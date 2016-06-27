@@ -70,6 +70,14 @@ class KVPair extends AbstractResponseModel
      */
     public function getValue()
     {
+        return base64_decode($this['Value']);
+    }
+
+    /**
+     * @return string
+     */
+    public function getEncodedValue()
+    {
         return $this['Value'];
     }
 
