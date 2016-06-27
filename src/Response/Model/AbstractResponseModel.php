@@ -137,7 +137,7 @@ abstract class AbstractResponseModel implements \JsonSerializable, \Serializable
     public function offsetGet($offset)
     {
         if (isset($this[$offset]))
-            return $this[$offset];
+            return $this->_storage[$offset];
 
         trigger_error(
             sprintf(
@@ -190,7 +190,7 @@ abstract class AbstractResponseModel implements \JsonSerializable, \Serializable
     public function offsetUnset($offset)
     {
         if (isset($this[$offset]))
-            unset($this[$offset]);
+            unset($this->_storage[$offset]);
     }
 
     /**
