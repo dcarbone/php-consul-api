@@ -1,0 +1,6 @@
+/composer.phar
+/vendor/
+/.idea
+/*.iml
+/composer.lock
+/tmp

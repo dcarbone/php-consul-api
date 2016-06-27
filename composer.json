@@ -1,0 +1,27 @@
+{
+  "name": "dcarbone/simple-consul-php",
+  "type": "library",
+  "description": "Zero-Dependency PHP Client Library for Consul",
+  "homepage": "https://github.com/dcarbone/simple-consul-php",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "Daniel Carbone",
+      "email": "daniel.p.carbone@gmail.com"
+    }
+  ],
+
+  "keywords": [
+    "consul"
+  ],
+
+  "require": {
+    "php": ">=5.4.0"
+  },
+
+  "autoload": {
+    "psr-4": {
+      "DCarbone\\SimpleConsulPHP\\": "src/"
+    }
+  }
+}
