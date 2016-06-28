@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP\Client;
+<?php namespace DCarbone\SimpleConsulPHP\Base;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -18,7 +18,7 @@
 
 /**
  * Class AbstractConsulClient
- * @package DCarbone\SimpleConsulPHP\Client
+ * @package DCarbone\SimpleConsulPHP\Base
  */
 abstract class AbstractConsulClient
 {
@@ -69,6 +69,14 @@ abstract class AbstractConsulClient
             ));
         }
 
+        // Don't let them override this.
+        if (CURLOPT_RETURNTRANSFER === $opt)
+            return $this;
+
+        // Don't let them override this.
+        if (CURLINFO_HEADER_OUT === $opt)
+            return $this;
+
         $this->_curlOpts[$opt] = $value;
 
         return $this;
@@ -85,13 +93,16 @@ abstract class AbstractConsulClient
 
     /**
      * @param string $uri
-     * @return array
+     * @param string $method
+     * @return string
      * @throws \Exception
      */
-    protected function execute($uri)
+    protected function execute($uri, $method = 'get')
     {
         $url = sprintf('%s/%s', $this->_url, ltrim(trim($uri), "/"));
         $ch = curl_init($url);
+
+        $this->_setMethod($method);
 
         if (!curl_setopt_array($ch, $this->_curlOpts))
         {
@@ -110,7 +121,7 @@ abstract class AbstractConsulClient
 
         if (is_string($data))
         {
-            if (200 == $info['http_code'])
+            if (200 === (int)$info['http_code'])
             {
                 $data = @json_decode($data, true);
                 $err = json_last_error();
@@ -121,7 +132,7 @@ abstract class AbstractConsulClient
                 throw new \DomainException(sprintf(
                     '%s - Unable to parse response as JSON.  Message: %s',
                     get_class($this),
-                    PHP_VERSION_ID > 50500 ? json_last_error_msg() : (string)$err
+                    PHP_VERSION_ID >= 50500 ? json_last_error_msg() : (string)$err
                 ));
             }
 
@@ -138,5 +149,63 @@ abstract class AbstractConsulClient
             get_class($this),
             $url
         ));
+    }
+
+    /**
+     * @param string $method
+     */
+    private function _setMethod($method)
+    {
+        if (!is_string($method)) {
+            throw new \InvalidArgumentException(sprintf('%s - Method must be string', get_class($this), gettype($method)));
+        }
+
+        if ('' === ($method = trim($method))) {
+            throw new \InvalidArgumentException(sprintf('%s - Method must be non-empty string', get_class($this)));
+        }
+
+        switch(strtolower($method))
+        {
+            case 'get':
+                $this->_GET();
+                break;
+            case 'put':
+                $this->_PUT();
+                break;
+            case 'delete':
+                $this->_DELETE();
+                break;
+
+            default:
+                throw new \UnexpectedValueException(sprintf(
+                    '%s - SimpleConsulPHP currently does not support queries made using the "%s" method.',
+                    get_class($this),
+                    $method
+                ));
+        }
+    }
+
+    private function _GET()
+    {
+        unset($this->_curlOpts[CURLOPT_CUSTOMREQUEST]);
+        unset($this->_curlOpts[CURLOPT_POST]);
+
+        $this->_curlOpts[CURLOPT_HTTPGET] = true;
+    }
+
+    private function _PUT()
+    {
+        unset($this->_curlOpts[CURLOPT_POST]);
+        unset($this->_curlOpts[CURLOPT_HTTPGET]);
+
+        $this->_curlOpts[CURLOPT_CUSTOMREQUEST] = 'PUT';
+    }
+
+    private function _DELETE()
+    {
+        unset($this->_curlOpts[CURLOPT_POST]);
+        unset($this->_curlOpts[CURLOPT_HTTPGET]);
+
+        $this->_curlOpts[CURLOPT_CUSTOMREQUEST] = 'DELETE';
     }
 }

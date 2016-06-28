@@ -8,11 +8,11 @@ It is in alpha stages of development.  Currently the only thing it can do is que
 ## KV
 
 ```php
-$kvClient = new \DCarbone\SimpleConsulPHP\Client\KVClient('url to your consul');
+$kvClient = new \DCarbone\SimpleConsulPHP\KV\KVClient('url to your consul');
 
-/** @var \DCarbone\SimpleConsulPHP\Response\Model\KVKeys $keys */
+/** @var string[] $keys */
 $keys = $kvClient->getKeys();
 
-/** @var \DCarbone\SimpleConsulPHP\Response\Model\KVPair $kvp */
+/** @var \DCarbone\SimpleConsulPHP\KV\KVPair $kvp */
 $kvp = $kvClient->getValue('my key');
 ```

@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP\Response\Model;
+<?php namespace DCarbone\SimpleConsulPHP\KV;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -15,10 +15,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+use DCarbone\SimpleConsulPHP\Base\AbstractResponseModel;
 
 /**
  * Class KVPair
- * @package DCarbone\SimpleConsulPHP\Model
+ * @package DCarbone\SimpleConsulPHP\KV
  */
 class KVPair extends AbstractResponseModel
 {

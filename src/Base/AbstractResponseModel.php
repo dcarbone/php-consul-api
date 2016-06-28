@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP\Response\Model;
+<?php namespace DCarbone\SimpleConsulPHP\Base;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -17,8 +17,8 @@
 */
 
 /**
- * Class AbstractModel
- * @package DCarbone\SimpleConsulPHP\Model
+ * Class AbstractResponseModel
+ * @package DCarbone\SimpleConsulPHP\Base
  */
 abstract class AbstractResponseModel implements \JsonSerializable, \Serializable, \ArrayAccess, \Iterator, \Countable
 {

@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP\Client;
+<?php namespace DCarbone\SimpleConsulPHP\KV;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,25 +16,24 @@
    limitations under the License.
 */
 
-use DCarbone\SimpleConsulPHP\Response\Model\KVKeys;
-use DCarbone\SimpleConsulPHP\Response\Model\KVPair;
+use DCarbone\SimpleConsulPHP\Base\AbstractConsulClient;
 
 /**
  * Class KVClient
- * @package DCarbone\SimpleConsulPHP\Client
+ * @package DCarbone\SimpleConsulPHP\KV
  */
 class KVClient extends AbstractConsulClient
 {
     /**
      * @param string $prefix Prefix to search for.  Null returns all keys.
-     * @return KVKeys
+     * @return string[]
      * @throws \Exception
      */
     public function getKeys($prefix = null)
     {
         if (null === $prefix)
         {
-            $data= $this->execute('v1/kv/?keys');
+            $data = $this->execute('v1/kv/?keys');
         }
         else if (is_string($prefix))
         {
@@ -49,12 +48,13 @@ class KVClient extends AbstractConsulClient
             ));
         }
 
-        return new KVKeys($data);
+        return $data;
     }
 
     /**
-     * @param string $key
-     * @return KVPair|null
+     * @param $key
+     * @return \DCarbone\SimpleConsulPHP\KV\KVPair|null
+     * @throws \Exception
      */
     public function getValue($key)
     {
