@@ -16,6 +16,7 @@
    limitations under the License.
 */
 
+use DCarbone\SimpleConsulPHP\KV\Error\KVError;
 use DCarbone\SimpleConsulPHP\KV\Verb\AbstractKVVerb;
 
 /**
@@ -27,28 +28,38 @@ class KVTransaction implements \Iterator, \Countable, \Serializable
     /** @var AbstractKVVerb[] */
     private $_verbs = array();
 
+    /** @var array */
+    private $_errors = array();
+
     /**
      * @param AbstractKVVerb $verb
      * @return $this
      */
     public function addVerb(AbstractKVVerb $verb)
     {
-        if (64 >= count($this))
+        if (64 > count($this))
         {
             $this->_verbs[] = $verb;
         }
         else
         {
-            trigger_error(
+            $this->_errors[] = new KVError(
+                $verb->getKVPair(),
                 sprintf(
                     '%s::addVerb - Maximum transaction length of 64 reached, will not add %s verb for %s key.',
                     get_class($this),
                     $verb->getVerb(),
                     $verb->getKey()
-                )
+                ),
+                KVError::TRANSACTION_OVERFLOW
             );
         }
         return $this;
+    }
+
+    public function getErrors()
+    {
+        return $this->_errors;
     }
 
     /**
@@ -138,7 +149,7 @@ class KVTransaction implements \Iterator, \Countable, \Serializable
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
      * @return array data which can be serialized by json_encode which is a value of any type other than a resource.
      */
-    function jsonSerialize()
+    public function jsonSerialize()
     {
         return $this->_verbs;
     }

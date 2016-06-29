@@ -37,10 +37,10 @@ class KVSetVerb extends AbstractKVVerb
     {
         if (null === $this->_KVPair->getKey())
         {
-            return array(
-                false,
-                
-            )
+//            return array(
+//                false,
+//
+//            )
         }
     }
 
