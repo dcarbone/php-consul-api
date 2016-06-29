@@ -79,4 +79,10 @@ class KVClient extends AbstractConsulClient
 
         return new KVPair($data);
     }
+
+    
+    public function newTransaction()
+    {
+        
+    }
 }
