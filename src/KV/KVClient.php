@@ -76,7 +76,7 @@ class KVClient extends AbstractConsulClient
 
         if (is_int(key($data)))
             $data = reset($data);
-
+        
         return new KVPair($data);
     }
 

@@ -16,43 +16,12 @@
    limitations under the License.
 */
 
-use DCarbone\SimpleConsulPHP\KV\KVPair;
-
 /**
  * Class KVSetVerb
  * @package DCarbone\SimpleConsulPHP\KV\Verb
  */
 class KVSetVerb extends AbstractKVVerb
 {
-    /** @var string */
-    private $_key = null;
-    /** @var mixed */
-    private $_value = null;
-    /** @var array */
-    private $_flags = 0;
-
-    /**
-     * KVSetVerb constructor.
-     * @param string $key
-     * @param mixed $value
-     * @param array $flags
-     */
-    public function __construct($key = null, $value = null, $flags = null)
-    {
-        $this->_key = $key;
-        $this->_value = $value;
-        $this->_flags = $flags;
-    }
-
-    /**
-     * @param KVPair $KVPair
-     * @return static
-     */
-    public static function createFromKVPair(KVPair $KVPair)
-    {
-        return new static($KVPair->getKey(), $KVPair->getValue(), $KVPair->getFlags());
-    }
-
     /**
      * @return string
      */
@@ -66,54 +35,27 @@ class KVSetVerb extends AbstractKVVerb
      */
     public function validate()
     {
-
+        if (null === $this->_KVPair->getKey())
+        {
+            return array(
+                false,
+                
+            )
+        }
     }
 
     /**
-     * @return string
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by json_encode, which is a value of any type other than a resource.
      */
-    public function getKey()
+    function jsonSerialize()
     {
-        return $this->_key;
-    }
-
-    /**
-     * @param string $key
-     */
-    public function setKey($key)
-    {
-        $this->_key = $key;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getValue()
-    {
-        return $this->_value;
-    }
-
-    /**
-     * @param mixed $value
-     */
-    public function setValue($value)
-    {
-        $this->_value = $value;
-    }
-
-    /**
-     * @return array
-     */
-    public function getFlags()
-    {
-        return $this->_flags;
-    }
-
-    /**
-     * @param array $flags
-     */
-    public function setFlags($flags)
-    {
-        $this->_flags = $flags;
+        return array(
+            'Verb' => $this->getVerb(),
+            'Key' => $this->_KVPair->getKey(),
+            'Value' => $this->_KVPair->getValue(),
+            'Flags' => $this->_KVPair->getFlags()
+        );
     }
 }
