@@ -221,6 +221,7 @@ abstract class AbstractConsulClient
     {
         unset($this->_curlOpts[CURLOPT_CUSTOMREQUEST]);
         unset($this->_curlOpts[CURLOPT_POST]);
+        unset($this->_curlOpts[CURLOPT_POSTFIELDS]);
 
         $this->_curlOpts[CURLOPT_HTTPGET] = true;
     }
