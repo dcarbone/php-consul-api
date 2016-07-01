@@ -15,6 +15,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+
 use DCarbone\SimpleConsulPHP\Base\AbstractResponseModel;
 
 /**
@@ -33,6 +34,24 @@ class KVPair extends AbstractResponseModel
         'Value' => null,
         'Session' => null
     );
+
+    /** @var KVClient */
+    private $_KVClient;
+
+    /**
+     * AbstractResponseModel constructor.
+     * @param array $data (
+     *      'Key' => string,
+     *      'Value' => string,
+     *      'Flags' => integer
+     * )
+     * @param KVClient $KVClient
+     */
+    public function __construct(array $data, KVClient $KVClient)
+    {
+        parent::__construct($data);
+        $this->_KVClient = $KVClient;
+    }
 
     /**
      * @return int
@@ -75,6 +94,25 @@ class KVPair extends AbstractResponseModel
     }
 
     /**
+     * @param mixed $value
+     * @return $this
+     */
+    public function setValue($value)
+    {
+        if (512 >= mb_strlen($value, '8bit'))
+        {
+            $this['Value'] = base64_encode((string)$value);
+            return $this;
+        }
+
+        throw new \InvalidArgumentException(sprintf(
+            '%s::setValue - Provided value is longer than the 512kB limit.  Value seen: "%s"',
+            get_class($this),
+            $value
+        ));
+    }
+
+    /**
      * @return string
      */
     public function getEncodedValue()
@@ -91,10 +129,59 @@ class KVPair extends AbstractResponseModel
     }
 
     /**
+     * @param int $flags
+     * @return $this
+     */
+    public function setFlags($flags)
+    {
+        $this['Flags'] = (int)$flags;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getSession()
     {
         return $this['Session'];
+    }
+
+    /**
+     * @param string $session
+     * @return $this
+     */
+    public function setSession($session)
+    {
+        $this['Session'] = $session;
+        return $this;
+    }
+
+    /**
+     * @return KVClient
+     */
+    public function getKVClient()
+    {
+        return $this->_KVClient;
+    }
+
+    public function executeSet()
+    {
+        $transaction = $this->_KVClient->newTransaction();
+        $transaction->set($this);
+        return $transaction->execute();
+    }
+
+    public function executeLock()
+    {
+        $transaction = $this->_KVClient->newTransaction();
+        $transaction->lock($this);
+        return $transaction->execute();
+    }
+
+    public function executeUnlock()
+    {
+        $transaction = $this->_KVClient->newTransaction();
+        $transaction->unlock($this);
+        return $transaction->execute();
     }
 }

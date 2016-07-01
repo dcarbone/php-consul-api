@@ -26,10 +26,10 @@ class KVClient extends AbstractConsulClient
 {
     /**
      * @param string $prefix Prefix to search for.  Null returns all keys.
-     * @return string[]
-     * @throws \Exception
+     * @param bool $expand If false, returns array of key names.  If true, expands into nested objects
+     * @return null|string[]|KVTree[]|KVPair[]
      */
-    public function getKeys($prefix = null)
+    public function getKeys($prefix = null, $expand = false)
     {
         if (null === $prefix)
         {
@@ -48,12 +48,41 @@ class KVClient extends AbstractConsulClient
             ));
         }
 
-        return $data;
+        if (null === $data || false === $expand)
+            return $data;
+
+        $treeHierarchy = array();
+        foreach($data as $path)
+        {
+            if (false === strpos($path, '/'))
+            {
+                $treeHierarchy[$path] = $this->getValue($path);
+                continue;
+            }
+
+            $root = strstr($path, '/', true);
+
+            // We're still in the path definition...
+            if ('/' === substr($path, -1))
+            {
+                if (!isset($treeHierarchy[$root]))
+                    $treeHierarchy[$root] = new KVTree($root);
+
+                $treeHierarchy[$root][$path] = new KVTree($path);
+            }
+            // We've arrived at an actual key
+            else
+            {
+                $treeHierarchy[$root][$path] = $this->getValue($path);
+            }
+        }
+
+        return $treeHierarchy;
     }
 
     /**
-     * @param $key
-     * @return \DCarbone\SimpleConsulPHP\KV\KVPair|null
+     * @param string $key Name of key to retrieve value for
+     * @return \DCarbone\SimpleConsulPHP\KV\KVPair|null Key Value Pair object or null if not found
      * @throws \Exception
      */
     public function getValue($key)
@@ -71,12 +100,20 @@ class KVClient extends AbstractConsulClient
             ));
         }
 
-        if (0 === count($data))
+        if (null === $data || 0 === count($data))
             return null;
-
+        
         if (is_int(key($data)))
             $data = reset($data);
+        
+        return new KVPair($data, $this);
+    }
 
-        return new KVPair($data);
+    /**
+     * @return KVTransaction
+     */
+    public function newTransaction()
+    {
+        return new KVTransaction($this);
     }
 }
