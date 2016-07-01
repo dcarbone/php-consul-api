@@ -15,22 +15,31 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-use DCarbone\SimpleConsulPHP\KV\KVPair;
 
 /**
- * Class Action
+ * Class KVGetVerb
  * @package DCarbone\SimpleConsulPHP\KV\Verb
  */
-abstract class AbstractKVVerb implements \JsonSerializable
+class KVGetVerb extends AbstractKVPairAwareVerb
 {
-
     /**
      * @return string
      */
-    abstract public function getVerb();
+    public function getVerb()
+    {
+        return 'get';
+    }
 
     /**
-     * @return string
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by json_encode, which is a value of any type other than a resource.
      */
-    abstract public function __toString();
+    public function jsonSerialize()
+    {
+        return array(
+            'Verb' => $this->getVerb(),
+            'Key' => $this->_KVPair->getKey()
+        );
+    }
 }

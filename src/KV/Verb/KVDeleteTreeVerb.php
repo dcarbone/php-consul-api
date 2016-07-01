@@ -17,17 +17,50 @@
 */
 
 /**
- * Class KVSetVerb
+ * Class KVDeleteTreeVerb
  * @package DCarbone\SimpleConsulPHP\KV\Verb
  */
-class KVSetVerb extends AbstractKVPairAwareVerb
+class KVDeleteTreeVerb extends AbstractKVVerb implements \Serializable
 {
+    /** @var string */
+    private $_prefix;
+
+    /**
+     * KVDeleteTreeVerb constructor.
+     * @param string $prefix
+     */
+    public function __construct($prefix)
+    {
+        $this->_prefix = $prefix;
+    }
+
     /**
      * @return string
      */
     public function getVerb()
     {
-        return 'set';
+        return 'delete-tree';
+    }
+
+    /**
+     * String representation of object
+     * @link http://php.net/manual/en/serializable.serialize.php
+     * @return string the string representation of the object or null
+     */
+    public function serialize()
+    {
+        return serialize($this->_prefix);
+    }
+
+    /**
+     * Constructs the object
+     * @link http://php.net/manual/en/serializable.unserialize.php
+     * @param string $serialized The string representation of the object.
+     * @return void
+     */
+    public function unserialize($serialized)
+    {
+        $this->_prefix = unserialize($serialized);
     }
 
     /**
@@ -39,9 +72,15 @@ class KVSetVerb extends AbstractKVPairAwareVerb
     {
         return array(
             'Verb' => $this->getVerb(),
-            'Key' => $this->_KVPair->getKey(),
-            'Value' => $this->_KVPair->getValue(),
-            'Flags' => $this->_KVPair->getFlags()
+            'Key' => $this->_prefix,
         );
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return (string)$this->_prefix;
     }
 }

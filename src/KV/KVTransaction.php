@@ -16,8 +16,18 @@
    limitations under the License.
 */
 
-use DCarbone\SimpleConsulPHP\KV\Error\KVError;
 use DCarbone\SimpleConsulPHP\KV\Verb\AbstractKVVerb;
+use DCarbone\SimpleConsulPHP\KV\Verb\KVCheckAndSetVerb;
+use DCarbone\SimpleConsulPHP\KV\Verb\KVCheckIndexVerb;
+use DCarbone\SimpleConsulPHP\KV\Verb\KVCheckSessionVerb;
+use DCarbone\SimpleConsulPHP\KV\Verb\KVDeleteCheckAndSetVerb;
+use DCarbone\SimpleConsulPHP\KV\Verb\KVDeleteTreeVerb;
+use DCarbone\SimpleConsulPHP\KV\Verb\KVDeleteVerb;
+use DCarbone\SimpleConsulPHP\KV\Verb\KVGetTreeVerb;
+use DCarbone\SimpleConsulPHP\KV\Verb\KVGetVerb;
+use DCarbone\SimpleConsulPHP\KV\Verb\KVLockVerb;
+use DCarbone\SimpleConsulPHP\KV\Verb\KVSetVerb;
+use DCarbone\SimpleConsulPHP\KV\Verb\KVUnlockVerb;
 
 /**
  * Class KVTransaction
@@ -28,8 +38,17 @@ class KVTransaction implements \Iterator, \Countable, \Serializable
     /** @var AbstractKVVerb[] */
     private $_verbs = array();
 
-    /** @var array */
-    private $_errors = array();
+    /** @var KVClient */
+    private $_KVClient;
+
+    /**
+     * KVTransaction constructor.
+     * @param KVClient $KVClient
+     */
+    public function __construct(KVClient $KVClient)
+    {
+        $this->_KVClient = $KVClient;
+    }
 
     /**
      * @param AbstractKVVerb $verb
@@ -43,23 +62,132 @@ class KVTransaction implements \Iterator, \Countable, \Serializable
         }
         else
         {
-            $this->_errors[] = new KVError(
-                $verb->getKVPair(),
+            trigger_error(
                 sprintf(
                     '%s::addVerb - Maximum transaction length of 64 reached, will not add %s verb for %s key.',
                     get_class($this),
                     $verb->getVerb(),
-                    $verb->getKey()
+                    (string)$verb
                 ),
-                KVError::TRANSACTION_OVERFLOW
+                E_USER_ERROR
             );
         }
         return $this;
     }
 
-    public function getErrors()
+    /**
+     * @param KVPair|null $KVPair
+     * @return KVSetVerb
+     */
+    public function addSetVerb(KVPair $KVPair)
     {
-        return $this->_errors;
+        $this->_verbs[] = new KVSetVerb($KVPair);
+        return end($this->_verbs);
+    }
+
+    /**
+     * @param KVPair|null $KVPair
+     * @return KVCheckAndSetVerb
+     */
+    public function checkAndSet(KVPair $KVPair)
+    {
+        $this->_verbs[] = new KVCheckAndSetVerb($KVPair);
+        return end($this->_verbs);
+    }
+
+    /**
+     * @param KVPair|null $KVPair
+     * @return KVLockVerb
+     */
+    public function lock(KVPair $KVPair)
+    {
+        $this->_verbs[] = new KVLockVerb($KVPair);
+        return end($this->_verbs);
+    }
+
+    /**
+     * @param KVPair $KVPair
+     * @return KVUnlockVerb
+     */
+    public function unlock(KVPair $KVPair)
+    {
+        $this->_verbs[] = new KVUnlockVerb($KVPair);
+        return end($this->_verbs);
+    }
+
+    /**
+     * @param KVPair $KVPair
+     * @return KVGetVerb
+     */
+    public function get(KVPair $KVPair)
+    {
+        $this->_verbs[] = new KVGetVerb($KVPair);
+        return end($this->_verbs);
+    }
+
+    /**
+     * @param string $prefix
+     * @return KVGetTreeVerb
+     */
+    public function getTree($prefix)
+    {
+        $this->_verbs[] = new KVGetTreeVerb($prefix);
+        return end($this->_verbs);
+    }
+
+    /**
+     * @param KVPair $KVPair
+     * @return KVCheckIndexVerb
+     */
+    public function checkIndex(KVPair $KVPair)
+    {
+        $this->_verbs[] = new KVCheckIndexVerb($KVPair);
+        return end($this->_verbs);
+    }
+
+    /**
+     * @param KVPair $KVPair
+     * @return KVCheckSessionVerb
+     */
+    public function checkSession(KVPair $KVPair)
+    {
+        $this->_verbs[] = new KVCheckSessionVerb($KVPair);
+        return end($this->_verbs);
+    }
+
+    /**
+     * @param KVPair $KVPair
+     * @return KVDeleteVerb
+     */
+    public function delete(KVPair $KVPair)
+    {
+        $this->_verbs[] = new KVDeleteVerb($KVPair);
+        return end($this->_verbs);
+    }
+
+    /**
+     * @param string $prefix
+     * @return KVDeleteTreeVerb
+     */
+    public function deleteTree($prefix)
+    {
+        $this->_verbs[] = new KVDeleteTreeVerb($prefix);
+        return end($this->_verbs);
+    }
+
+    /**
+     * @param KVPair $KVPair
+     * @return KVDeleteCheckAndSetVerb
+     */
+    public function deleteCheckAndSet(KVPair $KVPair)
+    {
+        $this->_verbs[] = new KVDeleteCheckAndSetVerb($KVPair);
+        return end($this->_verbs);
+    }
+
+    public function execute()
+    {
+        
     }
 
     /**

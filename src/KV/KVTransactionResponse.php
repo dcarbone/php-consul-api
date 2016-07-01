@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP\KV\Verb;
+<?php namespace DCarbone\SimpleConsulPHP\KV;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -15,22 +15,12 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-use DCarbone\SimpleConsulPHP\KV\KVPair;
 
 /**
- * Class Action
- * @package DCarbone\SimpleConsulPHP\KV\Verb
+ * Class KVTransactionResponse
+ * @package DCarbone\SimpleConsulPHP\KV
  */
-abstract class AbstractKVVerb implements \JsonSerializable
+class KVTransactionResponse
 {
 
-    /**
-     * @return string
-     */
-    abstract public function getVerb();
-
-    /**
-     * @return string
-     */
-    abstract public function __toString();
 }

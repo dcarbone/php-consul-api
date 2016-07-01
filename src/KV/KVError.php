@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP\KV\Error;
+<?php namespace DCarbone\SimpleConsulPHP\KV;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -17,11 +17,10 @@
 */
 
 use DCarbone\SimpleConsulPHP\Base\DateTime;
-use DCarbone\SimpleConsulPHP\KV\KVPair;
 
 /**
- * Class KVVerbValidationError
- * @package DCarbone\SimpleConsulPHP\KV\Verb
+ * Class KVError
+ * @package DCarbone\SimpleConsulPHP\KV
  */
 class KVError implements \JsonSerializable
 {

@@ -64,6 +64,14 @@ class DateTime extends \DateTime implements \JsonSerializable
      */
     public function jsonSerialize()
     {
+        return (string)$this;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
         return $this->format(self::$_defaultFormat);
     }
 }

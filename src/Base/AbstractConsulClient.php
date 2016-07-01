@@ -94,7 +94,7 @@ abstract class AbstractConsulClient
     /**
      * @param string $uri
      * @param string $method
-     * @return string
+     * @return null|array
      * @throws \Exception
      */
     protected function execute($uri, $method = 'get')
@@ -113,15 +113,24 @@ abstract class AbstractConsulClient
             ));
         }
 
-        // TODO: At some point, maybe return metadata?
-
         $data = curl_exec($ch);
         $info = curl_getinfo($ch);
         curl_close($ch);
 
+        return $this->parseResponse($url, $data, $info);
+    }
+
+    /**
+     * @param string $url
+     * @param string|bool $data
+     * @param array $info
+     * @return array|null
+     */
+    protected function parseResponse($url, $data, $info)
+    {
         if (is_string($data))
         {
-            if (200 === (int)$info['http_code'])
+            if (200 === $info['http_code'])
             {
                 $data = @json_decode($data, true);
                 $err = json_last_error();
@@ -136,7 +145,19 @@ abstract class AbstractConsulClient
                 ));
             }
 
-            throw new \Exception(sprintf(
+            if (404 === $info['http_code'])
+                return null;
+
+            if ('' === $data || false === $data)
+            {
+                throw new \UnexpectedValueException(sprintf(
+                    '%s - Error seen while executing.  Response code: %d',
+                    get_class($this),
+                    $info['http_code']
+                ));
+            }
+
+            throw new \UnexpectedValueException(sprintf(
                 '%s - Error seen while executing "%s": %s.',
                 get_class($this),
                 $url,
