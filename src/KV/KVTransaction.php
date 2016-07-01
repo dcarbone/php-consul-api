@@ -33,7 +33,7 @@ use DCarbone\SimpleConsulPHP\KV\Verb\KVUnlockVerb;
  * Class KVTransaction
  * @package DCarbone\SimpleConsulPHP\KV
  */
-class KVTransaction implements \Iterator, \Countable, \Serializable
+class KVTransaction implements \Iterator, \Countable, \Serializable, \JsonSerializable
 {
     /** @var AbstractKVVerb[] */
     private $_verbs = array();
@@ -185,9 +185,10 @@ class KVTransaction implements \Iterator, \Countable, \Serializable
 //        return end($this->_verbs);
 //    }
 
+    
     public function execute()
     {
-
+        return $this->_KVClient->executeTransaction($this);
     }
 
     /**
@@ -279,6 +280,11 @@ class KVTransaction implements \Iterator, \Countable, \Serializable
      */
     public function jsonSerialize()
     {
-        return $this->_verbs;
+        $data = array();
+        foreach($this as $verb)
+        {
+            $data[] = array('KV' => $verb);
+        }
+        return $data;
     }
 }

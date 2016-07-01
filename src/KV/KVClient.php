@@ -32,11 +32,11 @@ class KVClient extends AbstractConsulClient
     {
         if (null === $prefix)
         {
-            $data = $this->execute('v1/kv/?keys');
+            $data = $this->execute('GET', 'v1/kv/?keys');
         }
         else if (is_string($prefix))
         {
-            $data = $this->execute(sprintf('v1/kv/%s/?keys', trim(trim($prefix), "/")));
+            $data = $this->execute('GET', sprintf('v1/kv/%s/?keys', trim(trim($prefix), "/")));
         }
         else
         {
@@ -52,14 +52,14 @@ class KVClient extends AbstractConsulClient
 
     /**
      * @param string $key Name of key to retrieve value for
-     * @return \DCarbone\SimpleConsulPHP\KV\KVPair|null Key Value Pair object or null if not found
+     * @return KVPair|null Key Value Pair object or null if not found
      * @throws \Exception
      */
     public function getValue($key)
     {
         if (is_string($key))
         {
-            $data = $this->execute(sprintf('v1/kv/%s', $key));
+            $data = $this->execute('GET', sprintf('v1/kv/%s', $key));
         }
         else
         {
@@ -81,9 +81,7 @@ class KVClient extends AbstractConsulClient
 
     /**
      * @param null|string $prefix
-     * @return array(
-     *      'rootpath' => KVTree|KVPair
-     * )
+     * @return KVTree[]|KVPair[]
      */
     public function getTree($prefix = null)
     {
@@ -128,5 +126,16 @@ class KVClient extends AbstractConsulClient
     public function newTransaction()
     {
         return new KVTransaction($this);
+    }
+    
+    public function executeTransaction(KVTransaction $transaction)
+    {
+        $payload = json_encode($transaction);
+
+        $this->setCurlOpt(CURLOPT_POSTFIELDS, $payload);
+        $data = $this->execute('PUT', '/v1/txn');
+        var_dump($data);
+
+        return $payload;
     }
 }

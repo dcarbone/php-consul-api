@@ -32,6 +32,10 @@ abstract class AbstractConsulClient
     private static $_defaultCurlOpts = array(
         CURLOPT_RETURNTRANSFER => true,
         CURLINFO_HEADER_OUT => true,
+        CURLOPT_HTTPHEADER => array(
+            'Content-Type: application/json',
+            'Accept: application/json',
+        )
     );
 
     /**
@@ -51,6 +55,14 @@ abstract class AbstractConsulClient
     public function getUrl()
     {
         return $this->_url;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCurlOpts()
+    {
+        return $this->_curlOpts;
     }
 
     /**
@@ -92,12 +104,11 @@ abstract class AbstractConsulClient
     }
 
     /**
-     * @param string $uri
      * @param string $method
-     * @return null|array
-     * @throws \Exception
+     * @param string $uri
+     * @return array|null
      */
-    protected function execute($uri, $method = 'get')
+    protected function execute($method, $uri)
     {
         $url = sprintf('%s/%s', $this->_url, ltrim(trim($uri), "/"));
         $ch = curl_init($url);
