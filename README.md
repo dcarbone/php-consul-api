@@ -15,10 +15,7 @@ $keys = $kvClient->getKeys();
 
 /** @var \DCarbone\SimpleConsulPHP\KV\KVPair $kvp */
 $kvp = $kvClient->getValue('my key');
+
+/** @var array $tree */
+$tree = $kvClient->getTree();
 ```
-
-### Keys Expansion
-
-The `KVClient::getKeys()` method accepts a 2nd argument which will loop through the response and build
-an array of objects based upon the type of key.
-
