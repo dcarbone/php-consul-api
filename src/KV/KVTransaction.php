@@ -79,21 +79,21 @@ class KVTransaction implements \Iterator, \Countable, \Serializable
      * @param KVPair|null $KVPair
      * @return KVSetVerb
      */
-    public function addSetVerb(KVPair $KVPair)
+    public function set(KVPair $KVPair)
     {
         $this->_verbs[] = new KVSetVerb($KVPair);
         return end($this->_verbs);
     }
 
-    /**
-     * @param KVPair|null $KVPair
-     * @return KVCheckAndSetVerb
-     */
-    public function checkAndSet(KVPair $KVPair)
-    {
-        $this->_verbs[] = new KVCheckAndSetVerb($KVPair);
-        return end($this->_verbs);
-    }
+//    /**
+//     * @param KVPair|null $KVPair
+//     * @return KVCheckAndSetVerb
+//     */
+//    public function checkAndSet(KVPair $KVPair)
+//    {
+//        $this->_verbs[] = new KVCheckAndSetVerb($KVPair);
+//        return end($this->_verbs);
+//    }
 
     /**
      * @param KVPair|null $KVPair
@@ -175,19 +175,19 @@ class KVTransaction implements \Iterator, \Countable, \Serializable
         return end($this->_verbs);
     }
 
-    /**
-     * @param KVPair $KVPair
-     * @return KVDeleteCheckAndSetVerb
-     */
-    public function deleteCheckAndSet(KVPair $KVPair)
-    {
-        $this->_verbs[] = new KVDeleteCheckAndSetVerb($KVPair);
-        return end($this->_verbs);
-    }
+//    /**
+//     * @param KVPair $KVPair
+//     * @return KVDeleteCheckAndSetVerb
+//     */
+//    public function deleteCheckAndSet(KVPair $KVPair)
+//    {
+//        $this->_verbs[] = new KVDeleteCheckAndSetVerb($KVPair);
+//        return end($this->_verbs);
+//    }
 
     public function execute()
     {
-        
+
     }
 
     /**
