@@ -26,10 +26,9 @@ class KVClient extends AbstractConsulClient
 {
     /**
      * @param string $prefix Prefix to search for.  Null returns all keys.
-     * @param bool $expand If false, returns array of key names.  If true, expands into nested objects
-     * @return null|string[]|KVTree[]|KVPair[]
+     * @return null|string[]
      */
-    public function getKeys($prefix = null, $expand = false)
+    public function getKeys($prefix = null)
     {
         if (null === $prefix)
         {
@@ -48,36 +47,7 @@ class KVClient extends AbstractConsulClient
             ));
         }
 
-        if (null === $data || false === $expand)
-            return $data;
-
-        $treeHierarchy = array();
-        foreach($data as $path)
-        {
-            if (false === strpos($path, '/'))
-            {
-                $treeHierarchy[$path] = $this->getValue($path);
-                continue;
-            }
-
-            $root = strstr($path, '/', true);
-
-            // We're still in the path definition...
-            if ('/' === substr($path, -1))
-            {
-                if (!isset($treeHierarchy[$root]))
-                    $treeHierarchy[$root] = new KVTree($root);
-
-                $treeHierarchy[$root][$path] = new KVTree($path);
-            }
-            // We've arrived at an actual key
-            else
-            {
-                $treeHierarchy[$root][$path] = $this->getValue($path);
-            }
-        }
-
-        return $treeHierarchy;
+        return $data;
     }
 
     /**
@@ -107,6 +77,49 @@ class KVClient extends AbstractConsulClient
             $data = reset($data);
         
         return new KVPair($data, $this);
+    }
+
+    /**
+     * @param null|string $prefix
+     * @return array(
+     *      'rootpath' => KVTree|KVPair
+     * )
+     */
+    public function getTree($prefix = null)
+    {
+        $data = $this->getKeys($prefix);
+
+        if (null === $data)
+            return null;
+
+        $treeHierarchy = array();
+        foreach($data as $path)
+        {
+            $slashPos = strpos($path, '/');
+            if (false === $slashPos)
+            {
+                $treeHierarchy[$path] = $this->getValue($path);
+                continue;
+            }
+
+            $root = substr($path, 0, $slashPos + 1);
+
+            // We're still in the path definition...
+            if ('/' === substr($path, -1))
+            {
+                if (!isset($treeHierarchy[$root]))
+                    $treeHierarchy[$root] = new KVTree($root);
+
+                $treeHierarchy[$root][$path] = new KVTree($path);
+            }
+            // We've arrived at an actual key
+            else
+            {
+                $treeHierarchy[$root][$path] = $this->getValue($path);
+            }
+        }
+
+        return $treeHierarchy;
     }
 
     /**
