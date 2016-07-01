@@ -163,25 +163,4 @@ class KVPair extends AbstractResponseModel
     {
         return $this->_KVClient;
     }
-
-    public function executeSet()
-    {
-        $transaction = $this->_KVClient->newTransaction();
-        $transaction->set($this);
-        return $transaction->execute();
-    }
-
-    public function executeLock()
-    {
-        $transaction = $this->_KVClient->newTransaction();
-        $transaction->lock($this);
-        return $transaction->execute();
-    }
-
-    public function executeUnlock()
-    {
-        $transaction = $this->_KVClient->newTransaction();
-        $transaction->unlock($this);
-        return $transaction->execute();
-    }
 }

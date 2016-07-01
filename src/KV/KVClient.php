@@ -120,22 +120,4 @@ class KVClient extends AbstractConsulClient
         return $treeHierarchy;
     }
 
-    /**
-     * @return KVTransaction
-     */
-    public function newTransaction()
-    {
-        return new KVTransaction($this);
-    }
-    
-    public function executeTransaction(KVTransaction $transaction)
-    {
-        $payload = json_encode($transaction);
-
-        $this->setCurlOpt(CURLOPT_POSTFIELDS, $payload);
-        $data = $this->execute('PUT', '/v1/txn');
-        var_dump($data);
-
-        return $payload;
-    }
 }
