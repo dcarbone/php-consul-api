@@ -48,10 +48,7 @@ class KVClient extends AbstractConsulClient
             ));
         }
 
-        if (null === $data)
-            return null;
-
-        if (false === $expand)
+        if (null === $data || false === $expand)
             return $data;
 
         $treeHierarchy = array();
