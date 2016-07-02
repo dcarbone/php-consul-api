@@ -106,14 +106,40 @@ abstract class AbstractConsulClient
     /**
      * @param string $method
      * @param string $uri
+     * @param QueryParameters $parameters
      * @return array|null
      */
-    protected function execute($method, $uri)
+    protected function execute($method, $uri, QueryParameters $parameters = null)
     {
-        $url = sprintf('%s/%s', $this->_url, ltrim(trim($uri), "/"));
-        $ch = curl_init($url);
+        if (!is_string($method)) {
+            throw new \InvalidArgumentException(sprintf('%s - Method must be string', get_class($this), gettype($method)));
+        }
 
-        $this->_setMethod($method);
+        if ('' === ($method = trim($method))) {
+            throw new \InvalidArgumentException(sprintf('%s - Method must be non-empty string', get_class($this)));
+        }
+
+        switch(strtolower($method))
+        {
+            case 'get':
+                $url = $this->_GET($uri, $parameters);
+                break;
+            case 'put':
+                $url = $this->_PUT($uri, $parameters);
+                break;
+            case 'delete':
+                $url = $this->_DELETE($uri, $parameters);
+                break;
+
+            default:
+                throw new \UnexpectedValueException(sprintf(
+                    '%s - SimpleConsulPHP currently does not support queries made using the "%s" method.',
+                    get_class($this),
+                    $method
+                ));
+        }
+
+        $ch = curl_init($url);
 
         if (!curl_setopt_array($ch, $this->_curlOpts))
         {
@@ -184,61 +210,66 @@ abstract class AbstractConsulClient
     }
 
     /**
-     * @param string $method
+     * @param string $uri
+     * @param QueryParameters $parameters
+     * @return string
      */
-    private function _setMethod($method)
-    {
-        if (!is_string($method)) {
-            throw new \InvalidArgumentException(sprintf('%s - Method must be string', get_class($this), gettype($method)));
-        }
-
-        if ('' === ($method = trim($method))) {
-            throw new \InvalidArgumentException(sprintf('%s - Method must be non-empty string', get_class($this)));
-        }
-
-        switch(strtolower($method))
-        {
-            case 'get':
-                $this->_GET();
-                break;
-            case 'put':
-                $this->_PUT();
-                break;
-            case 'delete':
-                $this->_DELETE();
-                break;
-
-            default:
-                throw new \UnexpectedValueException(sprintf(
-                    '%s - SimpleConsulPHP currently does not support queries made using the "%s" method.',
-                    get_class($this),
-                    $method
-                ));
-        }
-    }
-
-    private function _GET()
+    private function _GET($uri, QueryParameters $parameters)
     {
         unset($this->_curlOpts[CURLOPT_CUSTOMREQUEST]);
         unset($this->_curlOpts[CURLOPT_POST]);
         unset($this->_curlOpts[CURLOPT_POSTFIELDS]);
 
         $this->_curlOpts[CURLOPT_HTTPGET] = true;
+
+        if (null === $parameters)
+            return $this->_buildRootUrl($uri);
+
+        return sprintf('%s?%s', $this->_buildRootUrl($uri), $parameters->queryString());
     }
 
-    private function _PUT()
+    /**
+     * @param string $uri
+     * @param QueryParameters $parameters
+     * @return string
+     */
+    private function _PUT($uri, QueryParameters $parameters)
     {
         unset($this->_curlOpts[CURLOPT_POST]);
         unset($this->_curlOpts[CURLOPT_HTTPGET]);
 
         $this->_curlOpts[CURLOPT_CUSTOMREQUEST] = 'PUT';
+
+        if (null !== $parameters)
+            $this->_curlOpts[CURLOPT_POSTFIELDS] = json_encode($parameters);
+
+        return $this->_buildRootUrl($uri);
     }
 
-    private function _DELETE()
+    /**
+     * @param string $uri
+     * @param QueryParameters $parameters
+     * @return string
+     */
+    private function _DELETE($uri, QueryParameters $parameters)
     {
         unset($this->_curlOpts[CURLOPT_POST]);
         unset($this->_curlOpts[CURLOPT_HTTPGET]);
 
         $this->_curlOpts[CURLOPT_CUSTOMREQUEST] = 'DELETE';
+
+        if (null !== $parameters)
+            $this->_curlOpts[CURLOPT_POSTFIELDS] = json_encode($parameters);
+
+        return $this->_buildRootUrl($uri);
+    }
+
+    /**
+     * @param string $uri
+     * @return string
+     */
+    private function _buildRootUrl($uri)
+    {
+        return sprintf('%s/%s', $this->_url,  ltrim(trim($uri), "/"));
     }
 }

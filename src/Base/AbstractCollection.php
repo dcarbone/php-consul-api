@@ -34,6 +34,14 @@ abstract class AbstractCollection implements \JsonSerializable, \Serializable, \
     }
 
     /**
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return 0 === count($this);
+    }
+
+    /**
      * Return the current element
      * @link http://php.net/manual/en/iterator.current.php
      * @return mixed Can return any type.

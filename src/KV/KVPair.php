@@ -35,24 +35,6 @@ class KVPair extends AbstractResponseModel
         'Session' => null
     );
 
-    /** @var KVClient */
-    private $_KVClient;
-
-    /**
-     * AbstractResponseModel constructor.
-     * @param array $data (
-     *      'Key' => string,
-     *      'Value' => string,
-     *      'Flags' => integer
-     * )
-     * @param KVClient $KVClient
-     */
-    public function __construct(array $data, KVClient $KVClient)
-    {
-        parent::__construct($data);
-        $this->_KVClient = $KVClient;
-    }
-
     /**
      * @return int
      */
@@ -154,13 +136,5 @@ class KVPair extends AbstractResponseModel
     {
         $this['Session'] = $session;
         return $this;
-    }
-
-    /**
-     * @return KVClient
-     */
-    public function getKVClient()
-    {
-        return $this->_KVClient;
     }
 }
