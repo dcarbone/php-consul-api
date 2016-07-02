@@ -214,7 +214,7 @@ abstract class AbstractConsulClient
      * @param QueryParameters $parameters
      * @return string
      */
-    private function _GET($uri, QueryParameters $parameters)
+    private function _GET($uri, QueryParameters $parameters = null)
     {
         unset($this->_curlOpts[CURLOPT_CUSTOMREQUEST]);
         unset($this->_curlOpts[CURLOPT_POST]);
@@ -233,7 +233,7 @@ abstract class AbstractConsulClient
      * @param QueryParameters $parameters
      * @return string
      */
-    private function _PUT($uri, QueryParameters $parameters)
+    private function _PUT($uri, QueryParameters $parameters = null)
     {
         unset($this->_curlOpts[CURLOPT_POST]);
         unset($this->_curlOpts[CURLOPT_HTTPGET]);
@@ -251,7 +251,7 @@ abstract class AbstractConsulClient
      * @param QueryParameters $parameters
      * @return string
      */
-    private function _DELETE($uri, QueryParameters $parameters)
+    private function _DELETE($uri, QueryParameters $parameters = null)
     {
         unset($this->_curlOpts[CURLOPT_POST]);
         unset($this->_curlOpts[CURLOPT_HTTPGET]);

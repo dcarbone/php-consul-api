@@ -37,7 +37,7 @@ class KVClient extends AbstractConsulClient
         }
         else if (is_string($prefix))
         {
-            $data = $this->execute('GET', 'v1/kv/%s', new QueryParameters(['keys']));
+            $data = $this->execute('GET', sprintf('v1/kv/%s', $prefix), new QueryParameters(['keys']));
         }
         else
         {
@@ -82,7 +82,7 @@ class KVClient extends AbstractConsulClient
     
     public function setValue(KVPair $KVPair)
     {
-        
+
     }    
 
     /**

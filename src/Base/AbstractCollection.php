@@ -26,6 +26,18 @@ abstract class AbstractCollection implements \JsonSerializable, \Serializable, \
     private $_storage = array();
 
     /**
+     * AbstractResponseModel constructor.
+     * @param array $data
+     */
+    public function __construct(array $data = array())
+    {
+        foreach($data as $k => $v)
+        {
+            $this[$k] = $v;
+        };
+    }
+
+    /**
      * @return mixed
      */
     public function reset()

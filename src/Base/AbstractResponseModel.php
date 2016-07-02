@@ -31,10 +31,7 @@ abstract class AbstractResponseModel extends AbstractCollection
      */
     public function __construct(array $data = array())
     {
-        foreach(($data + static::$default) as $k => $v)
-        {
-            $this[$k] = $v;
-        };
+        parent::__construct($data + static::$default);
     }
 
     /**
