@@ -36,6 +36,25 @@ class KVPair extends AbstractResponseModel
     );
 
     /**
+     * KVPair constructor.
+     * @param array $data
+     */
+    public function __construct(array $data = array())
+    {
+        foreach($data + self::$default as $k=>$v)
+        {
+            switch($k)
+            {
+                case 'Value':
+                    $this->setValue($v);
+                    break;
+                default:
+                    $this[$k] = $v;
+            }
+        }
+    }
+
+    /**
      * @return int
      */
     public function getCreateIndex()
