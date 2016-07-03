@@ -222,10 +222,8 @@ abstract class AbstractConsulClient
 
         $this->_curlOpts[CURLOPT_HTTPGET] = true;
 
-        if (null === $parameters)
-            return $this->_buildRootUrl($uri);
 
-        return sprintf('%s?%s', $this->_buildRootUrl($uri), $parameters->queryString());
+        return $this->_buildUrl($uri, $parameters);
     }
 
     /**
@@ -240,10 +238,7 @@ abstract class AbstractConsulClient
 
         $this->_curlOpts[CURLOPT_CUSTOMREQUEST] = 'PUT';
 
-        if (null !== $parameters)
-            $this->_curlOpts[CURLOPT_POSTFIELDS] = json_encode($parameters);
-
-        return $this->_buildRootUrl($uri);
+        return $this->_buildUrl($uri, $parameters);
     }
 
     /**
@@ -258,18 +253,24 @@ abstract class AbstractConsulClient
 
         $this->_curlOpts[CURLOPT_CUSTOMREQUEST] = 'DELETE';
 
-        if (null !== $parameters)
-            $this->_curlOpts[CURLOPT_POSTFIELDS] = json_encode($parameters);
-
-        return $this->_buildRootUrl($uri);
+        return $this->_buildUrl($uri, $parameters);
     }
 
     /**
      * @param string $uri
+     * @param QueryParameters $parameters
      * @return string
      */
-    private function _buildRootUrl($uri)
+    private function _buildUrl($uri, QueryParameters $parameters = null)
     {
-        return sprintf('%s/%s', $this->_url,  ltrim(trim($uri), "/"));
+        if (null === $parameters)
+            return sprintf('%s/%s', $this->_url, ltrim(trim($uri), "/"));
+
+        return sprintf(
+            '%s/%s?%s',
+            $this->_url,
+            ltrim(trim($uri), "/"),
+            $parameters->queryString()
+        );
     }
 }

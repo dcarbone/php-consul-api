@@ -79,9 +79,18 @@ class KVClient extends AbstractConsulClient
         
         return new KVPair($data, $this);
     }
-    
+
+    /**
+     * @param KVPair $KVPair
+     * @return bool
+     */
     public function setValue(KVPair $KVPair)
     {
+        $this->setCurlOpt(CURLOPT_POSTFIELDS, $KVPair->getEncodedValue());
+        return (bool)$this->execute(
+            'PUT',
+            sprintf('v1/kv/%s', $KVPair->getKey())
+        );
 
     }    
 
