@@ -42,8 +42,11 @@ abstract class AbstractConsulClient
      * AbstractConsulClient constructor.
      * @param ConsulConfig $config
      */
-    public function __construct(ConsulConfig $config)
+    public function __construct(ConsulConfig $config = null)
     {
+        if (null === $config)
+            $config = ConsulConfig::newDefaultConfig();
+
         $this->_config = $config;
     }
 
