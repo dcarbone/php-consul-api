@@ -27,17 +27,23 @@ class KVClient extends AbstractConsulClient
 {
     /**
      * @param string $prefix Prefix to search for.  Null returns all keys.
-     * @return null|string[]
+     * @param QueryOptions $queryOptions
+     * @return null|\string[]
      */
-    public function getKeys($prefix = null)
+    public function keys($prefix = null, QueryOptions $queryOptions = null)
     {
+        if (null === $queryOptions)
+            $queryOptions = new QueryOptions();
+
+        $queryOptions->setKeys(true);
+
         if (null === $prefix)
         {
-            $data = $this->execute('GET', 'v1/kv', new QueryOptions(['keys' => true]));
+            $data = $this->execute('GET', 'v1/kv', $queryOptions);
         }
         else if (is_string($prefix))
         {
-            $data = $this->execute('GET', sprintf('v1/kv/%s', $prefix), new QueryOptions(['keys' => true]));
+            $data = $this->execute('GET', sprintf('v1/kv/%s', rawurlencode($prefix)), $queryOptions);
         }
         else
         {
@@ -53,14 +59,14 @@ class KVClient extends AbstractConsulClient
 
     /**
      * @param string $key Name of key to retrieve value for
+     * @param QueryOptions $queryOptions
      * @return KVPair|null Key Value Pair object or null if not found
-     * @throws \Exception
      */
-    public function getValue($key)
+    public function get($key, QueryOptions $queryOptions = null)
     {
         if (is_string($key))
         {
-            $data = $this->execute('GET', sprintf('v1/kv/%s', $key));
+            $data = $this->execute('GET', sprintf('v1/kv/%s', rawurlencode($key)), $queryOptions);
         }
         else
         {
@@ -82,20 +88,32 @@ class KVClient extends AbstractConsulClient
 
     /**
      * @param KVPair $KVPair
+     * @param QueryOptions $queryOptions
      * @return bool
      */
-    public function setValue(KVPair $KVPair)
-    {;
-        return (bool)$this->execute('PUT', sprintf('v1/kv/%s', $KVPair->getKey()), $KVPair->getValue());
+    public function put(KVPair $KVPair, QueryOptions $queryOptions = null)
+    {
+        return (bool)$this->execute('PUT', sprintf('v1/kv/%s', rawurlencode($KVPair->getKey())), $queryOptions, $KVPair->getValue());
+    }
+
+    /**
+     * @param string $key
+     * @param QueryOptions $queryOptions
+     * @return bool
+     */
+    public function delete($key, QueryOptions $queryOptions = null)
+    {
+        return (bool)$this->execute('DELETE', sprintf('v1/kv/%s', rawurlencode($key)), $queryOptions);
     }
 
     /**
      * @param null|string $prefix
-     * @return KVTree[]|KVPair[]
+     * @param QueryOptions $queryOptions
+     * @return KVPair[]|KVTree[]
      */
-    public function getTree($prefix = null)
+    public function tree($prefix = null, QueryOptions $queryOptions = null)
     {
-        $data = $this->getKeys($prefix);
+        $data = $this->keys($prefix, $queryOptions);
 
         if (null === $data)
             return null;
@@ -106,7 +124,7 @@ class KVClient extends AbstractConsulClient
             $slashPos = strpos($path, '/');
             if (false === $slashPos)
             {
-                $treeHierarchy[$path] = $this->getValue($path);
+                $treeHierarchy[$path] = $this->get($path, $queryOptions);
                 continue;
             }
 
@@ -120,7 +138,7 @@ class KVClient extends AbstractConsulClient
                 $treeHierarchy[$root][$path] = new KVTree($path);
             // We've arrived at an actual key
             else
-                $treeHierarchy[$root][$path] = $this->getValue($path);
+                $treeHierarchy[$root][$path] = $this->get($path);
         }
         return $treeHierarchy;
     }
