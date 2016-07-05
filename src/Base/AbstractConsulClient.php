@@ -15,6 +15,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+use DCarbone\SimpleConsulPHP\Config\ConsulConfig;
 
 /**
  * Class AbstractConsulClient
@@ -22,11 +23,8 @@
  */
 abstract class AbstractConsulClient
 {
-    /** @var string */
-    private $_url = null;
-
-    /** @var array */
-    private $_curlOpts = array();
+    /** @var ConsulConfig */
+    private $_config;
 
     /** @var array */
     private static $_defaultCurlOpts = array(
@@ -38,78 +36,25 @@ abstract class AbstractConsulClient
         )
     );
 
+    /** @var array */
+    private $_curlOpts = array();
+
     /**
      * AbstractConsulClient constructor.
-     * @param string $url
-     * @param array $curlOpts
+     * @param ConsulConfig $config
      */
-    public function __construct($url, array $curlOpts = array())
+    public function __construct(ConsulConfig $config)
     {
-        $this->_url = rtrim(trim($url), "/");
-        $this->_curlOpts = $curlOpts + self::$_defaultCurlOpts;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUrl()
-    {
-        return $this->_url;
-    }
-
-    /**
-     * @return array
-     */
-    public function getCurlOpts()
-    {
-        return $this->_curlOpts;
-    }
-
-    /**
-     * @param int $opt
-     * @param mixed $value
-     * @return static
-     */
-    public function setCurlOpt($opt, $value)
-    {
-        if (!is_int($opt))
-        {
-            throw new \InvalidArgumentException(sprintf(
-                '%s::setCurlOpt - First argument must be integer that corresponds with a valid PHP CURL Option, %s seen.',
-                get_class($this),
-                gettype($opt)
-            ));
-        }
-
-        // Don't let them override this.
-        if (CURLOPT_RETURNTRANSFER === $opt)
-            return $this;
-
-        // Don't let them override this.
-        if (CURLINFO_HEADER_OUT === $opt)
-            return $this;
-
-        $this->_curlOpts[$opt] = $value;
-
-        return $this;
-    }
-
-    /**
-     * @return static
-     */
-    public function resetCurlOpt()
-    {
-        $this->_curlOpts = self::$_defaultCurlOpts;
-        return $this;
+        $this->_config = $config;
     }
 
     /**
      * @param string $method
      * @param string $uri
-     * @param QueryParameters $parameters
+     * @param QueryOptions $parameters
      * @return array|null
      */
-    protected function execute($method, $uri, QueryParameters $parameters = null)
+    protected function execute($method, $uri, QueryOptions $parameters = null)
     {
         if (!is_string($method)) {
             throw new \InvalidArgumentException(sprintf('%s - Method must be string', get_class($this), gettype($method)));
@@ -118,6 +63,8 @@ abstract class AbstractConsulClient
         if ('' === ($method = trim($method))) {
             throw new \InvalidArgumentException(sprintf('%s - Method must be non-empty string', get_class($this)));
         }
+
+        $this->_curlOpts = self::$_defaultCurlOpts + $this->_config->getCurlOptArray();
 
         switch(strtolower($method))
         {
@@ -137,7 +84,7 @@ abstract class AbstractConsulClient
                     get_class($this),
                     $method
                 ));
-        }
+        };
 
         $ch = curl_init($url);
 
@@ -211,10 +158,10 @@ abstract class AbstractConsulClient
 
     /**
      * @param string $uri
-     * @param QueryParameters $parameters
+     * @param QueryOptions $parameters
      * @return string
      */
-    private function _GET($uri, QueryParameters $parameters = null)
+    private function _GET($uri, QueryOptions $parameters = null)
     {
         unset($this->_curlOpts[CURLOPT_CUSTOMREQUEST]);
         unset($this->_curlOpts[CURLOPT_POST]);
@@ -228,10 +175,10 @@ abstract class AbstractConsulClient
 
     /**
      * @param string $uri
-     * @param QueryParameters $parameters
+     * @param QueryOptions $parameters
      * @return string
      */
-    private function _PUT($uri, QueryParameters $parameters = null)
+    private function _PUT($uri, QueryOptions $parameters = null)
     {
         unset($this->_curlOpts[CURLOPT_POST]);
         unset($this->_curlOpts[CURLOPT_HTTPGET]);
@@ -243,10 +190,10 @@ abstract class AbstractConsulClient
 
     /**
      * @param string $uri
-     * @param QueryParameters $parameters
+     * @param QueryOptions $parameters
      * @return string
      */
-    private function _DELETE($uri, QueryParameters $parameters = null)
+    private function _DELETE($uri, QueryOptions $parameters = null)
     {
         unset($this->_curlOpts[CURLOPT_POST]);
         unset($this->_curlOpts[CURLOPT_HTTPGET]);
@@ -258,10 +205,10 @@ abstract class AbstractConsulClient
 
     /**
      * @param string $uri
-     * @param QueryParameters $parameters
+     * @param QueryOptions $parameters
      * @return string
      */
-    private function _buildUrl($uri, QueryParameters $parameters = null)
+    private function _buildUrl($uri, QueryOptions $parameters = null)
     {
         if (null === $parameters)
             return sprintf('%s/%s', $this->_url, ltrim(trim($uri), "/"));

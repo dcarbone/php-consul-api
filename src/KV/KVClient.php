@@ -17,7 +17,7 @@
 */
 
 use DCarbone\SimpleConsulPHP\Base\AbstractConsulClient;
-use DCarbone\SimpleConsulPHP\Base\QueryParameters;
+use DCarbone\SimpleConsulPHP\Base\QueryOptions;
 
 /**
  * Class KVClient
@@ -33,11 +33,11 @@ class KVClient extends AbstractConsulClient
     {
         if (null === $prefix)
         {
-            $data = $this->execute('GET', 'v1/kv', new QueryParameters(['keys']));
+            $data = $this->execute('GET', 'v1/kv', new QueryOptions(['keys']));
         }
         else if (is_string($prefix))
         {
-            $data = $this->execute('GET', sprintf('v1/kv/%s', $prefix), new QueryParameters(['keys']));
+            $data = $this->execute('GET', sprintf('v1/kv/%s', $prefix), new QueryOptions(['keys']));
         }
         else
         {
@@ -91,8 +91,7 @@ class KVClient extends AbstractConsulClient
             'PUT',
             sprintf('v1/kv/%s', $KVPair->getKey())
         );
-
-    }    
+    }
 
     /**
      * @param null|string $prefix

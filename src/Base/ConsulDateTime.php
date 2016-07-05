@@ -17,10 +17,10 @@
 */
 
 /**
- * Class DateTime
+ * Class ConsulDateTime
  * @package DCarbone\SimpleConsulPHP\Base
  */
-class DateTime extends \DateTime implements \JsonSerializable
+class ConsulDateTime extends \DateTime implements \JsonSerializable
 {
     /** @var string */
     private static $_defaultFormat = 'Y-m-d\TH:i:s.uO';
