@@ -11,8 +11,9 @@ This library is loosely based upon the [official GO client](https://github.com/h
 ## TODO's
 
 1. Create logger interface, log errors and warnings rather than just throwing exceptions everywhere
-2. Implement *AndSet actions within KV
-3. Implement things other than KV
+2. Implement error returning
+3. Implement *AndSet actions within KV
+4. Implement things other than KV
 
 ## KV
 
