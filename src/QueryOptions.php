@@ -157,7 +157,7 @@ class QueryOptions extends AbstractDefinedCollection
         $params = '';
         foreach($this as $k=>$v)
         {
-            if ((bool)$v)
+            if (null !== $v && false !== $v)
             {
                 if ('keys' === $k)
                     $params = sprintf('%s%s&', $params, $k);
