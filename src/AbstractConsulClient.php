@@ -118,7 +118,7 @@ abstract class AbstractConsulClient
      * @param string|bool $data
      * @param array $info
      * @param string $err
-     * @return array|null
+     * @return array
      */
     protected function parseResponse($url, $data, $info, $err)
     {
@@ -142,7 +142,7 @@ abstract class AbstractConsulClient
             if (404 === $info['http_code'])
                 return null;
 
-            if ('' === $data || false === $data)
+            if ('' === $data)
             {
                 throw new \UnexpectedValueException(sprintf(
                     '%s - Error seen while executing.  Response code: %d.  Message: %s',

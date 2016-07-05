@@ -26,6 +26,32 @@ use DCarbone\SimpleConsulPHP\QueryOptions;
 class KVClient extends AbstractConsulClient
 {
     /**
+     * @param string $key Name of key to retrieve value for
+     * @param QueryOptions $queryOptions
+     * @return KVPair|null Key Value Pair object or null if not found
+     */
+    public function get($key, QueryOptions $queryOptions = null)
+    {
+        if (is_string($key))
+        {
+            $data = $this->execute('GET', sprintf('v1/kv/%s', rawurlencode($key)), $queryOptions);
+        }
+        else
+        {
+            throw new \InvalidArgumentException(sprintf(
+                '%s::getValue - Key expected to be string, %s seen.',
+                get_class($this),
+                gettype($key)
+            ));
+        }
+
+        if (null === $data || 0 === count($data))
+            return null;
+
+        return new KVPair(reset($data), $this);
+    }
+
+    /**
      * @param string $prefix Prefix to search for.  Null returns all keys.
      * @param QueryOptions $queryOptions
      * @return null|\string[]
@@ -55,35 +81,6 @@ class KVClient extends AbstractConsulClient
         }
 
         return $data;
-    }
-
-    /**
-     * @param string $key Name of key to retrieve value for
-     * @param QueryOptions $queryOptions
-     * @return KVPair|null Key Value Pair object or null if not found
-     */
-    public function get($key, QueryOptions $queryOptions = null)
-    {
-        if (is_string($key))
-        {
-            $data = $this->execute('GET', sprintf('v1/kv/%s', rawurlencode($key)), $queryOptions);
-        }
-        else
-        {
-            throw new \InvalidArgumentException(sprintf(
-                '%s::getValue - Key expected to be string, %s seen.',
-                get_class($this),
-                gettype($key)
-            ));
-        }
-
-        if (null === $data || 0 === count($data))
-            return null;
-        
-        if (is_int(key($data)))
-            $data = reset($data);
-        
-        return new KVPair($data, $this);
     }
 
     /**
