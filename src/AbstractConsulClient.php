@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP\Base;
+<?php namespace DCarbone\SimpleConsulPHP;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -15,7 +15,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-use DCarbone\SimpleConsulPHP\Config\ConsulConfig;
 
 /**
  * Class AbstractConsulClient
@@ -51,10 +50,11 @@ abstract class AbstractConsulClient
     /**
      * @param string $method
      * @param string $uri
-     * @param QueryOptions $parameters
+     * @param QueryOptions $queryOptions
+     * @param string $body
      * @return array|null
      */
-    protected function execute($method, $uri, QueryOptions $parameters = null)
+    protected function execute($method, $uri, QueryOptions $queryOptions = null, $body = null)
     {
         if (!is_string($method)) {
             throw new \InvalidArgumentException(sprintf('%s - Method must be string', get_class($this), gettype($method)));
@@ -69,13 +69,13 @@ abstract class AbstractConsulClient
         switch(strtolower($method))
         {
             case 'get':
-                $url = $this->_GET($uri, $parameters);
+                $url = $this->_GET($uri, $queryOptions);
                 break;
             case 'put':
-                $url = $this->_PUT($uri, $parameters);
+                $url = $this->_PUT($uri, $queryOptions, $body);
                 break;
             case 'delete':
-                $url = $this->_DELETE($uri, $parameters);
+                $url = $this->_DELETE($uri, $queryOptions, $body);
                 break;
 
             default:
@@ -99,18 +99,20 @@ abstract class AbstractConsulClient
 
         $data = curl_exec($ch);
         $info = curl_getinfo($ch);
+        $err = curl_error($ch);
         curl_close($ch);
 
-        return $this->parseResponse($url, $data, $info);
+        return $this->parseResponse($url, $data, $info, $err);
     }
 
     /**
      * @param string $url
      * @param string|bool $data
      * @param array $info
+     * @param string $err
      * @return array|null
      */
-    protected function parseResponse($url, $data, $info)
+    protected function parseResponse($url, $data, $info, $err)
     {
         if (is_string($data))
         {
@@ -135,9 +137,10 @@ abstract class AbstractConsulClient
             if ('' === $data || false === $data)
             {
                 throw new \UnexpectedValueException(sprintf(
-                    '%s - Error seen while executing.  Response code: %d',
+                    '%s - Error seen while executing.  Response code: %d.  Message: %s',
                     get_class($this),
-                    $info['http_code']
+                    $info['http_code'],
+                    $err
                 ));
             }
 
@@ -150,74 +153,69 @@ abstract class AbstractConsulClient
         }
 
         throw new \UnexpectedValueException(sprintf(
-            '%s - Invalid response seen executing query "%s".',
+            '%s - Invalid response seen executing query "%s": %s',
             get_class($this),
-            $url
+            $url,
+            $err
         ));
     }
 
     /**
      * @param string $uri
-     * @param QueryOptions $parameters
+     * @param QueryOptions $queryOptions
      * @return string
      */
-    private function _GET($uri, QueryOptions $parameters = null)
+    private function _GET($uri, QueryOptions $queryOptions = null)
     {
-        unset($this->_curlOpts[CURLOPT_CUSTOMREQUEST]);
-        unset($this->_curlOpts[CURLOPT_POST]);
-        unset($this->_curlOpts[CURLOPT_POSTFIELDS]);
-
         $this->_curlOpts[CURLOPT_HTTPGET] = true;
 
-
-        return $this->_buildUrl($uri, $parameters);
+        return $this->_buildUrl($uri, $queryOptions);
     }
 
     /**
      * @param string $uri
-     * @param QueryOptions $parameters
+     * @param QueryOptions $queryOptions
+     * @param string $body
      * @return string
      */
-    private function _PUT($uri, QueryOptions $parameters = null)
+    private function _PUT($uri, QueryOptions $queryOptions = null, $body = null)
     {
-        unset($this->_curlOpts[CURLOPT_POST]);
-        unset($this->_curlOpts[CURLOPT_HTTPGET]);
-
         $this->_curlOpts[CURLOPT_CUSTOMREQUEST] = 'PUT';
 
-        return $this->_buildUrl($uri, $parameters);
+        if (null !== $body)
+            $this->_curlOpts[CURLOPT_POSTFIELDS] = $body;
+
+        return $this->_buildUrl($uri, $queryOptions);
     }
 
     /**
      * @param string $uri
-     * @param QueryOptions $parameters
+     * @param QueryOptions $queryOptions
+     * @param string $body
      * @return string
      */
-    private function _DELETE($uri, QueryOptions $parameters = null)
+    private function _DELETE($uri, QueryOptions $queryOptions = null, $body = null)
     {
-        unset($this->_curlOpts[CURLOPT_POST]);
-        unset($this->_curlOpts[CURLOPT_HTTPGET]);
-
         $this->_curlOpts[CURLOPT_CUSTOMREQUEST] = 'DELETE';
 
-        return $this->_buildUrl($uri, $parameters);
+        if (null !== $body)
+            $this->_curlOpts[CURLOPT_POSTFIELDS] = $body;
+
+        return $this->_buildUrl($uri, $queryOptions);
     }
 
     /**
      * @param string $uri
-     * @param QueryOptions $parameters
+     * @param QueryOptions $queryOptions
      * @return string
      */
-    private function _buildUrl($uri, QueryOptions $parameters = null)
+    private function _buildUrl($uri, QueryOptions $queryOptions = null)
     {
-        if (null === $parameters)
-            return sprintf('%s/%s', $this->_url, ltrim(trim($uri), "/"));
-
         return sprintf(
             '%s/%s?%s',
-            $this->_url,
+            $this->_config->compileAddress(),
             ltrim(trim($uri), "/"),
-            $parameters->queryString()
+            $queryOptions
         );
     }
 }

@@ -16,7 +16,7 @@
    limitations under the License.
 */
 
-use DCarbone\SimpleConsulPHP\Base\AbstractResponseModel;
+use DCarbone\SimpleConsulPHP\AbstractResponseModel;
 
 /**
  * Class KVPair

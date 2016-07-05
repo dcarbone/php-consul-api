@@ -16,8 +16,8 @@
    limitations under the License.
 */
 
-use DCarbone\SimpleConsulPHP\Base\AbstractConsulClient;
-use DCarbone\SimpleConsulPHP\Base\QueryOptions;
+use DCarbone\SimpleConsulPHP\AbstractConsulClient;
+use DCarbone\SimpleConsulPHP\QueryOptions;
 
 /**
  * Class KVClient
@@ -33,11 +33,11 @@ class KVClient extends AbstractConsulClient
     {
         if (null === $prefix)
         {
-            $data = $this->execute('GET', 'v1/kv', new QueryOptions(['keys']));
+            $data = $this->execute('GET', 'v1/kv', new QueryOptions(['keys' => true]));
         }
         else if (is_string($prefix))
         {
-            $data = $this->execute('GET', sprintf('v1/kv/%s', $prefix), new QueryOptions(['keys']));
+            $data = $this->execute('GET', sprintf('v1/kv/%s', $prefix), new QueryOptions(['keys' => true]));
         }
         else
         {
@@ -85,12 +85,8 @@ class KVClient extends AbstractConsulClient
      * @return bool
      */
     public function setValue(KVPair $KVPair)
-    {
-        $this->setCurlOpt(CURLOPT_POSTFIELDS, $KVPair->getValue());
-        return (bool)$this->execute(
-            'PUT',
-            sprintf('v1/kv/%s', $KVPair->getKey())
-        );
+    {;
+        return (bool)$this->execute('PUT', sprintf('v1/kv/%s', $KVPair->getKey()), $KVPair->getValue());
     }
 
     /**
@@ -116,19 +112,15 @@ class KVClient extends AbstractConsulClient
 
             $root = substr($path, 0, $slashPos + 1);
 
+            if (!isset($treeHierarchy[$root]))
+                $treeHierarchy[$root] = new KVTree($root);
+
             // We're still in the path definition...
             if ('/' === substr($path, -1))
-            {
-                if (!isset($treeHierarchy[$root]))
-                    $treeHierarchy[$root] = new KVTree($root);
-
                 $treeHierarchy[$root][$path] = new KVTree($path);
-            }
             // We've arrived at an actual key
             else
-            {
                 $treeHierarchy[$root][$path] = $this->getValue($path);
-            }
         }
         return $treeHierarchy;
     }

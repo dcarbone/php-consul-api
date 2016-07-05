@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP\Config;
+<?php namespace DCarbone\SimpleConsulPHP;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -15,9 +15,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-
-use DCarbone\SimpleConsulPHP\Base\AbstractDefinedCollection;
-use DCarbone\SimpleConsulPHP\Base\QueryOptions;
 
 /**
  * Class ConsulConfig
@@ -275,24 +272,6 @@ class ConsulConfig extends AbstractDefinedCollection
     public function compileAddress()
     {
         return sprintf('%s://%s', $this->getScheme(), $this->getAddress());
-    }
-
-    /**
-     * @param string $uri
-     * @param QueryOptions|null $queryOptions
-     * @return string
-     */
-    public function compileCurlUrl($uri, QueryOptions $queryOptions = null)
-    {
-        if (null === $queryOptions)
-            return $this->compileAddress();
-
-        return sprintf(
-            '%s/%s?%s',
-            $this->compileAddress(),
-            ltrim(trim($uri), "/"),
-            $queryOptions
-        );
     }
 
     /**

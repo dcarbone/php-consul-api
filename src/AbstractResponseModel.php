@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP\Base;
+<?php namespace DCarbone\SimpleConsulPHP;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)

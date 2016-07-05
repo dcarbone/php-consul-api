@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP\Base;
+<?php namespace DCarbone\SimpleConsulPHP;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -18,7 +18,7 @@
 
 /**
  * Class QueryOptions
- * @package DCarbone\SimpleConsulPHP\Base
+ * @package DCarbone\SimpleConsulPHP\Query
  */
 class QueryOptions extends AbstractDefinedCollection
 {
@@ -146,16 +146,22 @@ class QueryOptions extends AbstractDefinedCollection
      */
     public function queryString()
     {
+        return (string)$this;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
         $params = '';
         foreach($this as $k=>$v)
         {
-            switch($k)
+            if ((bool)$v)
             {
-                case 'keys':
+                if ('keys' === $k)
                     $params = sprintf('%s%s&', $params, $k);
-                    break;
-
-                default:
+                else
                     $params = sprintf('%s%s=%s&', $params, $k, $v);
             }
         }
