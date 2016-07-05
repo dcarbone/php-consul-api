@@ -67,6 +67,11 @@ abstract class AbstractConsulClient
             throw new \InvalidArgumentException(sprintf('%s - Method must be non-empty string', get_class($this)));
         }
 
+        if (null === $queryOptions)
+            $queryOptions = new QueryOptions();
+
+        $this->_addConfigQueryOptions($queryOptions);
+
         $this->_curlOpts = self::$_defaultCurlOpts + $this->_config->getCurlOptArray();
 
         switch(strtolower($method))
@@ -164,11 +169,23 @@ abstract class AbstractConsulClient
     }
 
     /**
+     * @param QueryOptions $queryOptions
+     */
+    private function _addConfigQueryOptions(QueryOptions $queryOptions)
+    {
+        if (null !== ($token = $this->_config->getToken()) && null === $queryOptions->getToken())
+            $queryOptions->setToken($token);
+
+        if (null !== ($dc = $this->_config->getDatacenter()) && null === $queryOptions->getDatacenter())
+            $queryOptions->setDatacenter($dc);
+    }
+    
+    /**
      * @param string $uri
      * @param QueryOptions $queryOptions
      * @return string
      */
-    private function _GET($uri, QueryOptions $queryOptions = null)
+    private function _GET($uri, QueryOptions $queryOptions)
     {
         $this->_curlOpts[CURLOPT_HTTPGET] = true;
 
@@ -181,7 +198,7 @@ abstract class AbstractConsulClient
      * @param string $body
      * @return string
      */
-    private function _PUT($uri, QueryOptions $queryOptions = null, $body = null)
+    private function _PUT($uri, QueryOptions $queryOptions, $body = null)
     {
         $this->_curlOpts[CURLOPT_CUSTOMREQUEST] = 'PUT';
 
@@ -197,7 +214,7 @@ abstract class AbstractConsulClient
      * @param string $body
      * @return string
      */
-    private function _DELETE($uri, QueryOptions $queryOptions = null, $body = null)
+    private function _DELETE($uri, QueryOptions $queryOptions, $body = null)
     {
         $this->_curlOpts[CURLOPT_CUSTOMREQUEST] = 'DELETE';
 
@@ -212,7 +229,7 @@ abstract class AbstractConsulClient
      * @param QueryOptions $queryOptions
      * @return string
      */
-    private function _buildUrl($uri, QueryOptions $queryOptions = null)
+    private function _buildUrl($uri, QueryOptions $queryOptions)
     {
         return sprintf(
             '%s/%s?%s',

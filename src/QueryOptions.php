@@ -30,7 +30,8 @@ class QueryOptions extends AbstractDefinedCollection
         'WaitIndex' => null,
         'WaitTime' => null,
         'Token' => null,
-        'Near' => null
+        'Near' => null,
+        'RequireConsistent' => null,
     );
 
     /**
@@ -142,9 +143,89 @@ class QueryOptions extends AbstractDefinedCollection
     }
 
     /**
+     * @return bool
+     */
+    public function getRequireConsistent()
+    {
+        return (bool)$this->_storage['RequireConsistent'];
+    }
+
+    /**
+     * @param string $requireConsistent
+     * @return $this
+     */
+    public function setRequireConsistent($requireConsistent)
+    {
+        $this->_storage['RequireConsistent'] = (bool)$requireConsistent;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function buildHttpQueryArray()
+    {
+        $params = array();
+        foreach($this as $k=>$v)
+        {
+            if ('keys' === $k)
+            {
+                if (true === $v)
+                    $params['keys'] = true;
+
+                continue;
+            }
+
+            if (null !== $v)
+            {
+                $key = null;
+                $value = $v;
+
+                switch($k)
+                {
+                    case 'keys':
+                        $key = 'keys';
+                        break;
+                    case 'Datacenter':
+                        $key = 'dc';
+                        break;
+                    case 'AllowStale':
+                        $key = 'stale';
+                        break;
+                    case 'RequireConsistent':
+                        $key = 'consistent';
+                        break;
+                    case 'WaitIndex':
+                        $key = 'index';
+                        break;
+                    case 'WaitTime':
+                        $key = 'wait';
+                        break;
+                    case 'Token':
+                        $key = 'token';
+                        break;
+                    case 'Near':
+                        $key = 'near';
+                        break;
+
+                    default:
+                        continue 2;
+                }
+
+                if (null === $key)
+                    continue;
+
+                $params[$key] = $value;
+            }
+        }
+
+        return $params;
+    }
+
+    /**
      * @return string
      */
-    public function queryString()
+    public function buildHttpQueryString()
     {
         return (string)$this;
     }
@@ -154,17 +235,6 @@ class QueryOptions extends AbstractDefinedCollection
      */
     public function __toString()
     {
-        $params = '';
-        foreach($this as $k=>$v)
-        {
-            if (null !== $v && false !== $v)
-            {
-                if ('keys' === $k)
-                    $params = sprintf('%s%s&', $params, $k);
-                else
-                    $params = sprintf('%s%s=%s&', $params, $k, $v);
-            }
-        }
-        return rtrim($params, "&");
+        return http_build_query($this->buildHttpQueryArray());
     }
 }
