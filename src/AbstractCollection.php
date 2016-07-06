@@ -54,6 +54,22 @@ abstract class AbstractCollection implements \JsonSerializable, \Serializable, \
     }
 
     /**
+     * @return array
+     */
+    public function keys()
+    {
+        return array_keys($this->_storage);
+    }
+
+    /**
+     * @return array
+     */
+    public function values()
+    {
+        return array_values($this->_storage);
+    }
+
+    /**
      * Return the current element
      * @link http://php.net/manual/en/iterator.current.php
      * @return mixed Can return any type.

@@ -156,4 +156,9 @@ class KVPair extends AbstractResponseModel
         $this['Session'] = $session;
         return $this;
     }
+
+    public function __toString()
+    {
+        return $this->getValue();
+    }
 }

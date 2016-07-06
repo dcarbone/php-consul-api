@@ -22,6 +22,13 @@
  */
 abstract class AbstractConsulClient
 {
+    /** @var string */
+    private $_lastUrl = null;
+    /** @var array */
+    private $_lastInfo = array();
+    /** @var string */
+    private $_lastError = '';
+
     /** @var ConsulConfig */
     private $_config;
 
@@ -51,6 +58,30 @@ abstract class AbstractConsulClient
     }
 
     /**
+     * @return string
+     */
+    public function getLastUrl()
+    {
+        return $this->_lastUrl;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLastInfo()
+    {
+        return $this->_lastInfo;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastError()
+    {
+        return $this->_lastError;
+    }
+
+    /**
      * @param string $method
      * @param string $uri
      * @param QueryOptions $queryOptions
@@ -59,13 +90,11 @@ abstract class AbstractConsulClient
      */
     protected function execute($method, $uri, QueryOptions $queryOptions = null, $body = null)
     {
-        if (!is_string($method)) {
+        if (!is_string($method))
             throw new \InvalidArgumentException(sprintf('%s - Method must be string', get_class($this), gettype($method)));
-        }
 
-        if ('' === ($method = trim($method))) {
+        if ('' === ($method = trim($method)))
             throw new \InvalidArgumentException(sprintf('%s - Method must be non-empty string', get_class($this)));
-        }
 
         if (null === $queryOptions)
             $queryOptions = new QueryOptions();
@@ -77,13 +106,13 @@ abstract class AbstractConsulClient
         switch(strtolower($method))
         {
             case 'get':
-                $url = $this->_GET($uri, $queryOptions);
+                $this->_lastUrl = $this->_GET($uri, $queryOptions);
                 break;
             case 'put':
-                $url = $this->_PUT($uri, $queryOptions, $body);
+                $this->_lastUrl = $this->_PUT($uri, $queryOptions, $body);
                 break;
             case 'delete':
-                $url = $this->_DELETE($uri, $queryOptions, $body);
+                $this->_lastUrl = $this->_DELETE($uri, $queryOptions, $body);
                 break;
 
             default:
@@ -94,7 +123,7 @@ abstract class AbstractConsulClient
                 ));
         };
 
-        $ch = curl_init($url);
+        $ch = curl_init($this->_lastUrl);
 
         if (!curl_setopt_array($ch, $this->_curlOpts))
         {
@@ -106,25 +135,22 @@ abstract class AbstractConsulClient
         }
 
         $data = curl_exec($ch);
-        $info = curl_getinfo($ch);
-        $err = curl_error($ch);
+        $this->_lastInfo = curl_getinfo($ch);
+        $this->_lastError = curl_error($ch);
         curl_close($ch);
 
-        return $this->parseResponse($url, $data, $info, $err);
+        return $this->parseResponse($data);
     }
 
     /**
-     * @param string $url
      * @param string|bool $data
-     * @param array $info
-     * @param string $err
      * @return array
      */
-    protected function parseResponse($url, $data, $info, $err)
+    protected function parseResponse($data)
     {
         if (is_string($data))
         {
-            if (200 === $info['http_code'])
+            if (200 === $this->_lastInfo['http_code'])
             {
                 $data = @json_decode($data, true);
                 $err = json_last_error();
@@ -139,23 +165,24 @@ abstract class AbstractConsulClient
                 ));
             }
 
-            if (404 === $info['http_code'])
+            if (404 === $this->_lastInfo['http_code'])
                 return null;
 
             if ('' === $data)
             {
                 throw new \UnexpectedValueException(sprintf(
-                    '%s - Error seen while executing.  Response code: %d.  Message: %s',
+                    '%s - Error seen while executing "%s".  Response code: %d.  Message: %s',
                     get_class($this),
-                    $info['http_code'],
-                    $err
+                    $this->_lastUrl,
+                    $this->_lastInfo['http_code'],
+                    $this->_lastError
                 ));
             }
 
             throw new \UnexpectedValueException(sprintf(
                 '%s - Error seen while executing "%s": %s.',
                 get_class($this),
-                $url,
+                $this->_lastUrl,
                 $data
             ));
         }
@@ -163,8 +190,8 @@ abstract class AbstractConsulClient
         throw new \UnexpectedValueException(sprintf(
             '%s - Invalid response seen executing query "%s": %s',
             get_class($this),
-            $url,
-            $err
+            $this->_lastUrl,
+            $this->_lastError
         ));
     }
 
