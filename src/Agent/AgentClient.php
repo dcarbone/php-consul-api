@@ -17,6 +17,7 @@
 */
 
 use DCarbone\SimpleConsulPHP\AbstractConsulClient;
+use DCarbone\SimpleConsulPHP\QueryOptions;
 
 /**
  * Class AgentClient
@@ -25,11 +26,12 @@ use DCarbone\SimpleConsulPHP\AbstractConsulClient;
 class AgentClient extends AbstractConsulClient
 {
     /**
-     * @return null|AgentCheck[]
+     * @param QueryOptions $queryOptions
+     * @return AgentCheck[]|null
      */
-    public function checks()
+    public function checks(QueryOptions $queryOptions = null)
     {
-        $data = $this->execute('get', 'v1/agent/checks');
+        $data = $this->execute('get', 'v1/agent/checks', $queryOptions);
         if (null === $data)
             return null;
 
@@ -42,11 +44,12 @@ class AgentClient extends AbstractConsulClient
     }
 
     /**
-     * @return null|AgentService[]
+     * @param QueryOptions $queryOptions
+     * @return AgentService[]|null
      */
-    public function services()
+    public function services(QueryOptions $queryOptions = null)
     {
-        $data = $this->execute('get', 'v1/agent/servies');
+        $data = $this->execute('get', 'v1/agent/services', $queryOptions);
         if (null === $data)
             return null;
 
@@ -59,11 +62,12 @@ class AgentClient extends AbstractConsulClient
     }
 
     /**
-     * @return null|AgentMember[]
+     * @param QueryOptions $queryOptions
+     * @return AgentMember[]|null
      */
-    public function members()
+    public function members(QueryOptions $queryOptions = null)
     {
-        $data = $this->execute('get', 'v1/agent/members');
+        $data = $this->execute('get', 'v1/agent/members', $queryOptions);
         if (null === $data)
             return null;
 
@@ -76,14 +80,37 @@ class AgentClient extends AbstractConsulClient
     }
 
     /**
+     * @param QueryOptions $queryOptions
      * @return AgentSelf|null
      */
-    public function self()
+    public function self(QueryOptions $queryOptions = null)
     {
-        $data = $this->execute('get', 'v1/agent/self');
+        $data = $this->execute('get', 'v1/agent/self', $queryOptions);
         if (null === $data)
             return null;
 
         return new AgentSelf($data);
+    }
+
+    /**
+     * @param AgentServiceRegistration $agentServiceRegistration
+     * @param QueryOptions|null $queryOptions
+     * @return bool
+     */
+    public function serviceRegister(AgentServiceRegistration $agentServiceRegistration, QueryOptions $queryOptions = null)
+    {
+        $this->execute('put', 'v1/agent/service/register', $queryOptions, json_encode($agentServiceRegistration));
+        return 200 === $this->getLastHttpCode();
+    }
+
+    /**
+     * @param string $serviceID
+     * @param QueryOptions|null $queryOptions
+     * @return bool
+     */
+    public function serviceDeregister($serviceID, QueryOptions $queryOptions = null)
+    {
+        $this->execute('put', sprintf('v1/agent/service/deregister/%s', rawurlencode($serviceID)), $queryOptions);
+        return 200 === $this->getLastHttpCode();
     }
 }

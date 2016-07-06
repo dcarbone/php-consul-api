@@ -61,11 +61,7 @@ abstract class AbstractDefinedCollection implements \Serializable, \JsonSerializ
         if (isset($this[$offset]))
             return $this->{sprintf('get%s', $offset)}();
 
-        throw new \OutOfBoundsException(sprintf(
-            '%s - "%s" is not a valid configuration key.',
-            get_class($this),
-            is_string($offset) ? $offset : gettype($offset)
-        ));
+        throw $this->_createOutOfBoundsException($offset);
     }
 
     /**
@@ -78,17 +74,9 @@ abstract class AbstractDefinedCollection implements \Serializable, \JsonSerializ
     public function offsetSet($offset, $value)
     {
         if (isset($this[$offset]))
-        {
             $this->{sprintf('set%s', $offset)}($value);
-        }
         else
-        {
-            throw new \OutOfBoundsException(sprintf(
-                '%s - "%s" is not a valid configuration key.',
-                get_class($this),
-                is_string($offset) ? $offset : gettype($offset)
-            ));
-        }
+            throw $this->_createOutOfBoundsException($offset);
     }
 
     /**
@@ -101,40 +89,6 @@ abstract class AbstractDefinedCollection implements \Serializable, \JsonSerializ
     {
         if (isset($this[$offset]))
             $this->_storage[$offset] = null;
-    }
-
-    /**
-     * String representation of object
-     * @link http://php.net/manual/en/serializable.serialize.php
-     * @return string the string representation of the object or null
-     */
-    public function serialize()
-    {
-        return serialize($this->_storage);
-    }
-
-    /**
-     * Constructs the object
-     * @link http://php.net/manual/en/serializable.unserialize.php
-     * @param string $serialized The string representation of the object.
-     * @return void
-     */
-    public function unserialize($serialized)
-    {
-        foreach(unserialize($serialized) as $k => $v)
-        {
-            $this[$k] = $v;
-        }
-    }
-
-    /**
-     * Specify data which should be serialized to JSON
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by json_encode, which is a value of any type other than a resource.
-     */
-    public function jsonSerialize()
-    {
-        return json_encode(array_filter($this->_storage));
     }
 
     /**
@@ -186,5 +140,82 @@ abstract class AbstractDefinedCollection implements \Serializable, \JsonSerializ
     public function rewind()
     {
         reset($this->_storage);
+    }
+
+    /**
+     * String representation of object
+     * @link http://php.net/manual/en/serializable.serialize.php
+     * @return string the string representation of the object or null
+     */
+    public function serialize()
+    {
+        return serialize($this->_storage);
+    }
+
+    /**
+     * Constructs the object
+     * @link http://php.net/manual/en/serializable.unserialize.php
+     * @param string $serialized The string representation of the object.
+     * @return void
+     */
+    public function unserialize($serialized)
+    {
+        foreach(unserialize($serialized) as $k => $v)
+        {
+            $this[$k] = $v;
+        }
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by json_encode, which is a value of any type other than a resource.
+     */
+    public function jsonSerialize()
+    {
+        return array_filter($this->_storage);
+    }
+
+    /**
+     * @param mixed $key
+     * @return \OutOfBoundsException
+     */
+    private function _createOutOfBoundsException($key)
+    {
+        $matches = $this->_findKeyMatches($key);
+        if (0 === count($matches))
+        {
+            return new \OutOfBoundsException(sprintf(
+                '%s - "%s" is not a property on this object.',
+                get_class($this),
+                is_string($key) ? $key : gettype($key)
+            ));
+        }
+
+        return new \OutOfBoundsException(sprintf(
+            '%s - "%s" is not a property on this object. Did you mean one of the following: ["%s"]',
+            get_class($this),
+            $key,
+            implode('", "', $matches)
+        ));
+    }
+
+    /**
+     * @param mixed $key
+     * @return array
+     */
+    private function _findKeyMatches($key)
+    {
+        $possibleMatches = array();
+        if (is_string($key))
+        {
+            $regex = sprintf('{^.*%s.*$}i', $key);
+            foreach($this as $k => $_)
+            {
+                if (preg_match($regex, $k))
+                    $possibleMatches[] = $k;
+            }
+        }
+        return $possibleMatches;
     }
 }

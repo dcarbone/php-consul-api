@@ -74,6 +74,14 @@ abstract class AbstractConsulClient
     }
 
     /**
+     * @return int
+     */
+    public function getLastHttpCode()
+    {
+        return isset($this->_lastInfo['http_code']) ? $this->_lastInfo['http_code'] : 0;
+    }
+
+    /**
      * @return string
      */
     public function getLastError()
