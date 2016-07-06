@@ -193,7 +193,7 @@ abstract class AbstractDefinedCollection implements \Serializable, \JsonSerializ
         }
 
         return new \OutOfBoundsException(sprintf(
-            '%s - "%s" is not a property on this object. Did you mean one of the following: ["%s"]',
+            '%s - "%s" is not a property on this object. Did you mean one of the following: ["%s"]?',
             get_class($this),
             $key,
             implode('", "', $matches)

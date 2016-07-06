@@ -20,26 +20,14 @@
  * Class QueryOptions
  * @package DCarbone\SimpleConsulPHP\Query
  */
-class QueryOptions extends AbstractDefinedCollection
+class QueryOptions extends AbstractCollection
 {
-    /** @var array */
-    protected $_storage = array(
-        'keys' => false,
-        'Datacenter' => null,
-        'AllowStale' => false,
-        'WaitIndex' => null,
-        'WaitTime' => null,
-        'Token' => null,
-        'Near' => null,
-        'RequireConsistent' => null,
-    );
-
     /**
      * @return bool
      */
     public function getKeys()
     {
-        return (bool)$this->_storage['keys'];
+        return (bool)$this['keys'];
     }
 
     /**
@@ -48,7 +36,7 @@ class QueryOptions extends AbstractDefinedCollection
      */
     public function setKeys($keys)
     {
-        $this->_storage['keys'] = (bool)$keys;
+        $this['keys'] = (bool)$keys;
         return $this;
     }
 
@@ -57,7 +45,7 @@ class QueryOptions extends AbstractDefinedCollection
      */
     public function getDatacenter()
     {
-        return $this->_storage['Datacenter'];
+        return $this['Datacenter'];
     }
 
     /**
@@ -66,7 +54,7 @@ class QueryOptions extends AbstractDefinedCollection
      */
     public function setDatacenter($datacenter)
     {
-        $this->_storage['Datacenter'] = $datacenter;
+        $this['Datacenter'] = $datacenter;
         return $this;
     }
 
@@ -75,7 +63,7 @@ class QueryOptions extends AbstractDefinedCollection
      */
     public function getAllowStale()
     {
-        return (bool)$this->_storage['AllowStale'];
+        return (bool)$this['AllowStale'];
     }
 
     /**
@@ -84,7 +72,7 @@ class QueryOptions extends AbstractDefinedCollection
      */
     public function setAllowStale($allowStale)
     {
-        $this->_storage['AllowStale'] = (bool)$allowStale;
+        $this['AllowStale'] = (bool)$allowStale;
         return $this;
     }
 
@@ -93,7 +81,7 @@ class QueryOptions extends AbstractDefinedCollection
      */
     public function getWaitIndex()
     {
-        return (int)$this->_storage['WaitIndex'];
+        return (int)$this['WaitIndex'];
     }
 
     /**
@@ -102,7 +90,7 @@ class QueryOptions extends AbstractDefinedCollection
      */
     public function setWaitIndex($waitIndex)
     {
-        $this->_storage['WaitIndex'] = (int)$waitIndex;
+        $this['WaitIndex'] = (int)$waitIndex;
         return $this;
     }
 
@@ -111,7 +99,7 @@ class QueryOptions extends AbstractDefinedCollection
      */
     public function getToken()
     {
-        return $this->_storage['Token'];
+        return $this['Token'];
     }
 
     /**
@@ -120,7 +108,7 @@ class QueryOptions extends AbstractDefinedCollection
      */
     public function setToken($token)
     {
-        $this->_storage['Token'] = $token;
+        $this['Token'] = $token;
         return $this;
     }
 
@@ -129,7 +117,7 @@ class QueryOptions extends AbstractDefinedCollection
      */
     public function getNear()
     {
-        return $this->_storage['Near'];
+        return $this['Near'];
     }
 
     /**
@@ -138,7 +126,7 @@ class QueryOptions extends AbstractDefinedCollection
      */
     public function setNear($near)
     {
-        $this->_storage['Near'] = $near;
+        $this['Near'] = $near;
         return $this;
     }
 
@@ -147,7 +135,7 @@ class QueryOptions extends AbstractDefinedCollection
      */
     public function getRequireConsistent()
     {
-        return (bool)$this->_storage['RequireConsistent'];
+        return (bool)$this['RequireConsistent'];
     }
 
     /**
@@ -156,7 +144,7 @@ class QueryOptions extends AbstractDefinedCollection
      */
     public function setRequireConsistent($requireConsistent)
     {
-        $this->_storage['RequireConsistent'] = (bool)$requireConsistent;
+        $this['RequireConsistent'] = (bool)$requireConsistent;
         return $this;
     }
 
@@ -178,14 +166,10 @@ class QueryOptions extends AbstractDefinedCollection
 
             if (null !== $v)
             {
-                $key = null;
                 $value = $v;
 
                 switch($k)
                 {
-                    case 'keys':
-                        $key = 'keys';
-                        break;
                     case 'Datacenter':
                         $key = 'dc';
                         break;
@@ -201,19 +185,10 @@ class QueryOptions extends AbstractDefinedCollection
                     case 'WaitTime':
                         $key = 'wait';
                         break;
-                    case 'Token':
-                        $key = 'token';
-                        break;
-                    case 'Near':
-                        $key = 'near';
-                        break;
 
                     default:
-                        continue 2;
+                        $key = strtolower($k);
                 }
-
-                if (null === $key)
-                    continue;
 
                 $params[$key] = $value;
             }
