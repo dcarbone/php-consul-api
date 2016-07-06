@@ -56,4 +56,28 @@ class AgentSelf extends AbstractResponseModel
             }
         }
     }
+
+    /**
+     * @return AgentSelfConfig
+     */
+    public function getConfig()
+    {
+        return $this['Config'];
+    }
+
+    /**
+     * @return AgentSelfCoord
+     */
+    public function getCoord()
+    {
+        return $this['Coord'];
+    }
+
+    /**
+     * @return AgentMember
+     */
+    public function getMember()
+    {
+        return $this['Member'];
+    }
 }

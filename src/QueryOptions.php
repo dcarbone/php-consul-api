@@ -156,6 +156,7 @@ class QueryOptions extends AbstractCollection
         $params = array();
         foreach($this as $k=>$v)
         {
+            // "keys" is a special one who's actual value seems to be ignored...
             if ('keys' === $k)
             {
                 if (true === $v)

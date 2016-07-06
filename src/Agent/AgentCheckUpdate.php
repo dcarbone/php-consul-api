@@ -61,7 +61,7 @@ class AgentCheckUpdate extends AbstractDefinedCollection
 
             default:
                 throw new \InvalidArgumentException(sprintf(
-                    '%s - Agent Check statuses must be one of the following: passing, warning, critical.  %s seen.',
+                    '%s - Agent Check Update statuses must be one of the following: passing, warning, critical.  %s seen.',
                     get_class($this),
                     is_string($status) ? $status : gettype($status)
                 ));
