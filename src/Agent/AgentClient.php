@@ -93,6 +93,79 @@ class AgentClient extends AbstractConsulClient
     }
 
     /**
+     * @param AgentCheckRegistration $agentCheckRegistration
+     * @param QueryOptions|null $queryOptions
+     * @return bool
+     */
+    public function checkRegister(AgentCheckRegistration $agentCheckRegistration, QueryOptions $queryOptions = null)
+    {
+        $this->execute('put', 'v1/agent/check/register', $queryOptions, json_encode($agentCheckRegistration));
+
+        return $this->requireOK();
+    }
+
+    /**
+     * @param string $checkID
+     * @param QueryOptions|null $queryOptions
+     * @return bool
+     */
+    public function checkDeregister($checkID, QueryOptions $queryOptions = null)
+    {
+        $this->execute('put', sprintf('v1/agent/check/deregister/%s', rawurlencode($checkID)), $queryOptions);
+
+        return $this->requireOK();
+    }
+
+    /**
+     * @param string $checkID
+     * @param string $note
+     * @param QueryOptions|null $queryOptions
+     * @return bool
+     */
+    public function passTTL($checkID, $note, QueryOptions $queryOptions = null)
+    {
+        return $this->updateTTL($checkID, $note, 'passing', $queryOptions);
+    }
+
+    /**
+     * @param string $checkID
+     * @param string $note
+     * @param QueryOptions|null $queryOptions
+     * @return bool
+     */
+    public function warnTTL($checkID, $note, QueryOptions $queryOptions = null)
+    {
+        return $this->updateTTL($checkID, $note, 'warning', $queryOptions);
+    }
+
+    /**
+     * @param string $checkID
+     * @param string $note
+     * @param QueryOptions|null $queryOptions
+     * @return bool
+     */
+    public function failTTL($checkID, $note, QueryOptions $queryOptions = null)
+    {
+        return $this->updateTTL($checkID, $note, 'critical', $queryOptions);
+    }
+
+    /**
+     * @param string $checkID
+     * @param string $output
+     * @param string $status
+     * @param QueryOptions|null $queryOptions
+     * @return bool
+     */
+    public function updateTTL($checkID, $output, $status, QueryOptions $queryOptions = null)
+    {
+        $update = new AgentCheckUpdate(['Output' => $output, 'Status' => $status]);
+
+        $this->execute('put', sprintf('v1/agent/check/update/%s', rawurlencode($checkID)), $queryOptions, json_encode($update));
+
+        return $this->requireOK();
+    }
+
+    /**
      * @param AgentServiceRegistration $agentServiceRegistration
      * @param QueryOptions|null $queryOptions
      * @return bool
@@ -100,7 +173,7 @@ class AgentClient extends AbstractConsulClient
     public function serviceRegister(AgentServiceRegistration $agentServiceRegistration, QueryOptions $queryOptions = null)
     {
         $this->execute('put', 'v1/agent/service/register', $queryOptions, json_encode($agentServiceRegistration));
-        
+
         return $this->requireOK();
     }
 
@@ -116,6 +189,12 @@ class AgentClient extends AbstractConsulClient
         return $this->requireOK();
     }
 
+    /**
+     * @param string $addr
+     * @param bool $wan
+     * @param QueryOptions|null $queryOptions
+     * @return bool
+     */
     public function join($addr, $wan = false, QueryOptions $queryOptions = null)
     {
         if (null === $queryOptions)
@@ -125,6 +204,17 @@ class AgentClient extends AbstractConsulClient
 
         $this->execute('put', sprintf('v1/agent/join/%s', $addr), $queryOptions);
 
+        return $this->requireOK();
+    }
+
+    /**
+     * @param string $node
+     * @param QueryOptions|null $queryOptions
+     * @return bool
+     */
+    public function forceLeave($node, QueryOptions $queryOptions = null)
+    {
+        $this->execute('put', sprintf('v1/agent/force-leave/%s', rawurlencode($node)), $queryOptions);
         return $this->requireOK();
     }
 

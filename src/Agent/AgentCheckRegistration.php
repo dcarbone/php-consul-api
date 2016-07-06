@@ -16,40 +16,39 @@
    limitations under the License.
 */
 
-use DCarbone\SimpleConsulPHP\AbstractResponseModel;
+use DCarbone\SimpleConsulPHP\AbstractDefinedCollection;
 
 /**
- * Class AgentCheck
+ * Class AgentCheckRegistration
  * @package DCarbone\SimpleConsulPHP\Agent
  */
-class AgentCheck extends AbstractResponseModel
+class AgentCheckRegistration extends AbstractDefinedCollection
 {
     /** @var array */
-    protected static $default = array(
-        'Node' => null,
-        'CheckID' => null,
+    protected $_storage = array(
+        'ID' => null,
         'Name' => null,
-        'Status' => null,
         'Notes' => null,
-        'Output' => null,
         'ServiceID' => null,
-        'ServiceName' => null,
+        'AgentServiceCheck' => null,
     );
 
     /**
      * @return string
      */
-    public function getNode()
+    public function getID()
     {
-        return $this['Node'];
+        return $this['ID'];
     }
 
     /**
-     * @return string
+     * @param string $id
+     * @return $this
      */
-    public function getCheckID()
+    public function setID($id)
     {
-        return $this['CheckID'];
+        $this->_storage['ID'] = $id;
+        return $this;
     }
 
     /**
@@ -57,15 +56,17 @@ class AgentCheck extends AbstractResponseModel
      */
     public function getName()
     {
-        return $this['Name'];
+        return $this->_storage['Name'];
     }
 
     /**
-     * @return string
+     * @param string $name
+     * @return $this
      */
-    public function getStatus()
+    public function setName($name)
     {
-        return $this['Status'];
+        $this->_storage['Name'] = $name;
+        return $this;
     }
 
     /**
@@ -73,31 +74,35 @@ class AgentCheck extends AbstractResponseModel
      */
     public function getNotes()
     {
-        return $this['Nodes'];
+        return $this->_storage['Notes'];
     }
 
     /**
-     * @return string
+     * @param string $notes
+     * @return $this
      */
-    public function getOutput()
+    public function setNotes($notes)
     {
-        return $this['Output'];
+        $this->_storage['Notes'] = $notes;
+        return $this;
     }
 
     /**
-     * @return string
+     * @return AgentServiceCheck
      */
-    public function getServiceID()
+    public function getAgentServiceCheck()
     {
-        return $this['ServiceID'];
+        return $this->_storage['AgentServiceCheck'];
     }
 
     /**
-     * @return string
+     * @param AgentServiceCheck $agentServiceCheck
+     * @return $this
      */
-    public function getServiceName()
+    public function setAgentServiceCheck(AgentServiceCheck $agentServiceCheck)
     {
-        return $this['ServiceName'];
+        $this->_storage['AgentServiceCheck'] = $agentServiceCheck;
+        return $this;
     }
 
     /**
@@ -105,6 +110,6 @@ class AgentCheck extends AbstractResponseModel
      */
     public function __toString()
     {
-        return $this->getCheckID();
+        return $this->getName();
     }
 }
