@@ -32,9 +32,6 @@ class AgentService extends AbstractResponseModel implements TaggableInterface
         'Tags' => array(),
         'Address' => null,
         'Port' => null,
-        'EnableTagOverride' => null,
-        'CreateIndex' => null,
-        'ModifyIndex' => null
     );
 
     /**
@@ -96,30 +93,6 @@ class AgentService extends AbstractResponseModel implements TaggableInterface
     public function getPort()
     {
         return (int)$this['Port'];
-    }
-
-    /**
-     * @return bool
-     */
-    public function getEnableTagOverride()
-    {
-        return (bool)$this['EnableTagOverride'];
-    }
-
-    /**
-     * @return int
-     */
-    public function getCreateIndex()
-    {
-        return (int)$this['CreateIndex'];
-    }
-
-    /**
-     * @return int
-     */
-    public function getModifyIndex()
-    {
-        return (int)$this['ModifyIndex'];
     }
 
     /**
