@@ -100,7 +100,8 @@ class AgentClient extends AbstractConsulClient
     public function serviceRegister(AgentServiceRegistration $agentServiceRegistration, QueryOptions $queryOptions = null)
     {
         $this->execute('put', 'v1/agent/service/register', $queryOptions, json_encode($agentServiceRegistration));
-        return 200 === $this->getLastHttpCode();
+        
+        return $this->requireOK();
     }
 
     /**
@@ -111,7 +112,20 @@ class AgentClient extends AbstractConsulClient
     public function serviceDeregister($serviceID, QueryOptions $queryOptions = null)
     {
         $this->execute('put', sprintf('v1/agent/service/deregister/%s', rawurlencode($serviceID)), $queryOptions);
-        return 200 === $this->getLastHttpCode();
+
+        return $this->requireOK();
+    }
+
+    public function join($addr, $wan = false, QueryOptions $queryOptions = null)
+    {
+        if (null === $queryOptions)
+            $queryOptions = new QueryOptions();
+
+        $queryOptions['wan'] = $wan;
+
+        $this->execute('put', sprintf('v1/agent/join/%s', $addr), $queryOptions);
+
+        return $this->requireOK();
     }
 
     /**
@@ -129,7 +143,8 @@ class AgentClient extends AbstractConsulClient
         $queryOptions['reason'] = $reason;
 
         $this->execute('put', sprintf('v1/agent/service/maintenance/%s', rawurlencode($serviceID)), $queryOptions);
-        return 200 === $this->getLastHttpCode();
+
+        return $this->requireOK();
     }
 
     /**
@@ -145,6 +160,41 @@ class AgentClient extends AbstractConsulClient
         $queryOptions['enable'] = 'false';
 
         $this->execute('put', sprintf('v1/agent/service/maintenance/%s', rawurlencode($serviceID)), $queryOptions);
-        return 200 === $this->getLastHttpCode();
+
+        return $this->requireOK();
+    }
+
+    /**
+     * @param string|null $reason
+     * @param QueryOptions|null $queryOptions
+     * @return bool
+     */
+    public function enableNodeMaintenance($reason = null, QueryOptions $queryOptions = null)
+    {
+        if (null === $queryOptions)
+            $queryOptions = new QueryOptions();
+
+        $queryOptions['enable'] = 'true';
+        $queryOptions['reason'] = $reason;
+
+        $this->execute('put', 'v1/agent/maintenance', $queryOptions);
+
+        return $this->requireOK();
+    }
+
+    /**
+     * @param QueryOptions|null $queryOptions
+     * @return bool
+     */
+    public function disableNodeMaintenance(QueryOptions $queryOptions = null)
+    {
+        if (null === $queryOptions)
+            $queryOptions = new QueryOptions();
+
+        $queryOptions['enable'] = 'false';
+
+        $this->execute('put', 'v1/agent/maintenance', $queryOptions);
+
+        return $this->requireOK();
     }
 }

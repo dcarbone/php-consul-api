@@ -74,14 +74,6 @@ abstract class AbstractConsulClient
     }
 
     /**
-     * @return int
-     */
-    public function getLastHttpCode()
-    {
-        return isset($this->_lastInfo['http_code']) ? $this->_lastInfo['http_code'] : 0;
-    }
-
-    /**
      * @return string
      */
     public function getLastError()
@@ -201,6 +193,14 @@ abstract class AbstractConsulClient
             $this->_lastUrl,
             $this->_lastError
         ));
+    }
+
+    /**
+     * @return bool
+     */
+    protected function requireOK()
+    {
+        return 200 === $this->_lastInfo['http_code'];
     }
 
     /**
