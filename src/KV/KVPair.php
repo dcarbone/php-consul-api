@@ -96,13 +96,14 @@ class KVPair extends AbstractResponseModel
 
     /**
      * @param mixed $value
+     * @param bool $encode
      * @return $this
      */
-    public function setValue($value)
+    public function setValue($value, $encode = true)
     {
         if (512 >= mb_strlen($value, '8bit'))
         {
-            $this['Value'] = base64_encode((string)$value);
+            $this['Value'] = $encode ? base64_encode((string)$value) : (string)$value;
             return $this;
         }
 
@@ -157,6 +158,9 @@ class KVPair extends AbstractResponseModel
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return $this->getValue();

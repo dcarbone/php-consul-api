@@ -33,7 +33,7 @@ class AgentCheck extends AbstractResponseModel
         'Notes' => null,
         'Output' => null,
         'ServiceID' => null,
-        'ServiceName' => null,
+        'ServiceName' => null
     );
 
     /**
