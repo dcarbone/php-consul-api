@@ -129,7 +129,10 @@ abstract class AbstractConsulClient
 
     /**
      * @param HttpResponse $response
-     * @return array
+     * @return array(
+     *  @type array|string|bool|int|float decoded resposne
+     *  @type Error|null error, if any
+     * )
      */
     protected function decodeBody(HttpResponse $response)
     {

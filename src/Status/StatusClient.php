@@ -18,6 +18,7 @@
 
 use DCarbone\PHPConsulAPI\AbstractConsulClient;
 use DCarbone\PHPConsulAPI\QueryOptions;
+use DCarbone\PHPConsulAPI\Request;
 
 /**
  * Class StatusClient
@@ -26,12 +27,20 @@ use DCarbone\PHPConsulAPI\QueryOptions;
 class StatusClient extends AbstractConsulClient
 {
     /**
-     * @param QueryOptions|null $queryOptions
-     * @return array|null
+     * @return array(
+     *  @type string
+     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
+     * )
      */
-    public function leader(QueryOptions $queryOptions = null)
+    public function leader()
     {
-        return $this->execute('get', 'v1/status/leader', $queryOptions);
+        $r = new Request('get', 'v1/status/leader', $this->_Config);
+        list($_, $response, $err) = $this->requireOK($this->doRequest($r));
+
+        if (null !== $err)
+            return ['', $err];
+
+        return $this->decodeBody($response);
     }
 
     /**
@@ -40,6 +49,12 @@ class StatusClient extends AbstractConsulClient
      */
     public function peers(QueryOptions $queryOptions = null)
     {
-        return $this->execute('get', 'v1/status/peers', $queryOptions);
+        $r = new Request('get', 'v1/status/peers', $this->_Config);
+        list($_, $response, $err) = $this->requireOK($this->doRequest($r));
+
+        if (null !== $err)
+            return [null, $err];
+
+        return $this->decodeBody($response);
     }
 }
