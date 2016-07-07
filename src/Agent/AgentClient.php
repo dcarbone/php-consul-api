@@ -117,46 +117,114 @@ class AgentClient extends AbstractConsulClient
     }
 
     /**
+     * Set non-ttl check's state to passing with optional note
+     *
+     * @param string $checkID
+     * @param null|string $note
+     * @param QueryOptions|null $queryOptions
+     * @return bool
+     */
+    public function checkPass($checkID, $note = null, QueryOptions $queryOptions = null)
+    {
+        if (null === $queryOptions)
+            $queryOptions = new QueryOptions();
+
+        $queryOptions['note'] = $note;
+        
+        $this->execute('get', sprintf('v1/agent/check/pass/%s', rawurlencode($checkID)), $queryOptions);
+
+        return $this->requireOK();
+    }
+
+    /**
+     * Set non-ttl check's state to warning with optional note
+     *
+     * @param string $checkID
+     * @param null|string $note
+     * @param QueryOptions|null $queryOptions
+     * @return bool
+     */
+    public function checkWarn($checkID, $note = null, QueryOptions $queryOptions = null)
+    {
+        if (null === $queryOptions)
+            $queryOptions = new QueryOptions();
+
+        $queryOptions['note'] = $note;
+
+        $this->execute('get', sprintf('v1/agent/check/warn/%s', rawurlencode($checkID)), $queryOptions);
+
+        return $this->requireOK();
+    }
+
+    /**
+     * Set non-ttl check's state to critical with optional note
+     *
+     * @param string $checkID
+     * @param null|string $note
+     * @param QueryOptions|null $queryOptions
+     * @return bool
+     */
+    public function checkFail($checkID, $note = null, QueryOptions $queryOptions = null)
+    {
+        if (null === $queryOptions)
+            $queryOptions = new QueryOptions();
+
+        $queryOptions['note'] = $note;
+
+        $this->execute('get', sprintf('v1/agent/check/fail/%s', rawurlencode($checkID)), $queryOptions);
+
+        return $this->requireOK();
+    }
+
+    /**
+     * Set ttl check status to passing with optional note
+     *
      * @param string $checkID
      * @param string $note
      * @param QueryOptions|null $queryOptions
      * @return bool
      */
-    public function passTTL($checkID, $note, QueryOptions $queryOptions = null)
+    public function passTTLCheck($checkID, $note, QueryOptions $queryOptions = null)
     {
-        return $this->updateTTL($checkID, $note, 'passing', $queryOptions);
+        return $this->updateTTLCheck($checkID, $note, 'passing', $queryOptions);
     }
 
     /**
+     * Set ttl check status to warning with optional note
+     *
      * @param string $checkID
      * @param string $note
      * @param QueryOptions|null $queryOptions
      * @return bool
      */
-    public function warnTTL($checkID, $note, QueryOptions $queryOptions = null)
+    public function warnTTLCheck($checkID, $note, QueryOptions $queryOptions = null)
     {
-        return $this->updateTTL($checkID, $note, 'warning', $queryOptions);
+        return $this->updateTTLCheck($checkID, $note, 'warning', $queryOptions);
     }
 
     /**
+     * Set ttl check status to critical with optional note
+     *
      * @param string $checkID
      * @param string $note
      * @param QueryOptions|null $queryOptions
      * @return bool
      */
-    public function failTTL($checkID, $note, QueryOptions $queryOptions = null)
+    public function failTTLCheck($checkID, $note, QueryOptions $queryOptions = null)
     {
-        return $this->updateTTL($checkID, $note, 'critical', $queryOptions);
+        return $this->updateTTLCheck($checkID, $note, 'critical', $queryOptions);
     }
 
     /**
+     * Set ttl check status to one of your choosing with optional note
+     *
      * @param string $checkID
      * @param string $output
      * @param string $status
      * @param QueryOptions|null $queryOptions
      * @return bool
      */
-    public function updateTTL($checkID, $output, $status, QueryOptions $queryOptions = null)
+    public function updateTTLCheck($checkID, $output, $status, QueryOptions $queryOptions = null)
     {
         $update = new AgentCheckUpdate(['Output' => $output, 'Status' => $status]);
 
@@ -166,6 +234,8 @@ class AgentClient extends AbstractConsulClient
     }
 
     /**
+     * Register a service within Consul
+     *
      * @param AgentServiceRegistration $agentServiceRegistration
      * @param QueryOptions|null $queryOptions
      * @return bool
@@ -178,6 +248,8 @@ class AgentClient extends AbstractConsulClient
     }
 
     /**
+     * Remove a service from Consul
+     *
      * @param string $serviceID
      * @param QueryOptions|null $queryOptions
      * @return bool
