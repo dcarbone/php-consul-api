@@ -16,8 +16,6 @@
    limitations under the License.
 */
 
-use DCarbone\CURLHeaderExtractor;
-
 /**
  * Class AbstractConsulClient
  * @package DCarbone\PHPConsulAPI\Base

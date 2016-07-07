@@ -17,7 +17,9 @@
 */
 
 use DCarbone\PHPConsulAPI\AbstractConsulClient;
+use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPI\QueryOptions;
+use DCarbone\PHPConsulAPI\Request;
 
 /**
  * Class CatalogClient
@@ -27,10 +29,25 @@ class CatalogClient extends AbstractConsulClient
 {
     /**
      * @param QueryOptions|null $queryOptions
-     * @return array|null
+     * @return array(
+     * @type string[]|null list of services or null on error
+     * @type QueryMeta query metadata
+     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
+     * )
      */
     public function services(QueryOptions $queryOptions = null)
     {
-        return $this->execute('get', 'v1/catalog/services', $queryOptions);
+        $r = new Request('get', 'v1/catalog/services', $this->_Config);
+        $r->setQueryOptions($queryOptions);
+
+        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        $qm = $this->buildQueryMeta($duration, $response);
+
+        if (null !== $err)
+            return [null, $qm, $err];
+
+        list($data, $err) = $this->decodeBody($response);
+
+        return [$data, $qm, $err];
     }
 }
