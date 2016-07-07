@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP\Agent;
+<?php namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,46 +16,51 @@
    limitations under the License.
 */
 
-use DCarbone\SimpleConsulPHP\AbstractResponseModel;
+use DCarbone\PHPConsulAPI\AbstractDefinedCollection;
 
 /**
  * Class AgentSelfConfig
- * @package DCarbone\SimpleConsulPHP\Agent
+ * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentSelfConfig extends AbstractResponseModel
+class AgentSelfConfig extends AbstractDefinedCollection
 {
-    /** @var array */
-    protected static $default = array(
-        'Bootstrap' => null,
-        'Server' => null,
-        'Datacenter' => null,
-        'DataDir' => null,
-        'DNSRecursor' => null,
-        'DNSRecursors' => array(),
-        'DNSConfig' => array(),
-        'Domain' => null,
-        'LogLevel' => null,
-        'NodeName' => null,
-        'ClientAddr' => null,
-        'BindAddr' => null,
-        'AdvertiseAddr' => null,
-        'Ports' => array(),
-        'LeaveOnTerm' => null,
-        'SkipLeaveOnInt' => null,
-        'StatsiteAddr' => null,
-        'Protocol' => null,
-        'EnableDebug' => null,
-        'VerifyIncoming' => null,
-        'VerifyOutgoing' => null,
-        'CAFile' => null,
-        'CertFile' => null,
-        'KeyFile' => null,
-        'StartJoin' => array(),
-        'UiDir' => null,
-        'PidFile' => null,
-        'EnableSyslog' => null,
-        'RejoinAfterLeave' => null,
-    );
+    /**
+     * @return array
+     */
+    protected function getDefinition()
+    {
+        return array(
+            'Bootstrap' => null,
+            'Server' => null,
+            'Datacenter' => null,
+            'DataDir' => null,
+            'DNSRecursor' => null,
+            'DNSRecursors' => array(),
+            'DNSConfig' => array(),
+            'Domain' => null,
+            'LogLevel' => null,
+            'NodeName' => null,
+            'ClientAddr' => null,
+            'BindAddr' => null,
+            'AdvertiseAddr' => null,
+            'Ports' => array(),
+            'LeaveOnTerm' => null,
+            'SkipLeaveOnInt' => null,
+            'StatsiteAddr' => null,
+            'Protocol' => null,
+            'EnableDebug' => null,
+            'VerifyIncoming' => null,
+            'VerifyOutgoing' => null,
+            'CAFile' => null,
+            'CertFile' => null,
+            'KeyFile' => null,
+            'StartJoin' => array(),
+            'UiDir' => null,
+            'PidFile' => null,
+            'EnableSyslog' => null,
+            'RejoinAfterLeave' => null,
+        );
+    }
 
     /**
      * @return bool

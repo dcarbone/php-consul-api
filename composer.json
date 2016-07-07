@@ -1,7 +1,7 @@
 {
   "name": "dcarbone/php-consul-api",
   "type": "library",
-  "description": "Zero-Dependency PHP Client Library for Consul",
+  "description": "PHP client implementation for the Consul API",
   "homepage": "https://github.com/dcarbone/php-consul-api",
   "license": "Apache-2.0",
   "authors": [
@@ -21,7 +21,7 @@
 
   "autoload": {
     "psr-4": {
-      "DCarbone\\SimpleConsulPHP\\": "src/"
+      "DCarbone\\PHPConsulAPI\\": "src/"
     }
   }
 }

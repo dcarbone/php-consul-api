@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP;
+<?php namespace DCarbone\PHPConsulAPI;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -18,7 +18,7 @@
 
 /**
  * Class QueryOptions
- * @package DCarbone\SimpleConsulPHP\Query
+ * @package DCarbone\PHPConsulAPI\Query
  */
 class QueryOptions extends AbstractCollection
 {

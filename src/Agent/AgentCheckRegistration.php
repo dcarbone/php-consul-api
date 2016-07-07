@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP\Agent;
+<?php namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,37 +16,42 @@
    limitations under the License.
 */
 
-use DCarbone\SimpleConsulPHP\AbstractDefinedCollection;
+use DCarbone\PHPConsulAPI\AbstractDefinedStrictCollection;
 
 /**
  * Class AgentCheckRegistration
- * @package DCarbone\SimpleConsulPHP\Agent
+ * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentCheckRegistration extends AbstractDefinedCollection
+class AgentCheckRegistration extends AbstractDefinedStrictCollection
 {
-    /** @var array */
-    protected $_storage = array(
-        'ID' => null,
-        'Name' => null,
-        'Notes' => null,
-        'ServiceID' => null,
-        'Script' => null,
-        'DockerContainerID' => null,
-        'Shell' => null,
-        'Interval' => null,
-        'Timeout' => null,
-        'TTL' => null,
-        'HTTP' => null,
-        'TCP' => null,
-        'Status' => null
-    );
+    /**
+     * @return array
+     */
+    protected function getDefinition()
+    {
+        return array(
+            'ID' => null,
+            'Name' => null,
+            'Notes' => null,
+            'ServiceID' => null,
+            'Script' => null,
+            'DockerContainerID' => null,
+            'Shell' => null,
+            'Interval' => null,
+            'Timeout' => null,
+            'TTL' => null,
+            'HTTP' => null,
+            'TCP' => null,
+            'Status' => null
+        );
+    }
 
     /**
      * @return string
      */
     public function getID()
     {
-        return $this['ID'];
+        return $this->_storage['ID'];
     }
 
     /**

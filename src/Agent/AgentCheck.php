@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP\Agent;
+<?php namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,25 +16,30 @@
    limitations under the License.
 */
 
-use DCarbone\SimpleConsulPHP\AbstractResponseModel;
+use DCarbone\PHPConsulAPI\AbstractDefinedCollection;
 
 /**
  * Class AgentCheck
- * @package DCarbone\SimpleConsulPHP\Agent
+ * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentCheck extends AbstractResponseModel
+class AgentCheck extends AbstractDefinedCollection
 {
-    /** @var array */
-    protected static $default = array(
-        'Node' => null,
-        'CheckID' => null,
-        'Name' => null,
-        'Status' => null,
-        'Notes' => null,
-        'Output' => null,
-        'ServiceID' => null,
-        'ServiceName' => null
-    );
+    /**
+     * @return array
+     */
+    protected function getDefinition()
+    {
+        return array(
+            'Node' => null,
+            'CheckID' => null,
+            'Name' => null,
+            'Status' => null,
+            'Notes' => null,
+            'Output' => null,
+            'ServiceID' => null,
+            'ServiceName' => null
+        );
+    }
 
     /**
      * @return string
@@ -105,6 +110,6 @@ class AgentCheck extends AbstractResponseModel
      */
     public function __toString()
     {
-        return $this->getCheckID();
+        return (string)$this['CheckID'];
     }
 }

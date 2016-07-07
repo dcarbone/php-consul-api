@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP\Agent;
+<?php namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -17,26 +17,31 @@
 */
 
 
-use DCarbone\SimpleConsulPHP\AbstractDefinedCollection;
-use DCarbone\SimpleConsulPHP\TaggableInterface;
+use DCarbone\PHPConsulAPI\AbstractDefinedStrictCollection;
+use DCarbone\PHPConsulAPI\TaggedInterface;
 
 /**
  * Class AgentServiceRegistration
- * @package DCarbone\SimpleConsulPHP\Agent
+ * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentServiceRegistration extends AbstractDefinedCollection implements TaggableInterface
+class AgentServiceRegistration extends AbstractDefinedStrictCollection implements TaggedInterface
 {
-    /** @var array */
-    protected $_storage = array(
-        'ID' => null,
-        'Name' => null,
-        'Tags' => array(),
-        'Port' => null,
-        'Address' => null,
-        'EnableTagOverride' => false,
-        'Check' => null,
-        'Checks' => array(),
-    );
+    /**
+     * @return array
+     */
+    protected function getDefinition()
+    {
+        return array(
+            'ID' => null,
+            'Name' => null,
+            'Tags' => array(),
+            'Port' => null,
+            'Address' => null,
+            'EnableTagOverride' => false,
+            'Check' => null,
+            'Checks' => array(),
+        );
+    }
 
     /**
      * @return string

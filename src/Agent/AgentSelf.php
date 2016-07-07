@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP\Agent;
+<?php namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,28 +16,22 @@
    limitations under the License.
 */
 
-use DCarbone\SimpleConsulPHP\AbstractResponseModel;
+use DCarbone\PHPConsulAPI\AbstractDefinedCollection;
 
 /**
  * Class AgentSelf
- * @package DCarbone\SimpleConsulPHP\Agent
+ * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentSelf extends AbstractResponseModel
+class AgentSelf extends AbstractDefinedCollection
 {
-    /** @var array */
-    protected static $default = array(
-        'Config' => null,
-        'Coord' => null,
-        'Member' => null,
-    );
-
     /**
      * AgentSelf constructor.
      * @param array $data
      */
-    public function __construct(array $data)
+    public function __construct(array $data = array())
     {
-        foreach($data + self::$default as $k => $v)
+        parent::__construct();
+        foreach($data as $k => $v)
         {
             switch($k)
             {
@@ -55,6 +49,18 @@ class AgentSelf extends AbstractResponseModel
                     $this[$k] = $v;
             }
         }
+    }
+
+    /**
+     * @return array
+     */
+    protected function getDefinition()
+    {
+        return array(
+            'Config' => null,
+            'Coord' => null,
+            'Member' => null,
+        );
     }
 
     /**

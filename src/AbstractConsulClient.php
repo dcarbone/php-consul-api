@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP;
+<?php namespace DCarbone\PHPConsulAPI;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -18,7 +18,7 @@
 
 /**
  * Class AbstractConsulClient
- * @package DCarbone\SimpleConsulPHP\Base
+ * @package DCarbone\PHPConsulAPI\Base
  */
 abstract class AbstractConsulClient
 {
@@ -29,7 +29,7 @@ abstract class AbstractConsulClient
     /** @var string */
     private $_lastError = '';
 
-    /** @var ConsulConfig */
+    /** @var Config */
     private $_config;
 
     /** @var array */
@@ -47,12 +47,12 @@ abstract class AbstractConsulClient
 
     /**
      * AbstractConsulClient constructor.
-     * @param ConsulConfig $config
+     * @param Config $config
      */
-    public function __construct(ConsulConfig $config = null)
+    public function __construct(Config $config = null)
     {
         if (null === $config)
-            $config = ConsulConfig::newDefaultConfig();
+            $config = Config::newDefaultConfig();
 
         $this->_config = $config;
     }
@@ -117,7 +117,7 @@ abstract class AbstractConsulClient
 
             default:
                 throw new \UnexpectedValueException(sprintf(
-                    '%s - SimpleConsulPHP currently does not support queries made using the "%s" method.',
+                    '%s - PHPConsulAPI currently does not support queries made using the "%s" method.',
                     get_class($this),
                     $method
                 ));

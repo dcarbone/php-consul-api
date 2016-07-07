@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP\Agent;
+<?php namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,20 +16,26 @@
    limitations under the License.
 */
 
-use DCarbone\SimpleConsulPHP\AbstractResponseModel;
+use DCarbone\PHPConsulAPI\AbstractDefinedCollection;
 
 /**
  * Class AgentSelfCoord
- * @package DCarbone\SimpleConsulPHP\Agent
+ * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentSelfCoord extends AbstractResponseModel
+class AgentSelfCoord extends AbstractDefinedCollection
 {
-    protected static $default = array(
-        'Vec' => array(),
-        'Error' => null,
-        'Adjustment' => null,
-        'Height' => null
-    );
+    /**
+     * @return array
+     */
+    protected function getDefinition()
+    {
+        return array(
+            'Vec' => array(),
+            'Error' => null,
+            'Adjustment' => null,
+            'Height' => null
+        );
+    }
 
     /**
      * @return array

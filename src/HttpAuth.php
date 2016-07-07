@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP;
+<?php namespace DCarbone\PHPConsulAPI;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -18,9 +18,9 @@
 
 /**
  * Class ConsulHttpAuth
- * @package DCarbone\SimpleConsulPHP\Config
+ * @package DCarbone\PHPConsulAPI\Config
  */
-class ConsulHttpAuth implements \Serializable, \JsonSerializable
+class HttpAuth implements \Serializable, \JsonSerializable
 {
     /** @var string */
     private $_username;

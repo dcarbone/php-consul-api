@@ -1,6 +1,6 @@
-# simple-consul-php
+# php-consul-api
 
-Zero-Dependency PHP Client Library for Consul
+PHP client implementation for the Consul API
 
 The primary purpose of this lib is to provide a dependency-free way of interacting with [Consul](https://www.consul.io/).
 

@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP\KV;
+<?php namespace DCarbone\PHPConsulAPI\KV;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,12 +16,12 @@
    limitations under the License.
 */
 
-use DCarbone\SimpleConsulPHP\AbstractConsulClient;
-use DCarbone\SimpleConsulPHP\QueryOptions;
+use DCarbone\PHPConsulAPI\AbstractConsulClient;
+use DCarbone\PHPConsulAPI\QueryOptions;
 
 /**
  * Class KVClient
- * @package DCarbone\SimpleConsulPHP\KV
+ * @package DCarbone\PHPConsulAPI\KV
  */
 class KVClient extends AbstractConsulClient
 {

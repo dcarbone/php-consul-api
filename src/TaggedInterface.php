@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP;
+<?php namespace DCarbone\PHPConsulAPI;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -17,10 +17,10 @@
 */
 
 /**
- * Interface TaggableInterface
- * @package DCarbone\SimpleConsulPHP
+ * Interface TaggedInterface
+ * @package DCarbone\PHPConsulAPI
  */
-interface TaggableInterface
+interface TaggedInterface
 {
     /**
      * @return array

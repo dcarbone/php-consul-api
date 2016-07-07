@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP;
+<?php namespace DCarbone\PHPConsulAPI;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -17,13 +17,15 @@
 */
 
 /**
+ * TODO: I am not a huge fan of this collection stack.  Find a better way to do this.
+ *
  * Class AbstractCollection
- * @package DCarbone\SimpleConsulPHP\Base
+ * @package DCarbone\PHPConsulAPI
  */
 abstract class AbstractCollection implements \JsonSerializable, \Serializable, \ArrayAccess, \Iterator, \Countable
 {
     /** @var array */
-    private $_storage = array();
+    protected $_storage = array();
 
     /**
      * AbstractResponseModel constructor.
@@ -34,7 +36,7 @@ abstract class AbstractCollection implements \JsonSerializable, \Serializable, \
         foreach($data as $k => $v)
         {
             $this[$k] = $v;
-        };
+        }
     }
 
     /**
@@ -142,14 +144,7 @@ abstract class AbstractCollection implements \JsonSerializable, \Serializable, \
         if (isset($this[$offset]))
             return $this->_storage[$offset];
 
-        trigger_error(
-            sprintf(
-                '%s - Object does not contain key "%s"',
-                get_class($this),
-                $offset
-            ),
-            E_USER_NOTICE
-        );
+        $this->_triggerOutOfBoundsError($offset);
 
         return null;
     }
@@ -163,25 +158,10 @@ abstract class AbstractCollection implements \JsonSerializable, \Serializable, \
      */
     public function offsetSet($offset, $value)
     {
-        if (is_string($offset) || is_int($offset))
-        {
-            $this->_storage[$offset] = $value;
-        }
-        else if (null === $offset)
-        {
+        if (null === $offset)
             $this->_storage[] = $value;
-        }
         else
-        {
-            trigger_error(
-                sprintf(
-                    '%s - Property keys expected to be strings or integers, %s seen.',
-                    get_class($this),
-                    gettype($offset)
-                ),
-                E_USER_WARNING
-            );
-        }
+            $this->_storage[$offset] = $value;
     }
 
     /**
@@ -243,5 +223,56 @@ abstract class AbstractCollection implements \JsonSerializable, \Serializable, \
     public function __toString()
     {
         return get_class($this);
+    }
+
+    /**
+     * @param mixed $key
+     * @param int $level
+     */
+    protected function _triggerOutOfBoundsError($key, $level = E_USER_NOTICE)
+    {
+        $matches = $this->_findKeyMatches($key);
+        if (0 === count($matches))
+        {
+            trigger_error(
+                sprintf(
+                    '%s - "%s" is not a property on this object.',
+                    get_class($this),
+                    is_string($key) ? $key : gettype($key)
+                ),
+                $level
+            );
+        }
+        else
+        {
+            trigger_error(
+                sprintf(
+                    '%s - "%s" is not a property on this object. Did you mean one of the following: ["%s"]?',
+                    get_class($this),
+                    $key,
+                    implode('", "', $matches)
+                ),
+                $level
+            );
+        }
+    }
+
+    /**
+     * @param mixed $key
+     * @return array
+     */
+    protected function _findKeyMatches($key)
+    {
+        $possibleMatches = array();
+        if (is_string($key))
+        {
+            $regex = sprintf('{^.*%s.*$}i', $key);
+            foreach($this as $k => $_)
+            {
+                if (preg_match($regex, $k))
+                    $possibleMatches[] = $k;
+            }
+        }
+        return $possibleMatches;
     }
 }

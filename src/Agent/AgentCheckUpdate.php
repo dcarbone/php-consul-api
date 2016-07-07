@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP\Agent;
+<?php namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,19 +16,24 @@
    limitations under the License.
 */
 
-use DCarbone\SimpleConsulPHP\AbstractDefinedCollection;
+use DCarbone\PHPConsulAPI\AbstractDefinedStrictCollection;
 
 /**
  * Class AgentCheckUpdate
- * @package DCarbone\SimpleConsulPHP\Agent
+ * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentCheckUpdate extends AbstractDefinedCollection
+class AgentCheckUpdate extends AbstractDefinedStrictCollection
 {
-    /** @var array */
-    protected $_storage = array(
-        'Status' => null,
-        'Output' => null
-    );
+    /**
+     * @return array
+     */
+    protected function getDefinition()
+    {
+        return array(
+            'Status' => null,
+            'Output' => null
+        );
+    }
 
     /**
      * @return string

@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP;
+<?php namespace DCarbone\PHPConsulAPI;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -17,25 +17,11 @@
 */
 
 /**
- * Class ConsulConfig
- * @package DCarbone\SimpleConsulPHP\Config
+ * Class Config
+ * @package DCarbone\PHPConsulAPI
  */
-class ConsulConfig extends AbstractDefinedCollection
+class Config extends AbstractDefinedStrictCollection
 {
-    /** @var array */
-    protected $_storage = array(
-        'Address' => '127.0.0.1:8500',
-        'Scheme' => 'http',
-        'Datacenter' => null,
-        'HttpAuth' => null,
-        'WaitTime' => 30,
-        'Token' => null,
-        'CAFile' => null,
-        'CertFile' => null,
-        'KeyFile' => null,
-        'InsecureSkipVerify' => false,
-    );
-
     /**
      * @return static
      */
@@ -59,6 +45,25 @@ class ConsulConfig extends AbstractDefinedCollection
             $conf->setInsecureSkipVerify(!$doVerify);
 
         return $conf;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getDefinition()
+    {
+        return array(
+            'Address' => '127.0.0.1:8500',
+            'Scheme' => 'http',
+            'Datacenter' => null,
+            'HttpAuth' => null,
+            'WaitTime' => 30,
+            'Token' => null,
+            'CAFile' => null,
+            'CertFile' => null,
+            'KeyFile' => null,
+            'InsecureSkipVerify' => false,
+        );
     }
 
     /**
@@ -116,7 +121,7 @@ class ConsulConfig extends AbstractDefinedCollection
     }
 
     /**
-     * @return ConsulHttpAuth
+     * @return HttpAuth
      */
     public function getHttpAuth()
     {
@@ -124,7 +129,7 @@ class ConsulConfig extends AbstractDefinedCollection
     }
 
     /**
-     * @param string|ConsulHttpAuth $httpAuth
+     * @param string|HttpAuth $httpAuth
      * @return $this
      */
     public function setHttpAuth($httpAuth)
@@ -142,10 +147,10 @@ class ConsulConfig extends AbstractDefinedCollection
                 $username = substr($httpAuth, 0, $colon);
                 $password = substr($httpAuth, $colon + 1);
             }
-            $httpAuth = new ConsulHttpAuth($username, $password);
+            $httpAuth = new HttpAuth($username, $password);
         }
 
-        if ($httpAuth instanceof ConsulHttpAuth)
+        if ($httpAuth instanceof HttpAuth)
         {
             $this->_storage['HttpAuth'] = $httpAuth;
             return $this;
@@ -303,13 +308,19 @@ class ConsulConfig extends AbstractDefinedCollection
 
         return $opts;
     }
-    
+
     /**
      * @param string $param
      * @return string|bool
      */
     protected static function _tryGetEnvParam($param)
     {
-        return getenv($param) || (isset($_SERVER[$param]) ? $_SERVER[$param] : false);
+        if (false !== ($value = getenv($param)))
+            return $value;
+
+        if (isset($_SERVER[$param]))
+            return $_SERVER[$param];
+
+        return false;
     }
 }

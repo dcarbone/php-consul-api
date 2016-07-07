@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP;
+<?php namespace DCarbone\PHPConsulAPI\Catalog;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,39 +16,46 @@
    limitations under the License.
 */
 
+use DCarbone\PHPConsulAPI\AbstractDefinedCollection;
+
 /**
- * Class AbstractResponseModel
- * @package DCarbone\SimpleConsulPHP\Base
+ * Class CatalogNode
+ * @package DCarbone\PHPConsulAPI\Catalog
  */
-abstract class AbstractResponseModel extends AbstractCollection
+class CatalogNode extends AbstractDefinedCollection
 {
-    /** @var array */
-    protected static $default = array();
-
     /**
-     * AbstractResponseModel constructor.
-     * @param array $data
+     * @return array
      */
-    public function __construct(array $data = array())
+    protected function getDefinition()
     {
-        parent::__construct($data + static::$default);
+        return array(
+            'Node' => null,
+            'Address' => null
+        );
     }
 
     /**
-     * @param string $json
-     * @return static
+     * @return string
      */
-    public static function fromJson($json)
+    public function getNode()
     {
-        return new static(json_decode($json, true));
+        return $this['Node'];
     }
 
     /**
-     * @param array $data
-     * @return static
+     * @return string
      */
-    public static function fromArray(array $data)
+    public function getAddress()
     {
-        return new static($data);
+        return $this['Address'];
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return (string)$this['Node'];
     }
 }

@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP;
+<?php namespace DCarbone\PHPConsulAPI;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -17,10 +17,10 @@
 */
 
 /**
- * Class ConsulDateTime
- * @package DCarbone\SimpleConsulPHP\Base
+ * Class DateTime
+ * @package DCarbone\PHPConsulAPI
  */
-class ConsulDateTime extends \DateTime implements \JsonSerializable
+class DateTime extends \DateTime implements \JsonSerializable
 {
     /** @var string */
     private static $_defaultFormat = 'Y-m-d\TH:i:s.uO';
@@ -33,7 +33,7 @@ class ConsulDateTime extends \DateTime implements \JsonSerializable
         if (!is_string($format))
         {
             throw new \InvalidArgumentException(sprintf(
-                'SimpleConsulPHP - DateTime::setDefaultFormat expects argument 1 to be string, %s seen.',
+                'PHPConsulAPI - DateTime::setDefaultFormat expects argument 1 to be string, %s seen.',
                 gettype($format)
             ));
         }
@@ -41,7 +41,7 @@ class ConsulDateTime extends \DateTime implements \JsonSerializable
         if (false === @date($format))
         {
             throw new \InvalidArgumentException(sprintf(
-                'SimpleConsulPHP - DateTime::setDefaultFormat specified invalid format "%s".  Please see http://php.net/manual/en/function.date.php.',
+                'PHPConsulAPI - DateTime::setDefaultFormat specified invalid format "%s".  Please see http://php.net/manual/en/function.date.php.',
                 $format
             ));
         }

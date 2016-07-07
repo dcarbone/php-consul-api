@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP\KV;
+<?php namespace DCarbone\PHPConsulAPI\KV;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,11 +16,9 @@
    limitations under the License.
 */
 
-use RecursiveIterator;
-
 /**
  * Class KVTree
- * @package DCarbone\SimpleConsulPHP\KV
+ * @package DCarbone\PHPConsulAPI\KV
  */
 class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \ArrayAccess
 {
@@ -50,7 +48,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     /**
      * Return the current element
      * @link http://php.net/manual/en/iterator.current.php
-     * @return mixed Can return any type.
+     * @return KVTree|KVPair Can return any type.
      */
     public function current()
     {
@@ -70,7 +68,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     /**
      * Return the key of the current element
      * @link http://php.net/manual/en/iterator.key.php
-     * @return mixed scalar on success, or null on failure.
+     * @return string scalar on success, or null on failure.
      */
     public function key()
     {
@@ -111,7 +109,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     /**
      * Returns an iterator for the current entry.
      * @link http://php.net/manual/en/recursiveiterator.getchildren.php
-     * @return RecursiveIterator An iterator for the current entry.
+     * @return \RecursiveIterator An iterator for the current entry.
      */
     public function getChildren()
     {
@@ -131,7 +129,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     /**
      * Specify data which should be serialized to JSON
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by json_encode,which is a value of any type other than a resource.
+     * @return array data which can be serialized by json_encode,which is a value of any type other than a resource.
      */
     public function jsonSerialize()
     {
@@ -179,7 +177,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
      * Offset to retrieve
      * @link http://php.net/manual/en/arrayaccess.offsetget.php
      * @param mixed $offset The offset to retrieve.
-     * @return mixed Can return all value types.
+     * @return KVTree|KVPair
      */
     public function offsetGet($offset)
     {

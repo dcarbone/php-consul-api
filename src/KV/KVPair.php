@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP\KV;
+<?php namespace DCarbone\PHPConsulAPI\KV;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,32 +16,22 @@
    limitations under the License.
 */
 
-use DCarbone\SimpleConsulPHP\AbstractResponseModel;
+use DCarbone\PHPConsulAPI\AbstractDefinedCollection;
 
 /**
  * Class KVPair
- * @package DCarbone\SimpleConsulPHP\KV
+ * @package DCarbone\PHPConsulAPI\KV
  */
-class KVPair extends AbstractResponseModel
+class KVPair extends AbstractDefinedCollection
 {
-    /** @var array */
-    protected static $default = array(
-        'CreateIndex' => null,
-        'ModifyIndex' => null,
-        'LockIndex' => null,
-        'Key' => null,
-        'Flags' => null,
-        'Value' => null,
-        'Session' => null
-    );
-
     /**
      * KVPair constructor.
      * @param array $data
      */
     public function __construct(array $data = array())
     {
-        foreach($data + self::$default as $k=>$v)
+        parent::__construct();
+        foreach($data as $k=>$v)
         {
             switch($k)
             {
@@ -52,6 +42,22 @@ class KVPair extends AbstractResponseModel
                     $this[$k] = $v;
             }
         }
+    }
+
+    /**
+     * @return array
+     */
+    protected function getDefinition()
+    {
+        return array(
+            'CreateIndex' => null,
+            'ModifyIndex' => null,
+            'LockIndex' => null,
+            'Key' => null,
+            'Flags' => null,
+            'Value' => null,
+            'Session' => null
+        );
     }
 
     /**

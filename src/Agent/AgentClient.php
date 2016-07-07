@@ -1,4 +1,4 @@
-<?php namespace DCarbone\SimpleConsulPHP\Agent;
+<?php namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,12 +16,12 @@
    limitations under the License.
 */
 
-use DCarbone\SimpleConsulPHP\AbstractConsulClient;
-use DCarbone\SimpleConsulPHP\QueryOptions;
+use DCarbone\PHPConsulAPI\AbstractConsulClient;
+use DCarbone\PHPConsulAPI\QueryOptions;
 
 /**
  * Class AgentClient
- * @package DCarbone\SimpleConsulPHP\Agent
+ * @package DCarbone\PHPConsulAPI\Agent
  */
 class AgentClient extends AbstractConsulClient
 {

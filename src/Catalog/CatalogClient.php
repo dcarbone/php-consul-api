@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPConsulAPI\Status;
+<?php namespace DCarbone\PHPConsulAPI\Catalog;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,26 +20,17 @@ use DCarbone\PHPConsulAPI\AbstractConsulClient;
 use DCarbone\PHPConsulAPI\QueryOptions;
 
 /**
- * Class StatusClient
- * @package DCarbone\PHPConsulAPI\Status
+ * Class CatalogClient
+ * @package DCarbone\PHPConsulAPI\Catalog
  */
-class StatusClient extends AbstractConsulClient
+class CatalogClient extends AbstractConsulClient
 {
     /**
      * @param QueryOptions|null $queryOptions
      * @return array|null
      */
-    public function leader(QueryOptions $queryOptions = null)
+    public function services(QueryOptions $queryOptions = null)
     {
-        return $this->execute('get', 'v1/status/leader', $queryOptions);
-    }
-
-    /**
-     * @param QueryOptions|null $queryOptions
-     * @return array|null
-     */
-    public function peers(QueryOptions $queryOptions = null)
-    {
-        return $this->execute('get', 'v1/status/peers', $queryOptions);
+        return $this->execute('get', 'v1/catalog/services', $queryOptions);
     }
 }
