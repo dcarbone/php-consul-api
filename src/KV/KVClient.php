@@ -17,7 +17,12 @@
 */
 
 use DCarbone\PHPConsulAPI\AbstractConsulClient;
+use DCarbone\PHPConsulAPI\Error;
+use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPI\QueryOptions;
+use DCarbone\PHPConsulAPI\Request;
+use DCarbone\PHPConsulAPI\WriteMeta;
+use DCarbone\PHPConsulAPI\WriteOptions;
 
 /**
  * Class KVClient
@@ -28,100 +33,144 @@ class KVClient extends AbstractConsulClient
     /**
      * @param string $key Name of key to retrieve value for
      * @param QueryOptions $queryOptions
-     * @return KVPair|null Key Value Pair object or null if not found
+     * @return array(
+     *  @type KVPair|null kv object or null on error
+     *  @type QueryMeta|null query metadata object or null on error
+     *  @type Error|null error, if any
+     * )
      */
     public function get($key, QueryOptions $queryOptions = null)
     {
-        if (is_string($key))
+        if (!is_string($key))
         {
-            $data = $this->execute('GET', sprintf('v1/kv/%s', rawurlencode($key)), $queryOptions);
-        }
-        else
-        {
-            throw new \InvalidArgumentException(sprintf(
+            return [null, null, new Error('error', sprintf(
                 '%s::getValue - Key expected to be string, %s seen.',
                 get_class($this),
                 gettype($key)
-            ));
+            ))];
         }
 
-        if (null === $data || 0 === count($data))
-            return null;
+        $r = new Request('get', sprintf('v1/kv/%s', rawurlencode($key)), $this->_Config);
+        $r->setQueryOptions($queryOptions);
 
-        return new KVPair(reset($data), $this);
+        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        $qm = $this->buildQueryMeta($duration, $response);
+
+        if (null !== $err)
+            return [null, $qm, $err];
+
+        list($data, $err) = $this->decodeBody($response);
+
+        if (null !== $err)
+            return [null, $qm, $err];
+
+        return [new KVPair(reset($data)), $qm, null];
     }
 
     /**
      * @param string $prefix Prefix to search for.  Null returns all keys.
      * @param QueryOptions $queryOptions
-     * @return null|\string[]
+     * @return array(
+     *  @type string[]|null list of keys
+     *  @type QueryMeta|null query metadata
+     *  @type Error|null error, if any
+     * )
      */
     public function keys($prefix = null, QueryOptions $queryOptions = null)
     {
-        if (null === $queryOptions)
-            $queryOptions = new QueryOptions();
-
-        $queryOptions->setKeys(true);
-
-        if (null === $prefix)
+        if (null !== $prefix && !is_string($prefix))
         {
-            $data = $this->execute('GET', 'v1/kv', $queryOptions);
-        }
-        else if (is_string($prefix))
-        {
-            $data = $this->execute('GET', sprintf('v1/kv/%s', rawurlencode($prefix)), $queryOptions);
-        }
-        else
-        {
-            throw new \InvalidArgumentException(sprintf(
+            return [null, null, new Error('error', sprintf(
                 '%s::getKeys - Prefix expected to be empty or string, %s seen.',
                 get_class($this),
                 gettype($prefix)
-            ));
+            ))];
         }
 
-        return $data;
+        if (null === $prefix)
+            $r = new Request('get', 'v1/kv/', $this->_Config);
+        else
+            $r = new Request('get', sprintf('v1/kv/%s', rawurlencode($prefix)), $this->_Config);
+
+        $r->setQueryOptions($queryOptions);
+        $r->params()->set('keys', true);
+
+        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        $qm = $this->buildQueryMeta($duration, $response);
+
+        if (null !== $err)
+            return [null, $qm, $err];
+
+        list($data, $err) = $this->decodeBody($response);
+
+        return [$data, $qm, $err];
     }
 
     /**
      * @param KVPair $KVPair
-     * @param QueryOptions $queryOptions
-     * @return bool
+     * @param WriteOptions $writeOptions
+     * @return array(
+     *  @type WriteMeta write metadata
+     *  @type Error|null error, if any
+     * )
      */
-    public function put(KVPair $KVPair, QueryOptions $queryOptions = null)
+    public function put(KVPair $KVPair, WriteOptions $writeOptions = null)
     {
-        return (bool)$this->execute('PUT', sprintf('v1/kv/%s', rawurlencode($KVPair->getKey())), $queryOptions, $KVPair->getValue());
+        $r = new Request('put', sprintf('v1/kv/%s', rawurlencode($KVPair->getKey())), $this->_Config);
+        $r->setWriteOptions($writeOptions);
+        $r->setBody($KVPair);
+
+        list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
+        $wm = $this->buildWriteMeta($duration);
+
+        return [$wm, $err];
     }
 
     /**
      * @param string $key
-     * @param QueryOptions $queryOptions
-     * @return bool
+     * @param WriteOptions|null $writeOptions
+     * @return array(
+     *  @type WriteMeta metadata about write
+     *  @type Error|null error, if any
+     * )
      */
-    public function delete($key, QueryOptions $queryOptions = null)
+    public function delete($key, WriteOptions $writeOptions = null)
     {
-        return (bool)$this->execute('DELETE', sprintf('v1/kv/%s', rawurlencode($key)), $queryOptions);
+        $r = new Request('delete', sprintf('v1/kv/%s', rawurlencode($key)), $this->_Config);
+        $r->setWriteOptions($writeOptions);
+
+        list ($duration, $_, $err) = $this->requireOK($this->doRequest($r));
+        $wm = $this->buildWriteMeta($duration);
+
+        return [$wm, $err];
     }
 
     /**
      * @param null|string $prefix
      * @param QueryOptions $queryOptions
-     * @return KVPair[]|KVTree[]
+     * @return array(
+     *  @type KVPair[]|KVTree[]|null array of trees, values, or null on error
+     *  @type Error|null error, if any
+     * )
      */
     public function tree($prefix = null, QueryOptions $queryOptions = null)
     {
-        $data = $this->keys($prefix, $queryOptions);
+        list($keys, $_, $err) = $this->keys($prefix, $queryOptions);
 
-        if (null === $data)
-            return null;
+        if (null !== $err)
+            return [null, $err];
 
         $treeHierarchy = array();
-        foreach($data as $path)
+        foreach($keys as $path)
         {
             $slashPos = strpos($path, '/');
             if (false === $slashPos)
             {
-                $treeHierarchy[$path] = $this->get($path, $queryOptions);
+                list($kv, $_, $err) = $this->get($path, $queryOptions);
+                if (null !== $err)
+                    return [null, $err];
+
+                $treeHierarchy[$path] = $kv;
                 continue;
             }
 
@@ -132,11 +181,19 @@ class KVClient extends AbstractConsulClient
 
             // We're still in the path definition...
             if ('/' === substr($path, -1))
+            {
                 $treeHierarchy[$root][$path] = new KVTree($path);
+            }
             // We've arrived at an actual key
             else
-                $treeHierarchy[$root][$path] = $this->get($path);
+            {
+                list($kv, $_, $err) = $this->get($path, $queryOptions);
+                if (null !== $err)
+                    return [null, $err];
+
+                $treeHierarchy[$root][$path] = $kv;
+            }
         }
-        return $treeHierarchy;
+        return [$treeHierarchy, null];
     }
 }

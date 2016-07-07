@@ -27,15 +27,18 @@ class Config extends AbstractDefinedStrictCollection
      */
     public static function newDefaultConfig()
     {
-        $conf = new static;
+        $conf = new static([
+            'Address' => '127.0.0.1:8500',
+            'Scheme' => 'http'
+        ]);
 
-        if ($addr = static::_tryGetEnvParam('CONSUL_HTTP_ADDR'))
+        if (false !== ($addr = static::_tryGetEnvParam('CONSUL_HTTP_ADDR')))
             $conf->setAddress($addr);
         
-        if ($token = static::_tryGetEnvParam('CONSUL_HTTP_TOKEN'))
+        if (false !== ($token = static::_tryGetEnvParam('CONSUL_HTTP_TOKEN')))
             $conf->setToken($token);
 
-        if ($auth = static::_tryGetEnvParam('CONSUL_HTTP_AUTH'))
+        if (false !== ($auth = static::_tryGetEnvParam('CONSUL_HTTP_AUTH')))
             $conf->setHttpAuth($auth);
 
         if ($ssl = (bool)static::_tryGetEnvParam('CONSUL_HTTP_SSL'))
@@ -53,16 +56,16 @@ class Config extends AbstractDefinedStrictCollection
     protected function getDefinition()
     {
         return array(
-            'Address' => '127.0.0.1:8500',
-            'Scheme' => 'http',
+            'Address' => null,
+            'Scheme' => null,
             'Datacenter' => null,
             'HttpAuth' => null,
-            'WaitTime' => 30,
+            'WaitTime' => null,
             'Token' => null,
             'CAFile' => null,
             'CertFile' => null,
             'KeyFile' => null,
-            'InsecureSkipVerify' => false,
+            'InsecureSkipVerify' => null,
         );
     }
 
@@ -71,7 +74,7 @@ class Config extends AbstractDefinedStrictCollection
      */
     public function getAddress()
     {
-        return $this->_storage['Address'];
+        return (string)$this->_storage['Address'];
     }
 
     /**
@@ -89,7 +92,7 @@ class Config extends AbstractDefinedStrictCollection
      */
     public function getScheme()
     {
-        return $this->_storage['Scheme'];
+        return (string)$this->_storage['Scheme'];
     }
 
     /**
@@ -107,7 +110,7 @@ class Config extends AbstractDefinedStrictCollection
      */
     public function getDatacenter()
     {
-        return $this->_storage['Datacenter'];
+        return (string)$this->_storage['Datacenter'];
     }
 
     /**
@@ -168,7 +171,7 @@ class Config extends AbstractDefinedStrictCollection
      */
     public function getWaitTime()
     {
-        return $this->_storage['WaitTime'];
+        return (int)$this->_storage['WaitTime'];
     }
 
     /**
@@ -186,7 +189,7 @@ class Config extends AbstractDefinedStrictCollection
      */
     public function getToken()
     {
-        return $this->_storage['Token'];
+        return (string)$this->_storage['Token'];
     }
 
     /**
@@ -204,7 +207,7 @@ class Config extends AbstractDefinedStrictCollection
      */
     public function getCAFile()
     {
-        return $this->_storage['CAFile'];
+        return (string)$this->_storage['CAFile'];
     }
 
     /**
@@ -222,7 +225,7 @@ class Config extends AbstractDefinedStrictCollection
      */
     public function getCertFile()
     {
-        return $this->_storage['CertFile'];
+        return (string)$this->_storage['CertFile'];
     }
 
     /**
@@ -240,7 +243,7 @@ class Config extends AbstractDefinedStrictCollection
      */
     public function getKeyFile()
     {
-        return $this->_storage['KeyFile'];
+        return (string)$this->_storage['KeyFile'];
     }
 
     /**

@@ -18,26 +18,26 @@
 
 /**
  * Class QueryOptions
- * @package DCarbone\PHPConsulAPI\Query
+ * @package DCarbone\PHPConsulAPI
  */
-class QueryOptions extends AbstractCollection
+class QueryOptions extends AbstractDefinedStrictCollection
 {
-    /**
-     * @return bool
-     */
-    public function getKeys()
-    {
-        return (bool)$this['keys'];
-    }
+    use ConsulHttpParamContainerTrait;
 
     /**
-     * @param bool $keys
-     * @return $this
+     * @return array
      */
-    public function setKeys($keys)
+    protected function getDefinition()
     {
-        $this['keys'] = (bool)$keys;
-        return $this;
+        return array(
+            'Datacenter' => null,
+            'AllowStale' => null,
+            'RequireConsistent' => null,
+            'WaitIndex' => null,
+            'WaitTime' => null,
+            'Token' => null,
+            'Near' => null,
+        );
     }
 
     /**
@@ -45,7 +45,7 @@ class QueryOptions extends AbstractCollection
      */
     public function getDatacenter()
     {
-        return $this['Datacenter'];
+        return (string)$this->_storage['Datacenter'];
     }
 
     /**
@@ -54,7 +54,7 @@ class QueryOptions extends AbstractCollection
      */
     public function setDatacenter($datacenter)
     {
-        $this['Datacenter'] = $datacenter;
+        $this->_storage['Datacenter'] = $datacenter;
         return $this;
     }
 
@@ -63,7 +63,7 @@ class QueryOptions extends AbstractCollection
      */
     public function getAllowStale()
     {
-        return (bool)$this['AllowStale'];
+        return (bool)$this->_storage['AllowStale'];
     }
 
     /**
@@ -72,7 +72,7 @@ class QueryOptions extends AbstractCollection
      */
     public function setAllowStale($allowStale)
     {
-        $this['AllowStale'] = (bool)$allowStale;
+        $this->_storage['AllowStale'] = $allowStale;
         return $this;
     }
 
@@ -81,7 +81,7 @@ class QueryOptions extends AbstractCollection
      */
     public function getWaitIndex()
     {
-        return (int)$this['WaitIndex'];
+        return (int)$this->_storage['WaitIndex'];
     }
 
     /**
@@ -90,7 +90,25 @@ class QueryOptions extends AbstractCollection
      */
     public function setWaitIndex($waitIndex)
     {
-        $this['WaitIndex'] = (int)$waitIndex;
+        $this->_storage['WaitIndex'] = $waitIndex;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWaitTime()
+    {
+        return (int)$this->_storage['WaitTime'];
+    }
+
+    /**
+     * @param int $waitTime
+     * @return $this
+     */
+    public function setWaitTime($waitTime)
+    {
+        $this->_storage['WaitTime'] = $waitTime;
         return $this;
     }
 
@@ -99,7 +117,7 @@ class QueryOptions extends AbstractCollection
      */
     public function getToken()
     {
-        return $this['Token'];
+        return (string)$this->_storage['Token'];
     }
 
     /**
@@ -108,7 +126,7 @@ class QueryOptions extends AbstractCollection
      */
     public function setToken($token)
     {
-        $this['Token'] = $token;
+        $this->_storage['Token'] = $token;
         return $this;
     }
 
@@ -117,7 +135,7 @@ class QueryOptions extends AbstractCollection
      */
     public function getNear()
     {
-        return $this['Near'];
+        return (string)$this->_storage['Near'];
     }
 
     /**
@@ -126,7 +144,7 @@ class QueryOptions extends AbstractCollection
      */
     public function setNear($near)
     {
-        $this['Near'] = $near;
+        $this->_storage['Near'] = $near;
         return $this;
     }
 
@@ -135,7 +153,7 @@ class QueryOptions extends AbstractCollection
      */
     public function getRequireConsistent()
     {
-        return (bool)$this['RequireConsistent'];
+        return (bool)$this->_storage['RequireConsistent'];
     }
 
     /**
@@ -144,73 +162,7 @@ class QueryOptions extends AbstractCollection
      */
     public function setRequireConsistent($requireConsistent)
     {
-        $this['RequireConsistent'] = (bool)$requireConsistent;
+        $this->_storage['RequireConsistent'] = $requireConsistent;
         return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function buildHttpQueryArray()
-    {
-        $params = array();
-        foreach($this as $k=>$v)
-        {
-            // "keys" is a special one who's actual value seems to be ignored...
-            if ('keys' === $k)
-            {
-                if (true === $v)
-                    $params['keys'] = true;
-
-                continue;
-            }
-
-            if (null !== $v)
-            {
-                $value = $v;
-
-                switch($k)
-                {
-                    case 'Datacenter':
-                        $key = 'dc';
-                        break;
-                    case 'AllowStale':
-                        $key = 'stale';
-                        break;
-                    case 'RequireConsistent':
-                        $key = 'consistent';
-                        break;
-                    case 'WaitIndex':
-                        $key = 'index';
-                        break;
-                    case 'WaitTime':
-                        $key = 'wait';
-                        break;
-
-                    default:
-                        $key = strtolower($k);
-                }
-
-                $params[$key] = $value;
-            }
-        }
-
-        return $params;
-    }
-
-    /**
-     * @return string
-     */
-    public function buildHttpQueryString()
-    {
-        return (string)$this;
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return http_build_query($this->buildHttpQueryArray());
     }
 }

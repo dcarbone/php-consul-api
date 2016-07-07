@@ -40,6 +40,20 @@ abstract class AbstractCollection implements \JsonSerializable, \Serializable, \
     }
 
     /**
+     * @param array $data
+     * @return static
+     */
+    public static function fromArray(array $data = array())
+    {
+        $obj = new static;
+        foreach($data as $k => $v)
+        {
+            $obj[$k] = $v;
+        }
+        return $obj;
+    }
+
+    /**
      * @return mixed
      */
     public function reset()

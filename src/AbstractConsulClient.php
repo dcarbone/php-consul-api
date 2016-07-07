@@ -16,261 +16,133 @@
    limitations under the License.
 */
 
+use DCarbone\CURLHeaderExtractor;
+
 /**
  * Class AbstractConsulClient
  * @package DCarbone\PHPConsulAPI\Base
  */
 abstract class AbstractConsulClient
 {
-    /** @var string */
-    private $_lastUrl = null;
-    /** @var array */
-    private $_lastInfo = array();
-    /** @var string */
-    private $_lastError = '';
-
     /** @var Config */
-    private $_config;
-
-    /** @var array */
-    private static $_defaultCurlOpts = array(
-        CURLOPT_RETURNTRANSFER => true,
-        CURLINFO_HEADER_OUT => true,
-        CURLOPT_HTTPHEADER => array(
-            'Content-Type: application/json',
-            'Accept: application/json',
-        )
-    );
-
-    /** @var array */
-    private $_curlOpts = array();
+    protected $_Config;
 
     /**
      * AbstractConsulClient constructor.
      * @param Config $config
      */
-    public function __construct(Config $config = null)
+    public function __construct(Config $config)
     {
-        if (null === $config)
-            $config = Config::newDefaultConfig();
-
-        $this->_config = $config;
+        $this->_Config = $config;
     }
 
     /**
-     * @return string
+     * @param array $requestResult
+     * @return array(
+     *  @type int query duration in microseconds
+     *  @type HttpResponse|null response object
+     *  @type Error|null error, if any
+     * )
      */
-    public function getLastUrl()
+    protected function requireOK(array $requestResult)
     {
-        return $this->_lastUrl;
-    }
+        /** @var int $duration */
+        /** @var HttpResponse|null $response */
+        /** @var Error|null $err */
 
-    /**
-     * @return array
-     */
-    public function getLastInfo()
-    {
-        return $this->_lastInfo;
-    }
+        list($duration, $response, $err) = $requestResult;
 
-    /**
-     * @return string
-     */
-    public function getLastError()
-    {
-        return $this->_lastError;
-    }
+        if (null !== $err)
+            return $requestResult;
 
-    /**
-     * @param string $method
-     * @param string $uri
-     * @param QueryOptions $queryOptions
-     * @param string $body
-     * @return array|null
-     */
-    protected function execute($method, $uri, QueryOptions $queryOptions = null, $body = null)
-    {
-        if (!is_string($method))
-            throw new \InvalidArgumentException(sprintf('%s - Method must be string', get_class($this), gettype($method)));
-
-        if ('' === ($method = trim($method)))
-            throw new \InvalidArgumentException(sprintf('%s - Method must be non-empty string', get_class($this)));
-
-        if (null === $queryOptions)
-            $queryOptions = new QueryOptions();
-
-        $this->_addConfigQueryOptions($queryOptions);
-
-        $this->_curlOpts = self::$_defaultCurlOpts + $this->_config->getCurlOptArray();
-
-        switch(strtolower($method))
-        {
-            case 'get':
-                $this->_lastUrl = $this->_GET($uri, $queryOptions);
-                break;
-            case 'put':
-                $this->_lastUrl = $this->_PUT($uri, $queryOptions, $body);
-                break;
-            case 'delete':
-                $this->_lastUrl = $this->_DELETE($uri, $queryOptions, $body);
-                break;
-
-            default:
-                throw new \UnexpectedValueException(sprintf(
-                    '%s - PHPConsulAPI currently does not support queries made using the "%s" method.',
-                    get_class($this),
-                    $method
-                ));
-        };
-
-        $ch = curl_init($this->_lastUrl);
-
-        if (!curl_setopt_array($ch, $this->_curlOpts))
-        {
-            throw new \DomainException(sprintf(
-                '%s - Unable to set specified Curl options, please ensure you\'re passing in valid constants.  Specified options: %s',
+        if (200 !== $response->httpCode)
+            return [$duration, $response, new Error('warn', sprintf(
+                '%s - Error seen while executing "%s".  Response code: %d.  Message: %s',
                 get_class($this),
-                json_encode($this->_curlOpts)
-            ));
+                $response->url,
+                $response->httpCode,
+                $response->curlError
+            ))];
+
+        return [$duration, $response, null];
+    }
+
+    /**
+     * @param Request $r
+     * @return array(
+     *  @type int duration in microseconds
+     *  @type HttpResponse|null http response
+     *  @type Error|null any seen errors
+     * )
+     */
+    protected function doRequest(Request $r)
+    {
+        $rt = microtime(true);
+        /** @var HttpResponse $response */
+        /** @var Error|null $err */
+        list($response, $err) = $r->execute();
+        $duration = (int)((microtime(true) - $rt) * 1000000);
+
+        if (null !== $err)
+            return [$duration, null, $err];
+
+        return [$duration, $response, null];
+    }
+
+    /**
+     * @param int $duration
+     * @param HttpResponse $response
+     * @return QueryMeta
+     */
+    protected function buildQueryMeta($duration, HttpResponse $response)
+    {
+        $qm = new QueryMeta();
+
+        $qm->requestTime = $duration;
+        $qm->requestUrl = $response->url;
+
+        foreach($response->responseHeaders as $header)
+        {
+            if (isset($header['X-Consul-Index']))
+                $qm->lastIndex = (int)$header['X-Consul-Index'];
+
+            if (isset($header['X-Consul-Knownleader']))
+                $qm->knownLeader = (bool)$header['X-Consul-Knownleader'];
+
+            if (isset($header['X-Consul-Lastcontact']))
+                $qm->lastContact = (int)$header['X-Consul-Lastcontact'] * 1000;
         }
 
-        $data = curl_exec($ch);
-        $this->_lastInfo = curl_getinfo($ch);
-        $this->_lastError = curl_error($ch);
-        curl_close($ch);
-
-        return $this->parseResponse($data);
+        return $qm;
     }
 
     /**
-     * @param string|bool $data
+     * @param int $duration
+     * @return WriteMeta
+     */
+    protected function buildWriteMeta($duration)
+    {
+        $wm = new WriteMeta();
+        $wm->requestTime = $duration;
+        return $wm;
+    }
+
+    /**
+     * @param HttpResponse $response
      * @return array
      */
-    protected function parseResponse($data)
+    protected function decodeBody(HttpResponse $response)
     {
-        if (is_string($data))
-        {
-            if (200 === $this->_lastInfo['http_code'])
-            {
-                $data = @json_decode($data, true);
-                $err = json_last_error();
+        $data = @json_decode($response->body, true);
+        $err = json_last_error();
 
-                if (JSON_ERROR_NONE === $err)
-                    return $data;
+        if (JSON_ERROR_NONE === $err)
+            return [$data, null];
 
-                throw new \DomainException(sprintf(
-                    '%s - Unable to parse response as JSON.  Message: %s',
-                    get_class($this),
-                    PHP_VERSION_ID >= 50500 ? json_last_error_msg() : (string)$err
-                ));
-            }
-
-            if (404 === $this->_lastInfo['http_code'])
-                return null;
-
-            if ('' === $data)
-            {
-                throw new \UnexpectedValueException(sprintf(
-                    '%s - Error seen while executing "%s".  Response code: %d.  Message: %s',
-                    get_class($this),
-                    $this->_lastUrl,
-                    $this->_lastInfo['http_code'],
-                    $this->_lastError
-                ));
-            }
-
-            throw new \UnexpectedValueException(sprintf(
-                '%s - Error seen while executing "%s": %s.',
-                get_class($this),
-                $this->_lastUrl,
-                $data
-            ));
-        }
-
-        throw new \UnexpectedValueException(sprintf(
-            '%s - Invalid response seen executing query "%s": %s',
+        return [null, new Error('error', sprintf(
+            '%s - Unable to parse response as JSON.  Message: %s',
             get_class($this),
-            $this->_lastUrl,
-            $this->_lastError
-        ));
-    }
-
-    /**
-     * @return bool
-     */
-    protected function requireOK()
-    {
-        return 200 === $this->_lastInfo['http_code'];
-    }
-
-    /**
-     * @param QueryOptions $queryOptions
-     */
-    private function _addConfigQueryOptions(QueryOptions $queryOptions)
-    {
-        if (null !== ($token = $this->_config->getToken()) && null === $queryOptions->getToken())
-            $queryOptions->setToken($token);
-
-        if (null !== ($dc = $this->_config->getDatacenter()) && null === $queryOptions->getDatacenter())
-            $queryOptions->setDatacenter($dc);
-    }
-    
-    /**
-     * @param string $uri
-     * @param QueryOptions $queryOptions
-     * @return string
-     */
-    private function _GET($uri, QueryOptions $queryOptions)
-    {
-        $this->_curlOpts[CURLOPT_HTTPGET] = true;
-
-        return $this->_buildUrl($uri, $queryOptions);
-    }
-
-    /**
-     * @param string $uri
-     * @param QueryOptions $queryOptions
-     * @param string $body
-     * @return string
-     */
-    private function _PUT($uri, QueryOptions $queryOptions, $body = null)
-    {
-        $this->_curlOpts[CURLOPT_CUSTOMREQUEST] = 'PUT';
-
-        if (null !== $body)
-            $this->_curlOpts[CURLOPT_POSTFIELDS] = $body;
-
-        return $this->_buildUrl($uri, $queryOptions);
-    }
-
-    /**
-     * @param string $uri
-     * @param QueryOptions $queryOptions
-     * @param string $body
-     * @return string
-     */
-    private function _DELETE($uri, QueryOptions $queryOptions, $body = null)
-    {
-        $this->_curlOpts[CURLOPT_CUSTOMREQUEST] = 'DELETE';
-
-        if (null !== $body)
-            $this->_curlOpts[CURLOPT_POSTFIELDS] = $body;
-
-        return $this->_buildUrl($uri, $queryOptions);
-    }
-
-    /**
-     * @param string $uri
-     * @param QueryOptions $queryOptions
-     * @return string
-     */
-    private function _buildUrl($uri, QueryOptions $queryOptions)
-    {
-        return sprintf(
-            '%s/%s?%s',
-            $this->_config->compileAddress(),
-            ltrim(trim($uri), "/"),
-            $queryOptions
-        );
+            PHP_VERSION_ID >= 50500 ? json_last_error_msg() : (string)$err
+        ))];
     }
 }
