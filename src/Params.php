@@ -34,4 +34,47 @@ class Params extends AbstractCollection
         $this[$param] = $value;
         return $this;
     }
+
+    /**
+     * Offset to set
+     * @link http://php.net/manual/en/arrayaccess.offsetset.php
+     * @param mixed $offset The offset to assign the value to.
+     * @param mixed $value The value to set.
+     * @return void
+     */
+    public function offsetSet($offset, $value)
+    {
+        if (is_string($offset))
+        {
+            switch(strtolower($offset))
+            {
+                case 'datacenter':
+                case 'dc':
+                    $offset = 'Datacenter';
+                    break;
+
+                case 'allowstale':
+                case 'stale':
+                    $offset = 'AllowStale';
+                    break;
+
+                case 'requireconsistent':
+                case 'consistent':
+                    $offset = 'RequireConsistent';
+                    break;
+
+                case 'waitindex':
+                case 'index':
+                    $offset = 'WaitIndex';
+                    break;
+
+                case 'waittime':
+                case 'wait':
+                    $offset = 'WaitTime';
+                    break;
+            }
+        }
+
+        parent::offsetSet($offset, $value);
+    }
 }

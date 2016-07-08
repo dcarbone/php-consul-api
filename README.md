@@ -4,7 +4,7 @@ PHP client implementation for the Consul API
 
 The primary purpose of this lib is to provide a dependency-free way of interacting with [Consul](https://www.consul.io/).
 
-It is in alpha stages of development.  Currently the only thing it can do is query KV data.
+It is in alpha stages of development.
 
 This library is loosely based upon the [official GO client](https://github.com/hashicorp/consul/tree/master/api).
 

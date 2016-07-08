@@ -123,7 +123,6 @@ class HttpResponse
         $this->localPort = $curlInfo['local_port'];
         $this->requestHeader = $curlInfo['request_header'];
 
-
         $this->curlError = $curlError;
 
         if (is_string($response))
@@ -133,10 +132,12 @@ class HttpResponse
     /**
      * @return array
      */
-    public function parseRequestHeaders()
+    public function getRequestHeaderArray()
     {
         if (null === $this->_requestHeaderArray)
         {
+            $this->_requestHeaderArray = array();
+
             foreach(explode("\r\n", $this->requestHeader) as $header)
             {
                 if ('' === $header)

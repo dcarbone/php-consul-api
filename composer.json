@@ -12,7 +12,8 @@
   ],
 
   "keywords": [
-    "consul"
+    "consul",
+    "consul-api"
   ],
 
   "require": {

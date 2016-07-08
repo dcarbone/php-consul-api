@@ -54,6 +54,7 @@ abstract class AbstractConsulClient
             return $requestResult;
 
         if (200 !== $response->httpCode)
+        {
             return [$duration, $response, new Error('warn', sprintf(
                 '%s - Error seen while executing "%s".  Response code: %d.  Message: %s',
                 get_class($this),
@@ -61,6 +62,7 @@ abstract class AbstractConsulClient
                 $response->httpCode,
                 $response->curlError
             ))];
+        }
 
         return [$duration, $response, null];
     }
