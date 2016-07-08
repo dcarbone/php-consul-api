@@ -18,7 +18,6 @@
 
 use DCarbone\PHPConsulAPI\AbstractConsulClient;
 use DCarbone\PHPConsulAPI\QueryMeta;
-use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Request;
 
 /**
