@@ -8,6 +8,18 @@ It is in alpha stages of development.  Currently the only thing it can do is que
 
 This library is loosely based upon the [official GO client](https://github.com/hashicorp/consul/tree/master/api).
 
+## Composer
+
+This lib is designed to be used with [Composer](https://getcomposer.org)
+
+Require Entry:
+
+```json
+{
+  "dcarbone/php-consul-api": "dev-master"
+}
+```
+
 ## KV
 
 All interactions with the `v1/kv` endpoint are done via the [KVClient](./src/KV/KVClient.php) class.
