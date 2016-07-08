@@ -17,7 +17,9 @@
 */
 
 use DCarbone\PHPConsulAPI\AbstractConsulClient;
+use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPI\QueryOptions;
+use DCarbone\PHPConsulAPI\Request;
 
 /**
  * Class AgentClient
@@ -25,155 +27,170 @@ use DCarbone\PHPConsulAPI\QueryOptions;
  */
 class AgentClient extends AbstractConsulClient
 {
+    /** @var null|AgentSelf */
+    private $_self = null;
+
     /**
-     * @param QueryOptions $queryOptions
-     * @return AgentCheck[]|null
+     * @return array(
+     * @type AgentSelf|null agent info or null on error
+     * @type QueryMeta query metadata
+     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
+     * )
      */
-    public function checks(QueryOptions $queryOptions = null)
+    public function self()
     {
-        $data = $this->execute('get', 'v1/agent/checks', $queryOptions);
-        if (null === $data)
-            return null;
+        $r = new Request('get', 'v1/agent/self', $this->_Config);
+
+        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        $qm = $this->buildQueryMeta($duration, $response);
+
+        if (null !== $err)
+            return [null, $qm, $err];
+
+        list($data, $err) = $this->decodeBody($response);
+
+        if (null !== $err)
+            return [null, $qm, $err];
+
+        $this->_self = new AgentSelf($data);
+
+        return [new AgentSelf($data), $qm, null];
+    }
+
+    /**
+     * @return array(
+     *  @type string name of node or null on error
+     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
+     * )
+     */
+    public function nodeName()
+    {
+        if (null === $this->_self)
+        {
+            list($_, $_, $err) = $this->self();
+            if (null !== $err)
+                return ['', $err];
+        }
+
+        return [$this->_self->getConfig()->getNodeName(), null];
+    }
+
+    /**
+     * @return array(
+     *  @type AgentCheck[]|null array of agent checks or null on error
+     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
+     * )
+     */
+    public function checks()
+    {
+        $r = new Request('get', 'v1/agent/checks', $this->_Config);
+
+        list($_, $response, $err) = $this->requireOK($this->doRequest($r));
+
+        if (null !== $err)
+            return [null, $err];
+
+        list($data, $err) = $this->decodeBody($response);
+
+        if (null !== $err)
+            return [null, $err];
 
         $checks = array();
         foreach($data as $k => $v)
         {
             $checks[$k] = new AgentCheck($v);
         }
-        return $checks;
+
+        return [$checks, null];
     }
 
     /**
-     * @param QueryOptions $queryOptions
-     * @return AgentService[]|null
+     * @return array(
+     *  @type AgentService[]|null list of agent services or null on error
+     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
+     * )
      */
-    public function services(QueryOptions $queryOptions = null)
+    public function services()
     {
-        $data = $this->execute('get', 'v1/agent/services', $queryOptions);
-        if (null === $data)
-            return null;
+        $r = new Request('get', 'v1/agent/services', $this->_Config);
+
+        list($_, $response, $err) = $this->requireOK($this->doRequest($r));
+
+        if (null !== $err)
+            return [null, $err];
+
+        list($data, $err) = $this->decodeBody($response);
+
+        if (null !== $err)
+            return [null, $err];
 
         $services = array();
         foreach($data as $k => $v)
         {
             $services[$k] = new AgentService($v);
         }
-        return $services;
+
+        return [$services, null];
     }
 
     /**
-     * @param QueryOptions $queryOptions
-     * @return AgentMember[]|null
+     * @return array(
+     *  @type AgentMember[]|null array of agent members or null on error
+     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
+     * )
      */
-    public function members(QueryOptions $queryOptions = null)
+    public function members()
     {
-        $data = $this->execute('get', 'v1/agent/members', $queryOptions);
-        if (null === $data)
-            return null;
+        $r = new Request('get', 'v1/agent/members', $this->_Config);
+        
+        list($_, $response, $err) = $this->requireOK($this->doRequest($r));
+
+        if (null !== $err)
+            return [null, $err];
+
+        list($data, $err) = $this->decodeBody($response);
+
+        if (null !== $err)
+            return [null, $err];
 
         $members = array();
         foreach($data as $v)
         {
             $members[] = new AgentMember($v);
         }
-        return $members;
+
+        return [$members, null];
     }
 
     /**
-     * @param QueryOptions $queryOptions
-     * @return AgentSelf|null
-     */
-    public function self(QueryOptions $queryOptions = null)
-    {
-        $data = $this->execute('get', 'v1/agent/self', $queryOptions);
-        if (null === $data)
-            return null;
-
-        return new AgentSelf($data);
-    }
-
-    /**
-     * @param AgentCheckRegistration $agentCheckRegistration
-     * @param QueryOptions|null $queryOptions
-     * @return bool
-     */
-    public function checkRegister(AgentCheckRegistration $agentCheckRegistration, QueryOptions $queryOptions = null)
-    {
-        $this->execute('put', 'v1/agent/check/register', $queryOptions, json_encode($agentCheckRegistration));
-
-        return $this->requireOK();
-    }
-
-    /**
-     * @param string $checkID
-     * @param QueryOptions|null $queryOptions
-     * @return bool
-     */
-    public function checkDeregister($checkID, QueryOptions $queryOptions = null)
-    {
-        $this->execute('put', sprintf('v1/agent/check/deregister/%s', rawurlencode($checkID)), $queryOptions);
-
-        return $this->requireOK();
-    }
-
-    /**
-     * Set non-ttl check's state to passing with optional note
+     * Register a service within Consul
      *
-     * @param string $checkID
-     * @param null|string $note
-     * @param QueryOptions|null $queryOptions
-     * @return bool
+     * @param AgentServiceRegistration $agentServiceRegistration
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function checkPass($checkID, $note = null, QueryOptions $queryOptions = null)
+    public function serviceRegister(AgentServiceRegistration $agentServiceRegistration)
     {
-        if (null === $queryOptions)
-            $queryOptions = new QueryOptions();
+        $r = new Request('put', 'v1/agent/service/register', $this->_Config);
+        $r->setBody($agentServiceRegistration);
 
-        $queryOptions['note'] = $note;
-        
-        $this->execute('get', sprintf('v1/agent/check/pass/%s', rawurlencode($checkID)), $queryOptions);
+        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
-        return $this->requireOK();
+        return $err;
     }
 
     /**
-     * Set non-ttl check's state to warning with optional note
+     * Remove a service from Consul
      *
-     * @param string $checkID
-     * @param null|string $note
-     * @param QueryOptions|null $queryOptions
-     * @return bool
+     * @param string $serviceID
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function checkWarn($checkID, $note = null, QueryOptions $queryOptions = null)
+    public function serviceDeregister($serviceID)
     {
-        if (null === $queryOptions)
-            $queryOptions = new QueryOptions();
+        $r = new Request('put', sprintf('v1/agent/service/deregister/%s', rawurlencode($serviceID)), $this->_Config);
 
-        $queryOptions['note'] = $note;
+        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
-        $this->execute('get', sprintf('v1/agent/check/warn/%s', rawurlencode($checkID)), $queryOptions);
-
-        return $this->requireOK();
-    }
-
-    /**
-     * Set non-ttl check's state to critical with optional note
-     *
-     * @param string $checkID
-     * @param null|string $note
-     * @param QueryOptions|null $queryOptions
-     * @return bool
-     */
-    public function checkFail($checkID, $note = null, QueryOptions $queryOptions = null)
-    {
-        if (null === $queryOptions)
-            $queryOptions = new QueryOptions();
-
-        $queryOptions['note'] = $note;
-
-        $this->execute('get', sprintf('v1/agent/check/fail/%s', rawurlencode($checkID)), $queryOptions);
-
-        return $this->requireOK();
+        return $err;
     }
 
     /**
@@ -181,12 +198,11 @@ class AgentClient extends AbstractConsulClient
      *
      * @param string $checkID
      * @param string $note
-     * @param QueryOptions|null $queryOptions
-     * @return bool
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function passTTLCheck($checkID, $note, QueryOptions $queryOptions = null)
+    public function passTTL($checkID, $note)
     {
-        return $this->updateTTLCheck($checkID, $note, 'passing', $queryOptions);
+        return $this->updateTTL($checkID, $note, 'passing');
     }
 
     /**
@@ -194,12 +210,11 @@ class AgentClient extends AbstractConsulClient
      *
      * @param string $checkID
      * @param string $note
-     * @param QueryOptions|null $queryOptions
-     * @return bool
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function warnTTLCheck($checkID, $note, QueryOptions $queryOptions = null)
+    public function warnTTL($checkID, $note)
     {
-        return $this->updateTTLCheck($checkID, $note, 'warning', $queryOptions);
+        return $this->updateTTL($checkID, $note, 'warning');
     }
 
     /**
@@ -207,12 +222,11 @@ class AgentClient extends AbstractConsulClient
      *
      * @param string $checkID
      * @param string $note
-     * @param QueryOptions|null $queryOptions
-     * @return bool
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function failTTLCheck($checkID, $note, QueryOptions $queryOptions = null)
+    public function failTTL($checkID, $note)
     {
-        return $this->updateTTLCheck($checkID, $note, 'critical', $queryOptions);
+        return $this->updateTTL($checkID, $note, 'critical');
     }
 
     /**
@@ -221,142 +235,180 @@ class AgentClient extends AbstractConsulClient
      * @param string $checkID
      * @param string $output
      * @param string $status
-     * @param QueryOptions|null $queryOptions
-     * @return bool
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function updateTTLCheck($checkID, $output, $status, QueryOptions $queryOptions = null)
+    public function updateTTL($checkID, $output, $status)
     {
-        $update = new AgentCheckUpdate(['Output' => $output, 'Status' => $status]);
+        $r = new Request('put', sprintf('v1/agent/check/update/%s', rawurlencode($checkID)), $this->_Config);
+        $r->setBody(new AgentCheckUpdate(['Output' => $output, 'Status' => $status]));
 
-        $this->execute('put', sprintf('v1/agent/check/update/%s', rawurlencode($checkID)), $queryOptions, json_encode($update));
+        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
-        return $this->requireOK();
+        return $err;
     }
 
     /**
-     * Register a service within Consul
-     *
-     * @param AgentServiceRegistration $agentServiceRegistration
-     * @param QueryOptions|null $queryOptions
-     * @return bool
+     * @param AgentCheckRegistration $agentCheckRegistration
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function serviceRegister(AgentServiceRegistration $agentServiceRegistration, QueryOptions $queryOptions = null)
+    public function checkRegister(AgentCheckRegistration $agentCheckRegistration)
     {
-        $this->execute('put', 'v1/agent/service/register', $queryOptions, json_encode($agentServiceRegistration));
+        $r = new Request('put', 'v1/agent/check/register', $this->_Config);
+        $r->setBody($agentCheckRegistration);
 
-        return $this->requireOK();
+        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
+
+        return $err;
     }
 
     /**
-     * Remove a service from Consul
-     *
-     * @param string $serviceID
-     * @param QueryOptions|null $queryOptions
-     * @return bool
+     * @param string $checkID
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function serviceDeregister($serviceID, QueryOptions $queryOptions = null)
+    public function checkDeregister($checkID)
     {
-        $this->execute('put', sprintf('v1/agent/service/deregister/%s', rawurlencode($serviceID)), $queryOptions);
+        $r = new Request('put', sprintf('v1/agent/check/deregister/%s', rawurlencode($checkID)), $this->_Config);
 
-        return $this->requireOK();
+        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
+
+        return $err;
     }
 
     /**
      * @param string $addr
      * @param bool $wan
-     * @param QueryOptions|null $queryOptions
-     * @return bool
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function join($addr, $wan = false, QueryOptions $queryOptions = null)
+    public function join($addr, $wan = false)
     {
-        if (null === $queryOptions)
-            $queryOptions = new QueryOptions();
+        $r = new Request('put', sprintf('v1/agent/join/%s', rawurlencode($addr)), $this->_Config);
+        if ($wan)
+            $r->params()->set('wan', 1);
 
-        $queryOptions['wan'] = $wan;
+        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
-        $this->execute('put', sprintf('v1/agent/join/%s', $addr), $queryOptions);
-
-        return $this->requireOK();
+        return $err;
     }
 
     /**
      * @param string $node
-     * @param QueryOptions|null $queryOptions
-     * @return bool
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function forceLeave($node, QueryOptions $queryOptions = null)
+    public function forceLeave($node)
     {
-        $this->execute('put', sprintf('v1/agent/force-leave/%s', rawurlencode($node)), $queryOptions);
-        return $this->requireOK();
+        $r = new Request('put', sprintf('v1/agent/force-leave/%s', rawurlencode($node)), $this->_Config);
+
+        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
+
+        return $err;
     }
 
     /**
      * @param string $serviceID
-     * @param string|null $reason
-     * @param QueryOptions|null $queryOptions
-     * @return bool
+     * @param string $reason
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function enableServiceMaintenance($serviceID, $reason = null, QueryOptions $queryOptions = null)
+    public function enableServiceMaintenance($serviceID, $reason = '')
     {
-        if (null === $queryOptions)
-            $queryOptions = new QueryOptions();
-        
-        $queryOptions['enable'] = 'true';
-        $queryOptions['reason'] = $reason;
+        $r = new Request('put', sprintf('v1/agent/service/maintenance/%s', rawurlencode($serviceID)), $this->_Config);
+        $r->params()->set('enable', 'true');
+        $r->params()->set('reason', $reason);
 
-        $this->execute('put', sprintf('v1/agent/service/maintenance/%s', rawurlencode($serviceID)), $queryOptions);
+        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
-        return $this->requireOK();
+        return $err;
     }
 
     /**
      * @param string $serviceID
-     * @param QueryOptions|null $queryOptions
-     * @return bool
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function disableServiceMaintenance($serviceID, QueryOptions $queryOptions = null)
+    public function disableServiceMaintenance($serviceID)
     {
-        if (null === $queryOptions)
-            $queryOptions = new QueryOptions();
+        $r = new Request('put', sprintf('v1/agent/service/maintenance/%s', rawurlencode($serviceID)), $this->_Config);
+        $r->params()->set('enable', 'false');
 
-        $queryOptions['enable'] = 'false';
+        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
-        $this->execute('put', sprintf('v1/agent/service/maintenance/%s', rawurlencode($serviceID)), $queryOptions);
-
-        return $this->requireOK();
+        return $err;
     }
 
     /**
-     * @param string|null $reason
-     * @param QueryOptions|null $queryOptions
-     * @return bool
+     * @param string $reason
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function enableNodeMaintenance($reason = null, QueryOptions $queryOptions = null)
+    public function enableNodeMaintenance($reason = '')
     {
-        if (null === $queryOptions)
-            $queryOptions = new QueryOptions();
+        $r = new Request('put', 'v1/agent/maintenance', $this->_Config);
+        $r->params()->set('enable', 'true');
+        $r->params()->set('reason', $reason);
 
-        $queryOptions['enable'] = 'true';
-        $queryOptions['reason'] = $reason;
+        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
-        $this->execute('put', 'v1/agent/maintenance', $queryOptions);
-
-        return $this->requireOK();
+        return $err;
     }
 
     /**
-     * @param QueryOptions|null $queryOptions
-     * @return bool
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function disableNodeMaintenance(QueryOptions $queryOptions = null)
+    public function disableNodeMaintenance()
     {
-        if (null === $queryOptions)
-            $queryOptions = new QueryOptions();
+        $r = new Request('put', 'v1/agent/maintenance', $this->_Config);
+        $r->params()->set('enable', 'false');
 
-        $queryOptions['enable'] = 'false';
+        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
-        $this->execute('put', 'v1/agent/maintenance', $queryOptions);
+        return $err;
+    }
 
-        return $this->requireOK();
+    /**
+     * Set non-ttl check's state to passing with optional note
+     *
+     * @param string $checkID
+     * @param string $note
+     * @return \DCarbone\PHPConsulAPI\Error|null
+     */
+    public function checkPass($checkID, $note = '')
+    {
+        $r = new Request('get', sprintf('v1/agent/check/pass/%s', rawurlencode($checkID)), $this->_Config);
+        $r->params()->set('note', $note);
+
+        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
+
+        return $err;
+    }
+
+    /**
+     * Set non-ttl check's state to warning with optional note
+     *
+     * @param string $checkID
+     * @param string $note
+     * @return \DCarbone\PHPConsulAPI\Error|null
+     */
+    public function checkWarn($checkID, $note = '')
+    {
+        $r = new Request('get', sprintf('v1/agent/check/warn/%s', rawurlencode($checkID)), $this->_Config);
+        $r->params()->set('note', $note);
+
+        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
+
+        return $err;
+    }
+
+    /**
+     * Set non-ttl check's state to critical with optional note
+     *
+     * @param string $checkID
+     * @param string $note
+     * @return \DCarbone\PHPConsulAPI\Error|null
+     */
+    public function checkFail($checkID, $note = '')
+    {
+        $r = new Request('get', sprintf('v1/agent/check/fail/%s', rawurlencode($checkID)), $this->_Config);
+        $r->params()->set('note', $note);
+
+        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
+
+        return $err;
     }
 }

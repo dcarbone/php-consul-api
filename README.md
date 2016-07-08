@@ -8,38 +8,28 @@ It is in alpha stages of development.  Currently the only thing it can do is que
 
 This library is loosely based upon the [official GO client](https://github.com/hashicorp/consul/tree/master/api).
 
-## TODO's
-
-1. Create logger interface, log errors and warnings rather than just throwing exceptions everywhere
-2. Implement error returning
-3. Implement *AndSet actions within KV
-4. Implement things other than KV
-
 ## KV
 
 All interactions with the `v1/kv` endpoint are done via the [KVClient](./src/KV/KVClient.php) class.
 
-Currently, only `get`, `put`, `delete`, `keys`, and `tree` actions are implemented.
-
 Some basic examples:
 
 ```php
-use DCarbone\SimpleConsulPHP\KV\KVClient;
-use DCarbone\SimpleConsulPHP\ConsulConfig;
+use DCarbone\SimpleConsulPHP\Client;
 use DCarbone\SimpleConsulPHP\KV\KVPair;
 
-$kv = new KVClient(ConsulConfig::newDefaultConfig());
+$client = new Client();
 
-$ok = $kv->put(new KVPair(['Key' => 'prefix/mykey', 'Value' => 'my value']));
+list($wm, $err) = $client->KV()->put(new KVPair(['Key' => 'prefix/mykey', 'Value' => 'my value']));
 
-if (!$ok)
+if (null !== $err)
     die('bad things happened');
 
-$pair = $kv->get('prefix/mykey');
+list($kv, $qm, $err) = $client->KV()->get('prefix/mykey');
 
-if (null === $pair)
+if (null !== $err))
     die('could not retrieve key!');
 
-var_dump($pair);
+var_dump($kv);
 
 ```
