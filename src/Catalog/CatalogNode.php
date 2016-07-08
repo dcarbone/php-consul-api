@@ -40,7 +40,7 @@ class CatalogNode extends AbstractDefinedCollection
      */
     public function getNode()
     {
-        return $this['Node'];
+        return (string)$this['Node'];
     }
 
     /**
@@ -48,7 +48,7 @@ class CatalogNode extends AbstractDefinedCollection
      */
     public function getAddress()
     {
-        return $this['Address'];
+        return (string)$this['Address'];
     }
 
     /**
