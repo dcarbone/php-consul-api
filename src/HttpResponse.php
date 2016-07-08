@@ -25,7 +25,7 @@ use DCarbone\CURLHeaderExtractor;
 class HttpResponse
 {
     /** @var string */
-    public $url = null;
+    public $url = '';
     /** @var int */
     public $httpCode = 0;
     /** @var string */
@@ -78,15 +78,15 @@ class HttpResponse
     public $requestHeader = '';
 
     /** @var array */
-    private $_requestHeaderArray = null;
-
-    /** @var array */
     public $responseHeaders = array();
     /** @var string */
     public $body = '';
 
     /** @var string */
     public $curlError;
+
+    /** @var array */
+    private $_requestHeaderArray = null;
 
     /**
      * HttpResponse constructor.

@@ -17,6 +17,8 @@
 */
 
 /**
+ * TODO: Make this better...
+ * 
  * Class Error
  * @package DCarbone\PHPConsulAPI
  */

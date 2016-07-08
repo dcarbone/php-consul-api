@@ -26,6 +26,14 @@ class DateTime extends \DateTime implements \JsonSerializable
     private static $_defaultFormat = 'Y-m-d\TH:i:s.uO';
 
     /**
+     * @return string
+     */
+    public static function getDefaultFormat()
+    {
+        return self::$_defaultFormat;
+    }
+
+    /**
      * @param string $format
      */
     public static function setDefaultFormat($format)
@@ -52,7 +60,7 @@ class DateTime extends \DateTime implements \JsonSerializable
     /**
      * @return string
      */
-    public function defaultFormat()
+    public function formatDefault()
     {
         return $this->format(self::$_defaultFormat);
     }
