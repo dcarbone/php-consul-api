@@ -130,7 +130,7 @@ abstract class AbstractConsulClient
     /**
      * @param HttpResponse $response
      * @return array(
-     *  @type array|string|bool|int|float decoded resposne
+     *  @type array|string|bool|int|float decoded response
      *  @type Error|null error, if any
      * )
      */

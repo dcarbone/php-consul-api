@@ -1,10 +1,6 @@
 # php-consul-api
 
-PHP client implementation for the Consul API
-
-The primary purpose of this lib is to provide a dependency-free way of interacting with [Consul](https://www.consul.io/).
-
-It is in alpha stages of development.
+PHP client implementation for the [Consul API](https://www.consul.io/docs/agent/http.html)
 
 This library is loosely based upon the [official GO client](https://github.com/hashicorp/consul/tree/master/api).
 
@@ -20,28 +16,41 @@ Require Entry:
 }
 ```
 
-## KV
+## Usage
 
-All interactions with the `v1/kv` endpoint are done via the [KVClient](./src/KV/KVClient.php) class.
-
-Some basic examples:
+First, construct a [Config](./src/Config.php) object:
 
 ```php
-use DCarbone\SimpleConsulPHP\Client;
-use DCarbone\SimpleConsulPHP\KV\KVPair;
-
-$client = new Client();
-
-list($wm, $err) = $client->KV()->put(new KVPair(['Key' => 'prefix/mykey', 'Value' => 'my value']));
-
-if (null !== $err)
-    die('bad things happened');
-
-list($kv, $qm, $err) = $client->KV()->get('prefix/mykey');
-
-if (null !== $err))
-    die('could not retrieve key!');
-
-var_dump($kv);
-
+$config = new \DCarbone\PHPConsulAPI\Config(['Address' => 'address of your consul agent']);
 ```
+
+Next, construct a [Client](./src/Client.php) object:
+
+```php
+$client = new \DCarbone\PHPConsulAPI\Client($config);
+```
+
+Once constructed, you interact with each Consul API via it's corresponding Client class:
+
+```php
+$kv_list = $client->KV()->list();
+var_dump($kv_list);
+```
+
+...as an example.
+
+## Current Clients
+
+- [KV](./docs/KV.md)
+- [Agent](./docs/AGENT.md)
+- [Catalog](./docs/CATALOG.md)
+- [Status](./docs/STATUS.md)
+
+More will be added as time goes on!
+
+
+## TODO
+
+- Tests
+- Parity with GO lib
+- Code cleanup
