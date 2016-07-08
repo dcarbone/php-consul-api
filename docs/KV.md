@@ -12,7 +12,7 @@ $kv = $client->KV();
 
 ## Actions
 
-### Key Getting
+### Get Single KVP
 
 ```php
 list($kvp, $qm, $err) = $client->KV()->get('prefix/keyname');
@@ -22,10 +22,18 @@ if (null !== $err)
 var_dump($qm, $kvp);
 ```
 
-### Key Listing
+### List All KVP's under specified prefix
 
+```php
+list($kvps, $qm, $err) = $client->KV()->list('prefix');
+if (null !== $err)
+    die($err);
 
-*All Keys*:
+var_dump($qm, $kvps);
+```
+
+### List All Keys
+
 ```php
 list($keys, $qm, $err) = $client->KV()->keys();
 if (null !== $err)
@@ -34,7 +42,8 @@ if (null !== $err)
 var_dump($qm, $keys);
 ```
 
-*Only Keys with Specific Prefix*
+### List All Keys Under Prefix
+
 ```php
 list($keys, $qm, $err) = $client->KV()->keys('prefix');
 if (null !== $err)
@@ -43,7 +52,7 @@ if (null !== $err)
 var_dump($qm, $keys);
 ```
 
-### Key Putting
+### Put KVP
 
 ```php
 $kvp = new KVPair(['Key' => 'prefix/mykey', 'Value' => 'my value']);
@@ -54,7 +63,7 @@ if (null !== $err)
 var_dump($wm);
 ```
 
-### Key Deletion
+### Delete KVP
 
 ```php
 list($wm, $err) = $client->KV()->delete('prefix/mykey');
@@ -64,7 +73,7 @@ var_dump($wm);
 
 ```
 
-### Tree Retrieval
+### Tree Listing
 
 This is a custom feature to allow `get-tree`-like functionality with 0.6.4 (the current release as of this writing)
 

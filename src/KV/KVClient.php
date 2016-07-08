@@ -44,7 +44,7 @@ class KVClient extends AbstractConsulClient
         if (!is_string($key))
         {
             return [null, null, new Error('error', sprintf(
-                '%s::getValue - Key expected to be string, %s seen.',
+                '%s::get - Key expected to be string, %s seen.',
                 get_class($this),
                 gettype($key)
             ))];
@@ -68,6 +68,51 @@ class KVClient extends AbstractConsulClient
     }
 
     /**
+     * @param string $prefix
+     * @param QueryOptions|null $queryOptions
+     * @return array(
+     *  @type KVPair[]|null array of KVPair objects under specified prefix
+     *  @type QueryMeta|null query metadata
+     *  @type Error|null error, if any
+     * )
+     */
+    public function getList($prefix, QueryOptions $queryOptions = null)
+    {
+        if (!is_string($prefix) || '' === $prefix)
+        {
+            return [null, null, new Error('error', sprintf(
+                '%s::getList - Prefix expected to be empty or string, %s seen.',
+                get_class($this),
+                gettype($prefix)
+            ))];
+        }
+
+        $r = new Request('get', sprintf('v1/kv/%s', rawurlencode($prefix)), $this->_Config);
+        $r->setQueryOptions($queryOptions);
+        $r->params()->set('recurse', '');
+
+        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        $qm = $this->buildQueryMeta($duration, $response);
+
+        if (null !== $err)
+            return [null, $qm, $err];
+
+        list($data, $err) = $this->decodeBody($response);
+
+        if (null !== $err)
+            return [null, $qm, $err];
+
+        $kvPairs = array();
+        foreach($data as $v)
+        {
+            $kvp = new KVPair($v);
+            $kvPairs[$kvp->getKey()] = $kvp;
+        }
+
+        return [$kvPairs, $qm, null];
+    }
+
+    /**
      * @param string $prefix Prefix to search for.  Null returns all keys.
      * @param QueryOptions $queryOptions
      * @return array(
@@ -81,7 +126,7 @@ class KVClient extends AbstractConsulClient
         if (null !== $prefix && !is_string($prefix))
         {
             return [null, null, new Error('error', sprintf(
-                '%s::getKeys - Prefix expected to be empty or string, %s seen.',
+                '%s::keys - Prefix expected to be empty or string, %s seen.',
                 get_class($this),
                 gettype($prefix)
             ))];
