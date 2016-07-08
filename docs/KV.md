@@ -6,7 +6,6 @@ via the [KVClient](./src/KV/KVClient.php) class.
 If you have constructed a [Client](./src/Client.php) object, this is done as so:
 
 ```php
-/** @var \DCarbone\PHPConsulAPI\KV\KVClient $kv */
 $kv = $client->KV();
 ```
 

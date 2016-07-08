@@ -280,7 +280,7 @@ abstract class AbstractCollection implements \JsonSerializable, \Serializable, \
         $possibleMatches = array();
         if (is_string($key))
         {
-            $regex = sprintf('{^.*%s.*$}i', $key);
+            $regex = sprintf('{^.*%s.*$}i', substr($key, 0, 2));
             foreach($this as $k => $_)
             {
                 if (preg_match($regex, $k))
