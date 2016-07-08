@@ -33,7 +33,7 @@ $client = new \DCarbone\PHPConsulAPI\Client($config);
 Once constructed, you interact with each Consul API via it's corresponding Client class:
 
 ```php
-$kv_list = $client->KV()->list();
+$kv_list = $client->KV()->keys();
 var_dump($kv_list);
 ```
 
