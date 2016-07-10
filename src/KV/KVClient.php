@@ -18,10 +18,8 @@
 
 use DCarbone\PHPConsulAPI\AbstractConsulClient;
 use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Request;
-use DCarbone\PHPConsulAPI\WriteMeta;
 use DCarbone\PHPConsulAPI\WriteOptions;
 
 /**
@@ -86,9 +84,9 @@ class KVClient extends AbstractConsulClient
         if (!is_string($prefix) || '' === $prefix)
         {
             return [null, null, new Error(sprintf(
-                '%s::getList - Prefix expected to be empty or string, %s seen.',
+                '%s::getList - Prefix expected to be non-empty string, "%s" seen.',
                 get_class($this),
-                gettype($prefix)
+                is_string($prefix) ? $prefix : gettype($prefix)
             ))];
         }
 
@@ -163,7 +161,7 @@ class KVClient extends AbstractConsulClient
      * @param KVPair $KVPair
      * @param WriteOptions $writeOptions
      * @return array(
-     *  @type WriteMeta write metadata
+     *  @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
      *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
@@ -183,7 +181,7 @@ class KVClient extends AbstractConsulClient
      * @param string $key
      * @param WriteOptions|null $writeOptions
      * @return array(
-     *  @type WriteMeta metadata about write
+     *  @type \DCarbone\PHPConsulAPI\WriteMeta metadata about write
      *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */

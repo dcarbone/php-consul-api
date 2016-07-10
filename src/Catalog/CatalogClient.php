@@ -17,10 +17,8 @@
 */
 
 use DCarbone\PHPConsulAPI\AbstractConsulClient;
-use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Request;
-use DCarbone\PHPConsulAPI\WriteMeta;
 use DCarbone\PHPConsulAPI\WriteOptions;
 
 /**
@@ -33,7 +31,7 @@ class CatalogClient extends AbstractConsulClient
      * @param CatalogRegistration $catalogRegistration
      * @param WriteOptions|null $writeOptions
      * @return array(
-     *  @type WriteMeta write meta data
+     *  @type \DCarbone\PHPConsulAPI\WriteMeta write meta data
      *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
@@ -52,7 +50,7 @@ class CatalogClient extends AbstractConsulClient
      * @param CatalogDeregistration $catalogDeregistration
      * @param WriteOptions|null $writeOptions
      * @return array(
-     *  @type WriteMeta write meta data
+     *  @type \DCarbone\PHPConsulAPI\WriteMeta write meta data
      *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
