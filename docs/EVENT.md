@@ -19,5 +19,26 @@ object.
 Below is a quick example:
 
 ```php
-$event = new
+$userEvent = new \DCarbone\PHPConsulAPI\Event\UserEvent(
+    array(
+        'Name' => 'sandwiches',
+        'Payload' => 'They are tasty.'
+    )
+);
+
+list($event, $wm, $err) = $client->Event()->fire($userEvent);
+if (null !== $err)
+    die($err);
+
+var_dump($event, $wm);
+```
+
+### List Events
+
+```php
+list($userEvents, $qm, $err) = $client->Event()->eventList();
+if (null !== $err)
+    die($err);
+
+var_dump($userEvents, $qm);
 ```
