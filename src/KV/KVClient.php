@@ -43,7 +43,7 @@ class KVClient extends AbstractConsulClient
     {
         if (!is_string($key))
         {
-            return [null, null, new Error('error', sprintf(
+            return [null, null, new Error(sprintf(
                 '%s::get - Key expected to be string, %s seen.',
                 get_class($this),
                 gettype($key)
@@ -80,7 +80,7 @@ class KVClient extends AbstractConsulClient
     {
         if (!is_string($prefix) || '' === $prefix)
         {
-            return [null, null, new Error('error', sprintf(
+            return [null, null, new Error(sprintf(
                 '%s::getList - Prefix expected to be empty or string, %s seen.',
                 get_class($this),
                 gettype($prefix)
@@ -125,7 +125,7 @@ class KVClient extends AbstractConsulClient
     {
         if (null !== $prefix && !is_string($prefix))
         {
-            return [null, null, new Error('error', sprintf(
+            return [null, null, new Error(sprintf(
                 '%s::keys - Prefix expected to be empty or string, %s seen.',
                 get_class($this),
                 gettype($prefix)

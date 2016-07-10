@@ -164,7 +164,7 @@ class Request
                 break;
 
             default:
-                return [null, new Error('error', sprintf(
+                return [null, new Error(sprintf(
                     '%s - PHPConsulAPI currently does not support queries made using the "%s" method.',
                     get_class($this),
                     $this->_method
@@ -175,7 +175,7 @@ class Request
 
         if (false === $ch)
         {
-            return [null, new Error('error', sprintf(
+            return [null, new Error(sprintf(
                 '%s::execute - Unable to initialize CURL resource with URL "%s"',
                 get_class($this),
                 $this->_url
@@ -184,7 +184,7 @@ class Request
 
         if (false === curl_setopt_array($ch, $this->_curlOpts))
         {
-            return [null, new Error('error', sprintf(
+            return [null, new Error(sprintf(
                 '%s - Unable to set specified Curl options, please ensure you\'re passing in valid constants.  Specified options: %s',
                 get_class($this),
                 json_encode($this->_curlOpts)

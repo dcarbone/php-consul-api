@@ -55,7 +55,7 @@ abstract class AbstractConsulClient
 
         if (200 !== $response->httpCode)
         {
-            return [$duration, $response, new Error('warn', sprintf(
+            return [$duration, $response, new Error(sprintf(
                 '%s - Error seen while executing "%s".  Response code: %d.  Message: %s',
                 get_class($this),
                 $response->url,
@@ -142,7 +142,7 @@ abstract class AbstractConsulClient
         if (JSON_ERROR_NONE === $err)
             return [$data, null];
 
-        return [null, new Error('error', sprintf(
+        return [null, new Error(sprintf(
             '%s - Unable to parse response as JSON.  Message: %s',
             get_class($this),
             PHP_VERSION_ID >= 50500 ? json_last_error_msg() : (string)$err

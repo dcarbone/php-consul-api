@@ -22,6 +22,14 @@
  */
 class Config extends AbstractDefinedStrictCollection
 {
+    /** @var array */
+    private $_logLevels = array(
+        'debug' => 0,
+        'info' => 1,
+        'warn' => 2,
+        'error' => 3,
+    );
+
     /**
      * @return static
      */
@@ -66,6 +74,8 @@ class Config extends AbstractDefinedStrictCollection
             'CertFile' => null,
             'KeyFile' => null,
             'InsecureSkipVerify' => null,
+            'LogLevel' => 'warn',
+            'Loggers' => array(),
         );
     }
 
@@ -275,6 +285,80 @@ class Config extends AbstractDefinedStrictCollection
     }
 
     /**
+     * @return ConsulAPILoggerInterface[]
+     */
+    public function getLoggers()
+    {
+        return $this->_storage['Loggers'];
+    }
+
+    /**
+     * @param array $loggers
+     * @return $this
+     */
+    public function setLoggers(array $loggers)
+    {
+        $this->_storage['Loggers'] = array();
+        foreach($loggers as $logger)
+        {
+            if ($logger instanceof ConsulAPILoggerInterface)
+            {
+                $this->_storage['Loggers'][] = $logger;
+            }
+            else
+            {
+                throw new \InvalidArgumentException(sprintf(
+                    '%s - %s is not a valid logger implementation',
+                    get_class($this),
+                    is_object($logger) ? get_class($logger) : gettype($logger)
+                ));
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ConsulAPILoggerInterface $logger
+     * @return $this
+     */
+    public function addLogger(ConsulAPILoggerInterface $logger)
+    {
+        $this->_storage['Loggers'][] = $logger;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLogLevel()
+    {
+        return $this->_storage['LogLevel'];
+    }
+
+    /**
+     * @param string $logLevel
+     * @return $this
+     */
+    public function setLogLevel($logLevel)
+    {
+        if (!is_string($logLevel) || '' === ($level = strtolower($logLevel)) || !isset($this->_logLevels[$level]))
+        {
+            throw new \InvalidArgumentException(sprintf(
+                '%s - Log level must be one of the following values: ["%s"].  %s seen.',
+                get_class($this),
+                implode('", "', array_keys($this->_logLevels)),
+                is_string($logLevel) ? $logLevel : gettype($logLevel)
+            ));
+        }
+
+        $this->_storage['LogLevel'] = $level;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function compileAddress()
@@ -310,6 +394,22 @@ class Config extends AbstractDefinedStrictCollection
         $opts[CURLOPT_TIMEOUT] = $this->getWaitTime();
 
         return $opts;
+    }
+
+    /**
+     * @param string $logLevel
+     * @param string $message
+     */
+    public function log($logLevel, $message)
+    {
+        $level = strtolower($logLevel);
+        if ($this->_logLevels[$this->_storage['LogLevel']] <= $this->_logLevels[strtolower($level)])
+        {
+            foreach($this->_storage['Loggers'] as $logger)
+            {
+                $logger->{$level}($message);
+            }
+        }
     }
 
     /**

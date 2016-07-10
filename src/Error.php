@@ -24,17 +24,6 @@
  */
 class Error implements \JsonSerializable
 {
-    /** @var array */
-    private $_levels = array(
-        'debug',
-        'info',
-        'warn',
-        'error',
-    );
-
-    /** @var string */
-    private $_level;
-
     /** @var DateTime */
     private $_timestamp;
 
@@ -43,22 +32,11 @@ class Error implements \JsonSerializable
 
     /**
      * Error constructor.
-     * @param string $level
      * @param string $message
+     * @internal param string $level
      */
-    public function __construct($level, $message)
+    public function __construct($message)
     {
-        if (!is_string($level) || !in_array($level, $this->_levels, true))
-        {
-            throw new \InvalidArgumentException(sprintf(
-                '%s - "%s" is not valid level.  Available choices: ["%s"]',
-                get_class($this),
-                is_string($level) ? $level : gettype($level),
-                implode('", "', $this->_levels)
-            ));
-        }
-
-        $this->_level = $level;
         $this->_timestamp = new DateTime();
         $this->_message = $message;
     }
@@ -71,7 +49,6 @@ class Error implements \JsonSerializable
     public function jsonSerialize()
     {
         return array(
-            'level' => $this->_level,
             'message' => $this->_message,
             'timestamp' => $this->_timestamp
         );
@@ -83,8 +60,7 @@ class Error implements \JsonSerializable
     public function __toString()
     {
         return sprintf(
-            '[%s] - %s - %s',
-            $this->_level,
+            '[error] - %s - %s',
             $this->_timestamp,
             $this->_message
         );
