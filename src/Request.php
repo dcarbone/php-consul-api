@@ -144,7 +144,7 @@ class Request
     /**
      * @return array(
      *  @type HttpResponse|null response or null on error
-     *  @type Error|null any error if seen
+     *  @type \DCarbone\PHPConsulAPI\Error|null any error if seen
      * )
      */
     public function execute()

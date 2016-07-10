@@ -17,7 +17,6 @@
 */
 
 use DCarbone\PHPConsulAPI\AbstractConsulClient;
-use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Request;
 
 /**
@@ -44,10 +43,9 @@ class StatusClient extends AbstractConsulClient
     }
 
     /**
-     * @param QueryOptions|null $queryOptions
      * @return array|null
      */
-    public function peers(QueryOptions $queryOptions = null)
+    public function peers()
     {
         $r = new Request('get', 'v1/status/peers', $this->_Config);
         list($_, $response, $err) = $this->requireOK($this->doRequest($r));

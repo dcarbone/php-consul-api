@@ -17,7 +17,6 @@
 */
 
 use DCarbone\PHPConsulAPI\AbstractConsulClient;
-use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPI\Request;
 
 /**
@@ -32,7 +31,7 @@ class AgentClient extends AbstractConsulClient
     /**
      * @return array(
      * @type AgentSelf|null agent info or null on error
-     * @type QueryMeta query metadata
+     * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */

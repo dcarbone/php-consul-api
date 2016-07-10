@@ -25,26 +25,6 @@ use DCarbone\PHPConsulAPI\AbstractDefinedCollection;
 class KVPair extends AbstractDefinedCollection
 {
     /**
-     * KVPair constructor.
-     * @param array $data
-     */
-    public function __construct(array $data = array())
-    {
-        parent::__construct();
-        foreach($data as $k=>$v)
-        {
-            switch($k)
-            {
-                case 'Value':
-                    $this->setValue($v);
-                    break;
-                default:
-                    $this[$k] = $v;
-            }
-        }
-    }
-
-    /**
      * @return array
      */
     protected function getDefinition()
@@ -97,35 +77,26 @@ class KVPair extends AbstractDefinedCollection
      */
     public function getValue()
     {
-        return base64_decode($this['Value']);
+        return (string)$this['Value'];
     }
 
     /**
-     * @param mixed $value
-     * @param bool $encode
+     * @param string $value
      * @return $this
      */
-    public function setValue($value, $encode = true)
+    public function setValue($value)
     {
-        if (512 >= mb_strlen($value, '8bit'))
-        {
-            $this['Value'] = $encode ? base64_encode((string)$value) : (string)$value;
-            return $this;
-        }
+        $this['Value'] = $value;
 
-        throw new \InvalidArgumentException(sprintf(
-            '%s::setValue - Provided value is longer than the 512kB limit.  Value seen: "%s"',
-            get_class($this),
-            $value
-        ));
+        return $this;
     }
 
     /**
      * @return string
      */
-    public function getEncodedValue()
+    public function getDecodedValue()
     {
-        return $this['Value'];
+        return base64_decode((string)$this['Value']);
     }
 
     /**

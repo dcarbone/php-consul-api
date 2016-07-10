@@ -33,7 +33,6 @@ class Error implements \JsonSerializable
     /**
      * Error constructor.
      * @param string $message
-     * @internal param string $level
      */
     public function __construct($message)
     {

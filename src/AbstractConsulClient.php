@@ -39,7 +39,7 @@ abstract class AbstractConsulClient
      * @return array(
      *  @type int query duration in microseconds
      *  @type HttpResponse|null response object
-     *  @type Error|null error, if any
+     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
     protected function requireOK(array $requestResult)
@@ -72,7 +72,7 @@ abstract class AbstractConsulClient
      * @return array(
      *  @type int duration in microseconds
      *  @type HttpResponse|null http response
-     *  @type Error|null any seen errors
+     *  @type \DCarbone\PHPConsulAPI\Error|null any seen errors
      * )
      */
     protected function doRequest(Request $r)
@@ -131,7 +131,7 @@ abstract class AbstractConsulClient
      * @param HttpResponse $response
      * @return array(
      *  @type array|string|bool|int|float decoded response
-     *  @type Error|null error, if any
+     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
     protected function decodeBody(HttpResponse $response)

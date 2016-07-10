@@ -35,8 +35,8 @@ class KVClient extends AbstractConsulClient
      * @param QueryOptions $queryOptions
      * @return array(
      *  @type KVPair|null kv object or null on error
-     *  @type QueryMeta|null query metadata object or null on error
-     *  @type Error|null error, if any
+     *  @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata object or null on error
+     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
     public function get($key, QueryOptions $queryOptions = null)
@@ -72,11 +72,11 @@ class KVClient extends AbstractConsulClient
      * @param QueryOptions|null $queryOptions
      * @return array(
      *  @type KVPair[]|null array of KVPair objects under specified prefix
-     *  @type QueryMeta|null query metadata
-     *  @type Error|null error, if any
+     *  @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata
+     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function getList($prefix, QueryOptions $queryOptions = null)
+    public function valueList($prefix, QueryOptions $queryOptions = null)
     {
         if (!is_string($prefix) || '' === $prefix)
         {
@@ -117,8 +117,8 @@ class KVClient extends AbstractConsulClient
      * @param QueryOptions $queryOptions
      * @return array(
      *  @type string[]|null list of keys
-     *  @type QueryMeta|null query metadata
-     *  @type Error|null error, if any
+     *  @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata
+     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
     public function keys($prefix = null, QueryOptions $queryOptions = null)
@@ -156,7 +156,7 @@ class KVClient extends AbstractConsulClient
      * @param WriteOptions $writeOptions
      * @return array(
      *  @type WriteMeta write metadata
-     *  @type Error|null error, if any
+     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
     public function put(KVPair $KVPair, WriteOptions $writeOptions = null)
@@ -176,7 +176,7 @@ class KVClient extends AbstractConsulClient
      * @param WriteOptions|null $writeOptions
      * @return array(
      *  @type WriteMeta metadata about write
-     *  @type Error|null error, if any
+     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
     public function delete($key, WriteOptions $writeOptions = null)
@@ -195,7 +195,7 @@ class KVClient extends AbstractConsulClient
      * @param QueryOptions $queryOptions
      * @return array(
      *  @type KVPair[]|KVTree[]|null array of trees, values, or null on error
-     *  @type Error|null error, if any
+     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
     public function tree($prefix = null, QueryOptions $queryOptions = null)

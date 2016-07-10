@@ -89,7 +89,7 @@ class CatalogClient extends AbstractConsulClient
      * @param QueryOptions|null $queryOptions
      * @return array(
      *  @type CatalogNode[]|null array of catalog nodes or null on error
-     *  @type QueryMeta query metadata
+     *  @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
      *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
@@ -123,7 +123,7 @@ class CatalogClient extends AbstractConsulClient
      * @param QueryOptions|null $queryOptions
      * @return array(
      * @type string[]|null list of services or null on error
-     * @type QueryMeta query metadata
+     * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
@@ -149,7 +149,7 @@ class CatalogClient extends AbstractConsulClient
      * @param QueryOptions|null $queryOptions
      * @return array(
      *  @type CatalogService[]|null array of services or null on error
-     *  @type QueryMeta query metadata
+     *  @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
      *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
@@ -186,7 +186,7 @@ class CatalogClient extends AbstractConsulClient
      * @param QueryOptions|null $queryOptions
      * @return array(
      *  @type CatalogNode node or null on error
-     *  @type QueryMeta query metadata
+     *  @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
      *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */

@@ -18,6 +18,7 @@
 
 use DCarbone\PHPConsulAPI\Agent\AgentClient;
 use DCarbone\PHPConsulAPI\Catalog\CatalogClient;
+use DCarbone\PHPConsulAPI\Event\EventClient;
 use DCarbone\PHPConsulAPI\KV\KVClient;
 use DCarbone\PHPConsulAPI\Status\StatusClient;
 
@@ -35,6 +36,8 @@ class Client
     private $_Catalog;
     /** @var StatusClient */
     private $_Status;
+    /** @var EventClient */
+    private $_Event;
 
     /**
      * Client constructor.
@@ -61,6 +64,7 @@ class Client
         $this->_Agent = new AgentClient($config);
         $this->_Catalog = new CatalogClient($config);
         $this->_Status = new StatusClient($config);
+        $this->_Event = new EventClient($config);
     }
 
     /**
@@ -95,4 +99,11 @@ class Client
         return $this->_Status;
     }
 
+    /**
+     * @return EventClient
+     */
+    public function Event()
+    {
+        return $this->_Event;
+    }
 }

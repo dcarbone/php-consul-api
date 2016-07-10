@@ -45,6 +45,7 @@ var_dump($kv_list);
 - [Agent](./docs/AGENT.md)
 - [Catalog](./docs/CATALOG.md)
 - [Status](./docs/STATUS.md)
+- [Event](./docs/EVENT.md)
 
 More will be added as time goes on!
 
