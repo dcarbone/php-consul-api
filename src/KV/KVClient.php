@@ -84,7 +84,7 @@ class KVClient extends AbstractConsulClient
         if (!is_string($prefix) || '' === $prefix)
         {
             return [null, null, new Error(sprintf(
-                '%s::getList - Prefix expected to be non-empty string, "%s" seen.',
+                '%s::valueList - Prefix expected to be non-empty string, "%s" seen.',
                 get_class($this),
                 is_string($prefix) ? $prefix : gettype($prefix)
             ))];
