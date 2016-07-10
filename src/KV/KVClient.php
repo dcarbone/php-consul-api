@@ -64,7 +64,12 @@ class KVClient extends AbstractConsulClient
         if (null !== $err)
             return [null, $qm, $err];
 
-        return [new KVPair(reset($data)), $qm, null];
+        $data = $data[0];
+
+        if (isset($data['Value']))
+            $data['Value'] = base64_decode($data['Value']);
+
+        return [new KVPair($data), $qm, null];
     }
 
     /**
@@ -105,6 +110,9 @@ class KVClient extends AbstractConsulClient
         $kvPairs = array();
         foreach($data as $v)
         {
+            if (isset($v['Value']))
+                $v['Value'] = base64_decode($v['Value']);
+
             $kvp = new KVPair($v);
             $kvPairs[$kvp->getKey()] = $kvp;
         }

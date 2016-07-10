@@ -92,14 +92,6 @@ class KVPair extends AbstractDefinedCollection
     }
 
     /**
-     * @return string
-     */
-    public function getDecodedValue()
-    {
-        return base64_decode((string)$this['Value']);
-    }
-
-    /**
      * @return int
      */
     public function getFlags()

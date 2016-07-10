@@ -50,8 +50,6 @@ class EventClient extends AbstractConsulClient
         if ('' !== ($payload = $event->getPayload()))
             $r->setBody($payload);
 
-        var_dump($payload);exit;
-
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
         $wm = $this->buildWriteMeta($duration);
 
@@ -61,6 +59,9 @@ class EventClient extends AbstractConsulClient
         list($data, $err) = $this->decodeBody($response);
         if ($err !== null)
             return [null, $wm, $err];
+
+        if (isset($data['Payload']))
+            $data['Payload'] = base64_decode($data['Payload']);
 
         return [new UserEvent($data), $wm, null];
     }
@@ -95,6 +96,9 @@ class EventClient extends AbstractConsulClient
         $events = array();
         foreach($data as $event)
         {
+            if (isset($event['Payload']))
+                $event['Payload'] = base64_decode($event['Payload']);
+
             $events[] = new UserEvent($event);
         }
 

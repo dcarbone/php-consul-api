@@ -26,26 +26,6 @@ use DCarbone\PHPConsulAPI\AbstractDefinedCollection;
 class UserEvent extends AbstractDefinedCollection
 {
     /**
-     * UserEvent constructor.
-     * @param array $data
-     */
-    public function __construct(array $data = array())
-    {
-        parent::__construct();
-        foreach($data as $k=>$v)
-        {
-            switch($k)
-            {
-                case 'Payload':
-                    $this->setPayload($v);
-                    break;
-                default:
-                    $this[$k] = $v;
-            }
-        }
-    }
-
-    /**
      * @return array
      */
     protected function getDefinition()
@@ -105,7 +85,7 @@ class UserEvent extends AbstractDefinedCollection
      */
     public function getPayload()
     {
-        return $this->_storage['Payload'];
+        return (string)$this->_storage['Payload'];
     }
 
     /**
@@ -117,14 +97,6 @@ class UserEvent extends AbstractDefinedCollection
         $this->_storage['Payload'] = $payload;
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDecodedPayload()
-    {
-        return base64_decode((string)$this->_storage['Payload']);
     }
 
     /**
