@@ -114,7 +114,7 @@ function output_tree(\DCarbone\PHPConsulAPI\KV\KVTree $tree)
         }
         else if ($item instanceof \DCarbone\PHPConsulAPI\KV\KVPair)
         {
-            echo '<li>'.$item->getKey().'</li>';
+            echo '<li>'.$item->Key.': '.$item->Value.'</li>';
         }
     }
 }
@@ -134,7 +134,7 @@ foreach($tree as $v)
     }
     else if ($v instanceof \DCarbone\PHPConsulAPI\KV\KVPair)
     {
-        echo '<li>'.$v->getKey().'</li>';
+        echo '<li>'.$v->Key.': '.$v->Value.'</li>';
     }
 }
 echo '</ul>';

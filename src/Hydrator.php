@@ -47,16 +47,10 @@ class Hydrator
      */
     public static function KVPair(array $data)
     {
-        $kvp = new KVPair();
-        foreach($data as $k => $v)
-        {
-            if ('Value' === $k)
-                $kvp->Value = base64_decode($v);
-            else
-                $kvp->{$k} = $v;
-        }
+        if (isset($data['Value']))
+            $data['Value'] = base64_decode($data['Value']);
 
-        return $kvp;
+        return new KVPair($data);
     }
 
     /**
