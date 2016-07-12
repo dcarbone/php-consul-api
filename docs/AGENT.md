@@ -63,7 +63,7 @@ var_dump($members);
 
 ### Register Service
 
-To register a service, you must first create an [AgentServiceRegistration](./src/Agent/AgentServiceRegistration.php)
+To register a service, you must first create an [AgentServiceRegistration](../src/Agent/AgentServiceRegistration.php)
 object.  Below is a quick and sloppy example that also creates a check:
 
 ```php
@@ -94,7 +94,7 @@ if (null !== $err)
 
 ### Register Agent Check
 
-To register an agent check, you must first create an [AgentCheckRegistration](./src/Agent/AgentCheckRegistration.php)
+To register an agent check, you must first create an [AgentCheckRegistration](../src/Agent/AgentCheckRegistration.php)
 object.  Below is a quick and sloppy example:
 
 ```php

@@ -13,7 +13,7 @@ $event = $client->Event;
 
 ### Fire an Event
 
-In order to fire an event, you must first create an [UserEvent](./src/Event/UserEvent.php)
+In order to fire an event, you must first create an [UserEvent](../src/Event/UserEvent.php)
 object.
 
 Below is a quick example:

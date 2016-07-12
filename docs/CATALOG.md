@@ -15,7 +15,7 @@ $catalog = $client->Catalog;
 
 ### Register Node, Service, or Check
 
-For this endpoint, you must first create a [CatalogRegistration](./src/Catalog/CatalogRegistration.php)
+For this endpoint, you must first create a [CatalogRegistration](../src/Catalog/CatalogRegistration.php)
 object.  Below is a quick example on how to do this with a Service:
 
 ```php
@@ -40,7 +40,7 @@ var_dump($wm);
 
 ### Deregister Node, Service, or Check
 
-For this endpoint, you must first create a [CatalogDeregistration](./src/Catalog/CatalogDeregistration.php)
+For this endpoint, you must first create a [CatalogDeregistration](../src/Catalog/CatalogDeregistration.php)
 object.  Below is an example of how to deregister the service created above:
 
 ```php
