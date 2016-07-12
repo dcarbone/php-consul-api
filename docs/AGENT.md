@@ -1,7 +1,7 @@
 # PHP Consul API Agent
 
 All interactions with the [`v1/agent`](https://www.consul.io/docs/agent/http/agent.html) endpoint are done
-via the [AgentClient](./src/Agent/AgentClient.php) class.
+via the [AgentClient](../src/Agent/AgentClient.php) class.
 
 If you have constructed a [Client](./src/Client.php) object, this is done as so:
 
