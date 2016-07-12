@@ -17,219 +17,36 @@
 */
 
 
-use DCarbone\PHPConsulAPI\AbstractDefinedStrictCollection;
-use DCarbone\PHPConsulAPI\TaggedInterface;
+use DCarbone\PHPConsulAPI\AbstractObjectModel;
 
 /**
  * Class AgentServiceRegistration
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentServiceRegistration extends AbstractDefinedStrictCollection implements TaggedInterface
+class AgentServiceRegistration extends AbstractObjectModel
 {
-    /**
-     * @return array
-     */
-    protected function getDefinition()
-    {
-        return array(
-            'ID' => null,
-            'Name' => null,
-            'Tags' => array(),
-            'Port' => null,
-            'Address' => null,
-            'EnableTagOverride' => false,
-            'Check' => null,
-            'Checks' => array(),
-        );
-    }
+    /** @var string */
+    public $ID = '';
+    /** @var string */
+    public $Name = '';
+    /** @var string[] */
+    public $Tags = array();
+    /** @var int */
+    public $Port = 0;
+    /** @var string */
+    public $Address = '';
+    /** @var bool */
+    public $EnableTagOverride = false;
+    /** @var AgentCheck */
+    public $Check = null;
+    /** @var AgentCheck[] */
+    public $Checks = array();
 
     /**
      * @return string
      */
-    public function getID()
+    public function __toString()
     {
-        return $this->_storage['ID'];
-    }
-
-    /**
-     * @param string $id
-     * @return $this
-     */
-    public function setID($id)
-    {
-        $this->_storage['ID'] = $id;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->_storage['Name'];
-    }
-
-    /**
-     * @param string $name
-     * @return $this
-     */
-    public function setName($name)
-    {
-        $this->_storage['Name'] = $name;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getTags()
-    {
-        return $this->_storage['Tags'];
-    }
-
-    /**
-     * @param string $tag
-     * @return bool
-     */
-    public function hasTag($tag)
-    {
-        return isset($this->_storage['Tags'][$tag]) || array_key_exists($tag, $this->_storage['Tags']);
-    }
-
-    /**
-     * @param string $tag
-     * @return string|null
-     */
-    public function getTag($tag)
-    {
-        if ($this->hasTag($tag))
-            return $this->_storage['Tags'][$tag];
-
-        return null;
-    }
-
-    /**
-     * @param string $tag
-     * @param string $value
-     * @return $this
-     */
-    public function addTag($tag, $value)
-    {
-        $this->_storage['Tags'][$tag] = $value;
-        return $this;
-    }
-
-    /**
-     * @param array $tags
-     * @return $this
-     */
-    public function setTags(array $tags = array())
-    {
-        $this->_storage['Tags'] = $tags;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPort()
-    {
-        return (int)$this->_storage['Port'];
-    }
-
-    /**
-     * @param int $port
-     * @return $this
-     */
-    public function setPort($port)
-    {
-        $this->_storage['Port'] = (int)$port;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAddress()
-    {
-        return $this->_storage['Address'];
-    }
-
-    /**
-     * @param string $address
-     * @return $this
-     */
-    public function setAddress($address)
-    {
-        $this->_storage['Address'] = $address;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getEnableTagOverride()
-    {
-        return (bool)$this->_storage['EnableTagOverride'];
-    }
-
-    /**
-     * @param bool $enableTagOverride
-     * @return $this
-     */
-    public function setEnableTagOverride($enableTagOverride)
-    {
-        $this->_storage['EnableTagOverride'] = (bool)$enableTagOverride;
-        return $this;
-    }
-
-    /**
-     * @return AgentServiceCheck|null
-     */
-    public function getCheck()
-    {
-        return $this->_storage['Check'];
-    }
-
-    /**
-     * @param AgentServiceCheck $agentServiceCheck
-     * @return $this
-     */
-    public function setCheck(AgentServiceCheck $agentServiceCheck)
-    {
-        $this->_storage['Check'] = $agentServiceCheck;
-        return $this;
-    }
-
-    /**
-     * @return AgentServiceCheck[]
-     */
-    public function getChecks()
-    {
-        return $this->_storage['Checks'];
-    }
-
-    /**
-     * @param AgentServiceCheck[] $agentServiceChecks
-     * @return $this
-     */
-    public function setChecks(array $agentServiceChecks)
-    {
-        $this->_storage['Checks'] = array();
-        foreach($agentServiceChecks as $check)
-        {
-            if ($check instanceof AgentServiceCheck)
-            {
-                $this->_storage['Checks'][] = $check;
-                continue;
-            }
-
-            throw new \InvalidArgumentException(sprintf(
-                '%s::setChecks - Expected array of AgentServiceCheck objects, saw "%s".',
-                get_class($this),
-                is_object($check) ? get_class($check) : gettype($check)
-            ));
-        }
-        return $this;
+        return $this->Name;
     }
 }

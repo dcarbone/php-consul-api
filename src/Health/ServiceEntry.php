@@ -16,47 +16,18 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractDefinedCollection;
+use DCarbone\PHPConsulAPI\AbstractObjectModel;
 
 /**
  * Class ServiceEntry
  * @package DCarbone\PHPConsulAPI\Health
  */
-class ServiceEntry extends AbstractDefinedCollection
+class ServiceEntry extends AbstractObjectModel
 {
-    /**
-     * @return array
-     */
-    protected function getDefinition()
-    {
-        return array(
-            'Node' => null,
-            'Service' => null,
-            'Checks' => array()
-        );
-    }
-
-    /**
-     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogNode
-     */
-    public function getNode()
-    {
-        return $this->_storage['Node'];
-    }
-
-    /**
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentService
-     */
-    public function getService()
-    {
-        return $this->_storage['Service'];
-    }
-
-    /**
-     * @return \DCarbone\PHPConsulAPI\Health\HealCheck[]
-     */
-    public function getChecks()
-    {
-        return $this->_storage['Checks'];
-    }
+    /** @var string */
+    public $Node = '';
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentService */
+    public $Service = null;
+    /** @var \DCarbone\PHPConsulAPI\Health\HealthCheck[] */
+    public $Checks = array();
 }

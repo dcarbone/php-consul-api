@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPConsulAPI\Agent;
+<?php namespace DCarbone\PHPConsulAPI\Coordinate;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,26 +16,20 @@
    limitations under the License.
 */
 
-/**
- * Class AgentCheckRegistration
- * @package DCarbone\PHPConsulAPI\Agent
- */
-class AgentCheckRegistration extends AgentServiceCheck
-{
-    /** @var string */
-    public $ID = '';
-    /** @var string */
-    public $Name = '';
-    /** @var string */
-    public $Notes = '';
-    /** @var string */
-    public $ServiceID = '';
+use DCarbone\PHPConsulAPI\AbstractObjectModel;
 
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return (string)$this->Name;
-    }
+/**
+ * Class Coordinate
+ * @package DCarbone\PHPConsulAPI\Coordinate
+ */
+class Coordinate extends AbstractObjectModel
+{
+    /** @var int[] */
+    public $Vec = array();
+    /** @var float */
+    public $Error = 0.0;
+    /** @var float */
+    public $Adjustment = 0.0;
+    /** @var float */
+    public $Height = 0.0;
 }

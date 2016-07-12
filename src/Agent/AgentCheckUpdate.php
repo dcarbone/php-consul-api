@@ -16,81 +16,16 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractDefinedStrictCollection;
+use DCarbone\PHPConsulAPI\AbstractObjectModel;
 
 /**
  * Class AgentCheckUpdate
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentCheckUpdate extends AbstractDefinedStrictCollection
+class AgentCheckUpdate extends AbstractObjectModel
 {
-    /**
-     * @return array
-     */
-    protected function getDefinition()
-    {
-        return array(
-            'Status' => null,
-            'Output' => null
-        );
-    }
-
-    /**
-     * @return string
-     */
-    public function getStatus()
-    {
-        return $this->_storage['Status'];
-    }
-
-    /**
-     * @param string $status
-     * @return $this
-     */
-    public function setStatus($status)
-    {
-        switch($status)
-        {
-            case 'pass':
-            case 'passing':
-                $status = 'passing';
-                break;
-            case 'warn':
-            case 'warning':
-                $status = 'warning';
-                break;
-            case 'fail':
-            case 'critical':
-                $status = 'critical';
-                break;
-
-            default:
-                throw new \InvalidArgumentException(sprintf(
-                    '%s - Agent Check Update statuses must be one of the following: passing, warning, critical.  %s seen.',
-                    get_class($this),
-                    is_string($status) ? $status : gettype($status)
-                ));
-        }
-
-        $this->_storage['Status'] = $status;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getOutput()
-    {
-        return $this->_storage['Output'];
-    }
-
-    /**
-     * @param string $output
-     * @return $this
-     */
-    public function setOutput($output)
-    {
-        $this->_storage['Output'] = $output;
-        return $this;
-    }
+    /** @var string */
+    public $Status = '';
+    /** @var string */
+    public $Output = '';
 }

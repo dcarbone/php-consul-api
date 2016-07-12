@@ -16,100 +16,36 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractDefinedCollection;
+use DCarbone\PHPConsulAPI\AbstractObjectModel;
 
 /**
  * Class AgentCheck
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentCheck extends AbstractDefinedCollection
+class AgentCheck extends AbstractObjectModel
 {
-    /**
-     * @return array
-     */
-    protected function getDefinition()
-    {
-        return array(
-            'Node' => null,
-            'CheckID' => null,
-            'Name' => null,
-            'Status' => null,
-            'Notes' => null,
-            'Output' => null,
-            'ServiceID' => null,
-            'ServiceName' => null
-        );
-    }
-
-    /**
-     * @return string
-     */
-    public function getNode()
-    {
-        return $this['Node'];
-    }
-
-    /**
-     * @return string
-     */
-    public function getCheckID()
-    {
-        return $this['CheckID'];
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this['Name'];
-    }
-
-    /**
-     * @return string
-     */
-    public function getStatus()
-    {
-        return $this['Status'];
-    }
-
-    /**
-     * @return string
-     */
-    public function getNotes()
-    {
-        return $this['Nodes'];
-    }
-
-    /**
-     * @return string
-     */
-    public function getOutput()
-    {
-        return $this['Output'];
-    }
-
-    /**
-     * @return string
-     */
-    public function getServiceID()
-    {
-        return $this['ServiceID'];
-    }
-
-    /**
-     * @return string
-     */
-    public function getServiceName()
-    {
-        return $this['ServiceName'];
-    }
+    /** @var string */
+    public $Node = '';
+    /** @var string */
+    public $CheckID = '';
+    /** @var string */
+    public $Name = '';
+    /** @var string */
+    public $Status = '';
+    /** @var string */
+    public $Notes = '';
+    /** @var string */
+    public $Output = '';
+    /** @var string */
+    public $ServiceID = '';
+    /** @var string */
+    public $ServiceName = '';
 
     /**
      * @return string
      */
     public function __toString()
     {
-        return (string)$this['CheckID'];
+        return (string)$this->CheckID;
     }
 }

@@ -22,66 +22,16 @@
  */
 class CatalogService extends CatalogNode
 {
-    /**
-     * @return array
-     */
-    protected function getDefinition()
-    {
-        return parent::getDefinition() + array(
-            'ServiceID' => null,
-            'ServiceName' => null,
-            'ServiceAddress' => null,
-            'ServiceTags' => array(),
-            'ServicePort' => null,
-            'ServiceEnableTagOverride' => null,
-        );
-    }
-
-    /**
-     * @return string
-     */
-    public function getServiceID()
-    {
-        return (string)$this['ServiceID'];
-    }
-
-    /**
-     * @return string
-     */
-    public function getServiceName()
-    {
-        return (string)$this['ServiceName'];
-    }
-
-    /**
-     * @return string
-     */
-    public function getServiceAddress()
-    {
-        return (string)$this['ServiceAddress'];
-    }
-
-    /**
-     * @return array
-     */
-    public function getServiceTags()
-    {
-        return $this['ServiceTags'];
-    }
-
-    /**
-     * @return int
-     */
-    public function getServicePort()
-    {
-        return (int)$this['ServicePort'];
-    }
-
-    /**
-     * @return bool
-     */
-    public function getServiceEnableTagOverride()
-    {
-        return (bool)$this['ServiceEnableTagOverride'];
-    }
+    /** @var string */
+    public $ServiceID = '';
+    /** @var string */
+    public $ServiceName = '';
+    /** @var string */
+    public $ServiceAddress = '';
+    /** @var string[] */
+    public $ServiceTags = array();
+    /** @var int */
+    public $ServicePort = 0;
+    /** @var bool */
+    public $ServiceEnableTagOverride = false;
 }

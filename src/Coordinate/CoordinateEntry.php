@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPConsulAPI\Agent;
+<?php namespace DCarbone\PHPConsulAPI\Coordinate;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,26 +16,16 @@
    limitations under the License.
 */
 
+use DCarbone\PHPConsulAPI\AbstractObjectModel;
+
 /**
- * Class AgentCheckRegistration
- * @package DCarbone\PHPConsulAPI\Agent
+ * Class CoordinateEntry
+ * @package DCarbone\PHPConsulAPI\Coordinate
  */
-class AgentCheckRegistration extends AgentServiceCheck
+class CoordinateEntry extends AbstractObjectModel
 {
     /** @var string */
-    public $ID = '';
-    /** @var string */
-    public $Name = '';
-    /** @var string */
-    public $Notes = '';
-    /** @var string */
-    public $ServiceID = '';
-
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return (string)$this->Name;
-    }
+    public $Node = '';
+    /** @var Coordinate */
+    public $Coord = null;
 }

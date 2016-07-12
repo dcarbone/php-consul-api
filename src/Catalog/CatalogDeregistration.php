@@ -16,115 +16,22 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractDefinedStrictCollection;
+use DCarbone\PHPConsulAPI\AbstractObjectModel;
 
 /**
  * Class CatalogDeregistration
  * @package DCarbone\PHPConsulAPI\Catalog
  */
-class CatalogDeregistration extends AbstractDefinedStrictCollection
+class CatalogDeregistration extends AbstractObjectModel
 {
-    /**
-     * @return array
-     */
-    protected function getDefinition()
-    {
-        return array(
-            'Node' => null,
-            'Address' => null,
-            'Datacenter' => null,
-            'ServiceID' => null,
-            'CheckID' => null,
-        );
-    }
-
-    /**
-     * @return string
-     */
-    public function getNode()
-    {
-        return (string)$this->_storage['Node'];
-    }
-
-    /**
-     * @param string $node
-     * @return $this
-     */
-    public function setNode($node)
-    {
-        $this->_storage['Node'] = $node;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAddress()
-    {
-        return (string)$this->_storage['Address'];
-    }
-
-    /**
-     * @param string $address
-     * @return $this
-     */
-    public function setAddress($address)
-    {
-        $this->_storage['Address'] = $address;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDatacenter()
-    {
-        return (string)$this->_storage['Datacenter'];
-    }
-
-    /**
-     * @param string $datacenter
-     * @return $this
-     */
-    public function setDatacenter($datacenter)
-    {
-        $this->_storage['Datacenter'] = $datacenter;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getServiceID()
-    {
-        return (string)$this->_storage['ServiceID'];
-    }
-
-    /**
-     * @param string $serviceID
-     * @return $this
-     */
-    public function setServiceID($serviceID)
-    {
-        $this->_storage['ServiceID'] = $serviceID;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCheckID()
-    {
-        return (string)$this->_storage['CheckID'];
-    }
-
-    /**
-     * @param string $checkID
-     * @return $this
-     */
-    public function setCheckID($checkID)
-    {
-        $this->_storage['CheckID'] = $checkID;
-        return $this;
-    }
+    /** @var string */
+    public $Node = '';
+    /** @var string */
+    public $Address = '';
+    /** @var string */
+    public $Datacenter = '';
+    /** @var string */
+    public $ServiceID = '';
+    /** @var string */
+    public $CheckID = '';
 }

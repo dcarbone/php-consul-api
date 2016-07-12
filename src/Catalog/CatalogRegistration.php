@@ -16,7 +16,7 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractDefinedStrictCollection;
+use DCarbone\PHPConsulAPI\AbstractObjectModel;
 use DCarbone\PHPConsulAPI\Agent\AgentCheck;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
 
@@ -24,109 +24,16 @@ use DCarbone\PHPConsulAPI\Agent\AgentService;
  * Class CatalogRegistration
  * @package DCarbone\PHPConsulAPI\Catalog
  */
-class CatalogRegistration extends AbstractDefinedStrictCollection
+class CatalogRegistration extends AbstractObjectModel
 {
-    /**
-     * @return array
-     */
-    protected function getDefinition()
-    {
-        return array(
-            'Node' => null,
-            'Address' => null,
-            'Datacenter' => null,
-            'Service' => null,
-            'Check' => null,
-        );
-    }
-
-    /**
-     * @return string
-     */
-    public function getNode()
-    {
-        return (string)$this->_storage['Node'];
-    }
-
-    /**
-     * @param string $node
-     * @return $this
-     */
-    public function setNode($node)
-    {
-        $this->_storage['Node'] = $node;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAddress()
-    {
-        return (string)$this->_storage['Address'];
-    }
-
-    /**
-     * @param string $address
-     * @return $this
-     */
-    public function setAddress($address)
-    {
-        $this->_storage['Address'] = $address;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDatacenter()
-    {
-        return (string)$this->_storage['Datacenter'];
-    }
-
-    /**
-     * @param string $datacenter
-     * @return $this
-     */
-    public function setDatacenter($datacenter)
-    {
-        $this->_storage['Datacenter'] = $datacenter;
-        return $this;
-    }
-
-    /**
-     * @return AgentService|null
-     */
-    public function getService()
-    {
-        return $this->_storage['Service'];
-    }
-
-    /**
-     * @param AgentService $service
-     * @return $this
-     */
-    public function setService(AgentService $service)
-    {
-        $this->_storage['Service'] = $service;
-        return $this;
-    }
-
-    /**
-     * @return AgentCheck|null
-     */
-    public function getCheck()
-    {
-        return $this->_storage['Check'];
-    }
-
-    /**
-     * @param AgentCheck $check
-     * @return $this
-     */
-    public function setCheck(AgentCheck $check)
-    {
-        $this->_storage['Check'] = $check;
-        return $this;
-    }
+    /** @var string */
+    public $Node = '';
+    /** @var string */
+    public $Address = '';
+    /** @var string */
+    public $Datacenter = '';
+    /** @var AgentService */
+    public $Service = null;
+    /** @var AgentCheck */
+    public $Check = null;
 }

@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPConsulAPI\Agent;
+<?php namespace DCarbone\PHPConsulAPI;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -17,25 +17,28 @@
 */
 
 /**
- * Class AgentCheckRegistration
- * @package DCarbone\PHPConsulAPI\Agent
+ * Class AbstractObjectModel
+ * @package DCarbone\PHPConsulAPI
  */
-class AgentCheckRegistration extends AgentServiceCheck
+abstract class AbstractObjectModel
 {
-    /** @var string */
-    public $ID = '';
-    /** @var string */
-    public $Name = '';
-    /** @var string */
-    public $Notes = '';
-    /** @var string */
-    public $ServiceID = '';
+    /**
+     * AbstractObjectModel constructor.
+     * @param array $data
+     */
+    public function __construct(array $data = array())
+    {
+        foreach($data as $k => $v)
+        {
+            $this->{$k} = $v;
+        }
+    }
 
     /**
      * @return string
      */
     public function __toString()
     {
-        return (string)$this->Name;
+        return get_class($this);
     }
 }

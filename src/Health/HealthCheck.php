@@ -16,84 +16,28 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractDefinedCollection;
+use DCarbone\PHPConsulAPI\AbstractObjectModel;
 
 /**
  * Class HealthCheck
  * @package DCarbone\PHPConsulAPI\Health
  */
-class HealthCheck extends AbstractDefinedCollection
+class HealthCheck extends AbstractObjectModel
 {
-    /**
-     * @return array
-     */
-    protected function getDefinition()
-    {
-        return array(
-            'Node' => null,
-            'CheckID' => null,
-            'Name' => null,
-            'Status' => null,
-            'Notes' => null,
-            'Output' => null,
-            'ServiceID' => null,
-            'ServiceName' => null
-        );
-    }
-
-    /**
-     * @return string
-     */
-    public function getNode()
-    {
-        return (string)$this->_storage['Node'];
-    }
-
-    /**
-     * @return string
-     */
-    public function getCheckID()
-    {
-        return (string)$this->_storage['CheckID'];
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return (string)$this->_storage['Name'];
-    }
-
-    /**
-     * @return string
-     */
-    public function getStatus()
-    {
-        return (string)$this->_storage['Status'];
-    }
-
-    /**
-     * @return string
-     */
-    public function getOutput()
-    {
-        return (string)$this->_storage['Output'];
-    }
-
-    /**
-     * @return string
-     */
-    public function getServiceID()
-    {
-        return (string)$this->_storage['ServiceID'];
-    }
-
-    /**
-     * @return string
-     */
-    public function getServiceName()
-    {
-        return (string)$this->_storage['ServiceName'];
-    }
+    /** @var string */
+    public $Node = '';
+    /** @var string */
+    public $CheckID = '';
+    /** @var string */
+    public $Name = '';
+    /** @var string */
+    public $Status = '';
+    /** @var string */
+    public $Notes = '';
+    /** @var string */
+    public $Output = '';
+    /** @var string */
+    public $ServiceID = '';
+    /** @var string */
+    public $ServiceName = '';
 }

@@ -20,7 +20,7 @@
  * Class Config
  * @package DCarbone\PHPConsulAPI
  */
-class Config extends AbstractDefinedStrictCollection
+class Config extends AbstractStrictCollection
 {
     /** @var array */
     private $_logLevels = array(

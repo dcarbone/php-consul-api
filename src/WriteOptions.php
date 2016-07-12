@@ -20,7 +20,7 @@
  * Class WriteOptions
  * @package DCarbone\PHPConsulAPI
  */
-class WriteOptions extends AbstractDefinedStrictCollection
+class WriteOptions extends AbstractStrictCollection
 {
     use ConsulHttpParamContainerTrait;
 

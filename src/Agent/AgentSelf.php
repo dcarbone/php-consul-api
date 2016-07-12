@@ -16,74 +16,18 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractDefinedCollection;
+use DCarbone\PHPConsulAPI\AbstractObjectModel;
 
 /**
  * Class AgentSelf
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentSelf extends AbstractDefinedCollection
+class AgentSelf extends AbstractObjectModel
 {
-    /**
-     * AgentSelf constructor.
-     * @param array $data
-     */
-    public function __construct(array $data = array())
-    {
-        parent::__construct();
-        foreach($data as $k => $v)
-        {
-            switch($k)
-            {
-                case 'Config':
-                    $this['Config'] = new AgentSelfConfig($v);
-                    break;
-                case 'Coord':
-                    $this['Coord'] = new AgentSelfCoord($v);
-                    break;
-                case 'Member':
-                    $this['Member'] = new AgentMember($v);
-                    break;
-
-                default:
-                    $this[$k] = $v;
-            }
-        }
-    }
-
-    /**
-     * @return array
-     */
-    protected function getDefinition()
-    {
-        return array(
-            'Config' => null,
-            'Coord' => null,
-            'Member' => null,
-        );
-    }
-
-    /**
-     * @return AgentSelfConfig
-     */
-    public function getConfig()
-    {
-        return $this['Config'];
-    }
-
-    /**
-     * @return AgentSelfCoord
-     */
-    public function getCoord()
-    {
-        return $this['Coord'];
-    }
-
-    /**
-     * @return AgentMember
-     */
-    public function getMember()
-    {
-        return $this['Member'];
-    }
+    /** @var array */
+    public $Config = null;
+    /** @var array */
+    public $Coord = null;
+    /** @var AgentMember */
+    public $Member = null;
 }

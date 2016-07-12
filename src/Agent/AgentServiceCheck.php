@@ -16,191 +16,30 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractDefinedStrictCollection;
+use DCarbone\PHPConsulAPI\AbstractObjectModel;
 
 /**
  * Class AgentServiceCheck
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentServiceCheck extends AbstractDefinedStrictCollection
+class AgentServiceCheck extends AbstractObjectModel
 {
-    /**
-     * @return array
-     */
-    protected function getDefinition()
-    {
-        return array(
-            'Script' => null,
-            'DockerContainerID' => null,
-            'Shell' => null,
-            'Interval' => null,
-            'Timeout' => null,
-            'TTL' => null,
-            'HTTP' => null,
-            'TCP' => null,
-            'Status' => null
-        );
-    }
-
-    /**
-     * @return string
-     */
-    public function getScript()
-    {
-        return $this->_storage['Script'];
-    }
-
-    /**
-     * @param string $script
-     * @return $this
-     */
-    public function setScript($script)
-    {
-        $this->_storage['Script'] = $script;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDockerContainerID()
-    {
-        return $this->_storage['DockerContainerID'];
-    }
-
-    /**
-     * @param string $dockerContainerID
-     * @return $this
-     */
-    public function setDockerContainerID($dockerContainerID)
-    {
-        $this->_storage['DockerContainerID'] = $dockerContainerID;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getShell()
-    {
-        return $this->_storage['Shell'];
-    }
-
-    /**
-     * @param string $shell
-     * @return $this
-     */
-    public function setShell($shell)
-    {
-        $this->_storage['Shell'] = $shell;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getInterval()
-    {
-        return $this->_storage['Interval'];
-    }
-
-    /**
-     * @param string $interval
-     * @return $this
-     */
-    public function setInterval($interval)
-    {
-        $this->_storage['Interval'] = $interval;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTimeout()
-    {
-        return $this->_storage['Timeout'];
-    }
-
-    /**
-     * @param string $timeout
-     * @return $this
-     */
-    public function setTimeout($timeout)
-    {
-        $this->_storage['Timeout'] = $timeout;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTTL()
-    {
-        return $this->_storage['TTL'];
-    }
-
-    /**
-     * @param string $ttl
-     * @return $this
-     */
-    public function setTTL($ttl)
-    {
-        $this->_storage['TTL'] = $ttl;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getHTTP()
-    {
-        return $this->_storage['HTTP'];
-    }
-
-    /**
-     * @param string $http
-     * @return $this
-     */
-    public function setHTTP($http)
-    {
-        $this->_storage['HTTP'] = $http;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTCP()
-    {
-        return $this->_storage['TCP'];
-    }
-
-    /**
-     * @param string $tcp
-     * @return $this
-     */
-    public function setTCP($tcp)
-    {
-        $this->_storage['TCP'] = $tcp;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getStatus()
-    {
-        return $this->_storage['Status'];
-    }
-
-    /**
-     * @param string $status
-     * @return $this
-     */
-    public function setStatus($status)
-    {
-        $this->_storage['Status'] = $status;
-        return $this;
-    }
+    /** @var string */
+    public $Script = '';
+    /** @var string */
+    public $DockerContainerID = '';
+    /** @var string */
+    public $Shell = '';
+    /** @var string */
+    public $Interval = '';
+    /** @var string */
+    public $Timeout = '';
+    /** @var string */
+    public $TTL = '';
+    /** @var string */
+    public $HTTP = '';
+    /** @var string */
+    public $TCP = '';
+    /** @var string */
+    public $Status = '';
 }

@@ -18,7 +18,9 @@
 
 use DCarbone\PHPConsulAPI\Agent\AgentClient;
 use DCarbone\PHPConsulAPI\Catalog\CatalogClient;
+use DCarbone\PHPConsulAPI\Coordinate\CoordinateClient;
 use DCarbone\PHPConsulAPI\Event\EventClient;
+use DCarbone\PHPConsulAPI\Health\HealthClient;
 use DCarbone\PHPConsulAPI\KV\KVClient;
 use DCarbone\PHPConsulAPI\Status\StatusClient;
 
@@ -38,6 +40,10 @@ class Client
     private $_Status;
     /** @var EventClient */
     private $_Event;
+    /** @var HealthClient */
+    private $_Health;
+    /** @var CoordinateClient */
+    private $_Coordinate;
 
     /**
      * Client constructor.
@@ -65,6 +71,9 @@ class Client
         $this->_Catalog = new CatalogClient($config);
         $this->_Status = new StatusClient($config);
         $this->_Event = new EventClient($config);
+        $this->_Health = new HealthClient($config);
+        $this->_Coordinate = new CoordinateClient($config);
+
     }
 
     /**
@@ -105,5 +114,21 @@ class Client
     public function Event()
     {
         return $this->_Event;
+    }
+
+    /**
+     * @return HealthClient
+     */
+    public function Health()
+    {
+        return $this->_Health;
+    }
+
+    /**
+     * @return CoordinateClient
+     */
+    public function Coordinate()
+    {
+        return $this->_Coordinate;
     }
 }

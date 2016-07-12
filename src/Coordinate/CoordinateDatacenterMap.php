@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPConsulAPI;
+<?php namespace DCarbone\PHPConsulAPI\Coordinate;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,27 +16,16 @@
    limitations under the License.
 */
 
+use DCarbone\PHPConsulAPI\AbstractObjectModel;
+
 /**
- * Class AbstractResponseModel
- * @package DCarbone\PHPConsulAPI\Base
+ * Class CoordinateDatacenterMap
+ * @package DCarbone\PHPConsulAPI\Coordinate
  */
-abstract class AbstractDefinedCollection extends AbstractCollection
+class CoordinateDatacenterMap extends AbstractObjectModel
 {
-    /** @var array */
-    protected $_definition = array();
-
-    /**
-     * AbstractConsulConfig constructor.
-     * @param array $data
-     */
-    public function __construct(array $data = array())
-    {
-        $this->_definition = $this->getDefinition();
-        parent::__construct($data + $this->_definition);
-    }
-
-    /**
-     * @return array
-     */
-    abstract protected function getDefinition();
+    /** @var string */
+    public $Datacenter = '';
+    /** @var Coordinate[] */
+    public $Coordinates = array();
 }

@@ -17,11 +17,29 @@
 */
 
 /**
- * Class AbstractDefinedCollection
- * @package DCarbone\PHPConsulAPI\Base
+ * Class AbstractStrictCollection
+ * @package DCarbone\PHPConsulAPI
  */
-abstract class AbstractDefinedStrictCollection extends AbstractDefinedCollection
+abstract class AbstractStrictCollection extends AbstractCollection
 {
+    /** @var array */
+    protected $_definition = array();
+
+    /**
+     * AbstractConsulConfig constructor.
+     * @param array $data
+     */
+    public function __construct(array $data = array())
+    {
+        $this->_definition = $this->getDefinition();
+        parent::__construct($data + $this->_definition);
+    }
+
+    /**
+     * @return array
+     */
+    abstract protected function getDefinition();
+    
     /**
      * Whether a offset exists
      * @link http://php.net/manual/en/arrayaccess.offsetexists.php

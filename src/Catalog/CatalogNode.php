@@ -16,46 +16,16 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractDefinedCollection;
+use DCarbone\PHPConsulAPI\AbstractObjectModel;
 
 /**
  * Class CatalogNode
  * @package DCarbone\PHPConsulAPI\Catalog
  */
-class CatalogNode extends AbstractDefinedCollection
+class CatalogNode extends AbstractObjectModel
 {
-    /**
-     * @return array
-     */
-    protected function getDefinition()
-    {
-        return array(
-            'Node' => null,
-            'Address' => null
-        );
-    }
-
-    /**
-     * @return string
-     */
-    public function getNode()
-    {
-        return (string)$this['Node'];
-    }
-
-    /**
-     * @return string
-     */
-    public function getAddress()
-    {
-        return (string)$this['Address'];
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return (string)$this['Node'];
-    }
+    /** @var string */
+    public $Node = '';
+    /** @var string */
+    public $Address = '';
 }

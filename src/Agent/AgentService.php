@@ -17,103 +17,33 @@
 */
 
 use DCarbone\PHPConsulAPI\AbstractDefinedCollection;
+use DCarbone\PHPConsulAPI\AbstractObjectModel;
 use DCarbone\PHPConsulAPI\TaggedInterface;
 
 /**
  * Class AgentService
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentService extends AbstractDefinedCollection implements TaggedInterface
+class AgentService extends AbstractObjectModel
 {
-    /**
-     * @return array
-     */
-    protected function getDefinition()
-    {
-        return array(
-            'ID' => null,
-            'Service' => null,
-            'Tags' => array(),
-            'Address' => null,
-            'Port' => null,
-            'EnableTagOverride' => null
-        );
-    }
-
-    /**
-     * @return string
-     */
-    public function getID()
-    {
-        return $this['ID'];
-    }
-
-    /**
-     * @return string
-     */
-    public function getService()
-    {
-        return $this['Service'];
-    }
-
-    /**
-     * @return array
-     */
-    public function getTags()
-    {
-        return $this['Tags'];
-    }
-
-    /**
-     * @param string $tag
-     * @return bool
-     */
-    public function hasTag($tag)
-    {
-        return isset($this['Tags'][$tag]) || array_key_exists($tag, $this['Tags']);
-    }
-
-    /**
-     * @param string $tag
-     * @return string|null
-     */
-    public function getTag($tag)
-    {
-        if ($this->hasTag($tag))
-            return $this['Tags'][$tag];
-
-        return null;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAddress()
-    {
-        return $this['Address'];
-    }
-
-    /**
-     * @return int
-     */
-    public function getPort()
-    {
-        return (int)$this['Port'];
-    }
-
-    /**
-     * @return bool
-     */
-    public function getEnableTagOverride()
-    {
-        return (bool)$this['EnableTagOverride'];
-    }
+    /** @var string */
+    public $ID = '';
+    /** @var string */
+    public $Service = '';
+    /** @var string[] */
+    public $Tags = array();
+    /** @var string */
+    public $Address = '';
+    /** @var int */
+    public $Port = 0;
+    /** @var bool */
+    public $EnableTagOverride = false;
 
     /**
      * @return string
      */
     public function __toString()
     {
-        return $this->getID();
+        return $this->ID;
     }
 }

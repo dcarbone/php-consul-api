@@ -16,149 +16,42 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractDefinedCollection;
-use DCarbone\PHPConsulAPI\TaggedInterface;
+use DCarbone\PHPConsulAPI\AbstractObjectModel;
 
 /**
  * Class AgentMember
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentMember extends AbstractDefinedCollection implements TaggedInterface
+class AgentMember extends AbstractObjectModel
 {
-    /**
-     * @return array
-     */
-    protected function getDefinition()
-    {
-        return array(
-            'Name' => null,
-            'Addr' => null,
-            'Port' => null,
-            'Tags' => array(),
-            'Status' => null,
-            'ProtocolMin' => null,
-            'ProtocolMax' => null,
-            'ProtocolCur' => null,
-            'DelegateMin' => null,
-            'DelegateMax' => null,
-            'DelegateCur' => null,
-        );
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this['Name'];
-    }
-
-    /**
-     * @return string
-     */
-    public function getAddr()
-    {
-        return $this['Addr'];
-    }
-
-    /**
-     * @return int
-     */
-    public function getPort()
-    {
-        return (int)$this['Port'];
-    }
-
-    /**
-     * @return array
-     */
-    public function getTags()
-    {
-        return $this['Tags'];
-    }
-
-    /**
-     * @param string $tag
-     * @return bool
-     */
-    public function hasTag($tag)
-    {
-        return isset($this['Tags'][$tag]) || array_key_exists($tag, $this['Tags']);
-    }
-
-    /**
-     * @param string $tag
-     * @return string|null
-     */
-    public function getTag($tag)
-    {
-        if ($this->hasTag($tag))
-            return $this['Tags'][$tag];
-
-        return null;
-    }
-
-    /**
-     * @return int
-     */
-    public function getStatus()
-    {
-        return (int)$this['Status'];
-    }
-
-    /**
-     * @return int
-     */
-    public function getProtocolMin()
-    {
-        return (int)$this['ProtocolMin'];
-    }
-
-    /**
-     * @return int
-     */
-    public function getProtocolMax()
-    {
-        return (int)$this['ProtocolMax'];
-    }
-
-    /**
-     * @return int
-     */
-    public function getProtocolCur()
-    {
-        return (int)$this['ProtocolCur'];
-    }
-
-    /**
-     * @return int
-     */
-    public function getDelegateMin()
-    {
-        return (int)$this['DelegateMin'];
-    }
-
-    /**
-     * @return int
-     */
-    public function getDelegateMax()
-    {
-        return (int)$this['DelegateMax'];
-    }
-
-    /**
-     * @return int
-     */
-    public function getDelegateCur()
-    {
-        return (int)$this['DelegateCur'];
-    }
+    /** @var string */
+    public $Name = '';
+    /** @var string */
+    public $Addr = '';
+    /** @var int */
+    public $Port = 0;
+    /** @var string[] */
+    public $Tags = array();
+    /** @var string */
+    public $Status = '';
+    /** @var int */
+    public $ProtocolMin = 0;
+    /** @var int */
+    public $ProtocolMax = 0;
+    /** @var int */
+    public $ProtocolCur = 0;
+    /** @var int */
+    public $DelegateMin = 0;
+    /** @var int */
+    public $DelegateMax = 0;
+    /** @var int */
+    public $DelegateCur = 0;
 
     /**
      * @return string
      */
     public function __toString()
     {
-        return $this->getName();
+        return $this->Name;
     }
 }

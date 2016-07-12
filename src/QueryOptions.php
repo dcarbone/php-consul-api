@@ -20,7 +20,7 @@
  * Class QueryOptions
  * @package DCarbone\PHPConsulAPI
  */
-class QueryOptions extends AbstractDefinedStrictCollection
+class QueryOptions extends AbstractStrictCollection
 {
     use ConsulHttpParamContainerTrait;
 

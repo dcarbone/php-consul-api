@@ -15,123 +15,34 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-
-use DCarbone\PHPConsulAPI\AbstractDefinedCollection;
+use DCarbone\PHPConsulAPI\AbstractObjectModel;
 
 /**
  * Class KVPair
  * @package DCarbone\PHPConsulAPI\KV
  */
-class KVPair extends AbstractDefinedCollection
+class KVPair extends AbstractObjectModel
 {
-    /**
-     * @return array
-     */
-    protected function getDefinition()
-    {
-        return array(
-            'CreateIndex' => null,
-            'ModifyIndex' => null,
-            'LockIndex' => null,
-            'Key' => null,
-            'Flags' => null,
-            'Value' => null,
-            'Session' => null
-        );
-    }
-
-    /**
-     * @return int
-     */
-    public function getCreateIndex()
-    {
-        return $this['CreateIndex'];
-    }
-
-    /**
-     * @return int
-     */
-    public function getModifyIndex()
-    {
-        return $this['ModifyIndex'];
-    }
-
-    /**
-     * @return int
-     */
-    public function getLockIndex()
-    {
-        return $this['LockIndex'];
-    }
-
-    /**
-     * @return string
-     */
-    public function getKey()
-    {
-        return $this['Key'];
-    }
-
-    /**
-     * @return string
-     */
-    public function getValue()
-    {
-        return (string)$this['Value'];
-    }
-
-    /**
-     * @param string $value
-     * @return $this
-     */
-    public function setValue($value)
-    {
-        $this['Value'] = $value;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getFlags()
-    {
-        return $this['Flags'];
-    }
-
-    /**
-     * @param int $flags
-     * @return $this
-     */
-    public function setFlags($flags)
-    {
-        $this['Flags'] = (int)$flags;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSession()
-    {
-        return $this['Session'];
-    }
-
-    /**
-     * @param string $session
-     * @return $this
-     */
-    public function setSession($session)
-    {
-        $this['Session'] = $session;
-        return $this;
-    }
+    /** @var string */
+    public $Key = '';
+    /** @var int */
+    public $CreateIndex = 0;
+    /** @var int */
+    public $ModifyIndex = 0;
+    /** @var int */
+    public $LockIndex = 0;
+    /** @var int */
+    public $Flags = 0;
+    /** @var null|string */
+    public $Value = null;
+    /** @var string */
+    public $Session = '';
 
     /**
      * @return string
      */
     public function __toString()
     {
-        return $this->getValue();
+        return (string)$this->Value;
     }
 }
