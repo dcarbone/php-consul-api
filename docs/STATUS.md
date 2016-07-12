@@ -1,9 +1,9 @@
 # PHP Consul API Status
 
 All interactions with the [`v1/status`](https://www.consul.io/docs/agent/http/status.html) endpoint
-are done via the [StatusClient](./src/Status/StatusClient.php) class.
+are done via the [StatusClient](../src/Status/StatusClient.php) class.
 
-If you have constructed a [Client](./src/Client.php) object, this is done as so:
+If you have constructed a [Client../src/Client.php) object, this is done as so:
 
 ```php
 $status = $client->Status;

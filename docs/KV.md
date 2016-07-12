@@ -1,9 +1,9 @@
 # PHP Consul API KV
 
 All interactions with the [`v1/kv`](https://www.consul.io/docs/agent/http/kv.html) endpoint are done
-via the [KVClient](./src/KV/KVClient.php) class.
+via the [KVClient](../src/KV/KVClient.php) class.
 
-If you have constructed a [Client](./src/Client.php) object, this is done as so:
+If you have constructed a [Client](../src/Client.php) object, this is done as so:
 
 ```php
 $kv = $client->KV;

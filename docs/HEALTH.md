@@ -1,9 +1,9 @@
 # PHP Consul API Health
 
 ALl interactions with the [`v1/health`](https://www.consul.io/docs/agent/http/health.html) endpoint are done
-via the [HealthClient](./src/Health/HealthClient.php) class.
+via the [HealthClient](../src/Health/HealthClient.php) class.
 
-If you have constructed a [Client](./src/Client.php) object, this is done as so:
+If you have constructed a [Client](../src/Client.php) object, this is done as so:
 
 ```php
 $health = $client->Health;
