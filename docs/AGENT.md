@@ -115,7 +115,7 @@ if (null !== $err)
 ### Deregister Agent Check
 
 ```php
-$err = $client->Agetn()->checkDeregister('dan test service check');
+$err = $client->Agent()->checkDeregister('dan test service check');
 if (null !== $err)
     die($err);
 ```
