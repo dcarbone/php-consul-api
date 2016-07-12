@@ -136,22 +136,20 @@ class PHPLogger implements ConsulAPILoggerInterface
             $message
         );
 
-        switch($this->_mode)
+        if (0 === $this->_mode || 3 === $this->_mode || 4 === $this->_mode)
         {
-            case 0:
-            case 3:
-            case 4:
-                $ok = @error_log($message);
-                break;
-            case 1:
-                $ok = @error_log($message, $this->_mode, $this->_destination, $this->_extraHeaders);
-                break;
-
-            default:
-                throw new \Exception(sprintf(
-                    'PHPLogger - Invalid state seen, $mode is not set to a valid value! Current mode: "%s"',
-                    is_int($this->_mode) ? $this->_mode : gettype($this->_mode)
-                ));
+            $ok = @error_log($message);
+        }
+        else if (1 === $this->_mode)
+        {
+            $ok = @error_log($message, $this->_mode, $this->_destination, $this->_extraHeaders);
+        }
+        else
+        {
+            throw new \Exception(sprintf(
+                'PHPLogger - Invalid state seen, $mode is not set to a valid value! Current mode: "%s"',
+                is_int($this->_mode) ? $this->_mode : gettype($this->_mode)
+            ));
         }
         
         if ($ok)
