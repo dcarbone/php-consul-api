@@ -16,16 +16,16 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractConsulClient;
+use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\QueryOptions;
-use DCarbone\PHPConsulAPI\Request;
+use DCarbone\PHPConsulAPI\HttpRequest;
 
 /**
  * Class CoordinateClient
  * @package DCarbone\PHPConsulAPI\Coordinate
  */
-class CoordinateClient extends AbstractConsulClient
+class CoordinateClient extends AbstractClient
 {
     /**
      * @return array(
@@ -35,7 +35,7 @@ class CoordinateClient extends AbstractConsulClient
      */
     public function datacenters()
     {
-        $r = new Request('get', 'v1/coordinate/datacenters', $this->_Config);
+        $r = new HttpRequest('get', 'v1/coordinate/datacenters', $this->_Config);
 
         list($_, $response, $err) = $this->requireOK($this->doRequest($r));
 
@@ -66,7 +66,7 @@ class CoordinateClient extends AbstractConsulClient
      */
     public function nodes(QueryOptions $queryOptions = null)
     {
-        $r = new Request('get', 'v1/coordinate/nodes', $this->_Config);
+        $r = new HttpRequest('get', 'v1/coordinate/nodes', $this->_Config);
         $r->setQueryOptions($queryOptions);
 
         list ($duration, $response, $err) = $this->requireOK($this->doRequest($r));

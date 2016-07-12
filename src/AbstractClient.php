@@ -17,10 +17,10 @@
 */
 
 /**
- * Class AbstractConsulClient
+ * Class AbstractClient
  * @package DCarbone\PHPConsulAPI\Base
  */
-abstract class AbstractConsulClient
+abstract class AbstractClient
 {
     /** @var Config */
     protected $_Config;
@@ -68,14 +68,14 @@ abstract class AbstractConsulClient
     }
 
     /**
-     * @param Request $r
+     * @param HttpRequest $r
      * @return array(
      *  @type int duration in microseconds
      *  @type HttpResponse|null http response
      *  @type \DCarbone\PHPConsulAPI\Error|null any seen errors
      * )
      */
-    protected function doRequest(Request $r)
+    protected function doRequest(HttpRequest $r)
     {
         $rt = microtime(true);
         /** @var HttpResponse $response */

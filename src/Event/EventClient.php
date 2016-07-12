@@ -16,17 +16,17 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractConsulClient;
+use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\QueryOptions;
-use DCarbone\PHPConsulAPI\Request;
+use DCarbone\PHPConsulAPI\HttpRequest;
 use DCarbone\PHPConsulAPI\WriteOptions;
 
 /**
  * Class EventClient
  * @package DCarbone\PHPConsulAPI
  */
-class EventClient extends AbstractConsulClient
+class EventClient extends AbstractClient
 {
     /**
      * @param UserEvent $event
@@ -39,7 +39,7 @@ class EventClient extends AbstractConsulClient
      */
     public function fire(UserEvent $event, WriteOptions $writeOptions = null)
     {
-        $r = new Request('put', sprintf('v1/event/fire/%s', rawurlencode($event->Name)), $this->_Config);
+        $r = new HttpRequest('put', sprintf('v1/event/fire/%s', rawurlencode($event->Name)), $this->_Config);
         $r->setWriteOptions($writeOptions);
 
         if ('' !== ($nf = $event->NodeFilter))
@@ -75,7 +75,7 @@ class EventClient extends AbstractConsulClient
      */
     public function eventList($name = '', QueryOptions $queryOptions = null)
     {
-        $r = new Request('get', 'v1/event/list', $this->_Config);
+        $r = new HttpRequest('get', 'v1/event/list', $this->_Config);
         if ('' !== (string)$name)
             $r->params->set('name', $name);
         $r->setQueryOptions($queryOptions);

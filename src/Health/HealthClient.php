@@ -16,17 +16,17 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractConsulClient;
+use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\QueryOptions;
-use DCarbone\PHPConsulAPI\Request;
+use DCarbone\PHPConsulAPI\HttpRequest;
 
 /**
  * Class HealthClient
  * @package DCarbone\PHPConsulAPI\Health
  */
-class HealthClient extends AbstractConsulClient
+class HealthClient extends AbstractClient
 {
     /**
      * @param string $node
@@ -48,7 +48,7 @@ class HealthClient extends AbstractConsulClient
             ))];
         }
 
-        $r = new Request('get', sprintf('v1/health/node/%s', rawurlencode($node)), $this->_Config);
+        $r = new HttpRequest('get', sprintf('v1/health/node/%s', rawurlencode($node)), $this->_Config);
         $r->setQueryOptions($queryOptions);
 
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -91,7 +91,7 @@ class HealthClient extends AbstractConsulClient
             ))];
         }
 
-        $r = new Request('get', sprintf('v1/health/checks/%s', rawurlencode($service)), $this->_Config);
+        $r = new HttpRequest('get', sprintf('v1/health/checks/%s', rawurlencode($service)), $this->_Config);
         $r->setQueryOptions($queryOptions);
 
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -134,7 +134,7 @@ class HealthClient extends AbstractConsulClient
             ))];
         }
 
-        $r = new Request('get', sprintf('v1/health/checks/%s', rawurlencode($service)), $this->_Config);
+        $r = new HttpRequest('get', sprintf('v1/health/checks/%s', rawurlencode($service)), $this->_Config);
         $r->setQueryOptions($queryOptions);
 
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -180,7 +180,7 @@ class HealthClient extends AbstractConsulClient
             ))];
         }
 
-        $r = new Request('get', sprintf('v1/health/state/%s', rawurlencode($state)), $this->_Config);
+        $r = new HttpRequest('get', sprintf('v1/health/state/%s', rawurlencode($state)), $this->_Config);
         $r->setQueryOptions($queryOptions);
 
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));

@@ -32,6 +32,7 @@ use DCarbone\PHPConsulAPI\Event\UserEvent;
 use DCarbone\PHPConsulAPI\Health\HealthCheck;
 use DCarbone\PHPConsulAPI\Health\ServiceEntry;
 use DCarbone\PHPConsulAPI\KV\KVPair;
+use DCarbone\PHPConsulAPI\Session\SessionEntry;
 
 /**
  * TODO: Not a big fan of this...
@@ -222,5 +223,14 @@ class Hydrator
         }
         
         return $se;
+    }
+
+    /**
+     * @param array $data
+     * @return SessionEntry
+     */
+    public static function SessionEntry(array $data)
+    {
+        return new SessionEntry($data);
     }
 }

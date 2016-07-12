@@ -16,17 +16,17 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractConsulClient;
+use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\QueryOptions;
-use DCarbone\PHPConsulAPI\Request;
+use DCarbone\PHPConsulAPI\HttpRequest;
 use DCarbone\PHPConsulAPI\WriteOptions;
 
 /**
  * Class CatalogClient
  * @package DCarbone\PHPConsulAPI\Catalog
  */
-class CatalogClient extends AbstractConsulClient
+class CatalogClient extends AbstractClient
 {
     /**
      * @param CatalogRegistration $catalogRegistration
@@ -38,7 +38,7 @@ class CatalogClient extends AbstractConsulClient
      */
     public function register(CatalogRegistration $catalogRegistration, WriteOptions $writeOptions = null)
     {
-        $r = new Request('put', 'v1/catalog/register', $this->_Config, $catalogRegistration);
+        $r = new HttpRequest('put', 'v1/catalog/register', $this->_Config, $catalogRegistration);
         $r->setWriteOptions($writeOptions);
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
@@ -57,7 +57,7 @@ class CatalogClient extends AbstractConsulClient
      */
     public function deregister(CatalogDeregistration $catalogDeregistration, WriteOptions $writeOptions = null)
     {
-        $r = new Request('put', 'v1/catalog/deregister', $this->_Config, $catalogDeregistration);
+        $r = new HttpRequest('put', 'v1/catalog/deregister', $this->_Config, $catalogDeregistration);
         $r->setWriteOptions($writeOptions);
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
@@ -74,7 +74,7 @@ class CatalogClient extends AbstractConsulClient
      */
     public function datacenters()
     {
-        $r = new Request('get', 'v1/catalog/datacenters', $this->_Config);
+        $r = new HttpRequest('get', 'v1/catalog/datacenters', $this->_Config);
 
         list($_, $response, $err) = $this->requireOK($this->doRequest($r));
 
@@ -94,7 +94,7 @@ class CatalogClient extends AbstractConsulClient
      */
     public function nodes(QueryOptions $queryOptions = null)
     {
-        $r = new Request('get', 'v1/catalog/nodes', $this->_Config);
+        $r = new HttpRequest('get', 'v1/catalog/nodes', $this->_Config);
         $r->setQueryOptions($queryOptions);
 
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -128,7 +128,7 @@ class CatalogClient extends AbstractConsulClient
      */
     public function services(QueryOptions $queryOptions = null)
     {
-        $r = new Request('get', 'v1/catalog/services', $this->_Config);
+        $r = new HttpRequest('get', 'v1/catalog/services', $this->_Config);
         $r->setQueryOptions($queryOptions);
 
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -154,7 +154,7 @@ class CatalogClient extends AbstractConsulClient
      */
     public function service($service, $tag = '', QueryOptions $queryOptions = null)
     {
-        $r = new Request('get', sprintf('v1/catalog/service/%s', rawurlencode($service)), $this->_Config);
+        $r = new HttpRequest('get', sprintf('v1/catalog/service/%s', rawurlencode($service)), $this->_Config);
         $r->setQueryOptions($queryOptions);
         if ('' !== $tag)
             $r->params->set('tag', $tag);
@@ -191,7 +191,7 @@ class CatalogClient extends AbstractConsulClient
      */
     public function node($node, QueryOptions $queryOptions = null)
     {
-        $r = new Request('get', sprintf('v1/catalog/node/%s', rawurlencode($node)), $this->_Config);
+        $r = new HttpRequest('get', sprintf('v1/catalog/node/%s', rawurlencode($node)), $this->_Config);
         $r->setQueryOptions($queryOptions);
 
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));

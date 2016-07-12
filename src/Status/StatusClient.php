@@ -16,14 +16,14 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractConsulClient;
-use DCarbone\PHPConsulAPI\Request;
+use DCarbone\PHPConsulAPI\AbstractClient;
+use DCarbone\PHPConsulAPI\HttpRequest;
 
 /**
  * Class StatusClient
  * @package DCarbone\PHPConsulAPI\Status
  */
-class StatusClient extends AbstractConsulClient
+class StatusClient extends AbstractClient
 {
     /**
      * @return array(
@@ -33,7 +33,7 @@ class StatusClient extends AbstractConsulClient
      */
     public function leader()
     {
-        $r = new Request('get', 'v1/status/leader', $this->_Config);
+        $r = new HttpRequest('get', 'v1/status/leader', $this->_Config);
         list($_, $response, $err) = $this->requireOK($this->doRequest($r));
 
         if (null !== $err)
@@ -47,7 +47,7 @@ class StatusClient extends AbstractConsulClient
      */
     public function peers()
     {
-        $r = new Request('get', 'v1/status/peers', $this->_Config);
+        $r = new HttpRequest('get', 'v1/status/peers', $this->_Config);
         list($_, $response, $err) = $this->requireOK($this->doRequest($r));
 
         if (null !== $err)

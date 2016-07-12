@@ -22,6 +22,7 @@ use DCarbone\PHPConsulAPI\Coordinate\CoordinateClient;
 use DCarbone\PHPConsulAPI\Event\EventClient;
 use DCarbone\PHPConsulAPI\Health\HealthClient;
 use DCarbone\PHPConsulAPI\KV\KVClient;
+use DCarbone\PHPConsulAPI\Session\SessionClient;
 use DCarbone\PHPConsulAPI\Status\StatusClient;
 
 /**
@@ -44,6 +45,8 @@ class Client
     public $Health;
     /** @var CoordinateClient */
     public $Coordinate;
+    /** @var SessionClient */
+    public $Session;
 
     /**
      * Client constructor.
@@ -73,5 +76,6 @@ class Client
         $this->Event = new EventClient($config);
         $this->Health = new HealthClient($config);
         $this->Coordinate = new CoordinateClient($config);
+        $this->Session = new SessionClient($config);
     }
 }

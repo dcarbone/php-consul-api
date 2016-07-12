@@ -16,18 +16,18 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractConsulClient;
+use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\QueryOptions;
-use DCarbone\PHPConsulAPI\Request;
+use DCarbone\PHPConsulAPI\HttpRequest;
 use DCarbone\PHPConsulAPI\WriteOptions;
 
 /**
  * Class KVClient
  * @package DCarbone\PHPConsulAPI\KV
  */
-class KVClient extends AbstractConsulClient
+class KVClient extends AbstractClient
 {
     /**
      * @param string $key Name of key to retrieve value for
@@ -49,7 +49,7 @@ class KVClient extends AbstractConsulClient
             ))];
         }
 
-        $r = new Request('get', sprintf('v1/kv/%s', rawurlencode($key)), $this->_Config);
+        $r = new HttpRequest('get', sprintf('v1/kv/%s', rawurlencode($key)), $this->_Config);
         $r->setQueryOptions($queryOptions);
 
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -88,7 +88,7 @@ class KVClient extends AbstractConsulClient
             ))];
         }
 
-        $r = new Request('get', sprintf('v1/kv/%s', rawurlencode($prefix)), $this->_Config);
+        $r = new HttpRequest('get', sprintf('v1/kv/%s', rawurlencode($prefix)), $this->_Config);
         $r->setQueryOptions($queryOptions);
         $r->params->set('recurse', '');
 
@@ -134,9 +134,9 @@ class KVClient extends AbstractConsulClient
         }
 
         if (null === $prefix)
-            $r = new Request('get', 'v1/kv/', $this->_Config);
+            $r = new HttpRequest('get', 'v1/kv/', $this->_Config);
         else
-            $r = new Request('get', sprintf('v1/kv/%s', rawurlencode($prefix)), $this->_Config);
+            $r = new HttpRequest('get', sprintf('v1/kv/%s', rawurlencode($prefix)), $this->_Config);
 
         $r->setQueryOptions($queryOptions);
         $r->params->set('keys', true);
@@ -162,7 +162,7 @@ class KVClient extends AbstractConsulClient
      */
     public function put(KVPair $KVPair, WriteOptions $writeOptions = null)
     {
-        $r = new Request('put', sprintf('v1/kv/%s', rawurlencode($KVPair->Key)), $this->_Config);
+        $r = new HttpRequest('put', sprintf('v1/kv/%s', rawurlencode($KVPair->Key)), $this->_Config);
         $r->setWriteOptions($writeOptions);
         $r->body = ($KVPair);
 
@@ -182,7 +182,7 @@ class KVClient extends AbstractConsulClient
      */
     public function delete($key, WriteOptions $writeOptions = null)
     {
-        $r = new Request('delete', sprintf('v1/kv/%s', rawurlencode($key)), $this->_Config);
+        $r = new HttpRequest('delete', sprintf('v1/kv/%s', rawurlencode($key)), $this->_Config);
         $r->setWriteOptions($writeOptions);
 
         list ($duration, $_, $err) = $this->requireOK($this->doRequest($r));

@@ -17,10 +17,10 @@
 */
 
 /**
- * Class Request
+ * Class HttpRequest
  * @package DCarbone\PHPConsulAPI
  */
-class Request
+class HttpRequest
 {
     /** @var Params */
     public $params;
