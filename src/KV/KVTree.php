@@ -139,7 +139,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
             if ($child instanceof KVTree)
                 $json[$this->_prefix] = $child;
             else if ($child instanceof KVPair)
-                $json[$this->_prefix][$child->getKey()] = $child;
+                $json[$this->_prefix][$child->Key] = $child;
             else
                 $json[$this->_prefix][$k] = $child;
         }

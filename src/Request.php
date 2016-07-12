@@ -22,20 +22,18 @@
  */
 class Request
 {
+    /** @var Params */
+    public $params;
+    /** @var string */
+    public $body = null;
+
     /** @var Config */
     private $_Config;
-    /** @var Params */
-    private $_Params;
-
-    /** @var string */
-    private $_body = null;
 
     /** @var string */
     private $_method;
-
     /** @var string */
     private $_path;
-
     /** @var string */
     private $_url;
 
@@ -61,39 +59,23 @@ class Request
      */
     public function __construct($method, $path, Config $config, $body = null)
     {
-        $this->_Params = new Params();
+        $this->params = new Params();
         $this->_Config = $config;
         $this->_method = strtolower($method);
         $this->_path = $path;
 
         if ('' !== ($dc = $config->getDatacenter()))
-            $this->_Params['dc'] = $dc;
+            $this->params['dc'] = $dc;
 
         if (0 !== ($wait = $config->getWaitTime()))
-            $this->_Params['wait'] = $wait;
+            $this->params['wait'] = $wait;
 
         if ('' !== ($token = $config->getToken()))
-            $this->_Params['token'] = $token;
+            $this->params['token'] = $token;
 
         $this->_curlOpts = self::$_defaultCurlOpts + $config->getCurlOptArray();
 
-        $this->_body = $body;
-    }
-
-    /**
-     * @return Params
-     */
-    public function params()
-    {
-        return $this->_Params;
-    }
-
-    /**
-     * @param string $body
-     */
-    public function setBody($body)
-    {
-        $this->_body = $body;
+        $this->body = $body;
     }
 
     /**
@@ -105,25 +87,25 @@ class Request
             return;
         
         if ('' !== ($dc = $queryOptions->getDatacenter()))
-            $this->_Params['dc'] = $dc;
+            $this->params['dc'] = $dc;
 
         if ($queryOptions->getAllowStale())
-            $this->_Params['stale'] = '';
+            $this->params['stale'] = '';
 
         if ($queryOptions->getRequireConsistent())
-            $this->_Params['consistent'] = '';
+            $this->params['consistent'] = '';
 
         if (0 !== ($waitIndex = $queryOptions->getWaitIndex()))
-            $this->_Params['index'] = $waitIndex;
+            $this->params['index'] = $waitIndex;
         
         if (0 !== ($waitTime = $queryOptions->getWaitTime()))
-            $this->_Params['wait'] = $waitTime;
+            $this->params['wait'] = $waitTime;
 
         if ('' !== ($token = $queryOptions->getToken()))
-            $this->_Params['token'] = $token;
+            $this->params['token'] = $token;
 
         if ('' !== ($near = $queryOptions->getNear()))
-            $this->_Params['near'] = $near;
+            $this->params['near'] = $near;
     }
 
     /**
@@ -135,10 +117,10 @@ class Request
             return;
 
         if ('' !== ($dc = $writeOptions->getDatacenter()))
-            $this->_Params['dc'] = $dc;
+            $this->params['dc'] = $dc;
 
         if ('' !== ($token = $writeOptions->getToken()))
-            $this->_Params['token'] = $token;
+            $this->params['token'] = $token;
     }
 
     /**
@@ -215,21 +197,21 @@ class Request
      */
     private function _compileBody()
     {
-        switch(gettype($this->_body))
+        switch(gettype($this->body))
         {
             case 'integer':
             case 'double':
-                return (string)$this->_body;
+                return (string)$this->body;
 
             case 'string':
-                return $this->_body;
+                return $this->body;
 
             case 'object':
             case 'array':
-                return json_encode($this->_body);
+                return json_encode($this->body);
 
             case 'boolean':
-                return $this->_body ? 'true' : 'false';
+                return $this->body ? 'true' : 'false';
 
             default:
                 return '';
@@ -245,7 +227,7 @@ class Request
             '%s/%s?%s',
             $this->_Config->compileAddress(),
             ltrim(trim($this->_path), "/"),
-            $this->_Params
+            $this->params
         );
     }
 }

@@ -20,7 +20,7 @@
  * Class AbstractObjectModel
  * @package DCarbone\PHPConsulAPI
  */
-abstract class AbstractObjectModel
+abstract class AbstractObjectModel implements \JsonSerializable
 {
     /**
      * AbstractObjectModel constructor.
@@ -32,6 +32,16 @@ abstract class AbstractObjectModel
         {
             $this->{$k} = $v;
         }
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by json_encode, which is a value of any type other than a resource.
+     */
+    function jsonSerialize()
+    {
+        return array_filter((array)$this);
     }
 
     /**

@@ -17,6 +17,7 @@
 */
 
 use DCarbone\PHPConsulAPI\AbstractConsulClient;
+use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Request;
 use DCarbone\PHPConsulAPI\WriteOptions;
@@ -38,17 +39,17 @@ class EventClient extends AbstractConsulClient
      */
     public function fire(UserEvent $event, WriteOptions $writeOptions = null)
     {
-        $r = new Request('put', sprintf('v1/event/fire/%s', rawurlencode($event->getName())), $this->_Config);
+        $r = new Request('put', sprintf('v1/event/fire/%s', rawurlencode($event->Name)), $this->_Config);
         $r->setWriteOptions($writeOptions);
 
-        if ('' !== ($nf = $event->getNodeFilter()))
-            $r->params()->set('node', $nf);
-        if ('' !== ($sf = $event->getServiceFilter()))
-            $r->params()->set('service', $sf);
-        if ('' !== ($tf = $event->getTagFilter()))
-            $r->params()->set('tag', $tf);
-        if ('' !== ($payload = $event->getPayload()))
-            $r->setBody($payload);
+        if ('' !== ($nf = $event->NodeFilter))
+            $r->params->set('node', $nf);
+        if ('' !== ($sf = $event->ServiceFilter))
+            $r->params->set('service', $sf);
+        if ('' !== ($tf = $event->TagFilter))
+            $r->params->set('tag', $tf);
+        if ('' !== ($payload = $event->Payload))
+            $r->body = $payload;
 
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
         $wm = $this->buildWriteMeta($duration);
@@ -60,10 +61,7 @@ class EventClient extends AbstractConsulClient
         if ($err !== null)
             return [null, $wm, $err];
 
-        if (isset($data['Payload']))
-            $data['Payload'] = base64_decode($data['Payload']);
-
-        return [new UserEvent($data), $wm, null];
+        return [Hydrator::UserEvent($data), $wm, null];
     }
     
     /**
@@ -79,7 +77,7 @@ class EventClient extends AbstractConsulClient
     {
         $r = new Request('get', 'v1/event/list', $this->_Config);
         if ('' !== (string)$name)
-            $r->params()->set('name', $name);
+            $r->params->set('name', $name);
         $r->setQueryOptions($queryOptions);
 
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -96,10 +94,7 @@ class EventClient extends AbstractConsulClient
         $events = array();
         foreach($data as $event)
         {
-            if (isset($event['Payload']))
-                $event['Payload'] = base64_decode($event['Payload']);
-
-            $events[] = new UserEvent($event);
+            $events[] = Hydrator::UserEvent($event);
         }
 
         return [$events, $qm, null];

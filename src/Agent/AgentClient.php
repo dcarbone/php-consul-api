@@ -17,6 +17,7 @@
 */
 
 use DCarbone\PHPConsulAPI\AbstractConsulClient;
+use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\Request;
 
 /**
@@ -50,9 +51,9 @@ class AgentClient extends AbstractConsulClient
         if (null !== $err)
             return [null, $qm, $err];
 
-        $this->_self = new AgentSelf($data);
+        $this->_self = Hydrator::AgentSelf($data);
 
-        return [new AgentSelf($data), $qm, null];
+        return [$this->_self, $qm, null];
     }
 
     /**
@@ -70,7 +71,7 @@ class AgentClient extends AbstractConsulClient
                 return ['', $err];
         }
 
-        return [$this->_self->getConfig()->getNodeName(), null];
+        return [$this->_self->Config->NodeName, null];
     }
 
     /**
@@ -96,7 +97,7 @@ class AgentClient extends AbstractConsulClient
         $checks = array();
         foreach($data as $k => $v)
         {
-            $checks[$k] = new AgentCheck($v);
+            $checks[$k] = Hydrator::AgentCheck($v);
         }
 
         return [$checks, null];
@@ -125,7 +126,7 @@ class AgentClient extends AbstractConsulClient
         $services = array();
         foreach($data as $k => $v)
         {
-            $services[$k] = new AgentService($v);
+            $services[$k] = Hydrator::AgentService($v);
         }
 
         return [$services, null];
@@ -154,7 +155,7 @@ class AgentClient extends AbstractConsulClient
         $members = array();
         foreach($data as $v)
         {
-            $members[] = new AgentMember($v);
+            $members[] = Hydrator::AgentMember($v);
         }
 
         return [$members, null];
@@ -169,7 +170,7 @@ class AgentClient extends AbstractConsulClient
     public function serviceRegister(AgentServiceRegistration $agentServiceRegistration)
     {
         $r = new Request('put', 'v1/agent/service/register', $this->_Config);
-        $r->setBody($agentServiceRegistration);
+        $r->body = ($agentServiceRegistration);
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
@@ -238,7 +239,7 @@ class AgentClient extends AbstractConsulClient
     public function updateTTL($checkID, $output, $status)
     {
         $r = new Request('put', sprintf('v1/agent/check/update/%s', rawurlencode($checkID)), $this->_Config);
-        $r->setBody(new AgentCheckUpdate(['Output' => $output, 'Status' => $status]));
+        $r->body = (new AgentCheckUpdate(['Output' => $output, 'Status' => $status]));
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
@@ -252,7 +253,7 @@ class AgentClient extends AbstractConsulClient
     public function checkRegister(AgentCheckRegistration $agentCheckRegistration)
     {
         $r = new Request('put', 'v1/agent/check/register', $this->_Config);
-        $r->setBody($agentCheckRegistration);
+        $r->body = ($agentCheckRegistration);
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
@@ -281,7 +282,7 @@ class AgentClient extends AbstractConsulClient
     {
         $r = new Request('put', sprintf('v1/agent/join/%s', rawurlencode($addr)), $this->_Config);
         if ($wan)
-            $r->params()->set('wan', 1);
+            $r->params->set('wan', 1);
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
@@ -309,8 +310,8 @@ class AgentClient extends AbstractConsulClient
     public function enableServiceMaintenance($serviceID, $reason = '')
     {
         $r = new Request('put', sprintf('v1/agent/service/maintenance/%s', rawurlencode($serviceID)), $this->_Config);
-        $r->params()->set('enable', 'true');
-        $r->params()->set('reason', $reason);
+        $r->params->set('enable', 'true');
+        $r->params->set('reason', $reason);
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
@@ -324,7 +325,7 @@ class AgentClient extends AbstractConsulClient
     public function disableServiceMaintenance($serviceID)
     {
         $r = new Request('put', sprintf('v1/agent/service/maintenance/%s', rawurlencode($serviceID)), $this->_Config);
-        $r->params()->set('enable', 'false');
+        $r->params->set('enable', 'false');
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
@@ -338,8 +339,8 @@ class AgentClient extends AbstractConsulClient
     public function enableNodeMaintenance($reason = '')
     {
         $r = new Request('put', 'v1/agent/maintenance', $this->_Config);
-        $r->params()->set('enable', 'true');
-        $r->params()->set('reason', $reason);
+        $r->params->set('enable', 'true');
+        $r->params->set('reason', $reason);
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
@@ -352,7 +353,7 @@ class AgentClient extends AbstractConsulClient
     public function disableNodeMaintenance()
     {
         $r = new Request('put', 'v1/agent/maintenance', $this->_Config);
-        $r->params()->set('enable', 'false');
+        $r->params->set('enable', 'false');
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
@@ -369,7 +370,7 @@ class AgentClient extends AbstractConsulClient
     public function checkPass($checkID, $note = '')
     {
         $r = new Request('get', sprintf('v1/agent/check/pass/%s', rawurlencode($checkID)), $this->_Config);
-        $r->params()->set('note', $note);
+        $r->params->set('note', $note);
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
@@ -386,7 +387,7 @@ class AgentClient extends AbstractConsulClient
     public function checkWarn($checkID, $note = '')
     {
         $r = new Request('get', sprintf('v1/agent/check/warn/%s', rawurlencode($checkID)), $this->_Config);
-        $r->params()->set('note', $note);
+        $r->params->set('note', $note);
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
@@ -403,7 +404,7 @@ class AgentClient extends AbstractConsulClient
     public function checkFail($checkID, $note = '')
     {
         $r = new Request('get', sprintf('v1/agent/check/fail/%s', rawurlencode($checkID)), $this->_Config);
-        $r->params()->set('note', $note);
+        $r->params->set('note', $note);
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 

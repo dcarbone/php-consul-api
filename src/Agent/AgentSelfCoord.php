@@ -19,15 +19,17 @@
 use DCarbone\PHPConsulAPI\AbstractObjectModel;
 
 /**
- * Class AgentSelf
+ * Class AgentSelfCoord
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentSelf extends AbstractObjectModel
+class AgentSelfCoord extends AbstractObjectModel
 {
-    /** @var AgentSelfConfig */
-    public $Config = null;
-    /** @var AgentSelfCoord */
-    public $Coord = null;
-    /** @var AgentMember */
-    public $Member = null;
+    /** @var array */
+    public $Vec = array();
+    /** @var float */
+    public $Error = 0.0;
+    /** @var float */
+    public $Adjustment = 0.0;
+    /** @var float */
+    public $Height = 0.0;
 }

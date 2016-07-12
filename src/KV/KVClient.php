@@ -90,7 +90,7 @@ class KVClient extends AbstractConsulClient
 
         $r = new Request('get', sprintf('v1/kv/%s', rawurlencode($prefix)), $this->_Config);
         $r->setQueryOptions($queryOptions);
-        $r->params()->set('recurse', '');
+        $r->params->set('recurse', '');
 
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
         $qm = $this->buildQueryMeta($duration, $response);
@@ -139,7 +139,7 @@ class KVClient extends AbstractConsulClient
             $r = new Request('get', sprintf('v1/kv/%s', rawurlencode($prefix)), $this->_Config);
 
         $r->setQueryOptions($queryOptions);
-        $r->params()->set('keys', true);
+        $r->params->set('keys', true);
 
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
         $qm = $this->buildQueryMeta($duration, $response);
@@ -162,9 +162,9 @@ class KVClient extends AbstractConsulClient
      */
     public function put(KVPair $KVPair, WriteOptions $writeOptions = null)
     {
-        $r = new Request('put', sprintf('v1/kv/%s', rawurlencode($KVPair->getKey())), $this->_Config);
+        $r = new Request('put', sprintf('v1/kv/%s', rawurlencode($KVPair->Key)), $this->_Config);
         $r->setWriteOptions($writeOptions);
-        $r->setBody($KVPair);
+        $r->body = ($KVPair);
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
         $wm = $this->buildWriteMeta($duration);

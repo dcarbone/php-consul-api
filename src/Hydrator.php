@@ -19,6 +19,8 @@
 use DCarbone\PHPConsulAPI\Agent\AgentCheck;
 use DCarbone\PHPConsulAPI\Agent\AgentMember;
 use DCarbone\PHPConsulAPI\Agent\AgentSelf;
+use DCarbone\PHPConsulAPI\Agent\AgentSelfConfig;
+use DCarbone\PHPConsulAPI\Agent\AgentSelfCoord;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
 use DCarbone\PHPConsulAPI\Agent\AgentServiceCheck;
 use DCarbone\PHPConsulAPI\Catalog\CatalogNode;
@@ -91,10 +93,31 @@ class Hydrator
     public static function AgentSelf(array $data)
     {
         $agent = new AgentSelf();
-        $agent->Config = $data['Config'];
-        $agent->Coord = $data['Coord'];
-        $agent->Member = self::AgentMember($data['Member']);
+        if (isset($data['Config']))
+            $agent->Config = self::AgentSelfConfig($data['Config']);
+        if (isset($data['Coord']))
+            $agent->Coord = self::AgentSelfCoord($data['Coord']);
+        if (isset($data['Member']))
+            $agent->Member = self::AgentMember($data['Member']);
         return $agent;
+    }
+
+    /**
+     * @param array $data
+     * @return AgentSelfConfig
+     */
+    public static function AgentSelfConfig(array $data)
+    {
+        return new AgentSelfConfig($data);
+    }
+
+    /**
+     * @param array $data
+     * @return AgentSelfCoord
+     */
+    public static function AgentSelfCoord(array $data)
+    {
+        return new AgentSelfCoord($data);
     }
 
     /**
@@ -140,10 +163,14 @@ class Hydrator
     public static function CoordinateDatacenterMap(array $data)
     {
         $dcm = new CoordinateDatacenterMap();
-        $dcm->Datacenter = $data['Datacenter'];
-        foreach($data['Coordinates'] as $coordinate)
+        if (isset($data['Datacenter']))
+            $dcm->Datacenter = $data['Datacenter'];
+        if (isset($data['Coordinates']))
         {
-            $dcm->Coordinates[] = self::Coordinate($coordinate);
+            foreach($data['Coordinates'] as $coordinate)
+            {
+                $dcm->Coordinates[] = self::Coordinate($coordinate);
+            }
         }
         return $dcm;
     }
@@ -154,10 +181,10 @@ class Hydrator
      */
     public static function CoordinateEntry(array $data)
     {
-        $ce = new CoordinateEntry();
-        $ce->Node = $data['Node'];
-        $ce->Coord = self::Coordinate($data['Coord']);
-        return $ce;
+        if (isset($data['Coord']))
+            $data['Coord'] = self::Coordinate($data['Coord']);
+
+        return new CoordinateEntry($data);
     }
 
     /**
@@ -166,6 +193,9 @@ class Hydrator
      */
     public static function UserEvent(array $data)
     {
+        if (isset($data['Payload']))
+            $data['Payload'] = base64_decode($data['Payload']);
+
         return new UserEvent($data);
     }
 
