@@ -12,7 +12,7 @@ Require Entry:
 
 ```json
 {
-  "dcarbone/php-consul-api": "dev-master"
+  "dcarbone/php-consul-api": "0.1.*"
 }
 ```
 
