@@ -18,6 +18,7 @@
 
 use DCarbone\PHPConsulAPI\AbstractConsulClient;
 use DCarbone\PHPConsulAPI\Hydrator;
+use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Request;
 
 /**
@@ -53,5 +54,37 @@ class CoordinateClient extends AbstractConsulClient
         }
 
         return [$data, null];
+    }
+
+    /**
+     * @param QueryOptions|null $queryOptions
+     * @return array(
+     *  @type \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry[]|null coordinate list or null on error
+     *  @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
+     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
+     * )
+     */
+    public function nodes(QueryOptions $queryOptions = null)
+    {
+        $r = new Request('get', 'v1/coordinate/nodes', $this->_Config);
+        $r->setQueryOptions($queryOptions);
+
+        list ($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        $qm = $this->buildQueryMeta($duration, $response);
+
+        if (null !== $err)
+            return [null, $qm, $err];
+
+        list($data, $err) = $this->decodeBody($response);
+        if (null !== $err)
+            return [null, $qm, $err];
+
+        $coordinates = array();
+        foreach($data as $coord)
+        {
+            $coordinates[] = Hydrator::CoordinateEntry($coord);
+        }
+
+        return [$coordinates, $qm, null];
     }
 }

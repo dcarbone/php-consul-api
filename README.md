@@ -46,6 +46,8 @@ var_dump($kv_list);
 - [Catalog](./docs/CATALOG.md)
 - [Status](./docs/STATUS.md)
 - [Event](./docs/EVENT.md)
+- [Coordinate](./docs/COORDINATE.md)
+- [Health](./docs/HEALTH.md)
 
 More will be added as time goes on!
 

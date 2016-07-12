@@ -31,19 +31,19 @@ use DCarbone\PHPConsulAPI\Status\StatusClient;
 class Client
 {
     /** @var KVClient */
-    private $_KV;
+    public $KV;
     /** @var AgentClient */
-    private $_Agent;
+    public $Agent;
     /** @var CatalogClient */
-    private $_Catalog;
+    public $Catalog;
     /** @var StatusClient */
-    private $_Status;
+    public $Status;
     /** @var EventClient */
-    private $_Event;
+    public $Event;
     /** @var HealthClient */
-    private $_Health;
+    public $Health;
     /** @var CoordinateClient */
-    private $_Coordinate;
+    public $Coordinate;
 
     /**
      * Client constructor.
@@ -66,69 +66,12 @@ class Client
                 $config->setScheme($def->getScheme());
         }
 
-        $this->_KV = new KVClient($config);
-        $this->_Agent = new AgentClient($config);
-        $this->_Catalog = new CatalogClient($config);
-        $this->_Status = new StatusClient($config);
-        $this->_Event = new EventClient($config);
-        $this->_Health = new HealthClient($config);
-        $this->_Coordinate = new CoordinateClient($config);
-
-    }
-
-    /**
-     * @return KVClient
-     */
-    public function KV()
-    {
-        return $this->_KV;
-    }
-
-    /**
-     * @return AgentClient
-     */
-    public function Agent()
-    {
-        return $this->_Agent;
-    }
-
-    /**
-     * @return CatalogClient
-     */
-    public function Catalog()
-    {
-        return $this->_Catalog;
-    }
-
-    /**
-     * @return StatusClient
-     */
-    public function Status()
-    {
-        return $this->_Status;
-    }
-
-    /**
-     * @return EventClient
-     */
-    public function Event()
-    {
-        return $this->_Event;
-    }
-
-    /**
-     * @return HealthClient
-     */
-    public function Health()
-    {
-        return $this->_Health;
-    }
-
-    /**
-     * @return CoordinateClient
-     */
-    public function Coordinate()
-    {
-        return $this->_Coordinate;
+        $this->KV = new KVClient($config);
+        $this->Agent = new AgentClient($config);
+        $this->Catalog = new CatalogClient($config);
+        $this->Status = new StatusClient($config);
+        $this->Event = new EventClient($config);
+        $this->Health = new HealthClient($config);
+        $this->Coordinate = new CoordinateClient($config);
     }
 }
