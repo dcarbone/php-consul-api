@@ -76,7 +76,7 @@ var_dump($wm);
 
 This is a custom feature to allow `get-tree`-like functionality with 0.6.4 (the current release as of this writing)
 
-This call executes a `$consul->KV->keys()` call, parses the results, and builds an object tree of
+This call executes a `$consul->KV->valueList()` call, parses the results, and builds an object tree of
 [KVTree](../src/KV/KVTree.php) and [KVPair](../src/KV/KVPair.php) objects.
 
 *Entire Tree - POTENTIALLY VERY SLOW!!!!!!*
