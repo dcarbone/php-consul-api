@@ -16,14 +16,14 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractClient;
+use DCarbone\PHPConsulAPI\AbstractApiClient;
 use DCarbone\PHPConsulAPI\HttpRequest;
 
 /**
  * Class StatusClient
  * @package DCarbone\PHPConsulAPI\Status
  */
-class StatusClient extends AbstractClient
+class StatusApiClient extends AbstractApiClient
 {
     /**
      * @return array(

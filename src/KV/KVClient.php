@@ -16,7 +16,7 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractClient;
+use DCarbone\PHPConsulAPI\AbstractApiClient;
 use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\QueryOptions;
@@ -27,7 +27,7 @@ use DCarbone\PHPConsulAPI\WriteOptions;
  * Class KVClient
  * @package DCarbone\PHPConsulAPI\KV
  */
-class KVClient extends AbstractClient
+class KVApiClient extends AbstractApiClient
 {
     /**
      * @param string $key Name of key to retrieve value for

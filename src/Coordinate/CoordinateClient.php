@@ -16,7 +16,7 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractClient;
+use DCarbone\PHPConsulAPI\AbstractApiClient;
 use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\HttpRequest;
@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\HttpRequest;
  * Class CoordinateClient
  * @package DCarbone\PHPConsulAPI\Coordinate
  */
-class CoordinateClient extends AbstractClient
+class CoordinateApiClient extends AbstractApiClient
 {
     /**
      * @return array(

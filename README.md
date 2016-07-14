@@ -24,16 +24,19 @@ First, construct a [Config](./src/Config.php) object:
 $config = new \DCarbone\PHPConsulAPI\Config(['Address' => 'address of your consul agent']);
 ```
 
-Next, construct a [Client](./src/Client.php) object:
+Next, construct a [Consul](./src/Consul.php) object:
 
 ```php
-$client = new \DCarbone\PHPConsulAPI\Client($config);
+$consul = new \DCarbone\PHPConsulAPI\Consul($config);
 ```
 
 Once constructed, you interact with each Consul API via it's corresponding Client class:
 
 ```php
-$kv_list = $client->KV->keys();
+list($kv_list, $qm, $err) = $consul->KV->keys();
+if (null !== $err)
+    die($err);
+
 var_dump($kv_list);
 ```
 

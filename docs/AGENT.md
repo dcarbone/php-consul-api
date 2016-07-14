@@ -3,10 +3,10 @@
 All interactions with the [`v1/agent`](https://www.consul.io/docs/agent/http/agent.html) endpoint are done
 via the [AgentClient](../src/Agent/AgentClient.php) class.
 
-If you have constructed a [Client](../src/Client.php) object, this is done as so:
+If you have constructed a [Consul](../src/Consul.php) object, this is done as so:
 
 ```php
-$agent = $client->Agent;
+$agent = $consul->Agent;
 ```
 
 ## Actions
@@ -14,7 +14,7 @@ $agent = $client->Agent;
 ### Get "Self"
 
 ```php
-list($self, $qm, $err) = $client->Agent->self();
+list($self, $qm, $err) = $consul->Agent->self();
 if (null !== $err)
     die($err);
 
@@ -24,7 +24,7 @@ var_dump($qm, $self);
 ### Get Name of Node
 
 ```php
-list($nodeName, $err) = $client->Agent->nodeName();
+list($nodeName, $err) = $consul->Agent->nodeName();
 if (null !== $err)
     die($err);
 
@@ -34,7 +34,7 @@ var_dump($nodeName);
 ### Get List of Agent Checks
 
 ```php
-list($checks, $err) = $client->Agent->checks();
+list($checks, $err) = $consul->Agent->checks();
 if (null !== $err)
     die($err);
 
@@ -44,7 +44,7 @@ var_dump($checks);
 ### Get List of Agent Services
 
 ```php
-list($services, $err) = $client->Agent->services();
+list($services, $err) = $consul->Agent->services();
 if (null !== $err)
     die($err);
 
@@ -54,7 +54,7 @@ var_dump($services);
 ### Get List of Cluster Members
 
 ```php
-list($members, $err) = $client->Agent->members();
+list($members, $err) = $consul->Agent->members();
 if (null !== $err)
     die($err);
 
@@ -79,7 +79,7 @@ $service = new \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration(
     )
 );
 
-$err = $client->Agent->serviceRegister($service);
+$err = $consul->Agent->serviceRegister($service);
 if (null !== $err)
     die($err);
 ```
@@ -87,7 +87,7 @@ if (null !== $err)
 ### Deregister Service
 
 ```php
-$err = $client->Agent->serviceDeregister('dan test service');
+$err = $consul->Agent->serviceDeregister('dan test service');
 if (null !== $err)
     die($err);
 ```
@@ -107,7 +107,7 @@ $check = new \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration(
     )
 );
 
-$err = $client->Agent->checkRegister($check);
+$err = $consul->Agent->checkRegister($check);
 if (null !== $err)
     die($err);
 ```
@@ -115,7 +115,7 @@ if (null !== $err)
 ### Deregister Agent Check
 
 ```php
-$err = $client->Agent()->checkDeregister('dan test service check');
+$err = $consul->Agent()->checkDeregister('dan test service check');
 if (null !== $err)
     die($err);
 ```
@@ -123,7 +123,7 @@ if (null !== $err)
 ### Join
 
 ```php
-$err = $client->Agent->join('address to join');
+$err = $consul->Agent->join('address to join');
 if (null !== $err)
     die($err);
 ```
@@ -131,7 +131,7 @@ if (null !== $err)
 ### Force Leave
 
 ```php
-$err = $client->Agent->forceLeave('node name');
+$err = $consul->Agent->forceLeave('node name');
 if (null !== $err)
     die($err);
 ```
@@ -139,7 +139,7 @@ if (null !== $err)
 ### Enable Service Maintenance
 
 ```php
-$err = $client->Agent->enableServiceMaintenance('service id', 'because reasons');
+$err = $consul->Agent->enableServiceMaintenance('service id', 'because reasons');
 if (null !== $err)
     die($err);
 ```
@@ -147,7 +147,7 @@ if (null !== $err)
 ### Disable Service Maintenance
 
 ```php
-$err = $client->Agent->disableServiceMaintenance('service id');
+$err = $consul->Agent->disableServiceMaintenance('service id');
 if (null !== $er)
     die($err);
 ```
@@ -155,7 +155,7 @@ if (null !== $er)
 ### Enable Node Maintenance
 
 ```php
-$err = $client->Agent->enableNodeMaintenance('because GOOD reasons');
+$err = $consul->Agent->enableNodeMaintenance('because GOOD reasons');
 if (null !== $err)
     die($err);
 ```
@@ -163,7 +163,7 @@ if (null !== $err)
 ### Disable Node Maintenance
 
 ```php
-$err = $client->Agent->disableNodeMaintenance();
+$err = $consul->Agent->disableNodeMaintenance();
 if (null !== $err)
     die($err);
 ```
@@ -171,7 +171,7 @@ if (null !== $err)
 ### Set TTL Check to Passing
 
 ```php
-$err = $client->Agent->passTTL('check id', 'all good here, dudes');
+$err = $consul->Agent->passTTL('check id', 'all good here, dudes');
 if (null !== $err)
     die($err);
 ```
@@ -179,7 +179,7 @@ if (null !== $err)
 ### Set TTL Check to Warning
 
 ```php
-$err = $client->Agent->warnTTL('check id', 'might not be good here, dudes');
+$err = $consul->Agent->warnTTL('check id', 'might not be good here, dudes');
 if (null !== $err)
     die($err);
 ```
@@ -187,7 +187,7 @@ if (null !== $err)
 ### Set TTL Check to Failing
 
 ```php
-$err = $client->Agent->failTTL('check id', 'super not good here, dudes.');
+$err = $consul->Agent->failTTL('check id', 'super not good here, dudes.');
 if (null !== $err)
     die($err);
 ```

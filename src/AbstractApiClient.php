@@ -20,7 +20,7 @@
  * Class AbstractClient
  * @package DCarbone\PHPConsulAPI\Base
  */
-abstract class AbstractClient
+abstract class AbstractApiClient
 {
     /** @var Config */
     protected $_Config;
@@ -44,27 +44,21 @@ abstract class AbstractClient
      */
     protected function requireOK(array $requestResult)
     {
-        /** @var int $duration */
-        /** @var HttpResponse|null $response */
-        /** @var Error|null $err */
-
-        list($duration, $response, $err) = $requestResult;
-
-        if (null !== $err)
+        if (null !== $requestResult[2])
             return $requestResult;
 
-        if (200 !== $response->httpCode)
+        if (200 !== $requestResult[1]->httpCode)
         {
-            return [$duration, $response, new Error(sprintf(
+            return [$requestResult[0], $requestResult[1], new Error(sprintf(
                 '%s - Error seen while executing "%s".  Response code: %d.  Message: %s',
                 get_class($this),
-                $response->url,
-                $response->httpCode,
-                $response->curlError
+                $requestResult[1]->url,
+                $requestResult[1]->httpCode,
+                $requestResult[1]->curlError
             ))];
         }
 
-        return [$duration, $response, null];
+        return $requestResult;
     }
 
     /**
@@ -83,10 +77,7 @@ abstract class AbstractClient
         list($response, $err) = $r->execute();
         $duration = (int)((microtime(true) - $rt) * 1000000);
 
-        if (null !== $err)
-            return [$duration, null, $err];
-
-        return [$duration, $response, null];
+        return [$duration, $response, $err];
     }
 
     /**
@@ -106,10 +97,14 @@ abstract class AbstractClient
             if (isset($header['X-Consul-Index']))
                 $qm->lastIndex = (int)$header['X-Consul-Index'];
 
-            if (isset($header['X-Consul-Knownleader']))
+            if (isset($header['X-Consul-KnownLeader']))
+                $qm->knownLeader = (bool)$header['X-Consul-KnownLeader'];
+            else if (isset($header['X-Consul-Knownleader']))
                 $qm->knownLeader = (bool)$header['X-Consul-Knownleader'];
 
-            if (isset($header['X-Consul-Lastcontact']))
+            if (isset($header['X-Consul-LastContact']))
+                $qm->lastContact = (int)$header['X-Consul-LastContact'] * 1000;
+            else if (isset($header['X-Consul-Lastcontact']))
                 $qm->lastContact = (int)$header['X-Consul-Lastcontact'] * 1000;
         }
 

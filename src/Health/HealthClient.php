@@ -16,7 +16,7 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractClient;
+use DCarbone\PHPConsulAPI\AbstractApiClient;
 use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\QueryOptions;
@@ -26,7 +26,7 @@ use DCarbone\PHPConsulAPI\HttpRequest;
  * Class HealthClient
  * @package DCarbone\PHPConsulAPI\Health
  */
-class HealthClient extends AbstractClient
+class HealthApiClient extends AbstractApiClient
 {
     /**
      * @param string $node

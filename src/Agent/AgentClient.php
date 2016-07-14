@@ -16,7 +16,7 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractClient;
+use DCarbone\PHPConsulAPI\AbstractApiClient;
 use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\HttpRequest;
 
@@ -24,7 +24,7 @@ use DCarbone\PHPConsulAPI\HttpRequest;
  * Class AgentClient
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentClient extends AbstractClient
+class AgentApiClient extends AbstractApiClient
 {
     /** @var null|AgentSelf */
     private $_self = null;

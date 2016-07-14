@@ -16,7 +16,7 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractClient;
+use DCarbone\PHPConsulAPI\AbstractApiClient;
 use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\HttpRequest;
 use DCarbone\PHPConsulAPI\Hydrator;
@@ -27,7 +27,7 @@ use DCarbone\PHPConsulAPI\WriteOptions;
  * Class SessionClient
  * @package DCarbone\PHPConsulAPI\Session
  */
-class SessionClient extends AbstractClient
+class SessionApiClient extends AbstractApiClient
 {
     const SessionBehaviorRelease = 'release';
     const SessionBehaviorDelete = 'delete';

@@ -3,10 +3,10 @@
 All interactions with the [`v1/coordinate`](https://www.consul.io/docs/agent/http/coordinate.html) endpoint are done
 via the [CoordinateClient](../src/Coordinate/CoordinateClient.php) class.
 
-If you have constructed a [Client](../src/Client.php) object, this is done as so:
+If you have constructed a [Consul](../src/Consul.php) object, this is done as so:
 
 ```php
-$coordinate = $client->Coordinate;
+$coordinate = $consul->Coordinate;
 ```
 
 ## Actions
@@ -14,7 +14,7 @@ $coordinate = $client->Coordinate;
 ### Get Datacenter Map
 
 ```php
-list($datacenters, $err) = $client->Coordinate->datacenters();
+list($datacenters, $err) = $consul->Coordinate->datacenters();
 if (null !== $err)
     die($err);
 
@@ -24,7 +24,7 @@ var_dump($datacenters);
 ### Get Nodes List
 
 ```php
-list($nodes, $qm, $err) = $client->Coordinate->nodes();
+list($nodes, $qm, $err) = $consul->Coordinate->nodes();
 if (null !== $err)
     die($err);
 

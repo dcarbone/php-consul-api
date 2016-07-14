@@ -3,10 +3,10 @@
 All interactions with the [`v1/status`](https://www.consul.io/docs/agent/http/status.html) endpoint
 are done via the [StatusClient](../src/Status/StatusClient.php) class.
 
-If you have constructed a [Client../src/Client.php) object, this is done as so:
+If you have constructed a [Client../src/Consul.php) object, this is done as so:
 
 ```php
-$status = $client->Status;
+$status = $consul->Status;
 ```
 
 ## Actions
@@ -14,7 +14,7 @@ $status = $client->Status;
 ### Leader
 
 ```php
-list($addrses, $err) = $client->Status->leader();
+list($addrses, $err) = $consul->Status->leader();
 if (null !== $err)
     die($err);
 
@@ -24,7 +24,7 @@ var_dump($address);
 ### Peers
 
 ```php
-list($peers, $err) = $client->Status->peers();
+list($peers, $err) = $consul->Status->peers();
 if (null !== $err)
     die($err);
 

@@ -16,7 +16,7 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractClient;
+use DCarbone\PHPConsulAPI\AbstractApiClient;
 use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\HttpRequest;
@@ -26,7 +26,7 @@ use DCarbone\PHPConsulAPI\WriteOptions;
  * Class EventClient
  * @package DCarbone\PHPConsulAPI
  */
-class EventClient extends AbstractClient
+class EventApiClient extends AbstractApiClient
 {
     /**
      * @param UserEvent $event

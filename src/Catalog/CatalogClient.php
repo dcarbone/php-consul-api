@@ -16,7 +16,7 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractClient;
+use DCarbone\PHPConsulAPI\AbstractApiClient;
 use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\HttpRequest;
@@ -26,7 +26,7 @@ use DCarbone\PHPConsulAPI\WriteOptions;
  * Class CatalogClient
  * @package DCarbone\PHPConsulAPI\Catalog
  */
-class CatalogClient extends AbstractClient
+class CatalogApiClient extends AbstractApiClient
 {
     /**
      * @param CatalogRegistration $catalogRegistration
