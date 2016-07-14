@@ -20,7 +20,7 @@
  * Class KVTree
  * @package DCarbone\PHPConsulAPI\KV
  */
-class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \ArrayAccess
+class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \ArrayAccess, \Serializable
 {
     /** @var string */
     private $_prefix;
@@ -127,26 +127,6 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     }
 
     /**
-     * Specify data which should be serialized to JSON
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return array data which can be serialized by json_encode,which is a value of any type other than a resource.
-     */
-    public function jsonSerialize()
-    {
-        $json = array($this->_prefix => array());
-        foreach($this->_children as $k=>$child)
-        {
-            if ($child instanceof KVTree)
-                $json[$this->_prefix] = $child;
-            else if ($child instanceof KVPair)
-                $json[$this->_prefix][$child->Key] = $child;
-            else
-                $json[$this->_prefix][$k] = $child;
-        }
-        return $json;
-    }
-
-    /**
      * Whether a offset exists
      * @link http://php.net/manual/en/arrayaccess.offsetexists.php
      * @param mixed $offset An offset to check for.
@@ -248,5 +228,48 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     public function offsetUnset($offset)
     {
         // do nothing, yo...
+    }
+
+    /**
+     * String representation of object
+     * @link http://php.net/manual/en/serializable.serialize.php
+     * @return string the string representation of the object or null
+     */
+    public function serialize()
+    {
+        return serialize([$this->_prefix, $this->_children]);
+    }
+
+    /**
+     * Constructs the object
+     * @link http://php.net/manual/en/serializable.unserialize.php
+     * @param string $serialized The string representation of the object.
+     * @return void
+     */
+    public function unserialize($serialized)
+    {
+        $data = unserialize($serialized);
+        $this->_prefix = $data[0];
+        $this->_children = $data[1];
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return array data which can be serialized by json_encode,which is a value of any type other than a resource.
+     */
+    public function jsonSerialize()
+    {
+        $json = array($this->_prefix => array());
+        foreach($this->_children as $k=>$child)
+        {
+            if ($child instanceof KVTree)
+                $json[$this->_prefix] = $child;
+            else if ($child instanceof KVPair)
+                $json[$this->_prefix][$child->Key] = $child;
+            else
+                $json[$this->_prefix][$k] = $child;
+        }
+        return $json;
     }
 }
