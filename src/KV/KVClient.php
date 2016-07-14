@@ -18,9 +18,9 @@
 
 use DCarbone\PHPConsulAPI\AbstractApiClient;
 use DCarbone\PHPConsulAPI\Error;
+use DCarbone\PHPConsulAPI\HttpRequest;
 use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\QueryOptions;
-use DCarbone\PHPConsulAPI\HttpRequest;
 use DCarbone\PHPConsulAPI\WriteOptions;
 
 /**
@@ -201,22 +201,21 @@ class KVClient extends AbstractApiClient
      */
     public function tree($prefix = null, QueryOptions $queryOptions = null)
     {
-        list($keys, $_, $err) = $this->keys($prefix, $queryOptions);
+        list($valueList, $_, $err) = $this->valueList($prefix, $queryOptions);
 
         if (null !== $err)
             return [null, $err];
 
         $treeHierarchy = array();
-        foreach($keys as $path)
+        foreach($valueList as $path=>$kvp)
         {
             $slashPos = strpos($path, '/');
             if (false === $slashPos)
             {
-                list($kv, $_, $err) = $this->get($path, $queryOptions);
                 if (null !== $err)
                     return [null, $err];
 
-                $treeHierarchy[$path] = $kv;
+                $treeHierarchy[$path] = $kvp;
                 continue;
             }
 
@@ -233,11 +232,7 @@ class KVClient extends AbstractApiClient
             // We've arrived at an actual key
             else
             {
-                list($kv, $_, $err) = $this->get($path, $queryOptions);
-                if (null !== $err)
-                    return [null, $err];
-
-                $treeHierarchy[$root][$path] = $kv;
+                $treeHierarchy[$root][$path] = $kvp;
             }
         }
         return [$treeHierarchy, null];

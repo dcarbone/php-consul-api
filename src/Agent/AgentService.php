@@ -18,7 +18,6 @@
 
 use DCarbone\PHPConsulAPI\AbstractDefinedCollection;
 use DCarbone\PHPConsulAPI\AbstractObjectModel;
-use DCarbone\PHPConsulAPI\TaggedInterface;
 
 /**
  * Class AgentService

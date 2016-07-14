@@ -17,8 +17,8 @@
 */
 
 use DCarbone\PHPConsulAPI\AbstractApiClient;
-use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\HttpRequest;
+use DCarbone\PHPConsulAPI\Hydrator;
 
 /**
  * Class AgentClient
