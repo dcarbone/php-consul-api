@@ -31,11 +31,11 @@ class HttpRequest
     private $_Config;
 
     /** @var string */
-    private $_method;
+    public $method;
     /** @var string */
-    private $_path;
+    public $path;
     /** @var string */
-    private $_url;
+    public $url;
 
     /** @var array */
     private $_curlOpts = array();
@@ -59,10 +59,11 @@ class HttpRequest
      */
     public function __construct($method, $path, Config $config, $body = null)
     {
-        $this->params = new Params();
         $this->_Config = $config;
-        $this->_method = strtolower($method);
-        $this->_path = $path;
+
+        $this->params = new Params();
+        $this->method = strtolower($method);
+        $this->path = $path;
 
         if ('' !== ($dc = $config->getDatacenter()))
             $this->params['dc'] = $dc;
@@ -131,9 +132,16 @@ class HttpRequest
      */
     public function execute()
     {
-        $this->_url = $this->_buildUrl();
+        $this->url = sprintf(
+            '%s/%s?%s',
+            $this->_Config->compileAddress(),
+            ltrim(trim($this->path), "/"),
+            $this->params
+        );
 
-        switch($this->_method)
+        Logger::log('debug', 'Executing '.$this->method.' request '.$this->url.($this->body ? ' with body "'.$this->body.'"':''));
+
+        switch($this->method)
         {
             case 'get':
                 // no prep needed
@@ -149,33 +157,40 @@ class HttpRequest
                 return [null, new Error(sprintf(
                     '%s - PHPConsulAPI currently does not support queries made using the "%s" method.',
                     get_class($this),
-                    $this->_method
+                    $this->method
                 ))];
         }
 
-        $ch = curl_init($this->_url);
+        $ch = curl_init($this->url);
 
         if (false === $ch)
         {
-            return [null, new Error(sprintf(
+            $err = new Error(sprintf(
                 '%s::execute - Unable to initialize CURL resource with URL "%s"',
                 get_class($this),
-                $this->_url
-            ))];
+                $this->url
+            ));
+            Logger::log('error', $err);
+            return [null, $err];
         }
 
         if (false === curl_setopt_array($ch, $this->_curlOpts))
         {
-            return [null, new Error(sprintf(
+            $err = new Error(sprintf(
                 '%s - Unable to set specified Curl options, please ensure you\'re passing in valid constants.  Specified options: %s',
                 get_class($this),
                 json_encode($this->_curlOpts)
-            ))];
+            ));
+            Logger::log('error', $err);
+            return [null, $err];
         }
 
         $response = new HttpResponse(curl_exec($ch), curl_getinfo($ch), curl_error($ch));
 
         curl_close($ch);
+
+
+        Logger::log('debug', 'Response received - Code: '.$response->httpCode.'; Body: '.$response->body.'; ');
 
         return [$response, null];
     }
@@ -216,18 +231,5 @@ class HttpRequest
             default:
                 return '';
         }
-    }
-
-    /**
-     * @return string
-     */
-    private function _buildUrl()
-    {
-        return sprintf(
-            '%s/%s?%s',
-            $this->_Config->compileAddress(),
-            ltrim(trim($this->_path), "/"),
-            $this->params
-        );
     }
 }
