@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\HttpRequest;
  * Class CoordinateClient
  * @package DCarbone\PHPConsulAPI\Coordinate
  */
-class CoordinateApiClient extends AbstractApiClient
+class CoordinateClient extends AbstractApiClient
 {
     /**
      * @return array(

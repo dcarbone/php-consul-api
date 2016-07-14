@@ -27,7 +27,7 @@ use DCarbone\PHPConsulAPI\WriteOptions;
  * Class KVClient
  * @package DCarbone\PHPConsulAPI\KV
  */
-class KVApiClient extends AbstractApiClient
+class KVClient extends AbstractApiClient
 {
     /**
      * @param string $key Name of key to retrieve value for

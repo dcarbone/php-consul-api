@@ -16,14 +16,14 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\Agent\AgentApiClient;
-use DCarbone\PHPConsulAPI\Catalog\CatalogApiClient;
-use DCarbone\PHPConsulAPI\Coordinate\CoordinateApiClient;
-use DCarbone\PHPConsulAPI\Event\EventApiClient;
-use DCarbone\PHPConsulAPI\Health\HealthApiClient;
-use DCarbone\PHPConsulAPI\KV\KVApiClient;
-use DCarbone\PHPConsulAPI\Session\SessionApiClient;
-use DCarbone\PHPConsulAPI\Status\StatusApiClient;
+use DCarbone\PHPConsulAPI\Agent\AgentClient;
+use DCarbone\PHPConsulAPI\Catalog\CatalogClient;
+use DCarbone\PHPConsulAPI\Coordinate\CoordinateClient;
+use DCarbone\PHPConsulAPI\Event\EventClient;
+use DCarbone\PHPConsulAPI\Health\HealthClient;
+use DCarbone\PHPConsulAPI\KV\KVClient;
+use DCarbone\PHPConsulAPI\Session\SessionClient;
+use DCarbone\PHPConsulAPI\Status\StatusClient;
 
 /**
  * Class Consul
@@ -31,21 +31,21 @@ use DCarbone\PHPConsulAPI\Status\StatusApiClient;
  */
 class Consul
 {
-    /** @var KVApiClient */
+    /** @var KVClient */
     public $KV;
-    /** @var AgentApiClient */
+    /** @var AgentClient */
     public $Agent;
-    /** @var CatalogApiClient */
+    /** @var CatalogClient */
     public $Catalog;
-    /** @var StatusApiClient */
+    /** @var StatusClient */
     public $Status;
-    /** @var EventApiClient */
+    /** @var EventClient */
     public $Event;
-    /** @var HealthApiClient */
+    /** @var HealthClient */
     public $Health;
-    /** @var CoordinateApiClient */
+    /** @var CoordinateClient */
     public $Coordinate;
-    /** @var SessionApiClient */
+    /** @var SessionClient */
     public $Session;
 
     /**
@@ -69,13 +69,13 @@ class Consul
                 $config->setScheme($def->getScheme());
         }
 
-        $this->KV = new KVApiClient($config);
-        $this->Agent = new AgentApiClient($config);
-        $this->Catalog = new CatalogApiClient($config);
-        $this->Status = new StatusApiClient($config);
-        $this->Event = new EventApiClient($config);
-        $this->Health = new HealthApiClient($config);
-        $this->Coordinate = new CoordinateApiClient($config);
-        $this->Session = new SessionApiClient($config);
+        $this->KV = new KVClient($config);
+        $this->Agent = new AgentClient($config);
+        $this->Catalog = new CatalogClient($config);
+        $this->Status = new StatusClient($config);
+        $this->Event = new EventClient($config);
+        $this->Health = new HealthClient($config);
+        $this->Coordinate = new CoordinateClient($config);
+        $this->Session = new SessionClient($config);
     }
 }

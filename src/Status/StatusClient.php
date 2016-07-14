@@ -23,7 +23,7 @@ use DCarbone\PHPConsulAPI\HttpRequest;
  * Class StatusClient
  * @package DCarbone\PHPConsulAPI\Status
  */
-class StatusApiClient extends AbstractApiClient
+class StatusClient extends AbstractApiClient
 {
     /**
      * @return array(

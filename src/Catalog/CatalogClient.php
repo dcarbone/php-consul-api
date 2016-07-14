@@ -26,7 +26,7 @@ use DCarbone\PHPConsulAPI\WriteOptions;
  * Class CatalogClient
  * @package DCarbone\PHPConsulAPI\Catalog
  */
-class CatalogApiClient extends AbstractApiClient
+class CatalogClient extends AbstractApiClient
 {
     /**
      * @param CatalogRegistration $catalogRegistration

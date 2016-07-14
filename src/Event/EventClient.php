@@ -26,7 +26,7 @@ use DCarbone\PHPConsulAPI\WriteOptions;
  * Class EventClient
  * @package DCarbone\PHPConsulAPI
  */
-class EventApiClient extends AbstractApiClient
+class EventClient extends AbstractApiClient
 {
     /**
      * @param UserEvent $event

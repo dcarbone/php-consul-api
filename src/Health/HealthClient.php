@@ -26,7 +26,7 @@ use DCarbone\PHPConsulAPI\HttpRequest;
  * Class HealthClient
  * @package DCarbone\PHPConsulAPI\Health
  */
-class HealthApiClient extends AbstractApiClient
+class HealthClient extends AbstractApiClient
 {
     /**
      * @param string $node

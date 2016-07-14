@@ -24,7 +24,7 @@ use DCarbone\PHPConsulAPI\HttpRequest;
  * Class AgentClient
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentApiClient extends AbstractApiClient
+class AgentClient extends AbstractApiClient
 {
     /** @var null|AgentSelf */
     private $_self = null;
