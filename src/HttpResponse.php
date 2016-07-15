@@ -121,7 +121,8 @@ class HttpResponse
         $this->primaryPort = $curlInfo['primary_port'];
         $this->localIP = $curlInfo['local_ip'];
         $this->localPort = $curlInfo['local_port'];
-        $this->requestHeader = $curlInfo['request_header'];
+        if (isset($curlInfo['request_header']))
+            $this->requestHeader = $curlInfo['request_header'];
 
         $this->curlError = $curlError;
 
