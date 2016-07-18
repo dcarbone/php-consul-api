@@ -224,14 +224,41 @@ class KVClient extends AbstractApiClient
             if (!isset($treeHierarchy[$root]))
                 $treeHierarchy[$root] = new KVTree($root);
 
-            // We're still in the path definition...
             if ('/' === substr($path, -1))
             {
-                $treeHierarchy[$root][$path] = new KVTree($path);
+                $_path = '';
+                foreach(explode('/', $prefix) as $part)
+                {
+                    if ('' === $part)
+                        continue;
+
+                    $_path .= "{$part}/";
+
+                    if ($root === $_path)
+                        continue;
+
+                    if (!isset($treeHierarchy[$root][$_path]))
+                        $treeHierarchy[$root][$_path] = new KVTree($_path);
+                }
             }
-            // We've arrived at an actual key
             else
             {
+                $kvPrefix = substr($path, 0, strrpos($path, '/') + 1);
+                $_path = '';
+                foreach(explode('/', $kvPrefix) as $part)
+                {
+                    if ('' === $part)
+                        continue;
+
+                    $_path .= "{$part}/";
+
+                    if ($root === $_path)
+                        continue;
+
+                    if (!isset($treeHierarchy[$root][$_path]))
+                        $treeHierarchy[$root][$_path] = new KVTree($_path);
+                }
+
                 $treeHierarchy[$root][$path] = $kvp;
             }
         }

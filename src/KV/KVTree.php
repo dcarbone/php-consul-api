@@ -136,15 +136,12 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     {
         if (is_string($offset))
         {
-            $subPath = trim(str_replace($this->_prefix, '', $offset), "/");
-            $slashPos = strpos($subPath, '/');
-            if (false === $slashPos)
+            $subPath = str_replace($this->_prefix, '', $offset);
+            $cnt = substr_count($subPath, '/');
+
+            if (1 < $cnt || (1 === $cnt && '/' !== substr($subPath, -1)))
             {
-                $offset = $subPath;
-            }
-            else
-            {
-                $childKey = substr($offset, 0, $slashPos);
+                $childKey = $this->_prefix.substr($subPath, 0, strpos($subPath, '/') + 1);
                 if (isset($this->_children[$childKey]))
                     return isset($this->_children[$childKey][$offset]);
             }
@@ -163,15 +160,11 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     {
         if (is_string($offset))
         {
-            $subPath = trim(str_replace($this->_prefix, '', $offset), "/");
-            $slashPos = strpos($subPath, '/');
-            if (false === $slashPos)
+            $subPath = str_replace($this->_prefix, '', $offset);
+            $cnt = substr_count($subPath, '/');
+            if (1 < $cnt || (1 === $cnt && '/' !== substr($subPath, -1)))
             {
-                $offset = $subPath;
-            }
-            else
-            {
-                $childKey = substr($subPath, 0, $slashPos);
+                $childKey = $this->_prefix.substr($subPath, 0, strpos($subPath, '/') + 1);
                 if (isset($this[$childKey]))
                     return $this->_children[$childKey][$offset];
             }
@@ -199,23 +192,28 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
      */
     public function offsetSet($offset, $value)
     {
-        switch(gettype($offset))
+        if ('string' === gettype($offset))
         {
-            case 'NULL':
-                $this->_children[] = $value;
-                break;
-            case 'integer':
-            case 'double':
-                $this->_children[$offset] = $value;
-                break;
-            case 'string':
-                $childPath = trim(str_replace($this->_prefix, '', $offset), "/");
-                $slashPos = strpos($childPath, '/');
+            $subPath = str_replace($this->_prefix, '', $offset);
+            $cnt = substr_count($subPath, '/');
 
-                if (false === $slashPos)
-                    $this->_children[$childPath] = $value;
-                else
-                    $this->_children[substr($childPath, 0, $slashPos)][$offset] = $value;
+            if (1 < $cnt || (1 === $cnt && '/' !== substr($subPath, -1)))
+            {
+                $childKey = $this->_prefix.substr($subPath, 0, strpos($subPath, '/') + 1);
+                $this->_children[$childKey][$offset] = $value;
+            }
+            else
+            {
+                $this->_children[$offset] = $value;
+            }
+        }
+        else if (null === $offset)
+        {
+            $this->_children[] = $value;
+        }
+        else
+        {
+            $this->_children[$offset] = $value;
         }
     }
 
@@ -267,9 +265,30 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
                 $json[$this->_prefix] = $child;
             else if ($child instanceof KVPair)
                 $json[$this->_prefix][$child->Key] = $child;
-            else
-                $json[$this->_prefix][$k] = $child;
         }
         return $json;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->_prefix;
+    }
+
+    /**
+     * This method is called by var_dump() when dumping an object to get the properties that should be shown.
+     * If the method isn't defined on an object, then all public, protected and private properties will be shown.
+     *
+     * @return array
+     * @link http://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.debuginfo
+     */
+    public function __debugInfo()
+    {
+        return array(
+            'prefix' => $this->_prefix,
+            'children' => $this->_children
+        );
     }
 }
