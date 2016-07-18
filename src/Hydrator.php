@@ -157,17 +157,15 @@ class Hydrator
      */
     public static function CoordinateDatacenterMap(array $data)
     {
-        $dcm = new CoordinateDatacenterMap();
-        if (isset($data['Datacenter']))
-            $dcm->Datacenter = $data['Datacenter'];
         if (isset($data['Coordinates']))
         {
-            foreach($data['Coordinates'] as $coordinate)
+            for ($i = 0, $cnt = count($data['Coordinates']); $i < $cnt; $i++)
             {
-                $dcm->Coordinates[] = self::Coordinate($coordinate);
+                $data['Coordinates'][$i] = self::Coordinate($data['Coordinates'][$i]);
             }
         }
-        return $dcm;
+
+        return new CoordinateDatacenterMap($data);
     }
 
     /**
@@ -209,20 +207,18 @@ class Hydrator
      */
     public static function ServiceEntry(array $data)
     {
-        $se = new ServiceEntry();
-        $se->Node = $data['Node'];
         if (isset($data['Service']))
-            $se->Service = self::AgentService($data['Service']);
-        
+            $data['Service'] = self::AgentService($data['Service']);
+
         if (isset($data['Checks']))
         {
-            foreach($data['Checks'] as $check)
+            for ($i = 0, $cnt = count($data['Checks']); $i < $cnt; $i++)
             {
-                $se->Checks[] = self::HealthCheck($check);
+                $data['Checks'][$i] = self::HealthCheck($data['Checks'][$i]);
             }
         }
-        
-        return $se;
+
+        return new ServiceEntry($data);
     }
 
     /**
