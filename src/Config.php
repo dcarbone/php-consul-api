@@ -42,7 +42,7 @@ class Config extends AbstractStrictCollection
     }
 
     /**
-     * @return static
+     * @return Config
      */
     public static function newDefaultConfig()
     {
