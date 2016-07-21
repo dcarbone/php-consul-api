@@ -81,7 +81,19 @@ abstract class AbstractApiClient
         list($response, $err) = $r->execute();
         $duration = (int)((microtime(true) - $rt) * 1000000);
 
-        return [$duration, $response, $err];
+        if (false === $response->curlError)
+            return [$duration, $response, $err];
+
+        $err = new Error(sprintf(
+            '%s - Error seen while executing "%s".  Message: "%s"',
+            get_class($this),
+            $response->url,
+            $response->curlError
+        ));
+
+        Logger::error($err);
+
+        return [null, $err];
     }
 
     /**
