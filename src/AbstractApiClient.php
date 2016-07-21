@@ -49,13 +49,17 @@ abstract class AbstractApiClient
 
         if (200 !== $requestResult[1]->httpCode)
         {
-            return [$requestResult[0], $requestResult[1], new Error(sprintf(
+            $err = new Error(sprintf(
                 '%s - Error seen while executing "%s".  Response code: %d.  Message: %s',
                 get_class($this),
                 $requestResult[1]->url,
                 $requestResult[1]->httpCode,
                 $requestResult[1]->curlError
-            ))];
+            ));
+
+            Logger::error($err);
+
+            return [$requestResult[0], $requestResult[1], $err];
         }
 
         return $requestResult;

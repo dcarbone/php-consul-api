@@ -150,7 +150,7 @@ class HttpRequest
             );
         }
 
-        Logger::log('debug', 'Executing '.$this->method.' request '.$this->url.($this->body ? ' with body "'.$this->body.'"':''));
+        Logger::debug('Executing '.$this->method.' request '.$this->url.($this->body ? ' with body "'.$this->body.'"':''));
 
         switch($this->method)
         {
@@ -192,7 +192,7 @@ class HttpRequest
                 get_class($this),
                 json_encode($this->_curlOpts)
             ));
-            Logger::log('error', $err);
+            Logger::error($err);
             return [null, $err];
         }
 
@@ -200,8 +200,7 @@ class HttpRequest
 
         curl_close($ch);
 
-
-        Logger::log('debug', 'Response received - Code: '.$response->httpCode.'; Body: '.$response->body.'; ');
+        Logger::debug('Response received - Code: '.$response->httpCode.'; Body: '.$response->body.'; ');
 
         return [$response, null];
     }

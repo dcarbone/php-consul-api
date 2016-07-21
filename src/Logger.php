@@ -116,14 +116,27 @@ abstract class Logger
     }
 
     /**
-     * @param string $logLevel
+     * @param string $level
      * @param string $message
      */
-    public static function log($logLevel, $message)
+    public static function log($level, $message)
     {
-        $level = strtolower($logLevel);
-        if (self::$_logLevels[self::$_logLevel] <= self::$_logLevels[strtolower($level)])
+        if (!is_string($level) || !isset(self::$_logLevels[$level]))
         {
+            trigger_error(sprintf(
+                '%s::log - Specified level "%s" is not valid.  Available levels are: ["%s"]',
+                get_called_class(),
+                is_string($level) ? $level : gettype($level),
+                implode('","', array_keys(self::$_logLevels))
+            ));
+            return;
+        }
+
+        if (self::$_logLevels[self::$_logLevel] <= self::$_logLevels[$level])
+        {
+            if ($message instanceof Error)
+                $message = $message->getMessage();
+
             if (self::$_defaultLogger)
                 self::$_defaultLogger->{$level}($message);
 
@@ -132,6 +145,38 @@ abstract class Logger
                 $logger->{$level}($message);
             }
         }
+    }
+
+    /**
+     * @param string $message
+     */
+    public static function error($message)
+    {
+        self::log('error', $message);
+    }
+
+    /**
+     * @param string $message
+     */
+    public static function warn($message)
+    {
+        self::log('warn', $message);
+    }
+
+    /**
+     * @param string $message
+     */
+    public static function info($message)
+    {
+        self::log('info', $message);
+    }
+
+    /**
+     * @param string $message
+     */
+    public static function debug($message)
+    {
+        self::log('debug', $message);
     }
 }
 Logger::init();

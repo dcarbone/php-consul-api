@@ -41,6 +41,22 @@ class Error implements \JsonSerializable
     }
 
     /**
+     * @return DateTime
+     */
+    public function getTimestamp()
+    {
+        return $this->_timestamp;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMessage()
+    {
+        return $this->_message;
+    }
+
+    /**
      * Specify data which should be serialized to JSON
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
      * @return mixed data which can be serialized by json_encode, which is a value of any type other than a resource.

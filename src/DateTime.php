@@ -22,6 +22,13 @@
  */
 class DateTime extends \DateTime implements \JsonSerializable
 {
+    const Nanosecond = 1;
+    const Microsecond = 1000 * self::Nanosecond;
+    const Millisecond = 1000 * self::Microsecond;
+    const Second = 1000 * self::Millisecond;
+    const Minute = 60 * self::Second;
+    const Hour = 60 * self::Minute;
+
     /** @var string */
     private static $_defaultFormat = 'Y-m-d\TH:i:s.uO';
 
