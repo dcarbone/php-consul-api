@@ -52,20 +52,29 @@ class KVClient extends AbstractApiClient
         $r = new HttpRequest('get', sprintf('v1/kv/%s', rawurlencode($key)), $this->_Config);
         $r->setQueryOptions($queryOptions);
 
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        /** @var \DCarbone\PHPConsulAPI\HttpResponse $response */
+        list($duration, $response, $err) = $this->doRequest($r);
         $qm = $this->buildQueryMeta($duration, $response);
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        if (200 === $response->httpCode)
+        {
+            list($data, $err) = $this->decodeBody($response);
 
-        if (null !== $err)
-            return [null, $qm, $err];
+            if (null !== $err)
+                return [null, $qm, $err];
 
-        $data = $data[0];
+            $data = $data[0];
 
-        return [Hydrator::KVPair($data), $qm, null];
+            return [Hydrator::KVPair($data), $qm, null];
+        }
+
+        if (404 === $response->httpCode)
+            return [null, $qm, null];
+
+        return [null, $qm, new Error(sprintf('%s: %s', $response->httpCode, $response->body))];
     }
 
     /**
