@@ -37,7 +37,8 @@ class Config extends AbstractStrictCollection
             'CAFile' => null,
             'CertFile' => null,
             'KeyFile' => null,
-            'InsecureSkipVerify' => null
+            'InsecureSkipVerify' => null,
+            'AdditionalCurlOpts' => array(),
         );
     }
 
@@ -275,6 +276,35 @@ class Config extends AbstractStrictCollection
     }
 
     /**
+     * @return array
+     */
+    public function getAdditionalCurlOpts()
+    {
+        return $this->_storage['AdditionalCurlOpts'];
+    }
+
+    /**
+     * @param array $additionalCurlOpts
+     * @return $this
+     */
+    public function setAdditionalCurlOpts(array $additionalCurlOpts)
+    {
+        $this->_storage['AdditionalCurlOpts'] = $additionalCurlOpts;
+        return $this;
+    }
+
+    /**
+     * @param int $opt
+     * @param mixed $value
+     * @return $this
+     */
+    public function setAdditionalCurlOpt($opt, $value)
+    {
+        $this->_storage['AdditionalCurlOpts'][$opt] = $value;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function compileAddress()
@@ -305,7 +335,7 @@ class Config extends AbstractStrictCollection
      */
     public function getCurlOptArray()
     {
-        $opts = array();
+        $opts = $this->getAdditionalCurlOpts();
 
         if ($auth = $this->getHttpAuth())
             $opts[CURLOPT_HTTPAUTH] = (string)$auth;
