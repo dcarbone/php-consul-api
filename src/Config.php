@@ -162,7 +162,7 @@ class Config extends AbstractStrictCollection
         throw new \InvalidArgumentException(sprintf(
             '%s::setHttpAuth - Value is expected to be string of "username:password" or instance of "ConsulHttpAuth", %s seen.',
             get_class($this),
-            gettype($httpAuth)
+            is_string($httpAuth) ? $httpAuth : gettype($httpAuth)
         ));
     }
 
@@ -279,7 +279,25 @@ class Config extends AbstractStrictCollection
      */
     public function compileAddress()
     {
-        return sprintf('%s://%s', $this->getScheme(), $this->getAddress());
+        if ('' === ($scheme = $this->getScheme()))
+        {
+            throw new \LogicException(sprintf(
+                '%s - "Scheme" was left undefined in this config object. Definition: %s',
+                get_class($this),
+                json_encode($this)
+            ));
+        }
+
+        if ('' === ($addr = $this->getAddress()))
+        {
+            throw new \LogicException(sprintf(
+                '%s - "Address" was left undefined in this config object. Definition: %s',
+                get_class($this),
+                json_encode($this)
+            ));
+        }
+
+        return sprintf('%s://%s', $scheme, $addr);
     }
 
     /**
@@ -325,5 +343,19 @@ class Config extends AbstractStrictCollection
             return $_SERVER[$param];
 
         return false;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by json_encode, which is a value of any type other than a resource.
+     */
+    public function jsonSerialize()
+    {
+        $data = parent::jsonSerialize();
+        if (isset($data['HttpAuth']))
+            unset($data['HttpAuth']);
+
+        return $data;
     }
 }

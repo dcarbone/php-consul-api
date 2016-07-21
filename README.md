@@ -24,11 +24,16 @@ First, construct a [Config](./src/Config.php) object:
 $config = new \DCarbone\PHPConsulAPI\Config(['Address' => 'address of your consul agent']);
 ```
 
+See the [configuration documentation](./docs/CONFIG.md) for more information on this object.
+
 Next, construct a [Consul](./src/Consul.php) object:
 
 ```php
 $consul = new \DCarbone\PHPConsulAPI\Consul($config);
 ```
+
+*NOTE* If you do not create your own config object, [Consul](./src/Consu.php) will create it's own
+using [Config::newDefaultConfig()](../src/Config.php#L47).
 
 Once constructed, you interact with each Consul API via it's corresponding Client class:
 
@@ -51,6 +56,7 @@ var_dump($kv_list);
 - [Event](./docs/EVENT.md)
 - [Coordinate](./docs/COORDINATE.md)
 - [Health](./docs/HEALTH.md)
+- [Session](./docs/SESSION.md)
 
 More will be added as time goes on!
 
