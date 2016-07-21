@@ -54,7 +54,7 @@ abstract class AbstractApiClient
                 get_class($this),
                 $requestResult[1]->url,
                 $requestResult[1]->httpCode,
-                $requestResult[1]->curlError
+                $requestResult[1]->body
             ));
 
             Logger::error($err);
