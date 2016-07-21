@@ -93,7 +93,7 @@ abstract class AbstractApiClient
 
         Logger::error($err);
 
-        return [null, $err];
+        return [$duration, $response, $err];
     }
 
     /**
