@@ -257,7 +257,7 @@ class SessionClient extends AbstractApiClient
      */
     public function listSessions(QueryOptions $queryOptions = null)
     {
-        $r = new HttpRequest('get', 'v1/sesion/list', $this->_Config);
+        $r = new HttpRequest('get', 'v1/session/list', $this->_Config);
         $r->setQueryOptions($queryOptions);
 
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));

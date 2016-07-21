@@ -132,12 +132,23 @@ class HttpRequest
      */
     public function execute()
     {
-        $this->url = sprintf(
-            '%s/%s?%s',
-            $this->_Config->compileAddress(),
-            ltrim(trim($this->path), "/"),
-            $this->params
-        );
+        if (0 === count($this->params))
+        {
+            $this->url = sprintf(
+                '%s/%s',
+                $this->_Config->compileAddress(),
+                ltrim(trim($this->path), "/")
+            );
+        }
+        else
+        {
+            $this->url = sprintf(
+                '%s/%s?%s',
+                $this->_Config->compileAddress(),
+                ltrim(trim($this->path), "/"),
+                $this->params
+            );
+        }
 
         Logger::log('debug', 'Executing '.$this->method.' request '.$this->url.($this->body ? ' with body "'.$this->body.'"':''));
 
