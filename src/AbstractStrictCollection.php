@@ -39,7 +39,18 @@ abstract class AbstractStrictCollection extends AbstractCollection
      * @return array
      */
     abstract protected function getDefinition();
-    
+
+    /**
+     * This method is called by var_dump() when dumping an object to get the properties that should be shown.
+     * If the method isn't defined on an object, then all public, protected and private properties will be shown.
+     * @return array
+     * @link http://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.debuginfo
+     */
+    public function __debugInfo()
+    {
+        return $this->_storage;
+    }
+
     /**
      * Whether a offset exists
      * @link http://php.net/manual/en/arrayaccess.offsetexists.php
@@ -63,6 +74,30 @@ abstract class AbstractStrictCollection extends AbstractCollection
             return $this->{sprintf('get%s', $offset)}();
 
         throw $this->_createOutOfBoundsException($offset);
+    }
+
+    /**
+     * String representation of object
+     * @link http://php.net/manual/en/serializable.serialize.php
+     * @return string the string representation of the object or null
+     */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->_definition,
+            $this->_storage
+        ));
+    }
+
+    /**
+     * Constructs the object
+     * @link http://php.net/manual/en/serializable.unserialize.php
+     * @param string $serialized The string representation of the object.
+     * @return void
+     */
+    public function unserialize($serialized)
+    {
+        list($this->_definition, $this->_storage) = unserialize($serialized);
     }
 
     /**
