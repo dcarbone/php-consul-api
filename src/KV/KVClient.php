@@ -49,7 +49,7 @@ class KVClient extends AbstractApiClient
             ))];
         }
 
-        $r = new HttpRequest('get', sprintf('v1/kv/%s', rawurlencode($key)), $this->_Config);
+        $r = new HttpRequest('get', sprintf('v1/kv/%s', $key), $this->_Config);
         $r->setQueryOptions($queryOptions);
 
         /** @var \DCarbone\PHPConsulAPI\HttpResponse $response */
@@ -97,7 +97,7 @@ class KVClient extends AbstractApiClient
             ))];
         }
 
-        $r = new HttpRequest('get', sprintf('v1/kv/%s', rawurlencode($prefix)), $this->_Config);
+        $r = new HttpRequest('get', sprintf('v1/kv/%s', $prefix), $this->_Config);
         $r->setQueryOptions($queryOptions);
         $r->params->set('recurse', '');
 
@@ -145,7 +145,7 @@ class KVClient extends AbstractApiClient
         if (null === $prefix)
             $r = new HttpRequest('get', 'v1/kv/', $this->_Config);
         else
-            $r = new HttpRequest('get', sprintf('v1/kv/%s', rawurlencode($prefix)), $this->_Config);
+            $r = new HttpRequest('get', sprintf('v1/kv/%s', $prefix), $this->_Config);
 
         $r->setQueryOptions($queryOptions);
         $r->params->set('keys', true);
@@ -171,7 +171,7 @@ class KVClient extends AbstractApiClient
      */
     public function put(KVPair $KVPair, WriteOptions $writeOptions = null)
     {
-        $r = new HttpRequest('put', sprintf('v1/kv/%s', rawurlencode($KVPair->Key)), $this->_Config);
+        $r = new HttpRequest('put', sprintf('v1/kv/%s', $KVPair->Key), $this->_Config);
         $r->setWriteOptions($writeOptions);
         $r->body = ($KVPair);
 
@@ -191,7 +191,7 @@ class KVClient extends AbstractApiClient
      */
     public function delete($key, WriteOptions $writeOptions = null)
     {
-        $r = new HttpRequest('delete', sprintf('v1/kv/%s', rawurlencode($key)), $this->_Config);
+        $r = new HttpRequest('delete', sprintf('v1/kv/%s', $key), $this->_Config);
         $r->setWriteOptions($writeOptions);
 
         list ($duration, $_, $err) = $this->requireOK($this->doRequest($r));

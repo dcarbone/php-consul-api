@@ -69,7 +69,7 @@ object.  Below is a quick and sloppy example that also creates a check:
 ```php
 $service = new \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration(
     array(
-        'Name' => 'dan test service',
+        'Name' => 'service-name',
         'Check' => new \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck(
             array(
                 'HTTP' => 'http://127.0.0.1:8000',
@@ -100,7 +100,7 @@ object.  Below is a quick and sloppy example:
 ```php
 $check = new \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration(
     array(
-        'Name' => 'dan test service check',
+        'Name' => 'service-check',
         'TCP' => '127.0.0.1:8000',
         'Interval' => '10s',
         'ServiceID' => 'dan test service'

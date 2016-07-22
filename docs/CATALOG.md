@@ -23,7 +23,7 @@ $catalogRegistration = new \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration(
         'Address' => 'address of node',
         'Service' => new \DCarbone\PHPConsulAPI\Agent\AgentService(
             array(
-                'Service' => 'dan-no-space-test',
+                'Service' => 'service-name',
             )
         )
     )
@@ -47,7 +47,7 @@ $catalogDeregistration = new \DCarbone\PHPConsulAPI\Catalog\CatalogDeregistratio
     array(
         'Node' => 'name of node',
         'Address' => 'address of node',
-        'ServiceID' => 'dan-no-space-test'
+        'ServiceID' => 'service-name'
     )
 );
 

@@ -185,7 +185,7 @@ class AgentClient extends AbstractApiClient
      */
     public function serviceDeregister($serviceID)
     {
-        $r = new HttpRequest('put', sprintf('v1/agent/service/deregister/%s', rawurlencode($serviceID)), $this->_Config);
+        $r = new HttpRequest('put', sprintf('v1/agent/service/deregister/%s', $serviceID), $this->_Config);
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
@@ -238,7 +238,7 @@ class AgentClient extends AbstractApiClient
      */
     public function updateTTL($checkID, $output, $status)
     {
-        $r = new HttpRequest('put', sprintf('v1/agent/check/update/%s', rawurlencode($checkID)), $this->_Config);
+        $r = new HttpRequest('put', sprintf('v1/agent/check/update/%s', $checkID), $this->_Config);
         $r->body = (new AgentCheckUpdate(['Output' => $output, 'Status' => $status]));
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
@@ -266,7 +266,7 @@ class AgentClient extends AbstractApiClient
      */
     public function checkDeregister($checkID)
     {
-        $r = new HttpRequest('put', sprintf('v1/agent/check/deregister/%s', rawurlencode($checkID)), $this->_Config);
+        $r = new HttpRequest('put', sprintf('v1/agent/check/deregister/%s', $checkID), $this->_Config);
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
@@ -280,7 +280,7 @@ class AgentClient extends AbstractApiClient
      */
     public function join($addr, $wan = false)
     {
-        $r = new HttpRequest('put', sprintf('v1/agent/join/%s', rawurlencode($addr)), $this->_Config);
+        $r = new HttpRequest('put', sprintf('v1/agent/join/%s', $addr), $this->_Config);
         if ($wan)
             $r->params->set('wan', 1);
 
@@ -295,7 +295,7 @@ class AgentClient extends AbstractApiClient
      */
     public function forceLeave($node)
     {
-        $r = new HttpRequest('put', sprintf('v1/agent/force-leave/%s', rawurlencode($node)), $this->_Config);
+        $r = new HttpRequest('put', sprintf('v1/agent/force-leave/%s', $node), $this->_Config);
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
@@ -309,7 +309,7 @@ class AgentClient extends AbstractApiClient
      */
     public function enableServiceMaintenance($serviceID, $reason = '')
     {
-        $r = new HttpRequest('put', sprintf('v1/agent/service/maintenance/%s', rawurlencode($serviceID)), $this->_Config);
+        $r = new HttpRequest('put', sprintf('v1/agent/service/maintenance/%s', $serviceID), $this->_Config);
         $r->params->set('enable', 'true');
         $r->params->set('reason', $reason);
 
@@ -324,7 +324,7 @@ class AgentClient extends AbstractApiClient
      */
     public function disableServiceMaintenance($serviceID)
     {
-        $r = new HttpRequest('put', sprintf('v1/agent/service/maintenance/%s', rawurlencode($serviceID)), $this->_Config);
+        $r = new HttpRequest('put', sprintf('v1/agent/service/maintenance/%s', $serviceID), $this->_Config);
         $r->params->set('enable', 'false');
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
@@ -369,7 +369,7 @@ class AgentClient extends AbstractApiClient
      */
     public function checkPass($checkID, $note = '')
     {
-        $r = new HttpRequest('get', sprintf('v1/agent/check/pass/%s', rawurlencode($checkID)), $this->_Config);
+        $r = new HttpRequest('get', sprintf('v1/agent/check/pass/%s', $checkID), $this->_Config);
         $r->params->set('note', $note);
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
@@ -386,7 +386,7 @@ class AgentClient extends AbstractApiClient
      */
     public function checkWarn($checkID, $note = '')
     {
-        $r = new HttpRequest('get', sprintf('v1/agent/check/warn/%s', rawurlencode($checkID)), $this->_Config);
+        $r = new HttpRequest('get', sprintf('v1/agent/check/warn/%s', $checkID), $this->_Config);
         $r->params->set('note', $note);
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
@@ -403,7 +403,7 @@ class AgentClient extends AbstractApiClient
      */
     public function checkFail($checkID, $note = '')
     {
-        $r = new HttpRequest('get', sprintf('v1/agent/check/fail/%s', rawurlencode($checkID)), $this->_Config);
+        $r = new HttpRequest('get', sprintf('v1/agent/check/fail/%s', $checkID), $this->_Config);
         $r->params->set('note', $note);
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));

@@ -111,7 +111,7 @@ class SessionClient extends AbstractApiClient
             ))];
         }
 
-        $r = new HttpRequest('put', sprintf('v1/session/destroy/%s', rawurlencode($id)), $this->_Config);
+        $r = new HttpRequest('put', sprintf('v1/session/destroy/%s', $id), $this->_Config);
         $r->setWriteOptions($writeOptions);
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
@@ -140,7 +140,7 @@ class SessionClient extends AbstractApiClient
             ))];
         }
 
-        $r = new HttpRequest('put', sprintf('v1/session/renew/%s', rawurlencode($id)), $this->_Config);
+        $r = new HttpRequest('put', sprintf('v1/session/renew/%s', $id), $this->_Config);
         $r->setWriteOptions($writeOptions);
 
         /** @var \Dcarbone\PHPConsulAPI\HttpResponse $response */
@@ -190,7 +190,7 @@ class SessionClient extends AbstractApiClient
             ))];
         }
 
-        $r = new HttpRequest('get', sprintf('v1/session/info/%s', rawurlencode($id)), $this->_Config);
+        $r = new HttpRequest('get', sprintf('v1/session/info/%s', $id), $this->_Config);
         $r->setQueryOptions($queryOptions);
 
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -230,7 +230,7 @@ class SessionClient extends AbstractApiClient
             ))];
         }
 
-        $r = new HttpRequest('get', sprintf('v1/session/node/%s', rawurlencode($node)), $this->_Config);
+        $r = new HttpRequest('get', sprintf('v1/session/node/%s', $node), $this->_Config);
         $r->setQueryOptions($queryOptions);
 
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));

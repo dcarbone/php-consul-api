@@ -48,7 +48,7 @@ class HealthClient extends AbstractApiClient
             ))];
         }
 
-        $r = new HttpRequest('get', sprintf('v1/health/node/%s', rawurlencode($node)), $this->_Config);
+        $r = new HttpRequest('get', sprintf('v1/health/node/%s', $node), $this->_Config);
         $r->setQueryOptions($queryOptions);
 
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -91,7 +91,7 @@ class HealthClient extends AbstractApiClient
             ))];
         }
 
-        $r = new HttpRequest('get', sprintf('v1/health/checks/%s', rawurlencode($service)), $this->_Config);
+        $r = new HttpRequest('get', sprintf('v1/health/checks/%s', $service), $this->_Config);
         $r->setQueryOptions($queryOptions);
 
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -134,7 +134,7 @@ class HealthClient extends AbstractApiClient
             ))];
         }
 
-        $r = new HttpRequest('get', sprintf('v1/health/checks/%s', rawurlencode($service)), $this->_Config);
+        $r = new HttpRequest('get', sprintf('v1/health/checks/%s', $service), $this->_Config);
         $r->setQueryOptions($queryOptions);
 
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -180,7 +180,7 @@ class HealthClient extends AbstractApiClient
             ))];
         }
 
-        $r = new HttpRequest('get', sprintf('v1/health/state/%s', rawurlencode($state)), $this->_Config);
+        $r = new HttpRequest('get', sprintf('v1/health/state/%s', $state), $this->_Config);
         $r->setQueryOptions($queryOptions);
 
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));

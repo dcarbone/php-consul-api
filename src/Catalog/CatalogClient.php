@@ -154,7 +154,7 @@ class CatalogClient extends AbstractApiClient
      */
     public function service($service, $tag = '', QueryOptions $queryOptions = null)
     {
-        $r = new HttpRequest('get', sprintf('v1/catalog/service/%s', rawurlencode($service)), $this->_Config);
+        $r = new HttpRequest('get', sprintf('v1/catalog/service/%s', $service), $this->_Config);
         $r->setQueryOptions($queryOptions);
         if ('' !== $tag)
             $r->params->set('tag', $tag);
@@ -191,7 +191,7 @@ class CatalogClient extends AbstractApiClient
      */
     public function node($node, QueryOptions $queryOptions = null)
     {
-        $r = new HttpRequest('get', sprintf('v1/catalog/node/%s', rawurlencode($node)), $this->_Config);
+        $r = new HttpRequest('get', sprintf('v1/catalog/node/%s', $node), $this->_Config);
         $r->setQueryOptions($queryOptions);
 
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));

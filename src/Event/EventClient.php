@@ -39,7 +39,7 @@ class EventClient extends AbstractApiClient
      */
     public function fire(UserEvent $event, WriteOptions $writeOptions = null)
     {
-        $r = new HttpRequest('put', sprintf('v1/event/fire/%s', rawurlencode($event->Name)), $this->_Config);
+        $r = new HttpRequest('put', sprintf('v1/event/fire/%s', $event->Name), $this->_Config);
         $r->setWriteOptions($writeOptions);
 
         if ('' !== ($nf = $event->NodeFilter))
