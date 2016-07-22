@@ -81,7 +81,7 @@ abstract class AbstractApiClient
         list($response, $err) = $r->execute();
         $duration = (int)((microtime(true) - $rt) * 1000000);
 
-        if (false === $response->curlError)
+        if ('' === $response->curlError)
             return [$duration, $response, $err];
 
         $err = new Error(sprintf(
