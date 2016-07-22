@@ -37,6 +37,9 @@ class HttpRequest
     /** @var string */
     public $url;
 
+    /** @var string */
+    private $_compiledBody = null;
+
     /** @var array */
     private $_curlOpts = array();
     /** @var array */
@@ -125,6 +128,41 @@ class HttpRequest
     }
 
     /**
+     * @return string
+     */
+    public function getCompiledBody()
+    {
+        if (!isset($this->_compiledBody))
+        {
+            switch(gettype($this->body))
+            {
+                case 'integer':
+                case 'double':
+                    $this->_compiledBody = (string)$this->body;
+                    break;
+
+                case 'string':
+                    $this->_compiledBody = $this->body;
+                    break;
+
+                case 'object':
+                case 'array':
+                    $this->_compiledBody = json_encode($this->body);
+                    break;
+
+                case 'boolean':
+                    $this->_compiledBody = $this->body ? 'true' : 'false';
+                    break;
+
+                default:
+                    $this->_compiledBody = '';
+            }
+        }
+
+        return $this->_compiledBody;
+    }
+
+    /**
      * @return array(
      *  @type HttpResponse|null response or null on error
      *  @type \DCarbone\PHPConsulAPI\Error|null any error if seen
@@ -150,7 +188,12 @@ class HttpRequest
             );
         }
 
-        Logger::debug('Executing '.$this->method.' request '.$this->url.($this->body ? ' with body "'.$this->body.'"':''));
+        Logger::debug(sprintf(
+            'Executing %s request %s%s',
+            $this->method,
+            $this->url,
+            $this->body ? sprintf(' with body "%s"', $this->getCompiledBody()) : ''
+        ));
 
         switch($this->method)
         {
@@ -208,38 +251,12 @@ class HttpRequest
     private function _preparePUT()
     {
         $this->_curlOpts[CURLOPT_CUSTOMREQUEST] = 'PUT';
-        $this->_curlOpts[CURLOPT_POSTFIELDS] = $this->_compileBody();
+        $this->_curlOpts[CURLOPT_POSTFIELDS] = $this->getCompiledBody();
     }
 
     private function _prepareDELETE()
     {
         $this->_curlOpts[CURLOPT_CUSTOMREQUEST] = 'DELETE';
-        $this->_curlOpts[CURLOPT_POSTFIELDS] = $this->_compileBody();
-    }
-
-    /**
-     * @return string
-     */
-    private function _compileBody()
-    {
-        switch(gettype($this->body))
-        {
-            case 'integer':
-            case 'double':
-                return (string)$this->body;
-
-            case 'string':
-                return $this->body;
-
-            case 'object':
-            case 'array':
-                return json_encode($this->body);
-
-            case 'boolean':
-                return $this->body ? 'true' : 'false';
-
-            default:
-                return '';
-        }
+        $this->_curlOpts[CURLOPT_POSTFIELDS] = $this->getCompiledBody();
     }
 }
