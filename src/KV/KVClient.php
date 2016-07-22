@@ -289,9 +289,6 @@ class KVClient extends AbstractApiClient
             $slashPos = strpos($path, '/');
             if (false === $slashPos)
             {
-                if (null !== $err)
-                    return [null, $err];
-
                 $treeHierarchy[$path] = $kvp;
                 continue;
             }
