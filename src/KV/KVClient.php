@@ -276,7 +276,7 @@ class KVClient extends AbstractApiClient
      *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function tree($prefix = null, QueryOptions $queryOptions = null)
+    public function tree($prefix, QueryOptions $queryOptions = null)
     {
         list($valueList, $_, $err) = $this->valueList($prefix, $queryOptions);
 
