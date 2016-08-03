@@ -86,18 +86,22 @@ class KVClient extends AbstractApiClient
      *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function valueList($prefix, QueryOptions $queryOptions = null)
+    public function valueList($prefix = '', QueryOptions $queryOptions = null)
     {
-        if (!is_string($prefix) || '' === $prefix)
+        if (!is_string($prefix))
         {
             return [null, null, new Error(sprintf(
-                '%s::valueList - Prefix expected to be non-empty string, "%s" seen.',
+                '%s::valueList - Prefix expected to be string, "%s" seen.',
                 get_class($this),
-                is_string($prefix) ? $prefix : gettype($prefix)
+                gettype($prefix)
             ))];
         }
 
-        $r = new HttpRequest('get', sprintf('v1/kv/%s', $prefix), $this->_Config);
+        if ('' === $prefix)
+            $r = new HttpRequest('get', 'v1/kv', $this->_Config);
+        else
+            $r = new HttpRequest('get', sprintf('v1/kv/%s', $prefix), $this->_Config);
+
         $r->setQueryOptions($queryOptions);
         $r->params->set('recurse', '');
 
@@ -276,7 +280,7 @@ class KVClient extends AbstractApiClient
      *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function tree($prefix, QueryOptions $queryOptions = null)
+    public function tree($prefix = '', QueryOptions $queryOptions = null)
     {
         list($valueList, $_, $err) = $this->valueList($prefix, $queryOptions);
 
