@@ -98,7 +98,7 @@ class KVClient extends AbstractApiClient
         }
 
         if ('' === $prefix)
-            $r = new HttpRequest('get', 'v1/kv', $this->_Config);
+            $r = new HttpRequest('get', 'v1/kv/', $this->_Config);
         else
             $r = new HttpRequest('get', sprintf('v1/kv/%s', $prefix), $this->_Config);
 
