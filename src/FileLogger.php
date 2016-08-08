@@ -113,7 +113,7 @@ class FileLogger implements ConsulAPILoggerInterface
                     DateTime::now(),
                     $message
                 ),
-                FILE_APPEND | LOCK_EX
+                FILE_APPEND
             );
 
             if ($ok)
