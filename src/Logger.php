@@ -22,7 +22,7 @@
  */
 abstract class Logger
 {
-    /** @var array */
+    /** @var ConsulAPILoggerInterface[] */
     private static $_loggers = array();
 
     /** @var FileLogger */
