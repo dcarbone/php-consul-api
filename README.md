@@ -32,8 +32,10 @@ Next, construct a [Consul](./src/Consul.php) object:
 $consul = new \DCarbone\PHPConsulAPI\Consul($config);
 ```
 
-*NOTE* If you do not create your own config object, [Consul](./src/Consul.php#L59) will create it's own
-using [Config::newDefaultConfig()](../src/Config.php#L47).
+*NOTE*:
+
+If you do not create your own config object, [Consul](./src/Consul.php#L59) will create it's own
+using [Config::newDefaultConfig()](./src/Config.php#L47).
 
 Once constructed, you interact with each Consul API via it's corresponding Client class:
 
