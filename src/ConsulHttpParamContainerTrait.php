@@ -32,34 +32,20 @@ trait ConsulHttpParamContainerTrait
         {
             if (null !== $v)
             {
-                $value = $v;
-
-                switch($k)
-                {
-                    case 'Datacenter':
-                        $key = 'dc';
-                        break;
-                    case 'AllowStale':
-                        $key = 'stale';
-                        break;
-                    case 'RequireConsistent':
-                        $key = 'consistent';
-                        break;
-                    case 'WaitIndex':
-                        $key = 'index';
-                        break;
-                    case 'WaitTime':
-                        $key = 'wait';
-                        break;
-
-                    default:
-                        $key = strtolower($k);
-                }
-
-                $params[$key] = $value;
+                if ('Datacenter' === $k)
+                    $params['dc'] = $v;
+                else if ('AllowStale' === $k)
+                    $params['stale'] = $v;
+                else if ('RequireConsistent' === $k)
+                    $params['consistent'] = $v;
+                else if ('WaitIndex' === $k)
+                    $params['index'] = $v;
+                else if ('WaitTime' === $k)
+                    $params['wait'] = $v;
+                else
+                    $params[strtolower($k)] = $v;
             }
         }
-
         return $params;
     }
 
