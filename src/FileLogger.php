@@ -39,15 +39,15 @@ class FileLogger implements ConsulAPILoggerInterface
 
         if (is_string($file))
         {
-            $this->_file = $file;
-
-            if (false === @file_exists($file) && false === (bool)@file_put_contents($this->_file, "\n"))
+            if (false === @file_exists($file) && false === (bool)@file_put_contents($file, "\n"))
             {
                 throw new \InvalidArgumentException(sprintf(
                     'FileLogger - Unable to create file at path "%s"',
                     $file
                 ));
             }
+
+            $this->_file = $file;
         }
         else
         {
