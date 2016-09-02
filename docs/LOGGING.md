@@ -1,7 +1,7 @@
 # PHP Consul API Logging
 
 Logging is handled with the [Logger](../src/Logger.php) class.  To register a new logger, it must implement
-the [ConsulAPILoggerInterface](../src/API/ConsulAPILoggerInterface.php) interface.
+the [ConsulAPILoggerInterface](../src/ConsulAPILoggerInterface.php) interface.
 
 ## Provided Loggers
 
