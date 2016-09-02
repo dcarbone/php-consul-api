@@ -42,14 +42,22 @@ abstract class Logger
         'error' => 3,
     );
 
+    /**
+     * Initialize and set a default logger
+     */
     public static function init()
     {
         if (self::$_initialized)
             return;
 
-        self::$_defaultLogger = new FileLogger(__DIR__.'/../var/logs/php-consul-api.log');
+        static::addDefaultLogger();
 
         self::$_initialized = true;
+    }
+
+    public static function addDefaultLogger()
+    {
+        self::$_defaultLogger = new FileLogger(__DIR__.'/../var/logs/php-consul-api.log');
     }
 
     public static function removeDefaultLogger()

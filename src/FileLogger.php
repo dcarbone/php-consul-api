@@ -41,7 +41,7 @@ class FileLogger implements ConsulAPILoggerInterface
         {
             $this->_file = $file;
 
-            if (false === @file_exists($file) && false === $this->_tryCreateFile())
+            if (false === @file_exists($file) && false === (bool)@file_put_contents($this->_file, "\n"))
             {
                 throw new \InvalidArgumentException(sprintf(
                     'FileLogger - Unable to create file at path "%s"',
@@ -102,7 +102,7 @@ class FileLogger implements ConsulAPILoggerInterface
      */
     private function _log($level, $message)
     {
-        if ($this->_canLog())
+        if (file_exists($this->_file) && is_writable($this->_file))
         {
             // Try to write out line
             $ok = (bool)@file_put_contents(
@@ -131,21 +131,5 @@ class FileLogger implements ConsulAPILoggerInterface
         trigger_error($msg, E_USER_ERROR);
 
         return false;
-    }
-
-    /**
-     * @return bool
-     */
-    private function _canLog()
-    {
-        return file_exists($this->_file) && is_writable($this->_file);
-    }
-
-    /**
-     * @return bool
-     */
-    private function _tryCreateFile()
-    {
-        return (bool)@file_put_contents($this->_file, "\n");
     }
 }

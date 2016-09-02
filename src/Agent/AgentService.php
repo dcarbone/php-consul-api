@@ -16,7 +16,6 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractDefinedCollection;
 use DCarbone\PHPConsulAPI\AbstractObjectModel;
 
 /**
