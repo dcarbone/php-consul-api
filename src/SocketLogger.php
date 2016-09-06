@@ -61,7 +61,7 @@ class SocketLogger implements ConsulAPILoggerInterface
                                 $domain = AF_INET,
                                 $type = SOCK_DGRAM,
                                 $protocol = SOL_UDP,
-                                array $options,
+                                array $options = array(),
                                 $sendFlags = 0,
                                 $sendBlocking = false)
     {
@@ -122,6 +122,8 @@ class SocketLogger implements ConsulAPILoggerInterface
         {
             socket_set_option($this->_socket, $this->_protocol, $opt, $value);
         }
+
+        $this->_options = $options;
 
         if ($this->_sendBlocking)
             socket_set_block($this->_socket);
