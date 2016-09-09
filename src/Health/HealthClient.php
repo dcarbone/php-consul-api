@@ -140,7 +140,6 @@ class HealthClient extends AbstractApiClient
         if (null !== $err)
             return [null, $qm, $err];
 
-        echo ($response->body);exit;
         list($data, $err) = $this->decodeBody($response);
 
         if (null !== $err)
