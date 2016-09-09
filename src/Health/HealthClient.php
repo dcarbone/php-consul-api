@@ -127,6 +127,15 @@ class HealthClient extends AbstractApiClient
      */
     public function service($service, $tag = '', $passingOnly = false, QueryOptions $queryOptions = null)
     {
+        if (!is_string($service))
+        {
+            return [null, null, new Error(sprintf(
+                '%s::service - $service must be string, %s seen.',
+                get_class($this),
+                gettype($service)
+            ))];
+        }
+
         $r = new HttpRequest('get', sprintf('v1/health/service/%s', $service), $this->_Config);
         $r->setQueryOptions($queryOptions);
         if ('' !== $tag)
