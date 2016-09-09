@@ -193,6 +193,8 @@ class SocketLogger implements ConsulAPILoggerInterface
             return false;
         }
 
+        $this->_connected = true;
+
         $msg = sprintf(
             "[%s] %s - %s\n",
             $level,
@@ -200,6 +202,18 @@ class SocketLogger implements ConsulAPILoggerInterface
             $message
         );
 
-        return false !== socket_write($this->_socket, $msg, mb_strlen($msg));
+        $written = socket_write($this->_socket, $msg, mb_strlen($msg));
+
+        if (false === $written)
+        {
+            $this->_connected = false;
+            error_log(sprintf(
+                '%s - Unable to write to socket: %s',
+                get_class($this),
+                socket_strerror(socket_last_error())
+            ));
+        }
+
+        return false;
     }
 }

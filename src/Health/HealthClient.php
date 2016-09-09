@@ -116,26 +116,23 @@ class HealthClient extends AbstractApiClient
 
     /**
      * @param string $service
+     * @param string $tag
+     * @param bool $passingOnly
      * @param QueryOptions|null $queryOptions
-     * @return array(
+     * @return array (
      * @type ServiceEntry[]|null list of service entries or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function service($service, QueryOptions $queryOptions = null)
+    public function service($service, $tag = '', $passingOnly = false, QueryOptions $queryOptions = null)
     {
-        if (!is_string($service))
-        {
-            return [null, null, new Error(sprintf(
-                '%s::service - $service must be string, %s seen.',
-                get_class($this),
-                gettype($service)
-            ))];
-        }
-
-        $r = new HttpRequest('get', sprintf('v1/health/checks/%s', $service), $this->_Config);
+        $r = new HttpRequest('get', sprintf('v1/health/service/%s', $service), $this->_Config);
         $r->setQueryOptions($queryOptions);
+        if ('' !== $tag)
+            $r->params->set('tag', $tag);
+        if ($passingOnly)
+            $r->params->set('passing', '1');
 
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
         $qm = $this->buildQueryMeta($duration, $response);
@@ -143,6 +140,7 @@ class HealthClient extends AbstractApiClient
         if (null !== $err)
             return [null, $qm, $err];
 
+        echo ($response->body);exit;
         list($data, $err) = $this->decodeBody($response);
 
         if (null !== $err)
