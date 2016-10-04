@@ -16,50 +16,69 @@
    limitations under the License.
 */
 
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
+
 /**
  * Class Logger
  * @package DCarbone\PHPConsulAPI
  */
 abstract class Logger
 {
-    /** @var ConsulAPILoggerInterface[] */
+    /** @var LoggerInterface[] */
     private static $_loggers = array();
+
+    /** @var ConsulAPILoggerInterface[] */
+    private static $_deprecatedLoggers = array();
 
     /** @var FileLogger */
     private static $_defaultLogger = null;
 
-    /** @var bool */
-    private static $_initialized = false;
-
     /** @var string */
-    private static $_logLevel = 'warn';
+    private static $_logLevel = LogLevel::WARNING;
 
     /** @var array */
     private static $_logLevels = array(
-        'debug' => 0,
-        'info' => 1,
-        'warn' => 2,
-        'error' => 3,
+        LogLevel::DEBUG => 0,
+        LogLevel::INFO => 1,
+        LogLevel::NOTICE => 2,
+        LogLevel::WARNING => 3,
+        LogLevel::ERROR => 4,
+        LogLevel::CRITICAL => 5,
+        LogLevel::ALERT => 6,
+        LogLevel::EMERGENCY => 7,
     );
 
     /**
-     * Initialize and set a default logger
+     * Map to allow for older logger implementations to be used
+     *
+     * TODO: Remove old logging support at some point
+     *
+     * @var array
      */
-    public static function init()
-    {
-        if (self::$_initialized)
-            return;
+    private static $_compatibilityLevels = array(
+        LogLevel::DEBUG => 'debug',
+        LogLevel::INFO => 'info',
+        LogLevel::NOTICE => 'info',
+        LogLevel::WARNING => 'warn',
+        LogLevel::ERROR => 'error',
+        LogLevel::CRITICAL => 'error',
+        LogLevel::ALERT => 'error',
+        LogLevel::EMERGENCY => 'error'
+    );
 
-        static::addDefaultLogger();
-
-        self::$_initialized = true;
-    }
-
+    /**
+     * Set up a file logger that outputs log data to "var/logs/php-consul-api.log"
+     */
     public static function addDefaultLogger()
     {
-        self::$_defaultLogger = new FileLogger(__DIR__.'/../var/logs/php-consul-api.log');
+        if (!isset(self::$_defaultLogger))
+            self::$_defaultLogger = new FileLogger(__DIR__.'/../var/logs/php-consul-api.log');
     }
 
+    /**
+     * Destroy the default logger
+     */
     public static function removeDefaultLogger()
     {
         self::$_defaultLogger = null;
@@ -70,7 +89,226 @@ abstract class Logger
      */
     public static function setLogLevel($logLevel)
     {
-        if (!is_string($logLevel) || '' === ($level = strtolower($logLevel)) || !isset(self::$_logLevels[$level]))
+        self::$_logLevel = self::sanitizeLevel($logLevel);
+    }
+
+    /**
+     * @param LoggerInterface[] $loggers
+     * @param bool $clearDefault
+     */
+    public static function setLoggers(array $loggers, $clearDefault = true)
+    {
+        if ((bool)$clearDefault)
+            self::$_defaultLogger = null;
+
+        self::$_loggers = array();
+        self::$_deprecatedLoggers = array();
+
+        foreach($loggers as $logger)
+        {
+            self::addLogger($logger);
+        }
+    }
+
+    /**
+     * @param LoggerInterface $logger
+     */
+    public static function addLogger($logger)
+    {
+        if ($logger instanceof LoggerInterface)
+        {
+            self::$_loggers[] = $logger;
+        }
+        else if ($logger instanceof ConsulAPILoggerInterface)
+        {
+            trigger_error(sprintf(
+                '%s - The logger "%s" extends the deprecated "ConsulAPILoggerInterface", which will be removed at some point in the future.  Please update logger to support the PSR-3 LoggerInterface.',
+                get_called_class(),
+                get_class($logger)
+            ), E_USER_DEPRECATED);
+            self::$_deprecatedLoggers[] = $logger;
+        }
+        else
+        {
+            throw new \InvalidArgumentException(sprintf(
+                '%s - %s is not a valid logger implementation',
+                get_called_class(),
+                is_object($logger) ? get_class($logger) : gettype($logger)
+            ));
+        }
+    }
+
+    /**
+     * Clear out all loggers
+     */
+    public static function resetLoggers()
+    {
+        self::$_loggers = array();
+        self::$_deprecatedLoggers = array();
+    }
+
+    /**
+     * @param string $logLevel
+     * @param string $message
+     * @param array $context
+     */
+    public static function log($logLevel, $message, array $context = array())
+    {
+        $logLevel = self::sanitizeLevel($logLevel);
+
+        if (self::$_logLevels[self::$_logLevel] <= self::$_logLevels[$logLevel])
+        {
+            if ($message instanceof Error)
+                $message = $message->getMessage();
+
+            // Log to default logger, if set
+            if (isset(self::$_defaultLogger))
+                self::$_defaultLogger->{$logLevel}($message, $context);
+
+            // Log to each user-defined logger
+            foreach(self::$_loggers as $logger)
+            {
+                $logger->{$logLevel}($message, $context);
+            }
+
+            // Log to deprecated loggers.
+            foreach(self::$_deprecatedLoggers as $logger)
+            {
+                $logger->{self::$_compatibilityLevels[$logLevel]}($message);
+            }
+        }
+    }
+
+    /**
+     * System is unusable.
+     *
+     * @param string $message
+     * @param array  $context
+     */
+    public static function emergency($message, array $context = array())
+    {
+        static::log(LogLevel::EMERGENCY, $message, $context);
+    }
+
+    /**
+     * Action must be taken immediately.
+     *
+     * Example: Entire website down, database unavailable, etc. This should
+     * trigger the SMS alerts and wake you up.
+     *
+     * @param string $message
+     * @param array  $context
+     */
+    public static function alert($message, array $context = array())
+    {
+        static::log(LogLevel::ALERT, $message, $context);
+    }
+
+    /**
+     * Critical conditions.
+     *
+     * Example: Application component unavailable, unexpected exception.
+     *
+     * @param string $message
+     * @param array  $context
+     */
+    public static function critical($message, array $context = array())
+    {
+        static::log(LogLevel::CRITICAL, $message, $context);
+    }
+
+    /**
+     * Runtime errors that do not require immediate action but should typically
+     * be logged and monitored.
+     *
+     * @param string $message
+     * @param array  $context
+     */
+    public static function error($message, array $context = array())
+    {
+        static::log(LogLevel::ERROR, $message, $context);
+    }
+
+    /**
+     * Exceptional occurrences that are not errors.
+     *
+     * Example: Use of deprecated APIs, poor use of an API, undesirable things
+     * that are not necessarily wrong.
+     *
+     * @param string $message
+     * @param array  $context
+     */
+    public static function warning($message, array $context = array())
+    {
+        static::log(LogLevel::WARNING, $message, $context);
+    }
+
+    /**
+     * Normal but significant events.
+     *
+     * @param string $message
+     * @param array  $context
+     */
+    public static function notice($message, array $context = array())
+    {
+        static::log(LogLevel::NOTICE, $message, $context);
+    }
+
+    /**
+     * Interesting events.
+     *
+     * Example: User logs in, SQL logs.
+     *
+     * @param string $message
+     * @param array  $context
+     */
+    public static function info($message, array $context = array())
+    {
+        static::log(LogLevel::INFO, $message, $context);
+    }
+
+    /**
+     * Detailed debug information.
+     *
+     * @param string $message
+     * @param array  $context
+     */
+    public static function debug($message, array $context = array())
+    {
+        static::log(LogLevel::DEBUG, $message, $context);
+    }
+
+    /**
+     * @param string $message
+     * @param array $context
+     */
+    public static function warn($message, array $context = array())
+    {
+        self::log(LogLevel::WARNING, $message, $context);
+    }
+
+    /**
+     * @param string $logLevel
+     * @return string
+     */
+    private static function sanitizeLevel($logLevel)
+    {
+        if (!is_string($logLevel))
+        {
+            throw new \InvalidArgumentException(sprintf(
+                '%s - Log level must be string, %s seen.',
+                get_called_class(),
+                gettype($logLevel)
+            ));
+        }
+
+        $level = strtolower(trim($logLevel));
+
+        // Some backwards compatibility
+        if ('warn' === $level)
+            $level = LogLevel::WARNING;
+
+        if (!isset(self::$_logLevels[$level]))
         {
             throw new \InvalidArgumentException(sprintf(
                 '%s - Log level must be one of the following values: ["%s"].  %s seen.',
@@ -80,111 +318,6 @@ abstract class Logger
             ));
         }
 
-        self::$_logLevel = $level;
-    }
-
-    /**
-     * @param ConsulAPILoggerInterface[] $loggers
-     */
-    public static function setLoggers(array $loggers)
-    {
-        self::$_loggers = array();
-        self::$_defaultLogger = null;
-        foreach($loggers as $logger)
-        {
-            if ($logger instanceof ConsulAPILoggerInterface)
-            {
-                self::$_loggers[] = $logger;
-            }
-            else
-            {
-                throw new \InvalidArgumentException(sprintf(
-                    '%s - %s is not a valid logger implementation',
-                    get_called_class(),
-                    is_object($logger) ? get_class($logger) : gettype($logger)
-                ));
-            }
-        }
-    }
-
-    /**
-     * @param ConsulAPILoggerInterface $logger
-     */
-    public static function addLogger(ConsulAPILoggerInterface $logger)
-    {
-        self::$_loggers[] = $logger;
-    }
-
-    /**
-     * Clear out all loggers
-     */
-    public static function resetLoggers()
-    {
-        self::$_loggers = array();
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     */
-    public static function log($level, $message)
-    {
-        if (!is_string($level) || !isset(self::$_logLevels[$level]))
-        {
-            trigger_error(sprintf(
-                '%s::log - Specified level "%s" is not valid.  Available levels are: ["%s"]',
-                get_called_class(),
-                is_string($level) ? $level : gettype($level),
-                implode('","', array_keys(self::$_logLevels))
-            ));
-            return;
-        }
-
-        if (self::$_logLevels[self::$_logLevel] <= self::$_logLevels[$level])
-        {
-            if ($message instanceof Error)
-                $message = $message->getMessage();
-
-            if (self::$_defaultLogger)
-                self::$_defaultLogger->{$level}($message);
-
-            foreach(self::$_loggers as $logger)
-            {
-                $logger->{$level}($message);
-            }
-        }
-    }
-
-    /**
-     * @param string $message
-     */
-    public static function error($message)
-    {
-        self::log('error', $message);
-    }
-
-    /**
-     * @param string $message
-     */
-    public static function warn($message)
-    {
-        self::log('warn', $message);
-    }
-
-    /**
-     * @param string $message
-     */
-    public static function info($message)
-    {
-        self::log('info', $message);
-    }
-
-    /**
-     * @param string $message
-     */
-    public static function debug($message)
-    {
-        self::log('debug', $message);
+        return $level;
     }
 }
-Logger::init();

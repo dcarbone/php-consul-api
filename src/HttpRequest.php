@@ -224,7 +224,7 @@ class HttpRequest
                 get_class($this),
                 $this->url
             ));
-            Logger::log('error', $err);
+            Logger::log('error', $err, []);
             return [null, $err];
         }
 
