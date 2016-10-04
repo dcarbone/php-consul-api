@@ -16,11 +16,13 @@
    limitations under the License.
 */
 
+use Psr\Log\AbstractLogger;
+
 /**
  * Class PHPLogger
  * @package DCarbone\PHPConsulAPI
  */
-class PHPLogger implements ConsulAPILoggerInterface
+class PHPLogger extends AbstractLogger
 {
     /** @var int */
     private $_mode;
@@ -86,48 +88,15 @@ class PHPLogger implements ConsulAPILoggerInterface
     }
 
     /**
+     * Logs with an arbitrary level.
+     *
+     * @param mixed $level
      * @param string $message
-     * @return bool
-     */
-    public function error($message)
-    {
-        return $this->_log('error', $message);
-    }
-
-    /**
-     * @param string $message
-     * @return bool
-     */
-    public function warn($message)
-    {
-        return $this->_log('warn', $message);
-    }
-
-    /**
-     * @param string $message
-     * @return bool
-     */
-    public function info($message)
-    {
-        return $this->_log('info', $message);
-    }
-
-    /**
-     * @param string $message
-     * @return bool
-     */
-    public function debug($message)
-    {
-        return $this->_log('debug', $message);
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return bool
+     * @param array $context
+     * @return null
      * @throws \Exception
      */
-    private function _log($level, $message)
+    public function log($level, $message, array $context = array())
     {
         $message = sprintf(
             "[%s] %s - %s\n",
@@ -138,11 +107,11 @@ class PHPLogger implements ConsulAPILoggerInterface
 
         if (0 === $this->_mode || 3 === $this->_mode || 4 === $this->_mode)
         {
-            $ok = @error_log($message);
+           @error_log($message);
         }
         else if (1 === $this->_mode)
         {
-            $ok = @error_log($message, $this->_mode, $this->_destination, $this->_extraHeaders);
+            @error_log($message, $this->_mode, $this->_destination, $this->_extraHeaders);
         }
         else
         {
@@ -151,20 +120,7 @@ class PHPLogger implements ConsulAPILoggerInterface
                 is_int($this->_mode) ? $this->_mode : gettype($this->_mode)
             ));
         }
-        
-        if ($ok)
-            return true;
 
-        $msg = sprintf(
-            'PHPLogger - Unable to log message "%s"',
-            $message
-        );
-
-        if ($this->_exceptionOnError)
-            throw new \Exception($msg);
-
-        trigger_error($msg, E_USER_ERROR);
-
-        return false;
+        return null;
     }
 }

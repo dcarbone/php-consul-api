@@ -20,7 +20,7 @@
  * Class ConsulHttpAuth
  * @package DCarbone\PHPConsulAPI\Config
  */
-class HttpAuth implements \Serializable, \JsonSerializable
+class HttpAuth implements \JsonSerializable
 {
     /** @var string */
     private $_username;
@@ -36,6 +36,22 @@ class HttpAuth implements \Serializable, \JsonSerializable
     {
         $this->_username = $username;
         $this->_password = $password;
+    }
+
+    /**
+     * @return array
+     */
+    public function __sleep()
+    {
+        return ['_username'];
+    }
+
+    /**
+     * @return array
+     */
+    public function __debugInfo()
+    {
+        return ['username' => $this->_username];
     }
 
     /**
@@ -60,39 +76,6 @@ class HttpAuth implements \Serializable, \JsonSerializable
     public function compileAuthString()
     {
         return (string)$this;
-    }
-
-    /**
-     * String representation of object
-     * @link http://php.net/manual/en/serializable.serialize.php
-     * @return string the string representation of the object or null
-     */
-    public function serialize()
-    {
-        return serialize(array($this->_username, $this->_password));
-    }
-
-    /**
-     * Constructs the object
-     * @link http://php.net/manual/en/serializable.unserialize.php
-     * @param string $serialized The string representation of the object.
-     * @return void
-     */
-    public function unserialize($serialized)
-    {
-        $data = unserialize($serialized);
-        if (2 <= count($data))
-        {
-            $this->_username = $data[0];
-            $this->_password = $data[1];
-        }
-        else
-        {
-            throw new \DomainException(sprintf(
-                '%s - Invalid serialized input detected.',
-                get_class($this)
-            ));
-        }
     }
 
     /**

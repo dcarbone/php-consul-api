@@ -19,46 +19,7 @@
 /**
  * Class NullLogger
  * @package DCarbone\PHPConsulAPI
+ *
+ * @deprecated use \Psr\Log\NullLogger instead
  */
-class NullLogger implements ConsulAPILoggerInterface
-{
-    /**
-     * @param string $message
-     * @return bool
-     */
-    public function error($message)
-    {
-        // do nothing...
-        return true;
-    }
-
-    /**
-     * @param string $message
-     * @return bool
-     */
-    public function warn($message)
-    {
-        // do nothing...
-        return true;
-    }
-
-    /**
-     * @param string $message
-     * @return bool
-     */
-    public function info($message)
-    {
-        // do nothing...
-        return true;
-    }
-
-    /**
-     * @param string $message
-     * @return bool
-     */
-    public function debug($message)
-    {
-        // do nothing...
-        return true;
-    }
-}
+class NullLogger extends \Psr\Log\NullLogger { }

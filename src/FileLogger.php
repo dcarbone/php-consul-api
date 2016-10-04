@@ -16,11 +16,13 @@
    limitations under the License.
 */
 
+use Psr\Log\AbstractLogger;
+
 /**
  * Class FileLogger
  * @package DCarbone\PHPConsulAPI
  */
-class FileLogger implements ConsulAPILoggerInterface
+class FileLogger extends AbstractLogger
 {
     /** @var string */
     private $_file;
@@ -59,53 +61,22 @@ class FileLogger implements ConsulAPILoggerInterface
     }
 
     /**
+     * Logs with an arbitrary level.
+     *
+     * @param mixed $level
      * @param string $message
-     * @return bool
-     */
-    public function error($message)
-    {
-        return $this->_log('error', $message);
-    }
-
-    /**
-     * @param string $message
-     * @return bool
-     */
-    public function warn($message)
-    {
-        return $this->_log('warn', $message);
-    }
-
-    /**
-     * @param string $message
-     * @return bool
-     */
-    public function info($message)
-    {
-        return $this->_log('info', $message);
-    }
-
-    /**
-     * @param string $message
-     * @return bool
-     */
-    public function debug($message)
-    {
-        return $this->_log('debug', $message);
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return bool
+     * @param array $context
+     *
      * @throws \Exception
+     *
+     * @return null
      */
-    private function _log($level, $message)
+    public function log($level, $message, array $context = array())
     {
         if (file_exists($this->_file) && is_writable($this->_file))
         {
             // Try to write out line
-            $ok = (bool)@file_put_contents(
+            file_put_contents(
                 $this->_file,
                 sprintf(
                     "[%s] %s - %s\n",
@@ -115,21 +86,20 @@ class FileLogger implements ConsulAPILoggerInterface
                 ),
                 FILE_APPEND
             );
+        }
+        else
+        {
+            $msg = sprintf(
+                'FileLogger - Specified file "%s" could not be opened for writing.',
+                $this->_file
+            );
 
-            if ($ok)
-                return true;
+            if ($this->_exceptionOnError)
+                throw new \Exception($msg);
+
+            trigger_error($msg, E_USER_ERROR);
         }
 
-        $msg = sprintf(
-            'FileLogger - Specified file "%s" could not be opened for writing.',
-            $this->_file
-        );
-
-        if ($this->_exceptionOnError)
-            throw new \Exception($msg);
-
-        trigger_error($msg, E_USER_ERROR);
-
-        return false;
+        return null;
     }
 }
