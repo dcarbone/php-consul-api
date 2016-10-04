@@ -15,12 +15,13 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+use Psr\Log\AbstractLogger;
 
 /**
  * Class SocketLogger
  * @package DCarbone\PHPConsulAPI\Logging
  */
-class SocketLogger implements ConsulAPILoggerInterface
+class SocketLogger extends AbstractLogger
 {
     /** @var string */
     private $_address;
@@ -141,47 +142,15 @@ class SocketLogger implements ConsulAPILoggerInterface
     }
 
     /**
+     * Logs with an arbitrary level.
+     *
+     * @param mixed $level
      * @param string $message
-     * @return bool
+     * @param array $context
+     *
+     * @return null
      */
-    public function error($message)
-    {
-        return $this->_log('error', $message);
-    }
-
-    /**
-     * @param string $message
-     * @return bool
-     */
-    public function warn($message)
-    {
-        return $this->_log('warn', $message);
-    }
-
-    /**
-     * @param string $message
-     * @return bool
-     */
-    public function info($message)
-    {
-        return $this->_log('info', $message);
-    }
-
-    /**
-     * @param string $message
-     * @return bool
-     */
-    public function debug($message)
-    {
-        return $this->_log('debug', $message);
-    }
-
-    /**
-     * @param string $level
-     * @param string $message
-     * @return bool|int
-     */
-    private function _log($level, $message)
+    public function log($level, $message, array $context = array())
     {
         if (!$this->_connected && !socket_connect($this->_socket, $this->_address, $this->_port))
         {
@@ -190,30 +159,31 @@ class SocketLogger implements ConsulAPILoggerInterface
                 get_class($this),
                 socket_strerror(socket_last_error())
             ));
-            return false;
         }
-
-        $this->_connected = true;
-
-        $msg = sprintf(
-            "[%s] %s - %s\n",
-            $level,
-            DateTime::now(),
-            $message
-        );
-
-        $written = socket_write($this->_socket, $msg, mb_strlen($msg));
-
-        if (false === $written)
+        else
         {
-            $this->_connected = false;
-            error_log(sprintf(
-                '%s - Unable to write to socket: %s',
-                get_class($this),
-                socket_strerror(socket_last_error())
-            ));
+            $this->_connected = true;
+
+            $msg = sprintf(
+                "[%s] %s - %s\n",
+                $level,
+                DateTime::now(),
+                $message
+            );
+
+            $written = socket_write($this->_socket, $msg, mb_strlen($msg));
+
+            if (false === $written)
+            {
+                $this->_connected = false;
+                error_log(sprintf(
+                    '%s - Unable to write to socket: %s',
+                    get_class($this),
+                    socket_strerror(socket_last_error())
+                ));
+            }
         }
 
-        return false;
+        return null;
     }
 }

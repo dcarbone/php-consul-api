@@ -19,6 +19,8 @@
 /**
  * Interface ConsulAPILoggerInterface
  * @package DCarbone\PHPConsulAPI
+ *
+ * @deprecated Will be removed
  */
 interface ConsulAPILoggerInterface
 {
