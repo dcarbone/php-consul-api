@@ -16,6 +16,7 @@
    limitations under the License.
 */
 
+use DCarbone\PHPConsulAPI\Logger\FileLogger;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
@@ -27,9 +28,6 @@ abstract class Logger
 {
     /** @var LoggerInterface[] */
     private static $_loggers = array();
-
-    /** @var ConsulAPILoggerInterface[] */
-    private static $_deprecatedLoggers = array();
 
     /** @var FileLogger */
     private static $_defaultLogger = null;
@@ -102,7 +100,6 @@ abstract class Logger
             self::$_defaultLogger = null;
 
         self::$_loggers = array();
-        self::$_deprecatedLoggers = array();
 
         foreach($loggers as $logger)
         {
@@ -118,15 +115,6 @@ abstract class Logger
         if ($logger instanceof LoggerInterface)
         {
             self::$_loggers[] = $logger;
-        }
-        else if ($logger instanceof ConsulAPILoggerInterface)
-        {
-            trigger_error(sprintf(
-                '%s - The logger "%s" extends the deprecated "ConsulAPILoggerInterface", which will be removed at some point in the future.  Please update logger to support the PSR-3 LoggerInterface.',
-                get_called_class(),
-                get_class($logger)
-            ), E_USER_DEPRECATED);
-            self::$_deprecatedLoggers[] = $logger;
         }
         else
         {
@@ -144,7 +132,6 @@ abstract class Logger
     public static function resetLoggers()
     {
         self::$_loggers = array();
-        self::$_deprecatedLoggers = array();
     }
 
     /**
@@ -169,12 +156,6 @@ abstract class Logger
             foreach(self::$_loggers as $logger)
             {
                 $logger->{$logLevel}($message, $context);
-            }
-
-            // Log to deprecated loggers.
-            foreach(self::$_deprecatedLoggers as $logger)
-            {
-                $logger->{self::$_compatibilityLevels[$logLevel]}($message);
             }
         }
     }
