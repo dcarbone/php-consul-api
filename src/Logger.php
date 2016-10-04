@@ -94,12 +94,16 @@ abstract class Logger
 
     /**
      * @param LoggerInterface[] $loggers
+     * @param bool $clearDefault
      */
-    public static function setLoggers(array $loggers)
+    public static function setLoggers(array $loggers, $clearDefault = true)
     {
+        if ((bool)$clearDefault)
+            self::$_defaultLogger = null;
+
         self::$_loggers = array();
         self::$_deprecatedLoggers = array();
-        self::$_defaultLogger = null;
+
         foreach($loggers as $logger)
         {
             self::addLogger($logger);
