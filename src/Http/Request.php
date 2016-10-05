@@ -335,17 +335,9 @@ class Request implements RequestInterface
      */
     public function withRequestTarget($requestTarget)
     {
-        if ($requestTarget instanceof UriInterface)
-        {
-            $clone = clone $this;
-            $clone->requestTarget = $requestTarget;
-            return $clone;
-        }
-
-        throw new \InvalidArgumentException(sprintf(
-            'Request Target must be an instance of \\Psr\\Http\\Message\\UriInterface, %s seen.',
-            gettype($requestTarget))
-        );
+        $clone = clone $this;
+        $clone->requestTarget = trim($requestTarget);
+        return $clone;
     }
 
     /**
