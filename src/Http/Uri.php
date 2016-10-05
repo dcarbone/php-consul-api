@@ -11,24 +11,20 @@ class Uri implements UriInterface, \JsonSerializable
 {
     /** @var string */
     private $scheme = '';
-
     /** @var HttpAuth */
     private $userInfo;
-
     /** @var string */
     private $host = '';
-
     /** @var int */
     private $port = null;
-
     /** @var string */
     private $path = '';
-
     /** @var string */
     private $query = '';
-
     /** @var string */
     private $fragment = '';
+
+    private $compiled = null;
 
     /**
      * Uri constructor.
@@ -229,45 +225,50 @@ class Uri implements UriInterface, \JsonSerializable
      */
     public function __toString()
     {
-        $s = $this->getScheme();
-        $a = $this->getAuthority();
-        $p = $this->getPath();
-        $q = $this->getQuery();
-        $f = $this->getFragment();
-
-        if ('' === $s)
-            $uri = '';
-        else
-            $uri = sprintf('%s:', $s);
-
-        if ('' !== $a)
-            $uri = sprintf('%s//%s', $uri, $a);
-
-        if ('' !== $p)
+        if (null === $this->compiled)
         {
-            if (0 === strpos($p, '/'))
-            {
-                if ('' === $a)
-                    $uri = sprintf('%s/%s', $uri, $p);
-                else
-                    $uri = sprintf('%s%s', $uri, $p);
-            }
+            $s = $this->getScheme();
+            $a = $this->getAuthority();
+            $p = $this->getPath();
+            $q = $this->getQuery();
+            $f = $this->getFragment();
+
+            if ('' === $s)
+                $uri = '';
             else
+                $uri = sprintf('%s:', $s);
+
+            if ('' !== $a)
+                $uri = sprintf('%s//%s', $uri, $a);
+
+            if ('' !== $p)
             {
-                if ('' === $a)
-                    $uri = sprintf('%s/%s', $uri, ltrim($p, "/"));
+                if (0 === strpos($p, '/'))
+                {
+                    if ('' === $a)
+                        $uri = sprintf('%s/%s', $uri, $p);
+                    else
+                        $uri = sprintf('%s%s', $uri, $p);
+                }
                 else
-                    $uri = sprintf('%s%s', $uri, $p);
+                {
+                    if ('' === $a)
+                        $uri = sprintf('%s/%s', $uri, ltrim($p, "/"));
+                    else
+                        $uri = sprintf('%s%s', $uri, $p);
+                }
             }
+
+            if ('' !== $q)
+                $uri = sprintf('%s?%s', $uri, $q);
+
+            if ('' !== $f)
+                $uri = sprintf('%s#%s', $uri, $f);
+
+            $this->compiled = $uri;
         }
 
-        if ('' !== $q)
-            $uri = sprintf('%s?%s', $uri, $q);
-
-        if ('' !== $f)
-            $uri = sprintf('%s#%s', $uri, $f);
-
-        return $uri;
+        return $this->compiled;
     }
 
     /**
