@@ -40,7 +40,7 @@ on your hosts then it would probably be easiest to simply execute the following:
 $config = \DCarbone\PHPConsulAPI\Config::newDefaultConfig();
 ```
 *NOTE*: This method will attempt to locate a loaded Http Client based upon the array defined
-[here](../src/Config.php#L98). 
+[here](./src/Config.php#L98). 
 
 If you are using a PSR-7 compliant Http Client that does NOT have a pre-built adapter but DOES,
 that is ok!  You may use the below function to construct a configuration file with defaults and your own
@@ -53,8 +53,8 @@ $config = \DCarbvone\PHPConsulAPI\Config::newDefaultConfigWithClient($myClient);
 
 You will find the method definitions below:
 
-- [Config::newDefaultConfig()](../src/Config.php#L96)
-- [Config::newDefaultConfigWithClient()](../src/Config.php#L67)
+- [Config::newDefaultConfig()](./src/Config.php#L96)
+- [Config::newDefaultConfigWithClient()](./src/Config.php#L67)
  
 ### Advanced Configuration
 
