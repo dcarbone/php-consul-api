@@ -16,6 +16,11 @@
    limitations under the License.
 */
 
+use Http\Promise\Promise;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
+
 /**
  * Class AbstractClient
  * @package DCarbone\PHPConsulAPI
@@ -24,9 +29,6 @@ abstract class AbstractClient
 {
     /** @var Config */
     protected $Config;
-
-    /** @var Response|null */
-    protected $lastResponse = null;
 
     /**
      * AbstractConsulClient constructor.
@@ -38,101 +40,115 @@ abstract class AbstractClient
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Response|null
-     */
-    public function getLastResponse()
-    {
-        return $this->lastResponse;
-    }
-
-    /**
-     * @param array $requestResult
+     * @param array $r
      * @return array(
      *  @type int query duration in microseconds
-     *  @type \DCarbone\PHPConsulAPI\Response|null response object
+     *  @type ResponseInterface|null response object
      *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    protected function requireOK(array $requestResult)
+    protected function requireOK(array $r)
     {
-        if (null !== $requestResult[2])
-            return $requestResult;
+        // If a previous error occurred, just return as-is.
+        if (null !== $r[2])
+            return $r;
 
-        if (200 !== $requestResult[1]->httpCode)
+        // If we have any kind of response...
+        if (null !== $r[1])
         {
-            $err = new Error(sprintf(
-                '%s - Error seen while executing "%s".  Response code: %d.  Message: %s',
-                get_class($this),
-                $requestResult[1]->url,
-                $requestResult[1]->httpCode,
-                $requestResult[1]->body
-            ));
+            // If this is a response...
+            if ($r[1] instanceof ResponseInterface)
+            {
+                // Get the response code...
+                $code = $r[1]->getStatusCode();
 
-            Logger::error($err);
+                // If 200, move right along
+                if (200 === $code)
+                    return $r;
 
-            return [$requestResult[0], $requestResult[1], $err];
+                // Otherwise, return error
+                return [$r[0], $r[1], new Error(sprintf(
+                    '%s - Non-200 response seen.  Response code: %d.  Message: %s',
+                    get_class($this),
+                    $code,
+                    $r[1]->getReasonPhrase()
+                ))];
+
+            }
+            else
+            {
+                return [$r[0], $r[1], new Error(sprintf(
+                    '%s - Expected response to be instance of \\Psr\\Message\\ResponseInterface, %s seen.',
+                    is_object($r[1]) ? get_class($r[1]) : gettype($r[1])
+                ))];
+            }
         }
 
-        return $requestResult;
+        return $r;
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Request $r
+     * @param RequestInterface $r
      * @return array(
      *  @type int duration in microseconds
-     *  @type \DCarbone\PHPConsulAPI\Response|null http response
+     *  @type \Psr\Http\Message\ResponseInterface|\Http\Promise\Promise|null http response
      *  @type \DCarbone\PHPConsulAPI\Error|null any seen errors
      * )
      */
-    protected function doRequest(Request $r)
+    protected function doRequest(RequestInterface $r)
     {
-        /** Error $err */
-        list($this->lastResponse, $err) = $r->execute();
+        $rt = microtime(true);
+        $response = null;
+        $err = null;
+        try
+        {
+            // If we actually have a client defined...
+            if (isset($this->Config->HttpClient))
+                $response = $this->Config->HttpClient->sendRequest($r);
+            // Otherwise, throw error to be caught below
+            else
+                throw new \RuntimeException('Unable to execute query as no HttpClient has been defined.');
+        }
+        catch (\Exception $e)
+        {
+            // If there has been an exception of any kind, catch it and create Error object
+            $err = new Error(sprintf(
+                '%s - Error seen while executing "%s".  Message: "%s"',
+                get_class($this),
+                $r->getUri(),
+                $e->getMessage()
+            ));
+        }
 
-        if ('' === $this->lastResponse->curlError)
-            return [$this->lastResponse->totalTime, $this->lastResponse, $err];
-
-        $err = new Error(sprintf(
-            '%s - Error seen while executing "%s".  Message: "%s"',
-            get_class($this),
-            $this->lastResponse->url,
-            $this->lastResponse->curlError
-        ));
-
-        Logger::error($err);
-
-        return [$this->lastResponse->totalTime, $this->lastResponse, $err];
+        // Calculate duration and move along whatever response and error we see (if any)
+        return [(int)((microtime(true) - $rt) * 1000000), $response, $err];
     }
 
     /**
      * @param int $duration
-     * @param \DCarbone\PHPConsulAPI\Response $response
+     * @param ResponseInterface $response
+     * @param Uri $uri
      * @return QueryMeta
      */
-    protected function buildQueryMeta($duration, Response $response)
+    protected function buildQueryMeta($duration, ResponseInterface $response, Uri $uri)
     {
         $qm = new QueryMeta();
 
         $qm->requestTime = $duration;
-        $qm->requestUrl = $response->url;
+        $qm->requestUrl = (string)$uri;
 
-        foreach($response->responseHeaders as $header)
-        {
-            if (isset($header['X-Consul-Index']))
-                $qm->lastIndex = (int)$header['X-Consul-Index'];
+        if ($response->hasHeader('X-Consul-Index'))
+            $qm->lastIndex = (int)$response->getHeaderLine('X-Consul-Index');
 
-            if (isset($header['X-Consul-KnownLeader']))
-                $qm->knownLeader = (bool)$header['X-Consul-KnownLeader'];
-            else if (isset($header['X-Consul-Knownleader']))
-                $qm->knownLeader = (bool)$header['X-Consul-Knownleader'];
+        if ($response->hasHeader('X-Consul-KnownLeader'))
+            $qm->knownLeader = (bool)$response->getHeaderLine('X-Consul-KnownLeader');
+        else if ($response->hasHeader('X-Consul-Knownleader'))
+            $qm->knownLeader = (bool)$response->getHeaderLine('X-Consul-Knownleader');
 
-            if (isset($header['X-Consul-LastContact']))
-                $qm->lastContact = (int)$header['X-Consul-LastContact'] * 1000;
-            else if (isset($header['X-Consul-Lastcontact']))
-                $qm->lastContact = (int)$header['X-Consul-Lastcontact'] * 1000;
-        }
-
-        Logger::debug(sprintf('QueryMeta built: %s', json_encode($qm)));
+        if ($response->hasHeader('X-Consul-LastContact'))
+            $qm->lastContact = (int)$response->getHeaderLine('X-Consul-LastContact');
+        else if ($response->hasHeader('X-Consul-Lastcontact'))
+            $qm->lastContact = (int)$response->getHeaderLine('X-Consul-Lastcontact');
 
         return $qm;
     }
@@ -152,15 +168,15 @@ abstract class AbstractClient
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Response $response
+     * @param StreamInterface $body
      * @return array(
      *  @type array|string|bool|int|float decoded response
      *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    protected function decodeBody(Response $response)
+    protected function decodeBody(StreamInterface $body)
     {
-        $data = @json_decode($response->body, true);
+        $data = @json_decode((string)$body, true);
         $err = json_last_error();
 
         if (JSON_ERROR_NONE === $err)

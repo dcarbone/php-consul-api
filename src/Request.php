@@ -28,8 +28,11 @@ class Request implements RequestInterface
 {
     /** @var Params */
     public $params;
-    /** @var string */
+    /** @var mixed */
     public $body = null;
+
+    /** @var StreamInterface|null */
+    private $compiledBody = null;
 
     /** @var string */
     private $protocolVersion = '1.1';
@@ -130,41 +133,6 @@ class Request implements RequestInterface
 
         if ('' !== ($token = $writeOptions->getToken()))
             $this->params['token'] = $token;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCompiledBody()
-    {
-        if (!isset($this->_compiledBody))
-        {
-            switch(gettype($this->body))
-            {
-                case 'integer':
-                case 'double':
-                    $this->_compiledBody = (string)$this->body;
-                    break;
-
-                case 'string':
-                    $this->_compiledBody = $this->body;
-                    break;
-
-                case 'object':
-                case 'array':
-                    $this->_compiledBody = json_encode($this->body);
-                    break;
-
-                case 'boolean':
-                    $this->_compiledBody = $this->body ? 'true' : 'false';
-                    break;
-
-                default:
-                    $this->_compiledBody = '';
-            }
-        }
-
-        return $this->_compiledBody;
     }
 
     /**
@@ -287,7 +255,10 @@ class Request implements RequestInterface
      */
     public function getBody()
     {
-        return $this->body;
+        if (!isset($this->compiledBody))
+            $this->compiledBody = new RequestBody($this->body);
+
+        return $this->compiledBody;
     }
 
     /**
@@ -296,7 +267,7 @@ class Request implements RequestInterface
     public function withBody(StreamInterface $body)
     {
         $clone = clone $this;
-        $clone->body = $body;
+        $clone->compiledBody = $body;
         return $clone;
     }
 
@@ -358,8 +329,10 @@ class Request implements RequestInterface
      */
     public function getUri()
     {
-        if (null === $this->requestTarget)
-            $this->requestTarget = new Uri($this->path, $this->c, $this->params);
+        if (null === $this->uri)
+            $this->uri = new Uri($this->path, $this->c, $this->params);
+
+        return $this->uri;
     }
 
     /**

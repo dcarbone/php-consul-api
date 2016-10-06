@@ -51,13 +51,14 @@ class SessionClient extends AbstractClient
         $r = new Request('put', 'v1/session/create', $this->Config, $sessionEntry);
         $r->setWriteOptions($writeOptions);
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
         $wm = $this->buildWriteMeta($duration);
 
         if (null !== $err)
             return ['', $wm, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
         if (null !== $err)
             return ['', $wm, $err];
 
@@ -78,13 +79,14 @@ class SessionClient extends AbstractClient
         $r = new Request('put', 'v1/session/create', $this->Config, $sessionEntry);
         $r->setWriteOptions($writeOptions);
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
         $wm = $this->buildWriteMeta($duration);
 
         if (null !== $err)
             return ['', $wm, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err)
             return ['', $wm, $err];
@@ -143,26 +145,29 @@ class SessionClient extends AbstractClient
         $r = new Request('put', sprintf('v1/session/renew/%s', $id), $this->Config);
         $r->setWriteOptions($writeOptions);
 
-        /** @var \DCarbone\PHPConsulAPI\Http\Response $response */
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list ($duration, $response, $err) = $this->doRequest($r);
         $wm = $this->buildWriteMeta($duration);
 
         if (null !== $err)
             return [null, $wm, $err];
 
-        if (404 === $response->httpCode)
+        $code = $response->getStatusCode();
+
+        if (404 === $code)
             return [null, $wm, null];
 
-        if (200 !== $response->httpCode)
+        if (200 !== $code)
         {
             return [null, $wm, new Error(sprintf(
-                '%s::renew - Unexpected response code %d',
+                '%s::renew - Unexpected response code %d.  Reason: %s',
                 get_class($this),
-                $response->httpCode
+                $code,
+                $response->getReasonPhrase()
             ))];
         }
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err)
             return [null, $wm, $err];
@@ -193,13 +198,14 @@ class SessionClient extends AbstractClient
         $r = new Request('get', sprintf('v1/session/info/%s', $id), $this->Config);
         $r->setQueryOptions($queryOptions);
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response);
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err)
             return [null, $qm, $err];
@@ -233,13 +239,14 @@ class SessionClient extends AbstractClient
         $r = new Request('get', sprintf('v1/session/node/%s', $node), $this->Config);
         $r->setQueryOptions($queryOptions);
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response);
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err)
             return [null, $qm, $err];
@@ -260,13 +267,14 @@ class SessionClient extends AbstractClient
         $r = new Request('get', 'v1/session/list', $this->Config);
         $r->setQueryOptions($queryOptions);
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response);
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err)
             return [null, $qm, $err];
