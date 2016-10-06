@@ -51,13 +51,14 @@ class EventClient extends AbstractClient
         if ('' !== ($payload = $event->Payload))
             $r->body = $payload;
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
         $wm = $this->buildWriteMeta($duration);
 
         if (null !== $err)
             return [null, $wm, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
         if ($err !== null)
             return [null, $wm, $err];
 
@@ -80,13 +81,14 @@ class EventClient extends AbstractClient
             $r->params->set('name', $name);
         $r->setQueryOptions($queryOptions);
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response);
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err)
             return [null, $qm, $err];

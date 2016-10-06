@@ -34,12 +34,14 @@ class StatusClient extends AbstractClient
     public function leader()
     {
         $r = new Request('get', 'v1/status/leader', $this->Config);
+
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($_, $response, $err) = $this->requireOK($this->doRequest($r));
 
         if (null !== $err)
             return ['', $err];
 
-        return $this->decodeBody($response);
+        return $this->decodeBody($response->getBody());
     }
 
     /**
@@ -48,11 +50,13 @@ class StatusClient extends AbstractClient
     public function peers()
     {
         $r = new Request('get', 'v1/status/peers', $this->Config);
+
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($_, $response, $err) = $this->requireOK($this->doRequest($r));
 
         if (null !== $err)
             return [null, $err];
 
-        return $this->decodeBody($response);
+        return $this->decodeBody($response->getBody());
     }
 }

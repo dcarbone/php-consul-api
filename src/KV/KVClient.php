@@ -52,16 +52,18 @@ class KVClient extends AbstractClient
         $r = new Request('get', sprintf('v1/kv/%s', $key), $this->Config);
         $r->setQueryOptions($queryOptions);
 
-        /** @var \DCarbone\PHPConsulAPI\Response $response */
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->doRequest($r);
-        $qm = $this->buildQueryMeta($duration, $response);
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        if (200 === $response->httpCode)
+        $code = $response->getStatusCode();
+
+        if (200 === $code)
         {
-            list($data, $err) = $this->decodeBody($response);
+            list($data, $err) = $this->decodeBody($response->getBody());
 
             if (null !== $err)
                 return [null, $qm, $err];
@@ -71,10 +73,10 @@ class KVClient extends AbstractClient
             return [Hydrator::KVPair($data), $qm, null];
         }
 
-        if (404 === $response->httpCode)
+        if (404 === $code)
             return [null, $qm, null];
 
-        return [null, $qm, new Error(sprintf('%s: %s', $response->httpCode, $response->body))];
+        return [null, $qm, new Error(sprintf('%s: %s', $response->getStatusCode(), $response->getReasonPhrase()))];
     }
 
     /**
@@ -105,13 +107,14 @@ class KVClient extends AbstractClient
         $r->setQueryOptions($queryOptions);
         $r->params->set('recurse', '');
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response);
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err)
             return [null, $qm, $err];
@@ -128,7 +131,7 @@ class KVClient extends AbstractClient
 
     /**
      * @param string $prefix Prefix to search for.  Null returns all keys.
-     * @param \DCarbone\PHPConsulAPI\Model\QueryOptions $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions $queryOptions
      * @return array(
      *  @type string[]|null list of keys
      *  @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata
@@ -154,13 +157,14 @@ class KVClient extends AbstractClient
         $r->setQueryOptions($queryOptions);
         $r->params->set('keys', true);
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response);
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
 
         return [$data, $qm, $err];
     }

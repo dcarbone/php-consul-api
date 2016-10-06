@@ -16,9 +16,7 @@
    limitations under the License.
 */
 
-use Http\Client\HttpAsyncClient;
 use Http\Client\HttpClient;
-use Psr\Http\Message\RequestInterface;
 
 /**
  * Class Config
@@ -49,8 +47,6 @@ class Config
 
     /** @var HttpClient */
     public $HttpClient = null;
-    /** @var HttpAsyncClient */
-    public $HttpAsyncClient = null;
 
     /**
      * Config constructor.
@@ -65,22 +61,24 @@ class Config
     }
 
     /**
+     * @param HttpClient $client
      * @return Config
      */
-    public static function newDefaultConfig()
+    public static function newDefaultConfigWithClient(HttpClient $client)
     {
         $conf = new static([
             'Address' => '127.0.0.1:8500',
-            'Scheme' => 'http'
+            'Scheme' => 'http',
+            'HttpClient' => $client
         ]);
 
-        if (false !== ($addr = static::_tryGetEnvParam('CONSUL_HTTP_ADDR')))
+        if (null !== ($addr = static::_tryGetEnvParam('CONSUL_HTTP_ADDR')))
             $conf->setAddress($addr);
 
-        if (false !== ($token = static::_tryGetEnvParam('CONSUL_HTTP_TOKEN')))
+        if (null !== ($token = static::_tryGetEnvParam('CONSUL_HTTP_TOKEN')))
             $conf->setToken($token);
 
-        if (false !== ($auth = static::_tryGetEnvParam('CONSUL_HTTP_AUTH')))
+        if (null !== ($auth = static::_tryGetEnvParam('CONSUL_HTTP_AUTH')))
             $conf->setHttpAuth($auth);
 
         if ($ssl = (bool)static::_tryGetEnvParam('CONSUL_HTTP_SSL'))
@@ -90,6 +88,30 @@ class Config
             $conf->setInsecureSkipVerify(!$doVerify);
 
         return $conf;
+    }
+
+    /**
+     * @return Config
+     */
+    public static function newDefaultConfig()
+    {
+        static $knownClients = array(
+            '\\Http\\Client\\Curl\\Client',
+            '\\Http\\Adapter\\Guzzle6\\Client',
+            '\\Http\\Adapter\\Guzzle5\\Client',
+            '\\Http\\Adapter\\Buzz\\Client'
+        );
+
+        foreach($knownClients as $clientClass)
+        {
+            if (class_exists($clientClass, true))
+                return static::newDefaultConfigWithClient(new $clientClass);
+        }
+
+        throw new \RuntimeException(sprintf(
+            '%s - Unable to determine HttpClient to use for default config',
+            get_called_class()
+        ));
     }
 
     /**
@@ -263,63 +285,6 @@ class Config
     }
 
     /**
-     * @return HttpClient
-     */
-    public function getHttpClient()
-    {
-        return $this->HttpClient;
-    }
-
-    /**
-     * @param HttpClient $HttpClient
-     * @return Config
-     */
-    public function setHttpClient(HttpClient $HttpClient)
-    {
-        $this->HttpClient = $HttpClient;
-        return $this;
-    }
-
-    /**
-     * @return HttpAsyncClient
-     */
-    public function getHttpAsyncClient()
-    {
-        return $this->HttpAsyncClient;
-    }
-
-    /**
-     * @param HttpAsyncClient $HttpAsyncClient
-     * @return Config
-     */
-    public function setHttpAsyncClient(HttpAsyncClient $HttpAsyncClient)
-    {
-        $this->HttpAsyncClient = $HttpAsyncClient;
-        return $this;
-    }
-
-    /**
-     * @param RequestInterface $request
-     * @param bool $useAsync
-     * @return \Http\Promise\Promise|\Psr\Http\Message\ResponseInterface
-     */
-    public function doRequest(RequestInterface $request, $useAsync = false)
-    {
-        if ($useAsync)
-        {
-            if (isset($this->HttpAsyncClient))
-                return $this->HttpAsyncClient->sendAsyncRequest($request);
-
-            throw new \RuntimeException('Unable to execute Async query as no HttpAsyncClient has been defined.');
-        }
-
-        if (isset($this->HttpClient))
-            return $this->HttpClient->sendRequest($request);
-
-        throw new \RuntimeException('Unable to execute query as no HttpClient has been defined.');
-    }
-
-    /**
      * @param string|HttpAuth $httpAuth
      * @return Config
      */
@@ -355,29 +320,21 @@ class Config
     }
 
     /**
-     * @return string
+     * @return HttpClient
      */
-    public function compileAddress()
+    public function getHttpClient()
     {
-        if ('' === ($scheme = $this->getScheme()))
-        {
-            throw new \LogicException(sprintf(
-                '%s - "Scheme" was left undefined in this config object. Definition: %s',
-                get_class($this),
-                json_encode($this)
-            ));
-        }
+        return $this->HttpClient;
+    }
 
-        if ('' === ($addr = $this->getAddress()))
-        {
-            throw new \LogicException(sprintf(
-                '%s - "Address" was left undefined in this config object. Definition: %s',
-                get_class($this),
-                json_encode($this)
-            ));
-        }
-
-        return sprintf('%s://%s', $scheme, $addr);
+    /**
+     * @param HttpClient $HttpClient
+     * @return Config
+     */
+    public function setHttpClient(HttpClient $HttpClient)
+    {
+        $this->HttpClient = $HttpClient;
+        return $this;
     }
 
     /**
