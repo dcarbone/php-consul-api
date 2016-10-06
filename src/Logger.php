@@ -16,7 +16,6 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\Logger\FileLogger;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
@@ -29,8 +28,8 @@ abstract class Logger
     /** @var LoggerInterface[] */
     private static $_loggers = array();
 
-    /** @var FileLogger */
-    private static $_defaultLogger = null;
+    /** @var FileDebugLogger */
+    private static $_debugLogger = null;
 
     /** @var string */
     private static $_logLevel = LogLevel::WARNING;
@@ -48,38 +47,20 @@ abstract class Logger
     );
 
     /**
-     * Map to allow for older logger implementations to be used
-     *
-     * TODO: Remove old logging support at some point
-     *
-     * @var array
+     * Set up a file logger that outputs log data to "../var/logs/php-consul-api.log"
      */
-    private static $_compatibilityLevels = array(
-        LogLevel::DEBUG => 'debug',
-        LogLevel::INFO => 'info',
-        LogLevel::NOTICE => 'info',
-        LogLevel::WARNING => 'warn',
-        LogLevel::ERROR => 'error',
-        LogLevel::CRITICAL => 'error',
-        LogLevel::ALERT => 'error',
-        LogLevel::EMERGENCY => 'error'
-    );
-
-    /**
-     * Set up a file logger that outputs log data to "var/logs/php-consul-api.log"
-     */
-    public static function addDefaultLogger()
+    public static function addDebugLogger()
     {
-        if (!isset(self::$_defaultLogger))
-            self::$_defaultLogger = new FileLogger(__DIR__.'/../var/logs/php-consul-api.log');
+        if (!isset(self::$_debugLogger))
+            self::$_debugLogger = new FileDebugLogger(__DIR__ . '/../var/logs/php-consul-api.log');
     }
 
     /**
      * Destroy the default logger
      */
-    public static function removeDefaultLogger()
+    public static function removeDebugLogger()
     {
-        self::$_defaultLogger = null;
+        self::$_debugLogger = null;
     }
 
     /**
@@ -92,16 +73,12 @@ abstract class Logger
 
     /**
      * @param LoggerInterface[] $loggers
-     * @param bool $clearDefault
      */
-    public static function setLoggers(array $loggers, $clearDefault = true)
+    public static function setLoggers(array $loggers)
     {
-        if ((bool)$clearDefault)
-            self::$_defaultLogger = null;
-
         self::$_loggers = array();
 
-        foreach($loggers as $logger)
+        foreach($loggers as $i => $logger)
         {
             self::addLogger($logger);
         }
@@ -149,8 +126,8 @@ abstract class Logger
                 $message = $message->getMessage();
 
             // Log to default logger, if set
-            if (isset(self::$_defaultLogger))
-                self::$_defaultLogger->{$logLevel}($message, $context);
+            if (isset(self::$_debugLogger))
+                self::$_debugLogger->{$logLevel}($message, $context);
 
             // Log to each user-defined logger
             foreach(self::$_loggers as $logger)

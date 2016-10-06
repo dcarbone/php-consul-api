@@ -16,9 +16,9 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\Http\HttpAuth;
 use Http\Client\HttpAsyncClient;
 use Http\Client\HttpClient;
+use Psr\Http\Message\RequestInterface;
 
 /**
  * Class Config
@@ -46,6 +46,11 @@ class Config
     public $KeyFile = '';
     /** @var bool */
     public $InsecureSkipVerify = false;
+
+    /** @var HttpClient */
+    public $HttpClient = null;
+    /** @var HttpAsyncClient */
+    public $HttpAsyncClient = null;
 
     /**
      * Config constructor.
@@ -258,8 +263,65 @@ class Config
     }
 
     /**
+     * @return HttpClient
+     */
+    public function getHttpClient()
+    {
+        return $this->HttpClient;
+    }
+
+    /**
+     * @param HttpClient $HttpClient
+     * @return Config
+     */
+    public function setHttpClient(HttpClient $HttpClient)
+    {
+        $this->HttpClient = $HttpClient;
+        return $this;
+    }
+
+    /**
+     * @return HttpAsyncClient
+     */
+    public function getHttpAsyncClient()
+    {
+        return $this->HttpAsyncClient;
+    }
+
+    /**
+     * @param HttpAsyncClient $HttpAsyncClient
+     * @return Config
+     */
+    public function setHttpAsyncClient(HttpAsyncClient $HttpAsyncClient)
+    {
+        $this->HttpAsyncClient = $HttpAsyncClient;
+        return $this;
+    }
+
+    /**
+     * @param RequestInterface $request
+     * @param bool $useAsync
+     * @return \Http\Promise\Promise|\Psr\Http\Message\ResponseInterface
+     */
+    public function doRequest(RequestInterface $request, $useAsync = false)
+    {
+        if ($useAsync)
+        {
+            if (isset($this->HttpAsyncClient))
+                return $this->HttpAsyncClient->sendAsyncRequest($request);
+
+            throw new \RuntimeException('Unable to execute Async query as no HttpAsyncClient has been defined.');
+        }
+
+        if (isset($this->HttpClient))
+            return $this->HttpClient->sendRequest($request);
+
+        throw new \RuntimeException('Unable to execute query as no HttpClient has been defined.');
+    }
+
+    /**
      * @param string|HttpAuth $httpAuth
-     * @return $this
+     * @return Config
      */
     public function setHttpAuth($httpAuth)
     {
