@@ -20,7 +20,7 @@
  * Class AbstractStrictCollection
  * @package DCarbone\PHPConsulAPI
  */
-abstract class AbstractStrictCollection extends AbstractCollection
+abstract class AbstractOptions extends AbstractCollection
 {
     /** @var array */
     protected $_definition = array();
@@ -41,21 +41,16 @@ abstract class AbstractStrictCollection extends AbstractCollection
     abstract protected function getDefinition();
 
     /**
-     * This method is called by var_dump() when dumping an object to get the properties that should be shown.
-     * If the method isn't defined on an object, then all public, protected and private properties will be shown.
      * @return array
-     * @link http://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.debuginfo
      */
-    public function __debugInfo()
+    public function __sleep()
     {
-        return $this->_storage;
+        return ['_storage', '_definition'];
     }
 
     /**
-     * Whether a offset exists
-     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
-     * @param mixed $offset An offset to check for.
-     * @return boolean true on success or false on failure.
+     * @param mixed $offset
+     * @return bool
      */
     public function offsetExists($offset)
     {
@@ -63,10 +58,8 @@ abstract class AbstractStrictCollection extends AbstractCollection
     }
 
     /**
-     * Offset to retrieve
-     * @link http://php.net/manual/en/arrayaccess.offsetget.php
-     * @param mixed $offset The offset to retrieve.
-     * @return mixed Can return all value types.
+     * @param int|string $offset
+     * @return mixed
      */
     public function offsetGet($offset)
     {
@@ -77,35 +70,8 @@ abstract class AbstractStrictCollection extends AbstractCollection
     }
 
     /**
-     * String representation of object
-     * @link http://php.net/manual/en/serializable.serialize.php
-     * @return string the string representation of the object or null
-     */
-    public function serialize()
-    {
-        return serialize(array(
-            $this->_definition,
-            $this->_storage
-        ));
-    }
-
-    /**
-     * Constructs the object
-     * @link http://php.net/manual/en/serializable.unserialize.php
-     * @param string $serialized The string representation of the object.
-     * @return void
-     */
-    public function unserialize($serialized)
-    {
-        list($this->_definition, $this->_storage) = unserialize($serialized);
-    }
-
-    /**
-     * Offset to set
-     * @link http://php.net/manual/en/arrayaccess.offsetset.php
-     * @param mixed $offset The offset to assign the value to.
-     * @param mixed $value The value to set.
-     * @return void
+     * @param int|null|string $offset
+     * @param mixed $value
      */
     public function offsetSet($offset, $value)
     {
