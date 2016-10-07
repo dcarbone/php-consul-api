@@ -15,7 +15,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-use DCarbone\PHPConsulAPI\Collection\AbstractStrictCollection;
 
 /**
  * Class QueryOptions
@@ -23,7 +22,7 @@ use DCarbone\PHPConsulAPI\Collection\AbstractStrictCollection;
  */
 class QueryOptions extends AbstractStrictCollection
 {
-    use DCarbone\PHPConsulAPI\ConsulHttpParamContainerTrait;
+    use ConsulHttpParamContainerTrait;
 
     /**
      * @return array
