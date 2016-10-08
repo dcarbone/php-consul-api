@@ -33,7 +33,7 @@ class StatusClient extends AbstractClient
      */
     public function leader()
     {
-        $r = new Request('get', 'v1/status/leader', $this->Config);
+        $r = new Request('get', 'v1/status/leader', $this->c);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($_, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -49,7 +49,7 @@ class StatusClient extends AbstractClient
      */
     public function peers()
     {
-        $r = new Request('get', 'v1/status/peers', $this->Config);
+        $r = new Request('get', 'v1/status/peers', $this->c);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($_, $response, $err) = $this->requireOK($this->doRequest($r));

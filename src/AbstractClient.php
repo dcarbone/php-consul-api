@@ -16,7 +16,6 @@
    limitations under the License.
 */
 
-use Http\Promise\Promise;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
@@ -28,7 +27,7 @@ use Psr\Http\Message\StreamInterface;
 abstract class AbstractClient
 {
     /** @var Config */
-    protected $Config;
+    protected $c;
 
     /**
      * AbstractConsulClient constructor.
@@ -36,7 +35,7 @@ abstract class AbstractClient
      */
     public function __construct(Config $config)
     {
-        $this->Config = $config;
+        $this->c = $config;
     }
 
     /**
@@ -91,7 +90,7 @@ abstract class AbstractClient
      * @param RequestInterface $r
      * @return array(
      *  @type int duration in microseconds
-     *  @type \Psr\Http\Message\ResponseInterface|\Http\Promise\Promise|null http response
+     *  @type \Psr\Http\Message\ResponseInterface|null http response
      *  @type \DCarbone\PHPConsulAPI\Error|null any seen errors
      * )
      */
@@ -103,8 +102,8 @@ abstract class AbstractClient
         try
         {
             // If we actually have a client defined...
-            if (isset($this->Config->HttpClient))
-                $response = $this->Config->HttpClient->sendRequest($r);
+            if (isset($this->c->HttpClient))
+                $response = $this->c->HttpClient->sendRequest($r);
             // Otherwise, throw error to be caught below
             else
                 throw new \RuntimeException('Unable to execute query as no HttpClient has been defined.');
@@ -137,18 +136,18 @@ abstract class AbstractClient
         $qm->requestTime = $duration;
         $qm->requestUrl = (string)$uri;
 
-        if ($response->hasHeader('X-Consul-Index'))
-            $qm->lastIndex = (int)$response->getHeaderLine('X-Consul-Index');
+        if ('' !== ($h = $response->getHeaderLine('X-Consul-Index')))
+            $qm->lastIndex = (int)$h;
 
-        if ($response->hasHeader('X-Consul-KnownLeader'))
-            $qm->knownLeader = (bool)$response->getHeaderLine('X-Consul-KnownLeader');
-        else if ($response->hasHeader('X-Consul-Knownleader'))
-            $qm->knownLeader = (bool)$response->getHeaderLine('X-Consul-Knownleader');
+        if ('' !== ($h = $response->getHeaderLine('X-Consul-KnownLeader')))
+            $qm->knownLeader = (bool)$h;
+        else if ('' !== ($h = $response->getHeaderLine('X-Consul-Knownleader')))
+            $qm->knownLeader = (bool)$h;
 
-        if ($response->hasHeader('X-Consul-LastContact'))
-            $qm->lastContact = (int)$response->getHeaderLine('X-Consul-LastContact');
-        else if ($response->hasHeader('X-Consul-Lastcontact'))
-            $qm->lastContact = (int)$response->getHeaderLine('X-Consul-Lastcontact');
+        if ('' !== ($h = $response->getHeaderLine('X-Consul-LastContact')))
+            $qm->lastContact = (int)$h;
+        else if ('' !== ($h = $response->getHeaderLine('X-Consul-Lastcontact')))
+            $qm->lastContact = (int)$h;
 
         return $qm;
     }

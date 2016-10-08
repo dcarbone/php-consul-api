@@ -85,7 +85,12 @@ class Request implements RequestInterface
             $this->params['wait'] = $wait;
 
         if ('' !== ($token = $config->getToken()))
-            $this->params['token'] = $token;
+        {
+            if ($config->isTokenInHeader())
+                $this->headers['X-Consul-Token'] = $token;
+            else
+                $this->params['token'] = $token;
+        }
 
         $this->body = $body;
     }
@@ -114,7 +119,12 @@ class Request implements RequestInterface
             $this->params['wait'] = $waitTime;
 
         if ('' !== ($token = $queryOptions->getToken()))
-            $this->params['token'] = $token;
+        {
+            if ($this->c->isTokenInHeader())
+                $this->headers['X-Consul-Token'] = $token;
+            else
+                $this->params['token'] = $token;
+        }
 
         if ('' !== ($near = $queryOptions->getNear()))
             $this->params['near'] = $near;

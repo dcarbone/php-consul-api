@@ -48,7 +48,7 @@ class SessionClient extends AbstractClient
         else
             $sessionEntry->Checks = array();
 
-        $r = new Request('put', 'v1/session/create', $this->Config, $sessionEntry);
+        $r = new Request('put', 'v1/session/create', $this->c, $sessionEntry);
         $r->setWriteOptions($writeOptions);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -76,7 +76,7 @@ class SessionClient extends AbstractClient
      */
     public function create(SessionEntry $sessionEntry = null, WriteOptions $writeOptions = null)
     {
-        $r = new Request('put', 'v1/session/create', $this->Config, $sessionEntry);
+        $r = new Request('put', 'v1/session/create', $this->c, $sessionEntry);
         $r->setWriteOptions($writeOptions);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -113,7 +113,7 @@ class SessionClient extends AbstractClient
             ))];
         }
 
-        $r = new Request('put', sprintf('v1/session/destroy/%s', $id), $this->Config);
+        $r = new Request('put', sprintf('v1/session/destroy/%s', $id), $this->c);
         $r->setWriteOptions($writeOptions);
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
@@ -142,7 +142,7 @@ class SessionClient extends AbstractClient
             ))];
         }
 
-        $r = new Request('put', sprintf('v1/session/renew/%s', $id), $this->Config);
+        $r = new Request('put', sprintf('v1/session/renew/%s', $id), $this->c);
         $r->setWriteOptions($writeOptions);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -195,7 +195,7 @@ class SessionClient extends AbstractClient
             ))];
         }
 
-        $r = new Request('get', sprintf('v1/session/info/%s', $id), $this->Config);
+        $r = new Request('get', sprintf('v1/session/info/%s', $id), $this->c);
         $r->setQueryOptions($queryOptions);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -236,7 +236,7 @@ class SessionClient extends AbstractClient
             ))];
         }
 
-        $r = new Request('get', sprintf('v1/session/node/%s', $node), $this->Config);
+        $r = new Request('get', sprintf('v1/session/node/%s', $node), $this->c);
         $r->setQueryOptions($queryOptions);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -264,7 +264,7 @@ class SessionClient extends AbstractClient
      */
     public function listSessions(QueryOptions $queryOptions = null)
     {
-        $r = new Request('get', 'v1/session/list', $this->Config);
+        $r = new Request('get', 'v1/session/list', $this->c);
         $r->setQueryOptions($queryOptions);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
