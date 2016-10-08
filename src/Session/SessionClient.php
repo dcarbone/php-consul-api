@@ -16,25 +16,25 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractApiClient;
+use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\HttpRequest;
 use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\QueryOptions;
+use DCarbone\PHPConsulAPI\Request;
 use DCarbone\PHPConsulAPI\WriteOptions;
 
 /**
  * Class SessionClient
  * @package DCarbone\PHPConsulAPI\Session
  */
-class SessionClient extends AbstractApiClient
+class SessionClient extends AbstractClient
 {
     const SessionBehaviorRelease = 'release';
     const SessionBehaviorDelete = 'delete';
 
     /**
      * @param SessionEntry|null $sessionEntry
-     * @param WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
      * @return array(
      *  @type string
      *  @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
@@ -48,16 +48,17 @@ class SessionClient extends AbstractApiClient
         else
             $sessionEntry->Checks = array();
 
-        $r = new HttpRequest('put', 'v1/session/create', $this->_Config, $sessionEntry);
+        $r = new Request('put', 'v1/session/create', $this->c, $sessionEntry);
         $r->setWriteOptions($writeOptions);
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
         $wm = $this->buildWriteMeta($duration);
 
         if (null !== $err)
             return ['', $wm, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
         if (null !== $err)
             return ['', $wm, $err];
 
@@ -66,7 +67,7 @@ class SessionClient extends AbstractApiClient
 
     /**
      * @param SessionEntry|null $sessionEntry
-     * @param WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
      * @return array(
      *  @type string
      *  @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
@@ -75,16 +76,17 @@ class SessionClient extends AbstractApiClient
      */
     public function create(SessionEntry $sessionEntry = null, WriteOptions $writeOptions = null)
     {
-        $r = new HttpRequest('put', 'v1/session/create', $this->_Config, $sessionEntry);
+        $r = new Request('put', 'v1/session/create', $this->c, $sessionEntry);
         $r->setWriteOptions($writeOptions);
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
         $wm = $this->buildWriteMeta($duration);
 
         if (null !== $err)
             return ['', $wm, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err)
             return ['', $wm, $err];
@@ -94,7 +96,7 @@ class SessionClient extends AbstractApiClient
 
     /**
      * @param string $id
-     * @param WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
      * @return array(
      *  @type \DCarbone\PHPConsulAPI\WriteMeta|null write metadata or null on error
      *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
@@ -111,7 +113,7 @@ class SessionClient extends AbstractApiClient
             ))];
         }
 
-        $r = new HttpRequest('put', sprintf('v1/session/destroy/%s', $id), $this->_Config);
+        $r = new Request('put', sprintf('v1/session/destroy/%s', $id), $this->c);
         $r->setWriteOptions($writeOptions);
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
@@ -122,7 +124,7 @@ class SessionClient extends AbstractApiClient
 
     /**
      * @param string $id
-     * @param WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
      * @return array(
      *  @type \DCarbone\PHPConsulAPI\Session\SessionEntry[]|null list of session entries or null on error
      *  @type \DCarbone\PHPConsulAPI\WriteMeta|null write metadata or null on error
@@ -140,29 +142,32 @@ class SessionClient extends AbstractApiClient
             ))];
         }
 
-        $r = new HttpRequest('put', sprintf('v1/session/renew/%s', $id), $this->_Config);
+        $r = new Request('put', sprintf('v1/session/renew/%s', $id), $this->c);
         $r->setWriteOptions($writeOptions);
 
-        /** @var \Dcarbone\PHPConsulAPI\HttpResponse $response */
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list ($duration, $response, $err) = $this->doRequest($r);
         $wm = $this->buildWriteMeta($duration);
 
         if (null !== $err)
             return [null, $wm, $err];
 
-        if (404 === $response->httpCode)
+        $code = $response->getStatusCode();
+
+        if (404 === $code)
             return [null, $wm, null];
 
-        if (200 !== $response->httpCode)
+        if (200 !== $code)
         {
             return [null, $wm, new Error(sprintf(
-                '%s::renew - Unexpected response code %d',
+                '%s::renew - Unexpected response code %d.  Reason: %s',
                 get_class($this),
-                $response->httpCode
+                $code,
+                $response->getReasonPhrase()
             ))];
         }
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err)
             return [null, $wm, $err];
@@ -172,7 +177,7 @@ class SessionClient extends AbstractApiClient
 
     /**
      * @param string $id
-     * @param QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      * @return array(
      *  @type \DCarbone\PHPConsulAPI\Session\SessionEntry[]|null list of session entries or null on error / empty response
      *  @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata or null on error
@@ -190,16 +195,17 @@ class SessionClient extends AbstractApiClient
             ))];
         }
 
-        $r = new HttpRequest('get', sprintf('v1/session/info/%s', $id), $this->_Config);
+        $r = new Request('get', sprintf('v1/session/info/%s', $id), $this->c);
         $r->setQueryOptions($queryOptions);
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response);
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err)
             return [null, $qm, $err];
@@ -212,7 +218,7 @@ class SessionClient extends AbstractApiClient
 
     /**
      * @param string $node
-     * @param QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      * @return array(
      *  @type \DCarbone\PHPConsulAPI\Session\SessionEntry[]|null list of session entries or null on error
      *  @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata or null on error
@@ -230,16 +236,17 @@ class SessionClient extends AbstractApiClient
             ))];
         }
 
-        $r = new HttpRequest('get', sprintf('v1/session/node/%s', $node), $this->_Config);
+        $r = new Request('get', sprintf('v1/session/node/%s', $node), $this->c);
         $r->setQueryOptions($queryOptions);
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response);
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err)
             return [null, $qm, $err];
@@ -257,16 +264,17 @@ class SessionClient extends AbstractApiClient
      */
     public function listSessions(QueryOptions $queryOptions = null)
     {
-        $r = new HttpRequest('get', 'v1/session/list', $this->_Config);
+        $r = new Request('get', 'v1/session/list', $this->c);
         $r->setQueryOptions($queryOptions);
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response);
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err)
             return [null, $qm, $err];

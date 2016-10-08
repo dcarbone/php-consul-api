@@ -17,34 +17,38 @@
 */
 
 /**
- * Interface ConsulAPILoggerInterface
+ * Class AbstractModel
  * @package DCarbone\PHPConsulAPI
- *
- * @deprecated Will be removed
  */
-interface ConsulAPILoggerInterface
+abstract class AbstractModel implements \JsonSerializable
 {
     /**
-     * @param string $message
-     * @return bool
+     * AbstractObjectModel constructor.
+     * @param array $data
      */
-    public function error($message);
+    public function __construct(array $data = array())
+    {
+        foreach($data as $k => $v)
+        {
+            $this->{$k} = $v;
+        }
+    }
 
     /**
-     * @param string $message
-     * @return bool
+     * Specify data which should be serialized to JSON
+     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by json_encode, which is a value of any type other than a resource.
      */
-    public function warn($message);
+    function jsonSerialize()
+    {
+        return array_filter((array)$this);
+    }
 
     /**
-     * @param string $message
-     * @return bool
+     * @return string
      */
-    public function info($message);
-
-    /**
-     * @param string $message
-     * @return bool
-     */
-    public function debug($message);
+    public function __toString()
+    {
+        return get_class($this);
+    }
 }

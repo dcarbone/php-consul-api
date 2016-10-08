@@ -24,4 +24,12 @@ class WriteMeta
 {
     /** @var int */
     public $requestTime = 0;
+
+    /**
+     * @return int
+     */
+    public function getRequestTime()
+    {
+        return $this->requestTime;
+    }
 }

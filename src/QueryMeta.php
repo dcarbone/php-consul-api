@@ -32,4 +32,44 @@ class QueryMeta
     public $knownLeader = false;
     /** @var int */
     public $requestTime = 0;
+
+    /**
+     * @return string
+     */
+    public function getRequestUrl()
+    {
+        return $this->requestUrl;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLastIndex()
+    {
+        return $this->lastIndex;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLastContact()
+    {
+        return $this->lastContact;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isKnownLeader()
+    {
+        return $this->knownLeader;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRequestTime()
+    {
+        return $this->requestTime;
+    }
 }

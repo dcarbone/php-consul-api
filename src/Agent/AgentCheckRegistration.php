@@ -34,6 +34,168 @@ class AgentCheckRegistration extends AgentServiceCheck
     /**
      * @return string
      */
+    public function getID()
+    {
+        return $this->ID;
+    }
+
+    /**
+     * @param string $ID
+     * @return AgentCheckRegistration
+     */
+    public function setID($ID)
+    {
+        $this->ID = $ID;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->Name;
+    }
+
+    /**
+     * @param string $Name
+     * @return AgentCheckRegistration
+     */
+    public function setName($Name)
+    {
+        $this->Name = $Name;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNotes()
+    {
+        return $this->Notes;
+    }
+
+    /**
+     * @param string $Notes
+     * @return AgentCheckRegistration
+     */
+    public function setNotes($Notes)
+    {
+        $this->Notes = $Notes;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getServiceID()
+    {
+        return $this->ServiceID;
+    }
+
+    /**
+     * @param string $ServiceID
+     * @return AgentCheckRegistration
+     */
+    public function setServiceID($ServiceID)
+    {
+        $this->ServiceID = $ServiceID;
+        return $this;
+    }
+
+    /**
+     * @param string $Script
+     * @return AgentServiceCheck
+     */
+    public function setScript($Script)
+    {
+        $this->Script = $Script;
+        return $this;
+    }
+
+    /**
+     * @param string $DockerContainerID
+     * @return AgentServiceCheck
+     */
+    public function setDockerContainerID($DockerContainerID)
+    {
+        $this->DockerContainerID = $DockerContainerID;
+        return $this;
+    }
+
+    /**
+     * @param string $Shell
+     * @return AgentServiceCheck
+     */
+    public function setShell($Shell)
+    {
+        $this->Shell = $Shell;
+        return $this;
+    }
+
+    /**
+     * @param string $Interval
+     * @return AgentServiceCheck
+     */
+    public function setInterval($Interval)
+    {
+        $this->Interval = $Interval;
+        return $this;
+    }
+
+    /**
+     * @param string $Timeout
+     * @return AgentServiceCheck
+     */
+    public function setTimeout($Timeout)
+    {
+        $this->Timeout = $Timeout;
+        return $this;
+    }
+
+    /**
+     * @param string $TTL
+     * @return AgentServiceCheck
+     */
+    public function setTTL($TTL)
+    {
+        $this->TTL = $TTL;
+        return $this;
+    }
+
+    /**
+     * @param string $HTTP
+     * @return AgentServiceCheck
+     */
+    public function setHTTP($HTTP)
+    {
+        $this->HTTP = $HTTP;
+        return $this;
+    }
+
+    /**
+     * @param string $TCP
+     * @return AgentServiceCheck
+     */
+    public function setTCP($TCP)
+    {
+        $this->TCP = $TCP;
+        return $this;
+    }
+
+    /**
+     * @param string $Status
+     * @return AgentServiceCheck
+     */
+    public function setStatus($Status)
+    {
+        $this->Status = $Status;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
     public function __toString()
     {
         return (string)$this->Name;

@@ -16,13 +16,13 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractObjectModel;
+use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class AgentSelfCoord
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentSelfCoord extends AbstractObjectModel
+class AgentSelfCoord extends AbstractModel
 {
     /** @var array */
     public $Vec = array();
@@ -32,4 +32,36 @@ class AgentSelfCoord extends AbstractObjectModel
     public $Adjustment = 0.0;
     /** @var float */
     public $Height = 0.0;
+
+    /**
+     * @return array
+     */
+    public function getVec()
+    {
+        return $this->Vec;
+    }
+
+    /**
+     * @return float
+     */
+    public function getError()
+    {
+        return $this->Error;
+    }
+
+    /**
+     * @return float
+     */
+    public function getAdjustment()
+    {
+        return $this->Adjustment;
+    }
+
+    /**
+     * @return float
+     */
+    public function getHeight()
+    {
+        return $this->Height;
+    }
 }

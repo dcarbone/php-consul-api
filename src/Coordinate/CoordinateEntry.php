@@ -16,16 +16,32 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractObjectModel;
+use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class CoordinateEntry
  * @package DCarbone\PHPConsulAPI\Coordinate
  */
-class CoordinateEntry extends AbstractObjectModel
+class CoordinateEntry extends AbstractModel
 {
     /** @var string */
     public $Node = '';
     /** @var Coordinate */
     public $Coord = null;
+
+    /**
+     * @return string
+     */
+    public function getNode()
+    {
+        return $this->Node;
+    }
+
+    /**
+     * @return Coordinate
+     */
+    public function getCoord()
+    {
+        return $this->Coord;
+    }
 }

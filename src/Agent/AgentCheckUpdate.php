@@ -16,16 +16,52 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractObjectModel;
+use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class AgentCheckUpdate
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentCheckUpdate extends AbstractObjectModel
+class AgentCheckUpdate extends AbstractModel
 {
     /** @var string */
     public $Status = '';
     /** @var string */
     public $Output = '';
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->Status;
+    }
+
+    /**
+     * @param string $Status
+     * @return AgentCheckUpdate
+     */
+    public function setStatus($Status)
+    {
+        $this->Status = $Status;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOutput()
+    {
+        return $this->Output;
+    }
+
+    /**
+     * @param string $Output
+     * @return AgentCheckUpdate
+     */
+    public function setOutput($Output)
+    {
+        $this->Output = $Output;
+        return $this;
+    }
 }

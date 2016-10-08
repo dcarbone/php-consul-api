@@ -16,21 +16,21 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractApiClient;
-use DCarbone\PHPConsulAPI\HttpRequest;
+use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\QueryOptions;
+use DCarbone\PHPConsulAPI\Request;
 use DCarbone\PHPConsulAPI\WriteOptions;
 
 /**
  * Class CatalogClient
  * @package DCarbone\PHPConsulAPI\Catalog
  */
-class CatalogClient extends AbstractApiClient
+class CatalogClient extends AbstractClient
 {
     /**
      * @param CatalogRegistration $catalogRegistration
-     * @param WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
      * @return array(
      *  @type \DCarbone\PHPConsulAPI\WriteMeta write meta data
      *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
@@ -38,7 +38,7 @@ class CatalogClient extends AbstractApiClient
      */
     public function register(CatalogRegistration $catalogRegistration, WriteOptions $writeOptions = null)
     {
-        $r = new HttpRequest('put', 'v1/catalog/register', $this->_Config, $catalogRegistration);
+        $r = new Request('put', 'v1/catalog/register', $this->c, $catalogRegistration);
         $r->setWriteOptions($writeOptions);
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
@@ -49,7 +49,7 @@ class CatalogClient extends AbstractApiClient
 
     /**
      * @param CatalogDeregistration $catalogDeregistration
-     * @param WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
      * @return array(
      *  @type \DCarbone\PHPConsulAPI\WriteMeta write meta data
      *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
@@ -57,7 +57,7 @@ class CatalogClient extends AbstractApiClient
      */
     public function deregister(CatalogDeregistration $catalogDeregistration, WriteOptions $writeOptions = null)
     {
-        $r = new HttpRequest('put', 'v1/catalog/deregister', $this->_Config, $catalogDeregistration);
+        $r = new Request('put', 'v1/catalog/deregister', $this->c, $catalogDeregistration);
         $r->setWriteOptions($writeOptions);
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
@@ -74,18 +74,19 @@ class CatalogClient extends AbstractApiClient
      */
     public function datacenters()
     {
-        $r = new HttpRequest('get', 'v1/catalog/datacenters', $this->_Config);
+        $r = new Request('get', 'v1/catalog/datacenters', $this->c);
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($_, $response, $err) = $this->requireOK($this->doRequest($r));
 
         if (null !== $err)
             return [null, $err];
 
-        return $this->decodeBody($response);
+        return $this->decodeBody($response->getBody());
     }
 
     /**
-     * @param QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      * @return array(
      *  @type CatalogNode[]|null array of catalog nodes or null on error
      *  @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
@@ -94,16 +95,17 @@ class CatalogClient extends AbstractApiClient
      */
     public function nodes(QueryOptions $queryOptions = null)
     {
-        $r = new HttpRequest('get', 'v1/catalog/nodes', $this->_Config);
+        $r = new Request('get', 'v1/catalog/nodes', $this->c);
         $r->setQueryOptions($queryOptions);
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response);
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err)
             return [null, $qm, $err];
@@ -119,7 +121,7 @@ class CatalogClient extends AbstractApiClient
     }
 
     /**
-     * @param QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      * @return array(
      * @type string[]|null list of services or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
@@ -128,16 +130,17 @@ class CatalogClient extends AbstractApiClient
      */
     public function services(QueryOptions $queryOptions = null)
     {
-        $r = new HttpRequest('get', 'v1/catalog/services', $this->_Config);
+        $r = new Request('get', 'v1/catalog/services', $this->c);
         $r->setQueryOptions($queryOptions);
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response);
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
 
         return [$data, $qm, $err];
     }
@@ -145,7 +148,7 @@ class CatalogClient extends AbstractApiClient
     /**
      * @param string $service
      * @param string $tag
-     * @param QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      * @return array(
      *  @type CatalogService[]|null array of services or null on error
      *  @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
@@ -154,18 +157,19 @@ class CatalogClient extends AbstractApiClient
      */
     public function service($service, $tag = '', QueryOptions $queryOptions = null)
     {
-        $r = new HttpRequest('get', sprintf('v1/catalog/service/%s', $service), $this->_Config);
+        $r = new Request('get', sprintf('v1/catalog/service/%s', $service), $this->c);
         $r->setQueryOptions($queryOptions);
         if ('' !== $tag)
             $r->params->set('tag', $tag);
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response);
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         if (null !== $err)
             return [null, $qm, $err];
         
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
         
         if (null !== $err)
             return [null, $qm, $err];
@@ -182,7 +186,7 @@ class CatalogClient extends AbstractApiClient
 
     /**
      * @param string $node
-     * @param QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      * @return array(
      *  @type CatalogNode node or null on error
      *  @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
@@ -191,16 +195,17 @@ class CatalogClient extends AbstractApiClient
      */
     public function node($node, QueryOptions $queryOptions = null)
     {
-        $r = new HttpRequest('get', sprintf('v1/catalog/node/%s', $node), $this->_Config);
+        $r = new Request('get', sprintf('v1/catalog/node/%s', $node), $this->c);
         $r->setQueryOptions($queryOptions);
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response);
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err)
             return [null, $qm, $err];

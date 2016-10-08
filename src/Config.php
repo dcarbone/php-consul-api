@@ -16,58 +16,148 @@
    limitations under the License.
 */
 
+use Http\Client\HttpClient;
+
 /**
  * Class Config
  * @package DCarbone\PHPConsulAPI
  */
-class Config extends AbstractStrictCollection
+class Config
 {
     /**
-     * @return array
+     * The address, including port, of your Consul Agent
+     *
+     * @var string
      */
-    protected function getDefinition()
+    public $Address = '';
+
+    /**
+     * The scheme to use.  Currently only HTTP and HTTPS are supported.
+     *
+     * @var string
+     */
+    public $Scheme = '';
+
+    /**
+     * The name of the datacenter you wish all queries to be made against by default
+     *
+     * @var string
+     */
+    public $Datacenter = '';
+
+
+    /**
+     * HTTP authentication, if used
+     *
+     * @var HttpAuth
+     */
+    public $HttpAuth = null;
+
+    /**
+     * Time to wait on certain blockable endpoints
+     *
+     * @var int
+     */
+    public $WaitTime = 0;
+
+
+    /**
+     * ACL token to use by default
+     *
+     * @var string
+     */
+    public $Token = '';
+
+    /**
+     * Whether to skip SSL validation.  This does nothing unless you use it within your HttpClient of choice.
+     *
+     * @var bool
+     */
+    public $InsecureSkipVerify = false;
+
+    /**
+     * Whether to use Consul 0.7.0-style X-Consul-Token header or the older query-param style for passing ACL tokens
+     *
+     * @var bool
+     */
+    public $TokenInHeader = false;
+
+    /**
+     * Your HttpClient of choice.
+     *
+     * @var HttpClient
+     */
+    public $HttpClient = null;
+
+    /**
+     * Config constructor.
+     * @param array $config
+     */
+    public function __construct(array $config = array())
     {
-        return array(
-            'Address' => null,
-            'Scheme' => null,
-            'Datacenter' => null,
-            'HttpAuth' => null,
-            'WaitTime' => null,
-            'Token' => null,
-            'CAFile' => null,
-            'CertFile' => null,
-            'KeyFile' => null,
-            'InsecureSkipVerify' => null,
-            'AdditionalCurlOpts' => array(),
-        );
+        foreach($config as $k => $v)
+        {
+            $this->{"set{$k}"}($v);
+        }
     }
 
     /**
+     * Construct a configuration object from Environment Variables while using a specific HTTP Client
+     *
+     * @param HttpClient $client
+     * @return Config
+     */
+    public static function newDefaultConfigWithClient(HttpClient $client)
+    {
+        $conf = new static([
+            'Address' => '127.0.0.1:8500',
+            'Scheme' => 'http',
+            'HttpClient' => $client
+        ]);
+
+        $envParams = static::getEnvironmentConfig();
+        if (isset($envParams['CONSUL_HTTP_ADDR']))
+            $conf->setAddress($envParams['CONSUL_HTTP_ADDR']);
+
+        if (isset($envParams['CONSUL_HTTP_TOKEN']))
+            $conf->setToken($envParams['CONSUL_HTTP_TOKEN']);
+
+        if (isset($envParams['CONSUL_HTTP_AUTH']))
+            $conf->setHttpAuth($envParams['CONSUL_HTTP_AUTH']);
+
+        if (isset($envParams['CONSUL_HTTP_SSL']) && $envParams['CONSUL_HTTP_SSL'])
+            $conf->setScheme('https');
+
+        if (isset($envParams['CONSUL_HTTP_SSL_VERIFY']) && !$envParams['CONSUL_HTTP_SSL_VERIFY'])
+            $conf->setInsecureSkipVerify(false);
+
+        return $conf;
+    }
+
+    /**
+     * Construct a configuration object from Environment Variables and also attempt to locate an HTTP Client ot use.
+     *
      * @return Config
      */
     public static function newDefaultConfig()
     {
-        $conf = new static([
-            'Address' => '127.0.0.1:8500',
-            'Scheme' => 'http'
-        ]);
+        static $knownClients = array(
+            '\\Http\\Client\\Curl\\Client',
+            '\\Http\\Adapter\\Guzzle6\\Client',
+            '\\Http\\Adapter\\Guzzle5\\Client',
+            '\\Http\\Adapter\\Buzz\\Client'
+        );
 
-        if (false !== ($addr = static::_tryGetEnvParam('CONSUL_HTTP_ADDR')))
-            $conf->setAddress($addr);
-        
-        if (false !== ($token = static::_tryGetEnvParam('CONSUL_HTTP_TOKEN')))
-            $conf->setToken($token);
+        foreach($knownClients as $clientClass)
+        {
+            if (class_exists($clientClass, true))
+                return static::newDefaultConfigWithClient(new $clientClass);
+        }
 
-        if (false !== ($auth = static::_tryGetEnvParam('CONSUL_HTTP_AUTH')))
-            $conf->setHttpAuth($auth);
-
-        if ($ssl = (bool)static::_tryGetEnvParam('CONSUL_HTTP_SSL'))
-            $conf->setScheme('https');
-
-        if ($doVerify = (bool)static::_tryGetEnvParam('CONSUL_HTTP_SSL_VERIFY'))
-            $conf->setInsecureSkipVerify(!$doVerify);
-
-        return $conf;
+        throw new \RuntimeException(sprintf(
+            '%s - Unable to determine HttpClient to use for default config',
+            get_called_class()
+        ));
     }
 
     /**
@@ -75,16 +165,16 @@ class Config extends AbstractStrictCollection
      */
     public function getAddress()
     {
-        return (string)$this->_storage['Address'];
+        return $this->Address;
     }
 
     /**
-     * @param string $address
-     * @return $this
+     * @param string $Address
+     * @return Config
      */
-    public function setAddress($address)
+    public function setAddress($Address)
     {
-        $this->_storage['Address'] = $address;
+        $this->Address = $Address;
         return $this;
     }
 
@@ -93,16 +183,16 @@ class Config extends AbstractStrictCollection
      */
     public function getScheme()
     {
-        return (string)$this->_storage['Scheme'];
+        return $this->Scheme;
     }
 
     /**
-     * @param string $scheme
-     * @return $this
+     * @param string $Scheme
+     * @return Config
      */
-    public function setScheme($scheme)
+    public function setScheme($Scheme)
     {
-        $this->_storage['Scheme'] = $scheme;
+        $this->Scheme = $Scheme;
         return $this;
     }
 
@@ -111,30 +201,84 @@ class Config extends AbstractStrictCollection
      */
     public function getDatacenter()
     {
-        return (string)$this->_storage['Datacenter'];
+        return $this->Datacenter;
     }
 
     /**
-     * @param string $datacenter
-     * @return $this
+     * @param string $Datacenter
+     * @return Config
      */
-    public function setDatacenter($datacenter)
+    public function setDatacenter($Datacenter)
     {
-        $this->_storage['Datacenter'] = $datacenter;
+        $this->Datacenter = $Datacenter;
         return $this;
     }
 
     /**
-     * @return HttpAuth
+     * @return int
+     */
+    public function getWaitTime()
+    {
+        return $this->WaitTime;
+    }
+
+    /**
+     * @param int $WaitTime
+     * @return Config
+     */
+    public function setWaitTime($WaitTime)
+    {
+        $this->WaitTime = $WaitTime;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getToken()
+    {
+        return $this->Token;
+    }
+
+    /**
+     * @param string $Token
+     * @return Config
+     */
+    public function setToken($Token)
+    {
+        $this->Token = $Token;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isInsecureSkipVerify()
+    {
+        return $this->InsecureSkipVerify;
+    }
+
+    /**
+     * @param boolean $InsecureSkipVerify
+     * @return Config
+     */
+    public function setInsecureSkipVerify($InsecureSkipVerify)
+    {
+        $this->InsecureSkipVerify = $InsecureSkipVerify;
+        return $this;
+    }
+
+    /**
+     * @return null
      */
     public function getHttpAuth()
     {
-        return $this->_storage['HttpAuth'];
+        return $this->HttpAuth;
     }
 
     /**
      * @param string|HttpAuth $httpAuth
-     * @return $this
+     * @return Config
      */
     public function setHttpAuth($httpAuth)
     {
@@ -156,7 +300,7 @@ class Config extends AbstractStrictCollection
 
         if ($httpAuth instanceof HttpAuth)
         {
-            $this->_storage['HttpAuth'] = $httpAuth;
+            $this->HttpAuth = $httpAuth;
             return $this;
         }
 
@@ -168,201 +312,57 @@ class Config extends AbstractStrictCollection
     }
 
     /**
-     * @return int
+     * @return HttpClient
      */
-    public function getWaitTime()
+    public function getHttpClient()
     {
-        return (int)$this->_storage['WaitTime'];
+        return $this->HttpClient;
     }
 
     /**
-     * @param int $waitTime
-     * @return $this
+     * @param HttpClient $HttpClient
+     * @return Config
      */
-    public function setWaitTime($waitTime)
+    public function setHttpClient(HttpClient $HttpClient)
     {
-        $this->_storage['WaitTime'] = (int)$waitTime;
+        $this->HttpClient = $HttpClient;
         return $this;
     }
 
     /**
-     * @return string
+     * @return boolean
      */
-    public function getToken()
+    public function isTokenInHeader()
     {
-        return (string)$this->_storage['Token'];
+        return $this->TokenInHeader;
     }
 
     /**
-     * @param string $token
-     * @return $this
+     * @param boolean $TokenInHeader
+     * @return Config
      */
-    public function setToken($token)
+    public function setTokenInHeader($TokenInHeader)
     {
-        $this->_storage['Token'] = $token;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCAFile()
-    {
-        return (string)$this->_storage['CAFile'];
-    }
-
-    /**
-     * @param string $caFile Filepath to CA File
-     * @return $this
-     */
-    public function setCAFile($caFile)
-    {
-        $this->_storage['CAFile'] = $caFile;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCertFile()
-    {
-        return (string)$this->_storage['CertFile'];
-    }
-
-    /**
-     * @param string $certFile Filepath to certificate file
-     * @return $this
-     */
-    public function setCertFile($certFile)
-    {
-        $this->_storage['CertFile'] = $certFile;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getKeyFile()
-    {
-        return (string)$this->_storage['KeyFile'];
-    }
-
-    /**
-     * @param string $keyFile Filepath to certificate key file
-     * @return $this
-     */
-    public function setKeyFile($keyFile)
-    {
-        $this->_storage['KeyFile'] = $keyFile;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getInsecureSkipVerify()
-    {
-        return (bool)$this->_storage['InsecureSkipVerify'];
-    }
-
-    /**
-     * @param bool $insecureSkipVerify
-     * @return $this
-     */
-    public function setInsecureSkipVerify($insecureSkipVerify)
-    {
-        $this->_storage['InsecureSkipVerify'] = (bool)$insecureSkipVerify;
+        $this->TokenInHeader = (bool)$TokenInHeader;
         return $this;
     }
 
     /**
      * @return array
      */
-    public function getAdditionalCurlOpts()
+    public static function getEnvironmentConfig()
     {
-        return $this->_storage['AdditionalCurlOpts'];
-    }
-
-    /**
-     * @param array $additionalCurlOpts
-     * @return $this
-     */
-    public function setAdditionalCurlOpts(array $additionalCurlOpts)
-    {
-        $this->_storage['AdditionalCurlOpts'] = $additionalCurlOpts;
-        return $this;
-    }
-
-    /**
-     * @param int $opt
-     * @param mixed $value
-     * @return $this
-     */
-    public function setAdditionalCurlOpt($opt, $value)
-    {
-        $this->_storage['AdditionalCurlOpts'][$opt] = $value;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function compileAddress()
-    {
-        if ('' === ($scheme = $this->getScheme()))
-        {
-            throw new \LogicException(sprintf(
-                '%s - "Scheme" was left undefined in this config object. Definition: %s',
-                get_class($this),
-                json_encode($this)
-            ));
-        }
-
-        if ('' === ($addr = $this->getAddress()))
-        {
-            throw new \LogicException(sprintf(
-                '%s - "Address" was left undefined in this config object. Definition: %s',
-                get_class($this),
-                json_encode($this)
-            ));
-        }
-
-        return sprintf('%s://%s', $scheme, $addr);
-    }
-
-    /**
-     * @return array
-     */
-    public function getCurlOptArray()
-    {
-        $opts = $this->getAdditionalCurlOpts();
-
-        if ($auth = $this->getHttpAuth())
-            $opts[CURLOPT_HTTPAUTH] = (string)$auth;
-
-        if ($this->getInsecureSkipVerify())
-        {
-            $opts[CURLOPT_SSL_VERIFYPEER] = false;
-            $opts[CURLOPT_SSL_VERIFYHOST] = false;
-        }
-
-        if ($caFile = $this->getCAFile())
-            $opts[CURLOPT_CAINFO] = $caFile;
-
-        if ($certFile = $this->getCertFile())
-            $opts[CURLOPT_SSLCERT] = $certFile;
-
-        if ($keyFile = $this->getKeyFile())
-            $opts[CURLOPT_SSLKEY] = $keyFile;
-
-        $opts[CURLOPT_TIMEOUT] = $this->getWaitTime();
-
-        return $opts;
+        return array_filter([
+            'CONSUL_HTTP_ADDR' => static::_tryGetEnvParam('CONSUL_HTTP_ADDR'),
+            'CONSUL_HTTP_AUTH' => static::_tryGetEnvParam('CONSUL_HTTP_AUTH'),
+            'CONSUL_HTTP_SSL' => static::_tryGetEnvParam('CONSUL_HTTP_SSL'),
+            'CONSUL_HTTP_SSL_VERIFY' => static::_tryGetEnvParam('CONSUL_HTTP_SSL_VERIFY')
+        ], function($val) { return null !== $val; });
     }
 
     /**
      * @param string $param
-     * @return string|bool
+     * @return string|null
      */
     protected static function _tryGetEnvParam($param)
     {
@@ -372,20 +372,6 @@ class Config extends AbstractStrictCollection
         if (isset($_SERVER[$param]))
             return $_SERVER[$param];
 
-        return false;
-    }
-
-    /**
-     * Specify data which should be serialized to JSON
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by json_encode, which is a value of any type other than a resource.
-     */
-    public function jsonSerialize()
-    {
-        $data = parent::jsonSerialize();
-        if (isset($data['HttpAuth']))
-            unset($data['HttpAuth']);
-
-        return $data;
+        return null;
     }
 }

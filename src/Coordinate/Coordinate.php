@@ -16,13 +16,13 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractObjectModel;
+use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class Coordinate
  * @package DCarbone\PHPConsulAPI\Coordinate
  */
-class Coordinate extends AbstractObjectModel
+class Coordinate extends AbstractModel
 {
     /** @var int[] */
     public $Vec = array();
@@ -32,4 +32,36 @@ class Coordinate extends AbstractObjectModel
     public $Adjustment = 0.0;
     /** @var float */
     public $Height = 0.0;
+
+    /**
+     * @return \int[]
+     */
+    public function getVec()
+    {
+        return $this->Vec;
+    }
+
+    /**
+     * @return float
+     */
+    public function getError()
+    {
+        return $this->Error;
+    }
+
+    /**
+     * @return float
+     */
+    public function getAdjustment()
+    {
+        return $this->Adjustment;
+    }
+
+    /**
+     * @return float
+     */
+    public function getHeight()
+    {
+        return $this->Height;
+    }
 }

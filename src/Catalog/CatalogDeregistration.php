@@ -15,14 +15,13 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-
-use DCarbone\PHPConsulAPI\AbstractObjectModel;
+use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class CatalogDeregistration
  * @package DCarbone\PHPConsulAPI\Catalog
  */
-class CatalogDeregistration extends AbstractObjectModel
+class CatalogDeregistration extends AbstractModel
 {
     /** @var string */
     public $Node = '';
@@ -34,4 +33,94 @@ class CatalogDeregistration extends AbstractObjectModel
     public $ServiceID = '';
     /** @var string */
     public $CheckID = '';
+
+    /**
+     * @return string
+     */
+    public function getNode()
+    {
+        return $this->Node;
+    }
+
+    /**
+     * @param string $Node
+     * @return CatalogDeregistration
+     */
+    public function setNode($Node)
+    {
+        $this->Node = $Node;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress()
+    {
+        return $this->Address;
+    }
+
+    /**
+     * @param string $Address
+     * @return CatalogDeregistration
+     */
+    public function setAddress($Address)
+    {
+        $this->Address = $Address;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDatacenter()
+    {
+        return $this->Datacenter;
+    }
+
+    /**
+     * @param string $Datacenter
+     * @return CatalogDeregistration
+     */
+    public function setDatacenter($Datacenter)
+    {
+        $this->Datacenter = $Datacenter;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getServiceID()
+    {
+        return $this->ServiceID;
+    }
+
+    /**
+     * @param string $ServiceID
+     * @return CatalogDeregistration
+     */
+    public function setServiceID($ServiceID)
+    {
+        $this->ServiceID = $ServiceID;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCheckID()
+    {
+        return $this->CheckID;
+    }
+
+    /**
+     * @param string $CheckID
+     * @return CatalogDeregistration
+     */
+    public function setCheckID($CheckID)
+    {
+        $this->CheckID = $CheckID;
+        return $this;
+    }
 }

@@ -15,14 +15,13 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-
-use DCarbone\PHPConsulAPI\AbstractObjectModel;
+use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class KVPair
  * @package DCarbone\PHPConsulAPI\KV
  */
-class KVPair extends AbstractObjectModel
+class KVPair extends AbstractModel
 {
     /** @var string */
     public $Key = '';
@@ -38,6 +37,62 @@ class KVPair extends AbstractObjectModel
     public $Value = null;
     /** @var string */
     public $Session = '';
+
+    /**
+     * @return string
+     */
+    public function getKey()
+    {
+        return $this->Key;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCreateIndex()
+    {
+        return $this->CreateIndex;
+    }
+
+    /**
+     * @return int
+     */
+    public function getModifyIndex()
+    {
+        return $this->ModifyIndex;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLockIndex()
+    {
+        return $this->LockIndex;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFlags()
+    {
+        return $this->Flags;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getValue()
+    {
+        return $this->Value;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSession()
+    {
+        return $this->Session;
+    }
 
     /**
      * @return string

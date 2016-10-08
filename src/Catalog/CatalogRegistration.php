@@ -15,8 +15,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-
-use DCarbone\PHPConsulAPI\AbstractObjectModel;
+use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Agent\AgentCheck;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
 
@@ -24,7 +23,7 @@ use DCarbone\PHPConsulAPI\Agent\AgentService;
  * Class CatalogRegistration
  * @package DCarbone\PHPConsulAPI\Catalog
  */
-class CatalogRegistration extends AbstractObjectModel
+class CatalogRegistration extends AbstractModel
 {
     /** @var string */
     public $Node = '';
@@ -36,4 +35,94 @@ class CatalogRegistration extends AbstractObjectModel
     public $Service = null;
     /** @var AgentCheck */
     public $Check = null;
+
+    /**
+     * @return string
+     */
+    public function getNode()
+    {
+        return $this->Node;
+    }
+
+    /**
+     * @param string $Node
+     * @return CatalogRegistration
+     */
+    public function setNode($Node)
+    {
+        $this->Node = $Node;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress()
+    {
+        return $this->Address;
+    }
+
+    /**
+     * @param string $Address
+     * @return CatalogRegistration
+     */
+    public function setAddress($Address)
+    {
+        $this->Address = $Address;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDatacenter()
+    {
+        return $this->Datacenter;
+    }
+
+    /**
+     * @param string $Datacenter
+     * @return CatalogRegistration
+     */
+    public function setDatacenter($Datacenter)
+    {
+        $this->Datacenter = $Datacenter;
+        return $this;
+    }
+
+    /**
+     * @return AgentService
+     */
+    public function getService()
+    {
+        return $this->Service;
+    }
+
+    /**
+     * @param AgentService $Service
+     * @return CatalogRegistration
+     */
+    public function setService(AgentService $Service)
+    {
+        $this->Service = $Service;
+        return $this;
+    }
+
+    /**
+     * @return AgentCheck
+     */
+    public function getCheck()
+    {
+        return $this->Check;
+    }
+
+    /**
+     * @param AgentCheck $Check
+     * @return CatalogRegistration
+     */
+    public function setCheck(AgentCheck $Check)
+    {
+        $this->Check = $Check;
+        return $this;
+    }
 }

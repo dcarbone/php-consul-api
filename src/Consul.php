@@ -31,21 +31,21 @@ use DCarbone\PHPConsulAPI\Status\StatusClient;
  */
 class Consul
 {
-    /** @var KVClient */
+    /** @var \DCarbone\PHPConsulAPI\KV\KVClient */
     public $KV;
-    /** @var AgentClient */
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentClient */
     public $Agent;
-    /** @var CatalogClient */
+    /** @var \DCarbone\PHPConsulAPI\Catalog\CatalogClient */
     public $Catalog;
-    /** @var StatusClient */
+    /** @var \DCarbone\PHPConsulAPI\Status\StatusClient */
     public $Status;
-    /** @var EventClient */
+    /** @var \DCarbone\PHPConsulAPI\Event\EventClient */
     public $Event;
-    /** @var HealthClient */
+    /** @var \DCarbone\PHPConsulAPI\Health\HealthClient */
     public $Health;
-    /** @var CoordinateClient */
+    /** @var \DCarbone\PHPConsulAPI\Coordinate\CoordinateClient */
     public $Coordinate;
-    /** @var SessionClient */
+    /** @var \DCarbone\PHPConsulAPI\Session\SessionClient */
     public $Session;
 
     /**
@@ -77,5 +77,69 @@ class Consul
         $this->Health = new HealthClient($config);
         $this->Coordinate = new CoordinateClient($config);
         $this->Session = new SessionClient($config);
+    }
+
+    /**
+     * @return KVClient
+     */
+    public function KV()
+    {
+        return $this->KV;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentClient
+     */
+    public function Agent()
+    {
+        return $this->Agent;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogClient
+     */
+    public function Catalog()
+    {
+        return $this->Catalog;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Status\StatusClient
+     */
+    public function Status()
+    {
+        return $this->Status;
+    }
+
+    /**
+     * @return EventClient
+     */
+    public function Event()
+    {
+        return $this->Event;
+    }
+
+    /**
+     * @return HealthClient
+     */
+    public function Health()
+    {
+        return $this->Health;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateClient
+     */
+    public function Coordinate()
+    {
+        return $this->Coordinate;
+    }
+
+    /**
+     * @return SessionClient
+     */
+    public function Session()
+    {
+        return $this->Session;
     }
 }

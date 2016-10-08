@@ -16,13 +16,13 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractObjectModel;
+use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class AgentMember
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentMember extends AbstractObjectModel
+class AgentMember extends AbstractModel
 {
     /** @var string */
     public $Name = '';
@@ -46,6 +46,94 @@ class AgentMember extends AbstractObjectModel
     public $DelegateMax = 0;
     /** @var int */
     public $DelegateCur = 0;
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->Name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddr()
+    {
+        return $this->Addr;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPort()
+    {
+        return $this->Port;
+    }
+
+    /**
+     * @return \string[]
+     */
+    public function getTags()
+    {
+        return $this->Tags;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->Status;
+    }
+
+    /**
+     * @return int
+     */
+    public function getProtocolMin()
+    {
+        return $this->ProtocolMin;
+    }
+
+    /**
+     * @return int
+     */
+    public function getProtocolMax()
+    {
+        return $this->ProtocolMax;
+    }
+
+    /**
+     * @return int
+     */
+    public function getProtocolCur()
+    {
+        return $this->ProtocolCur;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDelegateMin()
+    {
+        return $this->DelegateMin;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDelegateMax()
+    {
+        return $this->DelegateMax;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDelegateCur()
+    {
+        return $this->DelegateCur;
+    }
 
     /**
      * @return string

@@ -15,17 +15,32 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-
-use DCarbone\PHPConsulAPI\AbstractObjectModel;
+use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class CatalogNode
  * @package DCarbone\PHPConsulAPI\Catalog
  */
-class CatalogNode extends AbstractObjectModel
+class CatalogNode extends AbstractModel
 {
     /** @var string */
     public $Node = '';
     /** @var string */
     public $Address = '';
+
+    /**
+     * @return string
+     */
+    public function getNode()
+    {
+        return $this->Node;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress()
+    {
+        return $this->Address;
+    }
 }

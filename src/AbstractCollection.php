@@ -22,7 +22,7 @@
  * Class AbstractCollection
  * @package DCarbone\PHPConsulAPI
  */
-abstract class AbstractCollection implements \JsonSerializable, \Serializable, \ArrayAccess, \Iterator, \Countable
+abstract class AbstractCollection implements \JsonSerializable, \ArrayAccess, \Iterator, \Countable
 {
     /** @var array */
     protected $_storage = array();
@@ -37,6 +37,22 @@ abstract class AbstractCollection implements \JsonSerializable, \Serializable, \
         {
             $this[$k] = $v;
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function __sleep()
+    {
+        return ['_storage'];
+    }
+
+    /**
+     * @return array
+     */
+    public function __debugInfo()
+    {
+        return $this->_storage;
     }
 
     /**
@@ -72,29 +88,20 @@ abstract class AbstractCollection implements \JsonSerializable, \Serializable, \
     }
 
     /**
-     * Return the current element
-     * @link http://php.net/manual/en/iterator.current.php
-     * @return mixed Can return any type.
+     * @return mixed
      */
     public function current()
     {
         return current($this->_storage);
     }
 
-    /**
-     * Move forward to next element
-     * @link http://php.net/manual/en/iterator.next.php
-     * @return void Any returned value is ignored.
-     */
     public function next()
     {
         next($this->_storage);
     }
 
     /**
-     * Return the key of the current element
-     * @link http://php.net/manual/en/iterator.key.php
-     * @return mixed scalar on success, or null on failure.
+     * @return string|int
      */
     public function key()
     {
@@ -102,31 +109,21 @@ abstract class AbstractCollection implements \JsonSerializable, \Serializable, \
     }
 
     /**
-     * Checks if current position is valid
-     * @link http://php.net/manual/en/iterator.valid.php
-     * @return boolean The return value will be casted to boolean and then evaluated.
-     * Returns true on success or false on failure.
+     * @return bool
      */
     public function valid()
     {
         return null !== key($this->_storage);
     }
 
-    /**
-     * Rewind the Iterator to the first element
-     * @link http://php.net/manual/en/iterator.rewind.php
-     * @return void Any returned value is ignored.
-     */
     public function rewind()
     {
         reset($this->_storage);
     }
 
     /**
-     * Whether a offset exists
-     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
-     * @param mixed $offset An offset to check for.
-     * @return boolean true on success or false on failure.
+     * @param mixed $offset
+     * @return bool
      */
     public function offsetExists($offset)
     {
@@ -134,10 +131,8 @@ abstract class AbstractCollection implements \JsonSerializable, \Serializable, \
     }
 
     /**
-     * Offset to retrieve
-     * @link http://php.net/manual/en/arrayaccess.offsetget.php
-     * @param mixed $offset The offset to retrieve.
-     * @return mixed Can return all value types.
+     * @param string|int $offset
+     * @return mixed|null
      */
     public function offsetGet($offset)
     {
@@ -150,11 +145,8 @@ abstract class AbstractCollection implements \JsonSerializable, \Serializable, \
     }
 
     /**
-     * Offset to set
-     * @link http://php.net/manual/en/arrayaccess.offsetset.php
-     * @param mixed $offset The offset to assign the value to.
-     * @param mixed $value The value to set.
-     * @return void
+     * @param null|string|int $offset
+     * @param mixed $value
      */
     public function offsetSet($offset, $value)
     {
@@ -165,10 +157,7 @@ abstract class AbstractCollection implements \JsonSerializable, \Serializable, \
     }
 
     /**
-     * Offset to unset
-     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
-     * @param mixed $offset The offset to unset.
-     * @return void
+     * @param string|int $offset
      */
     public function offsetUnset($offset)
     {
@@ -177,30 +166,7 @@ abstract class AbstractCollection implements \JsonSerializable, \Serializable, \
     }
 
     /**
-     * String representation of object
-     * @link http://php.net/manual/en/serializable.serialize.php
-     * @return string the string representation of the object or null
-     */
-    public function serialize()
-    {
-        return serialize($this->_storage);
-    }
-
-    /**
-     * Constructs the object
-     * @link http://php.net/manual/en/serializable.unserialize.php
-     * @param string $serialized The string representation of the object.
-     * @return void
-     */
-    public function unserialize($serialized)
-    {
-        $this->_storage = unserialize($serialized);
-    }
-
-    /**
-     * Specify data which should be serialized to JSON
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by json_encode, which is a value of any type other than a resource.
+     * @return array
      */
     public function jsonSerialize()
     {
@@ -208,9 +174,7 @@ abstract class AbstractCollection implements \JsonSerializable, \Serializable, \
     }
 
     /**
-     * Count elements of an object
-     * @link http://php.net/manual/en/countable.count.php
-     * @return int The custom count as an integer.
+     * @return int
      */
     public function count()
     {

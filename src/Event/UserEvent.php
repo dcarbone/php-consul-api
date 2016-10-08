@@ -17,13 +17,13 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractObjectModel;
+use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class UserEvent
  * @package DCarbone\PHPConsulAPI\Event
  */
-class UserEvent extends AbstractObjectModel
+class UserEvent extends AbstractModel
 {
     /** @var string */
     public $ID = '';
@@ -41,4 +41,68 @@ class UserEvent extends AbstractObjectModel
     public $Version = 0;
     /** @var int */
     public $LTime = 0;
+
+    /**
+     * @return string
+     */
+    public function getID()
+    {
+        return $this->ID;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->Name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPayload()
+    {
+        return $this->Payload;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNodeFilter()
+    {
+        return $this->NodeFilter;
+    }
+
+    /**
+     * @return string
+     */
+    public function getServiceFilter()
+    {
+        return $this->ServiceFilter;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTagFilter()
+    {
+        return $this->TagFilter;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVersion()
+    {
+        return $this->Version;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLTime()
+    {
+        return $this->LTime;
+    }
 }

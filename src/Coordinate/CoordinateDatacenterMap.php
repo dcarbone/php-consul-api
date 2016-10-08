@@ -15,17 +15,32 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-
-use DCarbone\PHPConsulAPI\AbstractObjectModel;
+use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class CoordinateDatacenterMap
  * @package DCarbone\PHPConsulAPI\Coordinate
  */
-class CoordinateDatacenterMap extends AbstractObjectModel
+class CoordinateDatacenterMap extends AbstractModel
 {
     /** @var string */
     public $Datacenter = '';
     /** @var Coordinate[] */
     public $Coordinates = array();
+
+    /**
+     * @return string
+     */
+    public function getDatacenter()
+    {
+        return $this->Datacenter;
+    }
+
+    /**
+     * @return Coordinate[]
+     */
+    public function getCoordinates()
+    {
+        return $this->Coordinates;
+    }
 }

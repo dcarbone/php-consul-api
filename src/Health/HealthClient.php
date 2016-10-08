@@ -16,21 +16,21 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractApiClient;
+use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\HttpRequest;
 use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\QueryOptions;
+use DCarbone\PHPConsulAPI\Request;
 
 /**
  * Class HealthClient
  * @package DCarbone\PHPConsulAPI\Health
  */
-class HealthClient extends AbstractApiClient
+class HealthClient extends AbstractClient
 {
     /**
      * @param string $node
-     * @param QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      * @return array(
      *  @type HealthCheck[]|null list of health checks or null on error
      *  @type \DCarbone\PHPConsulAPI\QueryMeta query meta
@@ -48,16 +48,17 @@ class HealthClient extends AbstractApiClient
             ))];
         }
 
-        $r = new HttpRequest('get', sprintf('v1/health/node/%s', $node), $this->_Config);
+        $r = new Request('get', sprintf('v1/health/node/%s', $node), $this->c);
         $r->setQueryOptions($queryOptions);
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response);
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
         
         if (null !== $err)
             return [null, $qm, $err];
@@ -73,7 +74,7 @@ class HealthClient extends AbstractApiClient
 
     /**
      * @param string $service
-     * @param QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      * @return array(
      * @type HealthCheck[]|null list of health checks or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
@@ -91,16 +92,17 @@ class HealthClient extends AbstractApiClient
             ))];
         }
 
-        $r = new HttpRequest('get', sprintf('v1/health/checks/%s', $service), $this->_Config);
+        /** @var \Psr\Http\Message\ResponseInterface $response */
+        $r = new Request('get', sprintf('v1/health/checks/%s', $service), $this->c);
         $r->setQueryOptions($queryOptions);
 
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response);
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err)
             return [null, $qm, $err];
@@ -118,7 +120,7 @@ class HealthClient extends AbstractApiClient
      * @param string $service
      * @param string $tag
      * @param bool $passingOnly
-     * @param QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      * @return array (
      * @type ServiceEntry[]|null list of service entries or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
@@ -136,20 +138,21 @@ class HealthClient extends AbstractApiClient
             ))];
         }
 
-        $r = new HttpRequest('get', sprintf('v1/health/service/%s', $service), $this->_Config);
+        $r = new Request('get', sprintf('v1/health/service/%s', $service), $this->c);
         $r->setQueryOptions($queryOptions);
         if ('' !== $tag)
             $r->params->set('tag', $tag);
         if ($passingOnly)
             $r->params->set('passing', '1');
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response);
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err)
             return [null, $qm, $err];
@@ -165,7 +168,7 @@ class HealthClient extends AbstractApiClient
 
     /**
      * @param string $state
-     * @param QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      * @return array(
      *  @type HealthCheck[]|null array of heath checks or null on error
      *  @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata or null on error
@@ -186,16 +189,17 @@ class HealthClient extends AbstractApiClient
             ))];
         }
 
-        $r = new HttpRequest('get', sprintf('v1/health/state/%s', $state), $this->_Config);
+        $r = new Request('get', sprintf('v1/health/state/%s', $state), $this->c);
         $r->setQueryOptions($queryOptions);
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response);
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err)
             return [null, $qm, $err];

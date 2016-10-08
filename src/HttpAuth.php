@@ -17,8 +17,8 @@
 */
 
 /**
- * Class ConsulHttpAuth
- * @package DCarbone\PHPConsulAPI\Config
+ * Class HttpAuth
+ * @package DCarbone\PHPConsulAPI
  */
 class HttpAuth implements \JsonSerializable
 {
@@ -34,8 +34,8 @@ class HttpAuth implements \JsonSerializable
      */
     public function __construct($username, $password = null)
     {
-        $this->_username = $username;
-        $this->_password = $password;
+        $this->_username = (string)$username;
+        $this->_password = null === $password ? null : (string)$password;
     }
 
     /**
@@ -79,9 +79,7 @@ class HttpAuth implements \JsonSerializable
     }
 
     /**
-     * Specify data which should be serialized to JSON
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by json_encode, which is a value of any type other than a resource.
+     * @return array
      */
     public function jsonSerialize()
     {
@@ -93,6 +91,6 @@ class HttpAuth implements \JsonSerializable
      */
     public function __toString()
     {
-        return sprintf('%s:%s', $this->_username, $this->_password);
+        return trim(sprintf('%s:%s', $this->_username, $this->_password), ":");
     }
 }

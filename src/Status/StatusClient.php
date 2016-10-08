@@ -16,14 +16,14 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractApiClient;
-use DCarbone\PHPConsulAPI\HttpRequest;
+use DCarbone\PHPConsulAPI\AbstractClient;
+use DCarbone\PHPConsulAPI\Request;
 
 /**
  * Class StatusClient
  * @package DCarbone\PHPConsulAPI\Status
  */
-class StatusClient extends AbstractApiClient
+class StatusClient extends AbstractClient
 {
     /**
      * @return array(
@@ -33,13 +33,15 @@ class StatusClient extends AbstractApiClient
      */
     public function leader()
     {
-        $r = new HttpRequest('get', 'v1/status/leader', $this->_Config);
+        $r = new Request('get', 'v1/status/leader', $this->c);
+
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($_, $response, $err) = $this->requireOK($this->doRequest($r));
 
         if (null !== $err)
             return ['', $err];
 
-        return $this->decodeBody($response);
+        return $this->decodeBody($response->getBody());
     }
 
     /**
@@ -47,12 +49,14 @@ class StatusClient extends AbstractApiClient
      */
     public function peers()
     {
-        $r = new HttpRequest('get', 'v1/status/peers', $this->_Config);
+        $r = new Request('get', 'v1/status/peers', $this->c);
+
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($_, $response, $err) = $this->requireOK($this->doRequest($r));
 
         if (null !== $err)
             return [null, $err];
 
-        return $this->decodeBody($response);
+        return $this->decodeBody($response->getBody());
     }
 }

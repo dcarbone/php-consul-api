@@ -16,13 +16,13 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractObjectModel;
+use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class AgentSelf
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentSelf extends AbstractObjectModel
+class AgentSelf extends AbstractModel
 {
     /** @var AgentSelfConfig */
     public $Config = null;
@@ -30,4 +30,28 @@ class AgentSelf extends AbstractObjectModel
     public $Coord = null;
     /** @var AgentMember */
     public $Member = null;
+
+    /**
+     * @return AgentSelfConfig
+     */
+    public function getConfig()
+    {
+        return $this->Config;
+    }
+
+    /**
+     * @return AgentSelfCoord
+     */
+    public function getCoord()
+    {
+        return $this->Coord;
+    }
+
+    /**
+     * @return AgentMember
+     */
+    public function getMember()
+    {
+        return $this->Member;
+    }
 }

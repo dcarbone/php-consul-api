@@ -16,13 +16,13 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractObjectModel;
+use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class AgentService
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentService extends AbstractObjectModel
+class AgentService extends AbstractModel
 {
     /** @var string */
     public $ID = '';
@@ -36,6 +36,54 @@ class AgentService extends AbstractObjectModel
     public $Port = 0;
     /** @var bool */
     public $EnableTagOverride = false;
+
+    /**
+     * @return string
+     */
+    public function getID()
+    {
+        return $this->ID;
+    }
+
+    /**
+     * @return string
+     */
+    public function getService()
+    {
+        return $this->Service;
+    }
+
+    /**
+     * @return \string[]
+     */
+    public function getTags()
+    {
+        return $this->Tags;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress()
+    {
+        return $this->Address;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPort()
+    {
+        return $this->Port;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isEnableTagOverride()
+    {
+        return $this->EnableTagOverride;
+    }
 
     /**
      * @return string

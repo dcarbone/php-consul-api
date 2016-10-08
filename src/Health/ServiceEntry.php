@@ -16,13 +16,14 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractObjectModel;
+use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Agent\AgentService;
 
 /**
  * Class ServiceEntry
  * @package DCarbone\PHPConsulAPI\Health
  */
-class ServiceEntry extends AbstractObjectModel
+class ServiceEntry extends AbstractModel
 {
     /** @var string */
     public $Node = '';
@@ -30,4 +31,28 @@ class ServiceEntry extends AbstractObjectModel
     public $Service = null;
     /** @var \DCarbone\PHPConsulAPI\Health\HealthCheck[] */
     public $Checks = array();
+
+    /**
+     * @return string
+     */
+    public function getNode()
+    {
+        return $this->Node;
+    }
+
+    /**
+     * @return AgentService
+     */
+    public function getService()
+    {
+        return $this->Service;
+    }
+
+    /**
+     * @return HealthCheck[]
+     */
+    public function getChecks()
+    {
+        return $this->Checks;
+    }
 }

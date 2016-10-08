@@ -16,16 +16,16 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractApiClient;
-use DCarbone\PHPConsulAPI\HttpRequest;
+use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\QueryOptions;
+use DCarbone\PHPConsulAPI\Request;
 
 /**
  * Class CoordinateClient
  * @package DCarbone\PHPConsulAPI\Coordinate
  */
-class CoordinateClient extends AbstractApiClient
+class CoordinateClient extends AbstractClient
 {
     /**
      * @return array(
@@ -35,14 +35,15 @@ class CoordinateClient extends AbstractApiClient
      */
     public function datacenters()
     {
-        $r = new HttpRequest('get', 'v1/coordinate/datacenters', $this->_Config);
+        $r = new Request('get', 'v1/coordinate/datacenters', $this->c);
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($_, $response, $err) = $this->requireOK($this->doRequest($r));
 
         if (null !== $err)
             return [null, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err)
             return [null, $err];
@@ -57,7 +58,7 @@ class CoordinateClient extends AbstractApiClient
     }
 
     /**
-     * @param QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      * @return array(
      *  @type \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry[]|null coordinate list or null on error
      *  @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
@@ -66,16 +67,17 @@ class CoordinateClient extends AbstractApiClient
      */
     public function nodes(QueryOptions $queryOptions = null)
     {
-        $r = new HttpRequest('get', 'v1/coordinate/nodes', $this->_Config);
+        $r = new Request('get', 'v1/coordinate/nodes', $this->c);
         $r->setQueryOptions($queryOptions);
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list ($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response);
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
         if (null !== $err)
             return [null, $qm, $err];
 

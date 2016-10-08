@@ -16,21 +16,21 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractApiClient;
-use DCarbone\PHPConsulAPI\HttpRequest;
+use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\QueryOptions;
+use DCarbone\PHPConsulAPI\Request;
 use DCarbone\PHPConsulAPI\WriteOptions;
 
 /**
  * Class EventClient
- * @package DCarbone\PHPConsulAPI
+ * @package DCarbone\PHPConsulAPI\Event
  */
-class EventClient extends AbstractApiClient
+class EventClient extends AbstractClient
 {
     /**
      * @param UserEvent $event
-     * @param WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
      * @return array(
      *  @type UserEvent|null user event that was fired or null on error
      *  @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
@@ -39,7 +39,7 @@ class EventClient extends AbstractApiClient
      */
     public function fire(UserEvent $event, WriteOptions $writeOptions = null)
     {
-        $r = new HttpRequest('put', sprintf('v1/event/fire/%s', $event->Name), $this->_Config);
+        $r = new Request('put', sprintf('v1/event/fire/%s', $event->Name), $this->c);
         $r->setWriteOptions($writeOptions);
 
         if ('' !== ($nf = $event->NodeFilter))
@@ -51,13 +51,14 @@ class EventClient extends AbstractApiClient
         if ('' !== ($payload = $event->Payload))
             $r->body = $payload;
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
         $wm = $this->buildWriteMeta($duration);
 
         if (null !== $err)
             return [null, $wm, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
         if ($err !== null)
             return [null, $wm, $err];
 
@@ -66,7 +67,7 @@ class EventClient extends AbstractApiClient
     
     /**
      * @param string $name
-     * @param QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      * @return array(
      *  @type UserEvent[] list of user events or null on error
      *  @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
@@ -75,18 +76,19 @@ class EventClient extends AbstractApiClient
      */
     public function eventList($name = '', QueryOptions $queryOptions = null)
     {
-        $r = new HttpRequest('get', 'v1/event/list', $this->_Config);
+        $r = new Request('get', 'v1/event/list', $this->c);
         if ('' !== (string)$name)
             $r->params->set('name', $name);
         $r->setQueryOptions($queryOptions);
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response);
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err)
             return [null, $qm, $err];

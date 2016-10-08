@@ -16,13 +16,13 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractObjectModel;
+use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class HealthCheck
  * @package DCarbone\PHPConsulAPI\Health
  */
-class HealthCheck extends AbstractObjectModel
+class HealthCheck extends AbstractModel
 {
     /** @var string */
     public $Node = '';
@@ -40,4 +40,68 @@ class HealthCheck extends AbstractObjectModel
     public $ServiceID = '';
     /** @var string */
     public $ServiceName = '';
+
+    /**
+     * @return string
+     */
+    public function getNode()
+    {
+        return $this->Node;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCheckID()
+    {
+        return $this->CheckID;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->Name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->Status;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNotes()
+    {
+        return $this->Notes;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOutput()
+    {
+        return $this->Output;
+    }
+
+    /**
+     * @return string
+     */
+    public function getServiceID()
+    {
+        return $this->ServiceID;
+    }
+
+    /**
+     * @return string
+     */
+    public function getServiceName()
+    {
+        return $this->ServiceName;
+    }
 }

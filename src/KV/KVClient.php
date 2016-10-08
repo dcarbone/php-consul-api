@@ -16,18 +16,18 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractApiClient;
+use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\HttpRequest;
 use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\QueryOptions;
+use DCarbone\PHPConsulAPI\Request;
 use DCarbone\PHPConsulAPI\WriteOptions;
 
 /**
  * Class KVClient
  * @package DCarbone\PHPConsulAPI\KV
  */
-class KVClient extends AbstractApiClient
+class KVClient extends AbstractClient
 {
     /**
      * @param string $key Name of key to retrieve value for
@@ -49,19 +49,21 @@ class KVClient extends AbstractApiClient
             ))];
         }
 
-        $r = new HttpRequest('get', sprintf('v1/kv/%s', $key), $this->_Config);
+        $r = new Request('get', sprintf('v1/kv/%s', $key), $this->c);
         $r->setQueryOptions($queryOptions);
 
-        /** @var \DCarbone\PHPConsulAPI\HttpResponse $response */
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->doRequest($r);
-        $qm = $this->buildQueryMeta($duration, $response);
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        if (200 === $response->httpCode)
+        $code = $response->getStatusCode();
+
+        if (200 === $code)
         {
-            list($data, $err) = $this->decodeBody($response);
+            list($data, $err) = $this->decodeBody($response->getBody());
 
             if (null !== $err)
                 return [null, $qm, $err];
@@ -71,10 +73,10 @@ class KVClient extends AbstractApiClient
             return [Hydrator::KVPair($data), $qm, null];
         }
 
-        if (404 === $response->httpCode)
+        if (404 === $code)
             return [null, $qm, null];
 
-        return [null, $qm, new Error(sprintf('%s: %s', $response->httpCode, $response->body))];
+        return [null, $qm, new Error(sprintf('%s: %s', $response->getStatusCode(), $response->getReasonPhrase()))];
     }
 
     /**
@@ -98,20 +100,21 @@ class KVClient extends AbstractApiClient
         }
 
         if ('' === $prefix)
-            $r = new HttpRequest('get', 'v1/kv/', $this->_Config);
+            $r = new Request('get', 'v1/kv/', $this->c);
         else
-            $r = new HttpRequest('get', sprintf('v1/kv/%s', $prefix), $this->_Config);
+            $r = new Request('get', sprintf('v1/kv/%s', $prefix), $this->c);
 
         $r->setQueryOptions($queryOptions);
         $r->params->set('recurse', '');
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response);
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err)
             return [null, $qm, $err];
@@ -128,7 +131,7 @@ class KVClient extends AbstractApiClient
 
     /**
      * @param string $prefix Prefix to search for.  Null returns all keys.
-     * @param QueryOptions $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions $queryOptions
      * @return array(
      *  @type string[]|null list of keys
      *  @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata
@@ -147,27 +150,28 @@ class KVClient extends AbstractApiClient
         }
 
         if (null === $prefix)
-            $r = new HttpRequest('get', 'v1/kv/', $this->_Config);
+            $r = new Request('get', 'v1/kv/', $this->c);
         else
-            $r = new HttpRequest('get', sprintf('v1/kv/%s', $prefix), $this->_Config);
+            $r = new Request('get', sprintf('v1/kv/%s', $prefix), $this->c);
 
         $r->setQueryOptions($queryOptions);
         $r->params->set('keys', true);
 
+        /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response);
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        list($data, $err) = $this->decodeBody($response);
+        list($data, $err) = $this->decodeBody($response->getBody());
 
         return [$data, $qm, $err];
     }
 
     /**
      * @param KVPair $p
-     * @param WriteOptions $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions $writeOptions
      * @return array(
      *  @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
      *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
@@ -175,7 +179,7 @@ class KVClient extends AbstractApiClient
      */
     public function put(KVPair $p, WriteOptions $writeOptions = null)
     {
-        $r = new HttpRequest('put', sprintf('v1/kv/%s', $p->Key), $this->_Config);
+        $r = new Request('put', sprintf('v1/kv/%s', $p->Key), $this->c);
         $r->setWriteOptions($writeOptions);
         $r->body = $p->Value;
         if (0 !== $p->Flags)
@@ -189,7 +193,7 @@ class KVClient extends AbstractApiClient
 
     /**
      * @param string $key
-     * @param WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
      * @return array(
      *  @type \DCarbone\PHPConsulAPI\WriteMeta metadata about write
      *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
@@ -197,7 +201,7 @@ class KVClient extends AbstractApiClient
      */
     public function delete($key, WriteOptions $writeOptions = null)
     {
-        $r = new HttpRequest('delete', sprintf('v1/kv/%s', $key), $this->_Config);
+        $r = new Request('delete', sprintf('v1/kv/%s', $key), $this->c);
         $r->setWriteOptions($writeOptions);
 
         list ($duration, $_, $err) = $this->requireOK($this->doRequest($r));
@@ -208,7 +212,7 @@ class KVClient extends AbstractApiClient
 
     /**
      * @param KVPair $p
-     * @param WriteOptions $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions $writeOptions
      * @return array(
      *  @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
      *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
@@ -216,7 +220,7 @@ class KVClient extends AbstractApiClient
      */
     public function cas(KVPair $p, WriteOptions $writeOptions = null)
     {
-        $r = new HttpRequest('put', sprintf('v1/kv/%s', $p->Key), $this->_Config);
+        $r = new Request('put', sprintf('v1/kv/%s', $p->Key), $this->c);
         $r->setWriteOptions($writeOptions);
         $r->params->set('cas', $p->ModifyIndex);
         if (0 !== $p->Flags)
@@ -230,7 +234,7 @@ class KVClient extends AbstractApiClient
 
     /**
      * @param KVPair $p
-     * @param WriteOptions $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions $writeOptions
      * @return array(
      *  @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
      *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
@@ -238,7 +242,7 @@ class KVClient extends AbstractApiClient
      */
     public function acquire(KVPair $p, WriteOptions $writeOptions = null)
     {
-        $r = new HttpRequest('put', sprintf('v1/kv/%s', $p->Key), $this->_Config);
+        $r = new Request('put', sprintf('v1/kv/%s', $p->Key), $this->c);
         $r->setWriteOptions($writeOptions);
         $r->params->set('acquire', $p->Session);
         if (0 !== $p->Flags)
@@ -252,7 +256,7 @@ class KVClient extends AbstractApiClient
 
     /**
      * @param KVPair $p
-     * @param WriteOptions $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions $writeOptions
      * @return array(
      *  @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
      *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
@@ -260,7 +264,7 @@ class KVClient extends AbstractApiClient
      */
     public function release(KVPair $p, WriteOptions $writeOptions = null)
     {
-        $r = new HttpRequest('put', sprintf('v1/kv/%s', $p->Key), $this->_Config);
+        $r = new Request('put', sprintf('v1/kv/%s', $p->Key), $this->c);
         $r->setWriteOptions($writeOptions);
         $r->params->set('release', $p->Session);
         if (0 !== $p->Flags)

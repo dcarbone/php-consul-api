@@ -16,13 +16,13 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractObjectModel;
+use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class SessionEntry
  * @package DCarbone\PHPConsulAPI\Session
  */
-class SessionEntry extends AbstractObjectModel
+class SessionEntry extends AbstractModel
 {
     /** @var int */
     public $CreateIndex = 0;
@@ -40,4 +40,68 @@ class SessionEntry extends AbstractObjectModel
     public $Behavior = '';
     /** @var string */
     public $TTL = '';
+
+    /**
+     * @return int
+     */
+    public function getCreateIndex()
+    {
+        return $this->CreateIndex;
+    }
+
+    /**
+     * @return string
+     */
+    public function getID()
+    {
+        return $this->ID;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->Name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNode()
+    {
+        return $this->Node;
+    }
+
+    /**
+     * @return \string[]
+     */
+    public function getChecks()
+    {
+        return $this->Checks;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLockDelay()
+    {
+        return $this->LockDelay;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBehavior()
+    {
+        return $this->Behavior;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTTL()
+    {
+        return $this->TTL;
+    }
 }

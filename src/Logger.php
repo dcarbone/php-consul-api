@@ -28,11 +28,8 @@ abstract class Logger
     /** @var LoggerInterface[] */
     private static $_loggers = array();
 
-    /** @var ConsulAPILoggerInterface[] */
-    private static $_deprecatedLoggers = array();
-
-    /** @var FileLogger */
-    private static $_defaultLogger = null;
+    /** @var FileDebugLogger */
+    private static $_debugLogger = null;
 
     /** @var string */
     private static $_logLevel = LogLevel::WARNING;
@@ -50,38 +47,20 @@ abstract class Logger
     );
 
     /**
-     * Map to allow for older logger implementations to be used
-     *
-     * TODO: Remove old logging support at some point
-     *
-     * @var array
+     * Set up a file logger that outputs log data to "../var/logs/php-consul-api.log"
      */
-    private static $_compatibilityLevels = array(
-        LogLevel::DEBUG => 'debug',
-        LogLevel::INFO => 'info',
-        LogLevel::NOTICE => 'info',
-        LogLevel::WARNING => 'warn',
-        LogLevel::ERROR => 'error',
-        LogLevel::CRITICAL => 'error',
-        LogLevel::ALERT => 'error',
-        LogLevel::EMERGENCY => 'error'
-    );
-
-    /**
-     * Set up a file logger that outputs log data to "var/logs/php-consul-api.log"
-     */
-    public static function addDefaultLogger()
+    public static function addDebugLogger()
     {
-        if (!isset(self::$_defaultLogger))
-            self::$_defaultLogger = new FileLogger(__DIR__.'/../var/logs/php-consul-api.log');
+        if (!isset(self::$_debugLogger))
+            self::$_debugLogger = new FileDebugLogger(__DIR__ . '/../var/logs/php-consul-api.log');
     }
 
     /**
      * Destroy the default logger
      */
-    public static function removeDefaultLogger()
+    public static function removeDebugLogger()
     {
-        self::$_defaultLogger = null;
+        self::$_debugLogger = null;
     }
 
     /**
@@ -94,17 +73,12 @@ abstract class Logger
 
     /**
      * @param LoggerInterface[] $loggers
-     * @param bool $clearDefault
      */
-    public static function setLoggers(array $loggers, $clearDefault = true)
+    public static function setLoggers(array $loggers)
     {
-        if ((bool)$clearDefault)
-            self::$_defaultLogger = null;
-
         self::$_loggers = array();
-        self::$_deprecatedLoggers = array();
 
-        foreach($loggers as $logger)
+        foreach($loggers as $i => $logger)
         {
             self::addLogger($logger);
         }
@@ -118,15 +92,6 @@ abstract class Logger
         if ($logger instanceof LoggerInterface)
         {
             self::$_loggers[] = $logger;
-        }
-        else if ($logger instanceof ConsulAPILoggerInterface)
-        {
-            trigger_error(sprintf(
-                '%s - The logger "%s" extends the deprecated "ConsulAPILoggerInterface", which will be removed at some point in the future.  Please update logger to support the PSR-3 LoggerInterface.',
-                get_called_class(),
-                get_class($logger)
-            ), E_USER_DEPRECATED);
-            self::$_deprecatedLoggers[] = $logger;
         }
         else
         {
@@ -144,7 +109,6 @@ abstract class Logger
     public static function resetLoggers()
     {
         self::$_loggers = array();
-        self::$_deprecatedLoggers = array();
     }
 
     /**
@@ -162,19 +126,13 @@ abstract class Logger
                 $message = $message->getMessage();
 
             // Log to default logger, if set
-            if (isset(self::$_defaultLogger))
-                self::$_defaultLogger->{$logLevel}($message, $context);
+            if (isset(self::$_debugLogger))
+                self::$_debugLogger->{$logLevel}($message, $context);
 
             // Log to each user-defined logger
             foreach(self::$_loggers as $logger)
             {
                 $logger->{$logLevel}($message, $context);
-            }
-
-            // Log to deprecated loggers.
-            foreach(self::$_deprecatedLoggers as $logger)
-            {
-                $logger->{self::$_compatibilityLevels[$logLevel]}($message);
             }
         }
     }

@@ -44,7 +44,7 @@ class Hydrator
 {
     /**
      * @param array $data
-     * @return KVPair
+     * @return \DCarbone\PHPConsulAPI\KV\KVPair
      */
     public static function KVPair(array $data)
     {
@@ -56,7 +56,7 @@ class Hydrator
 
     /**
      * @param array $data
-     * @return AgentCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheck
      */
     public static function AgentCheck(array $data)
     {
@@ -65,7 +65,7 @@ class Hydrator
 
     /**
      * @param array $data
-     * @return AgentServiceCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
     public static function AgentServiceCheck(array $data)
     {
@@ -83,7 +83,7 @@ class Hydrator
 
     /**
      * @param array $data
-     * @return AgentSelf
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentSelf
      */
     public static function AgentSelf(array $data)
     {
@@ -108,7 +108,7 @@ class Hydrator
 
     /**
      * @param array $data
-     * @return AgentSelfCoord
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentSelfCoord
      */
     public static function AgentSelfCoord(array $data)
     {
@@ -117,7 +117,7 @@ class Hydrator
 
     /**
      * @param array $data
-     * @return AgentService
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentService
      */
     public static function AgentService(array $data)
     {
@@ -126,7 +126,7 @@ class Hydrator
 
     /**
      * @param array $data
-     * @return CatalogNode
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogNode
      */
     public static function CatalogNode(array $data)
     {
@@ -135,7 +135,7 @@ class Hydrator
 
     /**
      * @param array $data
-     * @return CatalogService
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogService
      */
     public static function CatalogService(array $data)
     {
@@ -144,7 +144,7 @@ class Hydrator
 
     /**
      * @param array $data
-     * @return Coordinate
+     * @return \DCarbone\PHPConsulAPI\Coordinate\Coordinate
      */
     public static function Coordinate(array $data)
     {
@@ -223,7 +223,7 @@ class Hydrator
 
     /**
      * @param array $data
-     * @return SessionEntry
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
     public static function SessionEntry(array $data)
     {

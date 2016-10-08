@@ -1,7 +1,8 @@
 # PHP Consul API Logging
 
-Logging is handled with the [Logger](../src/Logger.php) class.  To register a new logger, it must implement
-the [ConsulAPILoggerInterface](../src/ConsulAPILoggerInterface.php) interface.
+Logging is handled with the [Logger](../src/Logger.php) class.  To register a new logger, it must be
+[PSR-3](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md) compliant and implement
+the [Psr\LoggerInterface](https://github.com/php-fig/log/blob/master/Psr/Log/LoggerInterface.php ) interface.
 
 ## Provided Loggers
 
@@ -9,23 +10,15 @@ There are a few Logger classes provided by this lib:
 
 - [FileLogger](../src/FileLogger.php)
 - [PHPLogger](../src/PHPLogger.php)
-- [NullLogger](../src/NullLogger.php)
 - [SocketLogger](../src/SocketLogger.php)
 
 ## Default Logger
 
-By default, the [FileLogger](../src/FileLogger.php) is initialized and set to write to this lib's [var/log](../var/log)
-directory.  You can disable the default logger by calling [Logger::removeDefaultLogger](../src/Logger.php#L63).
+For quick and lazy debugging or the like, you may optionally call [Logger::addDefaultLogger](../src/Logger.php#L73).
+This creates a new [FileLogger](../src/FileLogger.php) that writes to `var/logs/php-consul-api.log`.
 
-## Log Levels
+## Adding Loggers
 
-There are 4 levels adhered to by this lib:
+You may add a logger by calling [Logger::addLogger](../src/Logger.php#L112)
 
-- debug
-- info
-- warn
-- error
-
-The default logging level for this lib is `warn`.
-
-To specify a different logging level, call [Logger::setLogLevel](../src/Logger.php#L71).
+## 

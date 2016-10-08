@@ -19,45 +19,36 @@
 use Psr\Log\AbstractLogger;
 
 /**
- * Class FileLogger
+ * Class FileDebugLogger
  * @package DCarbone\PHPConsulAPI
  */
-class FileLogger extends AbstractLogger
+class FileDebugLogger extends AbstractLogger
 {
     /** @var string */
-    private $_file;
+    private $_file = '';
 
     /** @var bool */
     private $_exceptionOnError;
 
     /**
      * FileLogger constructor.
-     * @param $file
      * @param bool $exceptionOnError
      */
-    public function __construct($file, $exceptionOnError = false)
+    public function __construct($exceptionOnError = true)
     {
         $this->_exceptionOnError = (bool)$exceptionOnError;
 
-        if (is_string($file))
-        {
-            if (false === @file_exists($file) && false === (bool)@file_put_contents($file, "\n"))
-            {
-                throw new \InvalidArgumentException(sprintf(
-                    'FileLogger - Unable to create file at path "%s"',
-                    $file
-                ));
-            }
+        $file = __DIR__ . '/../var/logs/php-consul-api.log';
 
-            $this->_file = $file;
-        }
-        else
+        if (false === @file_exists($file) && false === (bool)@file_put_contents($file, "\n"))
         {
             throw new \InvalidArgumentException(sprintf(
-                'FileLogger - Constructor expects argument to be string containing path to file, %s seen.',
-                gettype($file)
+                'FileLogger - Unable to create file at path "%s"',
+                $file
             ));
         }
+
+        $this->_file = $file;
     }
 
     /**

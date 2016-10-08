@@ -16,13 +16,13 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractObjectModel;
+use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class AgentServiceCheck
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentServiceCheck extends AbstractObjectModel
+class AgentServiceCheck extends AbstractModel
 {
     /** @var string */
     public $Script = '';
@@ -42,4 +42,76 @@ class AgentServiceCheck extends AbstractObjectModel
     public $TCP = '';
     /** @var string */
     public $Status = '';
+
+    /**
+     * @return string
+     */
+    public function getScript()
+    {
+        return $this->Script;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDockerContainerID()
+    {
+        return $this->DockerContainerID;
+    }
+
+    /**
+     * @return string
+     */
+    public function getShell()
+    {
+        return $this->Shell;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInterval()
+    {
+        return $this->Interval;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTimeout()
+    {
+        return $this->Timeout;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTTL()
+    {
+        return $this->TTL;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHTTP()
+    {
+        return $this->HTTP;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTCP()
+    {
+        return $this->TCP;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->Status;
+    }
 }
