@@ -108,6 +108,7 @@ var_dump($kv_list);
 - [Coordinate](./docs/COORDINATE.md)
 - [Health](./docs/HEALTH.md)
 - [Session](./docs/SESSION.md)
+- [Operator](./docs/OPERATOR.md)
 
 More will be added as time goes on!
 

@@ -22,6 +22,7 @@ use DCarbone\PHPConsulAPI\Coordinate\CoordinateClient;
 use DCarbone\PHPConsulAPI\Event\EventClient;
 use DCarbone\PHPConsulAPI\Health\HealthClient;
 use DCarbone\PHPConsulAPI\KV\KVClient;
+use DCarbone\PHPConsulAPI\Operator\OperatorClient;
 use DCarbone\PHPConsulAPI\Session\SessionClient;
 use DCarbone\PHPConsulAPI\Status\StatusClient;
 
@@ -47,6 +48,8 @@ class Consul
     public $Coordinate;
     /** @var \DCarbone\PHPConsulAPI\Session\SessionClient */
     public $Session;
+    /** @var OperatorClient */
+    public $Operator;
 
     /**
      * Client constructor.
@@ -77,6 +80,79 @@ class Consul
         $this->Health = new HealthClient($config);
         $this->Coordinate = new CoordinateClient($config);
         $this->Session = new SessionClient($config);
+        $this->Operator = new OperatorClient($config);
+    }
+
+    /**
+     * @return KVClient
+     */
+    public function KV()
+    {
+        return $this->KV;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentClient
+     */
+    public function Agent()
+    {
+        return $this->Agent;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogClient
+     */
+    public function Catalog()
+    {
+        return $this->Catalog;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Status\StatusClient
+     */
+    public function Status()
+    {
+        return $this->Status;
+    }
+
+    /**
+     * @return EventClient
+     */
+    public function Event()
+    {
+        return $this->Event;
+    }
+
+    /**
+     * @return HealthClient
+     */
+    public function Health()
+    {
+        return $this->Health;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateClient
+     */
+    public function Coordinate()
+    {
+        return $this->Coordinate;
+    }
+
+    /**
+     * @return SessionClient
+     */
+    public function Session()
+    {
+        return $this->Session;
+    }
+
+    /**
+     * @return OperatorClient
+     */
+    public function Operator()
+    {
+        return $this->Operator;
     }
 
     /**
