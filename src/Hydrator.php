@@ -16,6 +16,7 @@
    limitations under the License.
 */
 
+use DCarbone\PHPConsulAPI\ACL\ACLEntry;
 use DCarbone\PHPConsulAPI\Agent\AgentCheck;
 use DCarbone\PHPConsulAPI\Agent\AgentMember;
 use DCarbone\PHPConsulAPI\Agent\AgentSelf;
@@ -255,5 +256,14 @@ class Hydrator
     public static function RaftServer(array $data)
     {
         return new RaftServer($data);
+    }
+
+    /**
+     * @param array $data
+     * @return ACLEntry
+     */
+    public static function ACLEntry(array $data)
+    {
+        return new ACLEntry($data);
     }
 }

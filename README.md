@@ -109,6 +109,7 @@ var_dump($kv_list);
 - [Health](./docs/HEALTH.md)
 - [Session](./docs/SESSION.md)
 - [Operator](./docs/OPERATOR.md)
+- [ACL](./docs/ACL.md)
 
 More will be added as time goes on!
 

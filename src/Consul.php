@@ -16,6 +16,7 @@
    limitations under the License.
 */
 
+use DCarbone\PHPConsulAPI\ACL\ACLClient;
 use DCarbone\PHPConsulAPI\Agent\AgentClient;
 use DCarbone\PHPConsulAPI\Catalog\CatalogClient;
 use DCarbone\PHPConsulAPI\Coordinate\CoordinateClient;
@@ -32,24 +33,26 @@ use DCarbone\PHPConsulAPI\Status\StatusClient;
  */
 class Consul
 {
-    /** @var \DCarbone\PHPConsulAPI\KV\KVClient */
+    /** @var KVClient */
     public $KV;
-    /** @var \DCarbone\PHPConsulAPI\Agent\AgentClient */
+    /** @var AgentClient */
     public $Agent;
-    /** @var \DCarbone\PHPConsulAPI\Catalog\CatalogClient */
+    /** @var CatalogClient */
     public $Catalog;
-    /** @var \DCarbone\PHPConsulAPI\Status\StatusClient */
+    /** @var StatusClient */
     public $Status;
-    /** @var \DCarbone\PHPConsulAPI\Event\EventClient */
+    /** @var EventClient */
     public $Event;
-    /** @var \DCarbone\PHPConsulAPI\Health\HealthClient */
+    /** @var HealthClient */
     public $Health;
-    /** @var \DCarbone\PHPConsulAPI\Coordinate\CoordinateClient */
+    /** @var CoordinateClient */
     public $Coordinate;
-    /** @var \DCarbone\PHPConsulAPI\Session\SessionClient */
+    /** @var SessionClient */
     public $Session;
     /** @var OperatorClient */
     public $Operator;
+    /** @var ACLClient */
+    public $ACL;
 
     /**
      * Client constructor.
@@ -81,6 +84,7 @@ class Consul
         $this->Coordinate = new CoordinateClient($config);
         $this->Session = new SessionClient($config);
         $this->Operator = new OperatorClient($config);
+        $this->ACL = new ACLClient($config);
     }
 
     /**
@@ -156,66 +160,10 @@ class Consul
     }
 
     /**
-     * @return KVClient
+     * @return ACLClient
      */
-    public function KV()
+    public function ACL()
     {
-        return $this->KV;
-    }
-
-    /**
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentClient
-     */
-    public function Agent()
-    {
-        return $this->Agent;
-    }
-
-    /**
-     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogClient
-     */
-    public function Catalog()
-    {
-        return $this->Catalog;
-    }
-
-    /**
-     * @return \DCarbone\PHPConsulAPI\Status\StatusClient
-     */
-    public function Status()
-    {
-        return $this->Status;
-    }
-
-    /**
-     * @return EventClient
-     */
-    public function Event()
-    {
-        return $this->Event;
-    }
-
-    /**
-     * @return HealthClient
-     */
-    public function Health()
-    {
-        return $this->Health;
-    }
-
-    /**
-     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateClient
-     */
-    public function Coordinate()
-    {
-        return $this->Coordinate;
-    }
-
-    /**
-     * @return SessionClient
-     */
-    public function Session()
-    {
-        return $this->Session;
+        return $this->ACL;
     }
 }
