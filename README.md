@@ -53,8 +53,8 @@ $config = \DCarbvone\PHPConsulAPI\Config::newDefaultConfigWithClient($myClient);
 
 You will find the method definitions below:
 
-- [Config::newDefaultConfig()](./src/Config.php#L96)
-- [Config::newDefaultConfigWithClient()](./src/Config.php#L67)
+- [Config::newDefaultConfig()](./src/Config.php#L142)
+- [Config::newDefaultConfigWithClient()](./src/Config.php#L110)
  
 ### Advanced Configuration
 
@@ -70,9 +70,7 @@ $config = new \DCarbone\PHPConsulAPI\Config([
     'HttpAuth' => 'user:pass', // OPTIONAL,
     'WaitTime' => 30, // OPTIONAL, not used yet
     'Token' => 'auth token', // OPTIONAL
-    'CAFile' => 'path to ca', // OPTIONAL
-    'CertFile' => 'path to cert', // OPTIONAL
-    'KeyFile' => 'path to key', // OPTIONAL
+    'TokenInHeader' => false // OPTIONAL
     'InsecureSkipVerify' => false, // OPTIONAL
 ]);
 ```
@@ -86,7 +84,7 @@ $consul = new \DCarbone\PHPConsulAPI\Consul($config);
 ```
 
 *NOTE*: If you do not create your own config object, [Consul](./src/Consul.php#L59) will create it's own
-using [Config::newDefaultConfig()](./src/Config.php#L47).
+using [Config::newDefaultConfig()](./src/Config.php#L142).
 
 Once constructed, you interact with each Consul API via it's corresponding Client class:
 

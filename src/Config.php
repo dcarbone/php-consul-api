@@ -24,28 +24,69 @@ use Http\Client\HttpClient;
  */
 class Config
 {
-    /** @var string */
+    /**
+     * The address, including port, of your Consul Agent
+     *
+     * @var string
+     */
     public $Address = '';
-    /** @var string */
+
+    /**
+     * The scheme to use.  Currently only HTTP and HTTPS are supported.
+     *
+     * @var string
+     */
     public $Scheme = '';
-    /** @var string */
+
+    /**
+     * The name of the datacenter you wish all queries to be made against by default
+     *
+     * @var string
+     */
     public $Datacenter = '';
-    /** @var null */
+
+
+    /**
+     * HTTP authentication, if used
+     *
+     * @var HttpAuth
+     */
     public $HttpAuth = null;
-    /** @var int */
+
+    /**
+     * Time to wait on certain blockable endpoints
+     *
+     * @var int
+     */
     public $WaitTime = 0;
-    /** @var string */
+
+
+    /**
+     * ACL token to use by default
+     *
+     * @var string
+     */
     public $Token = '';
-    /** @var string */
-    public $CAFile = '';
-    /** @var string */
-    public $CertFile = '';
-    /** @var string */
-    public $KeyFile = '';
-    /** @var bool */
+
+    /**
+     * Whether to skip SSL validation.  This does nothing unless you use it within your HttpClient of choice.
+     *
+     * @var bool
+     */
     public $InsecureSkipVerify = false;
 
-    /** @var HttpClient */
+    /**
+     * Whether to use Consul 0.7.0-style X-Consul-Token header or the older query-param style for passing ACL tokens
+     *
+     * @var bool
+     */
+    public $TokenInHeader = false;
+
+    /**
+     * Your HttpClient of choice.
+     *
+     * @var HttpClient
+     */
     public $HttpClient = null;
 
     /**
@@ -61,6 +102,8 @@ class Config
     }
 
     /**
+     * Construct a configuration object from Environment Variables while using a specific HTTP Client
+     *
      * @param HttpClient $client
      * @return Config
      */
@@ -72,25 +115,28 @@ class Config
             'HttpClient' => $client
         ]);
 
-        if (null !== ($addr = static::_tryGetEnvParam('CONSUL_HTTP_ADDR')))
-            $conf->setAddress($addr);
+        $envParams = static::getEnvironmentConfig();
+        if (isset($envParams['CONSUL_HTTP_ADDR']))
+            $conf->setAddress($envParams['CONSUL_HTTP_ADDR']);
 
-        if (null !== ($token = static::_tryGetEnvParam('CONSUL_HTTP_TOKEN')))
-            $conf->setToken($token);
+        if (isset($envParams['CONSUL_HTTP_TOKEN']))
+            $conf->setToken($envParams['CONSUL_HTTP_TOKEN']);
 
-        if (null !== ($auth = static::_tryGetEnvParam('CONSUL_HTTP_AUTH')))
-            $conf->setHttpAuth($auth);
+        if (isset($envParams['CONSUL_HTTP_AUTH']))
+            $conf->setHttpAuth($envParams['CONSUL_HTTP_AUTH']);
 
-        if ($ssl = (bool)static::_tryGetEnvParam('CONSUL_HTTP_SSL'))
+        if (isset($envParams['CONSUL_HTTP_SSL']) && $envParams['CONSUL_HTTP_SSL'])
             $conf->setScheme('https');
 
-        if ($doVerify = (bool)static::_tryGetEnvParam('CONSUL_HTTP_SSL_VERIFY'))
-            $conf->setInsecureSkipVerify(!$doVerify);
+        if (isset($envParams['CONSUL_HTTP_SSL_VERIFY']) && !$envParams['CONSUL_HTTP_SSL_VERIFY'])
+            $conf->setInsecureSkipVerify(false);
 
         return $conf;
     }
 
     /**
+     * Construct a configuration object from Environment Variables and also attempt to locate an HTTP Client ot use.
+     *
      * @return Config
      */
     public static function newDefaultConfig()
@@ -205,60 +251,6 @@ class Config
     }
 
     /**
-     * @return string
-     */
-    public function getCAFile()
-    {
-        return $this->CAFile;
-    }
-
-    /**
-     * @param string $CAFile
-     * @return Config
-     */
-    public function setCAFile($CAFile)
-    {
-        $this->CAFile = $CAFile;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCertFile()
-    {
-        return $this->CertFile;
-    }
-
-    /**
-     * @param string $CertFile
-     * @return Config
-     */
-    public function setCertFile($CertFile)
-    {
-        $this->CertFile = $CertFile;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getKeyFile()
-    {
-        return $this->KeyFile;
-    }
-
-    /**
-     * @param string $KeyFile
-     * @return Config
-     */
-    public function setKeyFile($KeyFile)
-    {
-        $this->KeyFile = $KeyFile;
-        return $this;
-    }
-
-    /**
      * @return boolean
      */
     public function isInsecureSkipVerify()
@@ -338,6 +330,24 @@ class Config
     }
 
     /**
+     * @return boolean
+     */
+    public function isTokenInHeader()
+    {
+        return $this->TokenInHeader;
+    }
+
+    /**
+     * @param boolean $TokenInHeader
+     * @return Config
+     */
+    public function setTokenInHeader($TokenInHeader)
+    {
+        $this->TokenInHeader = (bool)$TokenInHeader;
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public static function getEnvironmentConfig()
@@ -352,7 +362,7 @@ class Config
 
     /**
      * @param string $param
-     * @return string|bool
+     * @return string|null
      */
     protected static function _tryGetEnvParam($param)
     {

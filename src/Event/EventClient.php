@@ -39,7 +39,7 @@ class EventClient extends AbstractClient
      */
     public function fire(UserEvent $event, WriteOptions $writeOptions = null)
     {
-        $r = new Request('put', sprintf('v1/event/fire/%s', $event->Name), $this->Config);
+        $r = new Request('put', sprintf('v1/event/fire/%s', $event->Name), $this->c);
         $r->setWriteOptions($writeOptions);
 
         if ('' !== ($nf = $event->NodeFilter))
@@ -76,7 +76,7 @@ class EventClient extends AbstractClient
      */
     public function eventList($name = '', QueryOptions $queryOptions = null)
     {
-        $r = new Request('get', 'v1/event/list', $this->Config);
+        $r = new Request('get', 'v1/event/list', $this->c);
         if ('' !== (string)$name)
             $r->params->set('name', $name);
         $r->setQueryOptions($queryOptions);
