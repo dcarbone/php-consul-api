@@ -22,6 +22,7 @@ use DCarbone\PHPConsulAPI\Coordinate\CoordinateClient;
 use DCarbone\PHPConsulAPI\Event\EventClient;
 use DCarbone\PHPConsulAPI\Health\HealthClient;
 use DCarbone\PHPConsulAPI\KV\KVClient;
+use DCarbone\PHPConsulAPI\Operator\OperatorClient;
 use DCarbone\PHPConsulAPI\Session\SessionClient;
 use DCarbone\PHPConsulAPI\Status\StatusClient;
 
@@ -31,22 +32,24 @@ use DCarbone\PHPConsulAPI\Status\StatusClient;
  */
 class Consul
 {
-    /** @var \DCarbone\PHPConsulAPI\KV\KVClient */
+    /** @var KVClient */
     public $KV;
-    /** @var \DCarbone\PHPConsulAPI\Agent\AgentClient */
+    /** @var AgentClient */
     public $Agent;
-    /** @var \DCarbone\PHPConsulAPI\Catalog\CatalogClient */
+    /** @var CatalogClient */
     public $Catalog;
-    /** @var \DCarbone\PHPConsulAPI\Status\StatusClient */
+    /** @var StatusClient */
     public $Status;
-    /** @var \DCarbone\PHPConsulAPI\Event\EventClient */
+    /** @var EventClient */
     public $Event;
-    /** @var \DCarbone\PHPConsulAPI\Health\HealthClient */
+    /** @var HealthClient */
     public $Health;
-    /** @var \DCarbone\PHPConsulAPI\Coordinate\CoordinateClient */
+    /** @var CoordinateClient */
     public $Coordinate;
-    /** @var \DCarbone\PHPConsulAPI\Session\SessionClient */
+    /** @var SessionClient */
     public $Session;
+    /** @var OperatorClient */
+    public $Operator;
 
     /**
      * Client constructor.
@@ -77,6 +80,7 @@ class Consul
         $this->Health = new HealthClient($config);
         $this->Coordinate = new CoordinateClient($config);
         $this->Session = new SessionClient($config);
+        $this->Operator = new OperatorClient($config);
     }
 
     /**
@@ -141,5 +145,13 @@ class Consul
     public function Session()
     {
         return $this->Session;
+    }
+
+    /**
+     * @return OperatorClient
+     */
+    public function Operator()
+    {
+        return $this->Operator;
     }
 }

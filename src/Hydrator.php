@@ -32,6 +32,8 @@ use DCarbone\PHPConsulAPI\Event\UserEvent;
 use DCarbone\PHPConsulAPI\Health\HealthCheck;
 use DCarbone\PHPConsulAPI\Health\ServiceEntry;
 use DCarbone\PHPConsulAPI\KV\KVPair;
+use DCarbone\PHPConsulAPI\Operator\RaftConfiguration;
+use DCarbone\PHPConsulAPI\Operator\RaftServer;
 use DCarbone\PHPConsulAPI\Session\SessionEntry;
 
 /**
@@ -228,5 +230,30 @@ class Hydrator
     public static function SessionEntry(array $data)
     {
         return new SessionEntry($data);
+    }
+
+    /**
+     * @param array $data
+     * @return RaftConfiguration
+     */
+    public static function RaftConfiguration(array $data)
+    {
+        if (isset($data['Servers']))
+        {
+            for ($i = 0, $cnt = count($data['Servers']); $i < $cnt; $i++)
+            {
+                $data['Servers'][$i] = self::RaftServer($data['Servers'][$i]);
+            }
+        }
+        return new RaftConfiguration($data);
+    }
+
+    /**
+     * @param array $data
+     * @return RaftServer
+     */
+    public static function RaftServer(array $data)
+    {
+        return new RaftServer($data);
     }
 }

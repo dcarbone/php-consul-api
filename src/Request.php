@@ -75,7 +75,7 @@ class Request implements RequestInterface
         $this->c = $config;
 
         $this->params = new Params();
-        $this->method = strtolower($method);
+        $this->method = strtoupper($method);
         $this->path = $path;
 
         if ('' !== ($dc = $config->getDatacenter()))
@@ -330,7 +330,7 @@ class Request implements RequestInterface
     public function withMethod($method)
     {
         $clone = clone $this;
-        $clone->method = $method;
+        $clone->method = strtoupper($method);
         return $clone;
     }
 
