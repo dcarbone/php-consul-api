@@ -24,6 +24,7 @@ use DCarbone\PHPConsulAPI\Event\EventClient;
 use DCarbone\PHPConsulAPI\Health\HealthClient;
 use DCarbone\PHPConsulAPI\KV\KVClient;
 use DCarbone\PHPConsulAPI\Operator\OperatorClient;
+use DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryClient;
 use DCarbone\PHPConsulAPI\Session\SessionClient;
 use DCarbone\PHPConsulAPI\Status\StatusClient;
 
@@ -53,6 +54,8 @@ class Consul
     public $Operator;
     /** @var ACLClient */
     public $ACL;
+    /** @var PreparedQueryClient */
+    public $PreparedQuery;
 
     /**
      * Client constructor.
@@ -75,16 +78,17 @@ class Consul
                 $config->setScheme($def->getScheme());
         }
 
-        $this->KV = new KVClient($config);
-        $this->Agent = new AgentClient($config);
-        $this->Catalog = new CatalogClient($config);
-        $this->Status = new StatusClient($config);
-        $this->Event = new EventClient($config);
-        $this->Health = new HealthClient($config);
-        $this->Coordinate = new CoordinateClient($config);
-        $this->Session = new SessionClient($config);
-        $this->Operator = new OperatorClient($config);
-        $this->ACL = new ACLClient($config);
+        $this->KV            = new KVClient($config);
+        $this->Agent         = new AgentClient($config);
+        $this->Catalog       = new CatalogClient($config);
+        $this->Status        = new StatusClient($config);
+        $this->Event         = new EventClient($config);
+        $this->Health        = new HealthClient($config);
+        $this->Coordinate    = new CoordinateClient($config);
+        $this->Session       = new SessionClient($config);
+        $this->Operator      = new OperatorClient($config);
+        $this->ACL           = new ACLClient($config);
+        $this->PreparedQuery = new PreparedQueryClient($config);
     }
 
     /**
@@ -165,5 +169,13 @@ class Consul
     public function ACL()
     {
         return $this->ACL;
+    }
+
+    /**
+     * @return PreparedQueryClient
+     */
+    public function PreparedQuery()
+    {
+        return $this->PreparedQuery;
     }
 }

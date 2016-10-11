@@ -35,6 +35,12 @@ use DCarbone\PHPConsulAPI\Health\ServiceEntry;
 use DCarbone\PHPConsulAPI\KV\KVPair;
 use DCarbone\PHPConsulAPI\Operator\RaftConfiguration;
 use DCarbone\PHPConsulAPI\Operator\RaftServer;
+use DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition;
+use DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryExecuteResponse;
+use DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions;
+use DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions;
+use DCarbone\PHPConsulAPI\PreparedQuery\QueryTemplate;
+use DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery;
 use DCarbone\PHPConsulAPI\Session\SessionEntry;
 
 /**
@@ -265,5 +271,82 @@ class Hydrator
     public static function ACLEntry(array $data)
     {
         return new ACLEntry($data);
+    }
+
+    /**
+     * @param array $data
+     * @return PreparedQueryDefinition
+     */
+    public static function PreparedQueryDefinition(array $data)
+    {
+        if (isset($data['Service']))
+            $data['Service'] = self::ServiceQuery($data['Service']);
+
+        if (isset($data['DNS']))
+            $data['DNS'] = self::QueryDNSOptions($data['DNS']);
+
+        if (isset($data['Template']))
+            $data['Template'] = self::QueryTemplate($data['Template']);
+
+        return new PreparedQueryDefinition($data);
+    }
+
+    /**
+     * @param array $data
+     * @return ServiceQuery
+     */
+    public static function ServiceQuery(array $data)
+    {
+        if (isset($data['Failover']))
+            $data['Failover'] = self::QueryDatacenterOptions($data['Failover']);
+
+        return new ServiceQuery($data);
+    }
+
+    /**
+     * @param array $data
+     * @return QueryTemplate
+     */
+    public static function QueryTemplate(array $data)
+    {
+        return new QueryTemplate($data);
+    }
+
+    /**
+     * @param array $data
+     * @return QueryDNSOptions
+     */
+    public function QueryDNSOptions(array $data)
+    {
+        return new QueryDNSOptions($data);
+    }
+
+    /**
+     * @param array $data
+     * @return QueryDatacenterOptions
+     */
+    public function QueryDatacenterOptions(array $data)
+    {
+        return new QueryDatacenterOptions($data);
+    }
+
+    /**
+     * @param array $data
+     * @return PreparedQueryExecuteResponse
+     */
+    public static function PreparedQueryExecuteResponse(array $data)
+    {
+        if (isset($data['Nodes']))
+        {
+            for ($i = 0, $cnt = count($data['Nodes']); $i < $cnt; $i++)
+            {
+                $data['Nodes'][$i] = self::ServiceEntry($data['Nodes'][$i]);
+            }
+        }
+
+        if (isset($data['DNS']))
+            $data['DNS'] = self::QueryDNSOptions($data['DNS']);
+
+        return new PreparedQueryExecuteResponse($data);
     }
 }
