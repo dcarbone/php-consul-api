@@ -1,6 +1,6 @@
 # php-consul-api
 
-PHP client implementation for the [Consul API](https://www.consul.io/docs/agent/http.html)
+PHP client for the [Consul HTTP API](https://www.consul.io/docs/agent/http.html)
 
 This library is loosely based upon the [official GO client](https://github.com/hashicorp/consul/tree/master/api).
 
@@ -12,7 +12,9 @@ Require Entry:
 
 ```json
 {
-  "dcarbone/php-consul-api": "0.4.*"
+    "require": {
+        "dcarbone/php-consul-api": "0.4.*"    
+    }
 }
 ```
 

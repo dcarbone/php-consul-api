@@ -49,7 +49,7 @@ class Config
     /**
      * HTTP authentication, if used
      *
-     * @var HttpAuth
+     * @var \DCarbone\PHPConsulAPI\HttpAuth
      */
     public $HttpAuth = null;
 
@@ -85,7 +85,7 @@ class Config
     /**
      * Your HttpClient of choice.
      *
-     * @var HttpClient
+     * @var \Http\Client\HttpClient
      */
     public $HttpClient = null;
 
@@ -99,6 +99,9 @@ class Config
         {
             $this->{"set{$k}"}($v);
         }
+
+        if (!isset($this->HttpAuth))
+            $this->HttpAuth = new HttpAuth();
     }
 
     /**
@@ -269,7 +272,7 @@ class Config
     }
 
     /**
-     * @return null
+     * @return \DCarbone\PHPConsulAPI\HttpAuth
      */
     public function getHttpAuth()
     {
@@ -312,7 +315,7 @@ class Config
     }
 
     /**
-     * @return HttpClient
+     * @return \Http\Client\HttpClient
      */
     public function getHttpClient()
     {

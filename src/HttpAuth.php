@@ -23,19 +23,19 @@
 class HttpAuth implements \JsonSerializable
 {
     /** @var string */
-    private $_username;
+    private $_username = '';
     /** @var string */
-    private $_password;
+    private $_password = '';
 
     /**
      * ConsulHttpAuth constructor.
      * @param string $username
      * @param string $password
      */
-    public function __construct($username, $password = null)
+    public function __construct($username = '', $password = '')
     {
         $this->_username = (string)$username;
-        $this->_password = null === $password ? null : (string)$password;
+        $this->_password = (string)$password;
     }
 
     /**
