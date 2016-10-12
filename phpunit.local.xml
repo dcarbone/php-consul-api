@@ -12,8 +12,8 @@
         processIsolation="false"
         backupGlobals="false"
         >
-    <testsuite name="configuration">
-        <file>./tests/ConfigTest.php</file>
+    <testsuite name="definition">
+        <directory>./tests/DefinitionTests</directory>
     </testsuite>
 
     <filter>

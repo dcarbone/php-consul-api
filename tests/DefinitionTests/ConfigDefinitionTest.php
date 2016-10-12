@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPConsulAPITests;
+<?php namespace DCarbone\PHPConsulAPITests\DefinitionTests;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -19,13 +19,11 @@
 use DCarbone\PHPConsulAPI\Config;
 
 /**
- * Class ConfigTest
- * @package DCarbone\PHPConsulAPITests
+ * Class ConfigDefinitionTest
+ * @package DCarbone\PHPConsulAPITests\DefinitionTests
  */
-class ConfigTest extends \PHPUnit_Framework_TestCase
+class ConfigDefinitionTest extends AbstractDefinitionTest
 {
-    use PublicPropertyTestsTrait;
-
     /**
      * @inheritDoc
      */
@@ -46,18 +44,5 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
             $this->emptyInstance = new Config();
 
         return $this->emptyInstance;
-    }
-
-    /**
-     * @test
-     */
-    public function assertGetterMethodsExist()
-    {
-        $config = $this->getEmptyInstance();
-
-        $this->assertTrue(method_exists($config, 'getAddress'), 'Config::getAddress() must exist');
-        $this->assertTrue(method_exists($config, 'getScheme'), 'Config::getScheme() must exist');
-        $this->assertTrue(method_exists($config, 'getDatacenter'), 'Config::getDatacenter() must exist');
-//        $this->assertTrue(method_exists($config, 'getWaitTime'))
     }
 }

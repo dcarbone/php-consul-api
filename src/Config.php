@@ -280,37 +280,37 @@ class Config
     }
 
     /**
-     * @param string|HttpAuth $httpAuth
+     * @param string|HttpAuth $HttpAuth
      * @return Config
      */
-    public function setHttpAuth($httpAuth)
+    public function setHttpAuth($HttpAuth)
     {
-        if (is_string($httpAuth))
+        if (is_string($HttpAuth))
         {
-            $colon = strpos($httpAuth, ':');
+            $colon = strpos($HttpAuth, ':');
             if (false === $colon)
             {
-                $username = $httpAuth;
+                $username = $HttpAuth;
                 $password = null;
             }
             else
             {
-                $username = substr($httpAuth, 0, $colon);
-                $password = substr($httpAuth, $colon + 1);
+                $username = substr($HttpAuth, 0, $colon);
+                $password = substr($HttpAuth, $colon + 1);
             }
-            $httpAuth = new HttpAuth($username, $password);
+            $HttpAuth = new HttpAuth($username, $password);
         }
 
-        if ($httpAuth instanceof HttpAuth)
+        if ($HttpAuth instanceof HttpAuth)
         {
-            $this->HttpAuth = $httpAuth;
+            $this->HttpAuth = $HttpAuth;
             return $this;
         }
 
         throw new \InvalidArgumentException(sprintf(
             '%s::setHttpAuth - Value is expected to be string of "username:password" or instance of "ConsulHttpAuth", %s seen.',
             get_class($this),
-            is_string($httpAuth) ? $httpAuth : gettype($httpAuth)
+            is_string($HttpAuth) ? $HttpAuth : gettype($HttpAuth)
         ));
     }
 

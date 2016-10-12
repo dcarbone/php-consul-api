@@ -1,0 +1,15 @@
+language: php
+
+sudo: false
+
+php:
+    - 5.6
+    - 7.0
+    - 7.1
+
+before_script:
+    - composer self-update 1.2.1
+    - composer install --no-interaction -v
+
+script:
+    - ./vendor/bin/phpunit
