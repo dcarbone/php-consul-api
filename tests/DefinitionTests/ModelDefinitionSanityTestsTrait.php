@@ -60,6 +60,8 @@ trait ModelDefinitionSanityTestsTrait
 
     public function testClassConstructorImplementation()
     {
+        /** @var \phpDocumentor\Reflection\DocBlock\Tags\Param $paramTag */
+
         $reflectionClass = $this->getReflectionClass();
 
         if ($reflectionClass->hasMethod('__construct'))
@@ -88,6 +90,9 @@ trait ModelDefinitionSanityTestsTrait
 
             foreach($constructorParameters as $i => $parameter)
             {
+                $paramTag = $paramTags[$i];
+                $paramType = $paramTag->getType();
+
                 // First argument must always be an optional value of type array
                 if (0 === $i)
                 {
@@ -313,7 +318,6 @@ trait ModelDefinitionSanityTestsTrait
         /** @var \phpDocumentor\Reflection\Type $propertyVarType */
         /** @var \phpDocumentor\Reflection\DocBlock\Tags\Param $methodParamTag */
         /** @var \phpDocumentor\Reflection\DocBlock\Tags\Return_ $methodReturnTag */
-        /** @var \phpDocumentor\Reflection\DocBlock\Tags\Param $methodParam */
 
         $className = $reflectionClass->getName();
         $propertyName = $reflectionProperty->getName();
@@ -322,7 +326,7 @@ trait ModelDefinitionSanityTestsTrait
         // TODO: This will only validate methods that match the expected setter name.  Not sure I like that.
         if ($reflectionClass->hasMethod($expectedSetterName))
         {
-            // Grab docblock definition from class property declaration
+            // Grab doc block definition from class property declaration
             $propertyDocBlock = $this->docBlockFactory->create($reflectionProperty->getDocComment());
             $propertyVarType = $propertyDocBlock->getTagsByName('var')[0]->getType();
 
@@ -356,25 +360,25 @@ trait ModelDefinitionSanityTestsTrait
                 $className
             ));
 
-            // Get method docblock
+            // Get method doc block
             $methodDockBlock = $this->docBlockFactory->create($reflectionMethod->getDocComment());
 
             // Ensure we have one @param attribute
-            $methodParams = $methodDockBlock->getTagsByName('param');
-            $this->assertCount(1, $methodParams, sprintf(
-                'Parameter "%s" for setter "%s" for property "%s" in class "%s" must have a "@param" docblock attribute',
+            $methodParamTags = $methodDockBlock->getTagsByName('param');
+            $this->assertCount(1, $methodParamTags, sprintf(
+                'Parameter "%s" for setter "%s" for property "%s" in class "%s" must have a "@param" doc block attribute',
                 $parameterName,
                 $expectedSetterName,
                 $propertyName,
                 $className
             ));
 
-            // Pull out the @param attribute from the docblock comment
-            $methodParam = $methodParams[0];
-            $methodParamType = $methodParam->getType();
+            // Pull out the @param attribute from the doc block comment
+            $methodParamTag = $methodParamTags[0];
+            $methodParamType = $methodParamTag->getType();
             $parameterClass = $reflectionParameter->getClass();
 
-            // Finally, attempt to validate setter declaration stanity
+            // Finally, attempt to validate setter declaration sanity
             switch(true)
             {
                 // If the setter is designed to expect more than 1 type of variable, ensure that
