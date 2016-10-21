@@ -308,7 +308,7 @@ class Config
         }
 
         throw new \InvalidArgumentException(sprintf(
-            '%s::setHttpAuth - Value is expected to be string of "username:password" or instance of "ConsulHttpAuth", %s seen.',
+            '%s::setHttpAuth - Value is expected to be string of "username:password" or instance of "\\DCarbone\\PHPConsulApi\\HttpAuth", %s seen.',
             get_class($this),
             is_string($HttpAuth) ? $HttpAuth : gettype($HttpAuth)
         ));

@@ -58,7 +58,55 @@ trait ModelDefinitionSanityTestsTrait
         $this->docBlockFactory = DocBlockFactory::createInstance();
     }
 
-    public function testClassDefinition()
+    public function testClassConstructorImplementation()
+    {
+        $reflectionClass = $this->getReflectionClass();
+
+        if ($reflectionClass->hasMethod('__construct'))
+        {
+            // Ensure constructor has at least one argument
+            $constructorReflection = $reflectionClass->getMethod('__construct');
+            $this->assertGreaterThanOrEqual(1, $constructorReflection->getNumberOfParameters(), sprintf(
+                'Class "%s" must have at least one argument in it\'s constructor',
+                $reflectionClass->getName()
+            ));
+
+            // Get parameter reflections
+            $constructorParameters = $constructorReflection->getParameters();
+
+            // Get docblock
+            $constructorDocBlock = $this->docBlockFactory->create($constructorReflection->getDocComment());
+
+            // Get "@param" tags
+            $paramTags = $constructorDocBlock->getTagsByName('param');
+
+            // Ensure we have one param tag per constructor argument
+            $this->assertEquals(count($paramTags), count($constructorParameters), sprintf(
+                'Constructor for class "%s" must have one "@param" doc block tag for each property.',
+                $reflectionClass->getName()
+            ));
+
+            foreach($constructorParameters as $i => $parameter)
+            {
+                // First argument must always be an optional value of type array
+                if (0 === $i)
+                {
+                    $this->assertTrue($parameter->isArray(), sprintf(
+                        'Constructor for class "%s" must have an array parameter as it\'s first argument',
+                        $reflectionClass->getName()
+                    ));
+                    $this->assertTrue($parameter->isOptional(), sprintf(
+                        'Constructor for class "%s" must be optional (you must set a default value of "array()")',
+                        $reflectionClass->getName()
+                    ));
+                }
+
+
+            }
+        }
+    }
+
+    public function testClassPropertyDefinitionAndImplementation()
     {
         $reflectionClass = $this->getReflectionClass();
 
@@ -339,7 +387,8 @@ trait ModelDefinitionSanityTestsTrait
                         $propertyName,
                         $className,
                         (string)$methodParamType,
-                        $parameterClass->getName()
+                        // Dumb.
+                        null !== $parameterClass ? $parameterClass->getName() : ''
                     ));
                     break;
 
