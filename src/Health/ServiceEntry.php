@@ -33,6 +33,18 @@ class ServiceEntry extends AbstractModel
     public $Checks = array();
 
     /**
+     * ServiceEntry constructor.
+     * @param array $data
+     */
+    public function __construct(array $data = array())
+    {
+        parent::__construct($data);
+
+        if (null === $this->Service)
+            $this->Service = new AgentService();
+    }
+
+    /**
      * @return string
      */
     public function getNode()
@@ -41,7 +53,7 @@ class ServiceEntry extends AbstractModel
     }
 
     /**
-     * @return AgentService
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentService
      */
     public function getService()
     {
@@ -49,7 +61,7 @@ class ServiceEntry extends AbstractModel
     }
 
     /**
-     * @return HealthCheck[]
+     * @return \DCarbone\PHPConsulAPI\Health\HealthCheck[]
      */
     public function getChecks()
     {

@@ -19,6 +19,7 @@
 use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\Types\Array_;
 use phpDocumentor\Reflection\Types\Boolean;
+use phpDocumentor\Reflection\Types\Compound;
 use phpDocumentor\Reflection\Types\Float_;
 use phpDocumentor\Reflection\Types\Integer;
 use phpDocumentor\Reflection\Types\Object_;
@@ -264,19 +265,23 @@ abstract class AbstractDefinitionTest extends \PHPUnit_Framework_TestCase
         /** @var \phpDocumentor\Reflection\Type $propertyVarType */
         /** @var \phpDocumentor\Reflection\DocBlock\Tags\Param $methodParamTag */
         /** @var \phpDocumentor\Reflection\DocBlock\Tags\Return_ $methodReturnTag */
+        /** @var \phpDocumentor\Reflection\DocBlock\Tags\Param $methodParam */
 
         $className = $reflectionClass->getName();
         $propertyName = $reflectionProperty->getName();
         $expectedSetterName = sprintf('set%s', ucfirst($propertyName));
 
+        // TODO: This will only validate methods that match the expected setter name.  Not sure I like that.
         if ($reflectionClass->hasMethod($expectedSetterName))
         {
+            // Grab docblock definition from class property declaration
             $propertyDocBlock = $this->docBlockFactory->create($reflectionProperty->getDocComment());
-
             $propertyVarType = $propertyDocBlock->getTagsByName('var')[0]->getType();
 
+            // Get method reflection
             $reflectionMethod = $reflectionClass->getMethod($expectedSetterName);
 
+            // Validate we have one parameter
             // TODO: Support additional params, maybe?
             $this->assertEquals(1, $reflectionMethod->getNumberOfParameters(), sprintf(
                 'Setter "%s" for property "%s" in class "%s" must have at one parameter',
@@ -291,9 +296,11 @@ abstract class AbstractDefinitionTest extends \PHPUnit_Framework_TestCase
                 $className
             ));
 
+            // Get parameter reflection
             $reflectionParameter = $reflectionMethod->getParameters()[0];
-            $parameterName = $reflectionParameter->getName();
 
+            // Validate name
+            $parameterName = $reflectionParameter->getName();
             $this->assertEquals($propertyName, $parameterName, sprintf(
                 'Setter "%s" for property "%s" in class "%s" must have a parameter with the same name as the property',
                 $expectedSetterName,
@@ -301,10 +308,42 @@ abstract class AbstractDefinitionTest extends \PHPUnit_Framework_TestCase
                 $className
             ));
 
+            // Get method docblock
+            $methodDockBlock = $this->docBlockFactory->create($reflectionMethod->getDocComment());
+
+            // Ensure we have one @param attribute
+            $methodParams = $methodDockBlock->getTagsByName('param');
+            $this->assertCount(1, $methodParams, sprintf(
+                'Parameter "%s" for setter "%s" for property "%s" in class "%s" must have a "@param" docblock attribute',
+                $parameterName,
+                $expectedSetterName,
+                $propertyName,
+                $className
+            ));
+
+            // Pull out the @param attribute from the docblock comment
+            $methodParam = $methodParams[0];
+            $methodParamType = $methodParam->getType();
             $parameterClass = $reflectionParameter->getClass();
 
+            // Finally, attempt to validate setter declaration stanity
             switch(true)
             {
+                // If the setter is designed to expect more than 1 type of variable, ensure that
+                // there is no type-hinting going on.
+                case $methodParamType instanceof Compound:
+                    $this->assertNull($parameterClass, sprintf(
+                        'The "@param" docblock for parameter "%s" in setter "%s" for property "%s" in class "%s" indicates that the value can be one of "%s", but the param TypeHint explicitly requires "%s".',
+                        $parameterName,
+                        $expectedSetterName,
+                        $propertyName,
+                        $className,
+                        (string)$methodParamType,
+                        $parameterClass->getName()
+                    ));
+                    break;
+
+                // If we're dealing with a scalar types, don't allow type-hinting as we need to work with php5
                 case $propertyVarType instanceof String_:
                 case $propertyVarType instanceof Integer:
                 case $propertyVarType instanceof Float_:
@@ -317,6 +356,19 @@ abstract class AbstractDefinitionTest extends \PHPUnit_Framework_TestCase
                         $className
                     ));
                     break;
+
+                case $propertyVarType instanceof Array_:
+                    //                    var_dump('array', $parameterClass, $propertyVarType);
+                    //                    echo "\n";
+                    break;
+
+                case $propertyVarType instanceof Object_:
+                    //                    var_dump('object', $parameterClass, $propertyVarType);
+                    //                    echo "\n";
+                    break;
+
+                default:
+
             }
         }
     }
