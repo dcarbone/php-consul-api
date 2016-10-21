@@ -30,6 +30,21 @@ class RaftConfiguration extends AbstractModel
     public $Index = 0;
 
     /**
+     * @inheritDoc
+     */
+    public function __construct(array $data = array())
+    {
+        parent::__construct($data);
+        if (isset($this->Servers))
+        {
+            for ($i = 0, $cnt = count($this->Servers); $i < $cnt; $i++)
+            {
+                $this->Servers[$i] = new RaftServer((array)$this->Servers[$i]);
+            }
+        }
+    }
+
+    /**
      * @return RaftServer[]
      */
     public function getServers()

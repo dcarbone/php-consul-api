@@ -28,6 +28,18 @@ class CoordinateDatacenterMap extends AbstractModel
     /** @var Coordinate[] */
     public $Coordinates = array();
 
+    public function __construct(array $data = array())
+    {
+        parent::__construct($data);
+        if (isset($this->Coordinates))
+        {
+            for ($i = 0, $cnt = count($this->Coordinates); $i < $cnt; $i++)
+            {
+                $this->Coordinates[$i] = new Coordinate((array)$this->Coordinates[$i]);
+            }
+        }
+    }
+
     /**
      * @return string
      */

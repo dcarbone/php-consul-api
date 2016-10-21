@@ -17,6 +17,7 @@
 */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Agent\AgentCheck;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
 
 /**
@@ -40,8 +41,14 @@ class ServiceEntry extends AbstractModel
     {
         parent::__construct($data);
 
-        if (null === $this->Service)
-            $this->Service = new AgentService();
+        $this->Service = new AgentService((array)$this->Service);
+        if (isset($this->Checks))
+        {
+            for ($i = 0, $cnt = count($this->Checks); $i < $cnt; $i++)
+            {
+                $this->Checks[$i] = new AgentCheck((array)$this->Checks[$i]);
+            }
+        }
     }
 
     /**

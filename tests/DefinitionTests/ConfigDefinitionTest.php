@@ -22,8 +22,10 @@ use DCarbone\PHPConsulAPI\Config;
  * Class ConfigDefinitionTest
  * @package DCarbone\PHPConsulAPITests\DefinitionTests
  */
-class ConfigDefinitionTest extends AbstractDefinitionTest
+class ConfigDefinitionTest extends \PHPUnit_Framework_TestCase
 {
+    use ModelDefinitionSanityTestsTrait;
+
     /**
      * @inheritDoc
      */

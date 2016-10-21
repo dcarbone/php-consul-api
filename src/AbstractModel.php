@@ -24,6 +24,10 @@ abstract class AbstractModel implements \JsonSerializable
 {
     /**
      * AbstractObjectModel constructor.
+     *
+     * Convenience method to help set scalar types.  For object types, it is recommended
+     * that the implementing class have it's own constructor
+     *
      * @param array $data
      */
     public function __construct(array $data = array())

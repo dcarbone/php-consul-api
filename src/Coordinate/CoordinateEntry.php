@@ -30,6 +30,16 @@ class CoordinateEntry extends AbstractModel
     public $Coord = null;
 
     /**
+     * CoordinateEntry constructor.
+     * @param array $data
+     */
+    public function __construct(array $data = array())
+    {
+        parent::__construct($data);
+        $this->Coord = new Coordinate((array)$this->Coord);
+    }
+
+    /**
      * @return string
      */
     public function getNode()

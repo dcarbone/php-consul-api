@@ -17,7 +17,6 @@
 */
 
 use DCarbone\PHPConsulAPI\AbstractClient;
-use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Request;
 use DCarbone\PHPConsulAPI\WriteOptions;
@@ -113,7 +112,7 @@ class CatalogClient extends AbstractClient
         $nodes = array();
         foreach($data as $v)
         {
-            $node = Hydrator::CatalogNode($v);
+            $node = new CatalogNode($v);
             $nodes[$node->Node] = $node;
         }
 
@@ -177,7 +176,7 @@ class CatalogClient extends AbstractClient
         $services = array();
         foreach($data as $v)
         {
-            $service = Hydrator::CatalogService($v);
+            $service = new CatalogService($v);
             $services[$service->ServiceID] = $service;
         }
 
@@ -210,6 +209,6 @@ class CatalogClient extends AbstractClient
         if (null !== $err)
             return [null, $qm, $err];
 
-        return [Hydrator::CatalogNode($data), $qm, null];
+        return [new CatalogNode($data), $qm, null];
     }
 }

@@ -41,8 +41,8 @@ class ServiceQuery extends AbstractModel
      */
     public function __construct(array $data = array())
     {
-        $this->Failover = new QueryDatacenterOptions();
         parent::__construct($data);
+        $this->Failover = new QueryDatacenterOptions((array)$this->Failover);
     }
 
     /**

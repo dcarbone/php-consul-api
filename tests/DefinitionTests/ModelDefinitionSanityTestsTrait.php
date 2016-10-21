@@ -29,7 +29,7 @@ use phpDocumentor\Reflection\Types\String_;
  * Class AbstractDefinitionTest
  * @package DCarbone\PHPConsulAPITests\DefinitionTests
  */
-abstract class AbstractDefinitionTest extends \PHPUnit_Framework_TestCase
+trait ModelDefinitionSanityTestsTrait
 {
     /** @var \ReflectionClass */
     protected $reflectionClass;

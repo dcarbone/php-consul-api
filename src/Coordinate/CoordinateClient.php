@@ -17,7 +17,6 @@
 */
 
 use DCarbone\PHPConsulAPI\AbstractClient;
-use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Request;
 
@@ -51,7 +50,7 @@ class CoordinateClient extends AbstractClient
         $datacenters = array();
         foreach($data as $v)
         {
-            $datacenters[] = Hydrator::CoordinateDatacenterMap($v);
+            $datacenters[] = new CoordinateDatacenterMap($v);
         }
 
         return [$data, null];
@@ -84,7 +83,7 @@ class CoordinateClient extends AbstractClient
         $coordinates = array();
         foreach($data as $coord)
         {
-            $coordinates[] = Hydrator::CoordinateEntry($coord);
+            $coordinates[] = new CoordinateEntry($coord);
         }
 
         return [$coordinates, $qm, null];

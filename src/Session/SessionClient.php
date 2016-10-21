@@ -18,7 +18,6 @@
 
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Request;
 use DCarbone\PHPConsulAPI\WriteOptions;
@@ -291,7 +290,7 @@ class SessionClient extends AbstractClient
         $entries = array();
         foreach($data as $entry)
         {
-            $entries[] = Hydrator::SessionEntry($entry);
+            $entries[] = new SessionEntry($entry);
         }
 
         return $entries;

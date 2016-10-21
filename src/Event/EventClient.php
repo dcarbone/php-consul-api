@@ -17,7 +17,6 @@
 */
 
 use DCarbone\PHPConsulAPI\AbstractClient;
-use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Request;
 use DCarbone\PHPConsulAPI\WriteOptions;
@@ -62,7 +61,7 @@ class EventClient extends AbstractClient
         if ($err !== null)
             return [null, $wm, $err];
 
-        return [Hydrator::UserEvent($data), $wm, null];
+        return [new UserEvent($data), $wm, null];
     }
     
     /**
@@ -96,7 +95,7 @@ class EventClient extends AbstractClient
         $events = array();
         foreach($data as $event)
         {
-            $events[] = Hydrator::UserEvent($event);
+            $events[] = new UserEvent($event);
         }
 
         return [$events, $qm, null];

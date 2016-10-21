@@ -18,7 +18,6 @@
 
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Request;
 
@@ -66,7 +65,7 @@ class HealthClient extends AbstractClient
         $checks = array();
         foreach($data as $check)
         {
-            $checks[] = Hydrator::HealthCheck($check);
+            $checks[] = new HealthCheck($check);
         }
 
         return [$checks, $qm, null];
@@ -110,7 +109,7 @@ class HealthClient extends AbstractClient
         $checks = array();
         foreach($data as $check)
         {
-            $checks[] = Hydrator::HealthCheck($check);
+            $checks[] = new HealthCheck($check);
         }
 
         return [$checks, $qm, null];
@@ -160,7 +159,7 @@ class HealthClient extends AbstractClient
         $services = array();
         foreach($data as $service)
         {
-            $services[] = Hydrator::ServiceEntry($service);
+            $services[] = new ServiceEntry($service);
         }
 
         return [$services, $qm, null];
@@ -207,7 +206,7 @@ class HealthClient extends AbstractClient
         $checks = array();
         foreach($data as $check)
         {
-            $checks[] = Hydrator::HealthCheck($check);
+            $checks[] = new HealthCheck($check);
         }
 
         return [$checks, $qm, null];

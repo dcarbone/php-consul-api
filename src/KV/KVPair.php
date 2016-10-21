@@ -39,6 +39,18 @@ class KVPair extends AbstractModel
     public $Session = '';
 
     /**
+     * KVPair constructor.
+     * @param array $data
+     * @param bool $_decodeValue
+     */
+    public function __construct(array $data = array(), $_decodeValue = false)
+    {
+        parent::__construct($data);
+        if ($_decodeValue && isset($this->Value))
+            $this->Value = base64_decode($this->Value);
+    }
+
+    /**
      * @return string
      */
     public function getKey()

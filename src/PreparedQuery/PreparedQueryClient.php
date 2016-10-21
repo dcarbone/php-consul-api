@@ -17,7 +17,6 @@
 */
 
 use DCarbone\PHPConsulAPI\AbstractClient;
-use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Request;
 use DCarbone\PHPConsulAPI\WriteOptions;
@@ -95,7 +94,7 @@ class PreparedQueryClient extends AbstractClient
         $list = [];
         foreach($body as $d)
         {
-            $list[] = Hydrator::PreparedQueryDefinition($d);
+            $list[] = new PreparedQueryDefinition($d);
         }
         return $list;
     }
@@ -126,7 +125,7 @@ class PreparedQueryClient extends AbstractClient
         $queryDefinitions = [];
         foreach($body as $d)
         {
-            $queryDefinitions[] = Hydrator::PreparedQueryDefinition($d);
+            $queryDefinitions[] = new PreparedQueryDefinition($d);
         }
         return $queryDefinitions;
     }
@@ -181,6 +180,6 @@ class PreparedQueryClient extends AbstractClient
         if (null !== $err)
             return [null, $qm, $err];
 
-        return [Hydrator::PreparedQueryExecuteResponse($body), $qm, null];
+        return [new PreparedQueryExecuteResponse($body), $qm, null];
     }
 }

@@ -17,14 +17,16 @@
 */
 
 use DCarbone\PHPConsulAPI\Health\ServiceEntry;
-use DCarbone\PHPConsulAPITests\DefinitionTests\AbstractDefinitionTest;
+use DCarbone\PHPConsulAPITests\DefinitionTests\ModelDefinitionSanityTestsTrait;
 
 /**
  * Class ServiceEntryDefinitionTest
  * @package DCarbone\PHPConsulAPITests\DefinitionTests\Health
  */
-class ServiceEntryDefinitionTest extends AbstractDefinitionTest
+class ServiceEntryDefinitionTest extends \PHPUnit_Framework_TestCase
 {
+    use ModelDefinitionSanityTestsTrait;
+
     /**
      * @inheritDoc
      */

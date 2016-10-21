@@ -45,10 +45,11 @@ class PreparedQueryDefinition extends AbstractModel
      */
     public function __construct(array $data = array())
     {
-        $this->Service = new ServiceQuery();
-        $this->DNS = new QueryDNSOptions();
-        $this->Template = new QueryTemplate();
         parent::__construct($data);
+
+        $this->Service = new ServiceQuery((array)$this->Service);
+        $this->DNS = new QueryDNSOptions((array)$this->DNS);
+        $this->Template = new QueryTemplate((array)$this->Template);
     }
 
     /**

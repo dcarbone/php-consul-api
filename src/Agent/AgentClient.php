@@ -18,7 +18,6 @@
 
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Request;
-use DCarbone\PHPConsulAPI\Hydrator;
 
 /**
  * Class AgentClient
@@ -52,7 +51,7 @@ class AgentClient extends AbstractClient
         if (null !== $err)
             return [null, $qm, $err];
 
-        $this->_self = Hydrator::AgentSelf($data);
+        $this->_self = new AgentSelf($data);
 
         return [$this->_self, $qm, null];
     }
@@ -99,7 +98,7 @@ class AgentClient extends AbstractClient
         $checks = array();
         foreach($data as $k => $v)
         {
-            $checks[$k] = Hydrator::AgentCheck($v);
+            $checks[$k] = new AgentCheck($v);
         }
 
         return [$checks, null];
@@ -129,7 +128,7 @@ class AgentClient extends AbstractClient
         $services = array();
         foreach($data as $k => $v)
         {
-            $services[$k] = Hydrator::AgentService($v);
+            $services[$k] = new AgentService($v);
         }
 
         return [$services, null];
@@ -159,7 +158,7 @@ class AgentClient extends AbstractClient
         $members = array();
         foreach($data as $v)
         {
-            $members[] = Hydrator::AgentMember($v);
+            $members[] = new AgentMember($v);
         }
 
         return [$members, null];

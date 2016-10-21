@@ -42,8 +42,15 @@ class PreparedQueryExecuteResponse extends AbstractModel
      */
     public function __construct(array $data = array())
     {
-        $this->DNS = new QueryDNSOptions();
         parent::__construct($data);
+        $this->DNS = new QueryDNSOptions((array)$this->DNS);
+        if (isset($this->Nodes))
+        {
+            for ($i = 0, $cnt = count($this->Nodes); $i < $cnt; $i++)
+            {
+                $this->Nodes[$i] = new ServiceEntry((array)$this->Nodes[$i]);
+            }
+        }
     }
 
     /**

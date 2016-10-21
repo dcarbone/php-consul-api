@@ -17,7 +17,6 @@
 */
 
 use DCarbone\PHPConsulAPI\AbstractClient;
-use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Request;
 use DCarbone\PHPConsulAPI\WriteOptions;
@@ -53,7 +52,7 @@ class OperatorClient extends AbstractClient
         if (null !== $err)
             return [null, $qm, $err];
 
-        return [Hydrator::RaftConfiguration($data), $qm, $err];
+        return [new RaftConfiguration($data), $qm, $err];
     }
 
     /**

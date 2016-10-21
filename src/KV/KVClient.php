@@ -18,7 +18,6 @@
 
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Request;
 use DCarbone\PHPConsulAPI\WriteOptions;
@@ -70,7 +69,7 @@ class KVClient extends AbstractClient
 
             $data = $data[0];
 
-            return [Hydrator::KVPair($data), $qm, null];
+            return [new KVPair($data), $qm, null];
         }
 
         if (404 === $code)
@@ -122,7 +121,7 @@ class KVClient extends AbstractClient
         $kvPairs = array();
         foreach($data as $v)
         {
-            $kvp = Hydrator::KVPair($v);
+            $kvp = new KVPair($v);
             $kvPairs[$kvp->Key] = $kvp;
         }
 

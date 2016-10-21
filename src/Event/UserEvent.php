@@ -43,6 +43,16 @@ class UserEvent extends AbstractModel
     public $LTime = 0;
 
     /**
+     * @inheritDoc
+     */
+    public function __construct(array $data = array(), $_decodeValue = false)
+    {
+        parent::__construct($data);
+        if ($_decodeValue && isset($this->Payload))
+            $this->Payload = base64_decode($this->Payload);
+    }
+
+    /**
      * @return string
      */
     public function getID()

@@ -17,7 +17,6 @@
 */
 
 use DCarbone\PHPConsulAPI\AbstractClient;
-use DCarbone\PHPConsulAPI\Hydrator;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Request;
 use DCarbone\PHPConsulAPI\WriteOptions;
@@ -143,7 +142,7 @@ class ACLClient extends AbstractClient
         $entries = [];
         foreach($data as $entry)
         {
-            $entries[] = Hydrator::ACLEntry($entry);
+            $entries[] = new ACLEntry($entry);
         }
 
         return [$entries, $qm, null];
@@ -176,7 +175,7 @@ class ACLClient extends AbstractClient
         $entries = [];
         foreach($data as $entry)
         {
-            $entries[] = Hydrator::ACLEntry($entry);
+            $entries[] = new ACLEntry($entry);
         }
 
         return [$entries, $qm, null];
