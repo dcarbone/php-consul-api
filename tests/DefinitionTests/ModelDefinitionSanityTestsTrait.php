@@ -76,7 +76,7 @@ trait ModelDefinitionSanityTestsTrait
             // Get parameter reflections
             $constructorParameters = $constructorReflection->getParameters();
 
-            // Get docblock
+            // Get doc block
             $constructorDocBlock = $this->docBlockFactory->create($constructorReflection->getDocComment());
 
             // Get "@param" tags
@@ -90,23 +90,42 @@ trait ModelDefinitionSanityTestsTrait
 
             foreach($constructorParameters as $i => $parameter)
             {
+                // Just go ahead and get this stuff here...
                 $paramTag = $paramTags[$i];
                 $paramType = $paramTag->getType();
+
+                // Doc block tag must have same name as actual parameter and in the same ordinal position
+                $this->assertEquals($paramTag->getVariableName(), $parameter->getName(), sprintf(
+                    'Parameter "%s" in constructor method for class "%s" must specify a doc block tag of type @param with the same variable name',
+                    $parameter->getName(),
+                    $reflectionClass->getName()
+                ));
 
                 // First argument must always be an optional value of type array
                 if (0 === $i)
                 {
+                    // First argument must be array
                     $this->assertTrue($parameter->isArray(), sprintf(
-                        'Constructor for class "%s" must have an array parameter as it\'s first argument',
+                        'The first parameter in constructor method for class "%s" must use "array" type hinting',
                         $reflectionClass->getName()
                     ));
+                    // First argument must be optional
                     $this->assertTrue($parameter->isOptional(), sprintf(
-                        'Constructor for class "%s" must be optional (you must set a default value of "array()")',
+                        'The first parameter in constructor method for class "%s" must be optional',
                         $reflectionClass->getName()
+                    ));
+                    // First argument must have param doc block tag of simply "@param array $varname"
+                    $this->assertInstanceOf(Array_::class, $paramType, sprintf(
+                        'The first parameter in constructor method for class "%s" must be simply "array", "%s" found',
+                        $parameter->getName(),
+                        $reflectionClass->getName(),
+                        (string)$paramType
                     ));
                 }
+                else
+                {
 
-
+                }
             }
         }
     }
@@ -118,10 +137,10 @@ trait ModelDefinitionSanityTestsTrait
         // For now, only interested in Public properties, may expand later.
         foreach($reflectionClass->getProperties(\ReflectionProperty::IS_PUBLIC) as $reflectionProperty)
         {
-            $this->assertPropertyPHPDocExists($reflectionClass, $reflectionProperty);
-            $this->assertCorrectPropertyZeroValue($reflectionClass,$reflectionProperty);
-            $this->assertCorrectGetterImplementation($reflectionClass, $reflectionProperty);
-            $this->assertCorrectSetterImplementation($reflectionClass, $reflectionProperty);
+            $this->_assertPropertyPHPDocExists($reflectionClass, $reflectionProperty);
+            $this->_assertCorrectPropertyZeroValue($reflectionClass,$reflectionProperty);
+            $this->_assertCorrectGetterImplementation($reflectionClass, $reflectionProperty);
+            $this->_assertCorrectSetterImplementation($reflectionClass, $reflectionProperty);
         }
     }
 
@@ -129,7 +148,7 @@ trait ModelDefinitionSanityTestsTrait
      * @param \ReflectionClass $reflectionClass
      * @param \ReflectionProperty $reflectionProperty
      */
-    protected function assertPropertyPHPDocExists(\ReflectionClass $reflectionClass, \ReflectionProperty $reflectionProperty)
+    protected function _assertPropertyPHPDocExists(\ReflectionClass $reflectionClass, \ReflectionProperty $reflectionProperty)
     {
         $className = $reflectionClass->getName();
         $propertyName = $reflectionProperty->getName();
@@ -160,7 +179,7 @@ trait ModelDefinitionSanityTestsTrait
      * @param \ReflectionClass $reflectionClass
      * @param \ReflectionProperty $reflectionProperty
      */
-    protected function assertCorrectPropertyZeroValue(\ReflectionClass $reflectionClass, \ReflectionProperty $reflectionProperty)
+    protected function _assertCorrectPropertyZeroValue(\ReflectionClass $reflectionClass, \ReflectionProperty $reflectionProperty)
     {
         /** @var \phpDocumentor\Reflection\Type $propertyVarType */
 
@@ -253,7 +272,7 @@ trait ModelDefinitionSanityTestsTrait
      * @param \ReflectionClass $reflectionClass
      * @param \ReflectionProperty $reflectionProperty
      */
-    protected function assertCorrectGetterImplementation(\ReflectionClass $reflectionClass, \ReflectionProperty $reflectionProperty)
+    protected function _assertCorrectGetterImplementation(\ReflectionClass $reflectionClass, \ReflectionProperty $reflectionProperty)
     {
         /** @var \phpDocumentor\Reflection\Type $propertyVarType */
         /** @var \phpDocumentor\Reflection\DocBlock\Tags\Return_ $methodReturnTag */
@@ -313,7 +332,7 @@ trait ModelDefinitionSanityTestsTrait
      * @param \ReflectionClass $reflectionClass
      * @param \ReflectionProperty $reflectionProperty
      */
-    protected function assertCorrectSetterImplementation(\ReflectionClass $reflectionClass, \ReflectionProperty $reflectionProperty)
+    protected function _assertCorrectSetterImplementation(\ReflectionClass $reflectionClass, \ReflectionProperty $reflectionProperty)
     {
         /** @var \phpDocumentor\Reflection\Type $propertyVarType */
         /** @var \phpDocumentor\Reflection\DocBlock\Tags\Param $methodParamTag */
@@ -326,31 +345,25 @@ trait ModelDefinitionSanityTestsTrait
         // TODO: This will only validate methods that match the expected setter name.  Not sure I like that.
         if ($reflectionClass->hasMethod($expectedSetterName))
         {
-            // Grab doc block definition from class property declaration
-            $propertyDocBlock = $this->docBlockFactory->create($reflectionProperty->getDocComment());
-            $propertyVarType = $propertyDocBlock->getTagsByName('var')[0]->getType();
-
             // Get method reflection
             $reflectionMethod = $reflectionClass->getMethod($expectedSetterName);
 
             // Validate we have one parameter
-            // TODO: Support additional params, maybe?
             $this->assertEquals(1, $reflectionMethod->getNumberOfParameters(), sprintf(
                 'Setter "%s" for property "%s" in class "%s" must have at one parameter',
                 $expectedSetterName,
                 $propertyName,
                 $className
             ));
-            $this->assertEquals(1, $reflectionMethod->getNumberOfParameters(), sprintf(
+            $this->assertEquals(1, $reflectionMethod->getNumberOfRequiredParameters(), sprintf(
                 'Setter "%s" for property "%s" in class "%s" must have one required parameter',
                 $expectedSetterName,
                 $propertyName,
                 $className
             ));
 
-            // Get parameter reflection
+            // Get first parameter
             $reflectionParameter = $reflectionMethod->getParameters()[0];
-
             // Validate name
             $parameterName = $reflectionParameter->getName();
             $this->assertEquals($propertyName, $parameterName, sprintf(
@@ -362,8 +375,7 @@ trait ModelDefinitionSanityTestsTrait
 
             // Get method doc block
             $methodDockBlock = $this->docBlockFactory->create($reflectionMethod->getDocComment());
-
-            // Ensure we have one @param attribute
+            // Try to locate param doc block tag
             $methodParamTags = $methodDockBlock->getTagsByName('param');
             $this->assertCount(1, $methodParamTags, sprintf(
                 'Parameter "%s" for setter "%s" for property "%s" in class "%s" must have a "@param" doc block attribute',
@@ -373,10 +385,15 @@ trait ModelDefinitionSanityTestsTrait
                 $className
             ));
 
+            // Grab doc block definition from class property declaration
+            $propertyDocBlock = $this->docBlockFactory->create($reflectionProperty->getDocComment());
+            $propertyVarType = $propertyDocBlock->getTagsByName('var')[0]->getType();
+
             // Pull out the @param attribute from the doc block comment
             $methodParamTag = $methodParamTags[0];
             $methodParamType = $methodParamTag->getType();
             $parameterClass = $reflectionParameter->getClass();
+
 
             // Finally, attempt to validate setter declaration sanity
             switch(true)
@@ -424,5 +441,11 @@ trait ModelDefinitionSanityTestsTrait
 
             }
         }
+    }
+
+    protected function _assertParameterMatchesProperty(\ReflectionParameter $reflectionParameter,
+                                                       \ReflectionProperty $reflectionProperty)
+    {
+
     }
 }
