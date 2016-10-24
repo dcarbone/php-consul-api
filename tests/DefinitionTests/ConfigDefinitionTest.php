@@ -27,22 +27,8 @@ class ConfigDefinitionTest extends AbstractDefinitionTestCases
     /**
      * @inheritDoc
      */
-    protected function getReflectionClass()
+    protected function getSubjectClassName()
     {
-        if (!isset($this->reflectionClass))
-            $this->reflectionClass = new \ReflectionClass(Config::class);
-
-        return $this->reflectionClass;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getEmptyInstance()
-    {
-        if (!isset($this->emptyInstance))
-            $this->emptyInstance = new Config();
-
-        return $this->emptyInstance;
+        return Config::class;
     }
 }

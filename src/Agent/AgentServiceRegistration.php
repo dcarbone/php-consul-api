@@ -78,7 +78,7 @@ class AgentServiceRegistration extends AbstractModel
     }
 
     /**
-     * @return \string[]
+     * @return string[]
      */
     public function getTags()
     {
@@ -86,7 +86,7 @@ class AgentServiceRegistration extends AbstractModel
     }
 
     /**
-     * @param \string[] $Tags
+     * @param string[] $Tags
      * @return AgentServiceRegistration
      */
     public function setTags($Tags)

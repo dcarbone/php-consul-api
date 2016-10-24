@@ -24,11 +24,11 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  */
 class AgentSelf extends AbstractModel
 {
-    /** @var AgentSelfConfig */
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentSelfConfig */
     public $Config = null;
-    /** @var AgentSelfCoord */
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentSelfCoord */
     public $Coord = null;
-    /** @var AgentMember */
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentMember */
     public $Member = null;
 
     /**
@@ -44,7 +44,7 @@ class AgentSelf extends AbstractModel
     }
 
     /**
-     * @return AgentSelfConfig
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentSelfConfig
      */
     public function getConfig()
     {
@@ -52,7 +52,7 @@ class AgentSelf extends AbstractModel
     }
 
     /**
-     * @return AgentSelfCoord
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentSelfCoord
      */
     public function getCoord()
     {
@@ -60,7 +60,7 @@ class AgentSelf extends AbstractModel
     }
 
     /**
-     * @return AgentMember
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentMember
      */
     public function getMember()
     {

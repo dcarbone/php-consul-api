@@ -74,7 +74,7 @@ class SessionEntry extends AbstractModel
     }
 
     /**
-     * @return \string[]
+     * @return string[]
      */
     public function getChecks()
     {

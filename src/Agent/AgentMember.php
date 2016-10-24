@@ -72,7 +72,7 @@ class AgentMember extends AbstractModel
     }
 
     /**
-     * @return \string[]
+     * @return string[]
      */
     public function getTags()
     {

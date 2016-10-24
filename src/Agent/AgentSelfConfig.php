@@ -144,7 +144,7 @@ class AgentSelfConfig extends AbstractModel
     }
 
     /**
-     * @return \string[]
+     * @return string[]
      */
     public function getDNSRecursors()
     {
@@ -152,7 +152,7 @@ class AgentSelfConfig extends AbstractModel
     }
 
     /**
-     * @return \string[]
+     * @return string[]
      */
     public function getDNSConfig()
     {
@@ -208,7 +208,7 @@ class AgentSelfConfig extends AbstractModel
     }
 
     /**
-     * @return \string[]
+     * @return string[]
      */
     public function getPorts()
     {
@@ -232,7 +232,7 @@ class AgentSelfConfig extends AbstractModel
     }
 
     /**
-     * @return \string[]
+     * @return string[]
      */
     public function getTelemetry()
     {
@@ -296,7 +296,7 @@ class AgentSelfConfig extends AbstractModel
     }
 
     /**
-     * @return \string[]
+     * @return string[]
      */
     public function getStartJoin()
     {

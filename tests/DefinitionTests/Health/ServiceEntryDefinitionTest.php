@@ -28,23 +28,8 @@ class ServiceEntryDefinitionTest extends AbstractDefinitionTestCases
     /**
      * @inheritDoc
      */
-    protected function getReflectionClass()
+    protected function getSubjectClassName()
     {
-        if (!isset($this->reflectionClass))
-            $this->reflectionClass = new \ReflectionClass(ServiceEntry::class);
-
-        return $this->reflectionClass;
+        return ServiceEntry::class;
     }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getEmptyInstance()
-    {
-        if (!isset($this->emptyInstance))
-            $this->emptyInstance = new ServiceEntry();
-
-        return $this->emptyInstance;
-    }
-
 }

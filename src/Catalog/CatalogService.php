@@ -60,7 +60,7 @@ class CatalogService extends CatalogNode
     }
 
     /**
-     * @return \string[]
+     * @return string[]
      */
     public function getServiceTags()
     {

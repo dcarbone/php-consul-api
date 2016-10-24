@@ -31,22 +31,8 @@ class AgentCheckRegistrationDefinitionTest extends AbstractDefinitionTestCases
     /**
      * @inheritDoc
      */
-    protected function getReflectionClass()
+    protected function getSubjectClassName()
     {
-        if (!isset($this->reflectionClass))
-            return $this->reflectionClass = new \ReflectionClass(AgentCheckRegistration::class);
-
-        return $this->reflectionClass;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getEmptyInstance()
-    {
-        if (!isset($this->emptyInstance))
-            $this->emptyInstance = new AgentCheckRegistration();
-
-        return $this->emptyInstance;
+        return AgentCheckRegistration::class;
     }
 }

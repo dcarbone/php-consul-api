@@ -16,23 +16,20 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\Agent\AgentCheck;
+use DCarbone\PHPConsulAPI\Agent\AgentSelf;
 use DCarbone\PHPConsulAPITests\DefinitionTests\AbstractDefinitionTestCases;
 
 /**
- * Class AgentCheckDefinitionTest
+ * Class AgentSelfDefinitionTest
  * @package DCarbone\PHPConsulAPITests\DefinitionTests\Agent
  */
-class AgentCheckDefinitionTest extends AbstractDefinitionTestCases
+class AgentSelfDefinitionTest extends AbstractDefinitionTestCases
 {
-    /** @var bool */
-    protected $requiresSetters = true;
-
     /**
      * @inheritDoc
      */
     protected function getSubjectClassName()
     {
-        return AgentCheck::class;
+        return AgentSelf::class;
     }
 }

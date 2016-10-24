@@ -44,14 +44,34 @@ abstract class AbstractDefinitionTestCases extends \PHPUnit_Framework_TestCase
     protected $requiresSetters = false;
 
     /**
+     * @return string
+     */
+    abstract protected function getSubjectClassName();
+
+    /**
      * @return \ReflectionClass
      */
-    abstract protected function getReflectionClass();
+    protected function getReflectionClass()
+    {
+        if (!isset($this->reflectionClass))
+            $this->reflectionClass = new \ReflectionClass($this->getSubjectClassName());
+
+        return $this->reflectionClass;
+    }
 
     /**
      * @return object
      */
-    abstract protected function getEmptyInstance();
+    protected function getEmptyInstance()
+    {
+        if (!isset($this->emptyInstance))
+        {
+            $class = $this->getSubjectClassName();
+            $this->emptyInstance = new $class;
+        }
+
+        return $this->emptyInstance;
+    }
 
     /**
      * @inheritdoc

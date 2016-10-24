@@ -48,7 +48,7 @@ class QueryDatacenterOptions extends AbstractModel
     }
 
     /**
-     * @return \string[]
+     * @return string[]
      */
     public function getDatacenters()
     {
@@ -56,7 +56,7 @@ class QueryDatacenterOptions extends AbstractModel
     }
 
     /**
-     * @param \string[] $Datacenters
+     * @param string[] $Datacenters
      * @return QueryDatacenterOptions
      */
     public function setDatacenters(array $Datacenters)
