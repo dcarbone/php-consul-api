@@ -1,5 +1,7 @@
 # php-consul-api
 
+[![Build Status](https://travis-ci.org/dcarbone/php-consul-api.svg?branch=master)](https://travis-ci.org/dcarbone/php-consul-api)
+
 PHP client for the [Consul HTTP API](https://www.consul.io/docs/agent/http.html)
 
 This library is loosely based upon the [official GO client](https://github.com/hashicorp/consul/tree/master/api).
