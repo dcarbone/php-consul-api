@@ -107,7 +107,7 @@ class Config
     /**
      * Construct a configuration object from Environment Variables while using a specific HTTP Client
      *
-     * @param HttpClient $client
+     * @param \Http\Client\HttpClient $client
      * @return Config
      */
     public static function newDefaultConfigWithClient(HttpClient $client)
@@ -323,7 +323,7 @@ class Config
     }
 
     /**
-     * @param HttpClient $HttpClient
+     * @param \Http\Client\HttpClient $HttpClient
      * @return Config
      */
     public function setHttpClient(HttpClient $HttpClient)

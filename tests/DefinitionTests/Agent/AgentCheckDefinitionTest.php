@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPConsulAPITests\DefinitionTests;
+<?php namespace DCarbone\PHPConsulAPITests\DefinitionTests\Agent;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,21 +16,25 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\Config;
+use DCarbone\PHPConsulAPI\Agent\AgentCheck;
+use DCarbone\PHPConsulAPITests\DefinitionTests\AbstractDefinitionTestCases;
 
 /**
- * Class ConfigDefinitionTest
- * @package DCarbone\PHPConsulAPITests\DefinitionTests
+ * Class AgentCheckDefinitionTest
+ * @package DCarbone\PHPConsulAPITests\DefinitionTests\Agent
  */
-class ConfigDefinitionTest extends AbstractDefinitionTestCases
+class AgentCheckDefinitionTest extends AbstractDefinitionTestCases
 {
+    /** @var bool */
+    protected $requiresSetters = true;
+
     /**
      * @inheritDoc
      */
     protected function getReflectionClass()
     {
         if (!isset($this->reflectionClass))
-            $this->reflectionClass = new \ReflectionClass(Config::class);
+            $this->reflectionClass = new \ReflectionClass(AgentCheck::class);
 
         return $this->reflectionClass;
     }
@@ -41,7 +45,7 @@ class ConfigDefinitionTest extends AbstractDefinitionTestCases
     protected function getEmptyInstance()
     {
         if (!isset($this->emptyInstance))
-            $this->emptyInstance = new Config();
+            $this->emptyInstance = new AgentCheck();
 
         return $this->emptyInstance;
     }

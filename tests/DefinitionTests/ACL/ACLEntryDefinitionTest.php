@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPConsulAPITests\DefinitionTests;
+<?php namespace DCarbone\PHPConsulAPITests\DefinitionTests\ACL;
 
 /*
    Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,21 +16,25 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\Config;
+use DCarbone\PHPConsulAPI\ACL\ACLEntry;
+use DCarbone\PHPConsulAPITests\DefinitionTests\AbstractDefinitionTestCases;
 
 /**
- * Class ConfigDefinitionTest
- * @package DCarbone\PHPConsulAPITests\DefinitionTests
+ * Class ACLEntryDefinitionTest
+ * @package DCarbone\PHPConsulAPITests\ACL
  */
-class ConfigDefinitionTest extends AbstractDefinitionTestCases
+class ACLEntryDefinitionTest extends AbstractDefinitionTestCases
 {
+    /** @var bool */
+    protected $requiresSetters = true;
+
     /**
      * @inheritDoc
      */
     protected function getReflectionClass()
     {
         if (!isset($this->reflectionClass))
-            $this->reflectionClass = new \ReflectionClass(Config::class);
+            return $this->reflectionClass = new \ReflectionClass(ACLEntry::class);
 
         return $this->reflectionClass;
     }
@@ -41,7 +45,7 @@ class ConfigDefinitionTest extends AbstractDefinitionTestCases
     protected function getEmptyInstance()
     {
         if (!isset($this->emptyInstance))
-            $this->emptyInstance = new Config();
+            $this->emptyInstance = new ACLEntry();
 
         return $this->emptyInstance;
     }
