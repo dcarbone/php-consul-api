@@ -17,6 +17,8 @@
 */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\HasSettableStringTags;
+use DCarbone\PHPConsulAPI\HasStringTags;
 
 /**
  * Class ServiceQuery
@@ -24,6 +26,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  */
 class ServiceQuery extends AbstractModel
 {
+    use HasStringTags, HasSettableStringTags;
+
     /** @var string */
     public $Service = '';
     /** @var string */
@@ -32,8 +36,6 @@ class ServiceQuery extends AbstractModel
     public $Failover = null;
     /** @var bool */
     public $OnlyPassing = false;
-    /** @var array */
-    public $Tags = [];
 
     /**
      * ServiceQuery constructor.
@@ -114,38 +116,6 @@ class ServiceQuery extends AbstractModel
     public function setOnlyPassing($OnlyPassing)
     {
         $this->OnlyPassing = $OnlyPassing;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getTags()
-    {
-        return $this->Tags;
-    }
-
-    /**
-     * @param array $Tags
-     * @return ServiceQuery
-     */
-    public function setTags(array $Tags)
-    {
-        $this->Tags = [];
-        foreach($Tags as $tag)
-        {
-            $this->addTag($tag);
-        }
-        return $this;
-    }
-
-    /**
-     * @param string $tag
-     * @return $this
-     */
-    public function addTag($tag)
-    {
-        $this->Tags[] = $tag;
         return $this;
     }
 }

@@ -17,6 +17,7 @@
 */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\HasStringTags;
 
 /**
  * Class AgentService
@@ -24,12 +25,12 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  */
 class AgentService extends AbstractModel
 {
+    use HasStringTags;
+
     /** @var string */
     public $ID = '';
     /** @var string */
     public $Service = '';
-    /** @var string[] */
-    public $Tags = array();
     /** @var string */
     public $Address = '';
     /** @var int */
@@ -51,14 +52,6 @@ class AgentService extends AbstractModel
     public function getService()
     {
         return $this->Service;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getTags()
-    {
-        return $this->Tags;
     }
 
     /**

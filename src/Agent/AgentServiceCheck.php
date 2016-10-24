@@ -52,11 +52,31 @@ class AgentServiceCheck extends AbstractModel
     }
 
     /**
+     * @param string $Script
+     * @return AgentServiceCheck
+     */
+    public function setScript($Script)
+    {
+        $this->Script = $Script;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getDockerContainerID()
     {
         return $this->DockerContainerID;
+    }
+
+    /**
+     * @param string $DockerContainerID
+     * @return AgentServiceCheck
+     */
+    public function setDockerContainerID($DockerContainerID)
+    {
+        $this->DockerContainerID = $DockerContainerID;
+        return $this;
     }
 
     /**
@@ -68,11 +88,31 @@ class AgentServiceCheck extends AbstractModel
     }
 
     /**
+     * @param string $Shell
+     * @return AgentServiceCheck
+     */
+    public function setShell($Shell)
+    {
+        $this->Shell = $Shell;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getInterval()
     {
         return $this->Interval;
+    }
+
+    /**
+     * @param string $Interval
+     * @return AgentServiceCheck
+     */
+    public function setInterval($Interval)
+    {
+        $this->Interval = $Interval;
+        return $this;
     }
 
     /**
@@ -84,11 +124,31 @@ class AgentServiceCheck extends AbstractModel
     }
 
     /**
+     * @param string $Timeout
+     * @return AgentServiceCheck
+     */
+    public function setTimeout($Timeout)
+    {
+        $this->Timeout = $Timeout;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getTTL()
     {
         return $this->TTL;
+    }
+
+    /**
+     * @param string $TTL
+     * @return AgentServiceCheck
+     */
+    public function setTTL($TTL)
+    {
+        $this->TTL = $TTL;
+        return $this;
     }
 
     /**
@@ -100,6 +160,16 @@ class AgentServiceCheck extends AbstractModel
     }
 
     /**
+     * @param string $HTTP
+     * @return AgentServiceCheck
+     */
+    public function setHTTP($HTTP)
+    {
+        $this->HTTP = $HTTP;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getTCP()
@@ -108,10 +178,30 @@ class AgentServiceCheck extends AbstractModel
     }
 
     /**
+     * @param string $TCP
+     * @return AgentServiceCheck
+     */
+    public function setTCP($TCP)
+    {
+        $this->TCP = $TCP;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getStatus()
     {
         return $this->Status;
+    }
+
+    /**
+     * @param string $Status
+     * @return AgentServiceCheck
+     */
+    public function setStatus($Status)
+    {
+        $this->Status = $Status;
+        return $this;
     }
 }

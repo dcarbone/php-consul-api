@@ -17,6 +17,7 @@
 */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\HasStringTags;
 
 /**
  * Class AgentMember
@@ -24,14 +25,14 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  */
 class AgentMember extends AbstractModel
 {
+    use HasStringTags;
+
     /** @var string */
     public $Name = '';
     /** @var string */
     public $Addr = '';
     /** @var int */
     public $Port = 0;
-    /** @var string[] */
-    public $Tags = array();
     /** @var string */
     public $Status = '';
     /** @var int */
@@ -69,14 +70,6 @@ class AgentMember extends AbstractModel
     public function getPort()
     {
         return $this->Port;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getTags()
-    {
-        return $this->Tags;
     }
 
     /**
