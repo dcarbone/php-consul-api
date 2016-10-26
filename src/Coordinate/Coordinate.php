@@ -34,7 +34,7 @@ class Coordinate extends AbstractModel
     public $Height = 0.0;
 
     /**
-     * @return \int[]
+     * @return int[]
      */
     public function getVec()
     {

@@ -15,6 +15,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Agent\AgentCheck;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
@@ -31,10 +32,24 @@ class CatalogRegistration extends AbstractModel
     public $Address = '';
     /** @var string */
     public $Datacenter = '';
-    /** @var AgentService */
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentService */
     public $Service = null;
-    /** @var AgentCheck */
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentCheck */
     public $Check = null;
+
+    /**
+     * CatalogRegistration constructor.
+     *
+     * @param array $data
+     */
+    public function __construct(array $data = array())
+    {
+        parent::__construct($data);
+        if (!($this->Service instanceof AgentService))
+            $this->Service = new AgentService((array)$this->Service);
+        if (!($this->Check instanceof AgentCheck))
+            $this->Check = new AgentCheck((array)$this->Check);
+    }
 
     /**
      * @return string
@@ -91,7 +106,7 @@ class CatalogRegistration extends AbstractModel
     }
 
     /**
-     * @return AgentService
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentService
      */
     public function getService()
     {
@@ -99,7 +114,7 @@ class CatalogRegistration extends AbstractModel
     }
 
     /**
-     * @param AgentService $Service
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentService $Service
      * @return CatalogRegistration
      */
     public function setService(AgentService $Service)
@@ -109,7 +124,7 @@ class CatalogRegistration extends AbstractModel
     }
 
     /**
-     * @return AgentCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheck
      */
     public function getCheck()
     {
@@ -117,7 +132,7 @@ class CatalogRegistration extends AbstractModel
     }
 
     /**
-     * @param AgentCheck $Check
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentCheck $Check
      * @return CatalogRegistration
      */
     public function setCheck(AgentCheck $Check)

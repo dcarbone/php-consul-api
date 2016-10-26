@@ -15,6 +15,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
@@ -28,15 +29,18 @@ class CoordinateDatacenterMap extends AbstractModel
     /** @var Coordinate[] */
     public $Coordinates = array();
 
+    /**
+     * CoordinateDatacenterMap constructor.
+     *
+     * @param array $data
+     */
     public function __construct(array $data = array())
     {
         parent::__construct($data);
-        if (isset($this->Coordinates))
+        for ($i = 0, $cnt = count($this->Coordinates); $i < $cnt; $i++)
         {
-            for ($i = 0, $cnt = count($this->Coordinates); $i < $cnt; $i++)
-            {
+            if (!($this->Coordinates[$i] instanceof Coordinate))
                 $this->Coordinates[$i] = new Coordinate((array)$this->Coordinates[$i]);
-            }
         }
     }
 

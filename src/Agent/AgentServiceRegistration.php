@@ -50,9 +50,15 @@ class AgentServiceRegistration extends AbstractModel
     public function __construct(array $data = array())
     {
         parent::__construct($data);
-        $this->Check = new AgentCheck((array)$this->Check);
+
+        if (!($this->Check instanceof AgentCheck))
+            $this->Check = new AgentCheck((array)$this->Check);
+
         for ($i = 0, $cnt = count($this->Checks); $i < $cnt; $i++)
         {
+            if ($this->Checks[$i] instanceof AgentCheck)
+                continue;
+
             $this->Checks[$i] = new AgentCheck($this->Checks[$i]);
         }
     }
