@@ -6,6 +6,13 @@ PHP client for the [Consul HTTP API](https://www.consul.io/docs/agent/http.html)
 
 This library is loosely based upon the [official GO client](https://github.com/hashicorp/consul/tree/master/api).
 
+## Version Compatibility
+
+|PHPConsulAPI Version|Consul Version|
+|---|---|
+|0.3.x|0.6.4|
+|dev-master|0.7.0|
+
 ## Composer
 
 This lib is designed to be used with [Composer](https://getcomposer.org)
@@ -15,7 +22,7 @@ Require Entry:
 ```json
 {
     "require": {
-        "dcarbone/php-consul-api": "0.4.*"    
+        "dcarbone/php-consul-api": "dev-master"    
     }
 }
 ```
