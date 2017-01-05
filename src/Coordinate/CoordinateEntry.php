@@ -1,7 +1,7 @@
 <?php namespace DCarbone\PHPConsulAPI\Coordinate;
 
 /*
-   Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ class CoordinateEntry extends AbstractModel
 {
     /** @var string */
     public $Node = '';
-    /** @var Coordinate */
+    /** @var \DCarbone\PHPConsulAPI\Coordinate\Coordinate */
     public $Coord = null;
 
     /**
@@ -48,7 +48,7 @@ class CoordinateEntry extends AbstractModel
     }
 
     /**
-     * @return Coordinate
+     * @return \DCarbone\PHPConsulAPI\Coordinate\Coordinate
      */
     public function getCoord()
     {

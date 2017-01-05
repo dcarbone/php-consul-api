@@ -1,7 +1,7 @@
 <?php namespace DCarbone\PHPConsulAPI\KV;
 
 /*
-   Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
@@ -46,7 +47,7 @@ class KVPair extends AbstractModel
     public function __construct(array $data = array(), $_decodeValue = false)
     {
         parent::__construct($data);
-        if ($_decodeValue && isset($this->Value))
+        if ((bool)$_decodeValue && isset($this->Value))
             $this->Value = base64_decode($this->Value);
     }
 
@@ -59,11 +60,31 @@ class KVPair extends AbstractModel
     }
 
     /**
+     * @param string $Key
+     * @return KVPair
+     */
+    public function setKey($Key)
+    {
+        $this->Key = $Key;
+        return $this;
+    }
+
+    /**
      * @return int
      */
     public function getCreateIndex()
     {
         return $this->CreateIndex;
+    }
+
+    /**
+     * @param int $CreateIndex
+     * @return KVPair
+     */
+    public function setCreateIndex($CreateIndex)
+    {
+        $this->CreateIndex = $CreateIndex;
+        return $this;
     }
 
     /**
@@ -75,11 +96,31 @@ class KVPair extends AbstractModel
     }
 
     /**
+     * @param int $ModifyIndex
+     * @return KVPair
+     */
+    public function setModifyIndex($ModifyIndex)
+    {
+        $this->ModifyIndex = $ModifyIndex;
+        return $this;
+    }
+
+    /**
      * @return int
      */
     public function getLockIndex()
     {
         return $this->LockIndex;
+    }
+
+    /**
+     * @param int $LockIndex
+     * @return KVPair
+     */
+    public function setLockIndex($LockIndex)
+    {
+        $this->LockIndex = $LockIndex;
+        return $this;
     }
 
     /**
@@ -91,6 +132,16 @@ class KVPair extends AbstractModel
     }
 
     /**
+     * @param int $Flags
+     * @return KVPair
+     */
+    public function setFlags($Flags)
+    {
+        $this->Flags = $Flags;
+        return $this;
+    }
+
+    /**
      * @return null|string
      */
     public function getValue()
@@ -99,11 +150,31 @@ class KVPair extends AbstractModel
     }
 
     /**
+     * @param null|string $Value
+     * @return KVPair
+     */
+    public function setValue($Value)
+    {
+        $this->Value = $Value;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getSession()
     {
         return $this->Session;
+    }
+
+    /**
+     * @param string $Session
+     * @return KVPair
+     */
+    public function setSession($Session)
+    {
+        $this->Session = $Session;
+        return $this;
     }
 
     /**

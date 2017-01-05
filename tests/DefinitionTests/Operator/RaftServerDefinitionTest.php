@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPConsulAPITests\DefinitionTests\Agent;
+<?php namespace DCarbone\PHPConsulAPITests\DefinitionTests\Operator;
 
 /*
    Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,20 +16,24 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\Agent\AgentSelf;
+use DCarbone\PHPConsulAPI\Operator\RaftServer;
 use DCarbone\PHPConsulAPITests\DefinitionTests\AbstractDefinitionTestCases;
 
 /**
- * Class AgentSelfDefinitionTest
- * @package DCarbone\PHPConsulAPITests\DefinitionTests\Agent
+ * Class RaftServerDefinitionTest
+ *
+ * @package DCarbone\PHPConsulAPITests\DefinitionTests\Operator
  */
-class AgentSelfDefinitionTest extends AbstractDefinitionTestCases
+class RaftServerDefinitionTest extends AbstractDefinitionTestCases
 {
+    /** @var bool */
+    protected $requiresSetters = true;
+
     /**
-     * @inheritDoc
+     * @return mixed
      */
     protected function getSubjectClassName()
     {
-        return AgentSelf::class;
+        return RaftServer::class;
     }
 }

@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPConsulAPITests\DefinitionTests\Agent;
+<?php namespace DCarbone\PHPConsulAPITests\DefinitionTests\Coordinate;
 
 /*
    Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,20 +16,21 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\Agent\AgentSelf;
+use DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry;
 use DCarbone\PHPConsulAPITests\DefinitionTests\AbstractDefinitionTestCases;
 
 /**
- * Class AgentSelfDefinitionTest
- * @package DCarbone\PHPConsulAPITests\DefinitionTests\Agent
+ * Class CoordinateEntryDefinitionTest
+ *
+ * @package DCarbone\PHPConsulAPITests\DefinitionTests\Coordinate
  */
-class AgentSelfDefinitionTest extends AbstractDefinitionTestCases
+class CoordinateEntryDefinitionTest extends AbstractDefinitionTestCases
 {
     /**
-     * @inheritDoc
+     * @return string
      */
     protected function getSubjectClassName()
     {
-        return AgentSelf::class;
+        return CoordinateEntry::class;
     }
 }

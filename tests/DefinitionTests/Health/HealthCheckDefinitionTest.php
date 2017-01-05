@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPConsulAPITests\DefinitionTests\Agent;
+<?php namespace DCarbone\PHPConsulAPITests\DefinitionTests\Health;
 
 /*
    Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,20 +16,21 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\Agent\AgentSelf;
+use DCarbone\PHPConsulAPI\Health\HealthCheck;
 use DCarbone\PHPConsulAPITests\DefinitionTests\AbstractDefinitionTestCases;
 
 /**
- * Class AgentSelfDefinitionTest
- * @package DCarbone\PHPConsulAPITests\DefinitionTests\Agent
+ * Class HealthCheckDefinitionTest
+ *
+ * @package DCarbone\PHPConsulAPITests\DefinitionTests\Health
  */
-class AgentSelfDefinitionTest extends AbstractDefinitionTestCases
+class HealthCheckDefinitionTest extends AbstractDefinitionTestCases
 {
     /**
-     * @inheritDoc
+     * @return string
      */
     protected function getSubjectClassName()
     {
-        return AgentSelf::class;
+        return HealthCheck::class;
     }
 }

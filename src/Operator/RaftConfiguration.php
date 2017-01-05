@@ -1,7 +1,7 @@
 <?php namespace DCarbone\PHPConsulAPI\Operator;
 
 /*
-   Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -30,7 +30,9 @@ class RaftConfiguration extends AbstractModel
     public $Index = 0;
 
     /**
-     * @inheritDoc
+     * RaftConfiguration constructor.
+     *
+     * @param array $data
      */
     public function __construct(array $data = array())
     {

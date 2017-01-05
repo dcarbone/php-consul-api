@@ -1,7 +1,7 @@
 <?php namespace DCarbone\PHPConsulAPI\PreparedQuery;
 
 /*
-   Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -32,11 +32,11 @@ class PreparedQueryDefinition extends AbstractModel
     public $Session = '';
     /** @var string */
     public $Token = '';
-    /** @var ServiceQuery|null */
+    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery */
     public $Service = null;
-    /** @var QueryDNSOptions|null */
+    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions */
     public $DNS = null;
-    /** @var QueryTemplate|null */
+    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\QueryTemplate */
     public $Template = null;
 
     /**
@@ -46,10 +46,12 @@ class PreparedQueryDefinition extends AbstractModel
     public function __construct(array $data = array())
     {
         parent::__construct($data);
-
-        $this->Service = new ServiceQuery((array)$this->Service);
-        $this->DNS = new QueryDNSOptions((array)$this->DNS);
-        $this->Template = new QueryTemplate((array)$this->Template);
+        if (!($this->Service instanceof ServiceQuery))
+            $this->Service = new ServiceQuery((array)$this->Service);
+        if (!($this->DNS instanceof QueryDNSOptions))
+            $this->DNS = new QueryDNSOptions((array)$this->DNS);
+        if (!($this->Template instanceof QueryTemplate))
+            $this->Template = new QueryTemplate((array)$this->Template);
     }
 
     /**
@@ -125,7 +127,7 @@ class PreparedQueryDefinition extends AbstractModel
     }
 
     /**
-     * @return ServiceQuery|null
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
     public function getService()
     {
@@ -133,7 +135,7 @@ class PreparedQueryDefinition extends AbstractModel
     }
 
     /**
-     * @param ServiceQuery $Service
+     * @param \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery $Service
      * @return PreparedQueryDefinition
      */
     public function setService(ServiceQuery $Service)
@@ -143,7 +145,7 @@ class PreparedQueryDefinition extends AbstractModel
     }
 
     /**
-     * @return QueryDNSOptions|null
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions
      */
     public function getDNS()
     {
@@ -151,7 +153,7 @@ class PreparedQueryDefinition extends AbstractModel
     }
 
     /**
-     * @param QueryDNSOptions $DNS
+     * @param \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions $DNS
      * @return PreparedQueryDefinition
      */
     public function setDNS(QueryDNSOptions $DNS)
@@ -161,7 +163,7 @@ class PreparedQueryDefinition extends AbstractModel
     }
 
     /**
-     * @return QueryTemplate|null
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryTemplate
      */
     public function getTemplate()
     {
@@ -169,7 +171,7 @@ class PreparedQueryDefinition extends AbstractModel
     }
 
     /**
-     * @param QueryTemplate $Template
+     * @param \DCarbone\PHPConsulAPI\PreparedQuery\QueryTemplate $Template
      * @return PreparedQueryDefinition
      */
     public function setTemplate(QueryTemplate $Template)

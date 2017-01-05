@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPConsulAPITests\DefinitionTests\Agent;
+<?php namespace DCarbone\PHPConsulAPITests\DefinitionTests\PreparedQuery;
 
 /*
    Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,20 +16,24 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\Agent\AgentSelf;
+use DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition;
 use DCarbone\PHPConsulAPITests\DefinitionTests\AbstractDefinitionTestCases;
 
 /**
- * Class AgentSelfDefinitionTest
- * @package DCarbone\PHPConsulAPITests\DefinitionTests\Agent
+ * Class PreparedQueryDefinitionDefinitionTest
+ *
+ * @package DCarbone\PHPConsulAPITests\DefinitionTests\PreparedQuery
  */
-class AgentSelfDefinitionTest extends AbstractDefinitionTestCases
+class PreparedQueryDefinitionDefinitionTest extends AbstractDefinitionTestCases
 {
+    /** @var bool */
+    protected $requiresSetters = true;
+
     /**
-     * @inheritDoc
+     * @return string
      */
     protected function getSubjectClassName()
     {
-        return AgentSelf::class;
+        return PreparedQueryDefinition::class;
     }
 }

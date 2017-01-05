@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPConsulAPITests\DefinitionTests\Agent;
+<?php namespace DCarbone\PHPConsulAPITests\DefinitionTests\Event;
 
 /*
    Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,20 +16,21 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\Agent\AgentSelf;
+use DCarbone\PHPConsulAPI\Event\UserEvent;
 use DCarbone\PHPConsulAPITests\DefinitionTests\AbstractDefinitionTestCases;
 
 /**
- * Class AgentSelfDefinitionTest
- * @package DCarbone\PHPConsulAPITests\DefinitionTests\Agent
+ * Class UserEventDefinitionTest
+ *
+ * @package DCarbone\PHPConsulAPITests\DefinitionTests\Event
  */
-class AgentSelfDefinitionTest extends AbstractDefinitionTestCases
+class UserEventDefinitionTest extends AbstractDefinitionTestCases
 {
     /**
-     * @inheritDoc
+     * @return string
      */
     protected function getSubjectClassName()
     {
-        return AgentSelf::class;
+        return UserEvent::class;
     }
 }

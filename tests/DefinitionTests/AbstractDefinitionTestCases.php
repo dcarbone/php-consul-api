@@ -1,7 +1,7 @@
 <?php namespace DCarbone\PHPConsulAPITests\DefinitionTests;
 
 /*
-   Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -17,11 +17,13 @@
 */
 
 use phpDocumentor\Reflection\DocBlockFactory;
+use phpDocumentor\Reflection\Type;
 use phpDocumentor\Reflection\Types\Array_;
 use phpDocumentor\Reflection\Types\Boolean;
 use phpDocumentor\Reflection\Types\Compound;
 use phpDocumentor\Reflection\Types\Float_;
 use phpDocumentor\Reflection\Types\Integer;
+use phpDocumentor\Reflection\Types\Null_;
 use phpDocumentor\Reflection\Types\Object_;
 use phpDocumentor\Reflection\Types\String_;
 
@@ -290,8 +292,27 @@ abstract class AbstractDefinitionTestCases extends \PHPUnit_Framework_TestCase
 
         $defaultValue = $emptyInstance->{$propertyName};
 
-        switch($propertyVarType)
+        switch(true)
         {
+            case $propertyVarType instanceof Compound:
+                $compoundTypes = explode('|', (string)$propertyVarType);
+                if (in_array('null', $compoundTypes))
+                {
+                    $failMessage = sprintf($failMessageTemplate, 'null');
+                    $this->assertNull($defaultValue, $failMessage);
+                }
+                else
+                {
+                    $this->fail(sprintf(
+                        'The property "%s" in class "%s" is of type "%s", and there is no zero-val check in place for this type. Please add one to the test suite.',
+                        $propertyName,
+                        $className,
+                        (string)$propertyVarType
+                    ));
+                }
+
+                break;
+
             case $propertyVarType instanceof Array_:
                 $failMessage = sprintf($failMessageTemplate, 'an array');
                 $this->assertInternalType('array', $defaultValue, $failMessage);

@@ -2,7 +2,7 @@
 
 
 /*
-   Copyright 2016 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -43,12 +43,15 @@ class UserEvent extends AbstractModel
     public $LTime = 0;
 
     /**
-     * @inheritDoc
+     * UserEvent constructor.
+     *
+     * @param array $data
+     * @param bool $_decodeValue
      */
     public function __construct(array $data = array(), $_decodeValue = false)
     {
         parent::__construct($data);
-        if ($_decodeValue && isset($this->Payload))
+        if ((bool)$_decodeValue && isset($this->Payload))
             $this->Payload = base64_decode($this->Payload);
     }
 
