@@ -4,21 +4,12 @@ Logging is handled with the [Logger](../src/Logger.php) class.  To register a ne
 [PSR-3](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-3-logger-interface.md) compliant and implement
 the [Psr\LoggerInterface](https://github.com/php-fig/log/blob/master/Psr/Log/LoggerInterface.php ) interface.
 
-## Provided Loggers
+## Debug Logger
 
-There are a few Logger classes provided by this lib:
+There is a single logger provided, the [FileDebugLogger](../src/FileDebugLogger.php)
 
-- [FileLogger](../src/FileLogger.php)
-- [PHPLogger](../src/PHPLogger.php)
-- [SocketLogger](../src/SocketLogger.php)
-
-## Default Logger
-
-For quick and lazy debugging or the like, you may optionally call [Logger::addDefaultLogger](../src/Logger.php#L73).
-This creates a new [FileLogger](../src/FileLogger.php) that writes to `var/logs/php-consul-api.log`.
+To enable this logger, execute [Logger::addDebugLogger()](../src/Logger.php#L52)
 
 ## Adding Loggers
 
-You may add a logger by calling [Logger::addLogger](../src/Logger.php#L112)
-
-## 
+You may add a logger by calling [Logger::addLogger](../src/Logger.php#L90)

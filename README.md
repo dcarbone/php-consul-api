@@ -11,7 +11,7 @@ This library is loosely based upon the [official GO client](https://github.com/h
 |PHPConsulAPI Version|Consul Version|
 |---|---|
 |0.3.x|0.6.4|
-|dev-master|0.7.0|
+|0.4.x|0.7.x|
 
 ## Composer
 
@@ -22,7 +22,7 @@ Require Entry:
 ```json
 {
     "require": {
-        "dcarbone/php-consul-api": "dev-master"    
+        "dcarbone/php-consul-api": "@stable"    
     }
 }
 ```
@@ -94,8 +94,8 @@ Next, construct a [Consul](./src/Consul.php) object:
 $consul = new \DCarbone\PHPConsulAPI\Consul($config);
 ```
 
-*NOTE*: If you do not create your own config object, [Consul](./src/Consul.php#L59) will create it's own
-using [Config::newDefaultConfig()](./src/Config.php#L142).
+*NOTE*: If you do not create your own config object, [Consul](./src/Consul.php#L72) will create it's own
+using [Config::newDefaultConfig()](./src/Config.php#L145) and attempt to locate a suitable HTTP Client.
 
 Once constructed, you interact with each Consul API via it's corresponding Client class:
 
