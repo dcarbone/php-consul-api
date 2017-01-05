@@ -27,9 +27,9 @@ class PreparedQueryExecuteResponse extends AbstractModel
 {
     /** @var string */
     public $Service = '';
-    /** @var ServiceEntry[] */
+    /** @var \DCarbone\PHPConsulAPI\Health\ServiceEntry[] */
     public $Nodes = [];
-    /** @var QueryDNSOptions|null */
+    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions */
     public $DNS = null;
     /** @var string */
     public $Datacenter = '';
@@ -43,13 +43,16 @@ class PreparedQueryExecuteResponse extends AbstractModel
     public function __construct(array $data = array())
     {
         parent::__construct($data);
-        $this->DNS = new QueryDNSOptions((array)$this->DNS);
-        if (isset($this->Nodes))
+
+        if (!($this->DNS instanceof QueryDNSOptions))
+            $this->DNS = new QueryDNSOptions((array)$this->DNS);
+
+        for ($i = 0, $cnt = count($this->Nodes); $i < $cnt; $i++)
         {
-            for ($i = 0, $cnt = count($this->Nodes); $i < $cnt; $i++)
-            {
-                $this->Nodes[$i] = new ServiceEntry((array)$this->Nodes[$i]);
-            }
+            if ($this->Nodes[$i] instanceof ServiceEntry)
+                continue;
+
+            $this->Nodes[$i] = new ServiceEntry((array)$this->Nodes[$i]);
         }
     }
 
@@ -70,7 +73,7 @@ class PreparedQueryExecuteResponse extends AbstractModel
     }
 
     /**
-     * @return QueryDNSOptions|null
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions
      */
     public function getDNS()
     {

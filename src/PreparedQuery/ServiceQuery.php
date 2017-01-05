@@ -32,7 +32,7 @@ class ServiceQuery extends AbstractModel
     public $Service = '';
     /** @var string */
     public $Near = '';
-    /** @var QueryDatacenterOptions */
+    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions */
     public $Failover = null;
     /** @var bool */
     public $OnlyPassing = false;
@@ -44,7 +44,8 @@ class ServiceQuery extends AbstractModel
     public function __construct(array $data = array())
     {
         parent::__construct($data);
-        $this->Failover = new QueryDatacenterOptions((array)$this->Failover);
+        if (!($this->Failover instanceof QueryDatacenterOptions))
+            $this->Failover = new QueryDatacenterOptions((array)$this->Failover);
     }
 
     /**
@@ -84,7 +85,7 @@ class ServiceQuery extends AbstractModel
     }
 
     /**
-     * @return QueryDatacenterOptions
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions
      */
     public function getFailover()
     {
@@ -92,7 +93,7 @@ class ServiceQuery extends AbstractModel
     }
 
     /**
-     * @param QueryDatacenterOptions $Failover
+     * @param \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions $Failover
      * @return ServiceQuery
      */
     public function setFailover(QueryDatacenterOptions $Failover)
