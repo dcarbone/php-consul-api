@@ -413,4 +413,28 @@ class AgentClient extends AbstractClient
 
         return $err;
     }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Error|null
+     */
+    public function reload()
+    {
+        $r = new Request('put', 'v1/agent/reload', $this->c);
+
+        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
+
+        return $err;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Error|null
+     */
+    public function leave()
+    {
+        $r = new Request('put', 'v1/agent/leave', $this->c);
+
+        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
+
+        return $err;
+    }
 }

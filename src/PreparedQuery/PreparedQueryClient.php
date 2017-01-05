@@ -132,20 +132,20 @@ class PreparedQueryClient extends AbstractClient
 
     /**
      * @param string $queryID
-     * @param QueryOptions|null $queryOptions
+     * @param WriteOptions|null $writeOptions
      * @return array(
-     * @type \DCarbone\PHPConsulAPI\QueryMeta Query meta data
+     * @type \DCarbone\PHPConsulAPI\WriteMeta Write meta data
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function delete($queryID, QueryOptions $queryOptions = null)
+    public function delete($queryID, WriteOptions $writeOptions = null)
     {
         $r = new Request('DELETE', sprintf('v1/query/%s', $queryID), $this->c);
-        $r->setQueryOptions($queryOptions);
+        $r->setWriteOptions($writeOptions);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
+        $qm = $this->buildWriteMeta($duration);
 
         if (null !== $err)
             return [null, $qm, $err];

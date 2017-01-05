@@ -119,19 +119,19 @@ class Config
         ]);
 
         $envParams = static::getEnvironmentConfig();
-        if (isset($envParams['CONSUL_HTTP_ADDR']))
-            $conf->setAddress($envParams['CONSUL_HTTP_ADDR']);
+        if (isset($envParams[Consul::HTTPAddrEnvName]))
+            $conf->setAddress($envParams[Consul::HTTPAddrEnvName]);
 
-        if (isset($envParams['CONSUL_HTTP_TOKEN']))
-            $conf->setToken($envParams['CONSUL_HTTP_TOKEN']);
+        if (isset($envParams[Consul::HTTPTokenEnvName]))
+            $conf->setToken($envParams[Consul::HTTPTokenEnvName]);
 
-        if (isset($envParams['CONSUL_HTTP_AUTH']))
-            $conf->setHttpAuth($envParams['CONSUL_HTTP_AUTH']);
+        if (isset($envParams[Consul::HTTPAuthEnvName]))
+            $conf->setHttpAuth($envParams[Consul::HTTPAuthEnvName]);
 
-        if (isset($envParams['CONSUL_HTTP_SSL']) && $envParams['CONSUL_HTTP_SSL'])
+        if (isset($envParams[Consul::HTTPSSLEnvName]) && $envParams[Consul::HTTPSSLEnvName])
             $conf->setScheme('https');
 
-        if (isset($envParams['CONSUL_HTTP_SSL_VERIFY']) && !$envParams['CONSUL_HTTP_SSL_VERIFY'])
+        if (isset($envParams[Consul::HTTPSSLVerifyEnvName]) && !$envParams[Consul::HTTPSSLVerifyEnvName])
             $conf->setInsecureSkipVerify(false);
 
         return $conf;

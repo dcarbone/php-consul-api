@@ -34,6 +34,12 @@ use DCarbone\PHPConsulAPI\Status\StatusClient;
  */
 class Consul
 {
+    const HTTPAddrEnvName = 'CONSUL_HTTP_ADDR';
+    const HTTPTokenEnvName = 'CONSUL_HTTP_TOKEN';
+    const HTTPAuthEnvName = 'CONSUL_HTTP_AUTH';
+    const HTTPSSLEnvName = 'CONSUL_HTTP_SSL';
+    const HTTPSSLVerifyEnvName = 'CONSUL_HTTP_SSL_VERIFY';
+
     /** @var KVClient */
     public $KV;
     /** @var AgentClient */
