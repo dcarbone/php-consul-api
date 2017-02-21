@@ -57,7 +57,7 @@ class Request implements RequestInterface
     /** @var array */
     private $_normalizedHeaderNameMap = array(
         'content-type' => 'Content-Type',
-        'Accept' => 'accept'
+        'accept' => 'Accept'
     );
 
     /** @var Config */
