@@ -42,20 +42,20 @@ class RequestBody implements StreamInterface
         {
             case 'integer':
             case 'double':
-                fwrite($this->h, (string)$contents);
+                $str = (string)$contents;
                 break;
 
             case 'string':
-                fwrite($this->h, $contents);
+                $str = $contents;
                 break;
 
             case 'object':
             case 'array':
-                fwrite($this->h, json_encode($contents));
+                $str = json_encode(json_encode($contents);
                 break;
 
             case 'boolean':
-                fwrite($this->h, $contents ? 'true' : 'false');
+                $str = $contents ? 'true' : 'false';
                 break;
         }
 
