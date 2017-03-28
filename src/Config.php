@@ -93,14 +93,14 @@ class Config
      * Config constructor.
      * @param array $config
      */
-    public function __construct(array $config = array())
+    public function __construct(array $config = [])
     {
         foreach($config as $k => $v)
         {
             $this->{"set{$k}"}($v);
         }
 
-        if (!isset($this->HttpAuth))
+        if (null !== $this->HttpAuth && !isset($this->HttpAuth))
             $this->HttpAuth = new HttpAuth();
     }
 

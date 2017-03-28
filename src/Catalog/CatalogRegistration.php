@@ -42,12 +42,12 @@ class CatalogRegistration extends AbstractModel
      *
      * @param array $data
      */
-    public function __construct(array $data = array())
+    public function __construct(array $data = [])
     {
         parent::__construct($data);
-        if (!($this->Service instanceof AgentService))
+        if (null !== $this->Service && !($this->Service instanceof AgentService))
             $this->Service = new AgentService((array)$this->Service);
-        if (!($this->Check instanceof AgentCheck))
+        if (null !== $this->Check && !($this->Check instanceof AgentCheck))
             $this->Check = new AgentCheck((array)$this->Check);
     }
 

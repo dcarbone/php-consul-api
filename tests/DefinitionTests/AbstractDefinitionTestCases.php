@@ -338,7 +338,7 @@ abstract class AbstractDefinitionTestCases extends \PHPUnit_Framework_TestCase
 
             case $propertyVarType instanceof Object_:
                 $fqsn = (string)$propertyVarType->getFqsen();
-                $failMessage = sprintf($failMessageTemplate, sprintf('an instance of %s', $fqsn));
+                $failMessage = sprintf($failMessageTemplate, 'null');
 
                 $isInterface = interface_exists($fqsn, true);
                 $isClass = class_exists($fqsn);
@@ -350,18 +350,8 @@ abstract class AbstractDefinitionTestCases extends \PHPUnit_Framework_TestCase
                     $fqsn
                 ));
 
-                $refl = new \ReflectionClass($fqsn);
-                if ($refl->isInterface())
-                {
-                    if (is_object($defaultValue))
-                        $this->assertInstanceOf($fqsn, $defaultValue, $failMessage);
-                    else
-                        $this->assertNull($defaultValue, sprintf('%s or null', $failMessage));
-                }
-                else
-                {
-                    $this->assertInstanceOf($fqsn, $defaultValue, $failMessage);
-                }
+                $this->assertNull($defaultValue, $failMessage);
+
                 break;
 
             case $propertyVarType instanceof String_:

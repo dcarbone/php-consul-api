@@ -26,7 +26,7 @@ use Psr\Log\LogLevel;
 abstract class Logger
 {
     /** @var LoggerInterface[] */
-    private static $_loggers = array();
+    private static $_loggers = [];
 
     /** @var FileDebugLogger */
     private static $_debugLogger = null;
@@ -76,7 +76,7 @@ abstract class Logger
      */
     public static function setLoggers(array $loggers)
     {
-        self::$_loggers = array();
+        self::$_loggers = [];
 
         foreach($loggers as $i => $logger)
         {
@@ -108,7 +108,7 @@ abstract class Logger
      */
     public static function resetLoggers()
     {
-        self::$_loggers = array();
+        self::$_loggers = [];
     }
 
     /**
@@ -116,7 +116,7 @@ abstract class Logger
      * @param string $message
      * @param array $context
      */
-    public static function log($logLevel, $message, array $context = array())
+    public static function log($logLevel, $message, array $context = [])
     {
         $logLevel = self::sanitizeLevel($logLevel);
 
@@ -143,7 +143,7 @@ abstract class Logger
      * @param string $message
      * @param array  $context
      */
-    public static function emergency($message, array $context = array())
+    public static function emergency($message, array $context = [])
     {
         static::log(LogLevel::EMERGENCY, $message, $context);
     }
@@ -157,7 +157,7 @@ abstract class Logger
      * @param string $message
      * @param array  $context
      */
-    public static function alert($message, array $context = array())
+    public static function alert($message, array $context = [])
     {
         static::log(LogLevel::ALERT, $message, $context);
     }
@@ -170,7 +170,7 @@ abstract class Logger
      * @param string $message
      * @param array  $context
      */
-    public static function critical($message, array $context = array())
+    public static function critical($message, array $context = [])
     {
         static::log(LogLevel::CRITICAL, $message, $context);
     }
@@ -182,7 +182,7 @@ abstract class Logger
      * @param string $message
      * @param array  $context
      */
-    public static function error($message, array $context = array())
+    public static function error($message, array $context = [])
     {
         static::log(LogLevel::ERROR, $message, $context);
     }
@@ -196,7 +196,7 @@ abstract class Logger
      * @param string $message
      * @param array  $context
      */
-    public static function warning($message, array $context = array())
+    public static function warning($message, array $context = [])
     {
         static::log(LogLevel::WARNING, $message, $context);
     }
@@ -207,7 +207,7 @@ abstract class Logger
      * @param string $message
      * @param array  $context
      */
-    public static function notice($message, array $context = array())
+    public static function notice($message, array $context = [])
     {
         static::log(LogLevel::NOTICE, $message, $context);
     }
@@ -220,7 +220,7 @@ abstract class Logger
      * @param string $message
      * @param array  $context
      */
-    public static function info($message, array $context = array())
+    public static function info($message, array $context = [])
     {
         static::log(LogLevel::INFO, $message, $context);
     }
@@ -231,7 +231,7 @@ abstract class Logger
      * @param string $message
      * @param array  $context
      */
-    public static function debug($message, array $context = array())
+    public static function debug($message, array $context = [])
     {
         static::log(LogLevel::DEBUG, $message, $context);
     }
@@ -240,7 +240,7 @@ abstract class Logger
      * @param string $message
      * @param array $context
      */
-    public static function warn($message, array $context = array())
+    public static function warn($message, array $context = [])
     {
         self::log(LogLevel::WARNING, $message, $context);
     }

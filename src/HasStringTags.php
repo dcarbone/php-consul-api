@@ -23,7 +23,7 @@
 trait HasStringTags
 {
     /** @var string[] */
-    public $Tags = array();
+    public $Tags = [];
 
     /**
      * @return string[]

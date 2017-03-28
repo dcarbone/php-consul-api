@@ -24,9 +24,17 @@ use Psr\Http\Message\StreamInterface;
  */
 class RequestBody implements StreamInterface
 {
-    /** @var null|resource */
-    private $h = null;
+    const STATE_OPEN = 0;
+    const STATE_CLOSED = 1;
+    const STATE_DETACHED = 2;
 
+    /** @var int */
+    private $_state;
+
+    /** @var null|resource */
+    private $stream = null;
+    /** @var null|array */
+    private $meta = null;
     /** @var int */
     private $size = 0;
 
@@ -51,7 +59,7 @@ class RequestBody implements StreamInterface
 
             case 'object':
             case 'array':
-                $str = json_encode(json_encode($contents));
+                $str = json_encode($contents);
                 break;
 
             case 'boolean':
@@ -59,9 +67,14 @@ class RequestBody implements StreamInterface
                 break;
         }
 
-        $this->h = fopen('php://memory', 'w+');
-        fwrite($this->h, $str);
+        $this->stream = fopen('php://memory', 'w+');
+        fwrite($this->stream, $str);
+
         $this->size = mb_strlen($str, $encoding);
+
+        $this->meta = stream_get_meta_data($this->stream);
+
+        $this->_state = self::STATE_OPEN;
     }
 
     /**
@@ -69,13 +82,18 @@ class RequestBody implements StreamInterface
      */
     public function __toString()
     {
-        if ('resource' === gettype($this->h))
+        if (null === $this->stream)
+            return '';
+
+
+        $this->rewind();
+        $str = '';
+        while(!$this->eof() && $data = $this->read(8192))
         {
-            rewind($this->h);
-            return fread($this->h, $this->size);
+            $str .= $data;
         }
 
-        return '';
+        return $str;
     }
 
     /**
@@ -83,8 +101,13 @@ class RequestBody implements StreamInterface
      */
     public function close()
     {
-        if ('resource' === gettype($this->h))
-            fclose($this->h);
+        if (self::STATE_OPEN === $this->_state)
+        {
+            fclose($this->stream);
+            $this->stream = null;
+            $this->size = 0;
+            $this->_state = self::STATE_CLOSED;
+        }
     }
 
     /**
@@ -92,15 +115,15 @@ class RequestBody implements StreamInterface
      */
     public function detach()
     {
-        if ('resource' === gettype($this->h))
-        {
-            $h = $this->h;
-            $this->h = null;
-            return $h;
-        }
+        if (self::STATE_OPEN === $this->_state)
+            $stream = $this->stream;
+        else
+            $stream = null;
 
-        $this->h = null;
-        return null;
+        $this->stream = null;
+        $this->size = 0;
+        $this->_state = self::STATE_DETACHED;
+        return $stream;
     }
 
     /**
@@ -108,6 +131,9 @@ class RequestBody implements StreamInterface
      */
     public function getSize()
     {
+        if (self::STATE_OPEN !== $this->_state)
+            return null;
+
         return $this->size;
     }
 
@@ -116,10 +142,10 @@ class RequestBody implements StreamInterface
      */
     public function tell()
     {
-        if ('resource' === gettype($this->h))
-            return ftell($this->h);
+        if (self::STATE_OPEN === $this->_state)
+            return ftell($this->stream);
 
-        return 0;
+        throw new \RuntimeException();
     }
 
     /**
@@ -127,10 +153,10 @@ class RequestBody implements StreamInterface
      */
     public function eof()
     {
-        if ('resource' === gettype($this->h))
-            return feof($this->h);
+        if (null === $this->stream)
+            return true;
 
-        return true;
+        return feof($this->stream);
     }
 
     /**
@@ -138,7 +164,7 @@ class RequestBody implements StreamInterface
      */
     public function isSeekable()
     {
-        return (bool)$this->getMetadata('seekable');
+        return self::STATE_OPEN === $this->_state;
     }
 
     /**
@@ -146,19 +172,10 @@ class RequestBody implements StreamInterface
      */
     public function seek($offset, $whence = SEEK_SET)
     {
-        if ('resource' === gettype($this->h))
-        {
-            if (false === fseek($this->h, $offset, $whence))
-            {
-                throw new \RuntimeException('Unable execute seek, please verify values are in line with PHP fseek'.
-                                            ' arguments: http://www.php.net/manual/en/function.fseek.php');
-            }
-        }
+        if ($this->isSeekable())
+            fseek($this->stream, $offset, $whence);
         else
-        {
-            throw new \RuntimeException('The underlying stream has been closed or is in an unstable state.  Seek'.
-                                        ' operations cannot be performed.');
-        }
+            throw $this->createStateException(__METHOD__);
     }
 
     /**
@@ -166,23 +183,10 @@ class RequestBody implements StreamInterface
      */
     public function rewind()
     {
-        if ('resource' === gettype($this->h))
-        {
-            if ($this->isSeekable())
-            {
-                if (false === rewind($this->h))
-                    throw new \RuntimeException('Unable to rewind stream, something very bad has happened...');
-            }
-            else
-            {
-                throw new \RuntimeException('Stream is not seekable, cannot perform rewind.');
-            }
-        }
+        if ($this->isSeekable())
+            rewind($this->stream);
         else
-        {
-            throw new \RuntimeException('The underlying stream has been closed or is in an unstable state.  Rewind'.
-                                        ' operations cannot be performed.');
-        }
+            throw $this->createStateException(__METHOD__);
     }
 
     /**
@@ -190,16 +194,7 @@ class RequestBody implements StreamInterface
      */
     public function isWritable()
     {
-        $mode = $this->getMetadata('mode');
-        if (null === $mode)
-            return false;
-
-        $c = substr($mode, 0, 1);
-        return 0 === strpos($mode, 'r+')
-               || 'w' === $c
-               || 'a' === $c
-               || 'x' === $c
-               || 'c' === $c;
+        return false;
     }
 
     /**
@@ -207,13 +202,7 @@ class RequestBody implements StreamInterface
      */
     public function write($string)
     {
-        if ($this->isWritable())
-            return fwrite($this->h, $string);
-
-        throw new \RuntimeException(sprintf(
-            'Stream is not in writable state, unable to write %s.',
-            substr($string, 0, 500)
-        ));
+        throw new \RuntimeException('PHPConsulAPI request bodies are immutable.');
     }
 
     /**
@@ -221,17 +210,7 @@ class RequestBody implements StreamInterface
      */
     public function isReadable()
     {
-        $mode = $this->getMetadata('mode');
-        if (null === $mode)
-            return false;
-
-        $c = substr($mode, 0, 1);
-        $c2 = substr($mode, 0, 2);
-        return 'r' === $c
-               || 'w+' === $c2
-               || 'a+' === $c2
-               || 'x+' === $c2
-               || 'c+' === $c2;
+        return self::STATE_OPEN === $this->_state;
     }
 
     /**
@@ -239,15 +218,10 @@ class RequestBody implements StreamInterface
      */
     public function read($length)
     {
-        if ($this->isReadable())
-        {
-            if (feof($this->h))
-                return '';
+        if (self::STATE_OPEN === $this->_state)
+            return (string)fread($this->stream, $length);
 
-            return (string)fread($this->h, $length);
-        }
-
-        throw new \RuntimeException('Stream is not in readable state.');
+        throw $this->createStateException(__METHOD__);
     }
 
     /**
@@ -255,20 +229,18 @@ class RequestBody implements StreamInterface
      */
     public function getContents()
     {
-        if ($this->isReadable())
+        if (self::STATE_OPEN === $this->_state)
         {
-            if (feof($this->h))
-                return '';
-
-            $contents = '';
-            while (false !== ($d = fread($this->h, 8192)))
+            $str = '';
+            while(!$this->eof() && $data = $this->read(8192))
             {
-                $contents = sprintf('%s%s', $contents, $d);
+                $str .= $data;
             }
-            return $contents;
+
+            return $str;
         }
 
-        throw new \RuntimeException('Stream is not in readable state.');
+        throw $this->createStateException(__METHOD__);
     }
 
     /**
@@ -276,17 +248,29 @@ class RequestBody implements StreamInterface
      */
     public function getMetadata($key = null)
     {
-        if ('resource' === gettype($this->h))
+        if (self::STATE_OPEN === $this->_state)
         {
-            $m = stream_get_meta_data($this->h);
-
             if (null === $key)
-                return $m;
+                return $this->meta;
 
-            if (isset($m[$key]))
-                return $m[$key];
+            if (isset($this->meta[$key]))
+                return $this->meta[$key];
+
+            return null;
         }
 
         return null;
+    }
+
+    /**
+     * @param string $action
+     * @return \RuntimeException
+     */
+    private function createStateException($action)
+    {
+        if (self::STATE_DETACHED === $this->_state)
+            return new \RuntimeException(sprintf('Cannot "%s", request body is in a detached state', $action));
+
+        return new \RuntimeException('Cannot "%s", request body is closed', $action);
     }
 }

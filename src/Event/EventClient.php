@@ -38,7 +38,12 @@ class EventClient extends AbstractClient
      */
     public function fire(UserEvent $event, WriteOptions $writeOptions = null)
     {
-        $r = new Request('put', sprintf('v1/event/fire/%s', $event->Name), $this->c);
+        $r = new Request(
+            'put',
+                sprintf('v1/event/fire/%s', $event->Name),
+                $this->c,
+                '' !== $event->Payload ? $event->Payload : null);
+
         $r->setWriteOptions($writeOptions);
 
         if ('' !== ($nf = $event->NodeFilter))
@@ -47,15 +52,13 @@ class EventClient extends AbstractClient
             $r->params->set('service', $sf);
         if ('' !== ($tf = $event->TagFilter))
             $r->params->set('tag', $tf);
-        if ('' !== ($payload = $event->Payload))
-            $r->body = $payload;
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $wm = $this->buildWriteMeta($duration);
-
         if (null !== $err)
-            return [null, $wm, $err];
+            return [null, null, $err];
+
+        $wm = $this->buildWriteMeta($duration);
 
         list($data, $err) = $this->decodeBody($response->getBody());
         if ($err !== null)
@@ -82,17 +85,17 @@ class EventClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
         if (null !== $err)
-            return [null, $qm, $err];
+            return [null, null, $err];
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        $events = array();
+        $events = [];
         foreach($data as $event)
         {
             $events[] = new UserEvent($event);

@@ -33,7 +33,7 @@ class SessionEntry extends AbstractModel
     /** @var string */
     public $Node = '';
     /** @var string[] */
-    public $Checks = array();
+    public $Checks = [];
     /** @var int */
     public $LockDelay = 0;
     /** @var string */

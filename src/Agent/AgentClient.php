@@ -41,10 +41,10 @@ class AgentClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
         if (null !== $err)
-            return [null, $qm, $err];
+            return [null, null, $err];
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         list($data, $err) = $this->decodeBody($response->getBody());
 
@@ -95,7 +95,7 @@ class AgentClient extends AbstractClient
         if (null !== $err)
             return [null, $err];
 
-        $checks = array();
+        $checks = [];
         foreach($data as $k => $v)
         {
             $checks[$k] = new AgentCheck($v);
@@ -125,7 +125,7 @@ class AgentClient extends AbstractClient
         if (null !== $err)
             return [null, $err];
 
-        $services = array();
+        $services = [];
         foreach($data as $k => $v)
         {
             $services[$k] = new AgentService($v);
@@ -155,7 +155,7 @@ class AgentClient extends AbstractClient
         if (null !== $err)
             return [null, $err];
 
-        $members = array();
+        $members = [];
         foreach($data as $v)
         {
             $members[] = new AgentMember($v);
@@ -172,8 +172,7 @@ class AgentClient extends AbstractClient
      */
     public function serviceRegister(AgentServiceRegistration $agentServiceRegistration)
     {
-        $r = new Request('put', 'v1/agent/service/register', $this->c);
-        $r->body = ($agentServiceRegistration);
+        $r = new Request('put', 'v1/agent/service/register', $this->c, $agentServiceRegistration);
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
@@ -241,8 +240,7 @@ class AgentClient extends AbstractClient
      */
     public function updateTTL($checkID, $output, $status)
     {
-        $r = new Request('put', sprintf('v1/agent/check/update/%s', $checkID), $this->c);
-        $r->body = (new AgentCheckUpdate(['Output' => $output, 'Status' => $status]));
+        $r = new Request('put', sprintf('v1/agent/check/update/%s', $checkID), $this->c, new AgentCheckUpdate(['Output' => $output, 'Status' => $status]));
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
@@ -255,8 +253,7 @@ class AgentClient extends AbstractClient
      */
     public function checkRegister(AgentCheckRegistration $agentCheckRegistration)
     {
-        $r = new Request('put', 'v1/agent/check/register', $this->c);
-        $r->body = ($agentCheckRegistration);
+        $r = new Request('put', 'v1/agent/check/register', $this->c, $agentCheckRegistration);
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
@@ -357,57 +354,6 @@ class AgentClient extends AbstractClient
     {
         $r = new Request('put', 'v1/agent/maintenance', $this->c);
         $r->params->set('enable', 'false');
-
-        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
-
-        return $err;
-    }
-
-    /**
-     * Set non-ttl check's state to passing with optional note
-     *
-     * @param string $checkID
-     * @param string $note
-     * @return \DCarbone\PHPConsulAPI\Error|null
-     */
-    public function checkPass($checkID, $note = '')
-    {
-        $r = new Request('get', sprintf('v1/agent/check/pass/%s', $checkID), $this->c);
-        $r->params->set('note', $note);
-
-        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
-
-        return $err;
-    }
-
-    /**
-     * Set non-ttl check's state to warning with optional note
-     *
-     * @param string $checkID
-     * @param string $note
-     * @return \DCarbone\PHPConsulAPI\Error|null
-     */
-    public function checkWarn($checkID, $note = '')
-    {
-        $r = new Request('get', sprintf('v1/agent/check/warn/%s', $checkID), $this->c);
-        $r->params->set('note', $note);
-
-        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
-
-        return $err;
-    }
-
-    /**
-     * Set non-ttl check's state to critical with optional note
-     *
-     * @param string $checkID
-     * @param string $note
-     * @return \DCarbone\PHPConsulAPI\Error|null
-     */
-    public function checkFail($checkID, $note = '')
-    {
-        $r = new Request('get', sprintf('v1/agent/check/fail/%s', $checkID), $this->c);
-        $r->params->set('note', $note);
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 

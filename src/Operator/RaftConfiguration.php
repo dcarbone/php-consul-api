@@ -34,14 +34,21 @@ class RaftConfiguration extends AbstractModel
      *
      * @param array $data
      */
-    public function __construct(array $data = array())
+    public function __construct(array $data = [])
     {
         parent::__construct($data);
-        if (isset($this->Servers))
+
+        if (0 < count($this->Servers))
         {
-            for ($i = 0, $cnt = count($this->Servers); $i < $cnt; $i++)
+            $this->Servers = array_filter($this->Servers);
+
+            if (0 < ($cnt = count($this->Servers)))
             {
-                $this->Servers[$i] = new RaftServer((array)$this->Servers[$i]);
+                for ($i = 0; $i < $cnt; $i++)
+                {
+                    if (!($this->Servers[$i] instanceof RaftServer))
+                        $this->Servers[$i] = new RaftServer((array)$this->Servers[$i]);
+                }
             }
         }
     }

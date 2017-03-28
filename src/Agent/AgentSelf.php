@@ -35,14 +35,14 @@ class AgentSelf extends AbstractModel
      * AgentSelf constructor.
      * @param array $data
      */
-    public function __construct(array $data = array())
+    public function __construct(array $data = [])
     {
         parent::__construct($data);
-        if (!($this->Config instanceof AgentSelfConfig))
+        if (null !== $this->Config && !($this->Config instanceof AgentSelfConfig))
             $this->Config = new AgentSelfConfig((array)$this->Config);
-        if (!($this->Coord instanceof AgentSelfCoord))
+        if (null !== $this->Coord && !($this->Coord instanceof AgentSelfCoord))
             $this->Coord = new AgentSelfCoord((array)$this->Coord);
-        if (!($this->Member instanceof AgentMember))
+        if (null !== $this->Member && !($this->Member instanceof AgentMember))
             $this->Member = new AgentMember((array)$this->Member);
     }
 

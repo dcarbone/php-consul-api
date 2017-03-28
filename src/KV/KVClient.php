@@ -53,10 +53,10 @@ class KVClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->doRequest($r);
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
         if (null !== $err)
-            return [null, $qm, $err];
+            return [null, null, $err];
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         $code = $response->getStatusCode();
 
@@ -108,17 +108,17 @@ class KVClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
         if (null !== $err)
-            return [null, $qm, $err];
+            return [null, null, $err];
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        $kvPairs = array();
+        $kvPairs = [];
         foreach($data as $v)
         {
             $kvp = new KVPair($v);
@@ -158,10 +158,10 @@ class KVClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
         if (null !== $err)
-            return [null, $qm, $err];
+            return [null, null, $err];
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         list($data, $err) = $this->decodeBody($response->getBody());
 
@@ -178,16 +178,16 @@ class KVClient extends AbstractClient
      */
     public function put(KVPair $p, WriteOptions $writeOptions = null)
     {
-        $r = new Request('put', sprintf('v1/kv/%s', $p->Key), $this->c);
+        $r = new Request('put', sprintf('v1/kv/%s', $p->Key), $this->c, $p->Value);
         $r->setWriteOptions($writeOptions);
-        $r->body = $p->Value;
         if (0 !== $p->Flags)
             $r->params->set('flags', $p->Flags);
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
-        $wm = $this->buildWriteMeta($duration);
+        if (null !== $err)
+            return [null, $err];
 
-        return [$wm, $err];
+        return [$this->buildWriteMeta($duration), null];
     }
 
     /**
@@ -204,9 +204,10 @@ class KVClient extends AbstractClient
         $r->setWriteOptions($writeOptions);
 
         list ($duration, $_, $err) = $this->requireOK($this->doRequest($r));
-        $wm = $this->buildWriteMeta($duration);
+        if (null !== $err)
+            return [null, $err];
 
-        return [$wm, $err];
+        return [$this->buildWriteMeta($duration), null];
     }
 
     /**
@@ -226,9 +227,10 @@ class KVClient extends AbstractClient
             $r->params->set('flags', $p->Flags);
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
-        $wm = $this->buildWriteMeta($duration);
+        if (null !== $err)
+            return [null, $err];
 
-        return [$wm, $err];
+        return [$this->buildWriteMeta($duration), null];
     }
 
     /**
@@ -248,9 +250,10 @@ class KVClient extends AbstractClient
             $r->params->set('flags', $p->Flags);
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
-        $wm = $this->buildWriteMeta($duration);
+        if (null !== $err)
+            return [null, $err];
 
-        return [$wm, $err];
+        return [$this->buildWriteMeta($duration), null];
     }
 
     /**
@@ -270,9 +273,10 @@ class KVClient extends AbstractClient
             $r->params->set('flags', $p->Flags);
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
-        $wm = $this->buildWriteMeta($duration);
+        if (null !== $err)
+            return [null, $err];
 
-        return [$wm, $err];
+        return [$this->buildWriteMeta($duration), null];
     }
 
     /**
@@ -290,7 +294,7 @@ class KVClient extends AbstractClient
         if (null !== $err)
             return [null, $err];
 
-        $treeHierarchy = array();
+        $treeHierarchy = [];
         foreach($valueList as $path=>$kvp)
         {
             $slashPos = strpos($path, '/');

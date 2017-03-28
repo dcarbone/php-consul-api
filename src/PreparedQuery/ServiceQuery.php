@@ -41,10 +41,10 @@ class ServiceQuery extends AbstractModel
      * ServiceQuery constructor.
      * @param array $data
      */
-    public function __construct(array $data = array())
+    public function __construct(array $data = [])
     {
         parent::__construct($data);
-        if (!($this->Failover instanceof QueryDatacenterOptions))
+        if (null !== $this->Failover && !($this->Failover instanceof QueryDatacenterOptions))
             $this->Failover = new QueryDatacenterOptions((array)$this->Failover);
     }
 

@@ -62,7 +62,7 @@ class FileDebugLogger extends AbstractLogger
      *
      * @return null
      */
-    public function log($level, $message, array $context = array())
+    public function log($level, $message, array $context = [])
     {
         if (file_exists($this->_file) && is_writable($this->_file))
         {

@@ -41,25 +41,30 @@ class AgentServiceRegistration extends AbstractModel
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentCheck */
     public $Check = null;
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentCheck[] */
-    public $Checks = array();
+    public $Checks = [];
 
     /**
      * AgentServiceRegistration constructor.
      * @param array $data
      */
-    public function __construct(array $data = array())
+    public function __construct(array $data = [])
     {
         parent::__construct($data);
 
-        if (!($this->Check instanceof AgentCheck))
+        if (null !== $this->Check && !($this->Check instanceof AgentCheck))
             $this->Check = new AgentCheck((array)$this->Check);
 
-        for ($i = 0, $cnt = count($this->Checks); $i < $cnt; $i++)
+        if (0 < count($this->Checks))
         {
-            if ($this->Checks[$i] instanceof AgentCheck)
-                continue;
-
-            $this->Checks[$i] = new AgentCheck($this->Checks[$i]);
+            $this->Checks = array_filter($this->Checks);
+            if (0 < ($cnt = count($this->Checks)))
+            {
+                for ($i = 0, $cnt = count($this->Checks); $i < $cnt; $i++)
+                {
+                    if (!($this->Checks[$i] instanceof AgentCheck))
+                        $this->Checks[$i] = new AgentCheck($this->Checks[$i]);
+                }
+            }
         }
     }
 

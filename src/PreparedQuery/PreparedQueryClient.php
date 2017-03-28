@@ -31,7 +31,7 @@ class PreparedQueryClient extends AbstractClient
      * @param PreparedQueryDefinition $query
      * @param WriteOptions|null $writeOptions
      * @return array(
-     * @type string|null prepared query id or null on error
+     * @type string prepared query id
      * @type \DCarbone\PHPConsulAPI\WriteMeta write meta data
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
@@ -43,12 +43,10 @@ class PreparedQueryClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $wm = $this->buildWriteMeta($duration);
-
         if (null !== $err)
-            return [null, $wm, $err];
+            return ['', null, $err];
 
-        return [$response->getBody()->getContents(), $wm, $err];
+        return [(string)$response->getBody(), $this->buildWriteMeta($duration), null];
     }
 
     /**
@@ -66,14 +64,19 @@ class PreparedQueryClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
-        $wm = $this->buildWriteMeta($duration);
+        if (null !== $err)
+            return [null, $err];
 
-        return [$wm, $err];
+        return [$this->buildWriteMeta($duration), null];
     }
 
     /**
      * @param QueryOptions|null $queryOptions
-     * @return array
+     * @return array(
+     * @type \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition[]|null
+     * @type \DCarbone\PHPConsulAPI\QueryMeta|null
+     * @type \DCarbone\PHPConsulAPI\Error|null
+     * )
      */
     public function listQueries(QueryOptions $queryOptions = null)
     {
@@ -82,10 +85,10 @@ class PreparedQueryClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
         if (null !== $err)
-            return [null, $qm, $err];
+            return [null, null, $err];
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         list($body, $err) = $this->decodeBody($response->getBody());
         if (null !== $err)
@@ -96,14 +99,16 @@ class PreparedQueryClient extends AbstractClient
         {
             $list[] = new PreparedQueryDefinition($d);
         }
-        return $list;
+        return [$list, $qm, null];
     }
 
     /**
      * @param string $queryID
      * @param QueryOptions|null $queryOptions
      * @return array(
-     *
+     * @type \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition[]|null
+     * @type \DCarbone\PHPConsulAPI\QueryMeta|null
+     * @type \DCarbone\PHPConsulAPI\Error|null
      * )
      */
     public function get($queryID, QueryOptions $queryOptions = null)
@@ -113,10 +118,10 @@ class PreparedQueryClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
         if (null !== $err)
-            return [null, $qm, $err];
+            return [null, null, $err];
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         list($body, $err) = $this->decodeBody($response->getBody());
         if (null !== $err)
@@ -127,7 +132,7 @@ class PreparedQueryClient extends AbstractClient
         {
             $queryDefinitions[] = new PreparedQueryDefinition($d);
         }
-        return $queryDefinitions;
+        return [$queryDefinitions, $qm, null];
     }
 
     /**
@@ -145,14 +150,12 @@ class PreparedQueryClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildWriteMeta($duration);
-
         if (null !== $err)
-            return [null, $qm, $err];
+            return [null, $err];
 
         list($_, $err) = $this->decodeBody($response->getBody());
 
-        return [$qm, $err];
+        return [$this->buildWriteMeta($duration), null];
     }
 
     /**
@@ -171,10 +174,10 @@ class PreparedQueryClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
         if (null !== $err)
-            return [null, $qm, $err];
+            return [null, null, $err];
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         list($body, $err) = $this->decodeBody($response->getBody());
         if (null !== $err)

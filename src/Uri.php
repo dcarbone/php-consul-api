@@ -22,39 +22,39 @@ use Psr\Http\Message\UriInterface;
  * Class Uri
  * @package DCarbone\PHPConsulAPI\Http
  */
-class Uri implements UriInterface, \JsonSerializable
+class Uri implements UriInterface
 {
     /** @var string */
     private $scheme = '';
-    /** @var HttpAuth */
-    private $userInfo;
     /** @var string */
     private $host = '';
     /** @var int */
-    private $port = null;
+    private $port = 0;
     /** @var string */
     private $path = '';
     /** @var string */
     private $query = '';
     /** @var string */
     private $fragment = '';
+    /** @var string */
+    private $userInfo = '';
 
     /** @var string */
-    private $compiled = null;
+    private $_compiled = null;
 
     /**
      * Uri constructor.
      * @param string $path
-     * @param Config $c
-     * @param Params $p
+     * @param Config $config
+     * @param Params $params
      */
-    public function __construct($path, Config $c, Params $p)
+    public function __construct($path, Config $config, Params $params)
     {
-        $this->scheme = $c->Scheme;
-        $this->userInfo = $c->HttpAuth;
+        $this->scheme = $config->Scheme;
+        $this->userInfo = $config->HttpAuth;
         $this->path = $path;
 
-        $a = $c->Address;
+        $a = $config->Address;
 
         if (false === ($pos = strpos($a, ':')))
         {
@@ -66,29 +66,12 @@ class Uri implements UriInterface, \JsonSerializable
             $this->port = (int)substr($a, $pos + 1);
         }
 
-        $this->query = (string)$p;
-    }
-
-    /**
-     * @return array
-     */
-    public function __sleep()
-    {
-        return [
-            'scheme',
-            'userInfo',
-            'host',
-            'port',
-            'path',
-            'query',
-            'fragment'
-        ];
+        $this->query = (string)$params;
     }
 
     public function __clone()
     {
-        if (null !== $this->userInfo)
-            $this->userInfo =  clone $this->userInfo;
+        $this->_compiled = null;
     }
 
     /**
@@ -105,18 +88,18 @@ class Uri implements UriInterface, \JsonSerializable
     public function getAuthority()
     {
         $ui = $this->getUserInfo();
-        $h = $this->getHost();
-        $p = $this->getPort();
+        $host = $this->getHost();
+        $port = $this->getPort();
 
         if ('' === $ui)
-            $uri = $h;
+            $uri = $host;
         else
-            $uri = sprintf('%s@%s', $ui, $h);
+            $uri = sprintf('%s@%s', $ui, $host);
 
-        if (null === $p)
+        if (null === $port || 0 === $port)
             return $uri;
 
-        return sprintf('%s:%d', $uri, $p);
+        return sprintf('%s:%d', $uri, $port);
     }
 
     /**
@@ -172,9 +155,15 @@ class Uri implements UriInterface, \JsonSerializable
      */
     public function withScheme($scheme)
     {
-        $clone = clone $this;
-        $clone->scheme = trim((string)$scheme, " \t\n\r\0\x0B:/");
-        return $clone;
+        $scheme = strtolower($scheme);
+        if ('http' === $scheme || 'https' === $scheme)
+        {
+            $clone = clone $this;
+            $clone->scheme = $scheme;
+            return $clone;
+        }
+
+        throw new \InvalidArgumentException(sprintf('Scheme must be "http" or "https", saw "%s"', $scheme));
     }
 
     /**
@@ -192,8 +181,16 @@ class Uri implements UriInterface, \JsonSerializable
      */
     public function withHost($host)
     {
+        if (null === $host)
+        {
+            $clone = clone $this;
+            $clone->host = '';
+            return $clone;
+        }
+
+        // TODO: Some kind of hostname validation
         $clone = clone $this;
-        $clone->host = trim((string)$host, " \t\n\r\0\x0B/");
+        $clone->host = $host;
         return $clone;
     }
 
@@ -202,8 +199,16 @@ class Uri implements UriInterface, \JsonSerializable
      */
     public function withPort($port)
     {
+        if (null !== $port && (!is_int($port) || 0 >= $port || 65535 < $port))
+        {
+            throw new \InvalidArgumentException(
+                sprintf('Port must be integer greater than 0 and less than 65535, saw "%s"',
+                    is_int($port) ? (string)$port : gettype($port))
+            );
+        }
+
         $clone = clone $this;
-        $clone->port = null === $port ? null : (int)$port;
+        $clone->port = $port;
         return $clone;
     }
 
@@ -212,9 +217,21 @@ class Uri implements UriInterface, \JsonSerializable
      */
     public function withPath($path)
     {
-        $clone = clone $this;
-        $clone->path = trim((string)$path, " \t\n\r\0\x0B");
-        return $clone;
+        if (is_string($path))
+        {
+            $clone = clone $this;
+            $clone->path = ltrim($path, "/");
+            return $clone;
+        }
+
+        if (null === $path)
+        {
+            $clone = clone $this;
+            $clone->path = '';
+            return $clone;
+        }
+
+        throw new \InvalidArgumentException(sprintf('Path must be string or null, saw "%s"', gettype($path)));
     }
 
     /**
@@ -222,9 +239,22 @@ class Uri implements UriInterface, \JsonSerializable
      */
     public function withQuery($query)
     {
-        $clone = clone $this;
-        $clone->query = trim((string)$query, " \t\n\r\0\x0B?");
-        return $clone;
+        // TODO: Some validation...?
+        if (null === $query)
+        {
+            $clone = clone $this;
+            $clone->query = '';
+            return $clone;
+        }
+
+        if (is_string($query))
+        {
+            $clone = clone $this;
+            $clone->query = $query;
+            return $clone;
+        }
+
+        throw new \InvalidArgumentException(sprintf('Query must be string or null, saw "%s"', gettype($query)));
     }
 
     /**
@@ -242,7 +272,7 @@ class Uri implements UriInterface, \JsonSerializable
      */
     public function __toString()
     {
-        if (null === $this->compiled)
+        if (null === $this->_compiled)
         {
             $s = $this->getScheme();
             $a = $this->getAuthority();
@@ -282,25 +312,9 @@ class Uri implements UriInterface, \JsonSerializable
             if ('' !== $f)
                 $uri = sprintf('%s#%s', $uri, $f);
 
-            $this->compiled = $uri;
+            $this->_compiled = $uri;
         }
 
-        return $this->compiled;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    function jsonSerialize()
-    {
-        return [
-            'scheme' => $this->scheme,
-            'userInfo' => $this->userInfo,
-            'host' => $this->host,
-            'port' => $this->port,
-            'path' => $this->path,
-            'query' => $this->query,
-            'fragment' => $this->fragment
-        ];
+        return $this->_compiled;
     }
 }

@@ -47,7 +47,7 @@ class CoordinateClient extends AbstractClient
         if (null !== $err)
             return [null, $err];
 
-        $datacenters = array();
+        $datacenters = [];
         foreach($data as $v)
         {
             $datacenters[] = new CoordinateDatacenterMap($v);
@@ -71,16 +71,16 @@ class CoordinateClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list ($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
         if (null !== $err)
-            return [null, $qm, $err];
+            return [null, null, $err];
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         list($data, $err) = $this->decodeBody($response->getBody());
         if (null !== $err)
             return [null, $qm, $err];
 
-        $coordinates = array();
+        $coordinates = [];
         foreach($data as $coord)
         {
             $coordinates[] = new CoordinateEntry($coord);

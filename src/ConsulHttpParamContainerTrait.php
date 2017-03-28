@@ -27,7 +27,7 @@ trait ConsulHttpParamContainerTrait
      */
     public function buildHttpQueryArray()
     {
-        $params = array();
+        $params = [];
         foreach($this as $k => $v)
         {
             if (null !== $v)

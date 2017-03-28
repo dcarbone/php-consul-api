@@ -45,17 +45,17 @@ class SessionClient extends AbstractClient
         if (null === $sessionEntry)
             $sessionEntry = new SessionEntry;
         else
-            $sessionEntry->Checks = array();
+            $sessionEntry->Checks = [];
 
         $r = new Request('put', 'v1/session/create', $this->c, $sessionEntry);
         $r->setWriteOptions($writeOptions);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $wm = $this->buildWriteMeta($duration);
-
         if (null !== $err)
-            return ['', $wm, $err];
+            return ['', null, $err];
+
+        $wm = $this->buildWriteMeta($duration);
 
         list($data, $err) = $this->decodeBody($response->getBody());
         if (null !== $err)
@@ -80,10 +80,10 @@ class SessionClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $wm = $this->buildWriteMeta($duration);
-
         if (null !== $err)
-            return ['', $wm, $err];
+            return ['', null, $err];
+
+        $wm = $this->buildWriteMeta($duration);
 
         list($data, $err) = $this->decodeBody($response->getBody());
 
@@ -116,9 +116,10 @@ class SessionClient extends AbstractClient
         $r->setWriteOptions($writeOptions);
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
-        $wm = $this->buildWriteMeta($duration);
+        if (null !== $err)
+            return [null, $err];
 
-        return [$wm, $err];
+        return [$this->buildWriteMeta($duration), null];
     }
 
     /**
@@ -146,10 +147,10 @@ class SessionClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list ($duration, $response, $err) = $this->doRequest($r);
-        $wm = $this->buildWriteMeta($duration);
-
         if (null !== $err)
-            return [null, $wm, $err];
+            return [null, null, $err];
+
+        $wm = $this->buildWriteMeta($duration);
 
         $code = $response->getStatusCode();
 
@@ -199,10 +200,10 @@ class SessionClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
         if (null !== $err)
-            return [null, $qm, $err];
+            return [null, null, $err];
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         list($data, $err) = $this->decodeBody($response->getBody());
 
@@ -240,10 +241,10 @@ class SessionClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
         if (null !== $err)
-            return [null, $qm, $err];
+            return [null, null, $err];
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         list($data, $err) = $this->decodeBody($response->getBody());
 
@@ -268,10 +269,10 @@ class SessionClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
         if (null !== $err)
-            return [null, $qm, $err];
+            return [null, null, $err];
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         list($data, $err) = $this->decodeBody($response->getBody());
 
@@ -287,7 +288,7 @@ class SessionClient extends AbstractClient
      */
     private function _hydrateEntries(array $data)
     {
-        $entries = array();
+        $entries = [];
         foreach($data as $entry)
         {
             $entries[] = new SessionEntry($entry);

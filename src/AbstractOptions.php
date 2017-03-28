@@ -23,13 +23,13 @@
 abstract class AbstractOptions extends AbstractCollection
 {
     /** @var array */
-    protected $_definition = array();
+    protected $_definition = [];
 
     /**
      * AbstractConsulConfig constructor.
      * @param array $data
      */
-    public function __construct(array $data = array())
+    public function __construct(array $data = [])
     {
         $this->_definition = $this->getDefinition();
         parent::__construct($data + $this->_definition);

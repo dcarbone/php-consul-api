@@ -52,17 +52,17 @@ class HealthClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
         if (null !== $err)
-            return [null, $qm, $err];
+            return [null, null, $err];
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         list($data, $err) = $this->decodeBody($response->getBody());
         
         if (null !== $err)
             return [null, $qm, $err];
         
-        $checks = array();
+        $checks = [];
         foreach($data as $check)
         {
             $checks[] = new HealthCheck($check);
@@ -96,17 +96,17 @@ class HealthClient extends AbstractClient
         $r->setQueryOptions($queryOptions);
 
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
         if (null !== $err)
-            return [null, $qm, $err];
+            return [null, null, $err];
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        $checks = array();
+        $checks = [];
         foreach($data as $check)
         {
             $checks[] = new HealthCheck($check);
@@ -146,17 +146,17 @@ class HealthClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
         if (null !== $err)
-            return [null, $qm, $err];
+            return [null, null, $err];
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        $services = array();
+        $services = [];
         foreach($data as $service)
         {
             $services[] = new ServiceEntry($service);
@@ -193,17 +193,17 @@ class HealthClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
         if (null !== $err)
-            return [null, $qm, $err];
+            return [null, null, $err];
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        $checks = array();
+        $checks = [];
         foreach($data as $check)
         {
             $checks[] = new HealthCheck($check);

@@ -26,42 +26,34 @@ use Psr\Http\Message\UriInterface;
  */
 class Request implements RequestInterface
 {
-    /** @var Params */
+    // PHPConsulAPI properties
+
+    /** @var \DCarbone\PHPConsulAPI\Config */
+    private $config;
+    /** @var \DCarbone\PHPConsulAPI\Params */
     public $params;
-    /** @var mixed */
-    public $body = null;
-
-    /** @var StreamInterface|null */
-    private $compiledBody = null;
-
-    /** @var string */
-    private $protocolVersion = '1.1';
-
-    /** @var string */
-    private $method;
-
     /** @var string */
     private $path;
 
+    /** @var array */
+    private $_normalizedHeaders = ['accept' => 'Accept', 'content-type' => 'Content-Type'];
+    /** @var StreamInterface|null */
+    private $_compiledBody = null;
+
+    // PSR-7 properties below
+
+    /** @var string */
+    private $protocolVersion = '1.1';
+    /** @var array */
+    private $headers = ['Accept' => ['application/json'], 'Content-Type' => ['application/json']];
+    /** @var \Psr\Http\Message\StreamInterface */
+    private $body = null;
     /** @var string */
     private $requestTarget = null;
-
-    /** @var Uri */
+    /** @var string */
+    private $method = 'POST';
+    /** @var \Psr\Http\Message\UriInterface */
     private $uri = null;
-
-    /** @var array */
-    private $headers = array(
-        'Content-Type' => ['application/json'],
-        'Accept' => ['application/json'],
-    );
-    /** @var array */
-    private $_normalizedHeaderNameMap = array(
-        'content-type' => 'Content-Type',
-        'accept' => 'Accept'
-    );
-
-    /** @var Config */
-    private $c;
 
     /**
      * Request constructor.
@@ -72,7 +64,7 @@ class Request implements RequestInterface
      */
     public function __construct($method, $path, Config $config, $body = null)
     {
-        $this->c = $config;
+        $this->config = $config;
 
         $this->params = new Params();
         $this->method = strtoupper($method);
@@ -93,6 +85,11 @@ class Request implements RequestInterface
         }
 
         $this->body = $body;
+    }
+
+    public function __clone()
+    {
+        $this->_compiledBody = null;
     }
 
     /**
@@ -120,7 +117,7 @@ class Request implements RequestInterface
 
         if ('' !== ($token = $queryOptions->getToken()))
         {
-            if ($this->c->isTokenInHeader())
+            if ($this->config->isTokenInHeader())
                 $this->headers['X-Consul-Token'] = $token;
             else
                 $this->params['token'] = $token;
@@ -158,8 +155,9 @@ class Request implements RequestInterface
      */
     public function withProtocolVersion($version)
     {
-        $this->protocolVersion = $version;
-        return $this;
+        $clone = clone $this;
+        $clone->protocolVersion = $version;
+        return $clone;
     }
 
     /**
@@ -175,7 +173,7 @@ class Request implements RequestInterface
      */
     public function hasHeader($name)
     {
-        return isset($this->_normalizedHeaderNameMap[strtolower($name)]);
+        return isset($this->_normalizedHeaders[strtolower($name)]);
     }
 
     /**
@@ -183,11 +181,11 @@ class Request implements RequestInterface
      */
     public function getHeader($name)
     {
-        $name = strtolower($name);
-        if (isset($this->_normalizedHeaderNameMap[$name]))
-            return $this->headers[$this->_normalizedHeaderNameMap[$name]];
+        $lower = strtolower($name);
+        if (!isset($this->_normalizedHeaders[$lower]))
+            return [];
 
-        return [];
+        return $this->headers[$this->_normalizedHeaders[$lower]];
     }
 
     /**
@@ -195,11 +193,11 @@ class Request implements RequestInterface
      */
     public function getHeaderLine($name)
     {
-        $name = strtolower($name);
-        if (isset($this->_normalizedHeaderNameMap[$name]))
-            return implode(',', $this->headers[$this->_normalizedHeaderNameMap[$name]]);
+        $lower = strtolower($name);
+        if (!isset($this->_normalizedHeaders[$name]))
+            return '';
 
-        return '';
+        return implode(',', $this->headers[$this->_normalizedHeaders[$lower]]);
     }
 
     /**
@@ -207,13 +205,19 @@ class Request implements RequestInterface
      */
     public function withHeader($name, $value)
     {
-        if (!is_array($value))
-            $value = [(string)$value];
+        $type = gettype($value);
+        if ('string' !== $type && 'array' !== $type)
+            throw new \InvalidArgumentException(sprintf('$value must be array or string, %s seen.', gettype($value)));
+
+        $lower = strtolower($name);
 
         $clone = clone $this;
+        $clone->_normalizedHeaders[$lower] = $name;
 
-        $clone->headers[$name] = $value;
-        $clone->_normalizedHeaderNameMap[strtolower($name)] = $name;
+        if ('string' === $type)
+            $clone->headers[$name] = [$value];
+        else
+            $clone->headers[$name] = $value;
 
         return $clone;
     }
@@ -223,24 +227,26 @@ class Request implements RequestInterface
      */
     public function withAddedHeader($name, $value)
     {
-        $lower = strtolower($name);
-        if (isset($this->_normalizedHeaderNameMap[$lower]))
-            $name = $this->_normalizedHeaderNameMap[$lower];
+        $type = gettype($value);
+        if ('string' !== $type && 'array' !== $type)
+            throw new \InvalidArgumentException('$value must be array or string, %s seen.', gettype($value));
 
-        if (!is_array($value))
-            $value = [(string)$value];
+        $lower = strtolower($name);
+
+        if (isset($this->_normalizedHeaders[$lower]))
+            $headerValues = $this->headers[$this->_normalizedHeaders[$lower]];
+        else
+            $headerValues = [];
+
+        if ('string' === $type)
+            $headerValues[] = $value;
+        else
+            $headerValues = array_merge($headerValues, $value);
 
         $clone = clone $this;
 
-        if (isset($this->headers[$name]))
-        {
-            $clone->headers[$name] = array_unique(array_merge($this->headers[$name], $value));
-        }
-        else
-        {
-            $clone->headers[$name] = $value;
-            $clone->_normalizedHeaderNameMap[strtolower($name)] = $name;
-        }
+        $clone->_normalizedHeaders[$lower] = $name;
+        $clone->headers[$name] = $headerValues;
 
         return $clone;
     }
@@ -250,12 +256,11 @@ class Request implements RequestInterface
      */
     public function withoutHeader($name)
     {
-        $lower = strtolower($name);
-
         $clone = clone $this;
 
-        if (isset($clone->_normalizedHeaderNameMap[$lower]))
-            unset($clone->headers[$this->_normalizedHeaderNameMap[$lower]], $clone->_normalizedHeaderNameMap[$lower]);
+        $lower = strtolower($name);
+        if (isset($clone->_normalizedHeaders[$lower]))
+            unset($clone->headers[$clone->_normalizedHeaders[$lower]], $clone->_normalizedHeaders[$lower]);
 
         return $clone;
     }
@@ -265,10 +270,10 @@ class Request implements RequestInterface
      */
     public function getBody()
     {
-        if (!isset($this->compiledBody))
-            $this->compiledBody = new RequestBody($this->body);
+        if (isset($this->body) && !isset($this->_compiledBody))
+            $this->_compiledBody = new RequestBody($this->body);
 
-        return $this->compiledBody;
+        return $this->_compiledBody;
     }
 
     /**
@@ -277,7 +282,7 @@ class Request implements RequestInterface
     public function withBody(StreamInterface $body)
     {
         $clone = clone $this;
-        $clone->compiledBody = $body;
+        $clone->body = $body;
         return $clone;
     }
 
@@ -329,9 +334,20 @@ class Request implements RequestInterface
      */
     public function withMethod($method)
     {
-        $clone = clone $this;
-        $clone->method = strtoupper($method);
-        return $clone;
+        static $allowable = ['GET', 'PUT', 'POST', 'DELETE'];
+        $upper = strtoupper($method);
+        if (in_array($upper, $allowable, true))
+        {
+            $clone = clone $this;
+            $clone->method = $upper;
+            return $clone;
+        }
+
+        throw new \InvalidArgumentException(
+            '"%s" is not an allowable request method.  Allowable: ["%s"]',
+                $upper,
+                implode('", "', $allowable)
+        );
     }
 
     /**
@@ -340,7 +356,7 @@ class Request implements RequestInterface
     public function getUri()
     {
         if (null === $this->uri)
-            $this->uri = new Uri($this->path, $this->c, $this->params);
+            $this->uri = new Uri($this->path, $this->config, $this->params);
 
         return $this->uri;
     }
@@ -356,10 +372,8 @@ class Request implements RequestInterface
         $clone = clone $this;
         $clone->uri = $uri;
 
-        if (!$preserveHost)
-        {
-            // TODO: Do this...
-        }
+        if ($preserveHost)
+            $clone->uri = $this->uri->withHost($this->uri->getHost());
 
         return $clone;
     }

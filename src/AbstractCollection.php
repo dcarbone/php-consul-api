@@ -25,13 +25,13 @@
 abstract class AbstractCollection implements \JsonSerializable, \ArrayAccess, \Iterator, \Countable
 {
     /** @var array */
-    protected $_storage = array();
+    protected $_storage = [];
 
     /**
      * AbstractResponseModel constructor.
      * @param array $data
      */
-    public function __construct(array $data = array())
+    public function __construct(array $data = [])
     {
         foreach($data as $k => $v)
         {
@@ -227,7 +227,7 @@ abstract class AbstractCollection implements \JsonSerializable, \ArrayAccess, \I
      */
     protected function _findKeyMatches($key)
     {
-        $possibleMatches = array();
+        $possibleMatches = [];
         if (is_string($key))
         {
             $regex = sprintf('{^.*%s.*$}i', substr($key, 0, 2));

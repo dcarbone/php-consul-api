@@ -41,9 +41,10 @@ class CatalogClient extends AbstractClient
         $r->setWriteOptions($writeOptions);
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
-        $wm = $this->buildWriteMeta($duration);
+        if (null !== $err)
+            return [null, $err];
 
-        return [$wm, $err];
+        return [$this->buildWriteMeta($duration), null];
     }
 
     /**
@@ -60,9 +61,10 @@ class CatalogClient extends AbstractClient
         $r->setWriteOptions($writeOptions);
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
-        $wm = $this->buildWriteMeta($duration);
+        if (null !== $err)
+            return [null, $err];
 
-        return [$wm, $err];
+        return [$this->buildWriteMeta($duration), null];
     }
 
     /**
@@ -99,17 +101,17 @@ class CatalogClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
         if (null !== $err)
-            return [null, $qm, $err];
+            return [null, null, $err];
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        $nodes = array();
+        $nodes = [];
         foreach($data as $v)
         {
             $node = new CatalogNode($v);
@@ -134,10 +136,10 @@ class CatalogClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
         if (null !== $err)
-            return [null, $qm, $err];
+            return [null, null, $err];
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         list($data, $err) = $this->decodeBody($response->getBody());
 
@@ -163,17 +165,17 @@ class CatalogClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        if (null !== $err)
+            return [null, null, $err];
+
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
-        if (null !== $err)
-            return [null, $qm, $err];
-        
         list($data, $err) = $this->decodeBody($response->getBody());
         
         if (null !== $err)
             return [null, $qm, $err];
         
-        $services = array();
+        $services = [];
         foreach($data as $v)
         {
             $service = new CatalogService($v);
@@ -199,10 +201,10 @@ class CatalogClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
         if (null !== $err)
-            return [null, $qm, $err];
+            return [null, null, $err];
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         list($data, $err) = $this->decodeBody($response->getBody());
 

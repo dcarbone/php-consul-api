@@ -42,17 +42,17 @@ class OperatorClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
         if (null !== $err)
-            return [null, $qm, $err];
+            return [null, null, $err];
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err)
             return [null, $qm, $err];
 
-        return [new RaftConfiguration($data), $qm, $err];
+        return [new RaftConfiguration($data), $qm, null];
     }
 
     /**

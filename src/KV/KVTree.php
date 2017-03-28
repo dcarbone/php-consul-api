@@ -26,7 +26,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     private $_prefix;
 
     /** @var KVTree[]|KVPair[] */
-    private $_children = array();
+    private $_children = [];
 
     /**
      * KVTree constructor.
@@ -258,7 +258,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
      */
     public function jsonSerialize()
     {
-        $json = array($this->_prefix => array());
+        $json = array($this->_prefix => []);
         foreach($this->_children as $k=>$child)
         {
             if ($child instanceof KVTree)

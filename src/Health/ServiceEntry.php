@@ -31,22 +31,34 @@ class ServiceEntry extends AbstractModel
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentService */
     public $Service = null;
     /** @var \DCarbone\PHPConsulAPI\Health\HealthCheck[] */
-    public $Checks = array();
+    public $Checks = [];
 
     /**
      * ServiceEntry constructor.
      * @param array $data
      */
-    public function __construct(array $data = array())
+    public function __construct(array $data = [])
     {
         parent::__construct($data);
 
-        $this->Service = new AgentService((array)$this->Service);
-        if (isset($this->Checks))
+        if (null !== $this->Service && !($this->Service instanceof AgentService))
+            $this->Service = new AgentService((array)$this->Service);
+
+        // If we have data...
+        if (0 < count($this->Checks))
         {
-            for ($i = 0, $cnt = count($this->Checks); $i < $cnt; $i++)
+            // ...remove null
+            $this->Checks = array_filter($this->Checks);
+
+            // ...and if we still have data
+            if (0 < ($cnt = count($this->Checks)))
             {
-                $this->Checks[$i] = new AgentCheck((array)$this->Checks[$i]);
+                // ensure we have objects.
+                for ($i = 0; $i < $cnt; $i++)
+                {
+                    if (!($this->Checks[$i]) instanceof AgentCheck)
+                        $this->Checks[$i] = new AgentCheck((array)$this->Checks[$i]);
+                }
             }
         }
     }

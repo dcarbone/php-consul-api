@@ -29,7 +29,7 @@ class CatalogService extends CatalogNode
     /** @var string */
     public $ServiceAddress = '';
     /** @var string[] */
-    public $ServiceTags = array();
+    public $ServiceTags = [];
     /** @var int */
     public $ServicePort = 0;
     /** @var bool */

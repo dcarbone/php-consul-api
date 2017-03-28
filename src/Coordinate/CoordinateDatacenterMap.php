@@ -27,20 +27,33 @@ class CoordinateDatacenterMap extends AbstractModel
     /** @var string */
     public $Datacenter = '';
     /** @var Coordinate[] */
-    public $Coordinates = array();
+    public $Coordinates = [];
 
     /**
      * CoordinateDatacenterMap constructor.
      *
      * @param array $data
      */
-    public function __construct(array $data = array())
+    public function __construct(array $data = [])
     {
         parent::__construct($data);
-        for ($i = 0, $cnt = count($this->Coordinates); $i < $cnt; $i++)
+
+        // If we have data...
+        if (0 < count($this->Coordinates))
         {
-            if (!($this->Coordinates[$i] instanceof Coordinate))
-                $this->Coordinates[$i] = new Coordinate((array)$this->Coordinates[$i]);
+            // ...remove null
+            $this->Coordinates = array_filter($this->Coordinates);
+
+            // ...and if we still have data
+            if (0 < ($cnt = count($this->Coordinates)))
+            {
+                // ensure we have objects.
+                for ($i = 0; $i < $cnt; $i++)
+                {
+                    if (!($this->Coordinates[$i] instanceof Coordinate))
+                        $this->Coordinates[$i] = new Coordinate((array)$this->Coordinates[$i]);
+                }
+            }
         }
     }
 

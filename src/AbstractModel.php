@@ -30,7 +30,7 @@ abstract class AbstractModel implements \JsonSerializable
      *
      * @param array $data
      */
-    public function __construct(array $data = array())
+    public function __construct(array $data = [])
     {
         foreach($data as $k => $v)
         {

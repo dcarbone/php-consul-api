@@ -40,19 +40,25 @@ class PreparedQueryExecuteResponse extends AbstractModel
      * PreparedQueryExecuteResponse constructor.
      * @param array $data
      */
-    public function __construct(array $data = array())
+    public function __construct(array $data = [])
     {
         parent::__construct($data);
 
-        if (!($this->DNS instanceof QueryDNSOptions))
+        if (null !== $this->DNS && !($this->DNS instanceof QueryDNSOptions))
             $this->DNS = new QueryDNSOptions((array)$this->DNS);
 
-        for ($i = 0, $cnt = count($this->Nodes); $i < $cnt; $i++)
+        if (0 < count($this->Nodes))
         {
-            if ($this->Nodes[$i] instanceof ServiceEntry)
-                continue;
+            $this->Nodes = array_filter($this->Nodes);
+            if (0 < ($cnt = count($this->Nodes)))
+            {
+                for ($i = 0; $i < $cnt; $i++)
+                {
+                    if (!($this->Nodes[$i] instanceof ServiceEntry))
+                        $this->Nodes[$i] = new ServiceEntry((array)$this->Nodes[$i]);
 
-            $this->Nodes[$i] = new ServiceEntry((array)$this->Nodes[$i]);
+                }
+            }
         }
     }
 

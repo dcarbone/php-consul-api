@@ -39,9 +39,9 @@ class AgentSelfConfig extends AbstractModel
     /** @var string */
     public $DNSRecursor = '';
     /** @var string[] */
-    public $DNSRecursors = array();
+    public $DNSRecursors = [];
     /** @var string[] */
-    public $DNSConfig = array();
+    public $DNSConfig = [];
     /** @var string */
     public $Domain = '';
     /** @var string */
@@ -55,13 +55,13 @@ class AgentSelfConfig extends AbstractModel
     /** @var string */
     public $AdvertiseAddr = '';
     /** @var string[] */
-    public $Ports = array();
+    public $Ports = [];
     /** @var bool */
     public $LeaveOnTerm = false;
     /** @var bool */
     public $SkipLeaveOnInt = false;
     /** @var string[] */
-    public $Telemetry = array();
+    public $Telemetry = [];
     /** @var int */
     public $Protocol = 0;
     /** @var bool */
@@ -77,7 +77,7 @@ class AgentSelfConfig extends AbstractModel
     /** @var string */
     public $KeyFile = '';
     /** @var string[] */
-    public $StartJoin = array();
+    public $StartJoin = [];
     /** @var string */
     public $UiDir = '';
     /** @var string */

@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 class AgentSelfCoord extends AbstractModel
 {
     /** @var array */
-    public $Vec = array();
+    public $Vec = [];
     /** @var float */
     public $Error = 0.0;
     /** @var float */

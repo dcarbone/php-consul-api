@@ -43,14 +43,14 @@ class PreparedQueryDefinition extends AbstractModel
      * PreparedQueryDefinition constructor.
      * @param array $data
      */
-    public function __construct(array $data = array())
+    public function __construct(array $data = [])
     {
         parent::__construct($data);
-        if (!($this->Service instanceof ServiceQuery))
+        if (null !== $this->Service && !($this->Service instanceof ServiceQuery))
             $this->Service = new ServiceQuery((array)$this->Service);
-        if (!($this->DNS instanceof QueryDNSOptions))
+        if (null !== $this->DNS && !($this->DNS instanceof QueryDNSOptions))
             $this->DNS = new QueryDNSOptions((array)$this->DNS);
-        if (!($this->Template instanceof QueryTemplate))
+        if (null !== $this->Template && !($this->Template instanceof QueryTemplate))
             $this->Template = new QueryTemplate((array)$this->Template);
     }
 
