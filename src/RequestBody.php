@@ -51,7 +51,7 @@ class RequestBody implements StreamInterface
 
             case 'object':
             case 'array':
-                $str = json_encode(json_encode($contents);
+                $str = json_encode(json_encode($contents));
                 break;
 
             case 'boolean':
