@@ -67,9 +67,7 @@ class KVClient extends AbstractClient
             if (null !== $err)
                 return [null, $qm, $err];
 
-            $data = $data[0];
-
-            return [new KVPair($data), $qm, null];
+            return [new KVPair($data[0], true), $qm, null];
         }
 
         if (404 === $code)
@@ -121,7 +119,7 @@ class KVClient extends AbstractClient
         $kvPairs = [];
         foreach($data as $v)
         {
-            $kvp = new KVPair($v);
+            $kvp = new KVPair($v, true);
             $kvPairs[$kvp->Key] = $kvp;
         }
 
