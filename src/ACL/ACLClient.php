@@ -44,7 +44,7 @@ class ACLClient extends AbstractClient
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
         if (null !== $err)
-            return [null, $err];
+            return ['', null, $err];
 
         $wm = $this->buildWriteMeta($duration);
 
@@ -114,7 +114,7 @@ class ACLClient extends AbstractClient
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
         if (null !== $err)
-            return [null, null, $err];
+            return ['', null, $err];
 
         $wm = $this->buildWriteMeta($duration);
 
