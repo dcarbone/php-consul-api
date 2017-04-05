@@ -37,6 +37,7 @@ class QueryOptions extends AbstractOptions
             'WaitTime' => null,
             'Token' => null,
             'Near' => null,
+            'Pretty' => null,
         );
     }
 
@@ -50,7 +51,7 @@ class QueryOptions extends AbstractOptions
 
     /**
      * @param string $datacenter
-     * @return $this
+     * @return QueryOptions
      */
     public function setDatacenter($datacenter)
     {
@@ -68,7 +69,7 @@ class QueryOptions extends AbstractOptions
 
     /**
      * @param bool $allowStale
-     * @return $this
+     * @return QueryOptions
      */
     public function setAllowStale($allowStale)
     {
@@ -86,7 +87,7 @@ class QueryOptions extends AbstractOptions
 
     /**
      * @param int $waitIndex
-     * @return $this
+     * @return QueryOptions
      */
     public function setWaitIndex($waitIndex)
     {
@@ -104,7 +105,7 @@ class QueryOptions extends AbstractOptions
 
     /**
      * @param int $waitTime
-     * @return $this
+     * @return QueryOptions
      */
     public function setWaitTime($waitTime)
     {
@@ -122,7 +123,7 @@ class QueryOptions extends AbstractOptions
 
     /**
      * @param string $token
-     * @return $this
+     * @return QueryOptions
      */
     public function setToken($token)
     {
@@ -140,7 +141,7 @@ class QueryOptions extends AbstractOptions
 
     /**
      * @param string $near
-     * @return $this
+     * @return QueryOptions
      */
     public function setNear($near)
     {
@@ -158,11 +159,28 @@ class QueryOptions extends AbstractOptions
 
     /**
      * @param string $requireConsistent
-     * @return $this
+     * @return QueryOptions
      */
     public function setRequireConsistent($requireConsistent)
     {
         $this->_storage['RequireConsistent'] = $requireConsistent;
+        return $this;
+    }
+    
+    public function isPretty() {
+        return isset($this->_storage['Pretty']);
+    }
+
+    /**
+     * @param bool $pretty
+     * @return QueryOptions
+     */
+    public function setPretty($pretty) {
+        if ($pretty)
+            $this->_storage['Pretty'] = true;
+        else
+            unset($this->_storage['Pretty']);
+
         return $this;
     }
 }
