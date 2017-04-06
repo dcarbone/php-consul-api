@@ -64,7 +64,7 @@ class PreparedQueryDefinition extends AbstractModel
 
     /**
      * @param string $ID
-     * @return PreparedQueryDefinition
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition
      */
     public function setID($ID)
     {
@@ -82,7 +82,7 @@ class PreparedQueryDefinition extends AbstractModel
 
     /**
      * @param string $Name
-     * @return PreparedQueryDefinition
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition
      */
     public function setName($Name)
     {
@@ -100,7 +100,7 @@ class PreparedQueryDefinition extends AbstractModel
 
     /**
      * @param string $Session
-     * @return PreparedQueryDefinition
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition
      */
     public function setSession($Session)
     {
@@ -118,7 +118,7 @@ class PreparedQueryDefinition extends AbstractModel
 
     /**
      * @param string $Token
-     * @return PreparedQueryDefinition
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition
      */
     public function setToken($Token)
     {
@@ -136,7 +136,7 @@ class PreparedQueryDefinition extends AbstractModel
 
     /**
      * @param \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery $Service
-     * @return PreparedQueryDefinition
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition
      */
     public function setService(ServiceQuery $Service)
     {
@@ -154,7 +154,7 @@ class PreparedQueryDefinition extends AbstractModel
 
     /**
      * @param \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions $DNS
-     * @return PreparedQueryDefinition
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition
      */
     public function setDNS(QueryDNSOptions $DNS)
     {
@@ -172,7 +172,7 @@ class PreparedQueryDefinition extends AbstractModel
 
     /**
      * @param \DCarbone\PHPConsulAPI\PreparedQuery\QueryTemplate $Template
-     * @return PreparedQueryDefinition
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition
      */
     public function setTemplate(QueryTemplate $Template)
     {

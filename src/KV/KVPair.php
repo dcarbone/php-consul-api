@@ -61,7 +61,7 @@ class KVPair extends AbstractModel
 
     /**
      * @param string $Key
-     * @return KVPair
+     * @return \DCarbone\PHPConsulAPI\KV\KVPair
      */
     public function setKey($Key)
     {
@@ -79,7 +79,7 @@ class KVPair extends AbstractModel
 
     /**
      * @param int $CreateIndex
-     * @return KVPair
+     * @return \DCarbone\PHPConsulAPI\KV\KVPair
      */
     public function setCreateIndex($CreateIndex)
     {
@@ -97,7 +97,7 @@ class KVPair extends AbstractModel
 
     /**
      * @param int $ModifyIndex
-     * @return KVPair
+     * @return \DCarbone\PHPConsulAPI\KV\KVPair
      */
     public function setModifyIndex($ModifyIndex)
     {
@@ -115,7 +115,7 @@ class KVPair extends AbstractModel
 
     /**
      * @param int $LockIndex
-     * @return KVPair
+     * @return \DCarbone\PHPConsulAPI\KV\KVPair
      */
     public function setLockIndex($LockIndex)
     {
@@ -133,7 +133,7 @@ class KVPair extends AbstractModel
 
     /**
      * @param int $Flags
-     * @return KVPair
+     * @return \DCarbone\PHPConsulAPI\KV\KVPair
      */
     public function setFlags($Flags)
     {
@@ -151,7 +151,7 @@ class KVPair extends AbstractModel
 
     /**
      * @param null|string $Value
-     * @return KVPair
+     * @return \DCarbone\PHPConsulAPI\KV\KVPair
      */
     public function setValue($Value)
     {
@@ -169,7 +169,7 @@ class KVPair extends AbstractModel
 
     /**
      * @param string $Session
-     * @return KVPair
+     * @return \DCarbone\PHPConsulAPI\KV\KVPair
      */
     public function setSession($Session)
     {

@@ -28,7 +28,7 @@ use DCarbone\PHPConsulAPI\WriteOptions;
 class OperatorClient extends AbstractClient
 {
     /**
-     * @param QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      * @return array(
      * @type \DCarbone\PHPConsulAPI\Operator\RaftConfiguration|null Current Raft Configuration or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
@@ -57,7 +57,7 @@ class OperatorClient extends AbstractClient
 
     /**
      * @param string $address
-     * @param WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
      * @return \DCarbone\PHPConsulAPI\Error|null error, if any
      */
     public function raftRemovePeerByAddress($address, WriteOptions $writeOptions = null)

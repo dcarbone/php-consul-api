@@ -28,8 +28,8 @@ use DCarbone\PHPConsulAPI\WriteOptions;
 class ACLClient extends AbstractClient
 {
     /**
-     * @param ACLEntry $acl
-     * @param WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\ACL\ACLEntry $acl
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
      * @return array(
      * @type string ACL ID
      * @type \DCarbone\PHPConsulAPI\WriteMeta write meta data
@@ -56,8 +56,8 @@ class ACLClient extends AbstractClient
     }
 
     /**
-     * @param ACLEntry $acl
-     * @param WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\ACL\ACLEntry $acl
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
      * @return array(
      * @type \DCarbone\PHPConsulAPI\WriteMeta
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
@@ -78,7 +78,7 @@ class ACLClient extends AbstractClient
 
     /**
      * @param string $id
-     * @param WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
      * @return array(
      * @type \DCarbone\PHPConsulAPI\WriteMeta write meta data
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
@@ -99,7 +99,7 @@ class ACLClient extends AbstractClient
 
     /**
      * @param string $id
-     * @param WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
      * @return array(
      * @type string cloned ACL id
      * @type \DCarbone\PHPConsulAPI\WriteMeta write meta data
@@ -127,7 +127,7 @@ class ACLClient extends AbstractClient
 
     /**
      * @param string $id
-     * @param QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      * @return array(
      * @type \DCarbone\PHPConsulAPI\ACL\ACLEntry[]|null list of ACL entries corresponding to that ID, or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query meta data
@@ -160,7 +160,7 @@ class ACLClient extends AbstractClient
     }
 
     /**
-     * @param QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      * @return array(
      * @type \DCarbone\PHPConsulAPI\ACL\ACLEntry[] acl entries or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query meta data

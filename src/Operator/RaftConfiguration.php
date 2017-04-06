@@ -24,7 +24,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  */
 class RaftConfiguration extends AbstractModel
 {
-    /** @var RaftServer[] */
+    /** @var \DCarbone\PHPConsulAPI\Operator\RaftServer[] */
     public $Servers = [];
     /** @var int */
     public $Index = 0;
@@ -54,7 +54,7 @@ class RaftConfiguration extends AbstractModel
     }
 
     /**
-     * @return RaftServer[]
+     * @return \DCarbone\PHPConsulAPI\Operator\RaftServer[]
      */
     public function getServers()
     {
@@ -62,8 +62,8 @@ class RaftConfiguration extends AbstractModel
     }
 
     /**
-     * @param RaftServer[] $Servers
-     * @return RaftConfiguration
+     * @param \DCarbone\PHPConsulAPI\Operator\RaftServer[] $Servers
+     * @return \DCarbone\PHPConsulAPI\Operator\RaftConfiguration
      */
     public function setServers(array $Servers)
     {
@@ -76,8 +76,8 @@ class RaftConfiguration extends AbstractModel
     }
 
     /**
-     * @param RaftServer $Server
-     * @return RaftConfiguration
+     * @param \DCarbone\PHPConsulAPI\Operator\RaftServer $Server
+     * @return \DCarbone\PHPConsulAPI\Operator\RaftConfiguration
      */
     public function addServer(RaftServer $Server)
     {
@@ -95,7 +95,7 @@ class RaftConfiguration extends AbstractModel
 
     /**
      * @param int $Index
-     * @return RaftConfiguration
+     * @return \DCarbone\PHPConsulAPI\Operator\RaftConfiguration
      */
     public function setIndex($Index)
     {

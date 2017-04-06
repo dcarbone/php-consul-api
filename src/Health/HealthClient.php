@@ -121,7 +121,7 @@ class HealthClient extends AbstractClient
      * @param bool $passingOnly
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      * @return array (
-     * @type ServiceEntry[]|null list of service entries or null on error
+     * @type \DCarbone\PHPConsulAPI\Health\ServiceEntry[]|null list of service entries or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )

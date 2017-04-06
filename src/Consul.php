@@ -40,27 +40,27 @@ class Consul
     const HTTPSSLEnvName = 'CONSUL_HTTP_SSL';
     const HTTPSSLVerifyEnvName = 'CONSUL_HTTP_SSL_VERIFY';
 
-    /** @var KVClient */
+    /** @var \DCarbone\PHPConsulAPI\KV\KVClient */
     public $KV;
-    /** @var AgentClient */
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentClient */
     public $Agent;
-    /** @var CatalogClient */
+    /** @var \DCarbone\PHPConsulAPI\Catalog\CatalogClient */
     public $Catalog;
-    /** @var StatusClient */
+    /** @var \DCarbone\PHPConsulAPI\Status\StatusClient */
     public $Status;
-    /** @var EventClient */
+    /** @var \DCarbone\PHPConsulAPI\Event\EventClient */
     public $Event;
-    /** @var HealthClient */
+    /** @var \DCarbone\PHPConsulAPI\Health\HealthClient */
     public $Health;
-    /** @var CoordinateClient */
+    /** @var \DCarbone\PHPConsulAPI\Coordinate\CoordinateClient */
     public $Coordinate;
-    /** @var SessionClient */
+    /** @var \DCarbone\PHPConsulAPI\Session\SessionClient */
     public $Session;
-    /** @var OperatorClient */
+    /** @var \DCarbone\PHPConsulAPI\Operator\OperatorClient */
     public $Operator;
-    /** @var ACLClient */
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLClient */
     public $ACL;
-    /** @var PreparedQueryClient */
+    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryClient */
     public $PreparedQuery;
 
     /**
@@ -69,12 +69,9 @@ class Consul
      */
     public function __construct(Config $config = null)
     {
-        if (null === $config)
-        {
+        if (null === $config) {
             $config = Config::newDefaultConfig();
-        }
-        else
-        {
+        } else {
             $def = Config::newDefaultConfig();
 
             if ('' === $config->getAddress())
@@ -84,21 +81,21 @@ class Consul
                 $config->setScheme($def->getScheme());
         }
 
-        $this->KV            = new KVClient($config);
-        $this->Agent         = new AgentClient($config);
-        $this->Catalog       = new CatalogClient($config);
-        $this->Status        = new StatusClient($config);
-        $this->Event         = new EventClient($config);
-        $this->Health        = new HealthClient($config);
-        $this->Coordinate    = new CoordinateClient($config);
-        $this->Session       = new SessionClient($config);
-        $this->Operator      = new OperatorClient($config);
-        $this->ACL           = new ACLClient($config);
+        $this->KV = new KVClient($config);
+        $this->Agent = new AgentClient($config);
+        $this->Catalog = new CatalogClient($config);
+        $this->Status = new StatusClient($config);
+        $this->Event = new EventClient($config);
+        $this->Health = new HealthClient($config);
+        $this->Coordinate = new CoordinateClient($config);
+        $this->Session = new SessionClient($config);
+        $this->Operator = new OperatorClient($config);
+        $this->ACL = new ACLClient($config);
         $this->PreparedQuery = new PreparedQueryClient($config);
     }
 
     /**
-     * @return KVClient
+     * @return \DCarbone\PHPConsulAPI\KV\KVClient
      */
     public function KV()
     {
@@ -130,7 +127,7 @@ class Consul
     }
 
     /**
-     * @return EventClient
+     * @return \DCarbone\PHPConsulAPI\Event\EventClient
      */
     public function Event()
     {
@@ -138,7 +135,7 @@ class Consul
     }
 
     /**
-     * @return HealthClient
+     * @return \DCarbone\PHPConsulAPI\Health\HealthClient
      */
     public function Health()
     {
@@ -154,7 +151,7 @@ class Consul
     }
 
     /**
-     * @return SessionClient
+     * @return \DCarbone\PHPConsulAPI\Session\SessionClient
      */
     public function Session()
     {
@@ -162,7 +159,7 @@ class Consul
     }
 
     /**
-     * @return OperatorClient
+     * @return \DCarbone\PHPConsulAPI\Operator\OperatorClient
      */
     public function Operator()
     {
@@ -170,7 +167,7 @@ class Consul
     }
 
     /**
-     * @return ACLClient
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLClient
      */
     public function ACL()
     {
@@ -178,7 +175,7 @@ class Consul
     }
 
     /**
-     * @return PreparedQueryClient
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryClient
      */
     public function PreparedQuery()
     {

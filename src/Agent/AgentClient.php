@@ -167,8 +167,11 @@ class AgentClient extends AbstractClient
     /**
      * Register a service within Consul
      *
-     * @param AgentServiceRegistration $agentServiceRegistration
-     * @return \DCarbone\PHPConsulAPI\Error|null
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration $agentServiceRegistration
+     * @return array (
+     * @type \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration $agentServiceRegistration
+     * @type \DCarbone\PHPConsulAPI\Error|null
+     * )
      */
     public function serviceRegister(AgentServiceRegistration $agentServiceRegistration)
     {
@@ -248,8 +251,11 @@ class AgentClient extends AbstractClient
     }
 
     /**
-     * @param AgentCheckRegistration $agentCheckRegistration
-     * @return \DCarbone\PHPConsulAPI\Error|null
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration $agentCheckRegistration
+     * @return array (
+     * @type \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration $agentCheckRegistration
+     * @type \DCarbone\PHPConsulAPI\Error|null
+     * )
      */
     public function checkRegister(AgentCheckRegistration $agentCheckRegistration)
     {

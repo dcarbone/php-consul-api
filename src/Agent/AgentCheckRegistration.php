@@ -41,7 +41,7 @@ class AgentCheckRegistration extends AgentServiceCheck
 
     /**
      * @param string $ID
-     * @return AgentCheckRegistration
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration
      */
     public function setID($ID)
     {
@@ -59,7 +59,7 @@ class AgentCheckRegistration extends AgentServiceCheck
 
     /**
      * @param string $Name
-     * @return AgentCheckRegistration
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration
      */
     public function setName($Name)
     {
@@ -77,7 +77,7 @@ class AgentCheckRegistration extends AgentServiceCheck
 
     /**
      * @param string $Notes
-     * @return AgentCheckRegistration
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration
      */
     public function setNotes($Notes)
     {
@@ -95,7 +95,7 @@ class AgentCheckRegistration extends AgentServiceCheck
 
     /**
      * @param string $ServiceID
-     * @return AgentCheckRegistration
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration
      */
     public function setServiceID($ServiceID)
     {

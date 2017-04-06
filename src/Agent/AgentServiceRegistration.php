@@ -78,7 +78,7 @@ class AgentServiceRegistration extends AbstractModel
 
     /**
      * @param string $ID
-     * @return AgentServiceRegistration
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
     public function setID($ID)
     {
@@ -96,7 +96,7 @@ class AgentServiceRegistration extends AbstractModel
 
     /**
      * @param string $Name
-     * @return AgentServiceRegistration
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
     public function setName($Name)
     {
@@ -114,7 +114,7 @@ class AgentServiceRegistration extends AbstractModel
 
     /**
      * @param int $Port
-     * @return AgentServiceRegistration
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
     public function setPort($Port)
     {
@@ -132,7 +132,7 @@ class AgentServiceRegistration extends AbstractModel
 
     /**
      * @param string $Address
-     * @return AgentServiceRegistration
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
     public function setAddress($Address)
     {
@@ -150,7 +150,7 @@ class AgentServiceRegistration extends AbstractModel
 
     /**
      * @param boolean $EnableTagOverride
-     * @return AgentServiceRegistration
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
     public function setEnableTagOverride($EnableTagOverride)
     {
@@ -168,7 +168,7 @@ class AgentServiceRegistration extends AbstractModel
 
     /**
      * @param \DCarbone\PHPConsulAPI\Agent\AgentCheck $Check
-     * @return AgentServiceRegistration
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
     public function setCheck(AgentCheck $Check)
     {
@@ -186,7 +186,7 @@ class AgentServiceRegistration extends AbstractModel
 
     /**
      * @param \DCarbone\PHPConsulAPI\Agent\AgentCheck[] $Checks
-     * @return AgentServiceRegistration
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
     public function setChecks(array $Checks)
     {

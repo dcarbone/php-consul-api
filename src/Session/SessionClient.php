@@ -255,7 +255,7 @@ class SessionClient extends AbstractClient
     }
 
     /**
-     * @param QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      * @return array(
      *  @type \DCarbone\PHPConsulAPI\Session\SessionEntry[]|null list of session entries or null on error
      *  @type \DCarbone\PHPConsulAPI\QueryMeta query metadata

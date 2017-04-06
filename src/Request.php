@@ -93,7 +93,7 @@ class Request implements RequestInterface
     }
 
     /**
-     * @param QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      */
     public function setQueryOptions(QueryOptions $queryOptions = null)
     {

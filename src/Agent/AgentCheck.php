@@ -51,7 +51,7 @@ class AgentCheck extends AbstractModel
 
     /**
      * @param string $Node
-     * @return AgentCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheck
      */
     public function setNode($Node)
     {
@@ -69,7 +69,7 @@ class AgentCheck extends AbstractModel
 
     /**
      * @param string $CheckID
-     * @return AgentCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheck
      */
     public function setCheckID($CheckID)
     {
@@ -87,7 +87,7 @@ class AgentCheck extends AbstractModel
 
     /**
      * @param string $Name
-     * @return AgentCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheck
      */
     public function setName($Name)
     {
@@ -105,7 +105,7 @@ class AgentCheck extends AbstractModel
 
     /**
      * @param string $Status
-     * @return AgentCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheck
      */
     public function setStatus($Status)
     {
@@ -123,7 +123,7 @@ class AgentCheck extends AbstractModel
 
     /**
      * @param string $Notes
-     * @return AgentCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheck
      */
     public function setNotes($Notes)
     {
@@ -141,7 +141,7 @@ class AgentCheck extends AbstractModel
 
     /**
      * @param string $Output
-     * @return AgentCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheck
      */
     public function setOutput($Output)
     {
@@ -159,7 +159,7 @@ class AgentCheck extends AbstractModel
 
     /**
      * @param string $ServiceID
-     * @return AgentCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheck
      */
     public function setServiceID($ServiceID)
     {
@@ -177,7 +177,7 @@ class AgentCheck extends AbstractModel
 
     /**
      * @param string $ServiceName
-     * @return AgentCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheck
      */
     public function setServiceName($ServiceName)
     {

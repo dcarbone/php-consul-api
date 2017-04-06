@@ -25,7 +25,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     /** @var string */
     private $_prefix;
 
-    /** @var KVTree[]|KVPair[] */
+    /** @var \DCarbone\PHPConsulAPI\KV\KVTree[]|\DCarbone\PHPConsulAPI\KV\KVPair[] */
     private $_children = [];
 
     /**
@@ -46,9 +46,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     }
 
     /**
-     * Return the current element
-     * @link http://php.net/manual/en/iterator.current.php
-     * @return KVTree|KVPair Can return any type.
+     * @return \DCarbone\PHPConsulAPI\KV\KVTree|\DCarbone\PHPConsulAPI\KV\KVPair Can return any type.
      */
     public function current()
     {
@@ -56,8 +54,6 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     }
 
     /**
-     * Move forward to next element
-     * @link http://php.net/manual/en/iterator.next.php
      * @return void Any returned value is ignored.
      */
     public function next()
@@ -66,8 +62,6 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     }
 
     /**
-     * Return the key of the current element
-     * @link http://php.net/manual/en/iterator.key.php
      * @return string scalar on success, or null on failure.
      */
     public function key()
@@ -76,8 +70,6 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     }
 
     /**
-     * Checks if current position is valid
-     * @link http://php.net/manual/en/iterator.valid.php
      * @return boolean The return value will be casted to boolean and then evaluated.
      * Returns true on success or false on failure.
      */
@@ -87,8 +79,6 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     }
 
     /**
-     * Rewind the Iterator to the first element
-     * @link http://php.net/manual/en/iterator.rewind.php
      * @return void Any returned value is ignored.
      */
     public function rewind()
@@ -97,8 +87,6 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     }
 
     /**
-     * Returns if an iterator can be created for the current entry.
-     * @link http://php.net/manual/en/recursiveiterator.haschildren.php
      * @return bool true if the current entry can be iterated over, otherwise returns false.
      */
     public function hasChildren()
@@ -107,8 +95,6 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     }
 
     /**
-     * Returns an iterator for the current entry.
-     * @link http://php.net/manual/en/recursiveiterator.getchildren.php
      * @return \RecursiveIterator An iterator for the current entry.
      */
     public function getChildren()
@@ -117,8 +103,6 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     }
 
     /**
-     * Count elements of an object
-     * @link http://php.net/manual/en/countable.count.php
      * @return int The custom count as an integer.
      */
     public function count()
@@ -127,8 +111,6 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     }
 
     /**
-     * Whether a offset exists
-     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
      * @param mixed $offset An offset to check for.
      * @return boolean true on success or false on failure.
      */
@@ -151,10 +133,8 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     }
 
     /**
-     * Offset to retrieve
-     * @link http://php.net/manual/en/arrayaccess.offsetget.php
      * @param mixed $offset The offset to retrieve.
-     * @return KVTree|KVPair
+     * @return \DCarbone\PHPConsulAPI\KV\KVTree|\DCarbone\PHPConsulAPI\KV\KVPair
      */
     public function offsetGet($offset)
     {
@@ -184,8 +164,6 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     }
 
     /**
-     * Offset to set
-     * @link http://php.net/manual/en/arrayaccess.offsetset.php
      * @param mixed $offset The offset to assign the value to.
      * @param mixed $value The value to set.
      * @return void
@@ -218,8 +196,6 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     }
 
     /**
-     * Offset to unset
-     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
      * @param mixed $offset The offset to unset.
      * @return void
      */
@@ -229,8 +205,6 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     }
 
     /**
-     * String representation of object
-     * @link http://php.net/manual/en/serializable.serialize.php
      * @return string the string representation of the object or null
      */
     public function serialize()
@@ -239,8 +213,6 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     }
 
     /**
-     * Constructs the object
-     * @link http://php.net/manual/en/serializable.unserialize.php
      * @param string $serialized The string representation of the object.
      * @return void
      */
@@ -252,8 +224,6 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     }
 
     /**
-     * Specify data which should be serialized to JSON
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
      * @return array data which can be serialized by json_encode,which is a value of any type other than a resource.
      */
     public function jsonSerialize()
@@ -278,11 +248,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     }
 
     /**
-     * This method is called by var_dump() when dumping an object to get the properties that should be shown.
-     * If the method isn't defined on an object, then all public, protected and private properties will be shown.
-     *
      * @return array
-     * @link http://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.debuginfo
      */
     public function __debugInfo()
     {

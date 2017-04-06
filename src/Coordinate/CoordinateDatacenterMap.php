@@ -26,7 +26,7 @@ class CoordinateDatacenterMap extends AbstractModel
 {
     /** @var string */
     public $Datacenter = '';
-    /** @var Coordinate[] */
+    /** @var \DCarbone\PHPConsulAPI\Coordinate\Coordinate[] */
     public $Coordinates = [];
 
     /**
@@ -66,7 +66,7 @@ class CoordinateDatacenterMap extends AbstractModel
     }
 
     /**
-     * @return Coordinate[]
+     * @return \DCarbone\PHPConsulAPI\Coordinate\Coordinate[]
      */
     public function getCoordinates()
     {

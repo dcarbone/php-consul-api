@@ -58,7 +58,7 @@ class ServiceQuery extends AbstractModel
 
     /**
      * @param string $Service
-     * @return ServiceQuery
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
     public function setService($Service)
     {
@@ -76,7 +76,7 @@ class ServiceQuery extends AbstractModel
 
     /**
      * @param string $Near
-     * @return ServiceQuery
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
     public function setNear($Near)
     {
@@ -94,7 +94,7 @@ class ServiceQuery extends AbstractModel
 
     /**
      * @param \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions $Failover
-     * @return ServiceQuery
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
     public function setFailover(QueryDatacenterOptions $Failover)
     {
@@ -112,7 +112,7 @@ class ServiceQuery extends AbstractModel
 
     /**
      * @param boolean $OnlyPassing
-     * @return ServiceQuery
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
     public function setOnlyPassing($OnlyPassing)
     {

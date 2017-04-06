@@ -29,7 +29,7 @@ class PreparedQueryClient extends AbstractClient
 {
     /**
      * @param PreparedQueryDefinition $query
-     * @param WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
      * @return array(
      * @type string prepared query id
      * @type \DCarbone\PHPConsulAPI\WriteMeta write meta data
@@ -51,7 +51,7 @@ class PreparedQueryClient extends AbstractClient
 
     /**
      * @param PreparedQueryDefinition $query
-     * @param WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
      * @return array(
      * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
@@ -71,7 +71,7 @@ class PreparedQueryClient extends AbstractClient
     }
 
     /**
-     * @param QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      * @return array(
      * @type \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition[]|null
      * @type \DCarbone\PHPConsulAPI\QueryMeta|null
@@ -104,7 +104,7 @@ class PreparedQueryClient extends AbstractClient
 
     /**
      * @param string $queryID
-     * @param QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      * @return array(
      * @type \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition[]|null
      * @type \DCarbone\PHPConsulAPI\QueryMeta|null
@@ -137,7 +137,7 @@ class PreparedQueryClient extends AbstractClient
 
     /**
      * @param string $queryID
-     * @param WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
      * @return array(
      * @type \DCarbone\PHPConsulAPI\WriteMeta Write meta data
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
@@ -160,7 +160,7 @@ class PreparedQueryClient extends AbstractClient
 
     /**
      * @param string $queryIDOrName
-     * @param QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      * @return array(
      * @type \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryExecuteResponse|null prepared query response or null
      * @type \DCarbone\PHPConsulAPI\QueryMeta Query meta data

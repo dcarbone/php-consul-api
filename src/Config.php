@@ -108,7 +108,7 @@ class Config
      * Construct a configuration object from Environment Variables while using a specific HTTP Client
      *
      * @param \Http\Client\HttpClient $client
-     * @return Config
+     * @return \DCarbone\PHPConsulAPI\Config
      */
     public static function newDefaultConfigWithClient(HttpClient $client)
     {
@@ -140,7 +140,7 @@ class Config
     /**
      * Construct a configuration object from Environment Variables and also attempt to locate an HTTP Client ot use.
      *
-     * @return Config
+     * @return \DCarbone\PHPConsulAPI\Config
      */
     public static function newDefaultConfig()
     {
@@ -173,7 +173,7 @@ class Config
 
     /**
      * @param string $Address
-     * @return Config
+     * @return \DCarbone\PHPConsulAPI\Config
      */
     public function setAddress($Address)
     {
@@ -191,7 +191,7 @@ class Config
 
     /**
      * @param string $Scheme
-     * @return Config
+     * @return \DCarbone\PHPConsulAPI\Config
      */
     public function setScheme($Scheme)
     {
@@ -209,7 +209,7 @@ class Config
 
     /**
      * @param string $Datacenter
-     * @return Config
+     * @return \DCarbone\PHPConsulAPI\Config
      */
     public function setDatacenter($Datacenter)
     {
@@ -227,7 +227,7 @@ class Config
 
     /**
      * @param int $WaitTime
-     * @return Config
+     * @return \DCarbone\PHPConsulAPI\Config
      */
     public function setWaitTime($WaitTime)
     {
@@ -245,7 +245,7 @@ class Config
 
     /**
      * @param string $Token
-     * @return Config
+     * @return \DCarbone\PHPConsulAPI\Config
      */
     public function setToken($Token)
     {
@@ -263,7 +263,7 @@ class Config
 
     /**
      * @param boolean $InsecureSkipVerify
-     * @return Config
+     * @return \DCarbone\PHPConsulAPI\Config
      */
     public function setInsecureSkipVerify($InsecureSkipVerify)
     {
@@ -281,7 +281,7 @@ class Config
 
     /**
      * @param string|HttpAuth $HttpAuth
-     * @return Config
+     * @return \DCarbone\PHPConsulAPI\Config
      */
     public function setHttpAuth($HttpAuth)
     {
@@ -324,7 +324,7 @@ class Config
 
     /**
      * @param \Http\Client\HttpClient $HttpClient
-     * @return Config
+     * @return \DCarbone\PHPConsulAPI\Config
      */
     public function setHttpClient(HttpClient $HttpClient)
     {
@@ -342,7 +342,7 @@ class Config
 
     /**
      * @param boolean $TokenInHeader
-     * @return Config
+     * @return \DCarbone\PHPConsulAPI\Config
      */
     public function setTokenInHeader($TokenInHeader)
     {

@@ -28,7 +28,7 @@ use DCarbone\PHPConsulAPI\WriteOptions;
 class EventClient extends AbstractClient
 {
     /**
-     * @param UserEvent $event
+     * @param \DCarbone\PHPConsulAPI\Event\UserEvent $event
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
      * @return array(
      *  @type UserEvent|null user event that was fired or null on error

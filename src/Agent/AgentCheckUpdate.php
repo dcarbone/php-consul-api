@@ -39,7 +39,7 @@ class AgentCheckUpdate extends AbstractModel
 
     /**
      * @param string $Status
-     * @return AgentCheckUpdate
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheckUpdate
      */
     public function setStatus($Status)
     {
@@ -57,7 +57,7 @@ class AgentCheckUpdate extends AbstractModel
 
     /**
      * @param string $Output
-     * @return AgentCheckUpdate
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheckUpdate
      */
     public function setOutput($Output)
     {

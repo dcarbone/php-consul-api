@@ -30,7 +30,7 @@ class KVClient extends AbstractClient
 {
     /**
      * @param string $key Name of key to retrieve value for
-     * @param QueryOptions $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions $queryOptions
      * @return array(
      *  @type KVPair|null kv object or null on error
      *  @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata object or null on error
@@ -78,7 +78,7 @@ class KVClient extends AbstractClient
 
     /**
      * @param string $prefix
-     * @param QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      * @return array(
      *  @type KVPair[]|null array of KVPair objects under specified prefix
      *  @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata
@@ -279,7 +279,7 @@ class KVClient extends AbstractClient
 
     /**
      * @param null|string $prefix
-     * @param QueryOptions $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions $queryOptions
      * @return array(
      *  @type KVPair[]|KVTree[]|null array of trees, values, or null on error
      *  @type \DCarbone\PHPConsulAPI\Error|null error, if any

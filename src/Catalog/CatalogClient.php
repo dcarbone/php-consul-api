@@ -28,7 +28,7 @@ use DCarbone\PHPConsulAPI\WriteOptions;
 class CatalogClient extends AbstractClient
 {
     /**
-     * @param CatalogRegistration $catalogRegistration
+     * @param \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration $catalogRegistration
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
      * @return array(
      *  @type \DCarbone\PHPConsulAPI\WriteMeta write meta data
@@ -48,7 +48,7 @@ class CatalogClient extends AbstractClient
     }
 
     /**
-     * @param CatalogDeregistration $catalogDeregistration
+     * @param \DCarbone\PHPConsulAPI\Catalog\CatalogDeregistration $catalogDeregistration
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
      * @return array(
      *  @type \DCarbone\PHPConsulAPI\WriteMeta write meta data

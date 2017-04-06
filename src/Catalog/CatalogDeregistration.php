@@ -45,7 +45,7 @@ class CatalogDeregistration extends AbstractModel
 
     /**
      * @param string $Node
-     * @return CatalogDeregistration
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogDeregistration
      */
     public function setNode($Node)
     {
@@ -63,7 +63,7 @@ class CatalogDeregistration extends AbstractModel
 
     /**
      * @param string $Address
-     * @return CatalogDeregistration
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogDeregistration
      */
     public function setAddress($Address)
     {
@@ -81,7 +81,7 @@ class CatalogDeregistration extends AbstractModel
 
     /**
      * @param string $Datacenter
-     * @return CatalogDeregistration
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogDeregistration
      */
     public function setDatacenter($Datacenter)
     {
@@ -99,7 +99,7 @@ class CatalogDeregistration extends AbstractModel
 
     /**
      * @param string $ServiceID
-     * @return CatalogDeregistration
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogDeregistration
      */
     public function setServiceID($ServiceID)
     {
@@ -117,7 +117,7 @@ class CatalogDeregistration extends AbstractModel
 
     /**
      * @param string $CheckID
-     * @return CatalogDeregistration
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogDeregistration
      */
     public function setCheckID($CheckID)
     {

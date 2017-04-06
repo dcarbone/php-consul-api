@@ -61,7 +61,7 @@ class CatalogRegistration extends AbstractModel
 
     /**
      * @param string $Node
-     * @return CatalogRegistration
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
     public function setNode($Node)
     {
@@ -79,7 +79,7 @@ class CatalogRegistration extends AbstractModel
 
     /**
      * @param string $Address
-     * @return CatalogRegistration
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
     public function setAddress($Address)
     {
@@ -97,7 +97,7 @@ class CatalogRegistration extends AbstractModel
 
     /**
      * @param string $Datacenter
-     * @return CatalogRegistration
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
     public function setDatacenter($Datacenter)
     {
@@ -115,7 +115,7 @@ class CatalogRegistration extends AbstractModel
 
     /**
      * @param \DCarbone\PHPConsulAPI\Agent\AgentService $Service
-     * @return CatalogRegistration
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
     public function setService(AgentService $Service)
     {
@@ -133,7 +133,7 @@ class CatalogRegistration extends AbstractModel
 
     /**
      * @param \DCarbone\PHPConsulAPI\Agent\AgentCheck $Check
-     * @return CatalogRegistration
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
     public function setCheck(AgentCheck $Check)
     {
