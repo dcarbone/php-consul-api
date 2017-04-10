@@ -24,8 +24,7 @@ use DCarbone\PHPConsulAPI\HasStringTags;
  * Class ServiceQuery
  * @package DCarbone\PHPConsulAPI\PreparedQuery
  */
-class ServiceQuery extends AbstractModel
-{
+class ServiceQuery extends AbstractModel {
     use HasStringTags, HasSettableStringTags;
 
     /** @var string */
@@ -41,18 +40,17 @@ class ServiceQuery extends AbstractModel
      * ServiceQuery constructor.
      * @param array $data
      */
-    public function __construct(array $data = [])
-    {
+    public function __construct(array $data = []) {
         parent::__construct($data);
-        if (null !== $this->Failover && !($this->Failover instanceof QueryDatacenterOptions))
+        if (null !== $this->Failover && !($this->Failover instanceof QueryDatacenterOptions)) {
             $this->Failover = new QueryDatacenterOptions((array)$this->Failover);
+        }
     }
 
     /**
      * @return string
      */
-    public function getService()
-    {
+    public function getService() {
         return $this->Service;
     }
 
@@ -60,8 +58,7 @@ class ServiceQuery extends AbstractModel
      * @param string $Service
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
-    public function setService($Service)
-    {
+    public function setService($Service) {
         $this->Service = $Service;
         return $this;
     }
@@ -69,8 +66,7 @@ class ServiceQuery extends AbstractModel
     /**
      * @return string
      */
-    public function getNear()
-    {
+    public function getNear() {
         return $this->Near;
     }
 
@@ -78,8 +74,7 @@ class ServiceQuery extends AbstractModel
      * @param string $Near
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
-    public function setNear($Near)
-    {
+    public function setNear($Near) {
         $this->Near = $Near;
         return $this;
     }
@@ -87,8 +82,7 @@ class ServiceQuery extends AbstractModel
     /**
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions
      */
-    public function getFailover()
-    {
+    public function getFailover() {
         return $this->Failover;
     }
 
@@ -96,8 +90,7 @@ class ServiceQuery extends AbstractModel
      * @param \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions $Failover
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
-    public function setFailover(QueryDatacenterOptions $Failover)
-    {
+    public function setFailover(QueryDatacenterOptions $Failover) {
         $this->Failover = $Failover;
         return $this;
     }
@@ -105,8 +98,7 @@ class ServiceQuery extends AbstractModel
     /**
      * @return boolean
      */
-    public function isOnlyPassing()
-    {
+    public function isOnlyPassing() {
         return $this->OnlyPassing;
     }
 
@@ -114,8 +106,7 @@ class ServiceQuery extends AbstractModel
      * @param boolean $OnlyPassing
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
-    public function setOnlyPassing($OnlyPassing)
-    {
+    public function setOnlyPassing($OnlyPassing) {
         $this->OnlyPassing = $OnlyPassing;
         return $this;
     }

@@ -22,8 +22,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class AgentCheckUpdate
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentCheckUpdate extends AbstractModel
-{
+class AgentCheckUpdate extends AbstractModel {
     /** @var string */
     public $Status = '';
     /** @var string */
@@ -32,8 +31,7 @@ class AgentCheckUpdate extends AbstractModel
     /**
      * @return string
      */
-    public function getStatus()
-    {
+    public function getStatus() {
         return $this->Status;
     }
 
@@ -41,8 +39,7 @@ class AgentCheckUpdate extends AbstractModel
      * @param string $Status
      * @return \DCarbone\PHPConsulAPI\Agent\AgentCheckUpdate
      */
-    public function setStatus($Status)
-    {
+    public function setStatus($Status) {
         $this->Status = $Status;
         return $this;
     }
@@ -50,8 +47,7 @@ class AgentCheckUpdate extends AbstractModel
     /**
      * @return string
      */
-    public function getOutput()
-    {
+    public function getOutput() {
         return $this->Output;
     }
 
@@ -59,8 +55,7 @@ class AgentCheckUpdate extends AbstractModel
      * @param string $Output
      * @return \DCarbone\PHPConsulAPI\Agent\AgentCheckUpdate
      */
-    public function setOutput($Output)
-    {
+    public function setOutput($Output) {
         $this->Output = $Output;
         return $this;
     }

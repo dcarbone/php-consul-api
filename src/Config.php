@@ -22,8 +22,7 @@ use Http\Client\HttpClient;
  * Class Config
  * @package DCarbone\PHPConsulAPI
  */
-class Config
-{
+class Config {
     /**
      * The address, including port, of your Consul Agent
      *
@@ -93,15 +92,14 @@ class Config
      * Config constructor.
      * @param array $config
      */
-    public function __construct(array $config = [])
-    {
-        foreach($config as $k => $v)
-        {
+    public function __construct(array $config = []) {
+        foreach ($config as $k => $v) {
             $this->{"set{$k}"}($v);
         }
 
-        if (null !== $this->HttpAuth && !isset($this->HttpAuth))
+        if (null !== $this->HttpAuth && !isset($this->HttpAuth)) {
             $this->HttpAuth = new HttpAuth();
+        }
     }
 
     /**
@@ -110,8 +108,7 @@ class Config
      * @param \Http\Client\HttpClient $client
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public static function newDefaultConfigWithClient(HttpClient $client)
-    {
+    public static function newDefaultConfigWithClient(HttpClient $client) {
         $conf = new static([
             'Address' => '127.0.0.1:8500',
             'Scheme' => 'http',
@@ -119,20 +116,25 @@ class Config
         ]);
 
         $envParams = static::getEnvironmentConfig();
-        if (isset($envParams[Consul::HTTPAddrEnvName]))
+        if (isset($envParams[Consul::HTTPAddrEnvName])) {
             $conf->setAddress($envParams[Consul::HTTPAddrEnvName]);
+        }
 
-        if (isset($envParams[Consul::HTTPTokenEnvName]))
+        if (isset($envParams[Consul::HTTPTokenEnvName])) {
             $conf->setToken($envParams[Consul::HTTPTokenEnvName]);
+        }
 
-        if (isset($envParams[Consul::HTTPAuthEnvName]))
+        if (isset($envParams[Consul::HTTPAuthEnvName])) {
             $conf->setHttpAuth($envParams[Consul::HTTPAuthEnvName]);
+        }
 
-        if (isset($envParams[Consul::HTTPSSLEnvName]) && $envParams[Consul::HTTPSSLEnvName])
+        if (isset($envParams[Consul::HTTPSSLEnvName]) && $envParams[Consul::HTTPSSLEnvName]) {
             $conf->setScheme('https');
+        }
 
-        if (isset($envParams[Consul::HTTPSSLVerifyEnvName]) && !$envParams[Consul::HTTPSSLVerifyEnvName])
+        if (isset($envParams[Consul::HTTPSSLVerifyEnvName]) && !$envParams[Consul::HTTPSSLVerifyEnvName]) {
             $conf->setInsecureSkipVerify(false);
+        }
 
         return $conf;
     }
@@ -142,8 +144,7 @@ class Config
      *
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public static function newDefaultConfig()
-    {
+    public static function newDefaultConfig() {
         static $knownClients = array(
             '\\Http\\Client\\Curl\\Client',
             '\\Http\\Adapter\\Guzzle6\\Client',
@@ -151,10 +152,10 @@ class Config
             '\\Http\\Adapter\\Buzz\\Client'
         );
 
-        foreach($knownClients as $clientClass)
-        {
-            if (class_exists($clientClass, true))
+        foreach ($knownClients as $clientClass) {
+            if (class_exists($clientClass, true)) {
                 return static::newDefaultConfigWithClient(new $clientClass);
+            }
         }
 
         throw new \RuntimeException(sprintf(
@@ -166,8 +167,7 @@ class Config
     /**
      * @return string
      */
-    public function getAddress()
-    {
+    public function getAddress() {
         return $this->Address;
     }
 
@@ -175,8 +175,7 @@ class Config
      * @param string $Address
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setAddress($Address)
-    {
+    public function setAddress($Address) {
         $this->Address = $Address;
         return $this;
     }
@@ -184,8 +183,7 @@ class Config
     /**
      * @return string
      */
-    public function getScheme()
-    {
+    public function getScheme() {
         return $this->Scheme;
     }
 
@@ -193,8 +191,7 @@ class Config
      * @param string $Scheme
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setScheme($Scheme)
-    {
+    public function setScheme($Scheme) {
         $this->Scheme = $Scheme;
         return $this;
     }
@@ -202,8 +199,7 @@ class Config
     /**
      * @return string
      */
-    public function getDatacenter()
-    {
+    public function getDatacenter() {
         return $this->Datacenter;
     }
 
@@ -211,8 +207,7 @@ class Config
      * @param string $Datacenter
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setDatacenter($Datacenter)
-    {
+    public function setDatacenter($Datacenter) {
         $this->Datacenter = $Datacenter;
         return $this;
     }
@@ -220,8 +215,7 @@ class Config
     /**
      * @return int
      */
-    public function getWaitTime()
-    {
+    public function getWaitTime() {
         return $this->WaitTime;
     }
 
@@ -229,8 +223,7 @@ class Config
      * @param int $WaitTime
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setWaitTime($WaitTime)
-    {
+    public function setWaitTime($WaitTime) {
         $this->WaitTime = $WaitTime;
         return $this;
     }
@@ -238,8 +231,7 @@ class Config
     /**
      * @return string
      */
-    public function getToken()
-    {
+    public function getToken() {
         return $this->Token;
     }
 
@@ -247,8 +239,7 @@ class Config
      * @param string $Token
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setToken($Token)
-    {
+    public function setToken($Token) {
         $this->Token = $Token;
         return $this;
     }
@@ -256,8 +247,7 @@ class Config
     /**
      * @return boolean
      */
-    public function isInsecureSkipVerify()
-    {
+    public function isInsecureSkipVerify() {
         return $this->InsecureSkipVerify;
     }
 
@@ -265,8 +255,7 @@ class Config
      * @param boolean $InsecureSkipVerify
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setInsecureSkipVerify($InsecureSkipVerify)
-    {
+    public function setInsecureSkipVerify($InsecureSkipVerify) {
         $this->InsecureSkipVerify = $InsecureSkipVerify;
         return $this;
     }
@@ -274,8 +263,7 @@ class Config
     /**
      * @return \DCarbone\PHPConsulAPI\HttpAuth
      */
-    public function getHttpAuth()
-    {
+    public function getHttpAuth() {
         return $this->HttpAuth;
     }
 
@@ -283,26 +271,20 @@ class Config
      * @param string|HttpAuth $HttpAuth
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setHttpAuth($HttpAuth)
-    {
-        if (is_string($HttpAuth))
-        {
+    public function setHttpAuth($HttpAuth) {
+        if (is_string($HttpAuth)) {
             $colon = strpos($HttpAuth, ':');
-            if (false === $colon)
-            {
+            if (false === $colon) {
                 $username = $HttpAuth;
                 $password = null;
-            }
-            else
-            {
+            } else {
                 $username = substr($HttpAuth, 0, $colon);
                 $password = substr($HttpAuth, $colon + 1);
             }
             $HttpAuth = new HttpAuth($username, $password);
         }
 
-        if ($HttpAuth instanceof HttpAuth)
-        {
+        if ($HttpAuth instanceof HttpAuth) {
             $this->HttpAuth = $HttpAuth;
             return $this;
         }
@@ -317,8 +299,7 @@ class Config
     /**
      * @return \Http\Client\HttpClient
      */
-    public function getHttpClient()
-    {
+    public function getHttpClient() {
         return $this->HttpClient;
     }
 
@@ -326,8 +307,7 @@ class Config
      * @param \Http\Client\HttpClient $HttpClient
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setHttpClient(HttpClient $HttpClient)
-    {
+    public function setHttpClient(HttpClient $HttpClient) {
         $this->HttpClient = $HttpClient;
         return $this;
     }
@@ -335,8 +315,7 @@ class Config
     /**
      * @return boolean
      */
-    public function isTokenInHeader()
-    {
+    public function isTokenInHeader() {
         return $this->TokenInHeader;
     }
 
@@ -344,36 +323,56 @@ class Config
      * @param boolean $TokenInHeader
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setTokenInHeader($TokenInHeader)
-    {
+    public function setTokenInHeader($TokenInHeader) {
         $this->TokenInHeader = (bool)$TokenInHeader;
         return $this;
     }
 
     /**
+     * @param int $in
+     * @return string
+     */
+    public function intToMillisecond($in) {
+        if (!is_int($in)) {
+            throw new \InvalidArgumentException(sprintf('$in must be integer, saw "%s".', gettype($in)));
+        }
+
+        $ms = intval($in / 1000000, 10);
+
+        if (0 < $in && 0 === $ms) {
+            $ms = 1;
+        }
+
+        return sprintf('%dms', $ms);
+    }
+
+    /**
      * @return array
      */
-    public static function getEnvironmentConfig()
-    {
+    public static function getEnvironmentConfig() {
         return array_filter([
             'CONSUL_HTTP_ADDR' => static::_tryGetEnvParam('CONSUL_HTTP_ADDR'),
             'CONSUL_HTTP_AUTH' => static::_tryGetEnvParam('CONSUL_HTTP_AUTH'),
             'CONSUL_HTTP_SSL' => static::_tryGetEnvParam('CONSUL_HTTP_SSL'),
             'CONSUL_HTTP_SSL_VERIFY' => static::_tryGetEnvParam('CONSUL_HTTP_SSL_VERIFY')
-        ], function($val) { return null !== $val; });
+        ],
+            function ($val) {
+                return null !== $val;
+            });
     }
 
     /**
      * @param string $param
      * @return string|null
      */
-    protected static function _tryGetEnvParam($param)
-    {
-        if (false !== ($value = getenv($param)))
+    protected static function _tryGetEnvParam($param) {
+        if (false !== ($value = getenv($param))) {
             return $value;
+        }
 
-        if (isset($_SERVER[$param]))
+        if (isset($_SERVER[$param])) {
             return $_SERVER[$param];
+        }
 
         return null;
     }

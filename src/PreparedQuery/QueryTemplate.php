@@ -22,8 +22,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class QueryTemplate
  * @package DCarbone\PHPConsulAPI\PreparedQuery
  */
-class QueryTemplate extends AbstractModel
-{
+class QueryTemplate extends AbstractModel {
     /** @var string */
     public $Type = '';
     /** @var string */
@@ -32,8 +31,7 @@ class QueryTemplate extends AbstractModel
     /**
      * @return string
      */
-    public function getType()
-    {
+    public function getType() {
         return $this->Type;
     }
 
@@ -41,8 +39,7 @@ class QueryTemplate extends AbstractModel
      * @param string $Type
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryTemplate
      */
-    public function setType($Type)
-    {
+    public function setType($Type) {
         $this->Type = $Type;
         return $this;
     }
@@ -50,8 +47,7 @@ class QueryTemplate extends AbstractModel
     /**
      * @return string
      */
-    public function getRegexp()
-    {
+    public function getRegexp() {
         return $this->Regexp;
     }
 
@@ -59,8 +55,7 @@ class QueryTemplate extends AbstractModel
      * @param string $Regexp
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryTemplate
      */
-    public function setRegexp($Regexp)
-    {
+    public function setRegexp($Regexp) {
         $this->Regexp = $Regexp;
         return $this;
     }

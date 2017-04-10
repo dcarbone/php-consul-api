@@ -25,26 +25,25 @@ use DCarbone\PHPConsulAPI\Request;
  * Class HealthClient
  * @package DCarbone\PHPConsulAPI\Health
  */
-class HealthClient extends AbstractClient
-{
+class HealthClient extends AbstractClient {
     /**
      * @param string $node
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      * @return array(
-     *  @type HealthCheck[]|null list of health checks or null on error
-     *  @type \DCarbone\PHPConsulAPI\QueryMeta query meta
-     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
+     * @type HealthCheck[]|null list of health checks or null on error
+     * @type \DCarbone\PHPConsulAPI\QueryMeta query meta
+     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function node($node, QueryOptions $queryOptions = null)
-    {
-        if (!is_string($node))
-        {
-            return [null, null, new Error(sprintf(
-                '%s::node - $node must be string, %s seen.',
-                get_class($this),
-                gettype($node)
-            ))];
+    public function node($node, QueryOptions $queryOptions = null) {
+        if (!is_string($node)) {
+            return [null,
+                null,
+                new Error(sprintf(
+                    '%s::node - $node must be string, %s seen.',
+                    get_class($this),
+                    gettype($node)
+                ))];
         }
 
         $r = new Request('get', sprintf('v1/health/node/%s', $node), $this->c);
@@ -52,19 +51,20 @@ class HealthClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        if (null !== $err)
+        if (null !== $err) {
             return [null, null, $err];
+        }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         list($data, $err) = $this->decodeBody($response->getBody());
-        
-        if (null !== $err)
+
+        if (null !== $err) {
             return [null, $qm, $err];
-        
+        }
+
         $checks = [];
-        foreach($data as $check)
-        {
+        foreach ($data as $check) {
             $checks[] = new HealthCheck($check);
         }
 
@@ -80,15 +80,15 @@ class HealthClient extends AbstractClient
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function checks($service, QueryOptions $queryOptions = null)
-    {
-        if (!is_string($service))
-        {
-            return [null, null, new Error(sprintf(
-                '%s::checks - $service must be string, %s seen.',
-                get_class($this),
-                gettype($service)
-            ))];
+    public function checks($service, QueryOptions $queryOptions = null) {
+        if (!is_string($service)) {
+            return [null,
+                null,
+                new Error(sprintf(
+                    '%s::checks - $service must be string, %s seen.',
+                    get_class($this),
+                    gettype($service)
+                ))];
         }
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -96,19 +96,20 @@ class HealthClient extends AbstractClient
         $r->setQueryOptions($queryOptions);
 
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        if (null !== $err)
+        if (null !== $err) {
             return [null, null, $err];
+        }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         list($data, $err) = $this->decodeBody($response->getBody());
 
-        if (null !== $err)
+        if (null !== $err) {
             return [null, $qm, $err];
+        }
 
         $checks = [];
-        foreach($data as $check)
-        {
+        foreach ($data as $check) {
             $checks[] = new HealthCheck($check);
         }
 
@@ -126,39 +127,42 @@ class HealthClient extends AbstractClient
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function service($service, $tag = '', $passingOnly = false, QueryOptions $queryOptions = null)
-    {
-        if (!is_string($service))
-        {
-            return [null, null, new Error(sprintf(
-                '%s::service - $service must be string, %s seen.',
-                get_class($this),
-                gettype($service)
-            ))];
+    public function service($service, $tag = '', $passingOnly = false, QueryOptions $queryOptions = null) {
+        if (!is_string($service)) {
+            return [null,
+                null,
+                new Error(sprintf(
+                    '%s::service - $service must be string, %s seen.',
+                    get_class($this),
+                    gettype($service)
+                ))];
         }
 
         $r = new Request('get', sprintf('v1/health/service/%s', $service), $this->c);
         $r->setQueryOptions($queryOptions);
-        if ('' !== $tag)
+        if ('' !== $tag) {
             $r->params->set('tag', $tag);
-        if ($passingOnly)
+        }
+        if ($passingOnly) {
             $r->params->set('passing', '1');
+        }
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        if (null !== $err)
+        if (null !== $err) {
             return [null, null, $err];
+        }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         list($data, $err) = $this->decodeBody($response->getBody());
 
-        if (null !== $err)
+        if (null !== $err) {
             return [null, $qm, $err];
+        }
 
         $services = [];
-        foreach($data as $service)
-        {
+        foreach ($data as $service) {
             $services[] = new ServiceEntry($service);
         }
 
@@ -169,23 +173,23 @@ class HealthClient extends AbstractClient
      * @param string $state
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      * @return array(
-     *  @type HealthCheck[]|null array of heath checks or null on error
-     *  @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata or null on error
-     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
+     * @type HealthCheck[]|null array of heath checks or null on error
+     * @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata or null on error
+     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function state($state, QueryOptions $queryOptions = null)
-    {
+    public function state($state, QueryOptions $queryOptions = null) {
         static $validStates = array('any', 'warning', 'critical', 'passing', 'unknown');
 
-        if (!is_string($state) || !in_array($state, $validStates, true))
-        {
-            return [null, null, new Error(sprintf(
-                '%s::state - "$state" must be string with value of ["%s"].  %s seen.',
-                get_class($this),
-                implode('", "', $validStates),
-                is_string($state) ? $state : gettype($state)
-            ))];
+        if (!is_string($state) || !in_array($state, $validStates, true)) {
+            return [null,
+                null,
+                new Error(sprintf(
+                    '%s::state - "$state" must be string with value of ["%s"].  %s seen.',
+                    get_class($this),
+                    implode('", "', $validStates),
+                    is_string($state) ? $state : gettype($state)
+                ))];
         }
 
         $r = new Request('get', sprintf('v1/health/state/%s', $state), $this->c);
@@ -193,19 +197,20 @@ class HealthClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        if (null !== $err)
+        if (null !== $err) {
             return [null, null, $err];
+        }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         list($data, $err) = $this->decodeBody($response->getBody());
 
-        if (null !== $err)
+        if (null !== $err) {
             return [null, $qm, $err];
+        }
 
         $checks = [];
-        foreach($data as $check)
-        {
+        foreach ($data as $check) {
             $checks[] = new HealthCheck($check);
         }
 

@@ -22,8 +22,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class CoordinateDatacenterMap
  * @package DCarbone\PHPConsulAPI\Coordinate
  */
-class CoordinateDatacenterMap extends AbstractModel
-{
+class CoordinateDatacenterMap extends AbstractModel {
     /** @var string */
     public $Datacenter = '';
     /** @var \DCarbone\PHPConsulAPI\Coordinate\Coordinate[] */
@@ -34,24 +33,21 @@ class CoordinateDatacenterMap extends AbstractModel
      *
      * @param array $data
      */
-    public function __construct(array $data = [])
-    {
+    public function __construct(array $data = []) {
         parent::__construct($data);
 
         // If we have data...
-        if (0 < count($this->Coordinates))
-        {
+        if (0 < count($this->Coordinates)) {
             // ...remove null
             $this->Coordinates = array_filter($this->Coordinates);
 
             // ...and if we still have data
-            if (0 < ($cnt = count($this->Coordinates)))
-            {
+            if (0 < ($cnt = count($this->Coordinates))) {
                 // ensure we have objects.
-                for ($i = 0; $i < $cnt; $i++)
-                {
-                    if (!($this->Coordinates[$i] instanceof Coordinate))
+                for ($i = 0; $i < $cnt; $i++) {
+                    if (!($this->Coordinates[$i] instanceof Coordinate)) {
                         $this->Coordinates[$i] = new Coordinate((array)$this->Coordinates[$i]);
+                    }
                 }
             }
         }
@@ -60,16 +56,14 @@ class CoordinateDatacenterMap extends AbstractModel
     /**
      * @return string
      */
-    public function getDatacenter()
-    {
+    public function getDatacenter() {
         return $this->Datacenter;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Coordinate\Coordinate[]
      */
-    public function getCoordinates()
-    {
+    public function getCoordinates() {
         return $this->Coordinates;
     }
 }

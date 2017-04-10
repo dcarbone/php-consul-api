@@ -20,56 +20,50 @@
  * Class QueryMeta
  * @package DCarbone\PHPConsulAPI
  */
-class QueryMeta
-{
+class QueryMeta {
     /** @var string */
-    public $requestUrl = '';
+    public $RequestUrl = '';
     /** @var int */
-    public $lastIndex = 0;
+    public $LastIndex = 0;
     /** @var int */
-    public $lastContact = 0;
+    public $LastContact = 0;
     /** @var bool */
-    public $knownLeader = false;
+    public $KnownLeader = false;
     /** @var int */
-    public $requestTime = 0;
+    public $RequestTime = 0;
 
     /**
      * @return string
      */
-    public function getRequestUrl()
-    {
-        return $this->requestUrl;
+    public function getRequestUrl() {
+        return $this->RequestUrl;
     }
 
     /**
      * @return int
      */
-    public function getLastIndex()
-    {
-        return $this->lastIndex;
+    public function getLastIndex() {
+        return $this->LastIndex;
     }
 
     /**
      * @return int
      */
-    public function getLastContact()
-    {
-        return $this->lastContact;
+    public function getLastContact() {
+        return $this->LastContact;
     }
 
     /**
      * @return boolean
      */
-    public function isKnownLeader()
-    {
-        return $this->knownLeader;
+    public function isKnownLeader() {
+        return $this->KnownLeader;
     }
 
     /**
      * @return int
      */
-    public function getRequestTime()
-    {
-        return $this->requestTime;
+    public function getRequestTime() {
+        return $this->RequestTime;
     }
 }

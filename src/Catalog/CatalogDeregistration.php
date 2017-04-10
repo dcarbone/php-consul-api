@@ -22,8 +22,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class CatalogDeregistration
  * @package DCarbone\PHPConsulAPI\Catalog
  */
-class CatalogDeregistration extends AbstractModel
-{
+class CatalogDeregistration extends AbstractModel {
     /** @var string */
     public $Node = '';
     /** @var string */
@@ -38,8 +37,7 @@ class CatalogDeregistration extends AbstractModel
     /**
      * @return string
      */
-    public function getNode()
-    {
+    public function getNode() {
         return $this->Node;
     }
 
@@ -47,8 +45,7 @@ class CatalogDeregistration extends AbstractModel
      * @param string $Node
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogDeregistration
      */
-    public function setNode($Node)
-    {
+    public function setNode($Node) {
         $this->Node = $Node;
         return $this;
     }
@@ -56,8 +53,7 @@ class CatalogDeregistration extends AbstractModel
     /**
      * @return string
      */
-    public function getAddress()
-    {
+    public function getAddress() {
         return $this->Address;
     }
 
@@ -65,8 +61,7 @@ class CatalogDeregistration extends AbstractModel
      * @param string $Address
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogDeregistration
      */
-    public function setAddress($Address)
-    {
+    public function setAddress($Address) {
         $this->Address = $Address;
         return $this;
     }
@@ -74,8 +69,7 @@ class CatalogDeregistration extends AbstractModel
     /**
      * @return string
      */
-    public function getDatacenter()
-    {
+    public function getDatacenter() {
         return $this->Datacenter;
     }
 
@@ -83,8 +77,7 @@ class CatalogDeregistration extends AbstractModel
      * @param string $Datacenter
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogDeregistration
      */
-    public function setDatacenter($Datacenter)
-    {
+    public function setDatacenter($Datacenter) {
         $this->Datacenter = $Datacenter;
         return $this;
     }
@@ -92,8 +85,7 @@ class CatalogDeregistration extends AbstractModel
     /**
      * @return string
      */
-    public function getServiceID()
-    {
+    public function getServiceID() {
         return $this->ServiceID;
     }
 
@@ -101,8 +93,7 @@ class CatalogDeregistration extends AbstractModel
      * @param string $ServiceID
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogDeregistration
      */
-    public function setServiceID($ServiceID)
-    {
+    public function setServiceID($ServiceID) {
         $this->ServiceID = $ServiceID;
         return $this;
     }
@@ -110,8 +101,7 @@ class CatalogDeregistration extends AbstractModel
     /**
      * @return string
      */
-    public function getCheckID()
-    {
+    public function getCheckID() {
         return $this->CheckID;
     }
 
@@ -119,8 +109,7 @@ class CatalogDeregistration extends AbstractModel
      * @param string $CheckID
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogDeregistration
      */
-    public function setCheckID($CheckID)
-    {
+    public function setCheckID($CheckID) {
         $this->CheckID = $CheckID;
         return $this;
     }

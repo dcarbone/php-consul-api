@@ -24,8 +24,7 @@ use DCarbone\PHPConsulAPI\HasStringTags;
  * Class AgentServiceRegistration
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentServiceRegistration extends AbstractModel
-{
+class AgentServiceRegistration extends AbstractModel {
     use HasStringTags, HasSettableStringTags;
 
     /** @var string */
@@ -47,22 +46,20 @@ class AgentServiceRegistration extends AbstractModel
      * AgentServiceRegistration constructor.
      * @param array $data
      */
-    public function __construct(array $data = [])
-    {
+    public function __construct(array $data = []) {
         parent::__construct($data);
 
-        if (null !== $this->Check && !($this->Check instanceof AgentCheck))
+        if (null !== $this->Check && !($this->Check instanceof AgentCheck)) {
             $this->Check = new AgentCheck((array)$this->Check);
+        }
 
-        if (0 < count($this->Checks))
-        {
+        if (0 < count($this->Checks)) {
             $this->Checks = array_filter($this->Checks);
-            if (0 < ($cnt = count($this->Checks)))
-            {
-                for ($i = 0, $cnt = count($this->Checks); $i < $cnt; $i++)
-                {
-                    if (!($this->Checks[$i] instanceof AgentCheck))
+            if (0 < ($cnt = count($this->Checks))) {
+                for ($i = 0, $cnt = count($this->Checks); $i < $cnt; $i++) {
+                    if (!($this->Checks[$i] instanceof AgentCheck)) {
                         $this->Checks[$i] = new AgentCheck($this->Checks[$i]);
+                    }
                 }
             }
         }
@@ -71,8 +68,7 @@ class AgentServiceRegistration extends AbstractModel
     /**
      * @return string
      */
-    public function getID()
-    {
+    public function getID() {
         return $this->ID;
     }
 
@@ -80,8 +76,7 @@ class AgentServiceRegistration extends AbstractModel
      * @param string $ID
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
-    public function setID($ID)
-    {
+    public function setID($ID) {
         $this->ID = $ID;
         return $this;
     }
@@ -89,8 +84,7 @@ class AgentServiceRegistration extends AbstractModel
     /**
      * @return string
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->Name;
     }
 
@@ -98,8 +92,7 @@ class AgentServiceRegistration extends AbstractModel
      * @param string $Name
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
-    public function setName($Name)
-    {
+    public function setName($Name) {
         $this->Name = $Name;
         return $this;
     }
@@ -107,8 +100,7 @@ class AgentServiceRegistration extends AbstractModel
     /**
      * @return int
      */
-    public function getPort()
-    {
+    public function getPort() {
         return $this->Port;
     }
 
@@ -116,8 +108,7 @@ class AgentServiceRegistration extends AbstractModel
      * @param int $Port
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
-    public function setPort($Port)
-    {
+    public function setPort($Port) {
         $this->Port = $Port;
         return $this;
     }
@@ -125,8 +116,7 @@ class AgentServiceRegistration extends AbstractModel
     /**
      * @return string
      */
-    public function getAddress()
-    {
+    public function getAddress() {
         return $this->Address;
     }
 
@@ -134,8 +124,7 @@ class AgentServiceRegistration extends AbstractModel
      * @param string $Address
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
-    public function setAddress($Address)
-    {
+    public function setAddress($Address) {
         $this->Address = $Address;
         return $this;
     }
@@ -143,8 +132,7 @@ class AgentServiceRegistration extends AbstractModel
     /**
      * @return boolean
      */
-    public function isEnableTagOverride()
-    {
+    public function isEnableTagOverride() {
         return $this->EnableTagOverride;
     }
 
@@ -152,8 +140,7 @@ class AgentServiceRegistration extends AbstractModel
      * @param boolean $EnableTagOverride
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
-    public function setEnableTagOverride($EnableTagOverride)
-    {
+    public function setEnableTagOverride($EnableTagOverride) {
         $this->EnableTagOverride = $EnableTagOverride;
         return $this;
     }
@@ -161,8 +148,7 @@ class AgentServiceRegistration extends AbstractModel
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentCheck
      */
-    public function getCheck()
-    {
+    public function getCheck() {
         return $this->Check;
     }
 
@@ -170,8 +156,7 @@ class AgentServiceRegistration extends AbstractModel
      * @param \DCarbone\PHPConsulAPI\Agent\AgentCheck $Check
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
-    public function setCheck(AgentCheck $Check)
-    {
+    public function setCheck(AgentCheck $Check) {
         $this->Check = $Check;
         return $this;
     }
@@ -179,8 +164,7 @@ class AgentServiceRegistration extends AbstractModel
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentCheck[]
      */
-    public function getChecks()
-    {
+    public function getChecks() {
         return $this->Checks;
     }
 
@@ -188,10 +172,8 @@ class AgentServiceRegistration extends AbstractModel
      * @param \DCarbone\PHPConsulAPI\Agent\AgentCheck[] $Checks
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
-    public function setChecks(array $Checks)
-    {
-        foreach($Checks as $Check)
-        {
+    public function setChecks(array $Checks) {
+        foreach ($Checks as $Check) {
             $this->addCheck($Check);
         }
         return $this;
@@ -201,8 +183,7 @@ class AgentServiceRegistration extends AbstractModel
      * @param \DCarbone\PHPConsulAPI\Agent\AgentCheck $Check
      * @return $this
      */
-    public function addCheck(AgentCheck $Check)
-    {
+    public function addCheck(AgentCheck $Check) {
         $this->Checks[] = $Check;
         return $this;
     }
@@ -210,8 +191,7 @@ class AgentServiceRegistration extends AbstractModel
     /**
      * @return string
      */
-    public function __toString()
-    {
+    public function __toString() {
         return $this->Name;
     }
 }

@@ -45,9 +45,9 @@ class Uri implements UriInterface {
      * Uri constructor.
      * @param string $path
      * @param Config $config
-     * @param Params $params
+     * @param Values $query
      */
-    public function __construct($path, Config $config, Params $params) {
+    public function __construct($path, Config $config, Values $query) {
         $this->scheme = $config->Scheme;
         $this->userInfo = $config->HttpAuth;
         $this->path = $path;
@@ -61,7 +61,7 @@ class Uri implements UriInterface {
             $this->port = (int)substr($a, $pos + 1);
         }
 
-        $this->query = (string)$params;
+        $this->query = (string)$query;
     }
 
     public function __clone() {

@@ -23,23 +23,22 @@ use DCarbone\PHPConsulAPI\Request;
  * Class StatusClient
  * @package DCarbone\PHPConsulAPI\Status
  */
-class StatusClient extends AbstractClient
-{
+class StatusClient extends AbstractClient {
     /**
      * @return array(
-     *  @type string
-     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
+     * @type string
+     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function leader()
-    {
+    public function leader() {
         $r = new Request('get', 'v1/status/leader', $this->c);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($_, $response, $err) = $this->requireOK($this->doRequest($r));
 
-        if (null !== $err)
+        if (null !== $err) {
             return ['', $err];
+        }
 
         return $this->decodeBody($response->getBody());
     }
@@ -47,15 +46,15 @@ class StatusClient extends AbstractClient
     /**
      * @return array|null
      */
-    public function peers()
-    {
+    public function peers() {
         $r = new Request('get', 'v1/status/peers', $this->c);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($_, $response, $err) = $this->requireOK($this->doRequest($r));
 
-        if (null !== $err)
+        if (null !== $err) {
             return [null, $err];
+        }
 
         return $this->decodeBody($response->getBody());
     }

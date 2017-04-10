@@ -22,8 +22,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class ACLEntry
  * @package DCarbone\PHPConsulAPI\ACL
  */
-class ACLEntry extends AbstractModel
-{
+class ACLEntry extends AbstractModel {
     /** @var int */
     public $CreateIndex = 0;
     /** @var int */
@@ -40,96 +39,84 @@ class ACLEntry extends AbstractModel
     /**
      * @return int
      */
-    public function getCreateIndex()
-    {
+    public function getCreateIndex() {
         return $this->CreateIndex;
     }
 
     /**
      * @param int $CreateIndex
      */
-    public function setCreateIndex($CreateIndex)
-    {
+    public function setCreateIndex($CreateIndex) {
         $this->CreateIndex = $CreateIndex;
     }
 
     /**
      * @return int
      */
-    public function getModifyIndex()
-    {
+    public function getModifyIndex() {
         return $this->ModifyIndex;
     }
 
     /**
      * @param int $ModifyIndex
      */
-    public function setModifyIndex($ModifyIndex)
-    {
+    public function setModifyIndex($ModifyIndex) {
         $this->ModifyIndex = $ModifyIndex;
     }
 
     /**
      * @return string
      */
-    public function getID()
-    {
+    public function getID() {
         return $this->ID;
     }
 
     /**
      * @param string $ID
      */
-    public function setID($ID)
-    {
+    public function setID($ID) {
         $this->ID = $ID;
     }
 
     /**
      * @return string
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->Name;
     }
 
     /**
      * @param string $Name
      */
-    public function setName($Name)
-    {
+    public function setName($Name) {
         $this->Name = $Name;
     }
 
     /**
      * @return string
      */
-    public function getType()
-    {
+    public function getType() {
         return $this->Type;
     }
 
     /**
      * @param string $Type
      */
-    public function setType($Type)
-    {
+    public function setType($Type) {
         $this->Type = $Type;
     }
 
     /**
      * @return string
      */
-    public function getRules()
-    {
+    public function getRules() {
         return $this->Rules;
     }
 
     /**
      * @param string $Rules
      */
-    public function setRules($Rules)
-    {
+    public function setRules($Rules) {
         $this->Rules = $Rules;
     }
 }

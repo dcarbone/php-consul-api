@@ -20,8 +20,7 @@
  * Class CatalogService
  * @package DCarbone\PHPConsulAPI\Catalog
  */
-class CatalogService extends CatalogNode
-{
+class CatalogService extends CatalogNode {
     /** @var string */
     public $ServiceID = '';
     /** @var string */
@@ -38,48 +37,42 @@ class CatalogService extends CatalogNode
     /**
      * @return string
      */
-    public function getServiceID()
-    {
+    public function getServiceID() {
         return $this->ServiceID;
     }
 
     /**
      * @return string
      */
-    public function getServiceName()
-    {
+    public function getServiceName() {
         return $this->ServiceName;
     }
 
     /**
      * @return string
      */
-    public function getServiceAddress()
-    {
+    public function getServiceAddress() {
         return $this->ServiceAddress;
     }
 
     /**
      * @return string[]
      */
-    public function getServiceTags()
-    {
+    public function getServiceTags() {
         return $this->ServiceTags;
     }
 
     /**
      * @return int
      */
-    public function getServicePort()
-    {
+    public function getServicePort() {
         return $this->ServicePort;
     }
 
     /**
      * @return boolean
      */
-    public function isServiceEnableTagOverride()
-    {
+    public function isServiceEnableTagOverride() {
         return $this->ServiceEnableTagOverride;
     }
 }

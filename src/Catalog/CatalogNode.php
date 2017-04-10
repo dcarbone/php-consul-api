@@ -21,8 +21,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class CatalogNode
  * @package DCarbone\PHPConsulAPI\Catalog
  */
-class CatalogNode extends AbstractModel
-{
+class CatalogNode extends AbstractModel {
     /** @var string */
     public $Node = '';
     /** @var string */
@@ -31,16 +30,14 @@ class CatalogNode extends AbstractModel
     /**
      * @return string
      */
-    public function getNode()
-    {
+    public function getNode() {
         return $this->Node;
     }
 
     /**
      * @return string
      */
-    public function getAddress()
-    {
+    public function getAddress() {
         return $this->Address;
     }
 }

@@ -22,8 +22,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class RaftConfiguration
  * @package DCarbone\PHPConsulAPI\Operator
  */
-class RaftConfiguration extends AbstractModel
-{
+class RaftConfiguration extends AbstractModel {
     /** @var \DCarbone\PHPConsulAPI\Operator\RaftServer[] */
     public $Servers = [];
     /** @var int */
@@ -34,20 +33,17 @@ class RaftConfiguration extends AbstractModel
      *
      * @param array $data
      */
-    public function __construct(array $data = [])
-    {
+    public function __construct(array $data = []) {
         parent::__construct($data);
 
-        if (0 < count($this->Servers))
-        {
+        if (0 < count($this->Servers)) {
             $this->Servers = array_filter($this->Servers);
 
-            if (0 < ($cnt = count($this->Servers)))
-            {
-                for ($i = 0; $i < $cnt; $i++)
-                {
-                    if (!($this->Servers[$i] instanceof RaftServer))
+            if (0 < ($cnt = count($this->Servers))) {
+                for ($i = 0; $i < $cnt; $i++) {
+                    if (!($this->Servers[$i] instanceof RaftServer)) {
                         $this->Servers[$i] = new RaftServer((array)$this->Servers[$i]);
+                    }
                 }
             }
         }
@@ -56,8 +52,7 @@ class RaftConfiguration extends AbstractModel
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\RaftServer[]
      */
-    public function getServers()
-    {
+    public function getServers() {
         return $this->Servers;
     }
 
@@ -65,11 +60,9 @@ class RaftConfiguration extends AbstractModel
      * @param \DCarbone\PHPConsulAPI\Operator\RaftServer[] $Servers
      * @return \DCarbone\PHPConsulAPI\Operator\RaftConfiguration
      */
-    public function setServers(array $Servers)
-    {
+    public function setServers(array $Servers) {
         $this->Servers = [];
-        foreach($Servers as $Server)
-        {
+        foreach ($Servers as $Server) {
             $this->addServer($Server);
         }
         return $this;
@@ -79,8 +72,7 @@ class RaftConfiguration extends AbstractModel
      * @param \DCarbone\PHPConsulAPI\Operator\RaftServer $Server
      * @return \DCarbone\PHPConsulAPI\Operator\RaftConfiguration
      */
-    public function addServer(RaftServer $Server)
-    {
+    public function addServer(RaftServer $Server) {
         $this->Servers[] = $Server;
         return $this;
     }
@@ -88,8 +80,7 @@ class RaftConfiguration extends AbstractModel
     /**
      * @return int
      */
-    public function getIndex()
-    {
+    public function getIndex() {
         return $this->Index;
     }
 
@@ -97,8 +88,7 @@ class RaftConfiguration extends AbstractModel
      * @param int $Index
      * @return \DCarbone\PHPConsulAPI\Operator\RaftConfiguration
      */
-    public function setIndex($Index)
-    {
+    public function setIndex($Index) {
         $this->Index = $Index;
         return $this;
     }

@@ -20,16 +20,14 @@
  * Class HasStringTags
  * @package DCarbone\PHPConsulAPI
  */
-trait HasStringTags
-{
+trait HasStringTags {
     /** @var string[] */
     public $Tags = [];
 
     /**
      * @return string[]
      */
-    public function getTags()
-    {
+    public function getTags() {
         return $this->Tags;
     }
 }

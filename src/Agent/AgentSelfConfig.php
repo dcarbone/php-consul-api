@@ -22,8 +22,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class AgentSelfConfig
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentSelfConfig extends AbstractModel
-{
+class AgentSelfConfig extends AbstractModel {
     /** @var bool */
     public $Bootstrap = false;
     /** @var bool */
@@ -90,248 +89,217 @@ class AgentSelfConfig extends AbstractModel
     /**
      * @return boolean
      */
-    public function isBootstrap()
-    {
+    public function isBootstrap() {
         return $this->Bootstrap;
     }
 
     /**
      * @return boolean
      */
-    public function isDevMode()
-    {
+    public function isDevMode() {
         return $this->DevMode;
     }
 
     /**
      * @return int
      */
-    public function getBootstrapExpect()
-    {
+    public function getBootstrapExpect() {
         return $this->BootstrapExpect;
     }
 
     /**
      * @return boolean
      */
-    public function isServer()
-    {
+    public function isServer() {
         return $this->Server;
     }
 
     /**
      * @return string
      */
-    public function getDatacenter()
-    {
+    public function getDatacenter() {
         return $this->Datacenter;
     }
 
     /**
      * @return string
      */
-    public function getDataDir()
-    {
+    public function getDataDir() {
         return $this->DataDir;
     }
 
     /**
      * @return string
      */
-    public function getDNSRecursor()
-    {
+    public function getDNSRecursor() {
         return $this->DNSRecursor;
     }
 
     /**
      * @return string[]
      */
-    public function getDNSRecursors()
-    {
+    public function getDNSRecursors() {
         return $this->DNSRecursors;
     }
 
     /**
      * @return string[]
      */
-    public function getDNSConfig()
-    {
+    public function getDNSConfig() {
         return $this->DNSConfig;
     }
 
     /**
      * @return string
      */
-    public function getDomain()
-    {
+    public function getDomain() {
         return $this->Domain;
     }
 
     /**
      * @return string
      */
-    public function getLogLevel()
-    {
+    public function getLogLevel() {
         return $this->LogLevel;
     }
 
     /**
      * @return string
      */
-    public function getNodeName()
-    {
+    public function getNodeName() {
         return $this->NodeName;
     }
 
     /**
      * @return string
      */
-    public function getClientAddr()
-    {
+    public function getClientAddr() {
         return $this->ClientAddr;
     }
 
     /**
      * @return string
      */
-    public function getBindAddr()
-    {
+    public function getBindAddr() {
         return $this->BindAddr;
     }
 
     /**
      * @return string
      */
-    public function getAdvertiseAddr()
-    {
+    public function getAdvertiseAddr() {
         return $this->AdvertiseAddr;
     }
 
     /**
      * @return string[]
      */
-    public function getPorts()
-    {
+    public function getPorts() {
         return $this->Ports;
     }
 
     /**
      * @return boolean
      */
-    public function isLeaveOnTerm()
-    {
+    public function isLeaveOnTerm() {
         return $this->LeaveOnTerm;
     }
 
     /**
      * @return boolean
      */
-    public function isSkipLeaveOnInt()
-    {
+    public function isSkipLeaveOnInt() {
         return $this->SkipLeaveOnInt;
     }
 
     /**
      * @return string[]
      */
-    public function getTelemetry()
-    {
+    public function getTelemetry() {
         return $this->Telemetry;
     }
 
     /**
      * @return int
      */
-    public function getProtocol()
-    {
+    public function getProtocol() {
         return $this->Protocol;
     }
 
     /**
      * @return boolean
      */
-    public function isEnableDebug()
-    {
+    public function isEnableDebug() {
         return $this->EnableDebug;
     }
 
     /**
      * @return boolean
      */
-    public function isVerifyIncoming()
-    {
+    public function isVerifyIncoming() {
         return $this->VerifyIncoming;
     }
 
     /**
      * @return boolean
      */
-    public function isVerifyOutgoing()
-    {
+    public function isVerifyOutgoing() {
         return $this->VerifyOutgoing;
     }
 
     /**
      * @return string
      */
-    public function getCAFile()
-    {
+    public function getCAFile() {
         return $this->CAFile;
     }
 
     /**
      * @return string
      */
-    public function getCertFile()
-    {
+    public function getCertFile() {
         return $this->CertFile;
     }
 
     /**
      * @return string
      */
-    public function getKeyFile()
-    {
+    public function getKeyFile() {
         return $this->KeyFile;
     }
 
     /**
      * @return string[]
      */
-    public function getStartJoin()
-    {
+    public function getStartJoin() {
         return $this->StartJoin;
     }
 
     /**
      * @return string
      */
-    public function getUiDir()
-    {
+    public function getUiDir() {
         return $this->UiDir;
     }
 
     /**
      * @return string
      */
-    public function getPidFile()
-    {
+    public function getPidFile() {
         return $this->PidFile;
     }
 
     /**
      * @return boolean
      */
-    public function isEnableSyslog()
-    {
+    public function isEnableSyslog() {
         return $this->EnableSyslog;
     }
 
     /**
      * @return boolean
      */
-    public function isRejoinAfterLeave()
-    {
+    public function isRejoinAfterLeave() {
         return $this->RejoinAfterLeave;
     }
 }

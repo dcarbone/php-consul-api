@@ -23,8 +23,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class UserEvent
  * @package DCarbone\PHPConsulAPI\Event
  */
-class UserEvent extends AbstractModel
-{
+class UserEvent extends AbstractModel {
     /** @var string */
     public $ID = '';
     /** @var string */
@@ -48,74 +47,66 @@ class UserEvent extends AbstractModel
      * @param array $data
      * @param bool $_decodeValue
      */
-    public function __construct(array $data = [], $_decodeValue = false)
-    {
+    public function __construct(array $data = [], $_decodeValue = false) {
         parent::__construct($data);
-        if ((bool)$_decodeValue && isset($this->Payload))
+        if ((bool)$_decodeValue && isset($this->Payload)) {
             $this->Payload = base64_decode($this->Payload);
+        }
     }
 
     /**
      * @return string
      */
-    public function getID()
-    {
+    public function getID() {
         return $this->ID;
     }
 
     /**
      * @return string
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->Name;
     }
 
     /**
      * @return string
      */
-    public function getPayload()
-    {
+    public function getPayload() {
         return $this->Payload;
     }
 
     /**
      * @return string
      */
-    public function getNodeFilter()
-    {
+    public function getNodeFilter() {
         return $this->NodeFilter;
     }
 
     /**
      * @return string
      */
-    public function getServiceFilter()
-    {
+    public function getServiceFilter() {
         return $this->ServiceFilter;
     }
 
     /**
      * @return string
      */
-    public function getTagFilter()
-    {
+    public function getTagFilter() {
         return $this->TagFilter;
     }
 
     /**
      * @return int
      */
-    public function getVersion()
-    {
+    public function getVersion() {
         return $this->Version;
     }
 
     /**
      * @return int
      */
-    public function getLTime()
-    {
+    public function getLTime() {
         return $this->LTime;
     }
 }

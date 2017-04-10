@@ -20,8 +20,7 @@
  * Class AgentCheckRegistration
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentCheckRegistration extends AgentServiceCheck
-{
+class AgentCheckRegistration extends AgentServiceCheck {
     /** @var string */
     public $ID = '';
     /** @var string */
@@ -34,8 +33,7 @@ class AgentCheckRegistration extends AgentServiceCheck
     /**
      * @return string
      */
-    public function getID()
-    {
+    public function getID() {
         return $this->ID;
     }
 
@@ -43,8 +41,7 @@ class AgentCheckRegistration extends AgentServiceCheck
      * @param string $ID
      * @return \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration
      */
-    public function setID($ID)
-    {
+    public function setID($ID) {
         $this->ID = $ID;
         return $this;
     }
@@ -52,8 +49,7 @@ class AgentCheckRegistration extends AgentServiceCheck
     /**
      * @return string
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->Name;
     }
 
@@ -61,8 +57,7 @@ class AgentCheckRegistration extends AgentServiceCheck
      * @param string $Name
      * @return \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration
      */
-    public function setName($Name)
-    {
+    public function setName($Name) {
         $this->Name = $Name;
         return $this;
     }
@@ -70,8 +65,7 @@ class AgentCheckRegistration extends AgentServiceCheck
     /**
      * @return string
      */
-    public function getNotes()
-    {
+    public function getNotes() {
         return $this->Notes;
     }
 
@@ -79,8 +73,7 @@ class AgentCheckRegistration extends AgentServiceCheck
      * @param string $Notes
      * @return \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration
      */
-    public function setNotes($Notes)
-    {
+    public function setNotes($Notes) {
         $this->Notes = $Notes;
         return $this;
     }
@@ -88,8 +81,7 @@ class AgentCheckRegistration extends AgentServiceCheck
     /**
      * @return string
      */
-    public function getServiceID()
-    {
+    public function getServiceID() {
         return $this->ServiceID;
     }
 
@@ -97,8 +89,7 @@ class AgentCheckRegistration extends AgentServiceCheck
      * @param string $ServiceID
      * @return \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration
      */
-    public function setServiceID($ServiceID)
-    {
+    public function setServiceID($ServiceID) {
         $this->ServiceID = $ServiceID;
         return $this;
     }
@@ -106,8 +97,7 @@ class AgentCheckRegistration extends AgentServiceCheck
     /**
      * @return string
      */
-    public function __toString()
-    {
+    public function __toString() {
         return (string)$this->Name;
     }
 }

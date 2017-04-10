@@ -22,8 +22,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class QueryDatacenterOptions
  * @package DCarbone\PHPConsulAPI\PreparedQuery
  */
-class QueryDatacenterOptions extends AbstractModel
-{
+class QueryDatacenterOptions extends AbstractModel {
     /** @var int */
     public $NearestN = 0;
     /** @var string[] */
@@ -32,8 +31,7 @@ class QueryDatacenterOptions extends AbstractModel
     /**
      * @return int
      */
-    public function getNearestN()
-    {
+    public function getNearestN() {
         return $this->NearestN;
     }
 
@@ -41,8 +39,7 @@ class QueryDatacenterOptions extends AbstractModel
      * @param int $NearestN
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions
      */
-    public function setNearestN($NearestN)
-    {
+    public function setNearestN($NearestN) {
         $this->NearestN = $NearestN;
         return $this;
     }
@@ -50,8 +47,7 @@ class QueryDatacenterOptions extends AbstractModel
     /**
      * @return string[]
      */
-    public function getDatacenters()
-    {
+    public function getDatacenters() {
         return $this->Datacenters;
     }
 
@@ -59,11 +55,9 @@ class QueryDatacenterOptions extends AbstractModel
      * @param string[] $Datacenters
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions
      */
-    public function setDatacenters(array $Datacenters)
-    {
+    public function setDatacenters(array $Datacenters) {
         $this->Datacenters = [];
-        foreach($Datacenters as $datacenter)
-        {
+        foreach ($Datacenters as $datacenter) {
             $this->addDatacenter($datacenter);
         }
         return $this;
@@ -73,8 +67,7 @@ class QueryDatacenterOptions extends AbstractModel
      * @param string $datacenter
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions
      */
-    public function addDatacenter($datacenter)
-    {
+    public function addDatacenter($datacenter) {
         $this->Datacenters[] = $datacenter;
         return $this;
     }

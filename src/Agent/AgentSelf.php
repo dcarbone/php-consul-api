@@ -22,8 +22,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class AgentSelf
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentSelf extends AbstractModel
-{
+class AgentSelf extends AbstractModel {
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentSelfConfig */
     public $Config = null;
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentSelfCoord */
@@ -35,38 +34,37 @@ class AgentSelf extends AbstractModel
      * AgentSelf constructor.
      * @param array $data
      */
-    public function __construct(array $data = [])
-    {
+    public function __construct(array $data = []) {
         parent::__construct($data);
-        if (null !== $this->Config && !($this->Config instanceof AgentSelfConfig))
+        if (null !== $this->Config && !($this->Config instanceof AgentSelfConfig)) {
             $this->Config = new AgentSelfConfig((array)$this->Config);
-        if (null !== $this->Coord && !($this->Coord instanceof AgentSelfCoord))
+        }
+        if (null !== $this->Coord && !($this->Coord instanceof AgentSelfCoord)) {
             $this->Coord = new AgentSelfCoord((array)$this->Coord);
-        if (null !== $this->Member && !($this->Member instanceof AgentMember))
+        }
+        if (null !== $this->Member && !($this->Member instanceof AgentMember)) {
             $this->Member = new AgentMember((array)$this->Member);
+        }
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentSelfConfig
      */
-    public function getConfig()
-    {
+    public function getConfig() {
         return $this->Config;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentSelfCoord
      */
-    public function getCoord()
-    {
+    public function getCoord() {
         return $this->Coord;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentMember
      */
-    public function getMember()
-    {
+    public function getMember() {
         return $this->Member;
     }
 }

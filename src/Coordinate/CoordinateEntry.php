@@ -22,8 +22,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class CoordinateEntry
  * @package DCarbone\PHPConsulAPI\Coordinate
  */
-class CoordinateEntry extends AbstractModel
-{
+class CoordinateEntry extends AbstractModel {
     /** @var string */
     public $Node = '';
     /** @var \DCarbone\PHPConsulAPI\Coordinate\Coordinate */
@@ -33,27 +32,25 @@ class CoordinateEntry extends AbstractModel
      * CoordinateEntry constructor.
      * @param array $data
      */
-    public function __construct(array $data = [])
-    {
+    public function __construct(array $data = []) {
         parent::__construct($data);
 
-        if (null !== $this->Coord && !($this->Coord instanceof Coordinate))
+        if (null !== $this->Coord && !($this->Coord instanceof Coordinate)) {
             $this->Coord = new Coordinate((array)$this->Coord);
+        }
     }
 
     /**
      * @return string
      */
-    public function getNode()
-    {
+    public function getNode() {
         return $this->Node;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Coordinate\Coordinate
      */
-    public function getCoord()
-    {
+    public function getCoord() {
         return $this->Coord;
     }
 }

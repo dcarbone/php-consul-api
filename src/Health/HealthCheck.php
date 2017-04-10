@@ -22,8 +22,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class HealthCheck
  * @package DCarbone\PHPConsulAPI\Health
  */
-class HealthCheck extends AbstractModel
-{
+class HealthCheck extends AbstractModel {
     /** @var string */
     public $Node = '';
     /** @var string */
@@ -44,64 +43,56 @@ class HealthCheck extends AbstractModel
     /**
      * @return string
      */
-    public function getNode()
-    {
+    public function getNode() {
         return $this->Node;
     }
 
     /**
      * @return string
      */
-    public function getCheckID()
-    {
+    public function getCheckID() {
         return $this->CheckID;
     }
 
     /**
      * @return string
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->Name;
     }
 
     /**
      * @return string
      */
-    public function getStatus()
-    {
+    public function getStatus() {
         return $this->Status;
     }
 
     /**
      * @return string
      */
-    public function getNotes()
-    {
+    public function getNotes() {
         return $this->Notes;
     }
 
     /**
      * @return string
      */
-    public function getOutput()
-    {
+    public function getOutput() {
         return $this->Output;
     }
 
     /**
      * @return string
      */
-    public function getServiceID()
-    {
+    public function getServiceID() {
         return $this->ServiceID;
     }
 
     /**
      * @return string
      */
-    public function getServiceName()
-    {
+    public function getServiceName() {
         return $this->ServiceName;
     }
 }

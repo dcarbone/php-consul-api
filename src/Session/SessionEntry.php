@@ -22,8 +22,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class SessionEntry
  * @package DCarbone\PHPConsulAPI\Session
  */
-class SessionEntry extends AbstractModel
-{
+class SessionEntry extends AbstractModel {
     /** @var int */
     public $CreateIndex = 0;
     /** @var string */
@@ -44,64 +43,56 @@ class SessionEntry extends AbstractModel
     /**
      * @return int
      */
-    public function getCreateIndex()
-    {
+    public function getCreateIndex() {
         return $this->CreateIndex;
     }
 
     /**
      * @return string
      */
-    public function getID()
-    {
+    public function getID() {
         return $this->ID;
     }
 
     /**
      * @return string
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->Name;
     }
 
     /**
      * @return string
      */
-    public function getNode()
-    {
+    public function getNode() {
         return $this->Node;
     }
 
     /**
      * @return string[]
      */
-    public function getChecks()
-    {
+    public function getChecks() {
         return $this->Checks;
     }
 
     /**
      * @return int
      */
-    public function getLockDelay()
-    {
+    public function getLockDelay() {
         return $this->LockDelay;
     }
 
     /**
      * @return string
      */
-    public function getBehavior()
-    {
+    public function getBehavior() {
         return $this->Behavior;
     }
 
     /**
      * @return string
      */
-    public function getTTL()
-    {
+    public function getTTL() {
         return $this->TTL;
     }
 }

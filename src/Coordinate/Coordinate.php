@@ -22,8 +22,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class Coordinate
  * @package DCarbone\PHPConsulAPI\Coordinate
  */
-class Coordinate extends AbstractModel
-{
+class Coordinate extends AbstractModel {
     /** @var int[] */
     public $Vec = [];
     /** @var float */
@@ -36,32 +35,28 @@ class Coordinate extends AbstractModel
     /**
      * @return int[]
      */
-    public function getVec()
-    {
+    public function getVec() {
         return $this->Vec;
     }
 
     /**
      * @return float
      */
-    public function getError()
-    {
+    public function getError() {
         return $this->Error;
     }
 
     /**
      * @return float
      */
-    public function getAdjustment()
-    {
+    public function getAdjustment() {
         return $this->Adjustment;
     }
 
     /**
      * @return float
      */
-    public function getHeight()
-    {
+    public function getHeight() {
         return $this->Height;
     }
 }

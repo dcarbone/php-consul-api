@@ -20,16 +20,14 @@
  * Class WriteMeta
  * @package DCarbone\PHPConsulAPI
  */
-class WriteMeta
-{
+class WriteMeta {
     /** @var int */
-    public $requestTime = 0;
+    public $RequestTime = 0;
 
     /**
      * @return int
      */
-    public function getRequestTime()
-    {
-        return $this->requestTime;
+    public function getRequestTime() {
+        return $this->RequestTime;
     }
 }

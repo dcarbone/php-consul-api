@@ -20,37 +20,37 @@
  * Class AbstractModel
  * @package DCarbone\PHPConsulAPI
  */
-abstract class AbstractModel implements \JsonSerializable
-{
+abstract class AbstractModel implements \JsonSerializable {
+
     /**
      * AbstractObjectModel constructor.
      *
-     * Convenience method to help set scalar types.  For object types, it is recommended
-     * that the implementing class have it's own constructor
+     * Convenience method to help set scalar types.  Any extending class must have a constructor that builds any
+     * array / object properties it may have.
      *
      * @param array $data
      */
-    public function __construct(array $data = [])
-    {
-        foreach($data as $k => $v)
-        {
+    public function __construct(array $data = []) {
+        foreach ($data as $k => $v) {
             $this->{$k} = $v;
         }
     }
 
     /**
+     * TODO: More specific omission of values?
+     *
+     * Produces equivalent of `json:",omitempty"` tag
+     *
      * @return array
      */
-    function jsonSerialize()
-    {
+    function jsonSerialize() {
         return array_filter((array)$this);
     }
 
     /**
      * @return string
      */
-    public function __toString()
-    {
+    public function __toString() {
         return get_class($this);
     }
 }

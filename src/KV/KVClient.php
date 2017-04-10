@@ -26,26 +26,25 @@ use DCarbone\PHPConsulAPI\WriteOptions;
  * Class KVClient
  * @package DCarbone\PHPConsulAPI\KV
  */
-class KVClient extends AbstractClient
-{
+class KVClient extends AbstractClient {
     /**
      * @param string $key Name of key to retrieve value for
      * @param \DCarbone\PHPConsulAPI\QueryOptions $queryOptions
      * @return array(
-     *  @type KVPair|null kv object or null on error
-     *  @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata object or null on error
-     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
+     * @type KVPair|null kv object or null on error
+     * @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata object or null on error
+     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function get($key, QueryOptions $queryOptions = null)
-    {
-        if (!is_string($key))
-        {
-            return [null, null, new Error(sprintf(
-                '%s::get - Key expected to be string, %s seen.',
-                get_class($this),
-                gettype($key)
-            ))];
+    public function get($key, QueryOptions $queryOptions = null) {
+        if (!is_string($key)) {
+            return [null,
+                null,
+                new Error(sprintf(
+                    '%s::get - Key expected to be string, %s seen.',
+                    get_class($this),
+                    gettype($key)
+                ))];
         }
 
         $r = new Request('get', sprintf('v1/kv/%s', $key), $this->c);
@@ -53,25 +52,27 @@ class KVClient extends AbstractClient
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->doRequest($r);
-        if (null !== $err)
+        if (null !== $err) {
             return [null, null, $err];
+        }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         $code = $response->getStatusCode();
 
-        if (200 === $code)
-        {
+        if (200 === $code) {
             list($data, $err) = $this->decodeBody($response->getBody());
 
-            if (null !== $err)
+            if (null !== $err) {
                 return [null, $qm, $err];
+            }
 
             return [new KVPair($data[0], true), $qm, null];
         }
 
-        if (404 === $code)
+        if (404 === $code) {
             return [null, $qm, null];
+        }
 
         return [null, $qm, new Error(sprintf('%s: %s', $response->getStatusCode(), $response->getReasonPhrase()))];
     }
@@ -80,45 +81,47 @@ class KVClient extends AbstractClient
      * @param string $prefix
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      * @return array(
-     *  @type KVPair[]|null array of KVPair objects under specified prefix
-     *  @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata
-     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
+     * @type KVPair[]|null array of KVPair objects under specified prefix
+     * @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata
+     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function valueList($prefix = '', QueryOptions $queryOptions = null)
-    {
-        if (!is_string($prefix))
-        {
-            return [null, null, new Error(sprintf(
-                '%s::valueList - Prefix expected to be string, "%s" seen.',
-                get_class($this),
-                gettype($prefix)
-            ))];
+    public function valueList($prefix = '', QueryOptions $queryOptions = null) {
+        if (!is_string($prefix)) {
+            return [null,
+                null,
+                new Error(sprintf(
+                    '%s::valueList - Prefix expected to be string, "%s" seen.',
+                    get_class($this),
+                    gettype($prefix)
+                ))];
         }
 
-        if ('' === $prefix)
+        if ('' === $prefix) {
             $r = new Request('get', 'v1/kv/', $this->c);
-        else
+        } else {
             $r = new Request('get', sprintf('v1/kv/%s', $prefix), $this->c);
+        }
 
         $r->setQueryOptions($queryOptions);
         $r->params->set('recurse', '');
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        if (null !== $err)
+        if (null !== $err) {
             return [null, null, $err];
+        }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         list($data, $err) = $this->decodeBody($response->getBody());
 
-        if (null !== $err)
+        if (null !== $err) {
             return [null, $qm, $err];
+        }
 
         $kvPairs = [];
-        foreach($data as $v)
-        {
+        foreach ($data as $v) {
             $kvp = new KVPair($v, true);
             $kvPairs[$kvp->Key] = $kvp;
         }
@@ -130,34 +133,36 @@ class KVClient extends AbstractClient
      * @param string $prefix Prefix to search for.  Null returns all keys.
      * @param \DCarbone\PHPConsulAPI\QueryOptions $queryOptions
      * @return array(
-     *  @type string[]|null list of keys
-     *  @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata
-     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
+     * @type string[]|null list of keys
+     * @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata
+     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function keys($prefix = null, QueryOptions $queryOptions = null)
-    {
-        if (null !== $prefix && !is_string($prefix))
-        {
-            return [null, null, new Error(sprintf(
-                '%s::keys - Prefix expected to be empty or string, %s seen.',
-                get_class($this),
-                gettype($prefix)
-            ))];
+    public function keys($prefix = null, QueryOptions $queryOptions = null) {
+        if (null !== $prefix && !is_string($prefix)) {
+            return [null,
+                null,
+                new Error(sprintf(
+                    '%s::keys - Prefix expected to be empty or string, %s seen.',
+                    get_class($this),
+                    gettype($prefix)
+                ))];
         }
 
-        if (null === $prefix)
+        if (null === $prefix) {
             $r = new Request('get', 'v1/kv/', $this->c);
-        else
+        } else {
             $r = new Request('get', sprintf('v1/kv/%s', $prefix), $this->c);
+        }
 
         $r->setQueryOptions($queryOptions);
-        $r->params->set('keys', true);
+        $r->params->set('keys', 'true');
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        if (null !== $err)
+        if (null !== $err) {
             return [null, null, $err];
+        }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
@@ -170,20 +175,21 @@ class KVClient extends AbstractClient
      * @param KVPair $p
      * @param \DCarbone\PHPConsulAPI\WriteOptions $writeOptions
      * @return array(
-     *  @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
-     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
+     * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
+     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function put(KVPair $p, WriteOptions $writeOptions = null)
-    {
+    public function put(KVPair $p, WriteOptions $writeOptions = null) {
         $r = new Request('put', sprintf('v1/kv/%s', $p->Key), $this->c, $p->Value);
         $r->setWriteOptions($writeOptions);
-        if (0 !== $p->Flags)
-            $r->params->set('flags', $p->Flags);
+        if (0 !== $p->Flags) {
+            $r->params->set('flags', (string)$p->Flags);
+        }
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
-        if (null !== $err)
+        if (null !== $err) {
             return [null, $err];
+        }
 
         return [$this->buildWriteMeta($duration), null];
     }
@@ -192,18 +198,18 @@ class KVClient extends AbstractClient
      * @param string $key
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
      * @return array(
-     *  @type \DCarbone\PHPConsulAPI\WriteMeta metadata about write
-     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
+     * @type \DCarbone\PHPConsulAPI\WriteMeta metadata about write
+     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function delete($key, WriteOptions $writeOptions = null)
-    {
+    public function delete($key, WriteOptions $writeOptions = null) {
         $r = new Request('delete', sprintf('v1/kv/%s', $key), $this->c);
         $r->setWriteOptions($writeOptions);
 
         list ($duration, $_, $err) = $this->requireOK($this->doRequest($r));
-        if (null !== $err)
+        if (null !== $err) {
             return [null, $err];
+        }
 
         return [$this->buildWriteMeta($duration), null];
     }
@@ -212,21 +218,22 @@ class KVClient extends AbstractClient
      * @param KVPair $p
      * @param \DCarbone\PHPConsulAPI\WriteOptions $writeOptions
      * @return array(
-     *  @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
-     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
+     * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
+     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function cas(KVPair $p, WriteOptions $writeOptions = null)
-    {
+    public function cas(KVPair $p, WriteOptions $writeOptions = null) {
         $r = new Request('put', sprintf('v1/kv/%s', $p->Key), $this->c);
         $r->setWriteOptions($writeOptions);
-        $r->params->set('cas', $p->ModifyIndex);
-        if (0 !== $p->Flags)
-            $r->params->set('flags', $p->Flags);
+        $r->params->set('cas', (string)$p->ModifyIndex);
+        if (0 !== $p->Flags) {
+            $r->params->set('flags', (string)$p->Flags);
+        }
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
-        if (null !== $err)
+        if (null !== $err) {
             return [null, $err];
+        }
 
         return [$this->buildWriteMeta($duration), null];
     }
@@ -235,21 +242,22 @@ class KVClient extends AbstractClient
      * @param KVPair $p
      * @param \DCarbone\PHPConsulAPI\WriteOptions $writeOptions
      * @return array(
-     *  @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
-     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
+     * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
+     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function acquire(KVPair $p, WriteOptions $writeOptions = null)
-    {
+    public function acquire(KVPair $p, WriteOptions $writeOptions = null) {
         $r = new Request('put', sprintf('v1/kv/%s', $p->Key), $this->c);
         $r->setWriteOptions($writeOptions);
         $r->params->set('acquire', $p->Session);
-        if (0 !== $p->Flags)
-            $r->params->set('flags', $p->Flags);
+        if (0 !== $p->Flags) {
+            $r->params->set('flags', (string)$p->Flags);
+        }
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
-        if (null !== $err)
+        if (null !== $err) {
             return [null, $err];
+        }
 
         return [$this->buildWriteMeta($duration), null];
     }
@@ -258,21 +266,22 @@ class KVClient extends AbstractClient
      * @param KVPair $p
      * @param \DCarbone\PHPConsulAPI\WriteOptions $writeOptions
      * @return array(
-     *  @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
-     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
+     * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
+     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function release(KVPair $p, WriteOptions $writeOptions = null)
-    {
+    public function release(KVPair $p, WriteOptions $writeOptions = null) {
         $r = new Request('put', sprintf('v1/kv/%s', $p->Key), $this->c);
         $r->setWriteOptions($writeOptions);
         $r->params->set('release', $p->Session);
-        if (0 !== $p->Flags)
-            $r->params->set('flags', $p->Flags);
+        if (0 !== $p->Flags) {
+            $r->params->set('flags', (string)$p->Flags);
+        }
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
-        if (null !== $err)
+        if (null !== $err) {
             return [null, $err];
+        }
 
         return [$this->buildWriteMeta($duration), null];
     }
@@ -281,65 +290,65 @@ class KVClient extends AbstractClient
      * @param null|string $prefix
      * @param \DCarbone\PHPConsulAPI\QueryOptions $queryOptions
      * @return array(
-     *  @type KVPair[]|KVTree[]|null array of trees, values, or null on error
-     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
+     * @type KVPair[]|KVTree[]|null array of trees, values, or null on error
+     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function tree($prefix = '', QueryOptions $queryOptions = null)
-    {
+    public function tree($prefix = '', QueryOptions $queryOptions = null) {
         list($valueList, $_, $err) = $this->valueList($prefix, $queryOptions);
 
-        if (null !== $err)
+        if (null !== $err) {
             return [null, $err];
+        }
 
         $treeHierarchy = [];
-        foreach($valueList as $path=>$kvp)
-        {
+        foreach ($valueList as $path => $kvp) {
             $slashPos = strpos($path, '/');
-            if (false === $slashPos)
-            {
+            if (false === $slashPos) {
                 $treeHierarchy[$path] = $kvp;
                 continue;
             }
 
             $root = substr($path, 0, $slashPos + 1);
 
-            if (!isset($treeHierarchy[$root]))
+            if (!isset($treeHierarchy[$root])) {
                 $treeHierarchy[$root] = new KVTree($root);
+            }
 
-            if ('/' === substr($path, -1))
-            {
+            if ('/' === substr($path, -1)) {
                 $_path = '';
-                foreach(explode('/', $prefix) as $part)
-                {
-                    if ('' === $part)
+                foreach (explode('/', $prefix) as $part) {
+                    if ('' === $part) {
                         continue;
+                    }
 
                     $_path .= "{$part}/";
 
-                    if ($root === $_path)
+                    if ($root === $_path) {
                         continue;
+                    }
 
-                    if (!isset($treeHierarchy[$root][$_path]))
+                    if (!isset($treeHierarchy[$root][$_path])) {
                         $treeHierarchy[$root][$_path] = new KVTree($_path);
+                    }
                 }
-            }
-            else
-            {
+            } else {
                 $kvPrefix = substr($path, 0, strrpos($path, '/') + 1);
                 $_path = '';
-                foreach(explode('/', $kvPrefix) as $part)
-                {
-                    if ('' === $part)
+                foreach (explode('/', $kvPrefix) as $part) {
+                    if ('' === $part) {
                         continue;
+                    }
 
                     $_path .= "{$part}/";
 
-                    if ($root === $_path)
+                    if ($root === $_path) {
                         continue;
+                    }
 
-                    if (!isset($treeHierarchy[$root][$_path]))
+                    if (!isset($treeHierarchy[$root][$_path])) {
                         $treeHierarchy[$root][$_path] = new KVTree($_path);
+                    }
                 }
 
                 $treeHierarchy[$root][$path] = $kvp;

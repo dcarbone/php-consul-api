@@ -32,8 +32,7 @@ use DCarbone\PHPConsulAPI\Status\StatusClient;
  * Class Consul
  * @package DCarbone\PHPConsulAPI
  */
-class Consul
-{
+class Consul {
     const HTTPAddrEnvName = 'CONSUL_HTTP_ADDR';
     const HTTPTokenEnvName = 'CONSUL_HTTP_TOKEN';
     const HTTPAuthEnvName = 'CONSUL_HTTP_AUTH';
@@ -67,18 +66,19 @@ class Consul
      * Client constructor.
      * @param Config $config
      */
-    public function __construct(Config $config = null)
-    {
+    public function __construct(Config $config = null) {
         if (null === $config) {
             $config = Config::newDefaultConfig();
         } else {
             $def = Config::newDefaultConfig();
 
-            if ('' === $config->getAddress())
+            if ('' === $config->getAddress()) {
                 $config->setAddress($def->getAddress());
+            }
 
-            if ('' === $config->getScheme())
+            if ('' === $config->getScheme()) {
                 $config->setScheme($def->getScheme());
+            }
         }
 
         $this->KV = new KVClient($config);
@@ -97,88 +97,77 @@ class Consul
     /**
      * @return \DCarbone\PHPConsulAPI\KV\KVClient
      */
-    public function KV()
-    {
+    public function KV() {
         return $this->KV;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentClient
      */
-    public function Agent()
-    {
+    public function Agent() {
         return $this->Agent;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogClient
      */
-    public function Catalog()
-    {
+    public function Catalog() {
         return $this->Catalog;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Status\StatusClient
      */
-    public function Status()
-    {
+    public function Status() {
         return $this->Status;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Event\EventClient
      */
-    public function Event()
-    {
+    public function Event() {
         return $this->Event;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Health\HealthClient
      */
-    public function Health()
-    {
+    public function Health() {
         return $this->Health;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateClient
      */
-    public function Coordinate()
-    {
+    public function Coordinate() {
         return $this->Coordinate;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Session\SessionClient
      */
-    public function Session()
-    {
+    public function Session() {
         return $this->Session;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\OperatorClient
      */
-    public function Operator()
-    {
+    public function Operator() {
         return $this->Operator;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\ACL\ACLClient
      */
-    public function ACL()
-    {
+    public function ACL() {
         return $this->ACL;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryClient
      */
-    public function PreparedQuery()
-    {
+    public function PreparedQuery() {
         return $this->PreparedQuery;
     }
 }

@@ -16,6 +16,7 @@
    limitations under the License.
 */
 
+use Http\Client\HttpClient;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
@@ -23,8 +24,7 @@ use Psr\Http\Message\StreamInterface;
  * Class AbstractClient
  * @package DCarbone\PHPConsulAPI
  */
-abstract class AbstractClient
-{
+abstract class AbstractClient {
     /** @var Config */
     protected $c;
 
@@ -32,53 +32,53 @@ abstract class AbstractClient
      * AbstractConsulClient constructor.
      * @param Config $config
      */
-    public function __construct(Config $config)
-    {
+    public function __construct(Config $config) {
         $this->c = $config;
     }
 
     /**
      * @param array $r
      * @return array(
-     *  @type int query duration in microseconds
-     *  @type ResponseInterface|null response object
-     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
+     * @type int query duration in microseconds
+     * @type ResponseInterface|null response object
+     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    protected function requireOK(array $r)
-    {
+    protected function requireOK(array $r) {
         // If a previous error occurred, just return as-is.
-        if (null !== $r[2])
+        if (null !== $r[2]) {
             return $r;
+        }
 
         // If we have any kind of response...
-        if (null !== $r[1])
-        {
+        if (null !== $r[1]) {
             // If this is a response...
-            if ($r[1] instanceof ResponseInterface)
-            {
+            if ($r[1] instanceof ResponseInterface) {
                 // Get the response code...
                 $code = $r[1]->getStatusCode();
 
                 // If 200, move right along
-                if (200 === $code)
+                if (200 === $code) {
                     return $r;
+                }
 
                 // Otherwise, return error
-                return [$r[0], $r[1], new Error(sprintf(
-                    '%s - Non-200 response seen.  Response code: %d.  Message: %s',
-                    get_class($this),
-                    $code,
-                    $r[1]->getReasonPhrase()
-                ))];
+                return [$r[0],
+                    $r[1],
+                    new Error(sprintf(
+                        '%s - Non-200 response seen.  Response code: %d.  Message: %s',
+                        get_class($this),
+                        $code,
+                        $r[1]->getReasonPhrase()
+                    ))];
 
-            }
-            else
-            {
-                return [$r[0], $r[1], new Error(sprintf(
-                    '%s - Expected response to be instance of \\Psr\\Message\\ResponseInterface, %s seen.',
-                    is_object($r[1]) ? get_class($r[1]) : gettype($r[1])
-                ))];
+            } else {
+                return [$r[0],
+                    $r[1],
+                    new Error(sprintf(
+                        '%s - Expected response to be instance of \\Psr\\Message\\ResponseInterface, %s seen.',
+                        is_object($r[1]) ? get_class($r[1]) : gettype($r[1])
+                    ))];
             }
         }
 
@@ -88,27 +88,24 @@ abstract class AbstractClient
     /**
      * @param Request $r
      * @return array(
-     *  @type int duration in microseconds
-     *  @type \Psr\Http\Message\ResponseInterface|null http response
-     *  @type \DCarbone\PHPConsulAPI\Error|null any seen errors
+     * @type int duration in microseconds
+     * @type \Psr\Http\Message\ResponseInterface|null http response
+     * @type \DCarbone\PHPConsulAPI\Error|null any seen errors
      * )
      */
-    protected function doRequest(Request $r)
-    {
+    protected function doRequest(Request $r) {
         $rt = microtime(true);
         $response = null;
         $err = null;
-        try
-        {
+        try {
             // If we actually have a client defined...
-            if (isset($this->c->HttpClient))
+            if (isset($this->c->HttpClient) && $this->c->HttpClient instanceof HttpClient) {
                 $response = $this->c->HttpClient->sendRequest($r->toPsrRequest());
-            // Otherwise, throw error to be caught below
-            else
+            } // Otherwise, throw error to be caught below
+            else {
                 throw new \RuntimeException('Unable to execute query as no HttpClient has been defined.');
-        }
-        catch (\Exception $e)
-        {
+            }
+        } catch (\Exception $e) {
             // If there has been an exception of any kind, catch it and create Error object
             $err = new Error(sprintf(
                 '%s - Error seen while executing "%s".  Message: "%s"',
@@ -128,25 +125,27 @@ abstract class AbstractClient
      * @param Uri $uri
      * @return QueryMeta
      */
-    protected function buildQueryMeta($duration, ResponseInterface $response, Uri $uri)
-    {
+    protected function buildQueryMeta($duration, ResponseInterface $response, Uri $uri) {
         $qm = new QueryMeta();
 
-        $qm->requestTime = $duration;
-        $qm->requestUrl = (string)$uri;
+        $qm->RequestTime = $duration;
+        $qm->RequestUrl = (string)$uri;
 
-        if ('' !== ($h = $response->getHeaderLine('X-Consul-Index')))
-            $qm->lastIndex = (int)$h;
+        if ('' !== ($h = $response->getHeaderLine('X-Consul-Index'))) {
+            $qm->LastIndex = (int)$h;
+        }
 
-        if ('' !== ($h = $response->getHeaderLine('X-Consul-KnownLeader')))
-            $qm->knownLeader = (bool)$h;
-        else if ('' !== ($h = $response->getHeaderLine('X-Consul-Knownleader')))
-            $qm->knownLeader = (bool)$h;
+        if ('' !== ($h = $response->getHeaderLine('X-Consul-KnownLeader'))) {
+            $qm->KnownLeader = (bool)$h;
+        } else if ('' !== ($h = $response->getHeaderLine('X-Consul-Knownleader'))) {
+            $qm->KnownLeader = (bool)$h;
+        }
 
-        if ('' !== ($h = $response->getHeaderLine('X-Consul-LastContact')))
-            $qm->lastContact = (int)$h;
-        else if ('' !== ($h = $response->getHeaderLine('X-Consul-Lastcontact')))
-            $qm->lastContact = (int)$h;
+        if ('' !== ($h = $response->getHeaderLine('X-Consul-LastContact'))) {
+            $qm->LastContact = (int)$h;
+        } else if ('' !== ($h = $response->getHeaderLine('X-Consul-Lastcontact'))) {
+            $qm->LastContact = (int)$h;
+        }
 
         return $qm;
     }
@@ -155,12 +154,9 @@ abstract class AbstractClient
      * @param int $duration
      * @return WriteMeta
      */
-    protected function buildWriteMeta($duration)
-    {
+    protected function buildWriteMeta($duration) {
         $wm = new WriteMeta();
-        $wm->requestTime = $duration;
-
-        Logger::debug(sprintf('WriteMeta built: %s', json_encode($wm)));
+        $wm->RequestTime = $duration;
 
         return $wm;
     }
@@ -168,22 +164,23 @@ abstract class AbstractClient
     /**
      * @param StreamInterface $body
      * @return array(
-     *  @type array|string|bool|int|float decoded response
-     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
+     * @type array|string|bool|int|float decoded response
+     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    protected function decodeBody(StreamInterface $body)
-    {
+    protected function decodeBody(StreamInterface $body) {
         $data = @json_decode((string)$body, true);
         $err = json_last_error();
 
-        if (JSON_ERROR_NONE === $err)
+        if (JSON_ERROR_NONE === $err) {
             return [$data, null];
+        }
 
-        return [null, new Error(sprintf(
-            '%s - Unable to parse response as JSON.  Message: %s',
-            get_class($this),
-            PHP_VERSION_ID >= 50500 ? json_last_error_msg() : (string)$err
-        ))];
+        return [null,
+            new Error(sprintf(
+                '%s - Unable to parse response as JSON.  Message: %s',
+                get_class($this),
+                PHP_VERSION_ID >= 50500 ? json_last_error_msg() : (string)$err
+            ))];
     }
 }

@@ -24,32 +24,31 @@ use DCarbone\PHPConsulAPI\Request;
  * Class CoordinateClient
  * @package DCarbone\PHPConsulAPI\Coordinate
  */
-class CoordinateClient extends AbstractClient
-{
+class CoordinateClient extends AbstractClient {
     /**
      * @return array(
-     *  @type \DCarbone\PHPConsulAPI\Coordinate\CoordinateDatacenterMap[]|null datacenter map or null on error
-     *  @type \DCarbone\PHPConsulAPI\Error|null error, if an
+     * @type \DCarbone\PHPConsulAPI\Coordinate\CoordinateDatacenterMap[]|null datacenter map or null on error
+     * @type \DCarbone\PHPConsulAPI\Error|null error, if an
      * )
      */
-    public function datacenters()
-    {
+    public function datacenters() {
         $r = new Request('get', 'v1/coordinate/datacenters', $this->c);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($_, $response, $err) = $this->requireOK($this->doRequest($r));
 
-        if (null !== $err)
+        if (null !== $err) {
             return [null, $err];
+        }
 
         list($data, $err) = $this->decodeBody($response->getBody());
 
-        if (null !== $err)
+        if (null !== $err) {
             return [null, $err];
+        }
 
         $datacenters = [];
-        foreach($data as $v)
-        {
+        foreach ($data as $v) {
             $datacenters[] = new CoordinateDatacenterMap($v);
         }
 
@@ -59,30 +58,30 @@ class CoordinateClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      * @return array(
-     *  @type \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry[]|null coordinate list or null on error
-     *  @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
-     *  @type \DCarbone\PHPConsulAPI\Error|null error, if any
+     * @type \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry[]|null coordinate list or null on error
+     * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
+     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function nodes(QueryOptions $queryOptions = null)
-    {
+    public function nodes(QueryOptions $queryOptions = null) {
         $r = new Request('get', 'v1/coordinate/nodes', $this->c);
         $r->setQueryOptions($queryOptions);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list ($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        if (null !== $err)
+        if (null !== $err) {
             return [null, null, $err];
+        }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         list($data, $err) = $this->decodeBody($response->getBody());
-        if (null !== $err)
+        if (null !== $err) {
             return [null, $qm, $err];
+        }
 
         $coordinates = [];
-        foreach($data as $coord)
-        {
+        foreach ($data as $coord) {
             $coordinates[] = new CoordinateEntry($coord);
         }
 

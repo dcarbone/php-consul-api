@@ -16,19 +16,22 @@
    limitations under the License.
 */
 
-
 use GuzzleHttp\Psr7\Request as Psr7Request;
 use GuzzleHttp\Psr7\Stream as Psr7Stream;
 
 /**
  * Class Request
- * @package DCarbone\PHPConsulAPI\Http
+ * @package DCarbone\PHPConsulAPI
  */
 class Request {
-    /** @var \DCarbone\PHPConsulAPI\Config */
-    private $config;
+    /** @var \DCarbone\PHPConsulAPI\Values */
+    public $headers;
     /** @var \DCarbone\PHPConsulAPI\Params */
     public $params;
+
+    /** @var \DCarbone\PHPConsulAPI\Config */
+    private $config;
+
     /** @var string */
     private $path;
 
@@ -36,13 +39,10 @@ class Request {
     private $uri;
 
     /** @var string */
-    private $method = 'POST';
-
-    /** @var array */
-    private $headers = ['Accept' => ['application/json'], 'Content-Type' => ['application/json']];
+    private $method;
 
     /** @var null|resource */
-    private $body = null;
+    private $body;
 
     /**
      * Request constructor.
@@ -54,23 +54,25 @@ class Request {
     public function __construct($method, $path, Config $config, $body = null) {
         $this->config = $config;
 
-        $this->params = new Params();
         $this->method = strtoupper($method);
         $this->path = $path;
 
-        if ('' !== ($dc = $config->getDatacenter())) {
-            $this->params['dc'] = $dc;
+        $this->headers = new Values();
+        $this->params = new Params();
+
+        if ('' !== $config->Datacenter) {
+            $this->params->set('dc', $config->Datacenter);
         }
 
-        if (0 !== ($wait = $config->getWaitTime())) {
-            $this->params['wait'] = $wait;
+        if (0 !== $config->WaitTime) {
+            $this->params->set('wait', $config->intToMillisecond($config->WaitTime));
         }
 
-        if ('' !== ($token = $config->getToken())) {
-            if ($config->isTokenInHeader()) {
-                $this->headers['X-Consul-Token'] = $token;
+        if ('' !== $config->Token) {
+            if ($config->TokenInHeader) {
+                $this->headers->set('X-Consul-Token', $config->Token);
             } else {
-                $this->params['token'] = $token;
+                $this->params->set('token', $config->Token);
             }
         }
 
@@ -110,60 +112,68 @@ class Request {
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      */
-    public function setQueryOptions(QueryOptions $queryOptions = null) {
-        if (null === $queryOptions) {
+    public function setQueryOptions(QueryOptions $options = null) {
+        if (null === $options) {
             return;
         }
 
-        if ('' !== ($dc = $queryOptions->getDatacenter())) {
-            $this->params['dc'] = $dc;
+        if ('' !== $options->Datacenter) {
+            $this->params->set('dc', $options->Datacenter);
         }
-
-        if ($queryOptions->getAllowStale()) {
-            $this->params['stale'] = '';
+        if ($options->AllowStale) {
+            $this->params->set('stale', '');
         }
-
-        if ($queryOptions->getRequireConsistent()) {
-            $this->params['consistent'] = '';
+        if ($options->RequireConsistent) {
+            $this->params->set('consistent', '');
         }
-
-        if (0 !== ($waitIndex = $queryOptions->getWaitIndex())) {
-            $this->params['index'] = $waitIndex;
+        if (0 !== $options->WaitIndex) {
+            $this->params->set('index', (string)$options->WaitIndex);
         }
-
-        if (0 !== ($waitTime = $queryOptions->getWaitTime())) {
-            $this->params['wait'] = $waitTime;
+        if (0 !== $options->WaitTime) {
+            $this->params->set('wait', $this->config->intToMillisecond($options->WaitTime));
         }
-
-        if ('' !== ($token = $queryOptions->getToken())) {
-            if ($this->config->isTokenInHeader()) {
-                $this->headers['X-Consul-Token'] = $token;
+        if ('' !== $options->Token) {
+            if ($this->config->TokenInHeader) {
+                $this->headers->set('X-Consul-Token', $options->Token);
             } else {
-                $this->params['token'] = $token;
+                $this->params->set('token', $options->Token);
             }
         }
-
-        if ('' !== ($near = $queryOptions->getNear())) {
-            $this->params['near'] = $near;
+        if ('' !== $options->Near) {
+            $this->params->set('near', $options->Near);
+        }
+        if (isset($options->NodeMeta) && 0 < count($options->NodeMeta)) {
+            foreach ($options->NodeMeta as $k => $v) {
+                $this->params->add('node-meta', "{$k}:{$v}");
+            }
+        }
+        if ('' !== $options->RelayFactor) {
+            $this->params->set('relay-factor', (string)$options->RelayFactor);
         }
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
      */
-    public function setWriteOptions(WriteOptions $writeOptions = null) {
-        if (null === $writeOptions) {
+    public function setWriteOptions(WriteOptions $options = null) {
+        if (null === $options) {
             return;
         }
 
-        if ('' !== ($dc = $writeOptions->getDatacenter())) {
-            $this->params['dc'] = $dc;
+        if ('' !== $options->Datacenter) {
+            $this->params->set('dc', $options->Datacenter);
         }
-
-        if ('' !== ($token = $writeOptions->getToken())) {
-            $this->params['token'] = $token;
+        if ('' !== $options->Token) {
+            if ($this->config->TokenInHeader) {
+                $this->headers->set('X-Consul-Token', $options->Token);
+            } else {
+                $this->headers->set('token', $options->Token);
+            }
+        }
+        if (0 !== $options->RelayFactor) {
+            $this->params->set('relay-factor', (string)$options->RelayFactor);
         }
     }
 
@@ -187,7 +197,7 @@ class Request {
         return new Psr7Request(
             $this->method,
             $this->getUri(),
-            $this->headers,
+            $this->headers->toPsr7Array(),
             isset($this->body) ? new Psr7Stream($this->body) : null
         );
     }

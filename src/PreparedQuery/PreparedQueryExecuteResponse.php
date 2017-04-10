@@ -23,8 +23,7 @@ use DCarbone\PHPConsulAPI\Health\ServiceEntry;
  * Class PreparedQueryExecuteResponse
  * @package DCarbone\PHPConsulAPI\PreparedQuery
  */
-class PreparedQueryExecuteResponse extends AbstractModel
-{
+class PreparedQueryExecuteResponse extends AbstractModel {
     /** @var string */
     public $Service = '';
     /** @var \DCarbone\PHPConsulAPI\Health\ServiceEntry[] */
@@ -40,22 +39,20 @@ class PreparedQueryExecuteResponse extends AbstractModel
      * PreparedQueryExecuteResponse constructor.
      * @param array $data
      */
-    public function __construct(array $data = [])
-    {
+    public function __construct(array $data = []) {
         parent::__construct($data);
 
-        if (null !== $this->DNS && !($this->DNS instanceof QueryDNSOptions))
+        if (null !== $this->DNS && !($this->DNS instanceof QueryDNSOptions)) {
             $this->DNS = new QueryDNSOptions((array)$this->DNS);
+        }
 
-        if (0 < count($this->Nodes))
-        {
+        if (0 < count($this->Nodes)) {
             $this->Nodes = array_filter($this->Nodes);
-            if (0 < ($cnt = count($this->Nodes)))
-            {
-                for ($i = 0; $i < $cnt; $i++)
-                {
-                    if (!($this->Nodes[$i] instanceof ServiceEntry))
+            if (0 < ($cnt = count($this->Nodes))) {
+                for ($i = 0; $i < $cnt; $i++) {
+                    if (!($this->Nodes[$i] instanceof ServiceEntry)) {
                         $this->Nodes[$i] = new ServiceEntry((array)$this->Nodes[$i]);
+                    }
 
                 }
             }
@@ -65,40 +62,35 @@ class PreparedQueryExecuteResponse extends AbstractModel
     /**
      * @return string
      */
-    public function getService()
-    {
+    public function getService() {
         return $this->Service;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Health\ServiceEntry[]
      */
-    public function getNodes()
-    {
+    public function getNodes() {
         return $this->Nodes;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions
      */
-    public function getDNS()
-    {
+    public function getDNS() {
         return $this->DNS;
     }
 
     /**
      * @return string
      */
-    public function getDatacenter()
-    {
+    public function getDatacenter() {
         return $this->Datacenter;
     }
 
     /**
      * @return int
      */
-    public function getFailovers()
-    {
+    public function getFailovers() {
         return $this->Failovers;
     }
 }

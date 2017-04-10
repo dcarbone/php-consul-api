@@ -22,8 +22,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class AgentSelfCoord
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentSelfCoord extends AbstractModel
-{
+class AgentSelfCoord extends AbstractModel {
     /** @var array */
     public $Vec = [];
     /** @var float */
@@ -36,32 +35,28 @@ class AgentSelfCoord extends AbstractModel
     /**
      * @return array
      */
-    public function getVec()
-    {
+    public function getVec() {
         return $this->Vec;
     }
 
     /**
      * @return float
      */
-    public function getError()
-    {
+    public function getError() {
         return $this->Error;
     }
 
     /**
      * @return float
      */
-    public function getAdjustment()
-    {
+    public function getAdjustment() {
         return $this->Adjustment;
     }
 
     /**
      * @return float
      */
-    public function getHeight()
-    {
+    public function getHeight() {
         return $this->Height;
     }
 }

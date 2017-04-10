@@ -20,167 +20,165 @@
  * Class QueryOptions
  * @package DCarbone\PHPConsulAPI
  */
-class QueryOptions extends AbstractOptions
-{
-    use ConsulHttpParamContainerTrait;
+class QueryOptions extends AbstractModel {
+    /** @var string */
+    public $Datacenter = '';
+    /** @var bool */
+    public $AllowStale = false;
+    /** @var bool */
+    public $RequireConsistent = false;
+    /** @var int */
+    public $WaitIndex = 0;
+    /** @var int */
+    public $WaitTime = 0;
+    /** @var string */
+    public $Token = '';
+    /** @var string */
+    public $Near = '';
+    /** @var array */
+    public $NodeMeta = [];
+    /** @var int */
+    public $RelayFactor = 0;
+    /** @var bool */
+    public $Pretty = false;
+
+    /**
+     * @return string
+     */
+    public function getDatacenter() {
+        return $this->Datacenter;
+    }
+
+    /**
+     * @param string $Datacenter
+     */
+    public function setDatacenter($Datacenter) {
+        $this->Datacenter = $Datacenter;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAllowStale() {
+        return $this->AllowStale;
+    }
+
+    /**
+     * @param bool $AllowStale
+     */
+    public function setAllowStale($AllowStale) {
+        $this->AllowStale = $AllowStale;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRequireConsistent() {
+        return $this->RequireConsistent;
+    }
+
+    /**
+     * @param bool $RequireConsistent
+     */
+    public function setRequireConsistent($RequireConsistent) {
+        $this->RequireConsistent = $RequireConsistent;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWaitIndex() {
+        return $this->WaitIndex;
+    }
+
+    /**
+     * @param int $WaitIndex
+     */
+    public function setWaitIndex($WaitIndex) {
+        $this->WaitIndex = $WaitIndex;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWaitTime() {
+        return $this->WaitTime;
+    }
+
+    /**
+     * @param int $WaitTime
+     */
+    public function setWaitTime($WaitTime) {
+        $this->WaitTime = $WaitTime;
+    }
+
+    /**
+     * @return string
+     */
+    public function getToken() {
+        return $this->Token;
+    }
+
+    /**
+     * @param string $Token
+     */
+    public function setToken($Token) {
+        $this->Token = $Token;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNear() {
+        return $this->Near;
+    }
+
+    /**
+     * @param string $Near
+     */
+    public function setNear($Near) {
+        $this->Near = $Near;
+    }
 
     /**
      * @return array
      */
-    protected function getDefinition()
-    {
-        return array(
-            'Datacenter' => null,
-            'AllowStale' => null,
-            'RequireConsistent' => null,
-            'WaitIndex' => null,
-            'WaitTime' => null,
-            'Token' => null,
-            'Near' => null,
-            'Pretty' => null,
-        );
+    public function getNodeMeta() {
+        return $this->NodeMeta;
     }
 
     /**
-     * @return string
+     * @param array $NodeMeta
      */
-    public function getDatacenter()
-    {
-        return (string)$this->_storage['Datacenter'];
-    }
-
-    /**
-     * @param string $datacenter
-     * @return QueryOptions
-     */
-    public function setDatacenter($datacenter)
-    {
-        $this->_storage['Datacenter'] = $datacenter;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getAllowStale()
-    {
-        return (bool)$this->_storage['AllowStale'];
-    }
-
-    /**
-     * @param bool $allowStale
-     * @return QueryOptions
-     */
-    public function setAllowStale($allowStale)
-    {
-        $this->_storage['AllowStale'] = $allowStale;
-        return $this;
+    public function setNodeMeta($NodeMeta) {
+        $this->NodeMeta = $NodeMeta;
     }
 
     /**
      * @return int
      */
-    public function getWaitIndex()
-    {
-        return (int)$this->_storage['WaitIndex'];
+    public function getRelayFactor() {
+        return $this->RelayFactor;
     }
 
     /**
-     * @param int $waitIndex
-     * @return QueryOptions
+     * @param int $RelayFactor
      */
-    public function setWaitIndex($waitIndex)
-    {
-        $this->_storage['WaitIndex'] = $waitIndex;
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getWaitTime()
-    {
-        return (int)$this->_storage['WaitTime'];
-    }
-
-    /**
-     * @param int $waitTime
-     * @return QueryOptions
-     */
-    public function setWaitTime($waitTime)
-    {
-        $this->_storage['WaitTime'] = $waitTime;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getToken()
-    {
-        return (string)$this->_storage['Token'];
-    }
-
-    /**
-     * @param string $token
-     * @return QueryOptions
-     */
-    public function setToken($token)
-    {
-        $this->_storage['Token'] = $token;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getNear()
-    {
-        return (string)$this->_storage['Near'];
-    }
-
-    /**
-     * @param string $near
-     * @return QueryOptions
-     */
-    public function setNear($near)
-    {
-        $this->_storage['Near'] = $near;
-        return $this;
+    public function setRelayFactor($RelayFactor) {
+        $this->RelayFactor = $RelayFactor;
     }
 
     /**
      * @return bool
      */
-    public function getRequireConsistent()
-    {
-        return (bool)$this->_storage['RequireConsistent'];
-    }
-
-    /**
-     * @param string $requireConsistent
-     * @return QueryOptions
-     */
-    public function setRequireConsistent($requireConsistent)
-    {
-        $this->_storage['RequireConsistent'] = $requireConsistent;
-        return $this;
-    }
-    
     public function isPretty() {
-        return isset($this->_storage['Pretty']);
+        return $this->Pretty;
     }
 
     /**
-     * @param bool $pretty
-     * @return QueryOptions
+     * @param bool $Pretty
      */
-    public function setPretty($pretty) {
-        if ($pretty)
-            $this->_storage['Pretty'] = true;
-        else
-            unset($this->_storage['Pretty']);
-
-        return $this;
+    public function setPretty($Pretty) {
+        $this->Pretty = $Pretty;
     }
 }

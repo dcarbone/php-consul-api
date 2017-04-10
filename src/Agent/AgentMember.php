@@ -23,8 +23,7 @@ use DCarbone\PHPConsulAPI\HasStringTags;
  * Class AgentMember
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentMember extends AbstractModel
-{
+class AgentMember extends AbstractModel {
     use HasStringTags;
 
     /** @var string */
@@ -51,88 +50,77 @@ class AgentMember extends AbstractModel
     /**
      * @return string
      */
-    public function getName()
-    {
+    public function getName() {
         return $this->Name;
     }
 
     /**
      * @return string
      */
-    public function getAddr()
-    {
+    public function getAddr() {
         return $this->Addr;
     }
 
     /**
      * @return int
      */
-    public function getPort()
-    {
+    public function getPort() {
         return $this->Port;
     }
 
     /**
      * @return string
      */
-    public function getStatus()
-    {
+    public function getStatus() {
         return $this->Status;
     }
 
     /**
      * @return int
      */
-    public function getProtocolMin()
-    {
+    public function getProtocolMin() {
         return $this->ProtocolMin;
     }
 
     /**
      * @return int
      */
-    public function getProtocolMax()
-    {
+    public function getProtocolMax() {
         return $this->ProtocolMax;
     }
 
     /**
      * @return int
      */
-    public function getProtocolCur()
-    {
+    public function getProtocolCur() {
         return $this->ProtocolCur;
     }
 
     /**
      * @return int
      */
-    public function getDelegateMin()
-    {
+    public function getDelegateMin() {
         return $this->DelegateMin;
     }
 
     /**
      * @return int
      */
-    public function getDelegateMax()
-    {
+    public function getDelegateMax() {
         return $this->DelegateMax;
     }
 
     /**
      * @return int
      */
-    public function getDelegateCur()
-    {
+    public function getDelegateCur() {
         return $this->DelegateCur;
     }
 
     /**
      * @return string
      */
-    public function __toString()
-    {
+    public function __toString() {
         return $this->Name;
     }
 }

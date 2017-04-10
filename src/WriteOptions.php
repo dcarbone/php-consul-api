@@ -20,54 +20,53 @@
  * Class WriteOptions
  * @package DCarbone\PHPConsulAPI
  */
-class WriteOptions extends AbstractOptions
-{
-    use ConsulHttpParamContainerTrait;
+class WriteOptions extends AbstractModel {
+    /** @var string */
+    public $Datacenter = '';
+    /** @var string */
+    public $Token = '';
+    /** @var int */
+    public $RelayFactor = 0;
 
     /**
-     * @return array
+     * @return string
      */
-    protected function getDefinition()
-    {
-        return array(
-            'Datacenter' => null,
-            'Token' => null
-        );
+    public function getDatacenter() {
+        return $this->Datacenter;
+    }
+
+    /**
+     * @param string $Datacenter
+     */
+    public function setDatacenter($Datacenter) {
+        $this->Datacenter = $Datacenter;
     }
 
     /**
      * @return string
      */
-    public function getDatacenter()
-    {
-        return (string)$this->_storage['Datacenter'];
+    public function getToken() {
+        return $this->Token;
     }
 
     /**
-     * @param string $dc
-     * @return $this
+     * @param string $Token
      */
-    public function setDatacenter($dc)
-    {
-        $this->_storage['Datacenter'] = $dc;
-        return $this;
+    public function setToken($Token) {
+        $this->Token = $Token;
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getToken()
-    {
-        return (string)$this->_storage['Token'];
+    public function getRelayFactor() {
+        return $this->RelayFactor;
     }
 
     /**
-     * @param string $token
-     * @return $this
+     * @param int $RelayFactor
      */
-    public function setToken($token)
-    {
-        $this->_storage['Token'] = $token;
-        return $this;
+    public function setRelayFactor($RelayFactor) {
+        $this->RelayFactor = $RelayFactor;
     }
 }

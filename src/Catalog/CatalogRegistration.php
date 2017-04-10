@@ -24,8 +24,7 @@ use DCarbone\PHPConsulAPI\Agent\AgentService;
  * Class CatalogRegistration
  * @package DCarbone\PHPConsulAPI\Catalog
  */
-class CatalogRegistration extends AbstractModel
-{
+class CatalogRegistration extends AbstractModel {
     /** @var string */
     public $Node = '';
     /** @var string */
@@ -42,20 +41,20 @@ class CatalogRegistration extends AbstractModel
      *
      * @param array $data
      */
-    public function __construct(array $data = [])
-    {
+    public function __construct(array $data = []) {
         parent::__construct($data);
-        if (null !== $this->Service && !($this->Service instanceof AgentService))
+        if (null !== $this->Service && !($this->Service instanceof AgentService)) {
             $this->Service = new AgentService((array)$this->Service);
-        if (null !== $this->Check && !($this->Check instanceof AgentCheck))
+        }
+        if (null !== $this->Check && !($this->Check instanceof AgentCheck)) {
             $this->Check = new AgentCheck((array)$this->Check);
+        }
     }
 
     /**
      * @return string
      */
-    public function getNode()
-    {
+    public function getNode() {
         return $this->Node;
     }
 
@@ -63,8 +62,7 @@ class CatalogRegistration extends AbstractModel
      * @param string $Node
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
-    public function setNode($Node)
-    {
+    public function setNode($Node) {
         $this->Node = $Node;
         return $this;
     }
@@ -72,8 +70,7 @@ class CatalogRegistration extends AbstractModel
     /**
      * @return string
      */
-    public function getAddress()
-    {
+    public function getAddress() {
         return $this->Address;
     }
 
@@ -81,8 +78,7 @@ class CatalogRegistration extends AbstractModel
      * @param string $Address
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
-    public function setAddress($Address)
-    {
+    public function setAddress($Address) {
         $this->Address = $Address;
         return $this;
     }
@@ -90,8 +86,7 @@ class CatalogRegistration extends AbstractModel
     /**
      * @return string
      */
-    public function getDatacenter()
-    {
+    public function getDatacenter() {
         return $this->Datacenter;
     }
 
@@ -99,8 +94,7 @@ class CatalogRegistration extends AbstractModel
      * @param string $Datacenter
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
-    public function setDatacenter($Datacenter)
-    {
+    public function setDatacenter($Datacenter) {
         $this->Datacenter = $Datacenter;
         return $this;
     }
@@ -108,8 +102,7 @@ class CatalogRegistration extends AbstractModel
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentService
      */
-    public function getService()
-    {
+    public function getService() {
         return $this->Service;
     }
 
@@ -117,8 +110,7 @@ class CatalogRegistration extends AbstractModel
      * @param \DCarbone\PHPConsulAPI\Agent\AgentService $Service
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
-    public function setService(AgentService $Service)
-    {
+    public function setService(AgentService $Service) {
         $this->Service = $Service;
         return $this;
     }
@@ -126,8 +118,7 @@ class CatalogRegistration extends AbstractModel
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentCheck
      */
-    public function getCheck()
-    {
+    public function getCheck() {
         return $this->Check;
     }
 
@@ -135,8 +126,7 @@ class CatalogRegistration extends AbstractModel
      * @param \DCarbone\PHPConsulAPI\Agent\AgentCheck $Check
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
-    public function setCheck(AgentCheck $Check)
-    {
+    public function setCheck(AgentCheck $Check) {
         $this->Check = $Check;
         return $this;
     }

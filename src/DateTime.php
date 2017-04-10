@@ -20,34 +20,29 @@
  * Class DateTime
  * @package DCarbone\PHPConsulAPI
  */
-class DateTime extends \DateTime implements \JsonSerializable
-{
+class DateTime extends \DateTime implements \JsonSerializable {
     /** @var string */
     private static $_defaultFormat = 'Y-m-d\TH:i:s.uO';
 
     /**
      * @return string
      */
-    public static function getDefaultFormat()
-    {
+    public static function getDefaultFormat() {
         return self::$_defaultFormat;
     }
 
     /**
      * @param string $format
      */
-    public static function setDefaultFormat($format)
-    {
-        if (!is_string($format))
-        {
+    public static function setDefaultFormat($format) {
+        if (!is_string($format)) {
             throw new \InvalidArgumentException(sprintf(
                 'PHPConsulAPI - DateTime::setDefaultFormat expects argument 1 to be string, %s seen.',
                 gettype($format)
             ));
         }
 
-        if (false === @date($format))
-        {
+        if (false === @date($format)) {
             throw new \InvalidArgumentException(sprintf(
                 'PHPConsulAPI - DateTime::setDefaultFormat specified invalid format "%s".  Please see http://php.net/manual/en/function.date.php.',
                 $format
@@ -60,32 +55,28 @@ class DateTime extends \DateTime implements \JsonSerializable
     /**
      * @return string
      */
-    public function formatDefault()
-    {
+    public function formatDefault() {
         return $this->format(self::$_defaultFormat);
     }
 
     /**
      * @return string
      */
-    public static function now()
-    {
+    public static function now() {
         return date(self::$_defaultFormat);
     }
 
     /**
      * @return string
      */
-    public function jsonSerialize()
-    {
+    public function jsonSerialize() {
         return (string)$this;
     }
 
     /**
      * @return string
      */
-    public function __toString()
-    {
+    public function __toString() {
         return $this->format(self::$_defaultFormat);
     }
 }

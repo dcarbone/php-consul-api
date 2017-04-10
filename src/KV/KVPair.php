@@ -22,8 +22,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class KVPair
  * @package DCarbone\PHPConsulAPI\KV
  */
-class KVPair extends AbstractModel
-{
+class KVPair extends AbstractModel {
     /** @var string */
     public $Key = '';
     /** @var int */
@@ -44,18 +43,17 @@ class KVPair extends AbstractModel
      * @param array $data
      * @param bool $_decodeValue
      */
-    public function __construct(array $data = [], $_decodeValue = false)
-    {
+    public function __construct(array $data = [], $_decodeValue = false) {
         parent::__construct($data);
-        if ((bool)$_decodeValue && isset($this->Value))
+        if ((bool)$_decodeValue && isset($this->Value)) {
             $this->Value = base64_decode($this->Value);
+        }
     }
 
     /**
      * @return string
      */
-    public function getKey()
-    {
+    public function getKey() {
         return $this->Key;
     }
 
@@ -63,8 +61,7 @@ class KVPair extends AbstractModel
      * @param string $Key
      * @return \DCarbone\PHPConsulAPI\KV\KVPair
      */
-    public function setKey($Key)
-    {
+    public function setKey($Key) {
         $this->Key = $Key;
         return $this;
     }
@@ -72,8 +69,7 @@ class KVPair extends AbstractModel
     /**
      * @return int
      */
-    public function getCreateIndex()
-    {
+    public function getCreateIndex() {
         return $this->CreateIndex;
     }
 
@@ -81,8 +77,7 @@ class KVPair extends AbstractModel
      * @param int $CreateIndex
      * @return \DCarbone\PHPConsulAPI\KV\KVPair
      */
-    public function setCreateIndex($CreateIndex)
-    {
+    public function setCreateIndex($CreateIndex) {
         $this->CreateIndex = $CreateIndex;
         return $this;
     }
@@ -90,8 +85,7 @@ class KVPair extends AbstractModel
     /**
      * @return int
      */
-    public function getModifyIndex()
-    {
+    public function getModifyIndex() {
         return $this->ModifyIndex;
     }
 
@@ -99,8 +93,7 @@ class KVPair extends AbstractModel
      * @param int $ModifyIndex
      * @return \DCarbone\PHPConsulAPI\KV\KVPair
      */
-    public function setModifyIndex($ModifyIndex)
-    {
+    public function setModifyIndex($ModifyIndex) {
         $this->ModifyIndex = $ModifyIndex;
         return $this;
     }
@@ -108,8 +101,7 @@ class KVPair extends AbstractModel
     /**
      * @return int
      */
-    public function getLockIndex()
-    {
+    public function getLockIndex() {
         return $this->LockIndex;
     }
 
@@ -117,8 +109,7 @@ class KVPair extends AbstractModel
      * @param int $LockIndex
      * @return \DCarbone\PHPConsulAPI\KV\KVPair
      */
-    public function setLockIndex($LockIndex)
-    {
+    public function setLockIndex($LockIndex) {
         $this->LockIndex = $LockIndex;
         return $this;
     }
@@ -126,8 +117,7 @@ class KVPair extends AbstractModel
     /**
      * @return int
      */
-    public function getFlags()
-    {
+    public function getFlags() {
         return $this->Flags;
     }
 
@@ -135,8 +125,7 @@ class KVPair extends AbstractModel
      * @param int $Flags
      * @return \DCarbone\PHPConsulAPI\KV\KVPair
      */
-    public function setFlags($Flags)
-    {
+    public function setFlags($Flags) {
         $this->Flags = $Flags;
         return $this;
     }
@@ -144,8 +133,7 @@ class KVPair extends AbstractModel
     /**
      * @return null|string
      */
-    public function getValue()
-    {
+    public function getValue() {
         return $this->Value;
     }
 
@@ -153,8 +141,7 @@ class KVPair extends AbstractModel
      * @param null|string $Value
      * @return \DCarbone\PHPConsulAPI\KV\KVPair
      */
-    public function setValue($Value)
-    {
+    public function setValue($Value) {
         $this->Value = $Value;
         return $this;
     }
@@ -162,8 +149,7 @@ class KVPair extends AbstractModel
     /**
      * @return string
      */
-    public function getSession()
-    {
+    public function getSession() {
         return $this->Session;
     }
 
@@ -171,8 +157,7 @@ class KVPair extends AbstractModel
      * @param string $Session
      * @return \DCarbone\PHPConsulAPI\KV\KVPair
      */
-    public function setSession($Session)
-    {
+    public function setSession($Session) {
         $this->Session = $Session;
         return $this;
     }
@@ -180,8 +165,7 @@ class KVPair extends AbstractModel
     /**
      * @return string
      */
-    public function __toString()
-    {
+    public function __toString() {
         return (string)$this->Value;
     }
 }

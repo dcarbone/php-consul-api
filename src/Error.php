@@ -18,12 +18,11 @@
 
 /**
  * TODO: Make this better...
- * 
+ *
  * Class Error
  * @package DCarbone\PHPConsulAPI
  */
-class Error implements \JsonSerializable
-{
+class Error implements \JsonSerializable {
     /** @var DateTime */
     private $_timestamp;
 
@@ -34,8 +33,7 @@ class Error implements \JsonSerializable
      * Error constructor.
      * @param string $message
      */
-    public function __construct($message)
-    {
+    public function __construct($message) {
         $this->_timestamp = new DateTime();
         $this->_message = $message;
     }
@@ -43,16 +41,14 @@ class Error implements \JsonSerializable
     /**
      * @return DateTime
      */
-    public function getTimestamp()
-    {
+    public function getTimestamp() {
         return $this->_timestamp;
     }
 
     /**
      * @return string
      */
-    public function getMessage()
-    {
+    public function getMessage() {
         return $this->_message;
     }
 
@@ -61,8 +57,7 @@ class Error implements \JsonSerializable
      * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
      * @return mixed data which can be serialized by json_encode, which is a value of any type other than a resource.
      */
-    public function jsonSerialize()
-    {
+    public function jsonSerialize() {
         return array(
             'message' => $this->_message,
             'timestamp' => $this->_timestamp
@@ -72,8 +67,7 @@ class Error implements \JsonSerializable
     /**
      * @return string
      */
-    public function __toString()
-    {
+    public function __toString() {
         return sprintf(
             '[error] - %s - %s',
             $this->_timestamp,

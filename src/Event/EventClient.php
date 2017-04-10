@@ -25,79 +25,83 @@ use DCarbone\PHPConsulAPI\WriteOptions;
  * Class EventClient
  * @package DCarbone\PHPConsulAPI\Event
  */
-class EventClient extends AbstractClient
-{
+class EventClient extends AbstractClient {
     /**
      * @param \DCarbone\PHPConsulAPI\Event\UserEvent $event
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
      * @return array(
-     *  @type UserEvent|null user event that was fired or null on error
-     *  @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
-     *  @type \DCarbone\PHPConsulAPI\Error error, if any
+     * @type UserEvent|null user event that was fired or null on error
+     * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
+     * @type \DCarbone\PHPConsulAPI\Error error, if any
      * )
      */
-    public function fire(UserEvent $event, WriteOptions $writeOptions = null)
-    {
+    public function fire(UserEvent $event, WriteOptions $writeOptions = null) {
         $r = new Request(
             'put',
-                sprintf('v1/event/fire/%s', $event->Name),
-                $this->c,
-                '' !== $event->Payload ? $event->Payload : null);
+            sprintf('v1/event/fire/%s', $event->Name),
+            $this->c,
+            '' !== $event->Payload ? $event->Payload : null);
 
         $r->setWriteOptions($writeOptions);
 
-        if ('' !== ($nf = $event->NodeFilter))
+        if ('' !== ($nf = $event->NodeFilter)) {
             $r->params->set('node', $nf);
-        if ('' !== ($sf = $event->ServiceFilter))
+        }
+        if ('' !== ($sf = $event->ServiceFilter)) {
             $r->params->set('service', $sf);
-        if ('' !== ($tf = $event->TagFilter))
+        }
+        if ('' !== ($tf = $event->TagFilter)) {
             $r->params->set('tag', $tf);
+        }
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        if (null !== $err)
+        if (null !== $err) {
             return [null, null, $err];
+        }
 
         $wm = $this->buildWriteMeta($duration);
 
         list($data, $err) = $this->decodeBody($response->getBody());
-        if ($err !== null)
+        if ($err !== null) {
             return [null, $wm, $err];
+        }
 
         return [new UserEvent($data), $wm, null];
     }
-    
+
     /**
      * @param string $name
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      * @return array(
-     *  @type UserEvent[] list of user events or null on error
-     *  @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
-     *  @type \DCarbone\PHPConsulAPI\Error error, if any
+     * @type UserEvent[] list of user events or null on error
+     * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
+     * @type \DCarbone\PHPConsulAPI\Error error, if any
      * )
      */
-    public function eventList($name = '', QueryOptions $queryOptions = null)
-    {
+    public function eventList($name = '', QueryOptions $queryOptions = null) {
         $r = new Request('get', 'v1/event/list', $this->c);
-        if ('' !== (string)$name)
+        if ('' !== (string)$name) {
             $r->params->set('name', $name);
+        }
         $r->setQueryOptions($queryOptions);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
-        if (null !== $err)
+        if (null !== $err) {
             return [null, null, $err];
+        }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         list($data, $err) = $this->decodeBody($response->getBody());
 
-        if (null !== $err)
+        if (null !== $err) {
             return [null, $qm, $err];
+        }
 
         $events = [];
-        foreach($data as $event)
-        {
+        foreach ($data as $event) {
             $events[] = new UserEvent($event);
         }
 
