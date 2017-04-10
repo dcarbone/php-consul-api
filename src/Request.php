@@ -16,18 +16,15 @@
    limitations under the License.
 */
 
-use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\StreamInterface;
-use Psr\Http\Message\UriInterface;
+
+use GuzzleHttp\Psr7\Request as Psr7Request;
+use GuzzleHttp\Psr7\Stream as Psr7Stream;
 
 /**
  * Class Request
  * @package DCarbone\PHPConsulAPI\Http
  */
-class Request implements RequestInterface
-{
-    // PHPConsulAPI properties
-
+class Request {
     /** @var \DCarbone\PHPConsulAPI\Config */
     private $config;
     /** @var \DCarbone\PHPConsulAPI\Params */
@@ -35,25 +32,17 @@ class Request implements RequestInterface
     /** @var string */
     private $path;
 
-    /** @var array */
-    private $_normalizedHeaders = ['accept' => 'Accept', 'content-type' => 'Content-Type'];
-    /** @var StreamInterface|null */
-    private $_compiledBody = null;
+    /** @var \DCarbone\PHPConsulAPI\Uri */
+    private $uri;
 
-    // PSR-7 properties below
-
-    /** @var string */
-    private $protocolVersion = '1.1';
-    /** @var array */
-    private $headers = ['Accept' => ['application/json'], 'Content-Type' => ['application/json']];
-    /** @var \Psr\Http\Message\StreamInterface */
-    private $body = null;
-    /** @var string */
-    private $requestTarget = null;
     /** @var string */
     private $method = 'POST';
-    /** @var \Psr\Http\Message\UriInterface */
-    private $uri = null;
+
+    /** @var array */
+    private $headers = ['Accept' => ['application/json'], 'Content-Type' => ['application/json']];
+
+    /** @var null|resource */
+    private $body = null;
 
     /**
      * Request constructor.
@@ -62,319 +51,144 @@ class Request implements RequestInterface
      * @param Config $config
      * @param string $body
      */
-    public function __construct($method, $path, Config $config, $body = null)
-    {
+    public function __construct($method, $path, Config $config, $body = null) {
         $this->config = $config;
 
         $this->params = new Params();
         $this->method = strtoupper($method);
         $this->path = $path;
 
-        if ('' !== ($dc = $config->getDatacenter()))
+        if ('' !== ($dc = $config->getDatacenter())) {
             $this->params['dc'] = $dc;
-
-        if (0 !== ($wait = $config->getWaitTime()))
-            $this->params['wait'] = $wait;
-
-        if ('' !== ($token = $config->getToken()))
-        {
-            if ($config->isTokenInHeader())
-                $this->headers['X-Consul-Token'] = $token;
-            else
-                $this->params['token'] = $token;
         }
 
-        $this->body = $body;
+        if (0 !== ($wait = $config->getWaitTime())) {
+            $this->params['wait'] = $wait;
+        }
+
+        if ('' !== ($token = $config->getToken())) {
+            if ($config->isTokenInHeader()) {
+                $this->headers['X-Consul-Token'] = $token;
+            } else {
+                $this->params['token'] = $token;
+            }
+        }
+
+        if (null !== $body) {
+            $str = '';
+            switch (gettype($body)) {
+                case 'object':
+                case 'array':
+                    $str = json_encode($body);
+                    break;
+
+                case 'integer':
+                case 'double':
+                    $str = (string)$body;
+                    break;
+
+                case 'string':
+                    $str = $body;
+                    break;
+
+                case 'boolean':
+                    $str = $body ? 'true' : 'false';
+                    break;
+            }
+            $this->body = fopen('php://memory', 'w+');
+            fwrite($this->body, $str);
+        }
     }
 
-    public function __clone()
-    {
-        $this->_compiledBody = null;
+    /**
+     * Attempt to close body stream, if set.
+     */
+    public function __destruct() {
+        if (isset($this->body) && 'resource' === gettype($this->body)) {
+            @fclose($this->body);
+        }
     }
 
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      */
-    public function setQueryOptions(QueryOptions $queryOptions = null)
-    {
-        if (null === $queryOptions)
+    public function setQueryOptions(QueryOptions $queryOptions = null) {
+        if (null === $queryOptions) {
             return;
-        
-        if ('' !== ($dc = $queryOptions->getDatacenter()))
-            $this->params['dc'] = $dc;
-
-        if ($queryOptions->getAllowStale())
-            $this->params['stale'] = '';
-
-        if ($queryOptions->getRequireConsistent())
-            $this->params['consistent'] = '';
-
-        if (0 !== ($waitIndex = $queryOptions->getWaitIndex()))
-            $this->params['index'] = $waitIndex;
-        
-        if (0 !== ($waitTime = $queryOptions->getWaitTime()))
-            $this->params['wait'] = $waitTime;
-
-        if ('' !== ($token = $queryOptions->getToken()))
-        {
-            if ($this->config->isTokenInHeader())
-                $this->headers['X-Consul-Token'] = $token;
-            else
-                $this->params['token'] = $token;
         }
 
-        if ('' !== ($near = $queryOptions->getNear()))
+        if ('' !== ($dc = $queryOptions->getDatacenter())) {
+            $this->params['dc'] = $dc;
+        }
+
+        if ($queryOptions->getAllowStale()) {
+            $this->params['stale'] = '';
+        }
+
+        if ($queryOptions->getRequireConsistent()) {
+            $this->params['consistent'] = '';
+        }
+
+        if (0 !== ($waitIndex = $queryOptions->getWaitIndex())) {
+            $this->params['index'] = $waitIndex;
+        }
+
+        if (0 !== ($waitTime = $queryOptions->getWaitTime())) {
+            $this->params['wait'] = $waitTime;
+        }
+
+        if ('' !== ($token = $queryOptions->getToken())) {
+            if ($this->config->isTokenInHeader()) {
+                $this->headers['X-Consul-Token'] = $token;
+            } else {
+                $this->params['token'] = $token;
+            }
+        }
+
+        if ('' !== ($near = $queryOptions->getNear())) {
             $this->params['near'] = $near;
+        }
     }
 
     /**
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
      */
-    public function setWriteOptions(WriteOptions $writeOptions = null)
-    {
-        if (null === $writeOptions)
+    public function setWriteOptions(WriteOptions $writeOptions = null) {
+        if (null === $writeOptions) {
             return;
+        }
 
-        if ('' !== ($dc = $writeOptions->getDatacenter()))
+        if ('' !== ($dc = $writeOptions->getDatacenter())) {
             $this->params['dc'] = $dc;
+        }
 
-        if ('' !== ($token = $writeOptions->getToken()))
+        if ('' !== ($token = $writeOptions->getToken())) {
             $this->params['token'] = $token;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getProtocolVersion()
-    {
-        return $this->protocolVersion;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function withProtocolVersion($version)
-    {
-        $clone = clone $this;
-        $clone->protocolVersion = $version;
-        return $clone;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getHeaders()
-    {
-        return $this->headers;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function hasHeader($name)
-    {
-        return isset($this->_normalizedHeaders[strtolower($name)]);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getHeader($name)
-    {
-        $lower = strtolower($name);
-        if (!isset($this->_normalizedHeaders[$lower]))
-            return [];
-
-        return $this->headers[$this->_normalizedHeaders[$lower]];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getHeaderLine($name)
-    {
-        $lower = strtolower($name);
-        if (!isset($this->_normalizedHeaders[$name]))
-            return '';
-
-        return implode(',', $this->headers[$this->_normalizedHeaders[$lower]]);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function withHeader($name, $value)
-    {
-        $type = gettype($value);
-        if ('string' !== $type && 'array' !== $type)
-            throw new \InvalidArgumentException(sprintf('$value must be array or string, %s seen.', gettype($value)));
-
-        $lower = strtolower($name);
-
-        $clone = clone $this;
-        $clone->_normalizedHeaders[$lower] = $name;
-
-        if ('string' === $type)
-            $clone->headers[$name] = [$value];
-        else
-            $clone->headers[$name] = $value;
-
-        return $clone;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function withAddedHeader($name, $value)
-    {
-        $type = gettype($value);
-        if ('string' !== $type && 'array' !== $type)
-            throw new \InvalidArgumentException('$value must be array or string, %s seen.', gettype($value));
-
-        $lower = strtolower($name);
-
-        if (isset($this->_normalizedHeaders[$lower]))
-            $headerValues = $this->headers[$this->_normalizedHeaders[$lower]];
-        else
-            $headerValues = [];
-
-        if ('string' === $type)
-            $headerValues[] = $value;
-        else
-            $headerValues = array_merge($headerValues, $value);
-
-        $clone = clone $this;
-
-        $clone->_normalizedHeaders[$lower] = $name;
-        $clone->headers[$name] = $headerValues;
-
-        return $clone;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function withoutHeader($name)
-    {
-        $clone = clone $this;
-
-        $lower = strtolower($name);
-        if (isset($clone->_normalizedHeaders[$lower]))
-            unset($clone->headers[$clone->_normalizedHeaders[$lower]], $clone->_normalizedHeaders[$lower]);
-
-        return $clone;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getBody()
-    {
-        if (isset($this->body) && !isset($this->_compiledBody))
-            $this->_compiledBody = new RequestBody($this->body);
-
-        return $this->_compiledBody;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function withBody(StreamInterface $body)
-    {
-        $clone = clone $this;
-        $clone->body = $body;
-        return $clone;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getRequestTarget()
-    {
-        if (null === $this->requestTarget)
-        {
-            $uri = $this->getUri();
-            $p = $uri->getPath();
-            $q = $uri->getQuery();
-
-            if ('' === $p)
-                $t = '/';
-            else
-                $t = $p;
-
-            if ('' !== $q)
-                $t = sprintf('%s?%s', $t, $q);
-
-            $this->requestTarget = $t;
         }
-
-        return $this->requestTarget;
     }
 
     /**
-     * @inheritDoc
+     * @return \DCarbone\PHPConsulAPI\Uri
      */
-    public function withRequestTarget($requestTarget)
-    {
-        $clone = clone $this;
-        $clone->requestTarget = trim($requestTarget);
-        return $clone;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getMethod()
-    {
-        return $this->method;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function withMethod($method)
-    {
-        static $allowable = ['GET', 'PUT', 'POST', 'DELETE'];
-        $upper = strtoupper($method);
-        if (in_array($upper, $allowable, true))
-        {
-            $clone = clone $this;
-            $clone->method = $upper;
-            return $clone;
-        }
-
-        throw new \InvalidArgumentException(
-            '"%s" is not an allowable request method.  Allowable: ["%s"]',
-                $upper,
-                implode('", "', $allowable)
-        );
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getUri()
-    {
-        if (null === $this->uri)
+    public function getUri() {
+        if (!isset($this->uri)) {
             $this->uri = new Uri($this->path, $this->config, $this->params);
+        }
 
         return $this->uri;
     }
 
     /**
-     * @inheritDoc
+     * Constructs a Psr7 compliant request for use in a Psr7 client.
+     *
+     * @return \Psr\Http\Message\RequestInterface
      */
-    public function withUri(UriInterface $uri, $preserveHost = false)
-    {
-        if ($uri === $this->uri)
-            return $this;
-
-        $clone = clone $this;
-        $clone->uri = $uri;
-
-        if ($preserveHost)
-            $clone->uri = $this->uri->withHost($this->uri->getHost());
-
-        return $clone;
+    public function toPsrRequest() {
+        return new Psr7Request(
+            $this->method,
+            $this->getUri(),
+            $this->headers,
+            isset($this->body) ? new Psr7Stream($this->body) : null
+        );
     }
 }

@@ -16,7 +16,6 @@
    limitations under the License.
 */
 
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
@@ -87,14 +86,14 @@ abstract class AbstractClient
     }
 
     /**
-     * @param RequestInterface $r
+     * @param Request $r
      * @return array(
      *  @type int duration in microseconds
      *  @type \Psr\Http\Message\ResponseInterface|null http response
      *  @type \DCarbone\PHPConsulAPI\Error|null any seen errors
      * )
      */
-    protected function doRequest(RequestInterface $r)
+    protected function doRequest(Request $r)
     {
         $rt = microtime(true);
         $response = null;
@@ -103,7 +102,7 @@ abstract class AbstractClient
         {
             // If we actually have a client defined...
             if (isset($this->c->HttpClient))
-                $response = $this->c->HttpClient->sendRequest($r);
+                $response = $this->c->HttpClient->sendRequest($r->toPsrRequest());
             // Otherwise, throw error to be caught below
             else
                 throw new \RuntimeException('Unable to execute query as no HttpClient has been defined.');

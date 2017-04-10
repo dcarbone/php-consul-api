@@ -22,8 +22,7 @@ use Psr\Http\Message\UriInterface;
  * Class Uri
  * @package DCarbone\PHPConsulAPI\Http
  */
-class Uri implements UriInterface
-{
+class Uri implements UriInterface {
     /** @var string */
     private $scheme = '';
     /** @var string */
@@ -48,20 +47,16 @@ class Uri implements UriInterface
      * @param Config $config
      * @param Params $params
      */
-    public function __construct($path, Config $config, Params $params)
-    {
+    public function __construct($path, Config $config, Params $params) {
         $this->scheme = $config->Scheme;
         $this->userInfo = $config->HttpAuth;
         $this->path = $path;
 
         $a = $config->Address;
 
-        if (false === ($pos = strpos($a, ':')))
-        {
+        if (false === ($pos = strpos($a, ':'))) {
             $this->host = $a;
-        }
-        else
-        {
+        } else {
             $this->host = substr($a, 0, $pos);
             $this->port = (int)substr($a, $pos + 1);
         }
@@ -69,35 +64,34 @@ class Uri implements UriInterface
         $this->query = (string)$params;
     }
 
-    public function __clone()
-    {
+    public function __clone() {
         $this->_compiled = null;
     }
 
     /**
      * @inheritDoc
      */
-    public function getScheme()
-    {
+    public function getScheme() {
         return $this->scheme;
     }
 
     /**
      * @inheritDoc
      */
-    public function getAuthority()
-    {
+    public function getAuthority() {
         $ui = $this->getUserInfo();
         $host = $this->getHost();
         $port = $this->getPort();
 
-        if ('' === $ui)
+        if ('' === $ui) {
             $uri = $host;
-        else
+        } else {
             $uri = sprintf('%s@%s', $ui, $host);
+        }
 
-        if (null === $port || 0 === $port)
+        if (null === $port || 0 === $port) {
             return $uri;
+        }
 
         return sprintf('%s:%d', $uri, $port);
     }
@@ -105,59 +99,51 @@ class Uri implements UriInterface
     /**
      * @inheritDoc
      */
-    public function getUserInfo()
-    {
+    public function getUserInfo() {
         return (string)$this->userInfo;
     }
 
     /**
      * @inheritDoc
      */
-    public function getHost()
-    {
+    public function getHost() {
         return $this->host;
     }
 
     /**
      * @inheritDoc
      */
-    public function getPort()
-    {
+    public function getPort() {
         return $this->port;
     }
 
     /**
      * @inheritDoc
      */
-    public function getPath()
-    {
+    public function getPath() {
         return $this->path;
     }
 
     /**
      * @inheritDoc
      */
-    public function getQuery()
-    {
+    public function getQuery() {
         return $this->query;
     }
 
     /**
      * @inheritDoc
      */
-    public function getFragment()
-    {
+    public function getFragment() {
         return $this->fragment;
     }
 
     /**
      * @inheritDoc
      */
-    public function withScheme($scheme)
-    {
+    public function withScheme($scheme) {
         $scheme = strtolower($scheme);
-        if ('http' === $scheme || 'https' === $scheme)
-        {
+        if ('http' === $scheme || 'https' === $scheme) {
             $clone = clone $this;
             $clone->scheme = $scheme;
             return $clone;
@@ -169,8 +155,7 @@ class Uri implements UriInterface
     /**
      * @inheritDoc
      */
-    public function withUserInfo($user, $password = null)
-    {
+    public function withUserInfo($user, $password = null) {
         $clone = clone $this;
         $clone->userInfo = new HttpAuth($user, $password);
         return $clone;
@@ -179,10 +164,8 @@ class Uri implements UriInterface
     /**
      * @inheritDoc
      */
-    public function withHost($host)
-    {
-        if (null === $host)
-        {
+    public function withHost($host) {
+        if (null === $host) {
             $clone = clone $this;
             $clone->host = '';
             return $clone;
@@ -197,10 +180,8 @@ class Uri implements UriInterface
     /**
      * @inheritDoc
      */
-    public function withPort($port)
-    {
-        if (null !== $port && (!is_int($port) || 0 >= $port || 65535 < $port))
-        {
+    public function withPort($port) {
+        if (null !== $port && (!is_int($port) || 0 >= $port || 65535 < $port)) {
             throw new \InvalidArgumentException(
                 sprintf('Port must be integer greater than 0 and less than 65535, saw "%s"',
                     is_int($port) ? (string)$port : gettype($port))
@@ -215,17 +196,14 @@ class Uri implements UriInterface
     /**
      * @inheritDoc
      */
-    public function withPath($path)
-    {
-        if (is_string($path))
-        {
+    public function withPath($path) {
+        if (is_string($path)) {
             $clone = clone $this;
             $clone->path = ltrim($path, "/");
             return $clone;
         }
 
-        if (null === $path)
-        {
+        if (null === $path) {
             $clone = clone $this;
             $clone->path = '';
             return $clone;
@@ -237,18 +215,15 @@ class Uri implements UriInterface
     /**
      * @inheritDoc
      */
-    public function withQuery($query)
-    {
+    public function withQuery($query) {
         // TODO: Some validation...?
-        if (null === $query)
-        {
+        if (null === $query) {
             $clone = clone $this;
             $clone->query = '';
             return $clone;
         }
 
-        if (is_string($query))
-        {
+        if (is_string($query)) {
             $clone = clone $this;
             $clone->query = $query;
             return $clone;
@@ -260,8 +235,7 @@ class Uri implements UriInterface
     /**
      * @inheritDoc
      */
-    public function withFragment($fragment)
-    {
+    public function withFragment($fragment) {
         $clone = clone $this;
         $clone->fragment = trim((string)$fragment, " \t\r\n\0\x0B#");
         return $clone;
@@ -270,47 +244,47 @@ class Uri implements UriInterface
     /**
      * @inheritDoc
      */
-    public function __toString()
-    {
-        if (null === $this->_compiled)
-        {
+    public function __toString() {
+        if (null === $this->_compiled) {
             $s = $this->getScheme();
             $a = $this->getAuthority();
             $p = $this->getPath();
             $q = $this->getQuery();
             $f = $this->getFragment();
 
-            if ('' === $s)
+            if ('' === $s) {
                 $uri = '';
-            else
+            } else {
                 $uri = sprintf('%s:', $s);
+            }
 
-            if ('' !== $a)
+            if ('' !== $a) {
                 $uri = sprintf('%s//%s', $uri, $a);
+            }
 
-            if ('' !== $p)
-            {
-                if (0 === strpos($p, '/'))
-                {
-                    if ('' === $a)
+            if ('' !== $p) {
+                if (0 === strpos($p, '/')) {
+                    if ('' === $a) {
                         $uri = sprintf('%s/%s', $uri, $p);
-                    else
+                    } else {
                         $uri = sprintf('%s%s', $uri, $p);
-                }
-                else
-                {
-                    if ('' === $a)
+                    }
+                } else {
+                    if ('' === $a) {
                         $uri = sprintf('%s/%s', $uri, ltrim($p, "/"));
-                    else
+                    } else {
                         $uri = sprintf('%s/%s', $uri, $p);
+                    }
                 }
             }
 
-            if ('' !== $q)
+            if ('' !== $q) {
                 $uri = sprintf('%s?%s', $uri, $q);
+            }
 
-            if ('' !== $f)
+            if ('' !== $f) {
                 $uri = sprintf('%s#%s', $uri, $f);
+            }
 
             $this->_compiled = $uri;
         }

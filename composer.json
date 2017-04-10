@@ -18,7 +18,7 @@
     "require": {
         "php": ">=5.6.0",
         "psr/log": "1.0.*",
-        "psr/http-message": "1.0.*",
+        "guzzlehttp/psr7": "1.4.*",
         "php-http/client-implementation": "@stable"
     },
     "autoload": {
@@ -40,7 +40,6 @@
         }
     },
     "suggest": {
-        "php-http/guzzle5-adapter": "To enable use of Guzzle 5 http client (http://docs.php-http.org/en/latest/clients/guzzle5-adapter.html)",
         "php-http/guzzle6-adapter": "To enable use of Guzzle 6 http client (http://docs.php-http.org/en/latest/clients/guzzle6-adapter.html)",
         "php-http/react-adapter": "To enable React http client (http://docs.php-http.org/en/latest/clients/react-adapter.html)",
         "php-http/buzz-adapter": "To enable use of Buzz http client (http://docs.php-http.org/en/latest/clients/buzz-adapter.html)",
