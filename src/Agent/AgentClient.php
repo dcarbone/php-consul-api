@@ -167,10 +167,7 @@ class AgentClient extends AbstractClient {
      * Register a service within Consul
      *
      * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration $agentServiceRegistration
-     * @return array (
-     * @type \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration $agentServiceRegistration
-     * @type \DCarbone\PHPConsulAPI\Error|null
-     * )
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function serviceRegister(AgentServiceRegistration $agentServiceRegistration) {
         $r = new Request('put', 'v1/agent/service/register', $this->c, $agentServiceRegistration);
@@ -248,10 +245,7 @@ class AgentClient extends AbstractClient {
 
     /**
      * @param \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration $agentCheckRegistration
-     * @return array (
-     * @type \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration $agentCheckRegistration
-     * @type \DCarbone\PHPConsulAPI\Error|null
-     * )
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function checkRegister(AgentCheckRegistration $agentCheckRegistration) {
         $r = new Request('put', 'v1/agent/check/register', $this->c, $agentCheckRegistration);
