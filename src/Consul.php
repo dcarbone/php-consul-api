@@ -39,6 +39,12 @@ class Consul {
     const HTTPSSLEnvName = 'CONSUL_HTTP_SSL';
     const HTTPSSLVerifyEnvName = 'CONSUL_HTTP_SSL_VERIFY';
 
+    const HealthAny = 'any';
+    const HealthPassing = 'passing';
+    const HealthWarning = 'warning';
+    const HealthCritical = 'critical';
+    const HealthMaint = 'maintenance';
+
     /** @var \DCarbone\PHPConsulAPI\KV\KVClient */
     public $KV;
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentClient */

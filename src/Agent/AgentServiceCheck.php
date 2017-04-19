@@ -41,6 +41,12 @@ class AgentServiceCheck extends AbstractModel {
     public $TCP = '';
     /** @var string */
     public $Status = '';
+    /** @var string */
+    public $Notes = '';
+    /** @var bool */
+    public $TLSSkipVerify = false;
+    /** @var string */
+    public $DeregisterCriticalServiceAfter = '';
 
     /**
      * @return string
@@ -183,6 +189,54 @@ class AgentServiceCheck extends AbstractModel {
      */
     public function setStatus($Status) {
         $this->Status = $Status;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNotes() {
+        return $this->Notes;
+    }
+
+    /**
+     * @param string $Notes
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
+     */
+    public function setNotes($Notes) {
+        $this->Notes = $Notes;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTLSSkipVerify() {
+        return $this->TLSSkipVerify;
+    }
+
+    /**
+     * @param bool $TLSSkipVerify
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
+     */
+    public function setTLSSkipVerify($TLSSkipVerify) {
+        $this->TLSSkipVerify = $TLSSkipVerify;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDeregisterCriticalServiceAfter() {
+        return $this->DeregisterCriticalServiceAfter;
+    }
+
+    /**
+     * @param string $DeregisterCriticalServiceAfter
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
+     */
+    public function setDeregisterCriticalServiceAfter($DeregisterCriticalServiceAfter) {
+        $this->DeregisterCriticalServiceAfter = $DeregisterCriticalServiceAfter;
         return $this;
     }
 }

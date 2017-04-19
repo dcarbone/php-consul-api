@@ -24,54 +24,48 @@
  */
 class Error implements \JsonSerializable {
     /** @var DateTime */
-    private $_timestamp;
+    private $time;
 
     /** @var string */
-    private $_message;
+    private $message;
 
     /**
      * Error constructor.
      * @param string $message
      */
     public function __construct($message) {
-        $this->_timestamp = new DateTime();
-        $this->_message = $message;
+        $this->time = new DateTime();
+        $this->message = $message;
     }
 
     /**
      * @return DateTime
      */
-    public function getTimestamp() {
-        return $this->_timestamp;
+    public function getTime() {
+        return $this->time;
     }
 
     /**
      * @return string
      */
     public function getMessage() {
-        return $this->_message;
+        return $this->message;
     }
 
     /**
-     * Specify data which should be serialized to JSON
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     * @return mixed data which can be serialized by json_encode, which is a value of any type other than a resource.
+     * @return array
      */
     public function jsonSerialize() {
-        return array(
-            'message' => $this->_message,
-            'timestamp' => $this->_timestamp
-        );
+        return [
+            'message' => $this->message,
+            'timestamp' => $this->time
+        ];
     }
 
     /**
      * @return string
      */
     public function __toString() {
-        return sprintf(
-            '[error] - %s - %s',
-            $this->_timestamp,
-            $this->_message
-        );
+        return $this->message;
     }
 }

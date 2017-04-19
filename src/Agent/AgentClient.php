@@ -17,6 +17,8 @@
 */
 
 use DCarbone\PHPConsulAPI\AbstractClient;
+use DCarbone\PHPConsulAPI\Consul;
+use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\Request;
 
 /**
@@ -199,7 +201,7 @@ class AgentClient extends AbstractClient {
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function passTTL($checkID, $note) {
-        return $this->updateTTL($checkID, $note, 'passing');
+        return $this->updateTTL($checkID, $note, 'pass');
     }
 
     /**
@@ -210,7 +212,7 @@ class AgentClient extends AbstractClient {
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function warnTTL($checkID, $note) {
-        return $this->updateTTL($checkID, $note, 'warning');
+        return $this->updateTTL($checkID, $note, 'warn');
     }
 
     /**
@@ -221,7 +223,7 @@ class AgentClient extends AbstractClient {
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function failTTL($checkID, $note) {
-        return $this->updateTTL($checkID, $note, 'critical');
+        return $this->updateTTL($checkID, $note, 'fail');
     }
 
     /**
@@ -233,6 +235,27 @@ class AgentClient extends AbstractClient {
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function updateTTL($checkID, $output, $status) {
+        switch ($status) {
+            case Consul::HealthPassing:
+            case Consul::HealthWarning:
+            case Consul::HealthCritical:
+                break;
+            case 'pass':
+                $status = Consul::HealthPassing;
+                break;
+            case 'warn':
+                $status = Consul::HealthWarning;
+                break;
+            case 'fail':
+                $status = Consul::HealthCritical;
+                break;
+            default:
+                return new Error(sprintf(
+                    '%s is not a valid status.  Allowed: ["pass", "warn", "fail"]',
+                    is_string($status) ? $status : gettype($status)
+                ));
+        }
+
         $r = new Request('put',
             sprintf('v1/agent/check/update/%s', $checkID),
             $this->c,
