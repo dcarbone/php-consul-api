@@ -59,7 +59,7 @@ Http Client instance:
 
 ```php
 $myClient = my\psr7\http_client();
-$config = \DCarbvone\PHPConsulAPI\Config::newDefaultConfigWithClient($myClient);
+$config = \DCarbone\PHPConsulAPI\Config::newDefaultConfigWithClient($myClient);
 ```
 
 You will find the method definitions below:
