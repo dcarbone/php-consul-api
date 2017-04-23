@@ -124,10 +124,6 @@ var_dump($kv_list);
 
 More will be added as time goes on!
 
-## Logging
-
-Please see the [Logging](./docs/LOGGING.md) readme for more information.
-
 ## TODO
 
 - Tests

@@ -148,8 +148,8 @@ class Config {
         static $knownClients = array(
             '\\Http\\Client\\Curl\\Client',
             '\\Http\\Adapter\\Guzzle6\\Client',
-            '\\Http\\Adapter\\Guzzle5\\Client',
-            '\\Http\\Adapter\\Buzz\\Client'
+            '\\Http\\Adapter\\Buzz\\Client',
+            '\\Http\\Adapter\\React\\Client',
         );
 
         foreach ($knownClients as $clientClass) {
