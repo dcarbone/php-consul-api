@@ -94,8 +94,8 @@ Next, construct a [Consul](./src/Consul.php) object:
 $consul = new \DCarbone\PHPConsulAPI\Consul($config);
 ```
 
-*NOTE*: If you do not create your own config object, [Consul](./src/Consul.php#L72) will create it's own
-using [Config::newDefaultConfig()](./src/Config.php#L145) and attempt to locate a suitable HTTP Client.
+*NOTE*: If you do not create your own config object, [Consul](./src/Consul.php#L75) will create it's own
+using [Config::newDefaultConfig()](./src/Config.php#L147) and attempt to locate a suitable HTTP Client.
 
 Once constructed, you interact with each Consul API via it's corresponding Client class:
 

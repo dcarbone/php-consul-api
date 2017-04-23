@@ -45,28 +45,28 @@ class Consul {
     const HealthCritical = 'critical';
     const HealthMaint = 'maintenance';
 
-    /** @var \DCarbone\PHPConsulAPI\KV\KVClient */
-    public $KV;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLClient */
+    public $ACL;
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentClient */
     public $Agent;
     /** @var \DCarbone\PHPConsulAPI\Catalog\CatalogClient */
     public $Catalog;
-    /** @var \DCarbone\PHPConsulAPI\Status\StatusClient */
-    public $Status;
+    /** @var \DCarbone\PHPConsulAPI\Coordinate\CoordinateClient */
+    public $Coordinate;
     /** @var \DCarbone\PHPConsulAPI\Event\EventClient */
     public $Event;
     /** @var \DCarbone\PHPConsulAPI\Health\HealthClient */
     public $Health;
-    /** @var \DCarbone\PHPConsulAPI\Coordinate\CoordinateClient */
-    public $Coordinate;
-    /** @var \DCarbone\PHPConsulAPI\Session\SessionClient */
-    public $Session;
+    /** @var \DCarbone\PHPConsulAPI\KV\KVClient */
+    public $KV;
     /** @var \DCarbone\PHPConsulAPI\Operator\OperatorClient */
     public $Operator;
-    /** @var \DCarbone\PHPConsulAPI\ACL\ACLClient */
-    public $ACL;
     /** @var \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryClient */
     public $PreparedQuery;
+    /** @var \DCarbone\PHPConsulAPI\Session\SessionClient */
+    public $Session;
+    /** @var \DCarbone\PHPConsulAPI\Status\StatusClient */
+    public $Status;
 
     /**
      * Client constructor.
@@ -87,24 +87,24 @@ class Consul {
             }
         }
 
-        $this->KV = new KVClient($config);
+        $this->ACL = new ACLClient($config);
         $this->Agent = new AgentClient($config);
         $this->Catalog = new CatalogClient($config);
-        $this->Status = new StatusClient($config);
+        $this->Coordinate = new CoordinateClient($config);
         $this->Event = new EventClient($config);
         $this->Health = new HealthClient($config);
-        $this->Coordinate = new CoordinateClient($config);
-        $this->Session = new SessionClient($config);
+        $this->KV = new KVClient($config);
         $this->Operator = new OperatorClient($config);
-        $this->ACL = new ACLClient($config);
         $this->PreparedQuery = new PreparedQueryClient($config);
+        $this->Session = new SessionClient($config);
+        $this->Status = new StatusClient($config);
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\KV\KVClient
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLClient
      */
-    public function KV() {
-        return $this->KV;
+    public function ACL() {
+        return $this->ACL;
     }
 
     /**
@@ -122,10 +122,10 @@ class Consul {
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Status\StatusClient
+     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateClient
      */
-    public function Status() {
-        return $this->Status;
+    public function Coordinate() {
+        return $this->Coordinate;
     }
 
     /**
@@ -143,17 +143,10 @@ class Consul {
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateClient
+     * @return \DCarbone\PHPConsulAPI\KV\KVClient
      */
-    public function Coordinate() {
-        return $this->Coordinate;
-    }
-
-    /**
-     * @return \DCarbone\PHPConsulAPI\Session\SessionClient
-     */
-    public function Session() {
-        return $this->Session;
+    public function KV() {
+        return $this->KV;
     }
 
     /**
@@ -164,16 +157,23 @@ class Consul {
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\ACL\ACLClient
-     */
-    public function ACL() {
-        return $this->ACL;
-    }
-
-    /**
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryClient
      */
     public function PreparedQuery() {
         return $this->PreparedQuery;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Session\SessionClient
+     */
+    public function Session() {
+        return $this->Session;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Status\StatusClient
+     */
+    public function Status() {
+        return $this->Status;
     }
 }
