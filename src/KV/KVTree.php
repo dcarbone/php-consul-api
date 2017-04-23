@@ -20,7 +20,7 @@
  * Class KVTree
  * @package DCarbone\PHPConsulAPI\KV
  */
-class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \ArrayAccess, \Serializable {
+class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \ArrayAccess {
     /** @var string */
     private $_prefix;
 
@@ -181,27 +181,10 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     }
 
     /**
-     * @return string the string representation of the object or null
-     */
-    public function serialize() {
-        return serialize([$this->_prefix, $this->_children]);
-    }
-
-    /**
-     * @param string $serialized The string representation of the object.
-     * @return void
-     */
-    public function unserialize($serialized) {
-        $data = unserialize($serialized);
-        $this->_prefix = $data[0];
-        $this->_children = $data[1];
-    }
-
-    /**
-     * @return array data which can be serialized by json_encode,which is a value of any type other than a resource.
+     * @return array
      */
     public function jsonSerialize() {
-        $json = array($this->_prefix => []);
+        $json = [$this->_prefix => []];
         foreach ($this->_children as $k => $child) {
             if ($child instanceof KVTree) {
                 $json[$this->_prefix] = $child;
@@ -217,15 +200,5 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
      */
     public function __toString() {
         return $this->_prefix;
-    }
-
-    /**
-     * @return array
-     */
-    public function __debugInfo() {
-        return array(
-            'prefix' => $this->_prefix,
-            'children' => $this->_children
-        );
     }
 }

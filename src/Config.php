@@ -145,12 +145,12 @@ class Config {
      * @return \DCarbone\PHPConsulAPI\Config
      */
     public static function newDefaultConfig() {
-        static $knownClients = array(
+        static $knownClients = [
             '\\Http\\Client\\Curl\\Client',
             '\\Http\\Adapter\\Guzzle6\\Client',
             '\\Http\\Adapter\\Buzz\\Client',
             '\\Http\\Adapter\\React\\Client',
-        );
+        ];
 
         foreach ($knownClients as $clientClass) {
             if (class_exists($clientClass, true)) {

@@ -39,13 +39,6 @@ class HttpAuth implements \JsonSerializable {
     /**
      * @return array
      */
-    public function __sleep() {
-        return ['_username'];
-    }
-
-    /**
-     * @return array
-     */
     public function __debugInfo() {
         return ['username' => $this->_username];
     }
@@ -75,7 +68,7 @@ class HttpAuth implements \JsonSerializable {
      * @return array
      */
     public function jsonSerialize() {
-        return array('username' => $this->_username, 'password' => $this->_password);
+        return ['username' => $this->_username, 'password' => $this->_password];
     }
 
     /**
