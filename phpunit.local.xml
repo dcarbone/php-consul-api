@@ -13,7 +13,8 @@
         backupGlobals="false"
         >
     <testsuite name="definition">
-        <directory>./tests/DefinitionTests</directory>
+        <directory>./tests/Definition</directory>
+        <directory>./tests/Usage</directory>
     </testsuite>
 
     <filter>
