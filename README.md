@@ -124,8 +124,8 @@ var_dump($kv_list);
 
 More will be added as time goes on!
 
-## TODO
+## Tests
 
-- Tests
-- Parity with GO lib
-- Code cleanup
+The testing suite is still in it's infancy, however it is being tested directly against an actual Consul agent.
+They will be back-filled as time allows.  Future plans are to set up a simple cluster to provide a more real-world
+testing scenario.
