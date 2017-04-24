@@ -1,5 +1,7 @@
 language: php
 
+dist: trusty
+
 sudo: false
 
 php:
@@ -7,18 +9,18 @@ php:
   - 7.0
   - 7.1
 
+env:
+  - GIMME_GO_VERSION=1.8.1
+  - CONSUL_HTTP_ADDR=127.0.0.1:8500
+
 install:
   - mkdir -p $HOME/bin
   - export PATH="$HOME/bin:$PATH"
-  - curl -sL -o $HOME/bin/gimme https://raw.githubusercontent.com/travis-ci/gimme/master/gimme
-  - chmod +x $HOME/bin/gimme
-  - gimme stable
   - curl -sL --tlsv1.2 "https://releases.hashicorp.com/consul/0.8.1/consul_0.8.1_linux_amd64.zip"
   - unzip consul_0.8.1_linux_amd64.zip -d $HOME/bin
   - chmod +x $HOME/bin/consul
-  - export CONSUL_HTTP_ADDR="127.0.0.1:8500"
   - ./tests/Consul/run_consul.sh
-  - composer install --no-interaction -v
+  - composer install --no-interaction --no-progress --no-suggest --optimize-autoloader --profile
 
 script:
   - ./vendor/bin/phpunit
