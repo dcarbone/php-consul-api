@@ -13,7 +13,7 @@ install:
   - curl -sL -o $HOME/bin/gimme https://raw.githubusercontent.com/travis-ci/gimme/master/gimme
   - chmod +x $HOME/bin/gimme
   - gimme stable
-  - curl -sL https://releases.hashicorp.com/consul/0.8.1/consul_0.8.1_linux_amd64.zip
+  - wget --secure-protocol=TLSv1_2 "https://releases.hashicorp.com/consul/0.8.1/consul_0.8.1_linux_amd64.zip"
   - unzip consul_0.8.1_linux_amd64.zip -d $HOME/bin
   - chmod +x $HOME/bin/consul
   - export CONSUL_HTTP_ADDR="127.0.0.1:8500"
