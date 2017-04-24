@@ -3,12 +3,25 @@ language: php
 sudo: false
 
 php:
-    - 5.6
-    - 7.0
-    - 7.1
+  - 5.6
+  - 7.0
+  - 7.1
 
 install:
-    - composer install --no-interaction -v
+  - mkdir -p $HOME/bin
+  - export PATH="$HOME/bin:$PATH"
+  - curl -sL -o $HOME/bin/gimme https://raw.githubusercontent.com/travis-ci/gimme/master/gimme
+  - chmod +x $HOME/bin/gimme
+  - gimme stable
+  - wget "https://releases.hashicorp.com/consul/0.8.1/consul_0.8.1_linux_amd64.zip"
+  - unzip consul_0.8.1_linux_amd64.zip -d $HOME/bin
+  - chmod +x $HOME/bin/consul
+  - export CONSUL_HTTP_ADDR="127.0.0.1:8500"
+  - ./tests/Consul/run_consul.sh
+  - composer install --no-interaction -v
 
 script:
-    - ./vendor/bin/phpunit
+  - ./vendor/bin/phpunit
+
+after_script:
+  - ./tests/Consul/stop_consul.sh
