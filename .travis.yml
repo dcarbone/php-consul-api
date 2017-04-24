@@ -20,7 +20,7 @@ install:
   - unzip consul_0.8.1_linux_amd64.zip -d $HOME/bin
   - chmod +x $HOME/bin/consul
   - ./tests/run_consul.sh
-  - composer install --no-interaction --no-progress --no-suggest --optimize-autoloader --profile
+  - composer install --no-interaction --no-progress --no-suggest --optimize-autoloader
 
 script:
   - ./vendor/bin/phpunit

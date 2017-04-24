@@ -19,6 +19,8 @@
 use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\KV\KVClient;
 use DCarbone\PHPConsulAPI\KV\KVPair;
+use DCarbone\PHPConsulAPI\QueryMeta;
+use DCarbone\PHPConsulAPI\WriteMeta;
 
 /**
  * Class KVClientUsageTest
@@ -37,36 +39,27 @@ class KVClientUsageTest extends \PHPUnit_Framework_TestCase {
     /**
      * @depends testCanConstructClient
      * @param KVClient $client
-     * @return KVClient
      */
-    public function testCanSetKV(KVClient $client) {
-        $kvp = new KVPair([
-            'Key' => 'testkey',
-            'Value' => 'testvalue'
-        ]);
+    public function testKVLifecycle(KVClient $client) {
+        $kvp = new KVPair(['Key' => 'testkey', 'Value' => 'testvalue']);
 
         list($wm, $err) = $client->put($kvp);
-        $this->assertNull($err,
-            sprintf(
-                'Saw error while setting kvp: %s',
-                (string)$err
-            ));
+        $this->assertNull($err, sprintf('Unable to set kvp: %s', (string)$err));
+        $this->assertInstanceOf(WriteMeta::class, $wm);
 
-        return $client;
-    }
-
-    /**
-     * @depends testCanSetKV
-     * @param KVClient $client
-     */
-    public function testCanRetrieveKV(KVClient $client) {
         list($kvp, $qm, $err) = $client->get('testkey');
-        $this->assertNull($err,
-            sprintf(
-                'Saw error while getting kvp: %s',
-                (string)$err
-            ));
+        $this->assertNull($err, sprintf('Unable to get kvp: %s', (string)$err));
+        $this->assertInstanceOf(QueryMeta::class, $qm);
         $this->assertInstanceOf(KVPair::class, $kvp);
         $this->assertEquals('testvalue', $kvp->Value);
+
+        list($wm, $err) = $client->delete('testkey');
+        $this->assertNull($err, sprintf('Unable to delete kvp: %s', (string)$err));
+        $this->assertInstanceOf(WriteMeta::class, $wm);
+
+        list($kvp, $qm, $err) = $client->get('testkey');
+        $this->assertNull($err);
+        $this->assertInstanceOf(QueryMeta::class, $qm);
+        $this->assertNull($kvp);
     }
 }
