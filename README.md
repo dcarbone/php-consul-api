@@ -53,9 +53,8 @@ $config = \DCarbone\PHPConsulAPI\Config::newDefaultConfig();
 *NOTE*: This method will attempt to locate a loaded Http Client based upon the array defined
 [here](./src/Config.php#L98). 
 
-If you are using a PSR-7 compliant Http Client that does NOT have a pre-built adapter but DOES,
-that is ok!  You may use the below function to construct a configuration file with defaults and your own
-Http Client instance:
+If you are using a PSR-7 compliant Http Client that does NOT have a pre-built adapter,
+that is ok!  You simply need to create a thin wrapper around your client that implements the [HttpClient](https://github.com/php-http/httplug/blob/master/src/HttpClient.php) interface and use the below function to construct a config object with defaults and your wrapper instance:
 
 ```php
 $myClient = my\psr7\http_client();
