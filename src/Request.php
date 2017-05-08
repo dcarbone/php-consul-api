@@ -18,6 +18,7 @@
 
 use GuzzleHttp\Psr7\Request as Psr7Request;
 use GuzzleHttp\Psr7\Stream as Psr7Stream;
+use GuzzleHttp\Psr7\Uri;
 
 /**
  * Class Request
@@ -35,7 +36,7 @@ class Request {
     /** @var string */
     private $path;
 
-    /** @var \DCarbone\PHPConsulAPI\Uri */
+    /** @var \Psr\Http\Message\UriInterface */
     private $uri;
 
     /** @var string */
@@ -152,6 +153,8 @@ class Request {
         if ('' !== $options->RelayFactor) {
             $this->params->set('relay-factor', (string)$options->RelayFactor);
         }
+
+        $this->uri = null;
     }
 
     /**
@@ -175,14 +178,20 @@ class Request {
         if (0 !== $options->RelayFactor) {
             $this->params->set('relay-factor', (string)$options->RelayFactor);
         }
+
+        $this->uri = null;
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Uri
+     * @return \Psr\Http\Message\UriInterface
      */
     public function getUri() {
         if (!isset($this->uri)) {
-            $this->uri = new Uri($this->path, $this->config, $this->params);
+            $uri = sprintf('%s://%s/%s', $this->config->getScheme(), $this->config->Address, $this->path);
+            if (0 < count($this->params)) {
+                $uri = sprintf('%s?%s', $uri, (string)$this->params);
+            }
+            $this->uri = new Uri($uri);
         }
 
         return $this->uri;

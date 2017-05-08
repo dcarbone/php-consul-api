@@ -19,6 +19,7 @@
 use Http\Client\HttpClient;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\UriInterface;
 
 /**
  * Class AbstractClient
@@ -122,10 +123,10 @@ abstract class AbstractClient {
     /**
      * @param int $duration
      * @param ResponseInterface $response
-     * @param Uri $uri
+     * @param UriInterface $uri
      * @return QueryMeta
      */
-    protected function buildQueryMeta($duration, ResponseInterface $response, Uri $uri) {
+    protected function buildQueryMeta($duration, ResponseInterface $response, UriInterface $uri) {
         $qm = new QueryMeta();
 
         $qm->RequestTime = $duration;
@@ -170,9 +171,8 @@ abstract class AbstractClient {
      */
     protected function decodeBody(StreamInterface $body) {
         $data = @json_decode((string)$body, true);
-        $err = json_last_error();
 
-        if (JSON_ERROR_NONE === $err) {
+        if (JSON_ERROR_NONE === json_last_error()) {
             return [$data, null];
         }
 
@@ -180,7 +180,7 @@ abstract class AbstractClient {
             new Error(sprintf(
                 '%s - Unable to parse response as JSON.  Message: %s',
                 get_class($this),
-                PHP_VERSION_ID >= 50500 ? json_last_error_msg() : (string)$err
+                json_last_error_msg()
             ))];
     }
 }

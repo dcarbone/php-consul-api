@@ -20,7 +20,7 @@
  * Class Values
  * @package DCarbone\PHPConsulAPI
  */
-class Values implements \JsonSerializable {
+class Values implements \JsonSerializable, \Countable {
     /** @var array */
     private $values = [];
 
@@ -101,6 +101,13 @@ class Values implements \JsonSerializable {
         }
 
         unset($this->values[$key]);
+    }
+
+    /**
+     * @return int
+     */
+    public function count() {
+        return count($this->values);
     }
 
     /**
