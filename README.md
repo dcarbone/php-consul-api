@@ -11,7 +11,7 @@ This library is loosely based upon the [official GO client](https://github.com/h
 |PHPConsulAPI Version|Consul Version|
 |---|---|
 |0.3.x|0.6.4|
-|0.4.x|0.7.x|
+|0.5.x|0.7-0.8|
 
 ## Composer
 
@@ -22,7 +22,7 @@ Require Entry:
 ```json
 {
     "require": {
-        "dcarbone/php-consul-api": "@stable"    
+        "dcarbone/php-consul-api": "@stable"
     }
 }
 ```
@@ -30,17 +30,8 @@ Require Entry:
 ## Configuration
 
 First, construct a [Config](./src/Config.php). This class is modeled quite closely after the
-[Config Struct](https://github.com/hashicorp/consul/blob/v0.7.0/api/api.go#L104) present in the 
+[Config Struct](https://github.com/hashicorp/consul/blob/v0.7.0/api/api.go#L104) present in the
 [Consul API Subpackage](https://github.com/hashicorp/consul/blob/v0.7.0/api).
-
-### PSR-7 Compatibility
-
-This lib has been designed with [PSR-7](http://www.php-fig.org/psr/psr-7/) in mind, and as a result you may use
-any Http Client of your choosing, so long as it conforms to the [PSR-7](http://www.php-fig.org/psr/psr-7/) standard.
-
-To facilitate this, this lib uses the [php-http/httpplug](https://github.com/php-http/httplug) abstraction layer.
-This layer provides several different adapters for popular Http Clients (see a full list here:
-[Clients](http://docs.php-http.org/en/latest/clients.html), scroll down to "Client adapters:" section).
 
 ### Default Configuration
 
@@ -50,31 +41,16 @@ on your hosts then it would probably be easiest to simply execute the following:
 ```php
 $config = \DCarbone\PHPConsulAPI\Config::newDefaultConfig();
 ```
-*NOTE*: This method will attempt to locate a loaded Http Client based upon the array defined
-[here](./src/Config.php#L98). 
 
-If you are using a PSR-7 compliant Http Client that does NOT have a pre-built adapter,
-that is ok!  You simply need to create a thin wrapper around your client that implements the [HttpClient](https://github.com/php-http/httplug/blob/master/src/HttpClient.php) interface and use the below function to construct a config object with defaults and your wrapper instance:
-
-```php
-$myClient = my\psr7\http_client();
-$config = \DCarbone\PHPConsulAPI\Config::newDefaultConfigWithClient($myClient);
-```
-
-You will find the method definitions below:
-
-- [Config::newDefaultConfig()](./src/Config.php#L142)
-- [Config::newDefaultConfigWithClient()](./src/Config.php#L110)
- 
 ### Advanced Configuration
 
 You may alternatively define values yourself:
 
 ```php
 $config = new \DCarbone\PHPConsulAPI\Config([
-    'HttpClient' => $client // REQUIRED Instance of PSR-7 compliant HTTP client
+    'HttpClient' => $client // REQUIRED Client conforming to GuzzleHttp\ClientInterface
 
-    'Address' => 'address of server', // REQUIRED 
+    'Address' => 'address of server', // REQUIRED
     'Scheme' => 'http or https', // REQUIRED
     'Datacenter' => 'name of datacenter', // OPTIONAL
     'HttpAuth' => 'user:pass', // OPTIONAL,

@@ -15,8 +15,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-
-use Http\Client\HttpClient;
+use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 
 /**
  * Class Config
@@ -44,7 +44,6 @@ class Config {
      */
     public $Datacenter = '';
 
-
     /**
      * HTTP authentication, if used
      *
@@ -58,7 +57,6 @@ class Config {
      * @var int
      */
     public $WaitTime = 0;
-
 
     /**
      * ACL token to use by default
@@ -84,7 +82,7 @@ class Config {
     /**
      * Your HttpClient of choice.
      *
-     * @var \Http\Client\HttpClient
+     * @var \GuzzleHttp\ClientInterface
      */
     public $HttpClient = null;
 
@@ -103,16 +101,14 @@ class Config {
     }
 
     /**
-     * Construct a configuration object from Environment Variables while using a specific HTTP Client
+     * Construct a configuration object from Environment Variables and use bare guzzle client instance
      *
-     * @param \Http\Client\HttpClient $client
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public static function newDefaultConfigWithClient(HttpClient $client) {
+    public static function newDefaultConfig() {
         $conf = new static([
             'Address' => '127.0.0.1:8500',
             'Scheme' => 'http',
-            'HttpClient' => $client
         ]);
 
         $envParams = static::getEnvironmentConfig();
@@ -136,32 +132,9 @@ class Config {
             $conf->setInsecureSkipVerify(false);
         }
 
+        $conf->setHttpClient(new Client());
+
         return $conf;
-    }
-
-    /**
-     * Construct a configuration object from Environment Variables and also attempt to locate an HTTP Client ot use.
-     *
-     * @return \DCarbone\PHPConsulAPI\Config
-     */
-    public static function newDefaultConfig() {
-        static $knownClients = [
-            '\\Http\\Client\\Curl\\Client',
-            '\\Http\\Adapter\\Guzzle6\\Client',
-            '\\Http\\Adapter\\Buzz\\Client',
-            '\\Http\\Adapter\\React\\Client',
-        ];
-
-        foreach ($knownClients as $clientClass) {
-            if (class_exists($clientClass, true)) {
-                return static::newDefaultConfigWithClient(new $clientClass);
-            }
-        }
-
-        throw new \RuntimeException(sprintf(
-            '%s - Unable to determine HttpClient to use for default config',
-            get_called_class()
-        ));
     }
 
     /**
@@ -297,17 +270,17 @@ class Config {
     }
 
     /**
-     * @return \Http\Client\HttpClient
+     * @return \GuzzleHttp\ClientInterface
      */
     public function getHttpClient() {
         return $this->HttpClient;
     }
 
     /**
-     * @param \Http\Client\HttpClient $HttpClient
+     * @param \GuzzleHttp\ClientInterface $HttpClient
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setHttpClient(HttpClient $HttpClient) {
+    public function setHttpClient(ClientInterface $HttpClient) {
         $this->HttpClient = $HttpClient;
         return $this;
     }

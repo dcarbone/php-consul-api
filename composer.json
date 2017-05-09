@@ -17,8 +17,8 @@
     ],
     "require": {
         "php": ">=5.6.0",
-        "guzzlehttp/psr7": "1.4.*",
-        "php-http/client-implementation": "@stable"
+        "guzzlehttp/guzzle": "~6",
+        "guzzlehttp/psr7": "~1"
     },
     "autoload": {
         "psr-4": {
@@ -26,22 +26,12 @@
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "5.6.*",
-        "php-http/curl-client": "1.6.*",
-        "php-http/guzzle6-adapter": "1.1.*",
-        "php-http/react-adapter": "0.2.*",
-        "php-http/buzz-adapter": "0.3.*"
+        "phpunit/phpunit": "5.6.*"
     },
     "autoload-dev": {
         "psr-4": {
             "DCarbone\\PHPConsulAPI\\": "src/",
             "DCarbone\\PHPConsulAPITests\\": "tests/"
         }
-    },
-    "suggest": {
-        "php-http/guzzle6-adapter": "To enable use of Guzzle 6 http client (http://docs.php-http.org/en/latest/clients/guzzle6-adapter.html)",
-        "php-http/react-adapter": "To enable React http client (http://docs.php-http.org/en/latest/clients/react-adapter.html)",
-        "php-http/buzz-adapter": "To enable use of Buzz http client (http://docs.php-http.org/en/latest/clients/buzz-adapter.html)",
-        "php-http/curl-client": "Simple PSR-7 compliant http client"
     }
 }
