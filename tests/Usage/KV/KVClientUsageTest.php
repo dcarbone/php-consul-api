@@ -43,7 +43,7 @@ class KVClientUsageTest extends \PHPUnit_Framework_TestCase {
     public function testKVLifecycle(KVClient $client) {
         $kvp = new KVPair(['Key' => 'testkey', 'Value' => 'testvalue']);
 
-        list($wm, $err) = $client->put($kvp);
+        list($wm, $err) = $client->put($kvp);;
         $this->assertNull($err, sprintf('Unable to set kvp: %s', (string)$err));
         $this->assertInstanceOf(WriteMeta::class, $wm);
 

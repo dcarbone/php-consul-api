@@ -16,7 +16,7 @@
    limitations under the License.
 */
 
-use Http\Client\HttpClient;
+use GuzzleHttp\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
@@ -100,8 +100,12 @@ abstract class AbstractClient {
         $err = null;
         try {
             // If we actually have a client defined...
-            if (isset($this->c->HttpClient) && $this->c->HttpClient instanceof HttpClient) {
-                $response = $this->c->HttpClient->sendRequest($r->toPsrRequest());
+            if (isset($this->c->HttpClient) && $this->c->HttpClient instanceof ClientInterface) {
+                $response = $this->c->HttpClient->send($r->toPsrRequest(), [
+                    'http_errors' => false,
+                    'verify' => $this->c->isInsecureSkipVerify(),
+                    'decode_content' => false,
+                ]);
             } // Otherwise, throw error to be caught below
             else {
                 throw new \RuntimeException('Unable to execute query as no HttpClient has been defined.');
