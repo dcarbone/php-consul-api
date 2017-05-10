@@ -48,7 +48,7 @@ You may alternatively define values yourself:
 
 ```php
 $config = new \DCarbone\PHPConsulAPI\Config([
-    'HttpClient' => $client             // [required] Client conforming to GuzzleHttp\ClientInterface
+    'HttpClient' => $client,            // [required] Client conforming to GuzzleHttp\ClientInterface
     'Address' => 'address of server',   // [required]
     
     'Scheme' => 'http or https',            // [optional] defaults to "http"
@@ -58,10 +58,32 @@ $config = new \DCarbone\PHPConsulAPI\Config([
     'TokenInHeader' => false,               // [optional] specifies whether to send the token in the header or query string
     'InsecureSkipVerify' => false,          // [optional] if set to true, ignores all SSL validation
     'CAFile' => '',                         // [optional] path to ca cert file, see http://docs.guzzlephp.org/en/latest/request-options.html#verify
-    'CertFile' => '',                       // [optional] path to client pem.  if set, requires KeyFile also be set
-    'KeyFile' => '',                        // [optional] path to client
+    'CertFile' => '',                       // [optional] path to client public key.  if set, requires KeyFile also be set
+    'KeyFile' => '',                        // [optional] path to client private key.  if set, requires CertFile also be set
 ]);
 ```
+
+#### Configuration Note:
+
+By default, this client will attempt to locate a series of environment variables to describe much of the above
+configuration properties.  See [here](./src/Config.php#L446) for that list, and see [here](./src/Consul.php#L36) for
+a list of the env var names.
+
+For more advanced client configuration, such as proxy configuration, you must construct your own GuzzleHttp client
+prior to constructing a PHPConsulAPI Config object.
+
+As an example:
+
+```php
+$proxyClient = new \GuzzleHttp\Client(['proxy' => 'whatever proxy you want']]);
+$config = new \DCarbone\PHPConsulAPI\Config([
+    'HttpClient' => $proxyClient,             
+    'Address' => 'address of server',
+]);
+```
+
+When constructing your client, if you are using the `GuzzleHttp\Client` object directly or derivative thereof, you may
+pass any option listed in the [Guzzle Request Options](http://docs.guzzlephp.org/en/latest/request-options.html).
 
 ## Consul
 

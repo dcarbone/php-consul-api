@@ -15,6 +15,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\RequestOptions;
@@ -146,52 +147,6 @@ class Config {
      */
     public static function newDefaultConfig() {
         return new static(self::getDefaultConfig());
-    }
-
-    /**
-     * @return array
-     */
-    private static function getDefaultConfig() {
-        $conf = [
-            'Address' => '127.0.0.1:8500',
-            'Scheme' => 'http',
-        ];
-
-        // parse env vars
-        foreach (static::getEnvironmentConfig() as $k => $v) {
-            switch ($k) {
-                case Consul::HTTPAddrEnvName:
-                    $conf['Address'] = $v;
-                    break;
-                case Consul::HTTPTokenEnvName:
-                    $conf['Token'] = $v;
-                    break;
-                case Consul::HTTPAuthEnvName:
-                    $conf['HttpAuth'] = $v;
-                    break;
-                case Consul::HTTPCAFileEnvName:
-                    $conf['CAFile'] = $v;
-                    break;
-                case Consul::HTTPClientCertEnvName:
-                    $conf['CertFile'] = $v;
-                    break;
-                case Consul::HTTPClientKeyEnvName:
-                    $conf['KeyFile'] = $v;
-                    break;
-                case Consul::HTTPSSLEnvName:
-                    if ((bool)$v) {
-                        $conf['Scheme'] = 'https';
-                    }
-                    break;
-                case Consul::HTTPSSLVerifyEnvName:
-                    if ((bool)$v) {
-                        $conf['InsecureSkipVerify'] = true;
-                    }
-                    break;
-            }
-        }
-
-        return $conf;
     }
 
     /**
@@ -449,24 +404,6 @@ class Config {
     }
 
     /**
-     * @return array
-     */
-    public static function getEnvironmentConfig() {
-        return array_filter([
-            Consul::HTTPAddrEnvName => static::_tryGetEnvParam(Consul::HTTPAddrEnvName),
-            Consul::HTTPAuthEnvName => static::_tryGetEnvParam(Consul::HTTPAuthEnvName),
-            Consul::HTTPCAFileEnvName => static::_tryGetEnvParam(Consul::HTTPCAFileEnvName),
-            Consul::HTTPClientCertEnvName => static::_tryGetEnvParam(Consul::HTTPClientCertEnvName),
-            Consul::HTTPClientKeyEnvName => static::_tryGetEnvParam(Consul::HTTPClientKeyEnvName),
-            Consul::HTTPSSLEnvName => static::_tryGetEnvParam(Consul::HTTPSSLEnvName),
-            Consul::HTTPSSLVerifyEnvName => static::_tryGetEnvParam(Consul::HTTPSSLVerifyEnvName),
-        ],
-            function ($val) {
-                return null !== $val;
-            });
-    }
-
-    /**
      * @param string $param
      * @return string|null
      */
@@ -484,5 +421,72 @@ class Config {
         }
 
         return null;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getEnvironmentConfig() {
+        $ret = [];
+        foreach ([
+                     Consul::HTTPAddrEnvName => static::_tryGetEnvParam(Consul::HTTPAddrEnvName),
+                     Consul::HTTPAuthEnvName => static::_tryGetEnvParam(Consul::HTTPAuthEnvName),
+                     Consul::HTTPCAFileEnvName => static::_tryGetEnvParam(Consul::HTTPCAFileEnvName),
+                     Consul::HTTPClientCertEnvName => static::_tryGetEnvParam(Consul::HTTPClientCertEnvName),
+                     Consul::HTTPClientKeyEnvName => static::_tryGetEnvParam(Consul::HTTPClientKeyEnvName),
+                     Consul::HTTPSSLEnvName => static::_tryGetEnvParam(Consul::HTTPSSLEnvName),
+                     Consul::HTTPSSLVerifyEnvName => static::_tryGetEnvParam(Consul::HTTPSSLVerifyEnvName),
+                 ] as $k => $v) {
+            if (null !== $v) {
+                $ret[$k] = $v;
+            }
+        }
+        return $ret;
+    }
+
+    /**
+     * @return array
+     */
+    private static function getDefaultConfig() {
+        $conf = [
+            'Address' => '127.0.0.1:8500',
+            'Scheme' => 'http',
+        ];
+
+        // parse env vars
+        foreach (static::getEnvironmentConfig() as $k => $v) {
+            switch ($k) {
+                case Consul::HTTPAddrEnvName:
+                    $conf['Address'] = $v;
+                    break;
+                case Consul::HTTPTokenEnvName:
+                    $conf['Token'] = $v;
+                    break;
+                case Consul::HTTPAuthEnvName:
+                    $conf['HttpAuth'] = $v;
+                    break;
+                case Consul::HTTPCAFileEnvName:
+                    $conf['CAFile'] = $v;
+                    break;
+                case Consul::HTTPClientCertEnvName:
+                    $conf['CertFile'] = $v;
+                    break;
+                case Consul::HTTPClientKeyEnvName:
+                    $conf['KeyFile'] = $v;
+                    break;
+                case Consul::HTTPSSLEnvName:
+                    if ((bool)$v) {
+                        $conf['Scheme'] = 'https';
+                    }
+                    break;
+                case Consul::HTTPSSLVerifyEnvName:
+                    if ((bool)$v) {
+                        $conf['InsecureSkipVerify'] = true;
+                    }
+                    break;
+            }
+        }
+
+        return $conf;
     }
 }

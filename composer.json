@@ -12,8 +12,7 @@
     ],
     "keywords": [
         "consul",
-        "consul-api",
-        "psr-7"
+        "consul-api"
     ],
     "require": {
         "php": ">=5.6.0",

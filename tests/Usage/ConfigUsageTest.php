@@ -1,6 +1,7 @@
 <?php namespace DCarbone\PHPConsulAPITests\Usage;
 
 use DCarbone\PHPConsulAPI\Config;
+use DCarbone\PHPConsulAPI\Consul;
 
 /*
    Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -23,6 +24,9 @@ use DCarbone\PHPConsulAPI\Config;
  * @package DCarbone\PHPConsulAPITests\Usage
  */
 class ConfigUsageTest extends \PHPUnit_Framework_TestCase {
+    const DEFAULT_ADDRESS = '127.0.0.1:8500';
+    const DEFAULT_SCHEME = 'http';
+
     /**
      * @return Config
      */
@@ -30,5 +34,25 @@ class ConfigUsageTest extends \PHPUnit_Framework_TestCase {
         $config = new Config();
         $this->assertInstanceOf(Config::class, $config);
         return $config;
+    }
+
+    /**
+     * @depends testCanConstructConfig
+     */
+    public function testConfigDefaults() {
+        $config = new Config();
+
+        $expectedAddress = getenv(Consul::HTTPAddrEnvName) ?: self::DEFAULT_ADDRESS;
+        $expectedScheme = (bool)getenv(Consul::HTTPSSLEnvName) ? 'https' : self::DEFAULT_SCHEME;
+
+        $this->assertEquals($expectedAddress,
+            $config->getAddress(),
+            sprintf('Default address is not "%s"', $expectedAddress));
+        $this->assertEquals($expectedScheme,
+            $config->getScheme(),
+            sprintf('Default scheme is not "%s"', $expectedScheme));
+        $this->assertNotNull($config->getHttpClient(), 'HttpClient is null');
+        $this->assertFalse($config->isInsecureSkipVerify(), 'InsecureSkipVerify is not false');
+        $this->assertFalse($config->isTokenInHeader(), 'TokenInHeader is not false');
     }
 }
