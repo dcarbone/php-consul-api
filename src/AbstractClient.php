@@ -101,11 +101,7 @@ abstract class AbstractClient {
         try {
             // If we actually have a client defined...
             if (isset($this->c->HttpClient) && $this->c->HttpClient instanceof ClientInterface) {
-                $response = $this->c->HttpClient->send($r->toPsrRequest(), [
-                    'http_errors' => false,
-                    'verify' => $this->c->isInsecureSkipVerify(),
-                    'decode_content' => false,
-                ]);
+                $response = $this->c->HttpClient->send($r->toPsrRequest(), $this->c->getGuzzleRequestOptions());
             } // Otherwise, throw error to be caught below
             else {
                 throw new \RuntimeException('Unable to execute query as no HttpClient has been defined.');

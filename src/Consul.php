@@ -36,6 +36,9 @@ class Consul {
     const HTTPAddrEnvName = 'CONSUL_HTTP_ADDR';
     const HTTPTokenEnvName = 'CONSUL_HTTP_TOKEN';
     const HTTPAuthEnvName = 'CONSUL_HTTP_AUTH';
+    const HTTPCAFileEnvName = "CONSUL_CACERT";
+    const HTTPClientCertEnvName = "CONSUL_CLIENT_CERT";
+    const HTTPClientKeyEnvName = "CONSUL_CLIENT_KEY";
     const HTTPSSLEnvName = 'CONSUL_HTTP_SSL';
     const HTTPSSLVerifyEnvName = 'CONSUL_HTTP_SSL_VERIFY';
 

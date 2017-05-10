@@ -27,8 +27,14 @@ class ConfigDefinitionTest extends AbstractDefinitionTestCases
     /**
      * @inheritDoc
      */
-    protected function getSubjectClassName()
-    {
+    protected function getSubjectClassName() {
         return Config::class;
+    }
+
+    /**
+     * @return object
+     */
+    protected function getEmptyInstance() {
+        return $this->createMock($this->getSubjectClassName());
     }
 }
