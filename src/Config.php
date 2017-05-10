@@ -132,6 +132,11 @@ class Config {
                 $c
             ));
         }
+
+        // if client hasn't been constructed, construct.
+        if (null === $this->HttpClient) {
+            $this->HttpClient = new Client();
+        }
     }
 
     /**
@@ -150,7 +155,6 @@ class Config {
         $conf = [
             'Address' => '127.0.0.1:8500',
             'Scheme' => 'http',
-            'HttpClient' => new Client(),
         ];
 
         // parse env vars
