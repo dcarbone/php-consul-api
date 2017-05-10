@@ -48,16 +48,18 @@ You may alternatively define values yourself:
 
 ```php
 $config = new \DCarbone\PHPConsulAPI\Config([
-    'HttpClient' => $client // REQUIRED Client conforming to GuzzleHttp\ClientInterface
-
-    'Address' => 'address of server', // REQUIRED
-    'Scheme' => 'http or https', // REQUIRED
-    'Datacenter' => 'name of datacenter', // OPTIONAL
-    'HttpAuth' => 'user:pass', // OPTIONAL,
-    'WaitTime' => 30, // OPTIONAL, not used yet
-    'Token' => 'auth token', // OPTIONAL
-    'TokenInHeader' => false // OPTIONAL
-    'InsecureSkipVerify' => false, // OPTIONAL
+    'HttpClient' => $client             // [required] Client conforming to GuzzleHttp\ClientInterface
+    'Address' => 'address of server',   // [required]
+    
+    'Scheme' => 'http or https',            // [optional] defaults to "http"
+    'Datacenter' => 'name of datacenter',   // [optional]
+    'HttpAuth' => 'user:pass',              // [optional]
+    'Token' => 'auth token',                // [optional] default auth token to use
+    'TokenInHeader' => false,               // [optional] specifies whether to send the token in the header or query string
+    'InsecureSkipVerify' => false,          // [optional] if set to true, ignores all SSL validation
+    'CAFile' => '',                         // [optional] path to ca cert file, see http://docs.guzzlephp.org/en/latest/request-options.html#verify
+    'CertFile' => '',                       // [optional] path to client pem.  if set, requires KeyFile also be set
+    'KeyFile' => '',                        // [optional] path to client
 ]);
 ```
 
