@@ -36,7 +36,7 @@ class PreparedQueryClient extends AbstractClient {
      * )
      */
     public function create(PreparedQueryDefinition $query, WriteOptions $writeOptions = null) {
-        $r = new Request('GET', 'v1/query', $this->c, $query);
+        $r = new Request('POST', 'v1/query', $this->c, $query);
         $r->setWriteOptions($writeOptions);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -167,7 +167,7 @@ class PreparedQueryClient extends AbstractClient {
      * )
      */
     public function execute($queryIDOrName, QueryOptions $queryOptions = null) {
-        $r = new Request('GET', sprintf('v1/query/%s', $queryIDOrName), $this->c);
+        $r = new Request('GET', sprintf('v1/query/%s/execute', $queryIDOrName), $this->c);
         $r->setQueryOptions($queryOptions);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
