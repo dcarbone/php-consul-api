@@ -21,45 +21,82 @@ use DCarbone\PHPConsulAPI\KV\KVClient;
 use DCarbone\PHPConsulAPI\KV\KVPair;
 use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPI\WriteMeta;
+use DCarbone\PHPConsulAPITests\ConsulManager;
 
 /**
  * Class KVClientUsageTest
  * @package DCarbone\PHPConsulAPITests\Usage\KV
  */
 class KVClientUsageTest extends \PHPUnit_Framework_TestCase {
+
+    const KVKey = 'testkey';
+    const KVValue = 'testvalue';
+
+    /**
+     * Sets up the fixture, for example, open a network connection.
+     * This method is called before a test is executed.
+     */
+    protected function setUp() {
+        ConsulManager::startSingle();
+    }
+
+    /**
+     * Tears down the fixture, for example, close a network connection.
+     * This method is called after a test is executed.
+     */
+    protected function tearDown() {
+        ConsulManager::stopSingle();
+    }
+
     /**
      * @return KVClient
      */
     public function testCanConstructClient() {
-        $kv = new KVClient(Config::newDefaultConfig());
+        $kv = new KVClient(new Config());
         $this->assertInstanceOf(KVClient::class, $kv);
         return $kv;
     }
 
     /**
      * @depends testCanConstructClient
-     * @param KVClient $client
      */
-    public function testKVLifecycle(KVClient $client) {
-        $kvp = new KVPair(['Key' => 'testkey', 'Value' => 'testvalue']);
+    public function testCanPutKey() {
+        $client = new KVClient(new Config());
 
-        list($wm, $err) = $client->put($kvp);;
+        list($wm, $err) = $client->put(new KVPair(['Key' => self::KVKey, 'Value' => self::KVValue]));
         $this->assertNull($err, sprintf('Unable to set kvp: %s', (string)$err));
         $this->assertInstanceOf(WriteMeta::class, $wm);
+    }
 
-        list($kvp, $qm, $err) = $client->get('testkey');
-        $this->assertNull($err, sprintf('Unable to get kvp: %s', (string)$err));
+    /**
+     * @depends testCanPutKey
+     */
+    public function testCanGetKey() {
+        $client = new KVClient(new Config());
+        $client->put(new KVPair(['Key' => self::KVKey, 'Value' => self::KVValue]));
+
+        list($kv, $qm, $err) = $client->get(self::KVKey);
+        $this->assertNull($err, sprintf('KV::get returned error: %s', (string)$err));
         $this->assertInstanceOf(QueryMeta::class, $qm);
-        $this->assertInstanceOf(KVPair::class, $kvp);
-        $this->assertEquals('testvalue', $kvp->Value);
+        $this->assertInstanceOf(KVPair::class, $kv);
+    }
 
-        list($wm, $err) = $client->delete('testkey');
-        $this->assertNull($err, sprintf('Unable to delete kvp: %s', (string)$err));
-        $this->assertInstanceOf(WriteMeta::class, $wm);
+    /**
+     * @depends testCanPutKey
+     */
+    public function testCanDeleteKey() {
+        $client = new KVClient(new Config());
+        $client->put(new KVPair(['Key' => self::KVKey, 'Value' => self::KVValue]));
 
-        list($kvp, $qm, $err) = $client->get('testkey');
-        $this->assertNull($err);
-        $this->assertInstanceOf(QueryMeta::class, $qm);
-        $this->assertNull($kvp);
+        list($wm, $err) = $client->delete(self::KVKey);
+        $this->assertNull($err, sprintf('KV::delete returned error: %s', $err));
+        $this->assertInstanceOf(
+            WriteMeta::class,
+            $wm,
+            sprintf(
+                'expected "%s", saw "%s"',
+                WriteMeta::class,
+                is_object($wm) ? get_class($wm) : gettype($wm)
+            ));
     }
 }

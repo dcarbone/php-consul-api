@@ -1,12 +1,3 @@
 #!/usr/bin/env bash
 
-${HOME}/bin/consul agent -dev &
-
-PID=$!
-
-echo "consul pid: ${PID}"
-
-echo ${PID} > consul.pid
-echo "sleeping for 10 seconds to give consul time to set up..."
-sleep 10
-
+/usr/bin/env consul agent -dev >> consul.log 2>&1 & echo $! > consul.pid

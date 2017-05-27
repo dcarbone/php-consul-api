@@ -11,7 +11,13 @@
         stopOnFailure="true"
         processIsolation="false"
         backupGlobals="false"
-        >
+>
+
+    <php>
+        <env name="CONSUL_HTTP_ADDR" value="127.0.0.1:8500"/>
+        <env name="CONSUL_HTTP_SSL" value="0"/>
+    </php>
+
     <testsuite name="definition">
         <directory>./tests/Definition</directory>
         <directory>./tests/Usage</directory>
@@ -24,8 +30,8 @@
     </filter>
 
     <logging>
-        <log type="coverage-html" target="./tmp/tests/html" />
-        <log type="plain" target="./tmp/tests/php-consul-api-tests.log" />
+        <log type="coverage-html" target="./tmp/tests/html"/>
+        <log type="plain" target="./tmp/tests/php-consul-api-tests.log"/>
     </logging>
 
 </phpunit>
