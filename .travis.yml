@@ -16,8 +16,8 @@ env:
 install:
   - mkdir -p $HOME/bin
   - export PATH="$HOME/bin:$PATH"
-  - wget "https://releases.hashicorp.com/consul/0.8.2/consul_0.8.2_linux_amd64.zip"
-  - unzip consul_0.8.2_linux_amd64.zip -d $HOME/bin
+  - wget "https://releases.hashicorp.com/consul/0.8.3/consul_0.8.3_linux_amd64.zip"
+  - unzip consul_0.8.3_linux_amd64.zip -d $HOME/bin
   - chmod +x $HOME/bin/consul
   - composer install --no-interaction --no-progress --no-suggest --optimize-autoloader
 
