@@ -448,42 +448,33 @@ class Config {
      * @return array
      */
     private static function getDefaultConfig() {
-        $conf = [
+        static $conf = [
             'Address' => '127.0.0.1:8500',
             'Scheme' => 'http',
         ];
 
         // parse env vars
         foreach (static::getEnvironmentConfig() as $k => $v) {
-            switch ($k) {
-                case Consul::HTTPAddrEnvName:
-                    $conf['Address'] = $v;
-                    break;
-                case Consul::HTTPTokenEnvName:
-                    $conf['Token'] = $v;
-                    break;
-                case Consul::HTTPAuthEnvName:
-                    $conf['HttpAuth'] = $v;
-                    break;
-                case Consul::HTTPCAFileEnvName:
-                    $conf['CAFile'] = $v;
-                    break;
-                case Consul::HTTPClientCertEnvName:
-                    $conf['CertFile'] = $v;
-                    break;
-                case Consul::HTTPClientKeyEnvName:
-                    $conf['KeyFile'] = $v;
-                    break;
-                case Consul::HTTPSSLEnvName:
-                    if ((bool)$v) {
-                        $conf['Scheme'] = 'https';
-                    }
-                    break;
-                case Consul::HTTPSSLVerifyEnvName:
-                    if ((bool)$v) {
-                        $conf['InsecureSkipVerify'] = true;
-                    }
-                    break;
+            if (Consul::HTTPAddrEnvName === $k) {
+                $conf['Address'] = $v;
+            } else if (Consul::HTTPTokenEnvName === $k) {
+                $conf['Token'] = $v;
+            } else if (Consul::HTTPAuthEnvName === $k) {
+                $conf['HttpAuth'] = $v;
+            } else if (Consul::HTTPCAFileEnvName === $k) {
+                $conf['CAFile'] = $v;
+            } else if (Consul::HTTPClientCertEnvName === $k) {
+                $conf['CertFile'] = $v;
+            } else if (Consul::HTTPClientKeyEnvName === $k) {
+                $conf['KeyFile'] = $v;
+            } else if (Consul::HTTPSSLEnvName === $k) {
+                if ((bool)$v) {
+                    $conf['Scheme'] = 'https';
+                }
+            } else if (Consul::HTTPSSLVerifyEnvName === $k) {
+                if ((bool)$v) {
+                    $conf['InsecureSkipVerify'] = true;
+                }
             }
         }
 
