@@ -21,11 +21,5 @@ install:
   - chmod +x $HOME/bin/consul
   - composer install --no-interaction --no-progress --no-suggest --optimize-autoloader
 
-before_script:
-  - ./tests/run_consul.sh
-
 script:
   - ./vendor/bin/phpunit
-
-after_script:
-  - ./tests/stop_consul.sh

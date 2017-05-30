@@ -2,6 +2,7 @@
 
 use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\Consul;
+use DCarbone\PHPConsulAPITests\ConsulManager;
 
 /*
    Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -27,6 +28,14 @@ class ConfigUsageTest extends \PHPUnit_Framework_TestCase {
     const DEFAULT_ADDRESS = '127.0.0.1:8500';
     const DEFAULT_SCHEME = 'http';
 
+    protected function setUp() {
+        ConsulManager::startSingle();
+    }
+
+    protected function tearDown() {
+        ConsulManager::stopSingle();
+    }
+
     /**
      * @return Config
      */
@@ -42,8 +51,8 @@ class ConfigUsageTest extends \PHPUnit_Framework_TestCase {
     public function testConfigDefaults() {
         $config = new Config();
 
-        $expectedAddress = getenv(Consul::HTTPAddrEnvName) ?: self::DEFAULT_ADDRESS;
-        $expectedScheme = (bool)getenv(Consul::HTTPSSLEnvName) ? 'https' : self::DEFAULT_SCHEME;
+        $expectedAddress = $_ENV[Consul::HTTPAddrEnvName] ?: self::DEFAULT_ADDRESS;
+        $expectedScheme = $_ENV[Consul::HTTPSSLEnvName] ? 'https' : self::DEFAULT_SCHEME;
 
         $this->assertEquals($expectedAddress,
             $config->getAddress(),
