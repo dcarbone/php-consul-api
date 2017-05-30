@@ -29,8 +29,16 @@ use DCarbone\PHPConsulAPITests\ConsulManager;
  */
 class KVClientUsageTest extends \PHPUnit_Framework_TestCase {
 
-    const KVKey = 'testkey';
-    const KVValue = 'testvalue';
+    const KVKey1 = 'testkey1';
+    const KVValue1 = 'testvalue1';
+
+    const KVKey2 = 'testkey2';
+    const KVValue2 = 'testvalue2';
+
+    const KVKey3 = 'testkey3';
+    const KVValue3 = 'testvalue3';
+
+    const KVPrefix = 'tests';
 
     /**
      * Sets up the fixture, for example, open a network connection.
@@ -63,7 +71,7 @@ class KVClientUsageTest extends \PHPUnit_Framework_TestCase {
     public function testCanPutKey() {
         $client = new KVClient(new Config());
 
-        list($wm, $err) = $client->put(new KVPair(['Key' => self::KVKey, 'Value' => self::KVValue]));
+        list($wm, $err) = $client->put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
         $this->assertNull($err, sprintf('Unable to set kvp: %s', (string)$err));
         $this->assertInstanceOf(WriteMeta::class, $wm);
     }
@@ -73,9 +81,9 @@ class KVClientUsageTest extends \PHPUnit_Framework_TestCase {
      */
     public function testCanGetKey() {
         $client = new KVClient(new Config());
-        $client->put(new KVPair(['Key' => self::KVKey, 'Value' => self::KVValue]));
+        $client->put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
 
-        list($kv, $qm, $err) = $client->get(self::KVKey);
+        list($kv, $qm, $err) = $client->get(self::KVKey1);
         $this->assertNull($err, sprintf('KV::get returned error: %s', (string)$err));
         $this->assertInstanceOf(QueryMeta::class, $qm);
         $this->assertInstanceOf(KVPair::class, $kv);
@@ -86,9 +94,9 @@ class KVClientUsageTest extends \PHPUnit_Framework_TestCase {
      */
     public function testCanDeleteKey() {
         $client = new KVClient(new Config());
-        $client->put(new KVPair(['Key' => self::KVKey, 'Value' => self::KVValue]));
+        $client->put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
 
-        list($wm, $err) = $client->delete(self::KVKey);
+        list($wm, $err) = $client->delete(self::KVKey1);
         $this->assertNull($err, sprintf('KV::delete returned error: %s', $err));
         $this->assertInstanceOf(
             WriteMeta::class,
@@ -98,5 +106,37 @@ class KVClientUsageTest extends \PHPUnit_Framework_TestCase {
                 WriteMeta::class,
                 is_object($wm) ? get_class($wm) : gettype($wm)
             ));
+    }
+
+    /**
+     * @depends testCanPutKey
+     */
+    public function testCanGetNoPrefixList() {
+        $client = new KVClient(new Config());
+        $client->put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
+        $client->put(new KVPair(['Key' => self::KVKey2, 'Value' => self::KVValue2]));
+        $client->put(new KVPair(['Key' => self::KVKey3, 'Value' => self::KVValue3]));
+
+        list($list, $qm, $err) = $client->valueList();
+        $this->assertNull($err, sprintf('KV::valueList returned error: %s', $err));
+        $this->assertInstanceOf(QueryMeta::class, $qm);
+        $this->assertInternalType('array', $list);
+        $this->assertCount(3, $list);
+    }
+
+    /**
+     * @depends testCanPutKey
+     */
+    public function testCanGetPrefixList() {
+        $client = new KVClient(new Config());
+        $client->put(new KVPair(['Key' => self::KVPrefix . '/' . self::KVKey1, 'Value' => self::KVValue1]));
+        $client->put(new KVPair(['Key' => self::KVPrefix . '/' . self::KVKey2, 'Value' => self::KVValue2]));
+        $client->put(new KVPair(['Key' => self::KVPrefix . '/' . self::KVKey3, 'Value' => self::KVValue3]));
+
+        list($list, $qm, $err) = $client->valueList(self::KVPrefix);
+        $this->assertNull($err, sprintf('KV::valueList returned error: %s', $err));
+        $this->assertInstanceOf(QueryMeta::class, $qm);
+        $this->assertInternalType('array', $list);
+        $this->assertCount(3, $list);
     }
 }
