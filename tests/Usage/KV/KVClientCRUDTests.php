@@ -25,10 +25,10 @@ use DCarbone\PHPConsulAPI\WriteMeta;
 use DCarbone\PHPConsulAPITests\ConsulManager;
 
 /**
- * Class KVClientUsageTest
+ * Class KVClientCRUDTests
  * @package DCarbone\PHPConsulAPITests\Usage\KV
  */
-class KVClientUsageTest extends \PHPUnit_Framework_TestCase {
+class KVClientCRUDTests extends \PHPUnit_Framework_TestCase {
 
     const KVKey1 = 'testkey1';
     const KVValue1 = 'testvalue1';
@@ -213,6 +213,19 @@ class KVClientUsageTest extends \PHPUnit_Framework_TestCase {
 
             throw $e;
         }
+    }
+
+    public function testKeysReturnsErrorWithInvalidPrefix() {
+        $client = new KVClient(new Config());
+        list($_, $_, $err) = $client->keys(12345);
+        $this->assertInstanceOf(
+            Error::class,
+            $err,
+            sprintf(
+                'Expected $err to be "%s", saw "%s"',
+                Error::class,
+                is_object($err) ? get_class($err) : gettype($err)
+            ));
     }
 
     /**

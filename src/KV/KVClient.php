@@ -78,6 +78,49 @@ class KVClient extends AbstractClient {
     }
 
     /**
+     * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
+     * @param \DCarbone\PHPConsulAPI\WriteOptions $writeOptions
+     * @return array(
+     * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
+     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
+     * )
+     */
+    public function put(KVPair $p, WriteOptions $writeOptions = null) {
+        $r = new Request('put', sprintf('v1/kv/%s', $p->Key), $this->c, $p->Value);
+        $r->setWriteOptions($writeOptions);
+        if (0 !== $p->Flags) {
+            $r->params->set('flags', (string)$p->Flags);
+        }
+
+        list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
+        if (null !== $err) {
+            return [null, $err];
+        }
+
+        return [$this->buildWriteMeta($duration), null];
+    }
+
+    /**
+     * @param string $key
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
+     * @return array(
+     * @type \DCarbone\PHPConsulAPI\WriteMeta metadata about write
+     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
+     * )
+     */
+    public function delete($key, WriteOptions $writeOptions = null) {
+        $r = new Request('delete', sprintf('v1/kv/%s', $key), $this->c);
+        $r->setWriteOptions($writeOptions);
+
+        list ($duration, $_, $err) = $this->requireOK($this->doRequest($r));
+        if (null !== $err) {
+            return [null, $err];
+        }
+
+        return [$this->buildWriteMeta($duration), null];
+    }
+
+    /**
      * @param string $prefix
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
      * @return array(
@@ -165,49 +208,6 @@ class KVClient extends AbstractClient {
         list($data, $err) = $this->decodeBody($response->getBody());
 
         return [$data, $qm, $err];
-    }
-
-    /**
-     * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
-     * @param \DCarbone\PHPConsulAPI\WriteOptions $writeOptions
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
-     */
-    public function put(KVPair $p, WriteOptions $writeOptions = null) {
-        $r = new Request('put', sprintf('v1/kv/%s', $p->Key), $this->c, $p->Value);
-        $r->setWriteOptions($writeOptions);
-        if (0 !== $p->Flags) {
-            $r->params->set('flags', (string)$p->Flags);
-        }
-
-        list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
-        if (null !== $err) {
-            return [null, $err];
-        }
-
-        return [$this->buildWriteMeta($duration), null];
-    }
-
-    /**
-     * @param string $key
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\WriteMeta metadata about write
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
-     */
-    public function delete($key, WriteOptions $writeOptions = null) {
-        $r = new Request('delete', sprintf('v1/kv/%s', $key), $this->c);
-        $r->setWriteOptions($writeOptions);
-
-        list ($duration, $_, $err) = $this->requireOK($this->doRequest($r));
-        if (null !== $err) {
-            return [null, $err];
-        }
-
-        return [$this->buildWriteMeta($duration), null];
     }
 
     /**
