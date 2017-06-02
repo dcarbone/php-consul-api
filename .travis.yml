@@ -22,4 +22,4 @@ install:
   - composer install --no-interaction --no-progress --no-suggest --optimize-autoloader
 
 script:
-  - ./vendor/bin/phpunit
+  - ./vendor/bin/phpunit -c phpunit.xml.dist

@@ -128,6 +128,10 @@ class KVClientUsageTest extends \PHPUnit_Framework_TestCase {
      * @depends testCanPutKey
      */
     public function testCanGetPrefixList() {
+        /** @var \DCarbone\PHPConsulAPI\KV\KVPair[] $list */
+        /** @var \DCarbone\PHPConsulAPI\QueryMeta $qm */
+        /** @var \DCarbone\PHPConsulAPI\Error $err */
+
         $client = new KVClient(new Config());
         $client->put(new KVPair(['Key' => self::KVPrefix . '/' . self::KVKey1, 'Value' => self::KVValue1]));
         $client->put(new KVPair(['Key' => self::KVPrefix . '/' . self::KVKey2, 'Value' => self::KVValue2]));
@@ -138,5 +142,32 @@ class KVClientUsageTest extends \PHPUnit_Framework_TestCase {
         $this->assertInstanceOf(QueryMeta::class, $qm);
         $this->assertInternalType('array', $list);
         $this->assertCount(3, $list);
+        $this->assertContainsOnlyInstancesOf(KVPair::class, $list);
+
+        $key1found = false;
+        $key2found = false;
+        $key3found = false;
+
+        foreach ($list as $kv) {
+            if (self::KVValue1 === $kv->Value) {
+                $key1found = true;
+            } else if (self::KVValue2 === $kv->Value) {
+                $key2found = true;
+            } else if (self::KVValue3 === $kv->Value) {
+                $key3found = true;
+            }
+        }
+
+        try {
+            $this->assertTrue($key1found, 'Key1 not found in list!');
+            $this->assertTrue($key2found, 'Key2 not found in list!');
+            $this->assertTrue($key3found, 'Key3 not found in list!');
+        } catch (\PHPUnit_Framework_AssertionFailedError $e) {
+            echo "\n\$list value:\n";
+            var_dump($list);
+            echo "\n";
+
+            throw $e;
+        }
     }
 }
