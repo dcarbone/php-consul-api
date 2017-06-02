@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPConsulAPITests\Definition\Agent;
+<?php namespace DCarbone\PHPConsulAPITests\Definition\ACL;
 
 /*
    Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,20 +16,18 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\Agent\AgentSelfConfig;
+use DCarbone\PHPConsulAPI\ACL\ACLReplicationStatus;
 use DCarbone\PHPConsulAPITests\Definition\AbstractDefinitionTestCases;
 
 /**
- * Class AgentSelfConfigDefinitionTest
- * @package DCarbone\PHPConsulAPITests\Definition\Agent
+ * Class ACLReplicationStatusDefinitionTest
+ * @package DCarbone\PHPConsulAPITests\Definition\ACL
  */
-class AgentSelfConfigDefinitionTest extends AbstractDefinitionTestCases
-{
+class ACLReplicationStatusDefinitionTest extends AbstractDefinitionTestCases {
     /**
-     * @inheritDoc
+     * @return string
      */
-    protected function getSubjectClassName()
-    {
-        return AgentSelfConfig::class;
+    protected function getSubjectClassName() {
+        return ACLReplicationStatus::class;
     }
 }

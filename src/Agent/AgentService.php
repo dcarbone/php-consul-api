@@ -36,6 +36,10 @@ class AgentService extends AbstractModel {
     public $Port = 0;
     /** @var bool */
     public $EnableTagOverride = false;
+    /** @var int */
+    public $CreateIndex = 0;
+    /** @var int */
+    public $ModifyIndex = 0;
 
     /**
      * @return string
@@ -70,6 +74,20 @@ class AgentService extends AbstractModel {
      */
     public function isEnableTagOverride() {
         return $this->EnableTagOverride;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCreateIndex() {
+        return $this->CreateIndex;
+    }
+
+    /**
+     * @return int
+     */
+    public function getModifyIndex() {
+        return $this->ModifyIndex;
     }
 
     /**

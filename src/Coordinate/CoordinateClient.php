@@ -32,7 +32,7 @@ class CoordinateClient extends AbstractClient {
      * )
      */
     public function datacenters() {
-        $r = new Request('get', 'v1/coordinate/datacenters', $this->c);
+        $r = new Request('GET', 'v1/coordinate/datacenters', $this->c);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($_, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -56,16 +56,16 @@ class CoordinateClient extends AbstractClient {
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      * @return array(
      * @type \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry[]|null coordinate list or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function nodes(QueryOptions $queryOptions = null) {
-        $r = new Request('get', 'v1/coordinate/nodes', $this->c);
-        $r->setQueryOptions($queryOptions);
+    public function nodes(QueryOptions $options = null) {
+        $r = new Request('GET', 'v1/coordinate/nodes', $this->c);
+        $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list ($duration, $response, $err) = $this->requireOK($this->doRequest($r));

@@ -27,16 +27,16 @@ use DCarbone\PHPConsulAPI\WriteOptions;
  */
 class OperatorClient extends AbstractClient {
     /**
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      * @return array(
      * @type \DCarbone\PHPConsulAPI\Operator\RaftConfiguration|null Current Raft Configuration or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
      * @type \DCarbone\PHPConsulAPI\Error error, if any
      * )
      */
-    public function raftGetConfiguration(QueryOptions $queryOptions = null) {
-        $r = new Request('get', 'v1/operator/raft/configuration', $this->c);
-        $r->setQueryOptions($queryOptions);
+    public function raftGetConfiguration(QueryOptions $options = null) {
+        $r = new Request('GET', 'v1/operator/raft/configuration', $this->c);
+        $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -57,12 +57,12 @@ class OperatorClient extends AbstractClient {
 
     /**
      * @param string $address
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
      * @return \DCarbone\PHPConsulAPI\Error|null error, if any
      */
-    public function raftRemovePeerByAddress($address, WriteOptions $writeOptions = null) {
-        $r = new Request('delete', 'v1/operator/raft/peer', $this->c);
-        $r->setWriteOptions($writeOptions);
+    public function raftRemovePeerByAddress($address, WriteOptions $options = null) {
+        $r = new Request('DELETE', 'v1/operator/raft/peer', $this->c);
+        $r->setWriteOptions($options);
         $r->params->set('address', (string)$address);
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));

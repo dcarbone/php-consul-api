@@ -18,10 +18,20 @@
         <env name="CONSUL_HTTP_SSL" value="0"/>
     </php>
 
-    <testsuite name="definition">
-        <directory>./tests/Definition</directory>
-        <directory>./tests/Usage</directory>
-    </testsuite>
+    <testsuites>
+        <testsuite name="definition">
+            <directory>./tests/Definition</directory>
+        </testsuite>
+
+        <testsuite name="usage-config">
+            <file>./tests/Usage/ConfigUsageTest.php</file>
+        </testsuite>
+
+        <testsuite name="usage-kv">
+            <file>./tests/usage/KV/KVClientCRUDTests.php</file>
+
+        </testsuite>
+    </testsuites>
 
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">

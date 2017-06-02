@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPConsulAPITests\Definition\Agent;
+<?php namespace DCarbone\PHPConsulAPITests\Usage\KV;
 
 /*
    Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,20 +16,10 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\Agent\AgentSelfCoord;
-use DCarbone\PHPConsulAPITests\Definition\AbstractDefinitionTestCases;
-
 /**
- * Class AgentSelfCoordDefinitionTest
- * @package DCarbone\PHPConsulAPITests\Definition\Agent
+ * Class KVClientAdvancedTests
+ * @package DCarbone\PHPConsulAPITests\Usage\KV
  */
-class AgentSelfCoordDefinitionTest extends AbstractDefinitionTestCases
-{
-    /**
-     * @inheritDoc
-     */
-    protected function getSubjectClassName()
-    {
-        return AgentSelfCoord::class;
-    }
+class KVClientAdvancedTests extends \PHPUnit_Framework_TestCase {
+
 }

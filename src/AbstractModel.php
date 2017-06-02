@@ -23,7 +23,7 @@
 abstract class AbstractModel implements \JsonSerializable {
 
     /**
-     * AbstractObjectModel constructor.
+     * AbstractModel constructor.
      *
      * Convenience method to help set scalar types.  Any extending class must have a constructor that builds any
      * array / object properties it may have.

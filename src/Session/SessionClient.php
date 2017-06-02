@@ -28,26 +28,26 @@ use DCarbone\PHPConsulAPI\WriteOptions;
  */
 class SessionClient extends AbstractClient {
     const SessionBehaviorRelease = 'release';
-    const SessionBehaviorDelete = 'delete';
+    const SessionBehaviorDelete = 'DELETE';
 
     /**
      * @param SessionEntry|null $sessionEntry
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
      * @return array(
      * @type string
      * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function createNoChecks(SessionEntry $sessionEntry = null, WriteOptions $writeOptions = null) {
+    public function createNoChecks(SessionEntry $sessionEntry = null, WriteOptions $options = null) {
         if (null === $sessionEntry) {
             $sessionEntry = new SessionEntry;
         } else {
             $sessionEntry->Checks = [];
         }
 
-        $r = new Request('put', 'v1/session/create', $this->c, $sessionEntry);
-        $r->setWriteOptions($writeOptions);
+        $r = new Request('PUT', 'v1/session/create', $this->c, $sessionEntry);
+        $r->setWriteOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -67,16 +67,16 @@ class SessionClient extends AbstractClient {
 
     /**
      * @param SessionEntry|null $sessionEntry
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
      * @return array(
      * @type string
      * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function create(SessionEntry $sessionEntry = null, WriteOptions $writeOptions = null) {
-        $r = new Request('put', 'v1/session/create', $this->c, $sessionEntry);
-        $r->setWriteOptions($writeOptions);
+    public function create(SessionEntry $sessionEntry = null, WriteOptions $options = null) {
+        $r = new Request('PUT', 'v1/session/create', $this->c, $sessionEntry);
+        $r->setWriteOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -97,13 +97,13 @@ class SessionClient extends AbstractClient {
 
     /**
      * @param string $id
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
      * @return array(
      * @type \DCarbone\PHPConsulAPI\WriteMeta|null write metadata or null on error
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function destroy($id, WriteOptions $writeOptions = null) {
+    public function destroy($id, WriteOptions $options = null) {
         if (!is_string($id)) {
             return [null,
                 new Error(sprintf(
@@ -113,8 +113,8 @@ class SessionClient extends AbstractClient {
                 ))];
         }
 
-        $r = new Request('put', sprintf('v1/session/destroy/%s', $id), $this->c);
-        $r->setWriteOptions($writeOptions);
+        $r = new Request('PUT', sprintf('v1/session/destroy/%s', $id), $this->c);
+        $r->setWriteOptions($options);
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
@@ -126,14 +126,14 @@ class SessionClient extends AbstractClient {
 
     /**
      * @param string $id
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
      * @return array(
      * @type \DCarbone\PHPConsulAPI\Session\SessionEntry[]|null list of session entries or null on error
      * @type \DCarbone\PHPConsulAPI\WriteMeta|null write metadata or null on error
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function renew($id, WriteOptions $writeOptions = null) {
+    public function renew($id, WriteOptions $options = null) {
         if (!is_string($id)) {
             return [null,
                 null,
@@ -144,8 +144,8 @@ class SessionClient extends AbstractClient {
                 ))];
         }
 
-        $r = new Request('put', sprintf('v1/session/renew/%s', $id), $this->c);
-        $r->setWriteOptions($writeOptions);
+        $r = new Request('PUT', sprintf('v1/session/renew/%s', $id), $this->c);
+        $r->setWriteOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list ($duration, $response, $err) = $this->doRequest($r);
@@ -183,14 +183,14 @@ class SessionClient extends AbstractClient {
 
     /**
      * @param string $id
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      * @return array(
      * @type \DCarbone\PHPConsulAPI\Session\SessionEntry[]|null list of session entries or null on error / empty response
      * @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata or null on error
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function info($id, QueryOptions $queryOptions = null) {
+    public function info($id, QueryOptions $options = null) {
         if (!is_string($id)) {
             return [null,
                 null,
@@ -201,8 +201,8 @@ class SessionClient extends AbstractClient {
                 ))];
         }
 
-        $r = new Request('get', sprintf('v1/session/info/%s', $id), $this->c);
-        $r->setQueryOptions($queryOptions);
+        $r = new Request('GET', sprintf('v1/session/info/%s', $id), $this->c);
+        $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -227,14 +227,14 @@ class SessionClient extends AbstractClient {
 
     /**
      * @param string $node
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      * @return array(
      * @type \DCarbone\PHPConsulAPI\Session\SessionEntry[]|null list of session entries or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata or null on error
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function node($node, QueryOptions $queryOptions = null) {
+    public function node($node, QueryOptions $options = null) {
         if (!is_string($node)) {
             return [null,
                 null,
@@ -245,8 +245,8 @@ class SessionClient extends AbstractClient {
                 ))];
         }
 
-        $r = new Request('get', sprintf('v1/session/node/%s', $node), $this->c);
-        $r->setQueryOptions($queryOptions);
+        $r = new Request('GET', sprintf('v1/session/node/%s', $node), $this->c);
+        $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -266,16 +266,16 @@ class SessionClient extends AbstractClient {
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      * @return array(
      * @type \DCarbone\PHPConsulAPI\Session\SessionEntry[]|null list of session entries or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function listSessions(QueryOptions $queryOptions = null) {
-        $r = new Request('get', 'v1/session/list', $this->c);
-        $r->setQueryOptions($queryOptions);
+    public function listSessions(QueryOptions $options = null) {
+        $r = new Request('GET', 'v1/session/list', $this->c);
+        $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));

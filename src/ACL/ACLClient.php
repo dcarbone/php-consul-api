@@ -28,16 +28,16 @@ use DCarbone\PHPConsulAPI\WriteOptions;
 class ACLClient extends AbstractClient {
     /**
      * @param \DCarbone\PHPConsulAPI\ACL\ACLEntry $acl
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
      * @return array(
      * @type string ACL ID
      * @type \DCarbone\PHPConsulAPI\WriteMeta write meta data
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function create(ACLEntry $acl, WriteOptions $writeOptions = null) {
-        $r = new Request('put', 'v1/acl/create', $this->c, $acl);
-        $r->setWriteOptions($writeOptions);
+    public function create(ACLEntry $acl, WriteOptions $options = null) {
+        $r = new Request('PUT', 'v1/acl/create', $this->c, $acl);
+        $r->setWriteOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -57,15 +57,15 @@ class ACLClient extends AbstractClient {
 
     /**
      * @param \DCarbone\PHPConsulAPI\ACL\ACLEntry $acl
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
      * @return array(
      * @type \DCarbone\PHPConsulAPI\WriteMeta
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function update(ACLEntry $acl, WriteOptions $writeOptions = null) {
+    public function update(ACLEntry $acl, WriteOptions $options = null) {
         $r = new Request('PUT', 'v1/acl/update', $this->c, $acl);
-        $r->setWriteOptions($writeOptions);
+        $r->setWriteOptions($options);
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
 
@@ -78,15 +78,15 @@ class ACLClient extends AbstractClient {
 
     /**
      * @param string $id
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
      * @return array(
      * @type \DCarbone\PHPConsulAPI\WriteMeta write meta data
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function destroy($id, WriteOptions $writeOptions = null) {
+    public function destroy($id, WriteOptions $options = null) {
         $r = new Request('PUT', sprintf('v1/acl/destroy/%s', $id), $this->c);
-        $r->setWriteOptions($writeOptions);
+        $r->setWriteOptions($options);
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
 
@@ -99,16 +99,16 @@ class ACLClient extends AbstractClient {
 
     /**
      * @param string $id
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
      * @return array(
      * @type string cloned ACL id
      * @type \DCarbone\PHPConsulAPI\WriteMeta write meta data
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function cloneACL($id, WriteOptions $writeOptions = null) {
+    public function cloneACL($id, WriteOptions $options = null) {
         $r = new Request('PUT', sprintf('v1/acl/clone/%s', $id), $this->c);
-        $r->setWriteOptions($writeOptions);
+        $r->setWriteOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -128,16 +128,16 @@ class ACLClient extends AbstractClient {
 
     /**
      * @param string $id
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      * @return array(
      * @type \DCarbone\PHPConsulAPI\ACL\ACLEntry[]|null list of ACL entries corresponding to that ID, or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query meta data
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function info($id, QueryOptions $queryOptions = null) {
+    public function info($id, QueryOptions $options = null) {
         $r = new Request('GET', sprintf('v1/acl/info/%s', $id), $this->c);
-        $r->setQueryOptions($queryOptions);
+        $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -161,16 +161,16 @@ class ACLClient extends AbstractClient {
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      * @return array(
      * @type \DCarbone\PHPConsulAPI\ACL\ACLEntry[] acl entries or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query meta data
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function listACLs(QueryOptions $queryOptions = null) {
+    public function listACLs(QueryOptions $options = null) {
         $r = new Request('GET', 'v1/acl/list', $this->c);
-        $r->setQueryOptions($queryOptions);
+        $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -179,7 +179,6 @@ class ACLClient extends AbstractClient {
         }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
 
         list($data, $err) = $this->decodeBody($response->getBody());
         if (null !== $err) {
@@ -192,5 +191,33 @@ class ACLClient extends AbstractClient {
         }
 
         return [$entries, $qm, null];
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
+     * @return array(
+     * @type \DCarbone\PHPConsulAPI\ACL\ACLReplicationStatus current replication status
+     * @type \DCarbone\PHPConsulAPI\QueryMeta
+     * @type \DCarbone\PHPConsulAPI\Error
+     * )
+     */
+    public function replication(QueryOptions $options = null) {
+        $r = new Request('GET', '/v1/acl/replication', $this->c);
+        $r->setQueryOptions($options);
+
+        /** @var \Psr\Http\Message\ResponseInterface $response */
+        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        if (null !== $err) {
+            return [null, null, $err];
+        }
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
+
+        list($data, $err) = $this->decodeBody($response->getBody());
+        if (null !== $err) {
+            return [null, $qm, $err];
+        }
+
+        return [new ACLReplicationStatus($data), $qm, null];
     }
 }

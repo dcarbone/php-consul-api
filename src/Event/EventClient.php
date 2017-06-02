@@ -28,21 +28,21 @@ use DCarbone\PHPConsulAPI\WriteOptions;
 class EventClient extends AbstractClient {
     /**
      * @param \DCarbone\PHPConsulAPI\Event\UserEvent $event
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
      * @return array(
      * @type UserEvent|null user event that was fired or null on error
      * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
      * @type \DCarbone\PHPConsulAPI\Error error, if any
      * )
      */
-    public function fire(UserEvent $event, WriteOptions $writeOptions = null) {
+    public function fire(UserEvent $event, WriteOptions $options = null) {
         $r = new Request(
-            'put',
+            'PUT',
             sprintf('v1/event/fire/%s', $event->Name),
             $this->c,
             '' !== $event->Payload ? $event->Payload : null);
 
-        $r->setWriteOptions($writeOptions);
+        $r->setWriteOptions($options);
 
         if ('' !== ($nf = $event->NodeFilter)) {
             $r->params->set('node', $nf);
@@ -72,19 +72,19 @@ class EventClient extends AbstractClient {
 
     /**
      * @param string $name
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      * @return array(
      * @type UserEvent[] list of user events or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
      * @type \DCarbone\PHPConsulAPI\Error error, if any
      * )
      */
-    public function eventList($name = '', QueryOptions $queryOptions = null) {
-        $r = new Request('get', 'v1/event/list', $this->c);
+    public function eventList($name = '', QueryOptions $options = null) {
+        $r = new Request('GET', 'v1/event/list', $this->c);
         if ('' !== (string)$name) {
             $r->params->set('name', $name);
         }
-        $r->setQueryOptions($queryOptions);
+        $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));

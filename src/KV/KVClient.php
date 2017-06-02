@@ -29,14 +29,14 @@ use DCarbone\PHPConsulAPI\WriteOptions;
 class KVClient extends AbstractClient {
     /**
      * @param string $key Name of key to retrieve value for
-     * @param \DCarbone\PHPConsulAPI\QueryOptions $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions $options
      * @return array(
      * @type KVPair|null kv object or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata object or null on error
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function get($key, QueryOptions $queryOptions = null) {
+    public function get($key, QueryOptions $options = null) {
         if (!is_string($key)) {
             return [null,
                 null,
@@ -47,8 +47,8 @@ class KVClient extends AbstractClient {
                 ))];
         }
 
-        $r = new Request('get', sprintf('v1/kv/%s', $key), $this->c);
-        $r->setQueryOptions($queryOptions);
+        $r = new Request('GET', sprintf('v1/kv/%s', $key), $this->c);
+        $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->doRequest($r);
@@ -79,15 +79,15 @@ class KVClient extends AbstractClient {
 
     /**
      * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
-     * @param \DCarbone\PHPConsulAPI\WriteOptions $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions $options
      * @return array(
      * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function put(KVPair $p, WriteOptions $writeOptions = null) {
-        $r = new Request('put', sprintf('v1/kv/%s', $p->Key), $this->c, $p->Value);
-        $r->setWriteOptions($writeOptions);
+    public function put(KVPair $p, WriteOptions $options = null) {
+        $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->c, $p->Value);
+        $r->setWriteOptions($options);
         if (0 !== $p->Flags) {
             $r->params->set('flags', (string)$p->Flags);
         }
@@ -102,15 +102,15 @@ class KVClient extends AbstractClient {
 
     /**
      * @param string $key
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
      * @return array(
      * @type \DCarbone\PHPConsulAPI\WriteMeta metadata about write
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function delete($key, WriteOptions $writeOptions = null) {
-        $r = new Request('delete', sprintf('v1/kv/%s', $key), $this->c);
-        $r->setWriteOptions($writeOptions);
+    public function delete($key, WriteOptions $options = null) {
+        $r = new Request('DELETE', sprintf('v1/kv/%s', $key), $this->c);
+        $r->setWriteOptions($options);
 
         list ($duration, $_, $err) = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
@@ -122,18 +122,18 @@ class KVClient extends AbstractClient {
 
     /**
      * @param string $prefix
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      * @return array(
      * @type KVPair[]|null array of KVPair objects under specified prefix
      * @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function valueList($prefix = '', QueryOptions $queryOptions = null) {
+    public function valueList($prefix = '', QueryOptions $options = null) {
         if (null === $prefix) {
-            $r = new Request('get', 'v1/kv/', $this->c);
+            $r = new Request('GET', 'v1/kv/', $this->c);
         } else if (is_string($prefix)) {
-            $r = new Request('get', sprintf('v1/kv/%s', $prefix), $this->c);
+            $r = new Request('GET', sprintf('v1/kv/%s', $prefix), $this->c);
         } else {
             return [null,
                 null,
@@ -144,7 +144,7 @@ class KVClient extends AbstractClient {
                 ))];
         }
 
-        $r->setQueryOptions($queryOptions);
+        $r->setQueryOptions($options);
         $r->params->set('recurse', '');
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -172,18 +172,18 @@ class KVClient extends AbstractClient {
 
     /**
      * @param string $prefix Prefix to search for.  Null returns all keys.
-     * @param \DCarbone\PHPConsulAPI\QueryOptions $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions $options
      * @return array(
      * @type string[]|null list of keys
      * @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function keys($prefix = null, QueryOptions $queryOptions = null) {
+    public function keys($prefix = null, QueryOptions $options = null) {
         if (null === $prefix) {
-            $r = new Request('get', 'v1/kv/', $this->c);
+            $r = new Request('GET', 'v1/kv/', $this->c);
         } else if (is_string($prefix)) {
-            $r = new Request('get', sprintf('v1/kv/%s', $prefix), $this->c);
+            $r = new Request('GET', sprintf('v1/kv/%s', $prefix), $this->c);
         } else {
             return [null,
                 null,
@@ -194,7 +194,7 @@ class KVClient extends AbstractClient {
                 ))];
         }
 
-        $r->setQueryOptions($queryOptions);
+        $r->setQueryOptions($options);
         $r->params->set('keys', 'true');
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -212,15 +212,15 @@ class KVClient extends AbstractClient {
 
     /**
      * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
-     * @param \DCarbone\PHPConsulAPI\WriteOptions $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions $options
      * @return array(
      * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function cas(KVPair $p, WriteOptions $writeOptions = null) {
-        $r = new Request('put', sprintf('v1/kv/%s', $p->Key), $this->c);
-        $r->setWriteOptions($writeOptions);
+    public function cas(KVPair $p, WriteOptions $options = null) {
+        $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->c);
+        $r->setWriteOptions($options);
         $r->params->set('cas', (string)$p->ModifyIndex);
         if (0 !== $p->Flags) {
             $r->params->set('flags', (string)$p->Flags);
@@ -236,15 +236,15 @@ class KVClient extends AbstractClient {
 
     /**
      * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
-     * @param \DCarbone\PHPConsulAPI\WriteOptions $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions $options
      * @return array(
      * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function acquire(KVPair $p, WriteOptions $writeOptions = null) {
-        $r = new Request('put', sprintf('v1/kv/%s', $p->Key), $this->c);
-        $r->setWriteOptions($writeOptions);
+    public function acquire(KVPair $p, WriteOptions $options = null) {
+        $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->c);
+        $r->setWriteOptions($options);
         $r->params->set('acquire', $p->Session);
         if (0 !== $p->Flags) {
             $r->params->set('flags', (string)$p->Flags);
@@ -260,15 +260,15 @@ class KVClient extends AbstractClient {
 
     /**
      * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
-     * @param \DCarbone\PHPConsulAPI\WriteOptions $writeOptions
+     * @param \DCarbone\PHPConsulAPI\WriteOptions $options
      * @return array(
      * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function release(KVPair $p, WriteOptions $writeOptions = null) {
-        $r = new Request('put', sprintf('v1/kv/%s', $p->Key), $this->c);
-        $r->setWriteOptions($writeOptions);
+    public function release(KVPair $p, WriteOptions $options = null) {
+        $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->c);
+        $r->setWriteOptions($options);
         $r->params->set('release', $p->Session);
         if (0 !== $p->Flags) {
             $r->params->set('flags', (string)$p->Flags);
@@ -284,14 +284,14 @@ class KVClient extends AbstractClient {
 
     /**
      * @param null|string $prefix
-     * @param \DCarbone\PHPConsulAPI\QueryOptions $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions $options
      * @return array(
      * @type KVPair[]|KVTree[]|null array of trees, values, or null on error
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function tree($prefix = '', QueryOptions $queryOptions = null) {
-        list($valueList, $_, $err) = $this->valueList($prefix, $queryOptions);
+    public function tree($prefix = '', QueryOptions $options = null) {
+        list($valueList, $_, $err) = $this->valueList($prefix, $options);
 
         if (null !== $err) {
             return [null, $err];

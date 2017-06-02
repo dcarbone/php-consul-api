@@ -28,14 +28,14 @@ use DCarbone\PHPConsulAPI\Request;
 class HealthClient extends AbstractClient {
     /**
      * @param string $node
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      * @return array(
      * @type HealthCheck[]|null list of health checks or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query meta
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function node($node, QueryOptions $queryOptions = null) {
+    public function node($node, QueryOptions $options = null) {
         if (!is_string($node)) {
             return [null,
                 null,
@@ -46,8 +46,8 @@ class HealthClient extends AbstractClient {
                 ))];
         }
 
-        $r = new Request('get', sprintf('v1/health/node/%s', $node), $this->c);
-        $r->setQueryOptions($queryOptions);
+        $r = new Request('GET', sprintf('v1/health/node/%s', $node), $this->c);
+        $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -73,14 +73,14 @@ class HealthClient extends AbstractClient {
 
     /**
      * @param string $service
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      * @return array(
      * @type HealthCheck[]|null list of health checks or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function checks($service, QueryOptions $queryOptions = null) {
+    public function checks($service, QueryOptions $options = null) {
         if (!is_string($service)) {
             return [null,
                 null,
@@ -92,8 +92,8 @@ class HealthClient extends AbstractClient {
         }
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        $r = new Request('get', sprintf('v1/health/checks/%s', $service), $this->c);
-        $r->setQueryOptions($queryOptions);
+        $r = new Request('GET', sprintf('v1/health/checks/%s', $service), $this->c);
+        $r->setQueryOptions($options);
 
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
@@ -120,14 +120,14 @@ class HealthClient extends AbstractClient {
      * @param string $service
      * @param string $tag
      * @param bool $passingOnly
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      * @return array (
      * @type \DCarbone\PHPConsulAPI\Health\ServiceEntry[]|null list of service entries or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function service($service, $tag = '', $passingOnly = false, QueryOptions $queryOptions = null) {
+    public function service($service, $tag = '', $passingOnly = false, QueryOptions $options = null) {
         if (!is_string($service)) {
             return [null,
                 null,
@@ -138,8 +138,8 @@ class HealthClient extends AbstractClient {
                 ))];
         }
 
-        $r = new Request('get', sprintf('v1/health/service/%s', $service), $this->c);
-        $r->setQueryOptions($queryOptions);
+        $r = new Request('GET', sprintf('v1/health/service/%s', $service), $this->c);
+        $r->setQueryOptions($options);
         if ('' !== $tag) {
             $r->params->set('tag', $tag);
         }
@@ -171,14 +171,14 @@ class HealthClient extends AbstractClient {
 
     /**
      * @param string $state
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $queryOptions
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      * @return array(
      * @type HealthCheck[]|null array of heath checks or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata or null on error
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function state($state, QueryOptions $queryOptions = null) {
+    public function state($state, QueryOptions $options = null) {
         static $validStates = array('any', 'warning', 'critical', 'passing', 'unknown');
 
         if (!is_string($state) || !in_array($state, $validStates, true)) {
@@ -192,8 +192,8 @@ class HealthClient extends AbstractClient {
                 ))];
         }
 
-        $r = new Request('get', sprintf('v1/health/state/%s', $state), $this->c);
-        $r->setQueryOptions($queryOptions);
+        $r = new Request('GET', sprintf('v1/health/state/%s', $state), $this->c);
+        $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
