@@ -17,6 +17,7 @@
 */
 
 use DCarbone\PHPConsulAPI\Config;
+use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\KV\KVClient;
 use DCarbone\PHPConsulAPI\KV\KVPair;
 use DCarbone\PHPConsulAPI\QueryMeta;
@@ -108,10 +109,27 @@ class KVClientUsageTest extends \PHPUnit_Framework_TestCase {
             ));
     }
 
+    public function testListReturnsErrorWithInvalidPrefix() {
+        $client = new KVClient(new Config());
+        list($_, $_, $err) = $client->valueList(12345);
+        $this->assertInstanceOf(
+            Error::class,
+            $err,
+            sprintf(
+                'Expected $err to be instanceof "%s", saw "%s"',
+                Error::class,
+                is_object($err) ? get_class($err) : gettype($err)
+            ));
+    }
+
     /**
      * @depends testCanPutKey
      */
     public function testCanGetNoPrefixList() {
+        /** @var \DCarbone\PHPConsulAPI\KV\KVPair[] $list */
+        /** @var \DCarbone\PHPConsulAPI\QueryMeta $qm */
+        /** @var \DCarbone\PHPConsulAPI\Error $err */
+
         $client = new KVClient(new Config());
         $client->put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
         $client->put(new KVPair(['Key' => self::KVKey2, 'Value' => self::KVValue2]));
@@ -122,6 +140,32 @@ class KVClientUsageTest extends \PHPUnit_Framework_TestCase {
         $this->assertInstanceOf(QueryMeta::class, $qm);
         $this->assertInternalType('array', $list);
         $this->assertCount(3, $list);
+
+        $key1found = false;
+        $key2found = false;
+        $key3found = false;
+
+        foreach ($list as $kv) {
+            if (self::KVValue1 === $kv->Value) {
+                $key1found = true;
+            } else if (self::KVValue2 === $kv->Value) {
+                $key2found = true;
+            } else if (self::KVValue3 === $kv->Value) {
+                $key3found = true;
+            }
+        }
+
+        try {
+            $this->assertTrue($key1found, 'Key1 not found in list!');
+            $this->assertTrue($key2found, 'Key2 not found in list!');
+            $this->assertTrue($key3found, 'Key3 not found in list!');
+        } catch (\PHPUnit_Framework_AssertionFailedError $e) {
+            echo "\nno prefix \$list value:\n";
+            var_dump($list);
+            echo "\n";
+
+            throw $e;
+        }
     }
 
     /**
@@ -163,7 +207,54 @@ class KVClientUsageTest extends \PHPUnit_Framework_TestCase {
             $this->assertTrue($key2found, 'Key2 not found in list!');
             $this->assertTrue($key3found, 'Key3 not found in list!');
         } catch (\PHPUnit_Framework_AssertionFailedError $e) {
-            echo "\n\$list value:\n";
+            echo "\nprefix \$list value:\n";
+            var_dump($list);
+            echo "\n";
+
+            throw $e;
+        }
+    }
+
+    /**
+     * @depends testCanPutKey
+     */
+    public function testCanGetNoPrefixKeys() {
+        /** @var string[] $list */
+        /** @var \DCarbone\PHPConsulAPI\QueryMeta $qm */
+        /** @var \DCarbone\PHPConsulAPI\Error $err */
+
+        $client = new KVClient(new Config());
+        $client->put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
+        $client->put(new KVPair(['Key' => self::KVKey2, 'Value' => self::KVValue2]));
+        $client->put(new KVPair(['Key' => self::KVKey3, 'Value' => self::KVValue3]));
+
+        list($list, $qm, $err) = $client->keys();
+        $this->assertNull($err, sprintf('KV::keys returned error: %s', $err));
+        $this->assertInstanceOf(QueryMeta::class, $qm);
+        $this->assertInternalType('array', $list);
+        $this->assertCount(3, $list);
+        $this->assertContainsOnly('string', $list, true);
+
+        $key1found = false;
+        $key2found = false;
+        $key3found = false;
+
+        foreach ($list as $key) {
+            if (self::KVKey1 === $key) {
+                $key1found = true;
+            } else if (self::KVKey2 === $key) {
+                $key2found = true;
+            } else if (self::KVKey3 === $key) {
+                $key3found = true;
+            }
+        }
+
+        try {
+            $this->assertTrue($key1found, 'Key1 not found in list!');
+            $this->assertTrue($key2found, 'Key2 not found in list!');
+            $this->assertTrue($key3found, 'Key3 not found in list!');
+        } catch (\PHPUnit_Framework_AssertionFailedError $e) {
+            echo "\nprefix \$list value:\n";
             var_dump($list);
             echo "\n";
 

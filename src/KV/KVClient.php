@@ -87,7 +87,11 @@ class KVClient extends AbstractClient {
      * )
      */
     public function valueList($prefix = '', QueryOptions $queryOptions = null) {
-        if (!is_string($prefix)) {
+        if (null === $prefix) {
+            $r = new Request('get', 'v1/kv/', $this->c);
+        } else if (is_string($prefix)) {
+            $r = new Request('get', sprintf('v1/kv/%s', $prefix), $this->c);
+        } else {
             return [null,
                 null,
                 new Error(sprintf(
@@ -95,12 +99,6 @@ class KVClient extends AbstractClient {
                     get_class($this),
                     gettype($prefix)
                 ))];
-        }
-
-        if ('' === $prefix) {
-            $r = new Request('get', 'v1/kv/', $this->c);
-        } else {
-            $r = new Request('get', sprintf('v1/kv/%s', $prefix), $this->c);
         }
 
         $r->setQueryOptions($queryOptions);
@@ -139,7 +137,11 @@ class KVClient extends AbstractClient {
      * )
      */
     public function keys($prefix = null, QueryOptions $queryOptions = null) {
-        if (null !== $prefix && !is_string($prefix)) {
+        if (null === $prefix) {
+            $r = new Request('get', 'v1/kv/', $this->c);
+        } else if (is_string($prefix)) {
+            $r = new Request('get', sprintf('v1/kv/%s', $prefix), $this->c);
+        } else {
             return [null,
                 null,
                 new Error(sprintf(
@@ -147,12 +149,6 @@ class KVClient extends AbstractClient {
                     get_class($this),
                     gettype($prefix)
                 ))];
-        }
-
-        if (null === $prefix) {
-            $r = new Request('get', 'v1/kv/', $this->c);
-        } else {
-            $r = new Request('get', sprintf('v1/kv/%s', $prefix), $this->c);
         }
 
         $r->setQueryOptions($queryOptions);
@@ -172,7 +168,7 @@ class KVClient extends AbstractClient {
     }
 
     /**
-     * @param KVPair $p
+     * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
      * @param \DCarbone\PHPConsulAPI\WriteOptions $writeOptions
      * @return array(
      * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
@@ -215,7 +211,7 @@ class KVClient extends AbstractClient {
     }
 
     /**
-     * @param KVPair $p
+     * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
      * @param \DCarbone\PHPConsulAPI\WriteOptions $writeOptions
      * @return array(
      * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
@@ -239,7 +235,7 @@ class KVClient extends AbstractClient {
     }
 
     /**
-     * @param KVPair $p
+     * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
      * @param \DCarbone\PHPConsulAPI\WriteOptions $writeOptions
      * @return array(
      * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
@@ -263,7 +259,7 @@ class KVClient extends AbstractClient {
     }
 
     /**
-     * @param KVPair $p
+     * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
      * @param \DCarbone\PHPConsulAPI\WriteOptions $writeOptions
      * @return array(
      * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
