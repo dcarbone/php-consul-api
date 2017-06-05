@@ -19,6 +19,7 @@
 use DCarbone\PHPConsulAPI\Agent\AgentClient;
 use DCarbone\PHPConsulAPI\Agent\AgentMember;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
+use DCarbone\PHPConsulAPI\Agent\AgentServiceCheck;
 use DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration;
 use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPITests\ConsulManager;
@@ -174,4 +175,46 @@ class AgentClientUsageTests extends \PHPUnit_Framework_TestCase {
             throw $e;
         }
     }
+
+    /**
+     * @depends testCanDeregisterService
+     */
+    public function testCanRegisterServiceWithCheck() {
+        $client = new AgentClient(new Config());
+
+        $svc = new AgentServiceRegistration();
+        $svc
+            ->setName(self::ServiceName)
+            ->setPort(1234)
+            ->setAddress('127.0.0.1')
+            ->setCheck(new AgentServiceCheck([
+                'TCP' => '127.0.0.1',
+                'Interval' => '30s',
+            ]));
+
+        $err = $client->serviceRegister($svc);
+        $this->assertNull($err, sprintf('Error registering service with check: %s', $err));
+
+        sleep(2);
+
+        list($svcs, $err) = $client->services();
+
+        try {
+            $this->assertNull($err, sprintf('AgentClient::services returned error: %s', $err));
+            $this->assertInternalType('array', $svcs);
+            $this->assertContainsOnlyInstancesOf(AgentService::class, $svcs);
+            $this->assertCount(2, $svcs);
+        } catch (\PHPUnit_Framework_AssertionFailedError $e) {
+            echo "\nservices list:\n";
+            var_dump($svcs);
+            echo "\n";
+
+            throw $e;
+        }
+
+        $err = $client->serviceDeregister(self::ServiceName);
+        $this->assertNull($err, sprintf('Error deregistering service: %s', $err));
+    }
+
+
 }

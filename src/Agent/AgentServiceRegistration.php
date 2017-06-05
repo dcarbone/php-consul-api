@@ -37,9 +37,9 @@ class AgentServiceRegistration extends AbstractModel {
     public $Address = '';
     /** @var bool */
     public $EnableTagOverride = false;
-    /** @var \DCarbone\PHPConsulAPI\Agent\AgentCheck */
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck */
     public $Check = null;
-    /** @var \DCarbone\PHPConsulAPI\Agent\AgentCheck[] */
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck[] */
     public $Checks = [];
 
     /**
@@ -49,16 +49,16 @@ class AgentServiceRegistration extends AbstractModel {
     public function __construct(array $data = []) {
         parent::__construct($data);
 
-        if (null !== $this->Check && !($this->Check instanceof AgentCheck)) {
-            $this->Check = new AgentCheck((array)$this->Check);
+        if (null !== $this->Check && !($this->Check instanceof AgentServiceCheck)) {
+            $this->Check = new AgentServiceCheck((array)$this->Check);
         }
 
         if (0 < count($this->Checks)) {
             $this->Checks = array_filter($this->Checks);
             if (0 < ($cnt = count($this->Checks))) {
                 for ($i = 0, $cnt = count($this->Checks); $i < $cnt; $i++) {
-                    if (!($this->Checks[$i] instanceof AgentCheck)) {
-                        $this->Checks[$i] = new AgentCheck($this->Checks[$i]);
+                    if (!($this->Checks[$i] instanceof AgentServiceCheck)) {
+                        $this->Checks[$i] = new AgentServiceCheck($this->Checks[$i]);
                     }
                 }
             }
@@ -146,30 +146,30 @@ class AgentServiceRegistration extends AbstractModel {
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
     public function getCheck() {
         return $this->Check;
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Agent\AgentCheck $Check
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck $Check
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
-    public function setCheck(AgentCheck $Check) {
+    public function setCheck(AgentServiceCheck $Check) {
         $this->Check = $Check;
         return $this;
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheck[]
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck[]
      */
     public function getChecks() {
         return $this->Checks;
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Agent\AgentCheck[] $Checks
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck[] $Checks
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
     public function setChecks(array $Checks) {
@@ -180,10 +180,10 @@ class AgentServiceRegistration extends AbstractModel {
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Agent\AgentCheck $Check
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck $Check
      * @return $this
      */
-    public function addCheck(AgentCheck $Check) {
+    public function addCheck(AgentServiceCheck $Check) {
         $this->Checks[] = $Check;
         return $this;
     }
