@@ -11,7 +11,7 @@ This library is loosely based upon the [official GO client](https://github.com/h
 |PHPConsulAPI Version|Consul Version|
 |---|---|
 |0.3.x|0.6.4|
-|0.5.x|0.7-0.8|
+|0.6.x|0.7-0.8|
 
 ## Composer
 
