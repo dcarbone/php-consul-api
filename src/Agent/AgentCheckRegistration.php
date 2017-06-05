@@ -26,8 +26,6 @@ class AgentCheckRegistration extends AgentServiceCheck {
     /** @var string */
     public $Name = '';
     /** @var string */
-    public $Notes = '';
-    /** @var string */
     public $ServiceID = '';
 
     /**
@@ -59,22 +57,6 @@ class AgentCheckRegistration extends AgentServiceCheck {
      */
     public function setName($Name) {
         $this->Name = $Name;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getNotes() {
-        return $this->Notes;
-    }
-
-    /**
-     * @param string $Notes
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration
-     */
-    public function setNotes($Notes) {
-        $this->Notes = $Notes;
         return $this;
     }
 
