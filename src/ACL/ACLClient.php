@@ -36,7 +36,7 @@ class ACLClient extends AbstractClient {
      * )
      */
     public function create(ACLEntry $acl, WriteOptions $options = null) {
-        $r = new Request('PUT', 'v1/acl/create', $this->c, $acl);
+        $r = new Request('PUT', 'v1/acl/create', $this->config, $acl);
         $r->setWriteOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -64,7 +64,7 @@ class ACLClient extends AbstractClient {
      * )
      */
     public function update(ACLEntry $acl, WriteOptions $options = null) {
-        $r = new Request('PUT', 'v1/acl/update', $this->c, $acl);
+        $r = new Request('PUT', 'v1/acl/update', $this->config, $acl);
         $r->setWriteOptions($options);
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
@@ -85,7 +85,7 @@ class ACLClient extends AbstractClient {
      * )
      */
     public function destroy($id, WriteOptions $options = null) {
-        $r = new Request('PUT', sprintf('v1/acl/destroy/%s', $id), $this->c);
+        $r = new Request('PUT', sprintf('v1/acl/destroy/%s', $id), $this->config);
         $r->setWriteOptions($options);
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
@@ -107,7 +107,7 @@ class ACLClient extends AbstractClient {
      * )
      */
     public function cloneACL($id, WriteOptions $options = null) {
-        $r = new Request('PUT', sprintf('v1/acl/clone/%s', $id), $this->c);
+        $r = new Request('PUT', sprintf('v1/acl/clone/%s', $id), $this->config);
         $r->setWriteOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -136,7 +136,7 @@ class ACLClient extends AbstractClient {
      * )
      */
     public function info($id, QueryOptions $options = null) {
-        $r = new Request('GET', sprintf('v1/acl/info/%s', $id), $this->c);
+        $r = new Request('GET', sprintf('v1/acl/info/%s', $id), $this->config);
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -169,7 +169,7 @@ class ACLClient extends AbstractClient {
      * )
      */
     public function listACLs(QueryOptions $options = null) {
-        $r = new Request('GET', 'v1/acl/list', $this->c);
+        $r = new Request('GET', 'v1/acl/list', $this->config);
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -202,7 +202,7 @@ class ACLClient extends AbstractClient {
      * )
      */
     public function replication(QueryOptions $options = null) {
-        $r = new Request('GET', '/v1/acl/replication', $this->c);
+        $r = new Request('GET', '/v1/acl/replication', $this->config);
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */

@@ -35,7 +35,7 @@ class CatalogClient extends AbstractClient {
      * )
      */
     public function register(CatalogRegistration $catalogRegistration, WriteOptions $options = null) {
-        $r = new Request('PUT', 'v1/catalog/register', $this->c, $catalogRegistration);
+        $r = new Request('PUT', 'v1/catalog/register', $this->config, $catalogRegistration);
         $r->setWriteOptions($options);
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
@@ -55,7 +55,7 @@ class CatalogClient extends AbstractClient {
      * )
      */
     public function deregister(CatalogDeregistration $catalogDeregistration, WriteOptions $options = null) {
-        $r = new Request('PUT', 'v1/catalog/deregister', $this->c, $catalogDeregistration);
+        $r = new Request('PUT', 'v1/catalog/deregister', $this->config, $catalogDeregistration);
         $r->setWriteOptions($options);
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
@@ -73,7 +73,7 @@ class CatalogClient extends AbstractClient {
      * )
      */
     public function datacenters() {
-        $r = new Request('GET', 'v1/catalog/datacenters', $this->c);
+        $r = new Request('GET', 'v1/catalog/datacenters', $this->config);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($_, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -94,7 +94,7 @@ class CatalogClient extends AbstractClient {
      * )
      */
     public function nodes(QueryOptions $options = null) {
-        $r = new Request('GET', 'v1/catalog/nodes', $this->c);
+        $r = new Request('GET', 'v1/catalog/nodes', $this->config);
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -129,7 +129,7 @@ class CatalogClient extends AbstractClient {
      * )
      */
     public function services(QueryOptions $options = null) {
-        $r = new Request('GET', 'v1/catalog/services', $this->c);
+        $r = new Request('GET', 'v1/catalog/services', $this->config);
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -156,7 +156,7 @@ class CatalogClient extends AbstractClient {
      * )
      */
     public function service($service, $tag = '', QueryOptions $options = null) {
-        $r = new Request('GET', sprintf('v1/catalog/service/%s', $service), $this->c);
+        $r = new Request('GET', sprintf('v1/catalog/service/%s', $service), $this->config);
         $r->setQueryOptions($options);
         if ('' !== $tag) {
             $r->params->set('tag', $tag);
@@ -195,7 +195,7 @@ class CatalogClient extends AbstractClient {
      * )
      */
     public function node($node, QueryOptions $options = null) {
-        $r = new Request('GET', sprintf('v1/catalog/node/%s', $node), $this->c);
+        $r = new Request('GET', sprintf('v1/catalog/node/%s', $node), $this->config);
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */

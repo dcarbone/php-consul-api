@@ -47,7 +47,7 @@ class KVClient extends AbstractClient {
                 ))];
         }
 
-        $r = new Request('GET', sprintf('v1/kv/%s', $key), $this->c);
+        $r = new Request('GET', sprintf('v1/kv/%s', $key), $this->config);
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -86,7 +86,7 @@ class KVClient extends AbstractClient {
      * )
      */
     public function put(KVPair $p, WriteOptions $options = null) {
-        $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->c, $p->Value);
+        $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
         $r->setWriteOptions($options);
         if (0 !== $p->Flags) {
             $r->params->set('flags', (string)$p->Flags);
@@ -109,7 +109,7 @@ class KVClient extends AbstractClient {
      * )
      */
     public function delete($key, WriteOptions $options = null) {
-        $r = new Request('DELETE', sprintf('v1/kv/%s', $key), $this->c);
+        $r = new Request('DELETE', sprintf('v1/kv/%s', $key), $this->config);
         $r->setWriteOptions($options);
 
         list ($duration, $_, $err) = $this->requireOK($this->doRequest($r));
@@ -131,9 +131,9 @@ class KVClient extends AbstractClient {
      */
     public function valueList($prefix = '', QueryOptions $options = null) {
         if (null === $prefix) {
-            $r = new Request('GET', 'v1/kv/', $this->c);
+            $r = new Request('GET', 'v1/kv/', $this->config);
         } else if (is_string($prefix)) {
-            $r = new Request('GET', sprintf('v1/kv/%s', $prefix), $this->c);
+            $r = new Request('GET', sprintf('v1/kv/%s', $prefix), $this->config);
         } else {
             return [null,
                 null,
@@ -181,9 +181,9 @@ class KVClient extends AbstractClient {
      */
     public function keys($prefix = null, QueryOptions $options = null) {
         if (null === $prefix) {
-            $r = new Request('GET', 'v1/kv/', $this->c);
+            $r = new Request('GET', 'v1/kv/', $this->config);
         } else if (is_string($prefix)) {
-            $r = new Request('GET', sprintf('v1/kv/%s', $prefix), $this->c);
+            $r = new Request('GET', sprintf('v1/kv/%s', $prefix), $this->config);
         } else {
             return [null,
                 null,
@@ -219,7 +219,7 @@ class KVClient extends AbstractClient {
      * )
      */
     public function cas(KVPair $p, WriteOptions $options = null) {
-        $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->c);
+        $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config);
         $r->setWriteOptions($options);
         $r->params->set('cas', (string)$p->ModifyIndex);
         if (0 !== $p->Flags) {
@@ -243,7 +243,7 @@ class KVClient extends AbstractClient {
      * )
      */
     public function acquire(KVPair $p, WriteOptions $options = null) {
-        $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->c);
+        $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config);
         $r->setWriteOptions($options);
         $r->params->set('acquire', $p->Session);
         if (0 !== $p->Flags) {
@@ -267,7 +267,7 @@ class KVClient extends AbstractClient {
      * )
      */
     public function release(KVPair $p, WriteOptions $options = null) {
-        $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->c);
+        $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config);
         $r->setWriteOptions($options);
         $r->params->set('release', $p->Session);
         if (0 !== $p->Flags) {

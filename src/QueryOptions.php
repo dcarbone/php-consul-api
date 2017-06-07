@@ -39,6 +39,7 @@ class QueryOptions extends AbstractModel {
     public $NodeMeta = [];
     /** @var int */
     public $RelayFactor = 0;
+
     /** @var bool */
     public $Pretty = false;
 

@@ -27,14 +27,23 @@ use Psr\Http\Message\UriInterface;
  */
 abstract class AbstractClient {
     /** @var Config */
-    protected $c;
+    protected $config;
 
     /**
      * AbstractConsulClient constructor.
      * @param Config $config
      */
     public function __construct(Config $config) {
-        $this->c = $config;
+        // TODO: Clone config?
+
+        $this->config = $config;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Config
+     */
+    public function getConfig() {
+        return $this->config;
     }
 
     /**
@@ -100,8 +109,9 @@ abstract class AbstractClient {
         $err = null;
         try {
             // If we actually have a client defined...
-            if (isset($this->c->HttpClient) && $this->c->HttpClient instanceof ClientInterface) {
-                $response = $this->c->HttpClient->send($r->toPsrRequest(), $this->c->getGuzzleRequestOptions());
+            if (isset($this->config->HttpClient) && $this->config->HttpClient instanceof ClientInterface) {
+                $response =
+                    $this->config->HttpClient->send($r->toPsrRequest(), $this->config->getGuzzleRequestOptions());
             } // Otherwise, throw error to be caught below
             else {
                 throw new \RuntimeException('Unable to execute query as no HttpClient has been defined.');
@@ -146,6 +156,10 @@ abstract class AbstractClient {
             $qm->LastContact = (int)$h;
         } else if ('' !== ($h = $response->getHeaderLine('X-Consul-Lastcontact'))) {
             $qm->LastContact = (int)$h;
+        }
+
+        if ('' !== ($h = $response->getHeaderLine('X-Consul-Translate-Addresses'))) {
+            $qm->AddressTranslationEnabled = (bool)$h;
         }
 
         return $qm;

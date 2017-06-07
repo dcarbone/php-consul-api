@@ -153,6 +153,9 @@ class Request {
         if ('' !== $options->RelayFactor) {
             $this->params->set('relay-factor', (string)$options->RelayFactor);
         }
+        if ($options->Pretty) {
+            $this->params->set('pretty', '');
+        }
 
         $this->uri = null;
     }

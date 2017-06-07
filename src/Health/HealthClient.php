@@ -46,7 +46,7 @@ class HealthClient extends AbstractClient {
                 ))];
         }
 
-        $r = new Request('GET', sprintf('v1/health/node/%s', $node), $this->c);
+        $r = new Request('GET', sprintf('v1/health/node/%s', $node), $this->config);
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -92,7 +92,7 @@ class HealthClient extends AbstractClient {
         }
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        $r = new Request('GET', sprintf('v1/health/checks/%s', $service), $this->c);
+        $r = new Request('GET', sprintf('v1/health/checks/%s', $service), $this->config);
         $r->setQueryOptions($options);
 
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -138,7 +138,7 @@ class HealthClient extends AbstractClient {
                 ))];
         }
 
-        $r = new Request('GET', sprintf('v1/health/service/%s', $service), $this->c);
+        $r = new Request('GET', sprintf('v1/health/service/%s', $service), $this->config);
         $r->setQueryOptions($options);
         if ('' !== $tag) {
             $r->params->set('tag', $tag);
@@ -192,7 +192,7 @@ class HealthClient extends AbstractClient {
                 ))];
         }
 
-        $r = new Request('GET', sprintf('v1/health/state/%s', $state), $this->c);
+        $r = new Request('GET', sprintf('v1/health/state/%s', $state), $this->config);
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */

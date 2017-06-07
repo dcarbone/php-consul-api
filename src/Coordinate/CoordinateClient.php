@@ -32,7 +32,7 @@ class CoordinateClient extends AbstractClient {
      * )
      */
     public function datacenters() {
-        $r = new Request('GET', 'v1/coordinate/datacenters', $this->c);
+        $r = new Request('GET', 'v1/coordinate/datacenters', $this->config);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($_, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -64,7 +64,7 @@ class CoordinateClient extends AbstractClient {
      * )
      */
     public function nodes(QueryOptions $options = null) {
-        $r = new Request('GET', 'v1/coordinate/nodes', $this->c);
+        $r = new Request('GET', 'v1/coordinate/nodes', $this->config);
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */

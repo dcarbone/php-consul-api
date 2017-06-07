@@ -39,7 +39,7 @@ class EventClient extends AbstractClient {
         $r = new Request(
             'PUT',
             sprintf('v1/event/fire/%s', $event->Name),
-            $this->c,
+            $this->config,
             '' !== $event->Payload ? $event->Payload : null);
 
         $r->setWriteOptions($options);
@@ -80,7 +80,7 @@ class EventClient extends AbstractClient {
      * )
      */
     public function eventList($name = '', QueryOptions $options = null) {
-        $r = new Request('GET', 'v1/event/list', $this->c);
+        $r = new Request('GET', 'v1/event/list', $this->config);
         if ('' !== (string)$name) {
             $r->params->set('name', $name);
         }

@@ -36,7 +36,7 @@ class PreparedQueryClient extends AbstractClient {
      * )
      */
     public function create(PreparedQueryDefinition $query, WriteOptions $options = null) {
-        $r = new Request('POST', 'v1/query', $this->c, $query);
+        $r = new Request('POST', 'v1/query', $this->config, $query);
         $r->setWriteOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -57,7 +57,7 @@ class PreparedQueryClient extends AbstractClient {
      * )
      */
     public function update(PreparedQueryDefinition $query, WriteOptions $options = null) {
-        $r = new Request('PUT', 'v1/query', $this->c, $query);
+        $r = new Request('PUT', 'v1/query', $this->config, $query);
         $r->setWriteOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -78,7 +78,7 @@ class PreparedQueryClient extends AbstractClient {
      * )
      */
     public function listQueries(QueryOptions $options = null) {
-        $r = new Request('GET', 'v1/query', $this->c);
+        $r = new Request('GET', 'v1/query', $this->config);
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -111,7 +111,7 @@ class PreparedQueryClient extends AbstractClient {
      * )
      */
     public function get($queryID, QueryOptions $options = null) {
-        $r = new Request('GET', sprintf('v1/query/%s', $queryID), $this->c);
+        $r = new Request('GET', sprintf('v1/query/%s', $queryID), $this->config);
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -143,7 +143,7 @@ class PreparedQueryClient extends AbstractClient {
      * )
      */
     public function delete($queryID, WriteOptions $options = null) {
-        $r = new Request('DELETE', sprintf('v1/query/%s', $queryID), $this->c);
+        $r = new Request('DELETE', sprintf('v1/query/%s', $queryID), $this->config);
         $r->setWriteOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -167,7 +167,7 @@ class PreparedQueryClient extends AbstractClient {
      * )
      */
     public function execute($queryIDOrName, QueryOptions $options = null) {
-        $r = new Request('GET', sprintf('v1/query/%s/execute', $queryIDOrName), $this->c);
+        $r = new Request('GET', sprintf('v1/query/%s/execute', $queryIDOrName), $this->config);
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */

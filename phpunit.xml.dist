@@ -27,15 +27,22 @@
             <file>./tests/Usage/ConfigUsageTest.php</file>
         </testsuite>
 
+        <testsuite name="usage-consul">
+            <file>./tests/Usage/ConsulUsageTest.php</file>
+        </testsuite>
+
         <testsuite name="usage-kv">
             <file>./tests/usage/KV/KVClientCRUDTests.php</file>
+        </testsuite>
 
+        <testsuite name="usage-agent">
+            <file>./tests/Usage/Agent/AgentClientUsageTests.php</file>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist addUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./tests</directory>
+            <directory suffix=".php">./src</directory>
         </whitelist>
     </filter>
 

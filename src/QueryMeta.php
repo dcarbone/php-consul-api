@@ -31,6 +31,8 @@ class QueryMeta {
     public $KnownLeader = false;
     /** @var int */
     public $RequestTime = 0;
+    /** @var bool */
+    public $AddressTranslationEnabled = false;
 
     /**
      * @return string
@@ -65,5 +67,12 @@ class QueryMeta {
      */
     public function getRequestTime() {
         return $this->RequestTime;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAddressTranslationEnabled() {
+        return $this->AddressTranslationEnabled;
     }
 }

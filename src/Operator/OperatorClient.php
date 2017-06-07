@@ -35,7 +35,7 @@ class OperatorClient extends AbstractClient {
      * )
      */
     public function raftGetConfiguration(QueryOptions $options = null) {
-        $r = new Request('GET', 'v1/operator/raft/configuration', $this->c);
+        $r = new Request('GET', 'v1/operator/raft/configuration', $this->config);
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -61,7 +61,7 @@ class OperatorClient extends AbstractClient {
      * @return \DCarbone\PHPConsulAPI\Error|null error, if any
      */
     public function raftRemovePeerByAddress($address, WriteOptions $options = null) {
-        $r = new Request('DELETE', 'v1/operator/raft/peer', $this->c);
+        $r = new Request('DELETE', 'v1/operator/raft/peer', $this->config);
         $r->setWriteOptions($options);
         $r->params->set('address', (string)$address);
 
