@@ -41,29 +41,17 @@ class KVClientCRUDTests extends \PHPUnit_Framework_TestCase {
 
     const KVPrefix = 'tests';
 
-    /**
-     * Sets up the fixture, for example, open a network connection.
-     * This method is called before a test is executed.
-     */
     protected function setUp() {
         ConsulManager::startSingle();
     }
 
-    /**
-     * Tears down the fixture, for example, close a network connection.
-     * This method is called after a test is executed.
-     */
     protected function tearDown() {
         ConsulManager::stopSingle();
     }
 
-    /**
-     * @return KVClient
-     */
     public function testCanConstructClient() {
         $kv = new KVClient(new Config());
         $this->assertInstanceOf(KVClient::class, $kv);
-        return $kv;
     }
 
     /**

@@ -89,7 +89,7 @@ class KVClient extends AbstractClient {
         $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
         $r->setWriteOptions($options);
         if (0 !== $p->Flags) {
-            $r->params->set('flags', (string)$p->Flags);
+            $r->Params->set('flags', (string)$p->Flags);
         }
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
@@ -145,7 +145,7 @@ class KVClient extends AbstractClient {
         }
 
         $r->setQueryOptions($options);
-        $r->params->set('recurse', '');
+        $r->Params->set('recurse', '');
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -195,7 +195,7 @@ class KVClient extends AbstractClient {
         }
 
         $r->setQueryOptions($options);
-        $r->params->set('keys', 'true');
+        $r->Params->set('keys', 'true');
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
@@ -221,9 +221,9 @@ class KVClient extends AbstractClient {
     public function cas(KVPair $p, WriteOptions $options = null) {
         $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config);
         $r->setWriteOptions($options);
-        $r->params->set('cas', (string)$p->ModifyIndex);
+        $r->Params->set('cas', (string)$p->ModifyIndex);
         if (0 !== $p->Flags) {
-            $r->params->set('flags', (string)$p->Flags);
+            $r->Params->set('flags', (string)$p->Flags);
         }
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
@@ -245,9 +245,9 @@ class KVClient extends AbstractClient {
     public function acquire(KVPair $p, WriteOptions $options = null) {
         $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config);
         $r->setWriteOptions($options);
-        $r->params->set('acquire', $p->Session);
+        $r->Params->set('acquire', $p->Session);
         if (0 !== $p->Flags) {
-            $r->params->set('flags', (string)$p->Flags);
+            $r->Params->set('flags', (string)$p->Flags);
         }
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
@@ -269,9 +269,9 @@ class KVClient extends AbstractClient {
     public function release(KVPair $p, WriteOptions $options = null) {
         $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config);
         $r->setWriteOptions($options);
-        $r->params->set('release', $p->Session);
+        $r->Params->set('release', $p->Session);
         if (0 !== $p->Flags) {
-            $r->params->set('flags', (string)$p->Flags);
+            $r->Params->set('flags', (string)$p->Flags);
         }
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));

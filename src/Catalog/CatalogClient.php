@@ -159,7 +159,7 @@ class CatalogClient extends AbstractClient {
         $r = new Request('GET', sprintf('v1/catalog/service/%s', $service), $this->config);
         $r->setQueryOptions($options);
         if ('' !== $tag) {
-            $r->params->set('tag', $tag);
+            $r->Params->set('tag', $tag);
         }
 
         /** @var \Psr\Http\Message\ResponseInterface $response */

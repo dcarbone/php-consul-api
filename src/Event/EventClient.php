@@ -45,13 +45,13 @@ class EventClient extends AbstractClient {
         $r->setWriteOptions($options);
 
         if ('' !== ($nf = $event->NodeFilter)) {
-            $r->params->set('node', $nf);
+            $r->Params->set('node', $nf);
         }
         if ('' !== ($sf = $event->ServiceFilter)) {
-            $r->params->set('service', $sf);
+            $r->Params->set('service', $sf);
         }
         if ('' !== ($tf = $event->TagFilter)) {
-            $r->params->set('tag', $tf);
+            $r->Params->set('tag', $tf);
         }
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -82,7 +82,7 @@ class EventClient extends AbstractClient {
     public function eventList($name = '', QueryOptions $options = null) {
         $r = new Request('GET', 'v1/event/list', $this->config);
         if ('' !== (string)$name) {
-            $r->params->set('name', $name);
+            $r->Params->set('name', $name);
         }
         $r->setQueryOptions($options);
 

@@ -16,6 +16,7 @@
    limitations under the License.
 */
 
+use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\Consul;
 
 /**
@@ -39,7 +40,7 @@ class ConsulDefinitionTest extends \PHPUnit_Framework_TestCase {
     /**
      * @return Consul
      */
-    public function testCanConstructConsul() {
+    public function testCanConstructWithoutConfig() {
         $consul = new Consul();
         $this->assertInstanceOf(Consul::class, $consul);
 
@@ -47,14 +48,26 @@ class ConsulDefinitionTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @depends testCanConstructConsul
+     * @depends testCanConstructWithoutConfig
      * @param Consul $consul
      */
     public function testAllClientsRepresented(Consul $consul) {
         foreach ($this->clientClassnames as $clientClass) {
             $exp = explode('\\', $clientClass);
             $propName = str_replace(['.php', 'Client'], '', end($exp));
+            $this->assertClassHasAttribute($propName, Consul::class);
             $this->assertAttributeInstanceOf($clientClass, $propName, $consul);
         }
+    }
+
+    /**
+     * @depends testAllClientsRepresented
+     */
+    public function testCanConstructWithConfig() {
+        $config = new Config(['Address' => '123.456.789:8500']);
+        $consul = new Consul($config);
+        $this->assertInstanceOf(Consul::class, $consul);
+
+        $this->assertEquals('123.456.789:8500', $consul->KV->getConfig()->getAddress());
     }
 }

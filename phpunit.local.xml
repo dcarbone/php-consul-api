@@ -27,16 +27,16 @@
             <file>./tests/Usage/ConfigUsageTest.php</file>
         </testsuite>
 
-        <testsuite name="usage-consul">
-            <file>./tests/Usage/ConsulUsageTest.php</file>
-        </testsuite>
-
-        <testsuite name="usage-kv">
-            <file>./tests/usage/KV/KVClientCRUDTests.php</file>
+        <testsuite name="usage-request">
+            <file>./tests/Usage/RequestUsageTest.php</file>
         </testsuite>
 
         <testsuite name="usage-agent">
             <file>./tests/Usage/Agent/AgentClientUsageTests.php</file>
+        </testsuite>
+
+        <testsuite name="usage-kv">
+            <file>./tests/usage/KV/KVClientCRUDTests.php</file>
         </testsuite>
     </testsuites>
 

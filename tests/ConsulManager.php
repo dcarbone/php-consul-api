@@ -37,14 +37,8 @@ abstract class ConsulManager {
 
         shell_exec(self::START_SINGLE_CMD);
 
-//        if (file_exists(self::PID_FILE)) {
-//            echo "\nconsul pid: " . file_get_contents(self::PID_FILE) . "\n";
-//        } else {
-//            echo "\nunable to locate consul.pid file!\n";
-//        }
-
         // sleep to allow consul to setup
-        sleep(5);
+        sleep(3);
     }
 
     /**
@@ -56,7 +50,7 @@ abstract class ConsulManager {
             if (file_exists(self::PID_FILE)) {
                 unlink(self::PID_FILE);
             }
-            sleep(2);
+            sleep(1);
         }
     }
 }

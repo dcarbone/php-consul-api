@@ -26,9 +26,9 @@ use GuzzleHttp\Psr7\Uri;
  */
 class Request {
     /** @var \DCarbone\PHPConsulAPI\Values */
-    public $headers;
+    public $Headers;
     /** @var \DCarbone\PHPConsulAPI\Params */
-    public $params;
+    public $Params;
 
     /** @var \DCarbone\PHPConsulAPI\Config */
     private $config;
@@ -56,24 +56,24 @@ class Request {
         $this->config = $config;
 
         $this->method = strtoupper($method);
-        $this->path = $path;
+        $this->path = $path; // TODO: perform some kind of path input validation?
 
-        $this->headers = new Values();
-        $this->params = new Params();
+        $this->Headers = new Values();
+        $this->Params = new Params();
 
         if ('' !== $config->Datacenter) {
-            $this->params->set('dc', $config->Datacenter);
+            $this->Params->set('dc', $config->Datacenter);
         }
 
         if (0 !== $config->WaitTime) {
-            $this->params->set('wait', $config->intToMillisecond($config->WaitTime));
+            $this->Params->set('wait', $config->intToMillisecond($config->WaitTime));
         }
 
         if ('' !== $config->Token) {
             if ($config->TokenInHeader) {
-                $this->headers->set('X-Consul-Token', $config->Token);
+                $this->Headers->set('X-Consul-Token', $config->Token);
             } else {
-                $this->params->set('token', $config->Token);
+                $this->Params->set('token', $config->Token);
             }
         }
 
@@ -121,40 +121,40 @@ class Request {
         }
 
         if ('' !== $options->Datacenter) {
-            $this->params->set('dc', $options->Datacenter);
+            $this->Params->set('dc', $options->Datacenter);
         }
         if ($options->AllowStale) {
-            $this->params->set('stale', '');
+            $this->Params->set('stale', '');
         }
         if ($options->RequireConsistent) {
-            $this->params->set('consistent', '');
+            $this->Params->set('consistent', '');
         }
         if (0 !== $options->WaitIndex) {
-            $this->params->set('index', (string)$options->WaitIndex);
+            $this->Params->set('index', (string)$options->WaitIndex);
         }
         if (0 !== $options->WaitTime) {
-            $this->params->set('wait', $this->config->intToMillisecond($options->WaitTime));
+            $this->Params->set('wait', $this->config->intToMillisecond($options->WaitTime));
         }
         if ('' !== $options->Token) {
             if ($this->config->TokenInHeader) {
-                $this->headers->set('X-Consul-Token', $options->Token);
+                $this->Headers->set('X-Consul-Token', $options->Token);
             } else {
-                $this->params->set('token', $options->Token);
+                $this->Params->set('token', $options->Token);
             }
         }
         if ('' !== $options->Near) {
-            $this->params->set('near', $options->Near);
+            $this->Params->set('near', $options->Near);
         }
         if (isset($options->NodeMeta) && 0 < count($options->NodeMeta)) {
             foreach ($options->NodeMeta as $k => $v) {
-                $this->params->add('node-meta', "{$k}:{$v}");
+                $this->Params->add('node-meta', "{$k}:{$v}");
             }
         }
-        if ('' !== $options->RelayFactor) {
-            $this->params->set('relay-factor', (string)$options->RelayFactor);
+        if (0 !== $options->RelayFactor) {
+            $this->Params->set('relay-factor', (string)$options->RelayFactor);
         }
         if ($options->Pretty) {
-            $this->params->set('pretty', '');
+            $this->Params->set('pretty', '');
         }
 
         $this->uri = null;
@@ -169,17 +169,17 @@ class Request {
         }
 
         if ('' !== $options->Datacenter) {
-            $this->params->set('dc', $options->Datacenter);
+            $this->Params->set('dc', $options->Datacenter);
         }
         if ('' !== $options->Token) {
             if ($this->config->TokenInHeader) {
-                $this->headers->set('X-Consul-Token', $options->Token);
+                $this->Headers->set('X-Consul-Token', $options->Token);
             } else {
-                $this->headers->set('token', $options->Token);
+                $this->Headers->set('token', $options->Token);
             }
         }
         if (0 !== $options->RelayFactor) {
-            $this->params->set('relay-factor', (string)$options->RelayFactor);
+            $this->Params->set('relay-factor', (string)$options->RelayFactor);
         }
 
         $this->uri = null;
@@ -190,9 +190,15 @@ class Request {
      */
     public function getUri() {
         if (!isset($this->uri)) {
-            $uri = sprintf('%s://%s/%s', $this->config->getScheme(), $this->config->Address, $this->path);
-            if (0 < count($this->params)) {
-                $uri = sprintf('%s?%s', $uri, (string)$this->params);
+            $uri = sprintf(
+                '%s://%s/%s',
+                $this->config->getScheme(),
+                $this->config->Address,
+                ltrim(rtrim($this->path, " \t\n\r\0\x0B&?"),
+                    " \t\n\r\0\x0B/") // TODO: Lessen # of things being looked for?
+            );
+            if (0 < count($this->Params)) {
+                $uri = sprintf('%s?%s', $uri, (string)$this->Params);
             }
             $this->uri = new Uri($uri);
         }
@@ -209,7 +215,7 @@ class Request {
         return new Psr7Request(
             $this->method,
             $this->getUri(),
-            $this->headers->toPsr7Array(),
+            $this->Headers->toPsr7Array(),
             isset($this->body) ? new Psr7Stream($this->body) : null
         );
     }

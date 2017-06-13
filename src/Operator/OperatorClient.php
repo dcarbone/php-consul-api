@@ -63,7 +63,7 @@ class OperatorClient extends AbstractClient {
     public function raftRemovePeerByAddress($address, WriteOptions $options = null) {
         $r = new Request('DELETE', 'v1/operator/raft/peer', $this->config);
         $r->setWriteOptions($options);
-        $r->params->set('address', (string)$address);
+        $r->Params->set('address', (string)$address);
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 

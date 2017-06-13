@@ -299,7 +299,7 @@ class AgentClient extends AbstractClient {
     public function join($addr, $wan = false) {
         $r = new Request('PUT', sprintf('v1/agent/join/%s', $addr), $this->config);
         if ($wan) {
-            $r->params->set('wan', '1');
+            $r->Params->set('wan', '1');
         }
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
@@ -326,8 +326,8 @@ class AgentClient extends AbstractClient {
      */
     public function enableServiceMaintenance($serviceID, $reason = '') {
         $r = new Request('PUT', sprintf('v1/agent/service/maintenance/%s', $serviceID), $this->config);
-        $r->params->set('enable', 'true');
-        $r->params->set('reason', $reason);
+        $r->Params->set('enable', 'true');
+        $r->Params->set('reason', $reason);
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
@@ -340,7 +340,7 @@ class AgentClient extends AbstractClient {
      */
     public function disableServiceMaintenance($serviceID) {
         $r = new Request('PUT', sprintf('v1/agent/service/maintenance/%s', $serviceID), $this->config);
-        $r->params->set('enable', 'false');
+        $r->Params->set('enable', 'false');
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
@@ -353,8 +353,8 @@ class AgentClient extends AbstractClient {
      */
     public function enableNodeMaintenance($reason = '') {
         $r = new Request('PUT', 'v1/agent/maintenance', $this->config);
-        $r->params->set('enable', 'true');
-        $r->params->set('reason', $reason);
+        $r->Params->set('enable', 'true');
+        $r->Params->set('reason', $reason);
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
@@ -366,7 +366,7 @@ class AgentClient extends AbstractClient {
      */
     public function disableNodeMaintenance() {
         $r = new Request('PUT', 'v1/agent/maintenance', $this->config);
-        $r->params->set('enable', 'false');
+        $r->Params->set('enable', 'false');
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
 
