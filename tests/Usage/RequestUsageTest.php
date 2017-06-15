@@ -21,6 +21,7 @@ use DCarbone\PHPConsulAPI\KV\KVPair;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Request;
 use DCarbone\PHPConsulAPI\WriteOptions;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
 
@@ -28,7 +29,7 @@ use Psr\Http\Message\UriInterface;
  * Class RequestUsageTest
  * @package DCarbone\PHPConsulAPITests\Usage
  */
-class RequestUsageTest extends \PHPUnit_Framework_TestCase {
+class RequestUsageTest extends TestCase {
     public function testCanConstructWithoutBody() {
         $r = new Request('', '', new Config());
         $this->assertInstanceOf(Request::class, $r);

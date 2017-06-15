@@ -82,14 +82,15 @@ class Values implements \JsonSerializable, \Countable {
             throw new \InvalidArgumentException(sprintf('$key must be string, saw "%s".', gettype($key)));
         }
 
-        if (!is_string($value)) {
-            throw new \InvalidArgumentException(sprintf('$value must be string, saw "%s".', gettype($value)));
-        }
-
-        if (isset($this->values[$key])) {
-            $this->values[$key][] = $value;
+        if (settype($value, 'string')) {
+            if (isset($this->values[$key])) {
+                $this->values[$key][] = $value;
+            } else {
+                $this->values[$key] = [$value];
+            }
         } else {
-            $this->values[$key] = [$value];
+            throw new \InvalidArgumentException(sprintf('$value must be castable to string, saw "%s".',
+                gettype($value)));
         }
     }
 

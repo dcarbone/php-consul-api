@@ -23,12 +23,13 @@ use DCarbone\PHPConsulAPI\Agent\AgentServiceCheck;
 use DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration;
 use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPITests\ConsulManager;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class AgentClientUsageTests
  * @package DCarbone\PHPConsulAPITests\Usage\Agent
  */
-class AgentClientUsageTests extends \PHPUnit_Framework_TestCase {
+class AgentClientUsageTests extends TestCase {
 
     const ServiceName = 'testservice';
 

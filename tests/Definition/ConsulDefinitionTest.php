@@ -18,12 +18,13 @@
 
 use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\Consul;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class ConsulDefinitionTest
  * @package DCarbone\PHPConsulAPITests\Definition
  */
-class ConsulDefinitionTest extends \PHPUnit_Framework_TestCase {
+class ConsulDefinitionTest extends TestCase {
 
     protected $clientClassnames = [];
 

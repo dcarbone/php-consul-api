@@ -16,10 +16,12 @@
    limitations under the License.
 */
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Class KVClientAdvancedTests
  * @package DCarbone\PHPConsulAPITests\Usage\KV
  */
-class KVClientAdvancedTests extends \PHPUnit_Framework_TestCase {
+class KVClientAdvancedTests extends TestCase {
 
 }

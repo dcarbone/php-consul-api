@@ -24,12 +24,13 @@ use phpDocumentor\Reflection\Types\Float_;
 use phpDocumentor\Reflection\Types\Integer;
 use phpDocumentor\Reflection\Types\Object_;
 use phpDocumentor\Reflection\Types\String_;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class AbstractDefinitionTestCases
  * @package DCarbone\PHPConsulAPITests\Definition
  */
-abstract class AbstractDefinitionTestCases extends \PHPUnit_Framework_TestCase {
+abstract class AbstractDefinitionTestCases extends TestCase {
     /** @var \ReflectionClass */
     protected $reflectionClass;
 

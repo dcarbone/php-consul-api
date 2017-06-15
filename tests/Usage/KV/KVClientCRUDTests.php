@@ -23,12 +23,13 @@ use DCarbone\PHPConsulAPI\KV\KVPair;
 use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPI\WriteMeta;
 use DCarbone\PHPConsulAPITests\ConsulManager;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class KVClientCRUDTests
  * @package DCarbone\PHPConsulAPITests\Usage\KV
  */
-class KVClientCRUDTests extends \PHPUnit_Framework_TestCase {
+class KVClientCRUDTests extends TestCase {
 
     const KVKey1 = 'testkey1';
     const KVValue1 = 'testvalue1';

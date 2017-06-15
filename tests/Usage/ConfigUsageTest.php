@@ -3,6 +3,7 @@
 use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\Consul;
 use DCarbone\PHPConsulAPITests\ConsulManager;
+use PHPUnit\Framework\TestCase;
 
 /*
    Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -24,7 +25,7 @@ use DCarbone\PHPConsulAPITests\ConsulManager;
  * Class ConfigUsageTest
  * @package DCarbone\PHPConsulAPITests\Usage
  */
-class ConfigUsageTest extends \PHPUnit_Framework_TestCase {
+class ConfigUsageTest extends TestCase {
     const DEFAULT_ADDRESS = '127.0.0.1:8500';
     const DEFAULT_SCHEME = 'http';
 

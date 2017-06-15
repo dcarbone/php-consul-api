@@ -17,12 +17,13 @@
 */
 
 use DCarbone\PHPConsulAPI\Values;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class ValuesUsageTest
  * @package DCarbone\PHPConsulAPITests\Usage
  */
-class ValuesUsageTest extends \PHPUnit_Framework_TestCase {
+class ValuesUsageTest extends TestCase {
     public function testCanConstruct() {
         $values = new Values();
         $this->assertInstanceOf(Values::class, $values);
@@ -31,26 +32,40 @@ class ValuesUsageTest extends \PHPUnit_Framework_TestCase {
     /**
      * @depends testCanConstruct
      */
-    public function testCanSetValue() {
+    public function testCanAddValue() {
         $v = new Values();
-        $v->set('test', 'value');
+        $v->add('test', 'value');
     }
 
     /**
      * @depends testCanConstruct
-     * @expectedException \InvalidArgumentException
      */
-    public function testExceptionThrownWhenSettingInvalidKey() {
+    public function testExceptionThrownWhenAddingInvalidKey() {
+        $this->expectException(\InvalidArgumentException::class);
         $v = new Values();
-        $v->set(1234, 'whatever');
+        $v->add(1234, 'whatever');
     }
 
     /**
      * @depends testCanConstruct
-     * @expectedException \InvalidArgumentException
      */
-    public function testExceptionThrownWhenSettingInvalidValue() {
+    public function testExceptionThrownWhenAddingInvalidValue() {
+        $this->expectException(\InvalidArgumentException::class);
         $v = new Values();
-        $v->set('test', new \stdClass());
+        $v->add('test', new \stdClass());
+    }
+
+    /**
+     * @depends testCanAddValue
+     */
+    public function testCanGetAll() {
+        $values = new Values();
+        $values->add('test', 'value1');
+        $values->add('test', 'value2');
+        $values->add('test', 'value3');
+
+        $all = $values->getAll('test');
+        $this->assertInternalType('array', $all);
+        $this->assertCount(3, $all);
     }
 }
