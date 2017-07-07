@@ -12,7 +12,8 @@
     ],
     "keywords": [
         "consul",
-        "consul-api"
+      "consul-api",
+      "php-consul-api"
     ],
     "require": {
         "php": "^5.6 || ^7.0",
