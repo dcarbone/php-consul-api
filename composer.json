@@ -1,37 +1,37 @@
 {
-    "name": "dcarbone/php-consul-api",
-    "type": "library",
-    "description": "PHP client for the Consul HTTP API",
-    "homepage": "https://github.com/dcarbone/php-consul-api",
-    "license": "Apache-2.0",
-    "authors": [
-        {
-            "name": "Daniel Carbone",
-            "email": "daniel.p.carbone@gmail.com"
-        }
-    ],
-    "keywords": [
-        "consul",
-      "consul-api",
-      "php-consul-api"
-    ],
-    "require": {
-        "php": "^5.6 || ^7.0",
-        "guzzlehttp/guzzle": "~6",
-        "guzzlehttp/psr7": "~1"
-    },
-    "autoload": {
-        "psr-4": {
-            "DCarbone\\PHPConsulAPI\\": "src/"
-        }
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^5.7 || ^6.0"
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "DCarbone\\PHPConsulAPI\\": "src/",
-            "DCarbone\\PHPConsulAPITests\\": "tests/"
-        }
+  "name": "dcarbone/php-consul-api",
+  "type": "library",
+  "description": "PHP client for the Consul HTTP API",
+  "homepage": "https://github.com/dcarbone/php-consul-api",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "Daniel Carbone",
+      "email": "daniel.p.carbone@gmail.com"
     }
+  ],
+  "keywords": [
+    "consul",
+    "consul-api",
+    "php-consul-api"
+  ],
+  "require": {
+    "php": "^5.6 || ^7.0",
+    "guzzlehttp/guzzle": "~6",
+    "guzzlehttp/psr7": "~1"
+  },
+  "autoload": {
+    "psr-4": {
+      "DCarbone\\PHPConsulAPI\\": "src/"
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.7 || ^6.0"
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "DCarbone\\PHPConsulAPI\\": "src/",
+      "DCarbone\\PHPConsulAPITests\\": "tests/"
+    }
+  }
 }
