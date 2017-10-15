@@ -407,7 +407,7 @@ class Config {
      * @param string $param
      * @return string|null
      */
-    protected static function _tryGetEnvParam(string $param): ?string {
+    protected static function _tryGetEnvParam(string $param) {
         if (isset($_ENV[$param])) {
             return $_ENV[$param];
         }

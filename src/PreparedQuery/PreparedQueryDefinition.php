@@ -122,7 +122,7 @@ class PreparedQueryDefinition extends AbstractModel {
     /**
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
-    public function getService(): ?ServiceQuery {
+    public function getService() {
         return $this->Service;
     }
 
@@ -138,7 +138,7 @@ class PreparedQueryDefinition extends AbstractModel {
     /**
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions
      */
-    public function getDNS(): ?QueryDNSOptions {
+    public function getDNS() {
         return $this->DNS;
     }
 
@@ -154,7 +154,7 @@ class PreparedQueryDefinition extends AbstractModel {
     /**
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryTemplate
      */
-    public function getTemplate(): ?QueryTemplate {
+    public function getTemplate() {
         return $this->Template;
     }
 

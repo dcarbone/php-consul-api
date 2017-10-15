@@ -17,7 +17,6 @@
 */
 
 use DCarbone\PHPConsulAPI\AbstractClient;
-use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Request;
 use DCarbone\PHPConsulAPI\WriteOptions;
@@ -61,7 +60,7 @@ class OperatorClient extends AbstractClient {
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
      * @return \DCarbone\PHPConsulAPI\Error|null error, if any
      */
-    public function raftRemovePeerByAddress(string $address, WriteOptions $options = null): ?Error {
+    public function raftRemovePeerByAddress(string $address, WriteOptions $options = null) {
         $r = new Request('DELETE', 'v1/operator/raft/peer', $this->config);
         $r->setWriteOptions($options);
         $r->Params->set('address', (string)$address);

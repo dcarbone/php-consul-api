@@ -50,7 +50,7 @@ class CoordinateEntry extends AbstractModel {
     /**
      * @return \DCarbone\PHPConsulAPI\Coordinate\Coordinate
      */
-    public function getCoord(): ?Coordinate {
+    public function getCoord() {
         return $this->Coord;
     }
 }

@@ -70,7 +70,7 @@ class ServiceEntry extends AbstractModel {
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentService
      */
-    public function getService(): ?AgentService {
+    public function getService() {
         return $this->Service;
     }
 

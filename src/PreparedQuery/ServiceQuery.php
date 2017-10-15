@@ -82,7 +82,7 @@ class ServiceQuery extends AbstractModel {
     /**
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions
      */
-    public function getFailover(): ?QueryDatacenterOptions {
+    public function getFailover() {
         return $this->Failover;
     }
 

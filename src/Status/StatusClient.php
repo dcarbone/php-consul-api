@@ -46,7 +46,7 @@ class StatusClient extends AbstractClient {
     /**
      * @return array|null
      */
-    public function peers(): ?array {
+    public function peers() {
         $r = new Request('GET', 'v1/status/peers', $this->config);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */

@@ -133,7 +133,7 @@ class KVPair extends AbstractModel {
     /**
      * @return null|string
      */
-    public function getValue(): ?string {
+    public function getValue() {
         return $this->Value;
     }
 

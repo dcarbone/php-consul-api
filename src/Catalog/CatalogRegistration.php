@@ -102,7 +102,7 @@ class CatalogRegistration extends AbstractModel {
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentService
      */
-    public function getService(): ?AgentService {
+    public function getService() {
         return $this->Service;
     }
 
@@ -118,7 +118,7 @@ class CatalogRegistration extends AbstractModel {
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentCheck
      */
-    public function getCheck(): ?AgentCheck {
+    public function getCheck() {
         return $this->Check;
     }
 

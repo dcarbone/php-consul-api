@@ -67,14 +67,14 @@ class ACLReplicationStatus extends AbstractModel {
     /**
      * @return null|string
      */
-    public function getLastSuccess(): ?string {
+    public function getLastSuccess() {
         return $this->LastSuccess;
     }
 
     /**
      * @return null|string
      */
-    public function getLastError(): ?string {
+    public function getLastError() {
         return $this->LastError;
     }
 }

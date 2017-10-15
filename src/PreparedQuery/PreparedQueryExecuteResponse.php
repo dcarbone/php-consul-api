@@ -76,7 +76,7 @@ class PreparedQueryExecuteResponse extends AbstractModel {
     /**
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions
      */
-    public function getDNS(): ?QueryDNSOptions {
+    public function getDNS() {
         return $this->DNS;
     }
 

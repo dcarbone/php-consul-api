@@ -148,7 +148,7 @@ class AgentServiceRegistration extends AbstractModel {
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
-    public function getCheck(): ?AgentServiceCheck {
+    public function getCheck() {
         return $this->Check;
     }
 
