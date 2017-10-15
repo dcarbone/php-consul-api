@@ -177,7 +177,7 @@ class Request {
             if ($this->config->TokenInHeader) {
                 $this->Headers->set('X-Consul-Token', $options->Token);
             } else {
-                $this->Headers->set('token', $options->Token);
+                $this->Params->set('token', $options->Token);
             }
         }
         if (0 !== $options->RelayFactor) {
