@@ -141,7 +141,7 @@ class KVPair extends AbstractModel {
      * @param null|string $Value
      * @return \DCarbone\PHPConsulAPI\KV\KVPair
      */
-    public function setValue(?string $Value): KVPair {
+    public function setValue(string $Value): KVPair {
         $this->Value = $Value;
         return $this;
     }
