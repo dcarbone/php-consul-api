@@ -24,16 +24,14 @@ use DCarbone\PHPConsulAPITests\Definition\AbstractDefinitionTestCases;
  *
  * @package DCarbone\PHPConsulAPITests\Definition\KV
  */
-class KVPairDefinitionTest extends AbstractDefinitionTestCases
-{
+class KVPairDefinitionTest extends AbstractDefinitionTestCases {
     /** @var bool */
     protected $requiresSetters = true;
 
     /**
      * @return string
      */
-    protected function getSubjectClassName()
-    {
+    protected function getSubjectClassName() {
         return KVPair::class;
     }
 }

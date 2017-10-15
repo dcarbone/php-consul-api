@@ -24,15 +24,13 @@ use DCarbone\PHPConsulAPITests\Definition\AbstractDefinitionTestCases;
  *
  * @package DCarbone\PHPConsulAPITests\Definition\PreparedQuery
  */
-class ServiceQueryDefinitionTest extends AbstractDefinitionTestCases
-{
+class ServiceQueryDefinitionTest extends AbstractDefinitionTestCases {
     protected $requiresSetters = true;
 
     /**
      * @return string
      */
-    protected function getSubjectClassName()
-    {
+    protected function getSubjectClassName() {
         return ServiceQuery::class;
     }
 }

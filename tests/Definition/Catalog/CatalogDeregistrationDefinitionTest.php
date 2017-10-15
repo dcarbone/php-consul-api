@@ -23,16 +23,14 @@ use DCarbone\PHPConsulAPITests\Definition\AbstractDefinitionTestCases;
  * Class CatalogDeregistrationDefinitionTest
  * @package DCarbone\PHPConsulAPITests\Definition\Catalog
  */
-class CatalogDeregistrationDefinitionTest extends AbstractDefinitionTestCases
-{
+class CatalogDeregistrationDefinitionTest extends AbstractDefinitionTestCases {
     /** @var bool */
     protected $requiresSetters = true;
 
     /**
      * @inheritDoc
      */
-    protected function getSubjectClassName()
-    {
+    protected function getSubjectClassName() {
         return CatalogDeregistration::class;
     }
 }

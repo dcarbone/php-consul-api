@@ -56,7 +56,7 @@ class AgentServiceRegistration extends AbstractModel {
         if (0 < count($this->Checks)) {
             $this->Checks = array_filter($this->Checks);
             if (0 < ($cnt = count($this->Checks))) {
-                for ($i = 0, $cnt = count($this->Checks); $i < $cnt; $i++) {
+                for ($i = 0; $i < $cnt; $i++) {
                     if (!($this->Checks[$i] instanceof AgentServiceCheck)) {
                         $this->Checks[$i] = new AgentServiceCheck($this->Checks[$i]);
                     }

@@ -48,6 +48,8 @@ class Consul {
     const HealthCritical = 'critical';
     const HealthMaint = 'maintenance';
 
+    const AllSegments = '_all';
+
     /** @var \DCarbone\PHPConsulAPI\ACL\ACLClient */
     public $ACL;
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentClient */

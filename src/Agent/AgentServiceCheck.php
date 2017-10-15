@@ -37,6 +37,10 @@ class AgentServiceCheck extends AbstractModel {
     public $TTL = '';
     /** @var string */
     public $HTTP = '';
+    /** @var array */
+    public $Header = [];
+    /** @var string */
+    public $Method = '';
     /** @var string */
     public $TCP = '';
     /** @var string */
@@ -99,7 +103,7 @@ class AgentServiceCheck extends AbstractModel {
     /**
      * @return string
      */
-    public function getInterval() {
+    public function getInterval(): string {
         return $this->Interval;
     }
 
@@ -157,6 +161,38 @@ class AgentServiceCheck extends AbstractModel {
      */
     public function setHTTP(string $HTTP): AgentServiceCheck {
         $this->HTTP = $HTTP;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getHeader(): array {
+        return $this->Header;
+    }
+
+    /**
+     * @param array $Header
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
+     */
+    public function setHeader(array $Header): AgentServiceCheck {
+        $this->Header = $Header;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMethod(): string {
+        return $this->Method;
+    }
+
+    /**
+     * @param string $Method
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
+     */
+    public function setMethod(string $Method): AgentServiceCheck {
+        $this->Method = $Method;
         return $this;
     }
 

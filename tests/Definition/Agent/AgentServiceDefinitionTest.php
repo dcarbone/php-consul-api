@@ -23,13 +23,11 @@ use DCarbone\PHPConsulAPITests\Definition\AbstractDefinitionTestCases;
  * Class AgentServiceDefinitionTest
  * @package DCarbone\PHPConsulAPITests\Definition\Agent
  */
-class AgentServiceDefinitionTest extends AbstractDefinitionTestCases
-{
+class AgentServiceDefinitionTest extends AbstractDefinitionTestCases {
     /**
      * @inheritDoc
      */
-    protected function getSubjectClassName()
-    {
+    protected function getSubjectClassName() {
         return AgentService::class;
     }
 }

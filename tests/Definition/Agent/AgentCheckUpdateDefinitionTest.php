@@ -23,15 +23,13 @@ use DCarbone\PHPConsulAPITests\Definition\AbstractDefinitionTestCases;
  * Class AgentCheckUpdateDefinitionTest
  * @package DCarbone\PHPConsulAPITests\Definition\Agent
  */
-class AgentCheckUpdateDefinitionTest extends AbstractDefinitionTestCases
-{
+class AgentCheckUpdateDefinitionTest extends AbstractDefinitionTestCases {
     protected $requiresSetters = true;
 
     /**
      * @inheritDoc
      */
-    protected function getSubjectClassName()
-    {
+    protected function getSubjectClassName() {
         return AgentCheckUpdate::class;
     }
 }

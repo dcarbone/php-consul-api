@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPConsulAPITests\Definition\Health;
+<?php namespace DCarbone\PHPConsulAPITests\Definition\Agent;
 
 /*
    Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,19 +16,21 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\Health\HealthCheck;
+use DCarbone\PHPConsulAPI\Agent\PointValue;
 use DCarbone\PHPConsulAPITests\Definition\AbstractDefinitionTestCases;
 
 /**
- * Class HealthCheckDefinitionTest
- *
- * @package DCarbone\PHPConsulAPITests\Definition\Health
+ * Class PointsValueDefinitionTest
+ * @package DCarbone\PHPConsulAPITests\Definition\Agent
  */
-class HealthCheckDefinitionTest extends AbstractDefinitionTestCases {
+class PointValueDefinitionTest extends AbstractDefinitionTestCases {
+    /** @var bool */
+    protected $requiresSetters = true;
+
     /**
      * @return string
      */
     protected function getSubjectClassName() {
-        return HealthCheck::class;
+        return PointValue::class;
     }
 }

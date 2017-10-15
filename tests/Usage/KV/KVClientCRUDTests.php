@@ -166,9 +166,9 @@ class KVClientCRUDTests extends TestCase {
         /** @var \DCarbone\PHPConsulAPI\Error $err */
 
         $client = new KVClient(new Config());
-        $client->put(new KVPair(['Key' => self::KVPrefix . '/' . self::KVKey1, 'Value' => self::KVValue1]));
-        $client->put(new KVPair(['Key' => self::KVPrefix . '/' . self::KVKey2, 'Value' => self::KVValue2]));
-        $client->put(new KVPair(['Key' => self::KVPrefix . '/' . self::KVKey3, 'Value' => self::KVValue3]));
+        $client->put(new KVPair(['Key' => self::KVPrefix.'/'.self::KVKey1, 'Value' => self::KVValue1]));
+        $client->put(new KVPair(['Key' => self::KVPrefix.'/'.self::KVKey2, 'Value' => self::KVValue2]));
+        $client->put(new KVPair(['Key' => self::KVPrefix.'/'.self::KVKey3, 'Value' => self::KVValue3]));
 
         list($list, $qm, $err) = $client->list(self::KVPrefix);
         $this->assertNull($err, sprintf('KV::valueList returned error: %s', $err));

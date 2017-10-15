@@ -23,13 +23,11 @@ use DCarbone\PHPConsulAPITests\Definition\AbstractDefinitionTestCases;
  * Class ServiceEntryDefinitionTest
  * @package DCarbone\PHPConsulAPITests\Definition\Health
  */
-class ServiceEntryDefinitionTest extends AbstractDefinitionTestCases
-{
+class ServiceEntryDefinitionTest extends AbstractDefinitionTestCases {
     /**
      * @inheritDoc
      */
-    protected function getSubjectClassName()
-    {
+    protected function getSubjectClassName() {
         return ServiceEntry::class;
     }
 }

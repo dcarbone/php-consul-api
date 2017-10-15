@@ -24,13 +24,11 @@ use DCarbone\PHPConsulAPITests\Definition\AbstractDefinitionTestCases;
  *
  * @package DCarbone\PHPConsulAPITests\Definition\Event
  */
-class UserEventDefinitionTest extends AbstractDefinitionTestCases
-{
+class UserEventDefinitionTest extends AbstractDefinitionTestCases {
     /**
      * @return string
      */
-    protected function getSubjectClassName()
-    {
+    protected function getSubjectClassName() {
         return UserEvent::class;
     }
 }

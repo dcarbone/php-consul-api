@@ -27,6 +27,32 @@ use DCarbone\PHPConsulAPI\WriteOptions;
  */
 class ACLClient extends AbstractClient {
     /**
+     * @return array(
+     * @type string ACL ID
+     * @type \DCarbone\PHPConsulAPI\WriteMeta|null
+     * @type \DCarbone\PHPConsulAPI\Error|null
+     * )
+     */
+    public function bootstrap(): array {
+        $r = new Request('PUT', 'v1/acl/bootstrap', $this->config);
+
+        /** @var \Psr\Http\Message\ResponseInterface $response */
+        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        if (null !== $err) {
+            return ['', null, $err];
+        }
+
+        list($data, $err) = $this->decodeBody($response->getBody());
+        if (null !== $err) {
+            return ['', null, $err];
+        }
+
+        $wm = $this->buildWriteMeta($duration);
+
+        return [$data, $wm, null];
+    }
+
+    /**
      * @param \DCarbone\PHPConsulAPI\ACL\ACLEntry $acl
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
      * @return array(

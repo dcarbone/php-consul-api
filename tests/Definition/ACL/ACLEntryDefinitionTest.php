@@ -23,13 +23,11 @@ use DCarbone\PHPConsulAPITests\Definition\AbstractDefinitionTestCases;
  * Class ACLEntryDefinitionTest
  * @package DCarbone\PHPConsulAPITests\Definition\ACL
  */
-class ACLEntryDefinitionTest extends AbstractDefinitionTestCases
-{
+class ACLEntryDefinitionTest extends AbstractDefinitionTestCases {
     /**
      * @inheritDoc
      */
-    protected function getSubjectClassName()
-    {
+    protected function getSubjectClassName() {
         return ACLEntry::class;
     }
 }

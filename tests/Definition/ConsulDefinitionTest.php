@@ -29,7 +29,7 @@ class ConsulDefinitionTest extends TestCase {
     protected $clientClassnames = [];
 
     protected function setUp() {
-        foreach (glob(__DIR__ . '/../../src/*', GLOB_ONLYDIR) as $dir) {
+        foreach (glob(__DIR__.'/../../src/*', GLOB_ONLYDIR) as $dir) {
             $exp = explode('/', $dir);
             $this->clientClassnames[] = sprintf(
                 'DCarbone\\PHPConsulAPI\\%s\\%1$sClient',

@@ -24,13 +24,11 @@ use DCarbone\PHPConsulAPITests\Definition\AbstractDefinitionTestCases;
  *
  * @package DCarbone\PHPConsulAPITests\Definition\Session
  */
-class SessionEntryDefinitionTest extends AbstractDefinitionTestCases
-{
+class SessionEntryDefinitionTest extends AbstractDefinitionTestCases {
     /**
      * @return string
      */
-    protected function getSubjectClassName()
-    {
+    protected function getSubjectClassName() {
         return SessionEntry::class;
     }
 }

@@ -22,8 +22,7 @@ use DCarbone\PHPConsulAPI\Config;
  * Class ConfigDefinitionTest
  * @package DCarbone\PHPConsulAPITests\Definition
  */
-class ConfigDefinitionTest extends AbstractDefinitionTestCases
-{
+class ConfigDefinitionTest extends AbstractDefinitionTestCases {
     /**
      * @inheritDoc
      */

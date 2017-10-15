@@ -24,13 +24,11 @@ use DCarbone\PHPConsulAPITests\Definition\AbstractDefinitionTestCases;
  *
  * @package DCarbone\PHPConsulAPITests\Definition\Coordinate
  */
-class CoordinateDatacenterMapDefinitionTest extends AbstractDefinitionTestCases
-{
+class CoordinateDatacenterMapDefinitionTest extends AbstractDefinitionTestCases {
     /**
      * @return mixed
      */
-    protected function getSubjectClassName ()
-    {
+    protected function getSubjectClassName() {
         return CoordinateDatacenterMap::class;
     }
 }

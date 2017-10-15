@@ -23,16 +23,14 @@ use DCarbone\PHPConsulAPITests\Definition\AbstractDefinitionTestCases;
  * Class AgentServiceCheckRegistrationDefinitionTest
  * @package DCarbone\PHPConsulAPITests\Definition\Agent
  */
-class AgentServiceRegistrationDefinitionTest extends AbstractDefinitionTestCases
-{
+class AgentServiceRegistrationDefinitionTest extends AbstractDefinitionTestCases {
     /** @var bool */
     protected $requiresSetters = true;
 
     /**
      * @inheritDoc
      */
-    protected function getSubjectClassName()
-    {
+    protected function getSubjectClassName() {
         return AgentServiceRegistration::class;
     }
 }

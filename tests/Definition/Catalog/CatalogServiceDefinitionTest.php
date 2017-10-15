@@ -23,13 +23,11 @@ use DCarbone\PHPConsulAPITests\Definition\AbstractDefinitionTestCases;
  * Class CatalogServiceDefinitionTest
  * @package DCarbone\PHPConsulAPITests\Definition\Catalog
  */
-class CatalogServiceDefinitionTest extends AbstractDefinitionTestCases
-{
+class CatalogServiceDefinitionTest extends AbstractDefinitionTestCases {
     /**
      * @inheritDoc
      */
-    protected function getSubjectClassName()
-    {
+    protected function getSubjectClassName() {
         return CatalogService::class;
     }
 }

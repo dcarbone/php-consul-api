@@ -24,16 +24,14 @@ use DCarbone\PHPConsulAPITests\Definition\AbstractDefinitionTestCases;
  *
  * @package DCarbone\PHPConsulAPITests\Definition\PreparedQuery
  */
-class QueryTemplateDefinitionTest extends AbstractDefinitionTestCases
-{
+class QueryTemplateDefinitionTest extends AbstractDefinitionTestCases {
     /** @var bool */
     protected $requiresSetters = true;
 
     /**
      * @return string
      */
-    protected function getSubjectClassName()
-    {
+    protected function getSubjectClassName() {
         return QueryTemplate::class;
     }
 }

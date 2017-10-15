@@ -24,13 +24,11 @@ use DCarbone\PHPConsulAPITests\Definition\AbstractDefinitionTestCases;
  *
  * @package DCarbone\PHPConsulAPITests\Definition\Operator
  */
-class RaftConfigurationDefinitionTest extends AbstractDefinitionTestCases
-{
+class RaftConfigurationDefinitionTest extends AbstractDefinitionTestCases {
     /** @var bool */
     protected $requiresSetters = true;
 
-    protected function getSubjectClassName()
-    {
+    protected function getSubjectClassName() {
         return RaftConfiguration::class;
     }
 }

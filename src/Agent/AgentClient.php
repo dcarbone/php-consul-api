@@ -59,6 +59,32 @@ class AgentClient extends AbstractClient {
     }
 
     /**
+     * @return array(
+     * @type \DCarbone\PHPConsulAPI\Agent\MetricsInfo
+     * @type \DCarbone\PHPConsulAPI\Error|null
+     * )
+     */
+    public function metrics(): array {
+        $r = new Request('GET', 'v1/agent/metrics', $this->config);
+
+        /** @var \Psr\Http\Message\ResponseInterface $response */
+        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        if (null !== $err) {
+            return [null, null, $err];
+        }
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
+
+        list($data, $err) = $this->decodeBody($response->getBody());
+
+        if (null !== $err) {
+            return [null, $qm, $err];
+        }
+
+        return [new MetricsInfo($data), null];
+    }
+
+    /**
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function reload() {
@@ -159,13 +185,44 @@ class AgentClient extends AbstractClient {
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($_, $response, $err) = $this->requireOK($this->doRequest($r));
-
         if (null !== $err) {
             return [null, $err];
         }
 
         list($data, $err) = $this->decodeBody($response->getBody());
+        if (null !== $err) {
+            return [null, $err];
+        }
 
+        $members = [];
+        foreach ($data as $v) {
+            $members[] = new AgentMember($v);
+        }
+
+        return [$members, null];
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Agent\MemberOpts $opts
+     * @return array(
+     * @type \DCarbone\PHPConsulAPI\Agent\AgentMember[]
+     * @type \DCarbone\PHPConsulAPI\Error|null
+     * )
+     */
+    public function membersOpts(MemberOpts $opts): array {
+        $r = new Request('GET', 'v1/agent/members', $this->config);
+        $r->Params->set('segment', $opts->Segment);
+        if ($opts->WAN) {
+            $r->Params->set('wan', 1);
+        }
+
+        /** @var \Psr\Http\Message\ResponseInterface $response */
+        list($_, $response, $err) = $this->requireOK($this->doRequest($r));
+        if (null !== $err) {
+            return [null, $err];
+        }
+
+        list($data, $err) = $this->decodeBody($response->getBody());
         if (null !== $err) {
             return [null, $err];
         }

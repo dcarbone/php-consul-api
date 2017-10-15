@@ -200,7 +200,7 @@ class AgentClientUsageTests extends TestCase {
             ->setPort(1234)
             ->setAddress('127.0.0.1')
             ->setCheck(new AgentServiceCheck([
-                'TCP' => '127.0.0.1',
+                'TCP'      => '127.0.0.1',
                 'Interval' => '30s',
             ]));
 

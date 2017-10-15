@@ -24,13 +24,11 @@ use DCarbone\PHPConsulAPITests\Definition\AbstractDefinitionTestCases;
  *
  * @package DCarbone\PHPConsulAPITests\Definition\Coordinate
  */
-class CoordinateDefinitionTest extends AbstractDefinitionTestCases
-{
+class CoordinateDefinitionTest extends AbstractDefinitionTestCases {
     /**
      * @return string
      */
-    protected function getSubjectClassName ()
-    {
+    protected function getSubjectClassName() {
         return Coordinate::class;
     }
 }

@@ -22,10 +22,10 @@
  */
 abstract class ConsulManager {
 
-    const PID_FILE = __DIR__ . '/../consul.pid';
+    const PID_FILE = __DIR__.'/../consul.pid';
 
-    const START_SINGLE_CMD = __DIR__ . '/run_consul.sh';
-    const STOP_SINGLE_CMD = __DIR__ . '/stop_consul.sh';
+    const START_SINGLE_CMD = __DIR__.'/run_consul.sh';
+    const STOP_SINGLE_CMD = __DIR__.'/stop_consul.sh';
 
     /**
      * Start a single instance of a consul agent in -dev mode
