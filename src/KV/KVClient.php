@@ -179,7 +179,7 @@ class KVClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function keys(?string $prefix = null, QueryOptions $options = null): array {
+    public function keys($prefix = null, QueryOptions $options = null): array {
         if (null === $prefix) {
             $r = new Request('GET', 'v1/kv/', $this->config);
         } else if (is_string($prefix)) {

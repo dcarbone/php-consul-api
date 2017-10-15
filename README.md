@@ -12,6 +12,10 @@ This library is loosely based upon the [official GO client](https://github.com/h
 |---|---|
 |0.3.x|0.6.4|
 |0.6.x|0.7-0.8|
+|0.7.x|0.8-0.9|
+
+Newer versions of the api lib will probably work in a limited capacity with older versions of Consul, but no guarantee 
+is made and backwards compatibility issues will not be addressed.
 
 ## Composer
 
@@ -30,8 +34,8 @@ Require Entry:
 ## Configuration
 
 First, construct a [Config](./src/Config.php). This class is modeled quite closely after the
-[Config Struct](https://github.com/hashicorp/consul/blob/v0.8.3/api/api.go#L161) present in the
-[Consul API Subpackage](https://github.com/hashicorp/consul/blob/v0.8.3/api).
+[Config Struct](https://github.com/hashicorp/consul/blob/v0.9.3/api/api.go#L202) present in the
+[Consul API Subpackage](https://github.com/hashicorp/consul/blob/v0.9.3/api).
 
 ### Default Configuration
 
@@ -110,16 +114,16 @@ var_dump($kv_list);
 
 ## Current Clients
 
-- [KV](./docs/KV.md)
+- [ACL](./docs/ACL.md)
 - [Agent](./docs/AGENT.md)
 - [Catalog](./docs/CATALOG.md)
-- [Status](./docs/STATUS.md)
-- [Event](./docs/EVENT.md)
 - [Coordinate](./docs/COORDINATE.md)
+- [Event](./docs/EVENT.md)
 - [Health](./docs/HEALTH.md)
-- [Session](./docs/SESSION.md)
+- [KV](./docs/KV.md)
 - [Operator](./docs/OPERATOR.md)
-- [ACL](./docs/ACL.md)
+- [Session](./docs/SESSION.md)
+- [Status](./docs/STATUS.md)
 
 More will be added as time goes on!
 
