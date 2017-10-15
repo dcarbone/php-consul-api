@@ -25,6 +25,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 class CoordinateEntry extends AbstractModel {
     /** @var string */
     public $Node = '';
+    /** @var string */
+    public $Segment = '';
     /** @var \DCarbone\PHPConsulAPI\Coordinate\Coordinate */
     public $Coord = null;
 
@@ -48,9 +50,16 @@ class CoordinateEntry extends AbstractModel {
     }
 
     /**
+     * @return string
+     */
+    public function getSegment(): string {
+        return $this->Segment;
+    }
+
+    /**
      * @return \DCarbone\PHPConsulAPI\Coordinate\Coordinate
      */
-    public function getCoord() {
+    public function getCoord(): Coordinate {
         return $this->Coord;
     }
 }

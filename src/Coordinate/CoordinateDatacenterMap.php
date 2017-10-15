@@ -25,6 +25,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 class CoordinateDatacenterMap extends AbstractModel {
     /** @var string */
     public $Datacenter = '';
+    /** @var string */
+    public $AreaID = '';
     /** @var \DCarbone\PHPConsulAPI\Coordinate\Coordinate[] */
     public $Coordinates = [];
 
@@ -58,6 +60,13 @@ class CoordinateDatacenterMap extends AbstractModel {
      */
     public function getDatacenter(): string {
         return $this->Datacenter;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAreaID(): string {
+        return $this->AreaID;
     }
 
     /**

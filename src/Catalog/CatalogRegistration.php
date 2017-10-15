@@ -26,9 +26,15 @@ use DCarbone\PHPConsulAPI\Agent\AgentService;
  */
 class CatalogRegistration extends AbstractModel {
     /** @var string */
+    public $ID = '';
+    /** @var string */
     public $Node = '';
     /** @var string */
     public $Address = '';
+    /** @var array */
+    public $TaggedAddresses = [];
+    /** @var array */
+    public $NodeMeta = [];
     /** @var string */
     public $Datacenter = '';
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentService */
@@ -54,13 +60,29 @@ class CatalogRegistration extends AbstractModel {
     /**
      * @return string
      */
+    public function getID(): string {
+        return $this->ID;
+    }
+
+    /**
+     * @param string $ID
+     * @return CatalogRegistration
+     */
+    public function setID(string $ID): CatalogRegistration {
+        $this->ID = $ID;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
     public function getNode(): string {
         return $this->Node;
     }
 
     /**
      * @param string $Node
-     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
+     * @return CatalogRegistration
      */
     public function setNode(string $Node): CatalogRegistration {
         $this->Node = $Node;
@@ -76,10 +98,42 @@ class CatalogRegistration extends AbstractModel {
 
     /**
      * @param string $Address
-     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
+     * @return CatalogRegistration
      */
     public function setAddress(string $Address): CatalogRegistration {
         $this->Address = $Address;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getTaggedAddresses(): array {
+        return $this->TaggedAddresses;
+    }
+
+    /**
+     * @param array $TaggedAddresses
+     * @return CatalogRegistration
+     */
+    public function setTaggedAddresses(array $TaggedAddresses): CatalogRegistration {
+        $this->TaggedAddresses = $TaggedAddresses;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getNodeMeta(): array {
+        return $this->NodeMeta;
+    }
+
+    /**
+     * @param array $NodeMeta
+     * @return CatalogRegistration
+     */
+    public function setNodeMeta(array $NodeMeta): CatalogRegistration {
+        $this->NodeMeta = $NodeMeta;
         return $this;
     }
 
@@ -92,7 +146,7 @@ class CatalogRegistration extends AbstractModel {
 
     /**
      * @param string $Datacenter
-     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
+     * @return CatalogRegistration
      */
     public function setDatacenter(string $Datacenter): CatalogRegistration {
         $this->Datacenter = $Datacenter;
@@ -102,13 +156,13 @@ class CatalogRegistration extends AbstractModel {
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentService
      */
-    public function getService() {
+    public function getService(): AgentService {
         return $this->Service;
     }
 
     /**
      * @param \DCarbone\PHPConsulAPI\Agent\AgentService $Service
-     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
+     * @return CatalogRegistration
      */
     public function setService(AgentService $Service): CatalogRegistration {
         $this->Service = $Service;
@@ -118,13 +172,13 @@ class CatalogRegistration extends AbstractModel {
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentCheck
      */
-    public function getCheck() {
+    public function getCheck(): AgentCheck {
         return $this->Check;
     }
 
     /**
      * @param \DCarbone\PHPConsulAPI\Agent\AgentCheck $Check
-     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
+     * @return CatalogRegistration
      */
     public function setCheck(AgentCheck $Check): CatalogRegistration {
         $this->Check = $Check;

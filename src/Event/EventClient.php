@@ -79,7 +79,7 @@ class EventClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error error, if any
      * )
      */
-    public function eventList(string $name = '', QueryOptions $options = null): array {
+    public function list(string $name = '', QueryOptions $options = null): array {
         $r = new Request('GET', 'v1/event/list', $this->config);
         if ('' !== (string)$name) {
             $r->Params->set('name', $name);

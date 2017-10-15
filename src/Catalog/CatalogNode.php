@@ -15,29 +15,50 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Agent\AgentService;
 
 /**
  * Class CatalogNode
  * @package DCarbone\PHPConsulAPI\Catalog
  */
 class CatalogNode extends AbstractModel {
-    /** @var string */
-    public $Node = '';
-    /** @var string */
-    public $Address = '';
+    /** @var \DCarbone\PHPConsulAPI\Catalog\Node */
+    public $Node = null;
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentService[] */
+    public $Services = [];
 
     /**
-     * @return string
+     * CatalogNode constructor.
+     * @param array $data
      */
-    public function getNode(): string {
+    public function __construct(array $data = []) {
+        parent::__construct($data);
+        if (is_array($this->Node)) {
+            $this->Node = new Node($this->Node);
+        }
+        if (0 < count($this->Services)) {
+            $this->Services = array_filter($this->Services);
+            foreach (array_keys($this->Services) as $service) {
+                if (!($this->Services[$service] instanceof AgentService)) {
+                    $this->Services[$service] = new AgentService($this->Services[$service]);
+                }
+            }
+        }
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Catalog\Node
+     */
+    public function getNode(): Node {
         return $this->Node;
     }
 
     /**
-     * @return string
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentService[]
      */
-    public function getAddress(): string {
-        return $this->Address;
+    public function getServices(): array {
+        return $this->Services;
     }
 }

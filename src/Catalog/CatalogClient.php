@@ -103,19 +103,18 @@ class CatalogClient extends AbstractClient {
             return [null, null, $err];
         }
 
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
         list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err) {
-            return [null, $qm, $err];
+            return [null, null, $err];
         }
 
         $nodes = [];
         foreach ($data as $v) {
-            $node = new CatalogNode($v);
-            $nodes[$node->Node] = $node;
+            $nodes[] = new CatalogNode($v);
         }
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         return [$nodes, $qm, null];
     }
@@ -138,9 +137,12 @@ class CatalogClient extends AbstractClient {
             return [null, null, $err];
         }
 
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
         list($data, $err) = $this->decodeBody($response->getBody());
+        if (null !== $err) {
+            return [null, null, $err];
+        }
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         return [$data, $qm, $err];
     }
@@ -168,13 +170,13 @@ class CatalogClient extends AbstractClient {
             return [null, null, $err];
         }
 
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
         list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err) {
-            return [null, $qm, $err];
+            return [null, null, $err];
         }
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         $services = [];
         foreach ($data as $v) {

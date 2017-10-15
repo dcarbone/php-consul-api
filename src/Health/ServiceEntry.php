@@ -17,7 +17,6 @@
 */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Agent\AgentCheck;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
 
 /**
@@ -29,8 +28,8 @@ class ServiceEntry extends AbstractModel {
     public $Node = '';
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentService */
     public $Service = null;
-    /** @var \DCarbone\PHPConsulAPI\Health\HealthCheck[] */
-    public $Checks = [];
+    /** @var \DCarbone\PHPConsulAPI\Health\HealthChecks */
+    public $Checks = null;
 
     /**
      * ServiceEntry constructor.
@@ -38,25 +37,11 @@ class ServiceEntry extends AbstractModel {
      */
     public function __construct(array $data = []) {
         parent::__construct($data);
-
         if (null !== $this->Service && !($this->Service instanceof AgentService)) {
             $this->Service = new AgentService((array)$this->Service);
         }
-
-        // If we have data...
-        if (0 < count($this->Checks)) {
-            // ...remove null
-            $this->Checks = array_filter($this->Checks);
-
-            // ...and if we still have data
-            if (0 < ($cnt = count($this->Checks))) {
-                // ensure we have objects.
-                for ($i = 0; $i < $cnt; $i++) {
-                    if (!($this->Checks[$i]) instanceof AgentCheck) {
-                        $this->Checks[$i] = new AgentCheck((array)$this->Checks[$i]);
-                    }
-                }
-            }
+        if (!($this->Checks instanceof HealthChecks)) {
+            $this->Checks = new HealthChecks($this->Checks);
         }
     }
 
@@ -75,9 +60,9 @@ class ServiceEntry extends AbstractModel {
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Health\HealthCheck[]
+     * @return \DCarbone\PHPConsulAPI\Health\HealthChecks
      */
-    public function getChecks(): array {
+    public function getChecks(): HealthChecks {
         return $this->Checks;
     }
 }

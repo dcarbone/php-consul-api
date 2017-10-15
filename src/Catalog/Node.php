@@ -19,10 +19,10 @@
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
- * Class CatalogService
+ * Class Node
  * @package DCarbone\PHPConsulAPI\Catalog
  */
-class CatalogService extends AbstractModel {
+class Node extends AbstractModel {
     /** @var string */
     public $ID = '';
     /** @var string */
@@ -34,19 +34,7 @@ class CatalogService extends AbstractModel {
     /** @var array */
     public $TaggedAddresses = [];
     /** @var array */
-    public $NodeMeta = [];
-    /** @var string */
-    public $ServiceID = '';
-    /** @var string */
-    public $ServiceName = '';
-    /** @var string */
-    public $ServiceAddress = '';
-    /** @var string[] */
-    public $ServiceTags = [];
-    /** @var int */
-    public $ServicePort = 0;
-    /** @var bool */
-    public $ServiceEnableTagOverride = false;
+    public $Meta = [];
     /** @var int */
     public $CreateIndex = 0;
     /** @var int */
@@ -90,50 +78,8 @@ class CatalogService extends AbstractModel {
     /**
      * @return array
      */
-    public function getNodeMeta(): array {
-        return $this->NodeMeta;
-    }
-
-    /**
-     * @return string
-     */
-    public function getServiceID(): string {
-        return $this->ServiceID;
-    }
-
-    /**
-     * @return string
-     */
-    public function getServiceName(): string {
-        return $this->ServiceName;
-    }
-
-    /**
-     * @return string
-     */
-    public function getServiceAddress(): string {
-        return $this->ServiceAddress;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getServiceTags(): array {
-        return $this->ServiceTags;
-    }
-
-    /**
-     * @return int
-     */
-    public function getServicePort(): int {
-        return $this->ServicePort;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isServiceEnableTagOverride(): bool {
-        return $this->ServiceEnableTagOverride;
+    public function getMeta(): array {
+        return $this->Meta;
     }
 
     /**

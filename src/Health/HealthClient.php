@@ -30,7 +30,7 @@ class HealthClient extends AbstractClient {
      * @param string $node
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      * @return array(
-     * @type HealthCheck[]|null list of health checks or null on error
+     * @type \DCarbone\PHPConsulAPI\Health\HealthChecks|null list of health checks or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query meta
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
@@ -55,27 +55,21 @@ class HealthClient extends AbstractClient {
             return [null, null, $err];
         }
 
+        list($data, $err) = $this->decodeBody($response->getBody());
+        if (null !== $err) {
+            return [null, null, $err];
+        }
+
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
-        list($data, $err) = $this->decodeBody($response->getBody());
-
-        if (null !== $err) {
-            return [null, $qm, $err];
-        }
-
-        $checks = [];
-        foreach ($data as $check) {
-            $checks[] = new HealthCheck($check);
-        }
-
-        return [$checks, $qm, null];
+        return [new HealthChecks($data), $qm, null];
     }
 
     /**
      * @param string $service
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      * @return array(
-     * @type HealthCheck[]|null list of health checks or null on error
+     * @type \DCarbone\PHPConsulAPI\Health\HealthChecks|null list of health checks or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
@@ -100,20 +94,14 @@ class HealthClient extends AbstractClient {
             return [null, null, $err];
         }
 
+        list($data, $err) = $this->decodeBody($response->getBody());
+        if (null !== $err) {
+            return [null, null, $err];
+        }
+
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
-        list($data, $err) = $this->decodeBody($response->getBody());
-
-        if (null !== $err) {
-            return [null, $qm, $err];
-        }
-
-        $checks = [];
-        foreach ($data as $check) {
-            $checks[] = new HealthCheck($check);
-        }
-
-        return [$checks, $qm, null];
+        return [new HealthChecks($data), $qm, null];
     }
 
     /**
@@ -176,7 +164,7 @@ class HealthClient extends AbstractClient {
      * @param string $state
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      * @return array(
-     * @type HealthCheck[]|null array of heath checks or null on error
+     * @type \DCarbone\PHPConsulAPI\Health\HealthChecks|null array of heath checks or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata or null on error
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
@@ -204,19 +192,13 @@ class HealthClient extends AbstractClient {
             return [null, null, $err];
         }
 
+        list($data, $err) = $this->decodeBody($response->getBody());
+        if (null !== $err) {
+            return [null, null, $err];
+        }
+
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
-        list($data, $err) = $this->decodeBody($response->getBody());
-
-        if (null !== $err) {
-            return [null, $qm, $err];
-        }
-
-        $checks = [];
-        foreach ($data as $check) {
-            $checks[] = new HealthCheck($check);
-        }
-
-        return [$checks, $qm, null];
+        return [new HealthChecks($data), $qm, null];
     }
 }

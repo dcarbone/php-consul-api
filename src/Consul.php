@@ -48,6 +48,9 @@ class Consul {
     const HealthCritical = 'critical';
     const HealthMaint = 'maintenance';
 
+    const NodeMaint = '_node_maintenance';
+    const ServiceMaintPrefix = '_service_maintenance';
+
     const AllSegments = '_all';
 
     /** @var \DCarbone\PHPConsulAPI\ACL\ACLClient */
