@@ -63,21 +63,21 @@ class ServiceEntry extends AbstractModel {
     /**
      * @return string
      */
-    public function getNode() {
+    public function getNode(): string {
         return $this->Node;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentService
      */
-    public function getService() {
+    public function getService(): ?AgentService {
         return $this->Service;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Health\HealthCheck[]
      */
-    public function getChecks() {
+    public function getChecks(): array {
         return $this->Checks;
     }
 }

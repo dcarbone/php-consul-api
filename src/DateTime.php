@@ -27,14 +27,14 @@ class DateTime extends \DateTime implements \JsonSerializable {
     /**
      * @return string
      */
-    public static function getDefaultFormat() {
+    public static function getDefaultFormat(): string {
         return self::$_defaultFormat;
     }
 
     /**
      * @param string $format
      */
-    public static function setDefaultFormat($format) {
+    public static function setDefaultFormat(string $format): void {
         if (!is_string($format)) {
             throw new \InvalidArgumentException(sprintf(
                 'PHPConsulAPI - DateTime::setDefaultFormat expects argument 1 to be string, %s seen.',
@@ -55,14 +55,14 @@ class DateTime extends \DateTime implements \JsonSerializable {
     /**
      * @return string
      */
-    public function formatDefault() {
+    public function formatDefault(): string {
         return $this->format(self::$_defaultFormat);
     }
 
     /**
      * @return string
      */
-    public static function now() {
+    public static function now(): string {
         return date(self::$_defaultFormat);
     }
 

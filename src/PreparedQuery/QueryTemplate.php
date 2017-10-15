@@ -31,7 +31,7 @@ class QueryTemplate extends AbstractModel {
     /**
      * @return string
      */
-    public function getType() {
+    public function getType(): string {
         return $this->Type;
     }
 
@@ -39,7 +39,7 @@ class QueryTemplate extends AbstractModel {
      * @param string $Type
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryTemplate
      */
-    public function setType($Type) {
+    public function setType(string $Type): QueryTemplate {
         $this->Type = $Type;
         return $this;
     }
@@ -47,7 +47,7 @@ class QueryTemplate extends AbstractModel {
     /**
      * @return string
      */
-    public function getRegexp() {
+    public function getRegexp(): string {
         return $this->Regexp;
     }
 
@@ -55,7 +55,7 @@ class QueryTemplate extends AbstractModel {
      * @param string $Regexp
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryTemplate
      */
-    public function setRegexp($Regexp) {
+    public function setRegexp(string $Regexp): QueryTemplate {
         $this->Regexp = $Regexp;
         return $this;
     }

@@ -68,7 +68,7 @@ class AgentServiceRegistration extends AbstractModel {
     /**
      * @return string
      */
-    public function getID() {
+    public function getID(): string {
         return $this->ID;
     }
 
@@ -76,7 +76,7 @@ class AgentServiceRegistration extends AbstractModel {
      * @param string $ID
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
-    public function setID($ID) {
+    public function setID(string $ID): AgentServiceRegistration {
         $this->ID = $ID;
         return $this;
     }
@@ -84,7 +84,7 @@ class AgentServiceRegistration extends AbstractModel {
     /**
      * @return string
      */
-    public function getName() {
+    public function getName(): string {
         return $this->Name;
     }
 
@@ -92,7 +92,7 @@ class AgentServiceRegistration extends AbstractModel {
      * @param string $Name
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
-    public function setName($Name) {
+    public function setName(string $Name): AgentServiceRegistration {
         $this->Name = $Name;
         return $this;
     }
@@ -100,7 +100,7 @@ class AgentServiceRegistration extends AbstractModel {
     /**
      * @return int
      */
-    public function getPort() {
+    public function getPort(): int {
         return $this->Port;
     }
 
@@ -108,7 +108,7 @@ class AgentServiceRegistration extends AbstractModel {
      * @param int $Port
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
-    public function setPort($Port) {
+    public function setPort(int $Port): AgentServiceRegistration {
         $this->Port = $Port;
         return $this;
     }
@@ -116,7 +116,7 @@ class AgentServiceRegistration extends AbstractModel {
     /**
      * @return string
      */
-    public function getAddress() {
+    public function getAddress(): string {
         return $this->Address;
     }
 
@@ -124,7 +124,7 @@ class AgentServiceRegistration extends AbstractModel {
      * @param string $Address
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
-    public function setAddress($Address) {
+    public function setAddress(string $Address): AgentServiceRegistration {
         $this->Address = $Address;
         return $this;
     }
@@ -132,7 +132,7 @@ class AgentServiceRegistration extends AbstractModel {
     /**
      * @return boolean
      */
-    public function isEnableTagOverride() {
+    public function isEnableTagOverride(): bool {
         return $this->EnableTagOverride;
     }
 
@@ -140,7 +140,7 @@ class AgentServiceRegistration extends AbstractModel {
      * @param boolean $EnableTagOverride
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
-    public function setEnableTagOverride($EnableTagOverride) {
+    public function setEnableTagOverride(bool $EnableTagOverride): AgentServiceRegistration {
         $this->EnableTagOverride = $EnableTagOverride;
         return $this;
     }
@@ -148,7 +148,7 @@ class AgentServiceRegistration extends AbstractModel {
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
-    public function getCheck() {
+    public function getCheck(): ?AgentServiceCheck {
         return $this->Check;
     }
 
@@ -156,7 +156,7 @@ class AgentServiceRegistration extends AbstractModel {
      * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck $Check
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
-    public function setCheck(AgentServiceCheck $Check) {
+    public function setCheck(AgentServiceCheck $Check): AgentServiceRegistration {
         $this->Check = $Check;
         return $this;
     }
@@ -164,7 +164,7 @@ class AgentServiceRegistration extends AbstractModel {
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck[]
      */
-    public function getChecks() {
+    public function getChecks(): array {
         return $this->Checks;
     }
 
@@ -172,7 +172,7 @@ class AgentServiceRegistration extends AbstractModel {
      * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck[] $Checks
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
-    public function setChecks(array $Checks) {
+    public function setChecks(array $Checks): AgentServiceRegistration {
         foreach ($Checks as $Check) {
             $this->addCheck($Check);
         }
@@ -183,7 +183,7 @@ class AgentServiceRegistration extends AbstractModel {
      * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck $Check
      * @return $this
      */
-    public function addCheck(AgentServiceCheck $Check) {
+    public function addCheck(AgentServiceCheck $Check): AgentServiceRegistration {
         $this->Checks[] = $Check;
         return $this;
     }

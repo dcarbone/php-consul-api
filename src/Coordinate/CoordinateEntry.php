@@ -43,14 +43,14 @@ class CoordinateEntry extends AbstractModel {
     /**
      * @return string
      */
-    public function getNode() {
+    public function getNode(): string {
         return $this->Node;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Coordinate\Coordinate
      */
-    public function getCoord() {
+    public function getCoord(): ?Coordinate {
         return $this->Coord;
     }
 }

@@ -41,14 +41,14 @@ class Error implements \JsonSerializable {
     /**
      * @return DateTime
      */
-    public function getTime() {
+    public function getTime(): DateTime {
         return $this->time;
     }
 
     /**
      * @return string
      */
-    public function getMessage() {
+    public function getMessage(): string {
         return $this->message;
     }
 

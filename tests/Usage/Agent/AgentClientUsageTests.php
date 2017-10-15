@@ -23,6 +23,7 @@ use DCarbone\PHPConsulAPI\Agent\AgentServiceCheck;
 use DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration;
 use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPITests\ConsulManager;
+use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -31,7 +32,8 @@ use PHPUnit\Framework\TestCase;
  */
 class AgentClientUsageTests extends TestCase {
 
-    const ServiceName = 'testservice';
+    const Service1Name = 'test_1_service';
+    const Service2Name = 'test_2_service';
 
     public static function setUpBeforeClass() {
         ConsulManager::startSingle();
@@ -107,9 +109,28 @@ class AgentClientUsageTests extends TestCase {
 
         $svc = new AgentServiceRegistration();
         $svc
-            ->setName(self::ServiceName)
+            ->setName(self::Service1Name)
             ->setAddress('127.0.0.1')
             ->setPort(1234);
+
+        $err = $client->serviceRegister($svc);
+        $this->assertNull($err, sprintf('AgentClient::serviceRegister returned error: %s', $err));
+    }
+
+    /**
+     * @depends testCanConstructAgentClient
+     */
+    public function testCanRegisterServiceWithOneCheck() {
+        $client = new AgentClient(new Config());
+
+        $svc = new AgentServiceRegistration();
+        $svc
+            ->setName(self::Service2Name)
+            ->setAddress('127.0.0.1')
+            ->setPort(4321)
+            ->setCheck(new AgentServiceCheck([
+                'TTL' => '5s',
+            ]));
 
         $err = $client->serviceRegister($svc);
         $this->assertNull($err, sprintf('AgentClient::serviceRegister returned error: %s', $err));
@@ -133,7 +154,7 @@ class AgentClientUsageTests extends TestCase {
             // NOTE: will always contain "consul" service
             $this->assertCount(2, $svcs);
 
-        } catch (\PHPUnit_Framework_AssertionFailedError $e) {
+        } catch (AssertionFailedError $e) {
             echo "\nservices list:\n";
             var_dump($svcs);
             echo "\n";
@@ -148,7 +169,7 @@ class AgentClientUsageTests extends TestCase {
     public function testCanDeregisterService() {
         $client = new AgentClient(new Config());
 
-        $err = $client->serviceDeregister(self::ServiceName);
+        $err = $client->serviceDeregister(self::Service1Name);
         $this->assertNull($err, sprintf('AgentClient::serviceDeregister returned error: %s', $err));
 
         list($svcs, $err) = $client->services();
@@ -158,7 +179,7 @@ class AgentClientUsageTests extends TestCase {
             $this->assertInternalType('array', $svcs);
             $this->assertContainsOnlyInstancesOf(AgentService::class, $svcs);
             $this->assertCount(1, $svcs);
-        } catch (\PHPUnit_Framework_AssertionFailedError $e) {
+        } catch (AssertionFailedError $e) {
             echo "\nservices list:\n";
             var_dump($svcs);
             echo "\n";
@@ -175,7 +196,7 @@ class AgentClientUsageTests extends TestCase {
 
         $svc = new AgentServiceRegistration();
         $svc
-            ->setName(self::ServiceName)
+            ->setName(self::Service1Name)
             ->setPort(1234)
             ->setAddress('127.0.0.1')
             ->setCheck(new AgentServiceCheck([
@@ -203,7 +224,7 @@ class AgentClientUsageTests extends TestCase {
             throw $e;
         }
 
-        $err = $client->serviceDeregister(self::ServiceName);
+        $err = $client->serviceDeregister(self::Service1Name);
         $this->assertNull($err, sprintf('Error deregistering service: %s', $err));
     }
 

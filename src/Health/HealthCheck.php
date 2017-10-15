@@ -43,56 +43,56 @@ class HealthCheck extends AbstractModel {
     /**
      * @return string
      */
-    public function getNode() {
+    public function getNode(): string {
         return $this->Node;
     }
 
     /**
      * @return string
      */
-    public function getCheckID() {
+    public function getCheckID(): string {
         return $this->CheckID;
     }
 
     /**
      * @return string
      */
-    public function getName() {
+    public function getName(): string {
         return $this->Name;
     }
 
     /**
      * @return string
      */
-    public function getStatus() {
+    public function getStatus(): string {
         return $this->Status;
     }
 
     /**
      * @return string
      */
-    public function getNotes() {
+    public function getNotes(): string {
         return $this->Notes;
     }
 
     /**
      * @return string
      */
-    public function getOutput() {
+    public function getOutput(): string {
         return $this->Output;
     }
 
     /**
      * @return string
      */
-    public function getServiceID() {
+    public function getServiceID(): string {
         return $this->ServiceID;
     }
 
     /**
      * @return string
      */
-    public function getServiceName() {
+    public function getServiceName(): string {
         return $this->ServiceName;
     }
 }

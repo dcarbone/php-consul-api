@@ -31,9 +31,9 @@ class HttpAuth implements \JsonSerializable {
      * @param string $username
      * @param string $password
      */
-    public function __construct($username = '', $password = '') {
-        $this->_username = (string)$username;
-        $this->_password = (string)$password;
+    public function __construct(string $username = '', string $password = '') {
+        $this->_username = $username;
+        $this->_password = $password;
     }
 
     /**
@@ -46,21 +46,21 @@ class HttpAuth implements \JsonSerializable {
     /**
      * @return string
      */
-    public function getUsername() {
+    public function getUsername(): string {
         return $this->_username;
     }
 
     /**
      * @return string
      */
-    public function getPassword() {
+    public function getPassword(): string {
         return $this->_password;
     }
 
     /**
      * @return string
      */
-    public function compileAuthString() {
+    public function compileAuthString(): string {
         return (string)$this;
     }
 

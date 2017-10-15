@@ -42,7 +42,7 @@ abstract class AbstractClient {
     /**
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function getConfig() {
+    public function getConfig(): Config {
         return $this->config;
     }
 
@@ -54,7 +54,7 @@ abstract class AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    protected function requireOK(array $r) {
+    protected function requireOK(array $r): array {
         // If a previous error occurred, just return as-is.
         if (null !== $r[2]) {
             return $r;
@@ -103,7 +103,7 @@ abstract class AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null any seen errors
      * )
      */
-    protected function doRequest(Request $r) {
+    protected function doRequest(Request $r): array {
         $rt = microtime(true);
         $response = null;
         $err = null;
@@ -132,11 +132,11 @@ abstract class AbstractClient {
 
     /**
      * @param int $duration
-     * @param ResponseInterface $response
-     * @param UriInterface $uri
-     * @return QueryMeta
+     * @param \Psr\Http\Message\ResponseInterface $response
+     * @param \Psr\Http\Message\UriInterface $uri
+     * @return \DCarbone\PHPConsulAPI\QueryMeta
      */
-    protected function buildQueryMeta($duration, ResponseInterface $response, UriInterface $uri) {
+    protected function buildQueryMeta(int $duration, ResponseInterface $response, UriInterface $uri): QueryMeta {
         $qm = new QueryMeta();
 
         $qm->RequestTime = $duration;
@@ -167,9 +167,9 @@ abstract class AbstractClient {
 
     /**
      * @param int $duration
-     * @return WriteMeta
+     * @return \DCarbone\PHPConsulAPI\WriteMeta
      */
-    protected function buildWriteMeta($duration) {
+    protected function buildWriteMeta(int $duration): WriteMeta {
         $wm = new WriteMeta();
         $wm->RequestTime = $duration;
 
@@ -183,7 +183,7 @@ abstract class AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    protected function decodeBody(StreamInterface $body) {
+    protected function decodeBody(StreamInterface $body): array {
         $data = @json_decode((string)$body, true);
 
         if (JSON_ERROR_NONE === json_last_error()) {

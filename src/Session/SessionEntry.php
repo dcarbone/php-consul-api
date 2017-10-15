@@ -43,56 +43,56 @@ class SessionEntry extends AbstractModel {
     /**
      * @return int
      */
-    public function getCreateIndex() {
+    public function getCreateIndex(): int {
         return $this->CreateIndex;
     }
 
     /**
      * @return string
      */
-    public function getID() {
+    public function getID(): string {
         return $this->ID;
     }
 
     /**
      * @return string
      */
-    public function getName() {
+    public function getName(): string {
         return $this->Name;
     }
 
     /**
      * @return string
      */
-    public function getNode() {
+    public function getNode(): string {
         return $this->Node;
     }
 
     /**
      * @return string[]
      */
-    public function getChecks() {
+    public function getChecks(): array {
         return $this->Checks;
     }
 
     /**
      * @return int
      */
-    public function getLockDelay() {
+    public function getLockDelay(): int {
         return $this->LockDelay;
     }
 
     /**
      * @return string
      */
-    public function getBehavior() {
+    public function getBehavior(): string {
         return $this->Behavior;
     }
 
     /**
      * @return string
      */
-    public function getTTL() {
+    public function getTTL(): string {
         return $this->TTL;
     }
 }

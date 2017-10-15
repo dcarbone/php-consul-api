@@ -29,7 +29,7 @@ class QueryDNSOptions extends AbstractModel {
     /**
      * @return string
      */
-    public function getTTL() {
+    public function getTTL(): string {
         return (string)$this->TTL;
     }
 
@@ -37,7 +37,7 @@ class QueryDNSOptions extends AbstractModel {
      * @param string $TTL
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions
      */
-    public function setTTL($TTL) {
+    public function setTTL(string $TTL): QueryDNSOptions {
         $this->TTL = $TTL;
         return $this;
     }

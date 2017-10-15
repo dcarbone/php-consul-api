@@ -19,6 +19,8 @@
 use GuzzleHttp\Psr7\Request as Psr7Request;
 use GuzzleHttp\Psr7\Stream as Psr7Stream;
 use GuzzleHttp\Psr7\Uri;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\UriInterface;
 
 /**
  * Class Request
@@ -49,10 +51,10 @@ class Request {
      * Request constructor.
      * @param string $method
      * @param string $path
-     * @param Config $config
-     * @param string $body
+     * @param \DCarbone\PHPConsulAPI\Config $config
+     * @param mixed $body
      */
-    public function __construct($method, $path, Config $config, $body = null) {
+    public function __construct(string $method, string $path, Config $config, $body = null) {
         $this->config = $config;
 
         $this->method = strtoupper($method);
@@ -115,7 +117,7 @@ class Request {
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      */
-    public function setQueryOptions(QueryOptions $options = null) {
+    public function setQueryOptions(QueryOptions $options = null): void {
         if (null === $options) {
             return;
         }
@@ -163,7 +165,7 @@ class Request {
     /**
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
      */
-    public function setWriteOptions(WriteOptions $options = null) {
+    public function setWriteOptions(WriteOptions $options = null): void {
         if (null === $options) {
             return;
         }
@@ -188,7 +190,7 @@ class Request {
     /**
      * @return \Psr\Http\Message\UriInterface
      */
-    public function getUri() {
+    public function getUri(): UriInterface {
         if (!isset($this->uri)) {
             $uri = sprintf(
                 '%s://%s/%s',
@@ -211,7 +213,7 @@ class Request {
      *
      * @return \Psr\Http\Message\RequestInterface
      */
-    public function toPsrRequest() {
+    public function toPsrRequest(): RequestInterface {
         return new Psr7Request(
             $this->method,
             $this->getUri(),

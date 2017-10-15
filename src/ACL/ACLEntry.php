@@ -39,84 +39,84 @@ class ACLEntry extends AbstractModel {
     /**
      * @return int
      */
-    public function getCreateIndex() {
+    public function getCreateIndex(): int {
         return $this->CreateIndex;
     }
 
     /**
      * @param int $CreateIndex
      */
-    public function setCreateIndex($CreateIndex) {
+    public function setCreateIndex(int $CreateIndex): void {
         $this->CreateIndex = $CreateIndex;
     }
 
     /**
      * @return int
      */
-    public function getModifyIndex() {
+    public function getModifyIndex(): int {
         return $this->ModifyIndex;
     }
 
     /**
      * @param int $ModifyIndex
      */
-    public function setModifyIndex($ModifyIndex) {
+    public function setModifyIndex(int $ModifyIndex): void {
         $this->ModifyIndex = $ModifyIndex;
     }
 
     /**
      * @return string
      */
-    public function getID() {
+    public function getID(): string {
         return $this->ID;
     }
 
     /**
      * @param string $ID
      */
-    public function setID($ID) {
+    public function setID(string $ID): void {
         $this->ID = $ID;
     }
 
     /**
      * @return string
      */
-    public function getName() {
+    public function getName(): string {
         return $this->Name;
     }
 
     /**
      * @param string $Name
      */
-    public function setName($Name) {
+    public function setName(string $Name): void {
         $this->Name = $Name;
     }
 
     /**
      * @return string
      */
-    public function getType() {
+    public function getType(): string {
         return $this->Type;
     }
 
     /**
      * @param string $Type
      */
-    public function setType($Type) {
+    public function setType(string $Type): void {
         $this->Type = $Type;
     }
 
     /**
      * @return string
      */
-    public function getRules() {
+    public function getRules(): string {
         return $this->Rules;
     }
 
     /**
      * @param string $Rules
      */
-    public function setRules($Rules) {
+    public function setRules(string $Rules): void {
         $this->Rules = $Rules;
     }
 }

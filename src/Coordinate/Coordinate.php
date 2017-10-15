@@ -35,28 +35,28 @@ class Coordinate extends AbstractModel {
     /**
      * @return int[]
      */
-    public function getVec() {
+    public function getVec(): array {
         return $this->Vec;
     }
 
     /**
      * @return float
      */
-    public function getError() {
+    public function getError(): float {
         return $this->Error;
     }
 
     /**
      * @return float
      */
-    public function getAdjustment() {
+    public function getAdjustment(): float {
         return $this->Adjustment;
     }
 
     /**
      * @return float
      */
-    public function getHeight() {
+    public function getHeight(): float {
         return $this->Height;
     }
 }

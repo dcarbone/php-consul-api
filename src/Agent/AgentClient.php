@@ -36,7 +36,7 @@ class AgentClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function self() {
+    public function self(): array {
         $r = new Request('GET', 'v1/agent/self', $this->config);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -61,7 +61,7 @@ class AgentClient extends AbstractClient {
     /**
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function reload() {
+    public function reload(): ?Error {
         $r = new Request('PUT', 'v1/agent/reload', $this->config);
 
         return $this->requireOK($this->doRequest($r))[2];
@@ -73,7 +73,7 @@ class AgentClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function nodeName() {
+    public function nodeName(): array {
         if (null === $this->_self) {
             list($_, $_, $err) = $this->self();
             if (null !== $err) {
@@ -94,7 +94,7 @@ class AgentClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function checks() {
+    public function checks(): array {
         $r = new Request('GET', 'v1/agent/checks', $this->config);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -124,7 +124,7 @@ class AgentClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function services() {
+    public function services(): array {
         $r = new Request('GET', 'v1/agent/services', $this->config);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -154,7 +154,7 @@ class AgentClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function members() {
+    public function members(): array {
         $r = new Request('GET', 'v1/agent/members', $this->config);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -184,7 +184,7 @@ class AgentClient extends AbstractClient {
      * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration $agentServiceRegistration
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function serviceRegister(AgentServiceRegistration $agentServiceRegistration) {
+    public function serviceRegister(AgentServiceRegistration $agentServiceRegistration): ?Error {
         $r = new Request('PUT', 'v1/agent/service/register', $this->config, $agentServiceRegistration);
 
         return $this->requireOK($this->doRequest($r))[2];
@@ -196,7 +196,7 @@ class AgentClient extends AbstractClient {
      * @param string $serviceID
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function serviceDeregister($serviceID) {
+    public function serviceDeregister(string $serviceID): ?Error {
         $r = new Request('PUT', sprintf('v1/agent/service/deregister/%s', $serviceID), $this->config);
 
         return $this->requireOK($this->doRequest($r))[2];
@@ -209,7 +209,7 @@ class AgentClient extends AbstractClient {
      * @param string $note
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function passTTL($checkID, $note) {
+    public function passTTL(string $checkID, string $note): ?Error {
         return $this->updateTTL($checkID, $note, 'pass');
     }
 
@@ -220,7 +220,7 @@ class AgentClient extends AbstractClient {
      * @param string $note
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function warnTTL($checkID, $note) {
+    public function warnTTL(string $checkID, string $note): ?Error {
         return $this->updateTTL($checkID, $note, 'warn');
     }
 
@@ -231,7 +231,7 @@ class AgentClient extends AbstractClient {
      * @param string $note
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function failTTL($checkID, $note) {
+    public function failTTL(string $checkID, string $note): ?Error {
         return $this->updateTTL($checkID, $note, 'fail');
     }
 
@@ -241,7 +241,7 @@ class AgentClient extends AbstractClient {
      * @param string $status
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function updateTTL($checkID, $output, $status) {
+    public function updateTTL(string $checkID, string $output, string $status): ?Error {
         switch ($status) {
             case Consul::HealthPassing:
             case Consul::HealthWarning:
@@ -275,7 +275,7 @@ class AgentClient extends AbstractClient {
      * @param \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration $agentCheckRegistration
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function checkRegister(AgentCheckRegistration $agentCheckRegistration) {
+    public function checkRegister(AgentCheckRegistration $agentCheckRegistration): ?Error {
         $r = new Request('PUT', 'v1/agent/check/register', $this->config, $agentCheckRegistration);
 
         return $this->requireOK($this->doRequest($r))[2];
@@ -285,7 +285,7 @@ class AgentClient extends AbstractClient {
      * @param string $checkID
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function checkDeregister($checkID) {
+    public function checkDeregister(string $checkID): ?Error {
         $r = new Request('PUT', sprintf('v1/agent/check/deregister/%s', $checkID), $this->config);
 
         return $this->requireOK($this->doRequest($r))[2];
@@ -296,7 +296,7 @@ class AgentClient extends AbstractClient {
      * @param bool $wan
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function join($addr, $wan = false) {
+    public function join(string $addr, bool $wan = false): ?Error {
         $r = new Request('PUT', sprintf('v1/agent/join/%s', $addr), $this->config);
         if ($wan) {
             $r->Params->set('wan', '1');
@@ -311,7 +311,7 @@ class AgentClient extends AbstractClient {
      * @param string $node
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function forceLeave($node) {
+    public function forceLeave(string $node): ?Error {
         $r = new Request('PUT', sprintf('v1/agent/force-leave/%s', $node), $this->config);
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));
@@ -324,7 +324,7 @@ class AgentClient extends AbstractClient {
      * @param string $reason
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function enableServiceMaintenance($serviceID, $reason = '') {
+    public function enableServiceMaintenance(string $serviceID, string $reason = ''): ?Error {
         $r = new Request('PUT', sprintf('v1/agent/service/maintenance/%s', $serviceID), $this->config);
         $r->Params->set('enable', 'true');
         $r->Params->set('reason', $reason);
@@ -338,7 +338,7 @@ class AgentClient extends AbstractClient {
      * @param string $serviceID
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function disableServiceMaintenance($serviceID) {
+    public function disableServiceMaintenance(string $serviceID): ?Error {
         $r = new Request('PUT', sprintf('v1/agent/service/maintenance/%s', $serviceID), $this->config);
         $r->Params->set('enable', 'false');
 
@@ -351,7 +351,7 @@ class AgentClient extends AbstractClient {
      * @param string $reason
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function enableNodeMaintenance($reason = '') {
+    public function enableNodeMaintenance(string $reason = ''): ?Error {
         $r = new Request('PUT', 'v1/agent/maintenance', $this->config);
         $r->Params->set('enable', 'true');
         $r->Params->set('reason', $reason);
@@ -364,7 +364,7 @@ class AgentClient extends AbstractClient {
     /**
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function disableNodeMaintenance() {
+    public function disableNodeMaintenance(): ?Error {
         $r = new Request('PUT', 'v1/agent/maintenance', $this->config);
         $r->Params->set('enable', 'false');
 
@@ -376,7 +376,7 @@ class AgentClient extends AbstractClient {
     /**
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function leave() {
+    public function leave(): ?Error {
         $r = new Request('PUT', 'v1/agent/leave', $this->config);
 
         list($_, $_, $err) = $this->requireOK($this->doRequest($r));

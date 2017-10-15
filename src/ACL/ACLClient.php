@@ -35,7 +35,7 @@ class ACLClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function create(ACLEntry $acl, WriteOptions $options = null) {
+    public function create(ACLEntry $acl, WriteOptions $options = null): array {
         $r = new Request('PUT', 'v1/acl/create', $this->config, $acl);
         $r->setWriteOptions($options);
 
@@ -63,7 +63,7 @@ class ACLClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function update(ACLEntry $acl, WriteOptions $options = null) {
+    public function update(ACLEntry $acl, WriteOptions $options = null): array {
         $r = new Request('PUT', 'v1/acl/update', $this->config, $acl);
         $r->setWriteOptions($options);
 
@@ -84,7 +84,7 @@ class ACLClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function destroy($id, WriteOptions $options = null) {
+    public function destroy(string $id, WriteOptions $options = null): array {
         $r = new Request('PUT', sprintf('v1/acl/destroy/%s', $id), $this->config);
         $r->setWriteOptions($options);
 
@@ -106,7 +106,7 @@ class ACLClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function cloneACL($id, WriteOptions $options = null) {
+    public function clone(string $id, WriteOptions $options = null): array {
         $r = new Request('PUT', sprintf('v1/acl/clone/%s', $id), $this->config);
         $r->setWriteOptions($options);
 
@@ -135,7 +135,7 @@ class ACLClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function info($id, QueryOptions $options = null) {
+    public function info(string $id, QueryOptions $options = null): array {
         $r = new Request('GET', sprintf('v1/acl/info/%s', $id), $this->config);
         $r->setQueryOptions($options);
 
@@ -168,7 +168,7 @@ class ACLClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function listACLs(QueryOptions $options = null) {
+    public function list(QueryOptions $options = null): array {
         $r = new Request('GET', 'v1/acl/list', $this->config);
         $r->setQueryOptions($options);
 
@@ -201,7 +201,7 @@ class ACLClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error
      * )
      */
-    public function replication(QueryOptions $options = null) {
+    public function replication(QueryOptions $options = null): array {
         $r = new Request('GET', '/v1/acl/replication', $this->config);
         $r->setQueryOptions($options);
 

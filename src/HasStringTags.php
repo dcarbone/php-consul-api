@@ -27,7 +27,7 @@ trait HasStringTags {
     /**
      * @return string[]
      */
-    public function getTags() {
+    public function getTags(): array {
         return $this->Tags;
     }
 }

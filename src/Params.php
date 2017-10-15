@@ -25,7 +25,7 @@ class Params extends Values {
      * @param string $v
      * @return string
      */
-    protected function encode($v) {
+    protected function encode(string $v): string {
         return urlencode($v);
     }
 }

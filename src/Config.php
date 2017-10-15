@@ -145,14 +145,14 @@ class Config {
      *
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public static function newDefaultConfig() {
+    public static function newDefaultConfig(): Config {
         return new static(self::getDefaultConfig());
     }
 
     /**
      * @return string
      */
-    public function getAddress() {
+    public function getAddress(): string {
         return $this->Address;
     }
 
@@ -160,7 +160,7 @@ class Config {
      * @param string $Address
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setAddress($Address) {
+    public function setAddress(string $Address): Config {
         $this->Address = $Address;
         return $this;
     }
@@ -168,7 +168,7 @@ class Config {
     /**
      * @return string
      */
-    public function getScheme() {
+    public function getScheme(): string {
         return $this->Scheme;
     }
 
@@ -176,7 +176,7 @@ class Config {
      * @param string $Scheme
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setScheme($Scheme) {
+    public function setScheme(string $Scheme): Config {
         $this->Scheme = $Scheme;
         return $this;
     }
@@ -184,7 +184,7 @@ class Config {
     /**
      * @return string
      */
-    public function getDatacenter() {
+    public function getDatacenter(): string {
         return $this->Datacenter;
     }
 
@@ -192,7 +192,7 @@ class Config {
      * @param string $Datacenter
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setDatacenter($Datacenter) {
+    public function setDatacenter(string $Datacenter): Config {
         $this->Datacenter = $Datacenter;
         return $this;
     }
@@ -200,7 +200,7 @@ class Config {
     /**
      * @return int
      */
-    public function getWaitTime() {
+    public function getWaitTime(): int {
         return $this->WaitTime;
     }
 
@@ -208,7 +208,7 @@ class Config {
      * @param int $WaitTime
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setWaitTime($WaitTime) {
+    public function setWaitTime(int $WaitTime): Config {
         $this->WaitTime = $WaitTime;
         return $this;
     }
@@ -216,7 +216,7 @@ class Config {
     /**
      * @return string
      */
-    public function getToken() {
+    public function getToken(): string {
         return $this->Token;
     }
 
@@ -224,7 +224,7 @@ class Config {
      * @param string $Token
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setToken($Token) {
+    public function setToken(string $Token): Config {
         $this->Token = $Token;
         return $this;
     }
@@ -232,7 +232,7 @@ class Config {
     /**
      * @return boolean
      */
-    public function isInsecureSkipVerify() {
+    public function isInsecureSkipVerify(): bool {
         return $this->InsecureSkipVerify;
     }
 
@@ -240,7 +240,7 @@ class Config {
      * @param boolean $InsecureSkipVerify
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setInsecureSkipVerify($InsecureSkipVerify) {
+    public function setInsecureSkipVerify(bool $InsecureSkipVerify): Config {
         $this->InsecureSkipVerify = $InsecureSkipVerify;
         return $this;
     }
@@ -248,7 +248,7 @@ class Config {
     /**
      * @return \DCarbone\PHPConsulAPI\HttpAuth
      */
-    public function getHttpAuth() {
+    public function getHttpAuth(): HttpAuth {
         return $this->HttpAuth;
     }
 
@@ -256,7 +256,7 @@ class Config {
      * @param string|HttpAuth $HttpAuth
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setHttpAuth($HttpAuth) {
+    public function setHttpAuth($HttpAuth): Config {
         if (is_string($HttpAuth)) {
             $colon = strpos($HttpAuth, ':');
             if (false === $colon) {
@@ -284,7 +284,7 @@ class Config {
     /**
      * @return string
      */
-    public function getCAFile() {
+    public function getCAFile(): string {
         return $this->CAFile;
     }
 
@@ -292,7 +292,7 @@ class Config {
      * @param string $CAFile
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setCAFile($CAFile) {
+    public function setCAFile(string $CAFile): Config {
         $this->CAFile = $CAFile;
         return $this;
     }
@@ -300,7 +300,7 @@ class Config {
     /**
      * @return string
      */
-    public function getCertFile() {
+    public function getCertFile(): string {
         return $this->CertFile;
     }
 
@@ -308,7 +308,7 @@ class Config {
      * @param string $CertFile
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setCertFile($CertFile) {
+    public function setCertFile(string $CertFile): Config {
         $this->CertFile = $CertFile;
         return $this;
     }
@@ -316,7 +316,7 @@ class Config {
     /**
      * @return string
      */
-    public function getKeyFile() {
+    public function getKeyFile(): string {
         return $this->KeyFile;
     }
 
@@ -324,7 +324,7 @@ class Config {
      * @param string $KeyFile
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setKeyFile($KeyFile) {
+    public function setKeyFile(string $KeyFile): Config {
         $this->KeyFile = $KeyFile;
         return $this;
     }
@@ -332,7 +332,7 @@ class Config {
     /**
      * @return \GuzzleHttp\ClientInterface
      */
-    public function getHttpClient() {
+    public function getHttpClient(): ClientInterface {
         return $this->HttpClient;
     }
 
@@ -340,7 +340,7 @@ class Config {
      * @param \GuzzleHttp\ClientInterface $HttpClient
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setHttpClient(ClientInterface $HttpClient) {
+    public function setHttpClient(ClientInterface $HttpClient): Config {
         $this->HttpClient = $HttpClient;
         return $this;
     }
@@ -348,7 +348,7 @@ class Config {
     /**
      * @return boolean
      */
-    public function isTokenInHeader() {
+    public function isTokenInHeader(): bool {
         return $this->TokenInHeader;
     }
 
@@ -356,8 +356,8 @@ class Config {
      * @param boolean $TokenInHeader
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setTokenInHeader($TokenInHeader) {
-        $this->TokenInHeader = (bool)$TokenInHeader;
+    public function setTokenInHeader(bool $TokenInHeader): Config {
+        $this->TokenInHeader = $TokenInHeader;
         return $this;
     }
 
@@ -365,7 +365,7 @@ class Config {
      * @param int $in
      * @return string
      */
-    public function intToMillisecond($in) {
+    public function intToMillisecond(int $in): string {
         if (!is_int($in)) {
             throw new \InvalidArgumentException(sprintf('$in must be integer, saw "%s".', gettype($in)));
         }
@@ -382,7 +382,7 @@ class Config {
     /**
      * @return array
      */
-    public function getGuzzleRequestOptions() {
+    public function getGuzzleRequestOptions(): array {
         // TODO: Define once?
         $opts = [
             RequestOptions::HTTP_ERRORS => false,
@@ -407,7 +407,7 @@ class Config {
      * @param string $param
      * @return string|null
      */
-    protected static function _tryGetEnvParam($param) {
+    protected static function _tryGetEnvParam(string $param): ?string {
         if (isset($_ENV[$param])) {
             return $_ENV[$param];
         }
@@ -426,7 +426,7 @@ class Config {
     /**
      * @return array
      */
-    public static function getEnvironmentConfig() {
+    public static function getEnvironmentConfig(): array {
         $ret = [];
         foreach ([
                      Consul::HTTPAddrEnvName => static::_tryGetEnvParam(Consul::HTTPAddrEnvName),
@@ -447,7 +447,7 @@ class Config {
     /**
      * @return array
      */
-    private static function getDefaultConfig() {
+    private static function getDefaultConfig(): array {
         static $conf = [
             'Address' => '127.0.0.1:8500',
             'Scheme' => 'http',

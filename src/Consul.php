@@ -106,77 +106,77 @@ class Consul {
     /**
      * @return \DCarbone\PHPConsulAPI\ACL\ACLClient
      */
-    public function ACL() {
+    public function ACL(): ACLClient {
         return $this->ACL;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentClient
      */
-    public function Agent() {
+    public function Agent(): AgentClient {
         return $this->Agent;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogClient
      */
-    public function Catalog() {
+    public function Catalog(): CatalogClient {
         return $this->Catalog;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateClient
      */
-    public function Coordinate() {
+    public function Coordinate(): CoordinateClient {
         return $this->Coordinate;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Event\EventClient
      */
-    public function Event() {
+    public function Event(): EventClient {
         return $this->Event;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Health\HealthClient
      */
-    public function Health() {
+    public function Health(): HealthClient {
         return $this->Health;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\KV\KVClient
      */
-    public function KV() {
+    public function KV(): KVClient {
         return $this->KV;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\OperatorClient
      */
-    public function Operator() {
+    public function Operator(): OperatorClient {
         return $this->Operator;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryClient
      */
-    public function PreparedQuery() {
+    public function PreparedQuery(): PreparedQueryClient {
         return $this->PreparedQuery;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Session\SessionClient
      */
-    public function Session() {
+    public function Session(): SessionClient {
         return $this->Session;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Status\StatusClient
      */
-    public function Status() {
+    public function Status(): StatusClient {
         return $this->Status;
     }
 }

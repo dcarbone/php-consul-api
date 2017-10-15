@@ -50,70 +50,70 @@ class AgentMember extends AbstractModel {
     /**
      * @return string
      */
-    public function getName() {
+    public function getName(): string {
         return $this->Name;
     }
 
     /**
      * @return string
      */
-    public function getAddr() {
+    public function getAddr(): string {
         return $this->Addr;
     }
 
     /**
      * @return int
      */
-    public function getPort() {
+    public function getPort(): int {
         return $this->Port;
     }
 
     /**
      * @return string
      */
-    public function getStatus() {
+    public function getStatus(): string {
         return $this->Status;
     }
 
     /**
      * @return int
      */
-    public function getProtocolMin() {
+    public function getProtocolMin(): int {
         return $this->ProtocolMin;
     }
 
     /**
      * @return int
      */
-    public function getProtocolMax() {
+    public function getProtocolMax(): int {
         return $this->ProtocolMax;
     }
 
     /**
      * @return int
      */
-    public function getProtocolCur() {
+    public function getProtocolCur(): int {
         return $this->ProtocolCur;
     }
 
     /**
      * @return int
      */
-    public function getDelegateMin() {
+    public function getDelegateMin(): int {
         return $this->DelegateMin;
     }
 
     /**
      * @return int
      */
-    public function getDelegateMax() {
+    public function getDelegateMax(): int {
         return $this->DelegateMax;
     }
 
     /**
      * @return int
      */
-    public function getDelegateCur() {
+    public function getDelegateCur(): int {
         return $this->DelegateCur;
     }
 

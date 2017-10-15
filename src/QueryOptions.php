@@ -46,140 +46,140 @@ class QueryOptions extends AbstractModel {
     /**
      * @return string
      */
-    public function getDatacenter() {
+    public function getDatacenter(): string {
         return $this->Datacenter;
     }
 
     /**
      * @param string $Datacenter
      */
-    public function setDatacenter($Datacenter) {
+    public function setDatacenter(string $Datacenter): void {
         $this->Datacenter = $Datacenter;
     }
 
     /**
      * @return bool
      */
-    public function isAllowStale() {
+    public function isAllowStale(): bool {
         return $this->AllowStale;
     }
 
     /**
      * @param bool $AllowStale
      */
-    public function setAllowStale($AllowStale) {
+    public function setAllowStale(bool $AllowStale): void {
         $this->AllowStale = $AllowStale;
     }
 
     /**
      * @return bool
      */
-    public function isRequireConsistent() {
+    public function isRequireConsistent(): bool {
         return $this->RequireConsistent;
     }
 
     /**
      * @param bool $RequireConsistent
      */
-    public function setRequireConsistent($RequireConsistent) {
+    public function setRequireConsistent(bool $RequireConsistent): void {
         $this->RequireConsistent = $RequireConsistent;
     }
 
     /**
      * @return int
      */
-    public function getWaitIndex() {
+    public function getWaitIndex(): int {
         return $this->WaitIndex;
     }
 
     /**
      * @param int $WaitIndex
      */
-    public function setWaitIndex($WaitIndex) {
+    public function setWaitIndex(int $WaitIndex): void {
         $this->WaitIndex = $WaitIndex;
     }
 
     /**
      * @return int
      */
-    public function getWaitTime() {
+    public function getWaitTime(): int {
         return $this->WaitTime;
     }
 
     /**
      * @param int $WaitTime
      */
-    public function setWaitTime($WaitTime) {
+    public function setWaitTime(int $WaitTime): void {
         $this->WaitTime = $WaitTime;
     }
 
     /**
      * @return string
      */
-    public function getToken() {
+    public function getToken(): string {
         return $this->Token;
     }
 
     /**
      * @param string $Token
      */
-    public function setToken($Token) {
+    public function setToken(string $Token): void {
         $this->Token = $Token;
     }
 
     /**
      * @return string
      */
-    public function getNear() {
+    public function getNear(): string {
         return $this->Near;
     }
 
     /**
      * @param string $Near
      */
-    public function setNear($Near) {
+    public function setNear(string $Near): void {
         $this->Near = $Near;
     }
 
     /**
      * @return array
      */
-    public function getNodeMeta() {
+    public function getNodeMeta(): array {
         return $this->NodeMeta;
     }
 
     /**
      * @param array $NodeMeta
      */
-    public function setNodeMeta($NodeMeta) {
+    public function setNodeMeta(array $NodeMeta): void {
         $this->NodeMeta = $NodeMeta;
     }
 
     /**
      * @return int
      */
-    public function getRelayFactor() {
+    public function getRelayFactor(): int {
         return $this->RelayFactor;
     }
 
     /**
      * @param int $RelayFactor
      */
-    public function setRelayFactor($RelayFactor) {
+    public function setRelayFactor(int $RelayFactor): void {
         $this->RelayFactor = $RelayFactor;
     }
 
     /**
      * @return bool
      */
-    public function isPretty() {
+    public function isPretty(): bool {
         return $this->Pretty;
     }
 
     /**
      * @param bool $Pretty
      */
-    public function setPretty($Pretty) {
+    public function setPretty(bool $Pretty): void {
         $this->Pretty = $Pretty;
     }
 }

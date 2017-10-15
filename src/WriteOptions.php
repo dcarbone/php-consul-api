@@ -31,42 +31,42 @@ class WriteOptions extends AbstractModel {
     /**
      * @return string
      */
-    public function getDatacenter() {
+    public function getDatacenter(): string {
         return $this->Datacenter;
     }
 
     /**
      * @param string $Datacenter
      */
-    public function setDatacenter($Datacenter) {
+    public function setDatacenter(string $Datacenter): void {
         $this->Datacenter = $Datacenter;
     }
 
     /**
      * @return string
      */
-    public function getToken() {
+    public function getToken(): string {
         return $this->Token;
     }
 
     /**
      * @param string $Token
      */
-    public function setToken($Token) {
+    public function setToken(string $Token): void {
         $this->Token = $Token;
     }
 
     /**
      * @return int
      */
-    public function getRelayFactor() {
+    public function getRelayFactor(): int {
         return $this->RelayFactor;
     }
 
     /**
      * @param int $RelayFactor
      */
-    public function setRelayFactor($RelayFactor) {
+    public function setRelayFactor(int $RelayFactor): void {
         $this->RelayFactor = $RelayFactor;
     }
 }

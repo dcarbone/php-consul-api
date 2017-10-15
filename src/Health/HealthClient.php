@@ -35,7 +35,7 @@ class HealthClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function node($node, QueryOptions $options = null) {
+    public function node(string $node, QueryOptions $options = null): array {
         if (!is_string($node)) {
             return [null,
                 null,
@@ -80,7 +80,7 @@ class HealthClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function checks($service, QueryOptions $options = null) {
+    public function checks(string $service, QueryOptions $options = null): array {
         if (!is_string($service)) {
             return [null,
                 null,
@@ -127,7 +127,10 @@ class HealthClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function service($service, $tag = '', $passingOnly = false, QueryOptions $options = null) {
+    public function service(string $service,
+                            string $tag = '',
+                            bool $passingOnly = false,
+                            QueryOptions $options = null): array {
         if (!is_string($service)) {
             return [null,
                 null,
@@ -178,7 +181,7 @@ class HealthClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function state($state, QueryOptions $options = null) {
+    public function state(string $state, QueryOptions $options = null): array {
         static $validStates = array('any', 'warning', 'critical', 'passing', 'unknown');
 
         if (!is_string($state) || !in_array($state, $validStates, true)) {

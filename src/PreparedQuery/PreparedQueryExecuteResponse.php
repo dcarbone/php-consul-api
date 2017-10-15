@@ -62,35 +62,35 @@ class PreparedQueryExecuteResponse extends AbstractModel {
     /**
      * @return string
      */
-    public function getService() {
+    public function getService(): string {
         return $this->Service;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Health\ServiceEntry[]
      */
-    public function getNodes() {
+    public function getNodes(): array {
         return $this->Nodes;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions
      */
-    public function getDNS() {
+    public function getDNS(): ?QueryDNSOptions {
         return $this->DNS;
     }
 
     /**
      * @return string
      */
-    public function getDatacenter() {
+    public function getDatacenter(): string {
         return $this->Datacenter;
     }
 
     /**
      * @return int
      */
-    public function getFailovers() {
+    public function getFailovers(): int {
         return $this->Failovers;
     }
 }

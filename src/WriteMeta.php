@@ -27,7 +27,7 @@ class WriteMeta {
     /**
      * @return int
      */
-    public function getRequestTime() {
+    public function getRequestTime(): int {
         return $this->RequestTime;
     }
 }

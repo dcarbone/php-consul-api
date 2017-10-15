@@ -39,42 +39,42 @@ class ACLReplicationStatus extends AbstractModel {
     /**
      * @return bool
      */
-    public function isEnabled() {
+    public function isEnabled(): bool {
         return $this->Enabled;
     }
 
     /**
      * @return bool
      */
-    public function isRunning() {
+    public function isRunning(): bool {
         return $this->Running;
     }
 
     /**
      * @return string
      */
-    public function getSourceDatacenter() {
+    public function getSourceDatacenter(): string {
         return $this->SourceDatacenter;
     }
 
     /**
      * @return int
      */
-    public function getReplicatedIndex() {
+    public function getReplicatedIndex(): int {
         return $this->ReplicatedIndex;
     }
 
     /**
      * @return null|string
      */
-    public function getLastSuccess() {
+    public function getLastSuccess(): ?string {
         return $this->LastSuccess;
     }
 
     /**
      * @return null|string
      */
-    public function getLastError() {
+    public function getLastError(): ?string {
         return $this->LastError;
     }
 }

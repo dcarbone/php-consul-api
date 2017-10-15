@@ -35,7 +35,7 @@ class EventClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error error, if any
      * )
      */
-    public function fire(UserEvent $event, WriteOptions $options = null) {
+    public function fire(UserEvent $event, WriteOptions $options = null): array {
         $r = new Request(
             'PUT',
             sprintf('v1/event/fire/%s', $event->Name),
@@ -79,7 +79,7 @@ class EventClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error error, if any
      * )
      */
-    public function eventList($name = '', QueryOptions $options = null) {
+    public function eventList(string $name = '', QueryOptions $options = null): array {
         $r = new Request('GET', 'v1/event/list', $this->config);
         if ('' !== (string)$name) {
             $r->Params->set('name', $name);

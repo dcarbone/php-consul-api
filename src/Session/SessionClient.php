@@ -39,7 +39,7 @@ class SessionClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function createNoChecks(SessionEntry $sessionEntry = null, WriteOptions $options = null) {
+    public function createNoChecks(SessionEntry $sessionEntry = null, WriteOptions $options = null): array {
         if (null === $sessionEntry) {
             $sessionEntry = new SessionEntry;
         } else {
@@ -74,7 +74,7 @@ class SessionClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function create(SessionEntry $sessionEntry = null, WriteOptions $options = null) {
+    public function create(SessionEntry $sessionEntry = null, WriteOptions $options = null): array {
         $r = new Request('PUT', 'v1/session/create', $this->config, $sessionEntry);
         $r->setWriteOptions($options);
 
@@ -103,7 +103,7 @@ class SessionClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function destroy($id, WriteOptions $options = null) {
+    public function destroy(string $id, WriteOptions $options = null): array {
         if (!is_string($id)) {
             return [null,
                 new Error(sprintf(
@@ -133,7 +133,7 @@ class SessionClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function renew($id, WriteOptions $options = null) {
+    public function renew(string $id, WriteOptions $options = null): array {
         if (!is_string($id)) {
             return [null,
                 null,
@@ -190,7 +190,7 @@ class SessionClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function info($id, QueryOptions $options = null) {
+    public function info(string $id, QueryOptions $options = null): array {
         if (!is_string($id)) {
             return [null,
                 null,
@@ -234,7 +234,7 @@ class SessionClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function node($node, QueryOptions $options = null) {
+    public function node(string $node, QueryOptions $options = null): array {
         if (!is_string($node)) {
             return [null,
                 null,
@@ -273,7 +273,7 @@ class SessionClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function listSessions(QueryOptions $options = null) {
+    public function listSessions(QueryOptions $options = null): array {
         $r = new Request('GET', 'v1/session/list', $this->config);
         $r->setQueryOptions($options);
 

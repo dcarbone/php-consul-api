@@ -37,42 +37,42 @@ class CatalogService extends CatalogNode {
     /**
      * @return string
      */
-    public function getServiceID() {
+    public function getServiceID(): string {
         return $this->ServiceID;
     }
 
     /**
      * @return string
      */
-    public function getServiceName() {
+    public function getServiceName(): string {
         return $this->ServiceName;
     }
 
     /**
      * @return string
      */
-    public function getServiceAddress() {
+    public function getServiceAddress(): string {
         return $this->ServiceAddress;
     }
 
     /**
      * @return string[]
      */
-    public function getServiceTags() {
+    public function getServiceTags(): array {
         return $this->ServiceTags;
     }
 
     /**
      * @return int
      */
-    public function getServicePort() {
+    public function getServicePort(): int {
         return $this->ServicePort;
     }
 
     /**
      * @return boolean
      */
-    public function isServiceEnableTagOverride() {
+    public function isServiceEnableTagOverride(): bool {
         return $this->ServiceEnableTagOverride;
     }
 }

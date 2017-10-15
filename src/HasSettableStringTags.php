@@ -34,7 +34,7 @@ trait HasSettableStringTags {
      * @param string $Tag
      * @return $this
      */
-    public function addTag($Tag) {
+    public function addTag(string $Tag) {
         $this->Tags[] = $Tag;
         return $this;
     }

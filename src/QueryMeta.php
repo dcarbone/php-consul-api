@@ -37,42 +37,42 @@ class QueryMeta {
     /**
      * @return string
      */
-    public function getRequestUrl() {
+    public function getRequestUrl(): string {
         return $this->RequestUrl;
     }
 
     /**
      * @return int
      */
-    public function getLastIndex() {
+    public function getLastIndex(): int {
         return $this->LastIndex;
     }
 
     /**
      * @return int
      */
-    public function getLastContact() {
+    public function getLastContact(): int {
         return $this->LastContact;
     }
 
     /**
      * @return boolean
      */
-    public function isKnownLeader() {
+    public function isKnownLeader(): bool {
         return $this->KnownLeader;
     }
 
     /**
      * @return int
      */
-    public function getRequestTime() {
+    public function getRequestTime(): int {
         return $this->RequestTime;
     }
 
     /**
      * @return bool
      */
-    public function isAddressTranslationEnabled() {
+    public function isAddressTranslationEnabled(): bool {
         return $this->AddressTranslationEnabled;
     }
 }

@@ -28,11 +28,7 @@ class Values implements \JsonSerializable, \Countable {
      * @param string $key
      * @return string
      */
-    public function get($key) {
-        if (!is_string($key)) {
-            throw new \InvalidArgumentException(sprintf('$key must be string, saw "%s".', gettype($key)));
-        }
-
+    public function get(string $key): string {
         if (isset($this->values[$key])) {
             return $this->values[$key][0];
         }
@@ -44,11 +40,7 @@ class Values implements \JsonSerializable, \Countable {
      * @param string $key
      * @return string[]
      */
-    public function getAll($key) {
-        if (!is_string($key)) {
-            throw new \InvalidArgumentException(sprintf('$key must be string, saw "%s".', gettype($key)));
-        }
-
+    public function getAll(string $key): array {
         if (isset($this->values[$key])) {
             return $this->values[$key];
         }
@@ -60,62 +52,40 @@ class Values implements \JsonSerializable, \Countable {
      * @param string $key
      * @param string $value
      */
-    public function set($key, $value) {
-        if (!is_string($key)) {
-            throw new \InvalidArgumentException(sprintf('$key must be string, saw "%s".', gettype($key)));
-        }
-
-        if (settype($value, 'string')) {
-            $this->values[$key] = [$value];
-        } else {
-            throw new \InvalidArgumentException(sprintf('$value must be castable to string, saw "%s".',
-                gettype($value)));
-        }
+    public function set(string $key, string $value): void {
+        $this->values[$key] = [$value];
     }
 
     /**
      * @param string $key
      * @param string $value
      */
-    public function add($key, $value) {
-        if (!is_string($key)) {
-            throw new \InvalidArgumentException(sprintf('$key must be string, saw "%s".', gettype($key)));
-        }
-
-        if (settype($value, 'string')) {
-            if (isset($this->values[$key])) {
-                $this->values[$key][] = $value;
-            } else {
-                $this->values[$key] = [$value];
-            }
+    public function add(string $key, string $value): void {
+        if (isset($this->values[$key])) {
+            $this->values[$key][] = $value;
         } else {
-            throw new \InvalidArgumentException(sprintf('$value must be castable to string, saw "%s".',
-                gettype($value)));
+            $this->values[$key] = [$value];
         }
     }
 
     /**
      * @param string $key
      */
-    public function delete($key) {
-        if (!is_string($key)) {
-            throw new \InvalidArgumentException(sprintf('$key must be string, saw "%s".', gettype($key)));
-        }
-
+    public function delete(string $key): void {
         unset($this->values[$key]);
     }
 
     /**
      * @return int
      */
-    public function count() {
+    public function count(): int {
         return count($this->values);
     }
 
     /**
      * @return array
      */
-    public function toPsr7Array() {
+    public function toPsr7Array(): array {
         return $this->values;
     }
 
@@ -148,9 +118,9 @@ class Values implements \JsonSerializable, \Countable {
 
     /**
      * @param string $v
-     * @return string mixed
+     * @return string
      */
-    protected function encode($v) {
+    protected function encode(string $v): string {
         return $v;
     }
 }

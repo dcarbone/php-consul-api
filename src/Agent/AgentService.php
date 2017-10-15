@@ -44,49 +44,49 @@ class AgentService extends AbstractModel {
     /**
      * @return string
      */
-    public function getID() {
+    public function getID(): string {
         return $this->ID;
     }
 
     /**
      * @return string
      */
-    public function getService() {
+    public function getService(): string {
         return $this->Service;
     }
 
     /**
      * @return string
      */
-    public function getAddress() {
+    public function getAddress(): string {
         return $this->Address;
     }
 
     /**
      * @return int
      */
-    public function getPort() {
+    public function getPort(): int {
         return $this->Port;
     }
 
     /**
      * @return boolean
      */
-    public function isEnableTagOverride() {
+    public function isEnableTagOverride(): bool {
         return $this->EnableTagOverride;
     }
 
     /**
      * @return int
      */
-    public function getCreateIndex() {
+    public function getCreateIndex(): int {
         return $this->CreateIndex;
     }
 
     /**
      * @return int
      */
-    public function getModifyIndex() {
+    public function getModifyIndex(): int {
         return $this->ModifyIndex;
     }
 

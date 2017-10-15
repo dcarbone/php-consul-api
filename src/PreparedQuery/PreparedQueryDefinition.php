@@ -58,7 +58,7 @@ class PreparedQueryDefinition extends AbstractModel {
     /**
      * @return string
      */
-    public function getID() {
+    public function getID(): string {
         return $this->ID;
     }
 
@@ -66,7 +66,7 @@ class PreparedQueryDefinition extends AbstractModel {
      * @param string $ID
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition
      */
-    public function setID($ID) {
+    public function setID(string $ID): PreparedQueryDefinition {
         $this->ID = $ID;
         return $this;
     }
@@ -74,7 +74,7 @@ class PreparedQueryDefinition extends AbstractModel {
     /**
      * @return string
      */
-    public function getName() {
+    public function getName(): string {
         return $this->Name;
     }
 
@@ -82,7 +82,7 @@ class PreparedQueryDefinition extends AbstractModel {
      * @param string $Name
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition
      */
-    public function setName($Name) {
+    public function setName(string $Name): PreparedQueryDefinition {
         $this->Name = $Name;
         return $this;
     }
@@ -90,7 +90,7 @@ class PreparedQueryDefinition extends AbstractModel {
     /**
      * @return string
      */
-    public function getSession() {
+    public function getSession(): string {
         return $this->Session;
     }
 
@@ -98,7 +98,7 @@ class PreparedQueryDefinition extends AbstractModel {
      * @param string $Session
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition
      */
-    public function setSession($Session) {
+    public function setSession(string $Session): PreparedQueryDefinition {
         $this->Session = $Session;
         return $this;
     }
@@ -106,7 +106,7 @@ class PreparedQueryDefinition extends AbstractModel {
     /**
      * @return string
      */
-    public function getToken() {
+    public function getToken(): string {
         return $this->Token;
     }
 
@@ -114,7 +114,7 @@ class PreparedQueryDefinition extends AbstractModel {
      * @param string $Token
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition
      */
-    public function setToken($Token) {
+    public function setToken(string $Token): PreparedQueryDefinition {
         $this->Token = $Token;
         return $this;
     }
@@ -122,7 +122,7 @@ class PreparedQueryDefinition extends AbstractModel {
     /**
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
-    public function getService() {
+    public function getService(): ?ServiceQuery {
         return $this->Service;
     }
 
@@ -130,7 +130,7 @@ class PreparedQueryDefinition extends AbstractModel {
      * @param \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery $Service
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition
      */
-    public function setService(ServiceQuery $Service) {
+    public function setService(ServiceQuery $Service): PreparedQueryDefinition {
         $this->Service = $Service;
         return $this;
     }
@@ -138,7 +138,7 @@ class PreparedQueryDefinition extends AbstractModel {
     /**
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions
      */
-    public function getDNS() {
+    public function getDNS(): ?QueryDNSOptions {
         return $this->DNS;
     }
 
@@ -146,7 +146,7 @@ class PreparedQueryDefinition extends AbstractModel {
      * @param \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions $DNS
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition
      */
-    public function setDNS(QueryDNSOptions $DNS) {
+    public function setDNS(QueryDNSOptions $DNS): PreparedQueryDefinition {
         $this->DNS = $DNS;
         return $this;
     }
@@ -154,7 +154,7 @@ class PreparedQueryDefinition extends AbstractModel {
     /**
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryTemplate
      */
-    public function getTemplate() {
+    public function getTemplate(): ?QueryTemplate {
         return $this->Template;
     }
 
@@ -162,7 +162,7 @@ class PreparedQueryDefinition extends AbstractModel {
      * @param \DCarbone\PHPConsulAPI\PreparedQuery\QueryTemplate $Template
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition
      */
-    public function setTemplate(QueryTemplate $Template) {
+    public function setTemplate(QueryTemplate $Template): PreparedQueryDefinition {
         $this->Template = $Template;
         return $this;
     }

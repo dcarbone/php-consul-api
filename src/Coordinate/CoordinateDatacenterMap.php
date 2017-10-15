@@ -56,14 +56,14 @@ class CoordinateDatacenterMap extends AbstractModel {
     /**
      * @return string
      */
-    public function getDatacenter() {
+    public function getDatacenter(): string {
         return $this->Datacenter;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Coordinate\Coordinate[]
      */
-    public function getCoordinates() {
+    public function getCoordinates(): array {
         return $this->Coordinates;
     }
 }

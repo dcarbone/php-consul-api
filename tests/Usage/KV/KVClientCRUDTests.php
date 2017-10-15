@@ -100,7 +100,7 @@ class KVClientCRUDTests extends TestCase {
 
     public function testListReturnsErrorWithInvalidPrefix() {
         $client = new KVClient(new Config());
-        list($_, $_, $err) = $client->valueList(12345);
+        list($_, $_, $err) = $client->list(12345);
         $this->assertInstanceOf(
             Error::class,
             $err,
@@ -124,7 +124,7 @@ class KVClientCRUDTests extends TestCase {
         $client->put(new KVPair(['Key' => self::KVKey2, 'Value' => self::KVValue2]));
         $client->put(new KVPair(['Key' => self::KVKey3, 'Value' => self::KVValue3]));
 
-        list($list, $qm, $err) = $client->valueList();
+        list($list, $qm, $err) = $client->list();
         $this->assertNull($err, sprintf('KV::valueList returned error: %s', $err));
         $this->assertInstanceOf(QueryMeta::class, $qm);
         $this->assertInternalType('array', $list);
@@ -170,7 +170,7 @@ class KVClientCRUDTests extends TestCase {
         $client->put(new KVPair(['Key' => self::KVPrefix . '/' . self::KVKey2, 'Value' => self::KVValue2]));
         $client->put(new KVPair(['Key' => self::KVPrefix . '/' . self::KVKey3, 'Value' => self::KVValue3]));
 
-        list($list, $qm, $err) = $client->valueList(self::KVPrefix);
+        list($list, $qm, $err) = $client->list(self::KVPrefix);
         $this->assertNull($err, sprintf('KV::valueList returned error: %s', $err));
         $this->assertInstanceOf(QueryMeta::class, $qm);
         $this->assertInternalType('array', $list);

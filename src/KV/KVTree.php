@@ -38,7 +38,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     /**
      * @return string
      */
-    public function getPrefix() {
+    public function getPrefix(): string {
         return $this->_prefix;
     }
 

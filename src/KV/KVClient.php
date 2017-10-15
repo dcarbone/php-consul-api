@@ -36,7 +36,7 @@ class KVClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function get($key, QueryOptions $options = null) {
+    public function get(string $key, QueryOptions $options = null): array {
         if (!is_string($key)) {
             return [null,
                 null,
@@ -85,7 +85,7 @@ class KVClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function put(KVPair $p, WriteOptions $options = null) {
+    public function put(KVPair $p, WriteOptions $options = null): array {
         $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
         $r->setWriteOptions($options);
         if (0 !== $p->Flags) {
@@ -108,7 +108,7 @@ class KVClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function delete($key, WriteOptions $options = null) {
+    public function delete(string $key, WriteOptions $options = null): array {
         $r = new Request('DELETE', sprintf('v1/kv/%s', $key), $this->config);
         $r->setWriteOptions($options);
 
@@ -129,7 +129,7 @@ class KVClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function valueList($prefix = '', QueryOptions $options = null) {
+    public function list(string $prefix = '', QueryOptions $options = null): array {
         if (null === $prefix) {
             $r = new Request('GET', 'v1/kv/', $this->config);
         } else if (is_string($prefix)) {
@@ -179,7 +179,7 @@ class KVClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function keys($prefix = null, QueryOptions $options = null) {
+    public function keys(?string $prefix = null, QueryOptions $options = null): array {
         if (null === $prefix) {
             $r = new Request('GET', 'v1/kv/', $this->config);
         } else if (is_string($prefix)) {
@@ -218,7 +218,7 @@ class KVClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function cas(KVPair $p, WriteOptions $options = null) {
+    public function cas(KVPair $p, WriteOptions $options = null): array {
         $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config);
         $r->setWriteOptions($options);
         $r->Params->set('cas', (string)$p->ModifyIndex);
@@ -242,7 +242,7 @@ class KVClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function acquire(KVPair $p, WriteOptions $options = null) {
+    public function acquire(KVPair $p, WriteOptions $options = null): array {
         $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config);
         $r->setWriteOptions($options);
         $r->Params->set('acquire', $p->Session);
@@ -266,7 +266,7 @@ class KVClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function release(KVPair $p, WriteOptions $options = null) {
+    public function release(KVPair $p, WriteOptions $options = null): array {
         $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config);
         $r->setWriteOptions($options);
         $r->Params->set('release', $p->Session);
@@ -290,8 +290,8 @@ class KVClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function tree($prefix = '', QueryOptions $options = null) {
-        list($valueList, $_, $err) = $this->valueList($prefix, $options);
+    public function tree(string $prefix = '', QueryOptions $options = null): array {
+        list($valueList, $_, $err) = $this->list($prefix, $options);
 
         if (null !== $err) {
             return [null, $err];

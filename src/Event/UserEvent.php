@@ -57,56 +57,56 @@ class UserEvent extends AbstractModel {
     /**
      * @return string
      */
-    public function getID() {
+    public function getID(): string {
         return $this->ID;
     }
 
     /**
      * @return string
      */
-    public function getName() {
+    public function getName(): string {
         return $this->Name;
     }
 
     /**
      * @return string
      */
-    public function getPayload() {
+    public function getPayload(): string {
         return $this->Payload;
     }
 
     /**
      * @return string
      */
-    public function getNodeFilter() {
+    public function getNodeFilter(): string {
         return $this->NodeFilter;
     }
 
     /**
      * @return string
      */
-    public function getServiceFilter() {
+    public function getServiceFilter(): string {
         return $this->ServiceFilter;
     }
 
     /**
      * @return string
      */
-    public function getTagFilter() {
+    public function getTagFilter(): string {
         return $this->TagFilter;
     }
 
     /**
      * @return int
      */
-    public function getVersion() {
+    public function getVersion(): int {
         return $this->Version;
     }
 
     /**
      * @return int
      */
-    public function getLTime() {
+    public function getLTime(): int {
         return $this->LTime;
     }
 }

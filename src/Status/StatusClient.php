@@ -30,7 +30,7 @@ class StatusClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function leader() {
+    public function leader(): array {
         $r = new Request('GET', 'v1/status/leader', $this->config);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -46,7 +46,7 @@ class StatusClient extends AbstractClient {
     /**
      * @return array|null
      */
-    public function peers() {
+    public function peers(): ?array {
         $r = new Request('GET', 'v1/status/peers', $this->config);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
