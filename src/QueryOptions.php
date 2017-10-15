@@ -53,7 +53,7 @@ class QueryOptions extends AbstractModel {
     /**
      * @param string $Datacenter
      */
-    public function setDatacenter(string $Datacenter): void {
+    public function setDatacenter(string $Datacenter) {
         $this->Datacenter = $Datacenter;
     }
 
@@ -67,7 +67,7 @@ class QueryOptions extends AbstractModel {
     /**
      * @param bool $AllowStale
      */
-    public function setAllowStale(bool $AllowStale): void {
+    public function setAllowStale(bool $AllowStale) {
         $this->AllowStale = $AllowStale;
     }
 
@@ -81,7 +81,7 @@ class QueryOptions extends AbstractModel {
     /**
      * @param bool $RequireConsistent
      */
-    public function setRequireConsistent(bool $RequireConsistent): void {
+    public function setRequireConsistent(bool $RequireConsistent) {
         $this->RequireConsistent = $RequireConsistent;
     }
 
@@ -95,7 +95,7 @@ class QueryOptions extends AbstractModel {
     /**
      * @param int $WaitIndex
      */
-    public function setWaitIndex(int $WaitIndex): void {
+    public function setWaitIndex(int $WaitIndex) {
         $this->WaitIndex = $WaitIndex;
     }
 
@@ -109,7 +109,7 @@ class QueryOptions extends AbstractModel {
     /**
      * @param int $WaitTime
      */
-    public function setWaitTime(int $WaitTime): void {
+    public function setWaitTime(int $WaitTime) {
         $this->WaitTime = $WaitTime;
     }
 
@@ -123,7 +123,7 @@ class QueryOptions extends AbstractModel {
     /**
      * @param string $Token
      */
-    public function setToken(string $Token): void {
+    public function setToken(string $Token) {
         $this->Token = $Token;
     }
 
@@ -137,7 +137,7 @@ class QueryOptions extends AbstractModel {
     /**
      * @param string $Near
      */
-    public function setNear(string $Near): void {
+    public function setNear(string $Near) {
         $this->Near = $Near;
     }
 
@@ -151,7 +151,7 @@ class QueryOptions extends AbstractModel {
     /**
      * @param array $NodeMeta
      */
-    public function setNodeMeta(array $NodeMeta): void {
+    public function setNodeMeta(array $NodeMeta) {
         $this->NodeMeta = $NodeMeta;
     }
 
@@ -165,7 +165,7 @@ class QueryOptions extends AbstractModel {
     /**
      * @param int $RelayFactor
      */
-    public function setRelayFactor(int $RelayFactor): void {
+    public function setRelayFactor(int $RelayFactor) {
         $this->RelayFactor = $RelayFactor;
     }
 
@@ -179,7 +179,7 @@ class QueryOptions extends AbstractModel {
     /**
      * @param bool $Pretty
      */
-    public function setPretty(bool $Pretty): void {
+    public function setPretty(bool $Pretty) {
         $this->Pretty = $Pretty;
     }
 }

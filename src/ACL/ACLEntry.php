@@ -46,7 +46,7 @@ class ACLEntry extends AbstractModel {
     /**
      * @param int $CreateIndex
      */
-    public function setCreateIndex(int $CreateIndex): void {
+    public function setCreateIndex(int $CreateIndex) {
         $this->CreateIndex = $CreateIndex;
     }
 
@@ -60,7 +60,7 @@ class ACLEntry extends AbstractModel {
     /**
      * @param int $ModifyIndex
      */
-    public function setModifyIndex(int $ModifyIndex): void {
+    public function setModifyIndex(int $ModifyIndex) {
         $this->ModifyIndex = $ModifyIndex;
     }
 
@@ -74,7 +74,7 @@ class ACLEntry extends AbstractModel {
     /**
      * @param string $ID
      */
-    public function setID(string $ID): void {
+    public function setID(string $ID) {
         $this->ID = $ID;
     }
 
@@ -88,7 +88,7 @@ class ACLEntry extends AbstractModel {
     /**
      * @param string $Name
      */
-    public function setName(string $Name): void {
+    public function setName(string $Name) {
         $this->Name = $Name;
     }
 
@@ -102,7 +102,7 @@ class ACLEntry extends AbstractModel {
     /**
      * @param string $Type
      */
-    public function setType(string $Type): void {
+    public function setType(string $Type) {
         $this->Type = $Type;
     }
 
@@ -116,7 +116,7 @@ class ACLEntry extends AbstractModel {
     /**
      * @param string $Rules
      */
-    public function setRules(string $Rules): void {
+    public function setRules(string $Rules) {
         $this->Rules = $Rules;
     }
 }

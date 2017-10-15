@@ -117,7 +117,7 @@ class Request {
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      */
-    public function setQueryOptions(QueryOptions $options = null): void {
+    public function setQueryOptions(QueryOptions $options = null) {
         if (null === $options) {
             return;
         }
@@ -165,7 +165,7 @@ class Request {
     /**
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
      */
-    public function setWriteOptions(WriteOptions $options = null): void {
+    public function setWriteOptions(WriteOptions $options = null) {
         if (null === $options) {
             return;
         }

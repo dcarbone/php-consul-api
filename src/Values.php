@@ -52,7 +52,7 @@ class Values implements \JsonSerializable, \Countable {
      * @param string $key
      * @param string $value
      */
-    public function set(string $key, string $value): void {
+    public function set(string $key, string $value) {
         $this->values[$key] = [$value];
     }
 
@@ -60,7 +60,7 @@ class Values implements \JsonSerializable, \Countable {
      * @param string $key
      * @param string $value
      */
-    public function add(string $key, string $value): void {
+    public function add(string $key, string $value) {
         if (isset($this->values[$key])) {
             $this->values[$key][] = $value;
         } else {
@@ -71,7 +71,7 @@ class Values implements \JsonSerializable, \Countable {
     /**
      * @param string $key
      */
-    public function delete(string $key): void {
+    public function delete(string $key) {
         unset($this->values[$key]);
     }
 
