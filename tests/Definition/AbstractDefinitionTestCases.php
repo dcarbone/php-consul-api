@@ -342,7 +342,6 @@ abstract class AbstractDefinitionTestCases extends TestCase {
 
             case $propertyVarType instanceof Object_:
                 $fqsn = (string)$propertyVarType->getFqsen();
-                $failMessage = sprintf($failMessageTemplate, 'null');
 
                 $isInterface = interface_exists($fqsn, true);
                 $isClass = class_exists($fqsn);
@@ -355,7 +354,16 @@ abstract class AbstractDefinitionTestCases extends TestCase {
                         $fqsn
                     ));
 
-                $this->assertNull($defaultValue, $failMessage);
+                $implements = class_implements($fqsn);
+
+                // test for "slice" mimicking...
+                if (in_array('Iterator', $implements)) {
+                    $failMessage = sprintf($failMessageTemplate, $fqsn);
+                    $this->assertInstanceOf($fqsn, $defaultValue, $failMessage);
+                } else {
+                    $failMessage = sprintf($failMessageTemplate, 'null');
+                    $this->assertNull($defaultValue, $failMessage);
+                }
 
                 break;
 
