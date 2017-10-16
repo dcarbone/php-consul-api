@@ -36,16 +36,6 @@ class HealthClient extends AbstractClient {
      * )
      */
     public function node(string $node, QueryOptions $options = null): array {
-        if (!is_string($node)) {
-            return [null,
-                null,
-                new Error(sprintf(
-                    '%s::node - $node must be string, %s seen.',
-                    get_class($this),
-                    gettype($node)
-                ))];
-        }
-
         $r = new Request('GET', sprintf('v1/health/node/%s', $node), $this->config);
         $r->setQueryOptions($options);
 
@@ -75,16 +65,6 @@ class HealthClient extends AbstractClient {
      * )
      */
     public function checks(string $service, QueryOptions $options = null): array {
-        if (!is_string($service)) {
-            return [null,
-                null,
-                new Error(sprintf(
-                    '%s::checks - $service must be string, %s seen.',
-                    get_class($this),
-                    gettype($service)
-                ))];
-        }
-
         /** @var \Psr\Http\Message\ResponseInterface $response */
         $r = new Request('GET', sprintf('v1/health/checks/%s', $service), $this->config);
         $r->setQueryOptions($options);
@@ -119,16 +99,6 @@ class HealthClient extends AbstractClient {
                             string $tag = '',
                             bool $passingOnly = false,
                             QueryOptions $options = null): array {
-        if (!is_string($service)) {
-            return [null,
-                null,
-                new Error(sprintf(
-                    '%s::service - $service must be string, %s seen.',
-                    get_class($this),
-                    gettype($service)
-                ))];
-        }
-
         $r = new Request('GET', sprintf('v1/health/service/%s', $service), $this->config);
         $r->setQueryOptions($options);
         if ('' !== $tag) {
@@ -170,16 +140,16 @@ class HealthClient extends AbstractClient {
      * )
      */
     public function state(string $state, QueryOptions $options = null): array {
-        static $validStates = array('any', 'warning', 'critical', 'passing', 'unknown');
+        static $validStates = ['any', 'warning', 'critical', 'passing', 'unknown'];
 
-        if (!is_string($state) || !in_array($state, $validStates, true)) {
+        if (!in_array($state, $validStates, true)) {
             return [null,
                 null,
                 new Error(sprintf(
                     '%s::state - "$state" must be string with value of ["%s"].  %s seen.',
                     get_class($this),
                     implode('", "', $validStates),
-                    is_string($state) ? $state : gettype($state)
+                    $state
                 ))];
         }
 

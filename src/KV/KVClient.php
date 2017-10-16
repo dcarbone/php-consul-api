@@ -130,20 +130,7 @@ class KVClient extends AbstractClient {
      * )
      */
     public function list(string $prefix = '', QueryOptions $options = null): array {
-        if (null === $prefix) {
-            $r = new Request('GET', 'v1/kv/', $this->config);
-        } else if (is_string($prefix)) {
-            $r = new Request('GET', sprintf('v1/kv/%s', $prefix), $this->config);
-        } else {
-            return [null,
-                null,
-                new Error(sprintf(
-                    '%s::valueList - Prefix expected to be string, "%s" seen.',
-                    get_class($this),
-                    gettype($prefix)
-                ))];
-        }
-
+        $r = new Request('GET', sprintf('v1/kv/%s', $prefix), $this->config);
         $r->setQueryOptions($options);
         $r->Params->set('recurse', '');
 
@@ -179,21 +166,8 @@ class KVClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function keys($prefix = null, QueryOptions $options = null): array {
-        if (null === $prefix) {
-            $r = new Request('GET', 'v1/kv/', $this->config);
-        } else if (is_string($prefix)) {
-            $r = new Request('GET', sprintf('v1/kv/%s', $prefix), $this->config);
-        } else {
-            return [null,
-                null,
-                new Error(sprintf(
-                    '%s::keys - Prefix expected to be empty or string, %s seen.',
-                    get_class($this),
-                    gettype($prefix)
-                ))];
-        }
-
+    public function keys(string $prefix = '', QueryOptions $options = null): array {
+        $r = new Request('GET', sprintf('v1/kv/%s', $prefix), $this->config);
         $r->setQueryOptions($options);
         $r->Params->set('keys', 'true');
 
@@ -256,6 +230,29 @@ class KVClient extends AbstractClient {
         }
 
         return [$this->buildWriteMeta($duration), null];
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
+     * @return array(
+     * @type bool
+     * @type \DCarbone\PHPConsulAPI\WriteMeta
+     * @type \DCarbone\PHPConsulAPI\Error|null
+     * )
+     */
+    public function deleteCAS(KVPair $p, WriteOptions $options = null): array {
+        $r = new Request('DELETE', sprintf('v1/kv/%s', ltrim($p->Key, "/")), $this->config);
+        $r->setWriteOptions($options);
+        $r->Params['cas'] = (string)$p->ModifyIndex;
+
+        /** @var \Psr\Http\Message\ResponseInterface $response */
+        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        if (null !== $err) {
+            return [null, null, $err];
+        }
+
+        return [false !== strpos('true', $response->getBody()->getContents()), $this->buildWriteMeta($duration), null];
     }
 
     /**

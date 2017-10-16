@@ -53,6 +53,19 @@ class Consul {
 
     const AllSegments = '_all';
 
+    const KVSet = 'set';
+    const KVDelete = 'delete';
+    const KVDeleteCAS = 'delete-cas';
+    const KVDeleteTree = 'delete-tree';
+    const KVCAS = 'cas';
+    const KVLock = 'lock';
+    const KVUnlock = 'unlock';
+    const KVGet = 'get';
+    const KVGetTree = 'get-tree';
+    const KVCheckSession = 'check-session';
+    const KVCheckIndex = 'check-index';
+    const KVCheckNotExists = 'check-not-exists';
+
     /** @var \DCarbone\PHPConsulAPI\ACL\ACLClient */
     public $ACL;
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentClient */

@@ -39,6 +39,8 @@ class HealthCheck extends AbstractModel {
     public $ServiceID = '';
     /** @var string */
     public $ServiceName = '';
+    /** @var string[] */
+    public $ServiceTags = [];
 
     /**
      * @return string
@@ -94,5 +96,12 @@ class HealthCheck extends AbstractModel {
      */
     public function getServiceName(): string {
         return $this->ServiceName;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getServiceTags(): array {
+        return $this->ServiceTags;
     }
 }
