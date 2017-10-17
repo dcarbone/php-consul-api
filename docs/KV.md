@@ -24,7 +24,7 @@ var_dump($qm, $kvp);
 ### List All KVP's under specified prefix
 
 ```php
-list($kvps, $qm, $err) = $consul->KV->valueList('prefix');
+list($kvps, $qm, $err) = $consul->KV->list('prefix');
 if (null !== $err)
     die($err);
 
