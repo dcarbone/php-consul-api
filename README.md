@@ -114,16 +114,16 @@ var_dump($kv_list);
 
 ## Current Clients
 
-- [ACL](./docs/ACL.md)
-- [Agent](./docs/AGENT.md)
-- [Catalog](./docs/CATALOG.md)
-- [Coordinate](./docs/COORDINATE.md)
-- [Event](./docs/EVENT.md)
-- [Health](./docs/HEALTH.md)
-- [KV](./docs/KV.md)
-- [Operator](./docs/OPERATOR.md)
-- [Session](./docs/SESSION.md)
-- [Status](./docs/STATUS.md)
+- [ACL](./src/ACL/ACLClient.php)
+- [Agent](./src/Agent/AgentClient.php)
+- [Catalog](./src/Catalog/CatalogClient.php)
+- [Coordinate](./src/Coordinate/CoordinateClient.php)
+- [Event](./src/Event/EventClient.php)
+- [Health](./src/Health/HealthClient.php)
+- [KV](./src/KV/KVClient.php)
+- [Operator](./src/Operator/OperatorClient.php)
+- [Session](./src/Session/SessionClient.php)
+- [Status](./src/Status/StatusClient.php)
 
 More will be added as time goes on!
 
