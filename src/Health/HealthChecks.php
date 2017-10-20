@@ -22,7 +22,7 @@ use DCarbone\PHPConsulAPI\Consul;
  * Class HealthChecks
  * @package DCarbone\PHPConsulAPI\Health
  */
-class HealthChecks implements \Iterator, \ArrayAccess {
+class HealthChecks implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable {
     /** @var \DCarbone\PHPConsulAPI\Health\HealthCheck[] */
     private $_checks = [];
 
@@ -38,8 +38,9 @@ class HealthChecks implements \Iterator, \ArrayAccess {
                 } else if ($check instanceof HealthCheck) {
                     $this->_checks[] = $check;
                 } else {
-                    throw new \InvalidArgumentException('HealthChecks only accepts HealthCheck as a child, saw "%s"',
-                        is_object($check) ? get_class($check) : gettype($check));
+                    throw new \InvalidArgumentException(sprintf(
+                        'HealthChecks only accepts HealthCheck as a child, saw "%s"',
+                        is_object($check) ? get_class($check) : gettype($check)));
                 }
             }
         } else if (null === $checks) {
@@ -100,7 +101,7 @@ class HealthChecks implements \Iterator, \ArrayAccess {
     }
 
     /**
-     * @return int|null|string
+     * @return int|null
      */
     public function key() {
         return key($this->_checks);
@@ -133,9 +134,9 @@ class HealthChecks implements \Iterator, \ArrayAccess {
         if (is_int($offset) && isset($this->_checks[$offset])) {
             return $this->_checks[$offset];
         }
-        throw new \OutOfRangeException('Offset '.
-            (is_int($offset) ? $offset : gettype($offset)).
-            ' does not exist in this list');
+        throw new \OutOfRangeException(sprintf(
+            'Offset %s does not exist in this list',
+            is_int($offset) ? $offset : gettype($offset)));
     }
 
     /**
@@ -146,7 +147,7 @@ class HealthChecks implements \Iterator, \ArrayAccess {
         if (!is_int($offset)) {
             throw new \InvalidArgumentException('Offset must be int');
         }
-        if (!($value instanceof HealthCheck)) {
+        if (null !== $value && !($value instanceof HealthCheck)) {
             throw new \InvalidArgumentException('Value must be instance of HealthCheck');
         }
         $this->_checks[$offset] = $value;
@@ -157,5 +158,19 @@ class HealthChecks implements \Iterator, \ArrayAccess {
      */
     public function offsetUnset($offset) {
         unset($this->_checks[$offset]);
+    }
+
+    /**
+     * @return int
+     */
+    public function count() {
+        return count($this->_checks);
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Health\HealthCheck[]
+     */
+    public function jsonSerialize() {
+        return $this->_checks;
     }
 }

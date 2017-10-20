@@ -20,9 +20,11 @@ use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\KV\KVClient;
 use DCarbone\PHPConsulAPI\KV\KVPair;
+use DCarbone\PHPConsulAPI\KV\KVPairs;
 use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPI\WriteMeta;
 use DCarbone\PHPConsulAPITests\ConsulManager;
+use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -126,8 +128,8 @@ class KVClientCRUDTests extends TestCase {
 
         list($list, $qm, $err) = $client->list();
         $this->assertNull($err, sprintf('KV::valueList returned error: %s', $err));
+        $this->assertInstanceOf(KVPairs::class, $list);
         $this->assertInstanceOf(QueryMeta::class, $qm);
-        $this->assertInternalType('array', $list);
         $this->assertCount(3, $list);
 
         $key1found = false;
@@ -148,7 +150,7 @@ class KVClientCRUDTests extends TestCase {
             $this->assertTrue($key1found, 'Key1 not found in list!');
             $this->assertTrue($key2found, 'Key2 not found in list!');
             $this->assertTrue($key3found, 'Key3 not found in list!');
-        } catch (\PHPUnit_Framework_AssertionFailedError $e) {
+        } catch (AssertionFailedError $e) {
             echo "\nno prefix \$list value:\n";
             var_dump($list);
             echo "\n";
@@ -173,7 +175,7 @@ class KVClientCRUDTests extends TestCase {
         list($list, $qm, $err) = $client->list(self::KVPrefix);
         $this->assertNull($err, sprintf('KV::valueList returned error: %s', $err));
         $this->assertInstanceOf(QueryMeta::class, $qm);
-        $this->assertInternalType('array', $list);
+        $this->assertInstanceOf(KVPairs::class, $list);
         $this->assertCount(3, $list);
         $this->assertContainsOnlyInstancesOf(KVPair::class, $list);
 
@@ -195,7 +197,7 @@ class KVClientCRUDTests extends TestCase {
             $this->assertTrue($key1found, 'Key1 not found in list!');
             $this->assertTrue($key2found, 'Key2 not found in list!');
             $this->assertTrue($key3found, 'Key3 not found in list!');
-        } catch (\PHPUnit_Framework_AssertionFailedError $e) {
+        } catch (AssertionFailedError $e) {
             echo "\nprefix \$list value:\n";
             var_dump($list);
             echo "\n";
@@ -204,6 +206,9 @@ class KVClientCRUDTests extends TestCase {
         }
     }
 
+    /**
+     * @depends testCanConstructClient
+     */
     public function testKeysReturnsErrorWithInvalidPrefix() {
         $client = new KVClient(new Config());
         list($_, $_, $err) = $client->keys(12345);
@@ -255,7 +260,7 @@ class KVClientCRUDTests extends TestCase {
             $this->assertTrue($key1found, 'Key1 not found in list!');
             $this->assertTrue($key2found, 'Key2 not found in list!');
             $this->assertTrue($key3found, 'Key3 not found in list!');
-        } catch (\PHPUnit_Framework_AssertionFailedError $e) {
+        } catch (AssertionFailedError $e) {
             echo "\nprefix \$list value:\n";
             var_dump($list);
             echo "\n";

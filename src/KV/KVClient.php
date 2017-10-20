@@ -56,19 +56,21 @@ class KVClient extends AbstractClient {
             return [null, null, $err];
         }
 
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
         $code = $response->getStatusCode();
 
         if (200 === $code) {
             list($data, $err) = $this->decodeBody($response->getBody());
 
             if (null !== $err) {
-                return [null, $qm, $err];
+                return [null, null, $err];
             }
+
+            $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
             return [new KVPair($data[0], true), $qm, null];
         }
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         if (404 === $code) {
             return [null, $qm, null];
@@ -124,7 +126,7 @@ class KVClient extends AbstractClient {
      * @param string $prefix
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      * @return array(
-     * @type KVPair[]|null array of KVPair objects under specified prefix
+     * @type \DCarbone\PHPConsulAPI\KV\KVPairs|null array of KVPair objects under specified prefix
      * @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
@@ -140,21 +142,14 @@ class KVClient extends AbstractClient {
             return [null, null, $err];
         }
 
+        list($data, $err) = $this->decodeBody($response->getBody());
+        if (null !== $err) {
+            return [null, null, $err];
+        }
+
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
-        list($data, $err) = $this->decodeBody($response->getBody());
-
-        if (null !== $err) {
-            return [null, $qm, $err];
-        }
-
-        $kvPairs = [];
-        foreach ($data as $v) {
-            $kvp = new KVPair($v, true);
-            $kvPairs[$kvp->Key] = $kvp;
-        }
-
-        return [$kvPairs, $qm, null];
+        return [new KVPairs($data), $qm, null];
     }
 
     /**
@@ -270,6 +265,27 @@ class KVClient extends AbstractClient {
         if (0 !== $p->Flags) {
             $r->Params->set('flags', (string)$p->Flags);
         }
+
+        list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
+        if (null !== $err) {
+            return [null, $err];
+        }
+
+        return [$this->buildWriteMeta($duration), null];
+    }
+
+    /**
+     * @param string $prefix
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
+     * @return array(
+     * @type \DCarbone\PHPConsulAPI\WriteMeta|null
+     * @type \DCarbone\PHPConsulAPI\Error|null
+     * )
+     */
+    public function deleteTree(string $prefix, QueryOptions $options = null): array {
+        $r = new Request('DELETE', sprintf('v1/kv/%s', $prefix), $this->config);
+        $r->Params['recurse'] = '';
+        $r->setWriteOptions($options);
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
