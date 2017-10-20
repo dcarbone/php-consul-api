@@ -34,8 +34,8 @@ Require Entry:
 ## Configuration
 
 First, construct a [Config](./src/Config.php). This class is modeled quite closely after the
-[Config Struct](https://github.com/hashicorp/consul/blob/v0.9.3/api/api.go#L202) present in the
-[Consul API Subpackage](https://github.com/hashicorp/consul/blob/v0.9.3/api).
+[Config Struct](https://github.com/hashicorp/consul/blob/v1.0.0/api/api.go#L202) present in the
+[Consul API Subpackage](https://github.com/hashicorp/consul/blob/v1.0.0/api).
 
 ### Default Configuration
 
