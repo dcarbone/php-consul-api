@@ -23,8 +23,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * @package DCarbone\PHPConsulAPI\KV
  */
 class KVTxnResponse extends AbstractModel {
-    /** @var \DCarbone\PHPConsulAPI\KV\KVTxnOps */
-    public $Results = null;
+    /** @var \DCarbone\PHPConsulAPI\KV\KVPair[] */
+    public $Results = [];
     /** @var \DCarbone\PHPConsulAPI\KV\TxnErrors */
     public $Errors = null;
 
@@ -35,17 +35,22 @@ class KVTxnResponse extends AbstractModel {
     public function __construct(array $data = []) {
         parent::__construct($data);
         if (is_array($this->Results)) {
-            $this->Results = new KVTxnOps($this->Results);
+            $this->Results = array_filter((array)$this->Results);
+            foreach ($this->Results as &$result) {
+                if (!($result instanceof KVPair)) {
+                    $result = new KVPair($result, true);
+                }
+            }
         }
-        if (is_array($this->Errors)) {
+        if (!($this->Errors instanceof TxnErrors)) {
             $this->Errors = new TxnErrors($this->Errors);
         }
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\KV\KVTxnOps
+     * @return \DCarbone\PHPConsulAPI\KV\KVPair[]
      */
-    public function getResults(): KVTxnOps {
+    public function getResults(): array {
         return $this->Results;
     }
 

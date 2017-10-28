@@ -34,11 +34,11 @@ class TxnResponse extends AbstractModel {
      */
     public function __construct(array $data = []) {
         parent::__construct($data);
-        if (is_array($this->Results)) {
-            $this->Results = new TxnResults($this->Results);
+        if (!($this->Results instanceof TxnResults)) {
+            $this->Results = new TxnResults((array)$this->Results);
         }
-        if (is_array($this->Errors)) {
-            $this->Errors = new TxnErrors($this->Errors);
+        if (!($this->Errors instanceof TxnErrors)) {
+            $this->Errors = new TxnErrors((array)$this->Errors);
         }
     }
 

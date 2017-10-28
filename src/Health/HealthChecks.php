@@ -36,6 +36,7 @@ class HealthChecks extends AbstractModels {
         foreach ($this->_list as $check) {
             /** @var \DCarbone\PHPConsulAPI\Health\HealthCheck $check */
             if ($check->CheckID === Consul::NodeMaint || 0 === strpos($check->CheckID, Consul::ServiceMaintPrefix)) {
+                // TODO: Maybe just return maintenance right now...?
                 $maintenance = true;
                 continue;
             }

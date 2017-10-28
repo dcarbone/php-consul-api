@@ -23,7 +23,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * @package DCarbone\PHPConsulAPI\KV
  */
 class TxnResult extends AbstractModel {
-    /** @var \DCarbone\PHPConsulAPI\KV\KVPair */
+    /** @var \DCarbone\PHPConsulAPI\KV\KVPair|null */
     public $KV = null;
 
     /**
@@ -32,15 +32,15 @@ class TxnResult extends AbstractModel {
      */
     public function __construct(array $data = []) {
         parent::__construct($data);
-        if (is_array($this->KV)) {
-            $this->KV = new KVPair($this->KV, true);
+        if (null !== $this->KV && !($this->KV instanceof KVPair)) {
+            $this->KV = new KVPair((array)$this->KV, true);
         }
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\KV\KVPair
+     * @return \DCarbone\PHPConsulAPI\KV\KVPair|null
      */
-    public function getKV(): KVPair {
+    public function getKV() {
         return $this->KV;
     }
 }

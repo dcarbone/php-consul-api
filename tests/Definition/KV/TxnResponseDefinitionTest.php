@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPConsulAPI\KV;
+<?php namespace DCarbone\PHPConsulAPITests\Definition\KV;
 
 /*
    Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,31 +16,18 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\KV\TxnResponse;
+use DCarbone\PHPConsulAPITests\Definition\AbstractDefinitionTestCases;
 
 /**
- * Class TxnOp
- * @package DCarbone\PHPConsulAPI\KV
+ * Class TxnResponseDefinitionTest
+ * @package DCarbone\PHPConsulAPITests\Definition\KV
  */
-class TxnOp extends AbstractModel {
-    /** @var \DCarbone\PHPConsulAPI\KV\KVTxnOp|null */
-    public $KV = null;
-
+class TxnResponseDefinitionTest extends AbstractDefinitionTestCases {
     /**
-     * TxnOp constructor.
-     * @param array $data
+     * @return string
      */
-    public function __construct(array $data = []) {
-        parent::__construct($data);
-        if (null !== $this->KV && !($this->KV instanceof KVTxnOp)) {
-            $this->KV = new KVTxnOp((array)$this->KV);
-        }
-    }
-
-    /**
-     * @return \DCarbone\PHPConsulAPI\KV\KVTxnOp|null
-     */
-    public function getKV() {
-        return $this->KV;
+    protected function getSubjectClassName() {
+        return TxnResponse::class;
     }
 }
