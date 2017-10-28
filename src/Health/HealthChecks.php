@@ -16,46 +16,25 @@
    limitations under the License.
 */
 
+use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\AbstractModels;
 use DCarbone\PHPConsulAPI\Consul;
 
 /**
  * Class HealthChecks
  * @package DCarbone\PHPConsulAPI\Health
  */
-class HealthChecks implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable {
-    /** @var \DCarbone\PHPConsulAPI\Health\HealthCheck[] */
-    private $_checks = [];
-
-    /**
-     * HealthChecks constructor.
-     * @param \DCarbone\PHPConsulAPI\Health\HealthCheck[] $checks
-     */
-    public function __construct($checks = []) {
-        if (is_array($checks)) {
-            foreach (array_filter($checks) as $check) {
-                if (is_array($check)) {
-                    $this->_checks[] = new HealthCheck($check);
-                } else if ($check instanceof HealthCheck) {
-                    $this->_checks[] = $check;
-                } else {
-                    throw new \InvalidArgumentException(sprintf(
-                        'HealthChecks only accepts HealthCheck as a child, saw "%s"',
-                        is_object($check) ? get_class($check) : gettype($check)));
-                }
-            }
-        } else if (null === $checks) {
-            // do nothin
-        } else {
-            throw new \InvalidArgumentException('HealthChecks::__construct only accepts null or array of HealthCheck\'s as values');
-        }
-    }
+class HealthChecks extends AbstractModels {
+    /** @var string */
+    protected $containedClass = HealthCheck::class;
 
     /**
      * @return string
      */
     public function AggregatedStatus(): string {
         $passing = $warning = $critical = $maintenance = false;
-        foreach ($this->_checks as $check) {
+        foreach ($this->_list as $check) {
+            /** @var \DCarbone\PHPConsulAPI\Health\HealthCheck $check */
             if ($check->CheckID === Consul::NodeMaint || 0 === strpos($check->CheckID, Consul::ServiceMaintPrefix)) {
                 $maintenance = true;
                 continue;
@@ -90,87 +69,10 @@ class HealthChecks implements \Iterator, \ArrayAccess, \Countable, \JsonSerializ
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Health\HealthCheck
+     * @param null|array $data
+     * @return \DCarbone\PHPConsulAPI\AbstractModel
      */
-    public function current() {
-        return current($this->_checks);
-    }
-
-    public function next() {
-        return next($this->_checks);
-    }
-
-    /**
-     * @return int|null
-     */
-    public function key() {
-        return key($this->_checks);
-    }
-
-    /**
-     * @return bool
-     */
-    public function valid() {
-        return null !== key($this->_checks);
-    }
-
-    public function rewind() {
-        return reset($this->_checks);
-    }
-
-    /**
-     * @param int $offset
-     * @return bool
-     */
-    public function offsetExists($offset) {
-        return is_int($offset) && isset($this->_checks[$offset]);
-    }
-
-    /**
-     * @param int $offset
-     * @return \DCarbone\PHPConsulAPI\Health\HealthCheck
-     */
-    public function offsetGet($offset) {
-        if (is_int($offset) && isset($this->_checks[$offset])) {
-            return $this->_checks[$offset];
-        }
-        throw new \OutOfRangeException(sprintf(
-            'Offset %s does not exist in this list',
-            is_int($offset) ? $offset : gettype($offset)));
-    }
-
-    /**
-     * @param int $offset
-     * @param \DCarbone\PHPConsulAPI\Health\HealthCheck $value
-     */
-    public function offsetSet($offset, $value) {
-        if (!is_int($offset)) {
-            throw new \InvalidArgumentException('Offset must be int');
-        }
-        if (null !== $value && !($value instanceof HealthCheck)) {
-            throw new \InvalidArgumentException('Value must be instance of HealthCheck');
-        }
-        $this->_checks[$offset] = $value;
-    }
-
-    /**
-     * @param int $offset
-     */
-    public function offsetUnset($offset) {
-        unset($this->_checks[$offset]);
-    }
-
-    /**
-     * @return int
-     */
-    public function count() {
-        return count($this->_checks);
-    }
-
-    /**
-     * @return \DCarbone\PHPConsulAPI\Health\HealthCheck[]
-     */
-    public function jsonSerialize() {
-        return $this->_checks;
+    protected function newChild($data): AbstractModel {
+        return new HealthCheck($data);
     }
 }

@@ -20,18 +20,18 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\AbstractModels;
 
 /**
- * Class KVPairs
+ * Class KVTxnOps
  * @package DCarbone\PHPConsulAPI\KV
  */
-class KVPairs extends AbstractModels {
+class KVTxnOps extends AbstractModels {
     /** @var string */
-    protected $containedClass = KVPair::class;
+    protected $containedClass = KVTxnOp::class;
 
     /**
-     * @param null|array $data
+     * @param $data
      * @return \DCarbone\PHPConsulAPI\AbstractModel
      */
     protected function newChild($data): AbstractModel {
-        return new KVPair($data, true);
+        return new KVTxnOp($data);
     }
 }

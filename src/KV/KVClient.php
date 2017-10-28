@@ -296,6 +296,54 @@ class KVClient extends AbstractClient {
     }
 
     /**
+     * @param \DCarbone\PHPConsulAPI\KV\KVTxnOps $txn
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
+     * @return array(
+     * @type bool
+     * @type \DCarbone\PHPConsulAPI\KV\KVTxnResponse|null
+     * @type \DCarbone\PHPConsulAPI\QueryOptions|null
+     * @type \DCarbone\PHPConsulAPI\Error|null
+     * )
+     */
+    public function txn(KVTxnOps $txn, QueryOptions $options = null): array {
+        $ops = new TxnOps();
+        foreach ($txn as $op) {
+            $ops->append(clone $op);
+        }
+
+        $r = new Request('PUT', 'v1/txn', $this->config, $ops);
+        $r->setQueryOptions($options);
+
+        /** @var \Psr\Http\Message\ResponseInterface $response */
+        list($duration, $response, $err) = $this->doRequest($r);
+        if (null !== $err) {
+            return [false, null, null, $err];
+        }
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
+
+        $code = $response->getStatusCode();
+        if (200 === $code || 409 === $code) {
+            list($data, $err) = $this->decodeBody($response->getBody());
+            if (null !== $err) {
+                return [false, null, null, $err];
+            }
+
+            // TODO: Maybe go straight to actual response?  What is the benefit of this...
+            $internal = new TxnResponse($data);
+
+            $resp = new KVTxnResponse(['Errors' => $internal->Errors, 'Results' => $internal->Results]);
+            return [200 === $code, $resp, $qm, null];
+        }
+
+        if ('' === ($body = $response->getBody()->getContents())) {
+            return [false, null, null, new Error('Unable to read response')];
+        }
+
+        return [false, null, null, new Error('Failed request: '.$body)];
+    }
+
+    /**
      * @param null|string $prefix
      * @param \DCarbone\PHPConsulAPI\QueryOptions $options
      * @return array(

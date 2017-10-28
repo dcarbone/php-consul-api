@@ -17,21 +17,30 @@
 */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\AbstractModels;
 
 /**
- * Class KVPairs
+ * Class TxnOp
  * @package DCarbone\PHPConsulAPI\KV
  */
-class KVPairs extends AbstractModels {
-    /** @var string */
-    protected $containedClass = KVPair::class;
+class TxnOp extends AbstractModel {
+    /** @var \DCarbone\PHPConsulAPI\KV\KVTxnOp */
+    public $KV = null;
 
     /**
-     * @param null|array $data
-     * @return \DCarbone\PHPConsulAPI\AbstractModel
+     * TxnOp constructor.
+     * @param array $data
      */
-    protected function newChild($data): AbstractModel {
-        return new KVPair($data, true);
+    public function __construct(array $data = []) {
+        parent::__construct($data);
+        if (is_array($this->KV)) {
+            $this->KV = new KVTxnOp($this->KV);
+        }
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\KV\KVTxnOp
+     */
+    public function getKV(): KVTxnOp {
+        return $this->KV;
     }
 }
