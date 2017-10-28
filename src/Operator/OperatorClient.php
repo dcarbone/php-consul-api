@@ -27,6 +27,154 @@ use DCarbone\PHPConsulAPI\WriteOptions;
  */
 class OperatorClient extends AbstractClient {
     /**
+     * @param \DCarbone\PHPConsulAPI\Operator\Area $area
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
+     * @return array(
+     * @type string
+     * @type \DCarbone\PHPConsulAPI\WriteMeta|null
+     * @type \DCarbone\PHPConsulAPI\Error|null
+     * )
+     */
+    public function areaCreate(Area $area, WriteOptions $options = null): array {
+        $r = new Request('POST', 'v1/operator/area', $this->config, $area);
+        $r->setWriteOptions($options);
+
+        /** @var \Psr\Http\Message\ResponseInterface $response */
+        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        if (null !== $err) {
+            return ['', null, $err];
+        }
+
+        list($data, $err) = $this->decodeBody($response->getBody());
+        if (null !== $err) {
+            return ['', null, $err];
+        }
+
+        $wm = $this->buildWriteMeta($duration);
+
+        return [$data['ID'] ?? '', $wm, null];
+    }
+
+    /**
+     * @param string $areaID
+     * @param \DCarbone\PHPConsulAPI\Operator\Area $area
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
+     * @return array(
+     * @type string
+     * @type \DCarbone\PHPConsulAPI\WriteMeta|null
+     * @type \DCarbone\PHPConsulAPI\Error|null
+     * )
+     */
+    public function areaUpdate(string $areaID, Area $area, WriteOptions $options = null): array {
+        $r = new Request('PUT', 'v1/operator/area/'.$areaID, $this->config, $area);
+        $r->setWriteOptions($options);
+
+        /** @var \Psr\Http\Message\ResponseInterface $response */
+        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        if (null !== $err) {
+            return ['', null, $err];
+        }
+
+        list($data, $err) = $this->decodeBody($response->getBody());
+        if (null !== $err) {
+            return ['', null, $err];
+        }
+
+        $wm = $this->buildWriteMeta($duration);
+
+        return [$data['ID'] ?? '', $wm, null];
+    }
+
+    /**
+     * @param string $areaID
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
+     * @return array(
+     * @type \DCarbone\PHPConsulAPI\Operator\Area[]|null
+     * @type \DCarbone\PHPConsulAPI\QueryMeta|null
+     * @type \DCarbone\PHPConsulAPI\Error|null
+     * )
+     */
+    public function areaGet(string $areaID, QueryOptions $options = null): array {
+        $r = new Request('GET', 'v1/operator/area/'.$areaID, $this->config);
+        $r->setQueryOptions($options);
+
+        /** @var \Psr\Http\Message\ResponseInterface $response */
+        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        if (null !== $err) {
+            return [null, null, $err];
+        }
+
+        list($data, $err) = $this->decodeBody($response->getBody());
+        if (null !== $err) {
+            return [null, null, $err];
+        }
+
+        $resp = [];
+        foreach ($data as $datum) {
+            $resp = new Area($datum);
+        }
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
+
+        return [$resp, $qm, null];
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
+     * @return array(
+     * @type \DCarbone\PHPConsulAPI\Operator\Area[]|null
+     * @type \DCarbone\PHPConsulAPI\QueryMeta|null
+     * @type \DCarbone\PHPConsulAPI\Error|null
+     * )
+     */
+    public function areaList(QueryOptions $options = null): array {
+        $r = new Request('GET', 'v1/operator/area', $this->config);
+        $r->setQueryOptions($options);
+
+        /** @var \Psr\Http\Message\ResponseInterface $response */
+        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        if (null !== $err) {
+            return [null, null, $err];
+        }
+
+        list($data, $err) = $this->decodeBody($response->getBody());
+        if (null !== $err) {
+            return [null, null, $err];
+        }
+
+        $resp = [];
+        foreach ($data as $datum) {
+            $resp = new Area($datum);
+        }
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
+
+        return [$resp, $qm, null];
+    }
+
+    /**
+     * @param string $areaID
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
+     * @return array(
+     * @type \DCarbone\PHPConsulAPI\WriteMeta|null
+     * @type \DCarbone\PHPConsulAPI\Error|null
+     * )
+     */
+    public function areaDelete(string $areaID, WriteOptions $options = null): array {
+        $r = new Request('DELETE', 'v1/operator/area/'.$areaID, $this->config);
+        $r->setWriteOptions($options);
+
+        list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
+        if (null !== $err) {
+            return [null, $err];
+        }
+
+        $wm = $this->buildWriteMeta($duration);
+
+        return [$wm, null];
+    }
+
+    /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      * @return array(
      * @type \DCarbone\PHPConsulAPI\Operator\RaftConfiguration|null Current Raft Configuration or null on error
@@ -44,13 +192,13 @@ class OperatorClient extends AbstractClient {
             return [null, null, $err];
         }
 
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
         list($data, $err) = $this->decodeBody($response->getBody());
 
         if (null !== $err) {
-            return [null, $qm, $err];
+            return [null, null, $err];
         }
+
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         return [new RaftConfiguration($data), $qm, null];
     }
