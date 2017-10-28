@@ -34,8 +34,8 @@ Require Entry:
 ## Configuration
 
 First, construct a [Config](./src/Config.php). This class is modeled quite closely after the
-[Config Struct](https://github.com/hashicorp/consul/blob/v0.9.3/api/api.go#L202) present in the
-[Consul API Subpackage](https://github.com/hashicorp/consul/blob/v0.9.3/api).
+[Config Struct](https://github.com/hashicorp/consul/blob/v1.0.0/api/api.go#L202) present in the
+[Consul API Subpackage](https://github.com/hashicorp/consul/blob/v1.0.0/api).
 
 ### Default Configuration
 
@@ -70,7 +70,7 @@ $config = new \DCarbone\PHPConsulAPI\Config([
 #### Configuration Note:
 
 By default, this client will attempt to locate a series of environment variables to describe much of the above
-configuration properties.  See [here](./src/Config.php#L450) for that list, and see [here](./src/Consul.php#L36) for
+configuration properties.  See [here](./src/Config.php#L450) for that list, and see [here](./src/Consul.php#L96) for
 a list of the env var names.
 
 For more advanced client configuration, such as proxy configuration, you must construct your own GuzzleHttp client
