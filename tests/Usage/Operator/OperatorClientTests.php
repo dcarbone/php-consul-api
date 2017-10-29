@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPConsulAPITests\Usage\KV;
+<?php namespace DCarbone\PHPConsulAPITests\Usage\Operator;
 
 /*
    Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,12 +16,17 @@
    limitations under the License.
 */
 
+use DCarbone\PHPConsulAPI\Config;
+use DCarbone\PHPConsulAPI\Operator\OperatorClient;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class KVClientAdvancedTests
- * @package DCarbone\PHPConsulAPITests\Usage\KV
+ * Class OperatorClientTests
+ * @package DCarbone\PHPConsulAPITests\Usage\Operator
  */
-class KVClientAdvancedTests extends TestCase {
-
+class OperatorClientTests extends TestCase {
+    public function testCanConstructOperatorClient() {
+        $client = new OperatorClient(new Config());
+        $this->assertInstanceOf(OperatorClient::class, $client);
+    }
 }

@@ -232,6 +232,31 @@ class OperatorClient extends AbstractClient {
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      * @return array(
+     * @type \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration|null
+     * @type \DCarbone\PHPConsulAPI\Error|null
+     * )
+     */
+    public function autopilotGetConfiguration(QueryOptions $options = null): array {
+        $r = new Request('GET', 'v1/operator/autopilot/configuration', $this->config);
+        $r->setQueryOptions($options);
+
+        /** @var \Psr\Http\Message\ResponseInterface $response */
+        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        if (null !== $err) {
+            return [null, $err];
+        }
+
+        list($data, $err) = $this->decodeBody($response->getBody());
+        if (null !== $err) {
+            return [null, $err];
+        }
+
+        return [new AutopilotConfiguration($data), null];
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
+     * @return array(
      * @type \DCarbone\PHPConsulAPI\Operator\RaftConfiguration|null Current Raft Configuration or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
      * @type \DCarbone\PHPConsulAPI\Error error, if any

@@ -216,7 +216,7 @@ class AgentClientUsageTests extends TestCase {
             $this->assertInternalType('array', $svcs);
             $this->assertContainsOnlyInstancesOf(AgentService::class, $svcs);
             $this->assertCount(2, $svcs);
-        } catch (\PHPUnit_Framework_AssertionFailedError $e) {
+        } catch (AssertionFailedError $e) {
             echo "\nservices list:\n";
             var_dump($svcs);
             echo "\n";
