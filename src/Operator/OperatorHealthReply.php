@@ -26,7 +26,7 @@ class OperatorHealthReply extends AbstractModel {
     /** @var bool */
     public $Healthy = false;
     /** @var int */
-    public $FaultTolerance = 0;
+    public $FailureTolerance = 0;
     /** @var \DCarbone\PHPConsulAPI\Operator\ServerHealth[] */
     public $Servers = [];
 
@@ -53,8 +53,8 @@ class OperatorHealthReply extends AbstractModel {
     /**
      * @return int
      */
-    public function getFaultTolerance(): int {
-        return $this->FaultTolerance;
+    public function getFailureTolerance(): int {
+        return $this->FailureTolerance;
     }
 
     /**

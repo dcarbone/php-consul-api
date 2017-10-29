@@ -19,6 +19,7 @@
 use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration;
 use DCarbone\PHPConsulAPI\Operator\OperatorClient;
+use DCarbone\PHPConsulAPI\Operator\OperatorHealthReply;
 use DCarbone\PHPConsulAPITests\ConsulManager;
 use PHPUnit\Framework\TestCase;
 
@@ -45,5 +46,59 @@ class AutopilotTests extends TestCase {
             sprintf('Expected instance of %s, saw: %s', AutopilotConfiguration::class, json_encode($conf)));
     }
 
+    /**
+     * @depends testCanGetAutopilotConfiguration
+     */
+    public function testCanSetAutopilotConfiguration() {
+        $client = new OperatorClient(new Config());
 
+        /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration $current */
+        /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration $updated */
+        list($current) = $client->autopilotGetConfiguration();
+        $new = clone $current;
+        $new->CleanupDeadServers = !$current->CleanupDeadServers;
+        $err = $client->autopilotSetConfiguration($new);
+        $this->assertNull($err, 'Unable to update Autopilot configuration: '.$err);
+        list($updated, $err) = $client->autopilotGetConfiguration();
+        $this->assertNull($err, 'Unable to get updated Autopilot configuration: '.$err);
+        $this->assertInstanceOf(AutopilotConfiguration::class, $updated);
+        if ($current->CleanupDeadServers) {
+            $this->assertFalse($updated->CleanupDeadServers, 'Autopilot conf did not change');
+        } else {
+            $this->assertTrue($updated->CleanupDeadServers, 'Autopilot conf did not change');
+        }
+    }
+
+    /**
+     * @depends testCanSetAutopilotConfiguration
+     */
+    public function testCanCASAutopilotConfiguration() {
+        $client = new OperatorClient(new Config());
+        /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration $current */
+        /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration $updated */
+        list($current) = $client->autopilotGetConfiguration();
+        $new = clone $current;
+        $new->CleanupDeadServers = !$current->CleanupDeadServers;
+        list($ok, $err) = $client->autopilotCASConfiguration($new);
+        $this->assertNull($err, 'Unable to update Autopilot configuration: '.$err);
+        $this->assertTrue($ok);
+        list($updated, $err) = $client->autopilotGetConfiguration();
+        $this->assertNull($err, 'Unable to get updated Autopilot configuration: '.$err);
+        $this->assertInstanceOf(AutopilotConfiguration::class, $updated);
+        if ($current->CleanupDeadServers) {
+            $this->assertFalse($updated->CleanupDeadServers, 'Autopilot conf did not change');
+        } else {
+            $this->assertTrue($updated->CleanupDeadServers, 'Autopilot conf did not change');
+        }
+    }
+
+    public function testCanGetAutopilotServerHealth() {
+        $client = new OperatorClient(new Config());
+
+        /** @var \DCarbone\PHPConsulAPI\Operator\OperatorHealthReply $healths */
+        list($healths, $err) = $client->autopilotServerHealth();
+        $this->assertNull($err, 'Unable to get Autopilot server health: %s'.$err);
+        $this->assertInstanceOf(OperatorHealthReply::class, $healths);
+        $this->assertCount(1, $healths->Servers);
+    }
 }

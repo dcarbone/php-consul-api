@@ -255,6 +255,66 @@ class OperatorClient extends AbstractClient {
     }
 
     /**
+     * @param \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration $conf
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
+     * @return \DCarbone\PHPConsulAPI\Error|null
+     */
+    public function autopilotSetConfiguration(AutopilotConfiguration $conf, WriteOptions $options = null) {
+        $r = new Request('PUT', 'v1/operator/autopilot/configuration', $this->config, $conf);
+        $r->setWriteOptions($options);
+
+        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
+        return $err;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration $conf
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
+     * @return array(
+     * @type bool
+     * @type \DCarbone\PHPConsulAPI\Error|null
+     * )
+     */
+    public function autopilotCASConfiguration(AutopilotConfiguration $conf, WriteOptions $options = null): array {
+        $r = new Request('PUT', 'v1/operator/autopilot/configuration', $this->config, $conf);
+        $r->setWriteOptions($options);
+        $r->Params->set('cas', $conf->ModifyIndex);
+
+        /** @var \Psr\Http\Message\ResponseInterface $response */
+        list($_, $response, $err) = $this->requireOK($this->doRequest($r));
+        if (null !== $err) {
+            return [false, $err];
+        }
+
+        return [false !== strpos($response->getBody()->getContents(), 'true'), null];
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
+     * @return array(
+     * @type \DCarbone\PHPConsulAPI\Operator\ServerHealth[]|null
+     * @type \DCarbone\PHPConsulAPI\Error|null
+     * )
+     */
+    public function autopilotServerHealth(QueryOptions $options = null): array {
+        $r = new Request('GET', 'v1/operator/autopilot/health', $this->config);
+        $r->setQueryOptions($options);
+
+        /** @var \Psr\Http\Message\ResponseInterface $response */
+        list($_, $response, $err) = $this->requireOK($this->doRequest($r));
+        if (null !== $err) {
+            return [null, $err];
+        }
+
+        list($data, $err) = $this->decodeBody($response->getBody());
+        if (null !== $err) {
+            return [null, $err];
+        }
+
+        return [new OperatorHealthReply($data), null];
+    }
+
+    /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      * @return array(
      * @type \DCarbone\PHPConsulAPI\Operator\RaftConfiguration|null Current Raft Configuration or null on error

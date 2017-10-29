@@ -35,8 +35,7 @@ abstract class AbstractClient {
      */
     public function __construct(Config $config) {
         // TODO: Clone config?
-
-        $this->config = $config;
+        $this->config = clone $config;
     }
 
     /**
