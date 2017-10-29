@@ -50,9 +50,7 @@ class OperatorClient extends AbstractClient {
             return ['', null, $err];
         }
 
-        $wm = $this->buildWriteMeta($duration);
-
-        return [$data['ID'] ?? '', $wm, null];
+        return [$data['ID'] ?? '', $this->buildWriteMeta($duration), null];
     }
 
     /**
@@ -80,9 +78,7 @@ class OperatorClient extends AbstractClient {
             return ['', null, $err];
         }
 
-        $wm = $this->buildWriteMeta($duration);
-
-        return [$data['ID'] ?? '', $wm, null];
+        return [$data['ID'] ?? '', $this->buildWriteMeta($duration), null];
     }
 
     /**
@@ -114,9 +110,7 @@ class OperatorClient extends AbstractClient {
             $resp = new Area($datum);
         }
 
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
-        return [$resp, $qm, null];
+        return [$resp, $this->buildQueryMeta($duration, $response, $r->getUri()), null];
     }
 
     /**
@@ -147,9 +141,7 @@ class OperatorClient extends AbstractClient {
             $resp = new Area($datum);
         }
 
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
-        return [$resp, $qm, null];
+        return [$resp, $this->buildQueryMeta($duration, $response, $r->getUri()), null];
     }
 
     /**
@@ -169,9 +161,72 @@ class OperatorClient extends AbstractClient {
             return [null, $err];
         }
 
-        $wm = $this->buildWriteMeta($duration);
+        return [$this->buildWriteMeta($duration), null];
+    }
 
-        return [$wm, null];
+    /**
+     * @param string $areaID
+     * @param array $addresses
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
+     * @return array(
+     * @type \DCarbone\PHPConsulAPI\Operator\AreaJoinResponse[]|null
+     * @type \DCarbone\PHPConsulAPI\WriteMeta|null
+     * @type \DCarbone\PHPConsulAPI\Error|null
+     * )
+     */
+    public function areaJoin(string $areaID, array $addresses, WriteOptions $options = null): array {
+        $r = new Request('PUT', 'v1/operator/area/'.$areaID.'/join', $this->config, $addresses);
+        $r->setWriteOptions($options);
+
+        /** @var \Psr\Http\Message\ResponseInterface $response */
+        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        if (null !== $err) {
+            return [null, null, $err];
+        }
+
+        list($data, $err) = $this->decodeBody($response->getBody());
+        if (null !== $err) {
+            return [null, null, $err];
+        }
+
+        $resp = [];
+        foreach ($data as $datum) {
+            $resp[] = new AreaJoinResponse($datum);
+        }
+
+        return [$resp, $this->buildWriteMeta($duration), null];
+    }
+
+    /**
+     * @param string $areaID
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
+     * @return array(
+     * @type \DCarbone\PHPConsulAPI\Operator\SerfMember[]|null
+     * @type \DCarbone\PHPConsulAPI\QueryMeta|null
+     * @type \DCarbone\PHPConsulAPI\Error|null
+     * )
+     */
+    public function areaMembers(string $areaID, QueryOptions $options = null): array {
+        $r = new Request('GET', 'v1/operator/area/'.$areaID.'/members', $this->config);
+        $r->setQueryOptions($options);
+
+        /** @var \Psr\Http\Message\ResponseInterface $response */
+        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        if (null !== $err) {
+            return [null, null, $err];
+        }
+
+        list($data, $err) = $this->decodeBody($response->getBody());
+        if (null !== $err) {
+            return [null, null, $err];
+        }
+
+        $resp = [];
+        foreach ($data as $datum) {
+            $resp[] = new SerfMember($datum);
+        }
+
+        return [$resp, $this->buildQueryMeta($duration, $response, $r->getUri()), null];
     }
 
     /**
