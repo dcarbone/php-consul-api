@@ -26,17 +26,25 @@
             <file>./tests/Usage/RequestUsageTest.php</file>
         </testsuite>
 
+        <!--<testsuite name="usage-acl">-->
+        <!--<file>./tests/Usage/ACL/ACLClientTests.php</file>-->
+        <!--</testsuite>-->
+
         <testsuite name="usage-agent">
-            <file>./tests/Usage/Agent/AgentClientUsageTests.php</file>
+            <file>./tests/Usage/Agent/AgentClientTests.php</file>
+        </testsuite>
+
+        <testsuite name="usage-catalog">
+            <file>./tests/Usage/Catalog/CatalogClientTests.php</file>
         </testsuite>
 
         <testsuite name="usage-kv">
-            <file>./tests/Usage/KV/KVClientCRUDTests.php</file>
+            <file>./tests/Usage/KV/KVCRUDTests.php</file>
         </testsuite>
 
         <testsuite name="usage-operator">
             <file>./tests/Usage/Operator/OperatorClientTests.php</file>
-            <file>./tests/Usage/Operator/AutopilotTests.php</file>
+            <file>./tests/Usage/Operator/OperatorAutopilotTests.php</file>
         </testsuite>
     </testsuites>
 

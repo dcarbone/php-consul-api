@@ -172,11 +172,12 @@ class KVClient extends AbstractClient {
             return [null, null, $err];
         }
 
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
         list($data, $err) = $this->decodeBody($response->getBody());
+        if (null !== $err) {
+            return [null, null, $err];
+        }
 
-        return [$data, $qm, $err];
+        return [$data, $this->buildQueryMeta($duration, $response, $r->getUri()), $err];
     }
 
     /**

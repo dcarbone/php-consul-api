@@ -3,6 +3,3 @@
 /.idea
 /*.iml
 /composer.lock
-/tmp
-/consul.log
-/consul.pid

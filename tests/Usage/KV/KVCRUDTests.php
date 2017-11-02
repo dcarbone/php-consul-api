@@ -23,15 +23,16 @@ use DCarbone\PHPConsulAPI\KV\KVPair;
 use DCarbone\PHPConsulAPI\KV\KVPairs;
 use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPI\WriteMeta;
-use DCarbone\PHPConsulAPITests\ConsulManager;
+use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 use PHPUnit\Framework\AssertionFailedError;
-use PHPUnit\Framework\TestCase;
 
 /**
- * Class KVClientCRUDTests
+ * Class KVCRUDTests
  * @package DCarbone\PHPConsulAPITests\Usage\KV
  */
-class KVClientCRUDTests extends TestCase {
+class KVCRUDTests extends AbstractUsageTests {
+    /** @var bool */
+    protected $singlePerTest = true;
 
     const KVKey1 = 'testkey1';
     const KVValue1 = 'testvalue1';
@@ -44,22 +45,6 @@ class KVClientCRUDTests extends TestCase {
 
     const KVPrefix = 'tests';
 
-    protected function setUp() {
-        ConsulManager::startSingle();
-    }
-
-    protected function tearDown() {
-        ConsulManager::stopSingle();
-    }
-
-    public function testCanConstructClient() {
-        $kv = new KVClient(new Config());
-        $this->assertInstanceOf(KVClient::class, $kv);
-    }
-
-    /**
-     * @depends testCanConstructClient
-     */
     public function testCanPutKey() {
         $client = new KVClient(new Config());
 
@@ -128,25 +113,26 @@ class KVClientCRUDTests extends TestCase {
 
         list($list, $qm, $err) = $client->list();
         $this->assertNull($err, sprintf('KV::valueList returned error: %s', $err));
-        $this->assertInstanceOf(KVPairs::class, $list);
-        $this->assertInstanceOf(QueryMeta::class, $qm);
-        $this->assertCount(3, $list);
-
-        $key1found = false;
-        $key2found = false;
-        $key3found = false;
-
-        foreach ($list as $kv) {
-            if (self::KVValue1 === $kv->Value) {
-                $key1found = true;
-            } else if (self::KVValue2 === $kv->Value) {
-                $key2found = true;
-            } else if (self::KVValue3 === $kv->Value) {
-                $key3found = true;
-            }
-        }
 
         try {
+            $this->assertInstanceOf(KVPairs::class, $list);
+            $this->assertInstanceOf(QueryMeta::class, $qm);
+            $this->assertCount(3, $list);
+
+            $key1found = false;
+            $key2found = false;
+            $key3found = false;
+
+            foreach ($list as $kv) {
+                if (self::KVValue1 === $kv->Value) {
+                    $key1found = true;
+                } else if (self::KVValue2 === $kv->Value) {
+                    $key2found = true;
+                } else if (self::KVValue3 === $kv->Value) {
+                    $key3found = true;
+                }
+            }
+
             $this->assertTrue($key1found, 'Key1 not found in list!');
             $this->assertTrue($key2found, 'Key2 not found in list!');
             $this->assertTrue($key3found, 'Key3 not found in list!');
@@ -175,25 +161,26 @@ class KVClientCRUDTests extends TestCase {
         list($list, $qm, $err) = $client->list(self::KVPrefix);
         $this->assertNull($err, sprintf('KV::valueList returned error: %s', $err));
         $this->assertInstanceOf(QueryMeta::class, $qm);
-        $this->assertInstanceOf(KVPairs::class, $list);
-        $this->assertCount(3, $list);
-        $this->assertContainsOnlyInstancesOf(KVPair::class, $list);
-
-        $key1found = false;
-        $key2found = false;
-        $key3found = false;
-
-        foreach ($list as $kv) {
-            if (self::KVValue1 === $kv->Value) {
-                $key1found = true;
-            } else if (self::KVValue2 === $kv->Value) {
-                $key2found = true;
-            } else if (self::KVValue3 === $kv->Value) {
-                $key3found = true;
-            }
-        }
 
         try {
+            $this->assertInstanceOf(KVPairs::class, $list);
+            $this->assertCount(3, $list);
+            $this->assertContainsOnlyInstancesOf(KVPair::class, $list);
+
+            $key1found = false;
+            $key2found = false;
+            $key3found = false;
+
+            foreach ($list as $kv) {
+                if (self::KVValue1 === $kv->Value) {
+                    $key1found = true;
+                } else if (self::KVValue2 === $kv->Value) {
+                    $key2found = true;
+                } else if (self::KVValue3 === $kv->Value) {
+                    $key3found = true;
+                }
+            }
+
             $this->assertTrue($key1found, 'Key1 not found in list!');
             $this->assertTrue($key2found, 'Key2 not found in list!');
             $this->assertTrue($key3found, 'Key3 not found in list!');
@@ -206,9 +193,6 @@ class KVClientCRUDTests extends TestCase {
         }
     }
 
-    /**
-     * @depends testCanConstructClient
-     */
     public function testKeysReturnsErrorWithInvalidPrefix() {
         $client = new KVClient(new Config());
         list($_, $_, $err) = $client->keys(12345);
@@ -238,25 +222,26 @@ class KVClientCRUDTests extends TestCase {
         list($list, $qm, $err) = $client->keys();
         $this->assertNull($err, sprintf('KV::keys returned error: %s', $err));
         $this->assertInstanceOf(QueryMeta::class, $qm);
-        $this->assertInternalType('array', $list);
-        $this->assertCount(3, $list);
-        $this->assertContainsOnly('string', $list, true);
-
-        $key1found = false;
-        $key2found = false;
-        $key3found = false;
-
-        foreach ($list as $key) {
-            if (self::KVKey1 === $key) {
-                $key1found = true;
-            } else if (self::KVKey2 === $key) {
-                $key2found = true;
-            } else if (self::KVKey3 === $key) {
-                $key3found = true;
-            }
-        }
 
         try {
+            $this->assertInternalType('array', $list);
+            $this->assertCount(3, $list);
+            $this->assertContainsOnly('string', $list, true);
+
+            $key1found = false;
+            $key2found = false;
+            $key3found = false;
+
+            foreach ($list as $key) {
+                if (self::KVKey1 === $key) {
+                    $key1found = true;
+                } else if (self::KVKey2 === $key) {
+                    $key2found = true;
+                } else if (self::KVKey3 === $key) {
+                    $key3found = true;
+                }
+            }
+
             $this->assertTrue($key1found, 'Key1 not found in list!');
             $this->assertTrue($key2found, 'Key2 not found in list!');
             $this->assertTrue($key3found, 'Key3 not found in list!');

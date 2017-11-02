@@ -1,3 +1,6 @@
 #!/usr/bin/env bash
 
-/usr/bin/env consul agent -dev >> consul.log 2>&1 & echo $! > consul.pid
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+TMPDIR=${DIR}/../tmp
+
+/usr/bin/env consul agent -dev >> ${TMPDIR}/consul.log 2>&1 & echo $! > ${TMPDIR}/consul.pid

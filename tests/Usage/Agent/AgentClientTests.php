@@ -22,26 +22,19 @@ use DCarbone\PHPConsulAPI\Agent\AgentService;
 use DCarbone\PHPConsulAPI\Agent\AgentServiceCheck;
 use DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration;
 use DCarbone\PHPConsulAPI\Config;
-use DCarbone\PHPConsulAPITests\ConsulManager;
+use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 use PHPUnit\Framework\AssertionFailedError;
-use PHPUnit\Framework\TestCase;
 
 /**
- * Class AgentClientUsageTests
+ * Class AgentClientTests
  * @package DCarbone\PHPConsulAPITests\Usage\Agent
  */
-class AgentClientUsageTests extends TestCase {
+class AgentClientTests extends AbstractUsageTests {
+    /** @var bool */
+    protected static $singlePerClass = true;
 
     const Service1Name = 'test_1_service';
     const Service2Name = 'test_2_service';
-
-    public static function setUpBeforeClass() {
-        ConsulManager::startSingle();
-    }
-
-    public static function tearDownAfterClass() {
-        ConsulManager::stopSingle();
-    }
 
     public function testCanConstructAgentClient() {
         $client = new AgentClient(new Config());
@@ -227,6 +220,4 @@ class AgentClientUsageTests extends TestCase {
         $err = $client->serviceDeregister(self::Service1Name);
         $this->assertNull($err, sprintf('Error deregistering service: %s', $err));
     }
-
-
 }

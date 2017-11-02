@@ -22,7 +22,7 @@
  */
 abstract class ConsulManager {
 
-    const PID_FILE = __DIR__.'/../consul.pid';
+    const PID_FILE = __DIR__.'/../tmp/consul.pid';
 
     const START_SINGLE_CMD = __DIR__.'/run_consul.sh';
     const STOP_SINGLE_CMD = __DIR__.'/stop_consul.sh';
@@ -38,7 +38,7 @@ abstract class ConsulManager {
         shell_exec(self::START_SINGLE_CMD);
 
         // sleep to allow consul to setup
-        sleep(3);
+        sleep(4);
     }
 
     /**
@@ -50,7 +50,7 @@ abstract class ConsulManager {
             if (file_exists(self::PID_FILE)) {
                 unlink(self::PID_FILE);
             }
-            sleep(1);
+            sleep(2);
         }
     }
 }

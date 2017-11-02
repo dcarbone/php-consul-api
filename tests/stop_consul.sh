@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
-if [ -e consul.pid ]; then
-    kill -15 $(cat consul.pid)
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+TMPDIR=${DIR}/../tmp
+
+if [ -e ${TMPDIR}/consul.pid ]; then
+    kill -SIGINT $(cat ${TMPDIR}/consul.pid)
 fi

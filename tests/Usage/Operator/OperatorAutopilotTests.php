@@ -20,21 +20,15 @@ use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration;
 use DCarbone\PHPConsulAPI\Operator\OperatorClient;
 use DCarbone\PHPConsulAPI\Operator\OperatorHealthReply;
-use DCarbone\PHPConsulAPITests\ConsulManager;
-use PHPUnit\Framework\TestCase;
+use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 
 /**
- * Class AutopilotTests
+ * Class OperatorAutopilotTests
  * @package DCarbone\PHPConsulAPITests\Usage\Operator
  */
-class AutopilotTests extends TestCase {
-    public static function setUpBeforeClass() {
-        ConsulManager::startSingle();
-    }
-
-    public static function tearDownAfterClass() {
-        ConsulManager::stopSingle();
-    }
+class OperatorAutopilotTests extends AbstractUsageTests {
+    /** @var bool */
+    protected static $singlePerClass = true;
 
     public function testCanGetAutopilotConfiguration() {
         $client = new OperatorClient(new Config());

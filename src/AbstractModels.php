@@ -33,15 +33,15 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
      */
     public function __construct($children = []) {
         if (is_array($children)) {
-            foreach (array_filter($children) as $kvp) {
-                if (is_array($kvp)) {
-                    $this->_list[] = $this->newChild($kvp);
-                } else if ($kvp instanceof $this->containedClass) {
-                    $this->_list[] = $kvp;
+            foreach (array_filter($children) as $child) {
+                if (is_array($child)) {
+                    $this->_list[] = $this->newChild($child);
+                } else if ($child instanceof $this->containedClass) {
+                    $this->_list[] = $child;
                 } else {
                     throw new \InvalidArgumentException(sprintf(
                         get_class($this).' accepts only '.$this->containedClass.' as a child, saw %s',
-                        is_object($kvp) ? get_class($kvp) : gettype($kvp)));
+                        is_object($child) ? get_class($child) : gettype($child)));
                 }
             }
         } else if (null === $children) {
