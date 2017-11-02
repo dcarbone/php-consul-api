@@ -122,7 +122,7 @@ class CatalogClient extends AbstractClient {
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      * @return array(
-     * @type string[]|null list of services or null on error
+     * @type array|null list of services or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )

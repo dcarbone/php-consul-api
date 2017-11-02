@@ -179,4 +179,48 @@ class CatalogClientTests extends AbstractUsageTests {
             throw $e;
         }
     }
+
+    public function testCanGetListOfServices() {
+        $client = new CatalogClient(new Config());
+
+        list($wm, $err) = $client->register(new CatalogRegistration([
+            'Node'    => 'dc1',
+            'Address' => self::ServiceAddress,
+            'Service' => new AgentService([
+                'ID'      => self::ServiceID1,
+                'Service' => self::ServiceName,
+                'Port'    => self::ServicePort,
+                'Address' => self::ServiceAddress,
+            ]),
+        ]));
+        $this->assertNull($err, 'CatalogClient::register returned error: '.$err);
+        $this->assertInstanceOf(WriteMeta::class, $wm);
+
+        list($wm, $err) = $client->register(new CatalogRegistration([
+            'Node'    => 'dc1',
+            'Address' => self::ServiceAddress,
+            'Service' => new AgentService([
+                'ID'      => self::ServiceID2,
+                'Service' => self::ServiceName,
+                'Port'    => self::ServicePort,
+                'Address' => self::ServiceAddress,
+            ]),
+        ]));
+
+        $this->assertNull($err, 'CatalogClient::register failed to register second service: '.$err);
+        $this->assertInstanceOf(WriteMeta::class, $wm);
+
+        list($services, $qm, $err) = $client->services();
+
+        try {
+            $this->assertNull($err, 'CatalogClient::services returned error: '.$err);
+            $this->assertInstanceOf(QueryMeta::class, $qm);
+            $this->assertInternalType('array', $services);
+            $this->assertCount(2, $services);
+            $this->assertContainsOnly('array', $services);
+        } catch (AssertionFailedError $e) {
+            var_dump($services);
+            throw $e;
+        }
+    }
 }
