@@ -39,7 +39,7 @@ class CatalogClientTests extends AbstractUsageTests {
     const ServiceAddress = '127.0.0.1';
 
     /** @var bool */
-    protected $singlePerTest = true;
+    protected static $singlePerClass = true;
 
     public function testCanConstructClient() {
         $client = new CatalogClient(new Config());
@@ -74,21 +74,6 @@ class CatalogClientTests extends AbstractUsageTests {
     public function testCanGetService() {
         $client = new CatalogClient(new Config());
 
-        $registration = new CatalogRegistration([
-            'Node'    => 'dc1',
-            'Address' => self::ServiceAddress,
-            'Service' => new AgentService([
-                'ID'      => self::ServiceID1,
-                'Service' => self::ServiceName,
-                'Port'    => self::ServicePort,
-                'Adress'  => self::ServiceAddress,
-            ]),
-        ]);
-
-        list($wm, $err) = $client->register($registration);
-        $this->assertNull($err, 'CatalogClient::register returned error: '.$err);
-        $this->assertInstanceOf(WriteMeta::class, $wm);
-
         list($service, $qm, $err) = $client->service(self::ServiceName);
         $this->assertNull($err, 'CatalogClient::service returned error: '.$err);
         $this->assertInstanceOf(QueryMeta::class, $qm);
@@ -102,19 +87,6 @@ class CatalogClientTests extends AbstractUsageTests {
      */
     public function testCanRegisterSecondServiceWithSameName() {
         $client = new CatalogClient(new Config());
-
-        list($wm, $err) = $client->register(new CatalogRegistration([
-            'Node'    => 'dc1',
-            'Address' => self::ServiceAddress,
-            'Service' => new AgentService([
-                'ID'      => self::ServiceID1,
-                'Service' => self::ServiceName,
-                'Port'    => self::ServicePort,
-                'Adress'  => self::ServiceAddress,
-            ]),
-        ]));
-        $this->assertNull($err, 'CatalogClient::register returned error: '.$err);
-        $this->assertInstanceOf(WriteMeta::class, $wm);
 
         list($wm, $err) = $client->register(new CatalogRegistration([
             'Node'    => 'dc1',
@@ -137,33 +109,6 @@ class CatalogClientTests extends AbstractUsageTests {
     public function testCanGetListOfService() {
         $client = new CatalogClient(new Config());
 
-        list($wm, $err) = $client->register(new CatalogRegistration([
-            'Node'    => 'dc1',
-            'Address' => self::ServiceAddress,
-            'Service' => new AgentService([
-                'ID'      => self::ServiceID1,
-                'Service' => self::ServiceName,
-                'Port'    => self::ServicePort,
-                'Adress'  => self::ServiceAddress,
-            ]),
-        ]));
-        $this->assertNull($err, 'CatalogClient::register returned error: '.$err);
-        $this->assertInstanceOf(WriteMeta::class, $wm);
-
-        list($wm, $err) = $client->register(new CatalogRegistration([
-            'Node'    => 'dc1',
-            'Address' => self::ServiceAddress,
-            'Service' => new AgentService([
-                'ID'      => self::ServiceID2,
-                'Service' => self::ServiceName,
-                'Port'    => self::ServicePort,
-                'Address' => self::ServiceAddress,
-            ]),
-        ]));
-
-        $this->assertNull($err, 'CatalogClient::register failed to register second service: '.$err);
-        $this->assertInstanceOf(WriteMeta::class, $wm);
-
         list($service, $qm, $err) = $client->service(self::ServiceName);
         $this->assertNull($err, 'CatalogClient::service returned error: '.$err);
         $this->assertInstanceOf(QueryMeta::class, $qm);
@@ -180,35 +125,11 @@ class CatalogClientTests extends AbstractUsageTests {
         }
     }
 
+    /**
+     * @depends testCanRegisterSecondServiceWithSameName
+     */
     public function testCanGetListOfServices() {
         $client = new CatalogClient(new Config());
-
-        list($wm, $err) = $client->register(new CatalogRegistration([
-            'Node'    => 'dc1',
-            'Address' => self::ServiceAddress,
-            'Service' => new AgentService([
-                'ID'      => self::ServiceID1,
-                'Service' => self::ServiceName,
-                'Port'    => self::ServicePort,
-                'Address' => self::ServiceAddress,
-            ]),
-        ]));
-        $this->assertNull($err, 'CatalogClient::register returned error: '.$err);
-        $this->assertInstanceOf(WriteMeta::class, $wm);
-
-        list($wm, $err) = $client->register(new CatalogRegistration([
-            'Node'    => 'dc1',
-            'Address' => self::ServiceAddress,
-            'Service' => new AgentService([
-                'ID'      => self::ServiceID2,
-                'Service' => self::ServiceName,
-                'Port'    => self::ServicePort,
-                'Address' => self::ServiceAddress,
-            ]),
-        ]));
-
-        $this->assertNull($err, 'CatalogClient::register failed to register second service: '.$err);
-        $this->assertInstanceOf(WriteMeta::class, $wm);
 
         list($services, $qm, $err) = $client->services();
 

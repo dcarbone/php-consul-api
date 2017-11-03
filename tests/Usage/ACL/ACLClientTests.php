@@ -37,8 +37,6 @@ class ACLClientTests extends AbstractUsageTests {
      * @return string
      */
     public function testCanBootstrapACL() {
-        return;
-
         $client = new ACLClient(new Config());
 
         list($aclID, $wm, $err) = $client->bootstrap();
@@ -54,8 +52,6 @@ class ACLClientTests extends AbstractUsageTests {
      * @param string $aclID
      */
     public function testCanGetBootstrappedACL(string $aclID) {
-        return;
-
         $client = new ACLClient(new Config());
 
         list($acls, $qm, $err) = $client->info($aclID);

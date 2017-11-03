@@ -38,7 +38,7 @@ abstract class ConsulManager {
         shell_exec(self::START_SINGLE_CMD);
 
         // sleep to allow consul to setup
-        sleep(4);
+        sleep(3);
     }
 
     /**
@@ -50,7 +50,7 @@ abstract class ConsulManager {
             if (file_exists(self::PID_FILE)) {
                 unlink(self::PID_FILE);
             }
-            sleep(2);
+            sleep(1);
         }
     }
 }
