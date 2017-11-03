@@ -18,6 +18,8 @@
 
 use DCarbone\PHPConsulAPI\Agent\AgentService;
 use DCarbone\PHPConsulAPI\Catalog\CatalogClient;
+use DCarbone\PHPConsulAPI\Catalog\CatalogDeregistration;
+use DCarbone\PHPConsulAPI\Catalog\CatalogNode;
 use DCarbone\PHPConsulAPI\Catalog\CatalogRegistration;
 use DCarbone\PHPConsulAPI\Catalog\CatalogService;
 use DCarbone\PHPConsulAPI\Config;
@@ -141,6 +143,105 @@ class CatalogClientTests extends AbstractUsageTests {
             $this->assertContainsOnly('array', $services);
         } catch (AssertionFailedError $e) {
             var_dump($services);
+            throw $e;
+        }
+    }
+
+    /**
+     * testCanGetListOfService
+     */
+    public function testCanDeregisterService() {
+        $client = new CatalogClient(new Config());
+
+
+        list($wm, $err) = $client->deregister(new CatalogDeregistration([
+            'Node'      => 'dc1',
+            'ServiceID' => self::ServiceID1,
+        ]));
+        $this->assertNull($err, 'CatalogClient::deregister returned error: '.$err);
+        $this->assertInstanceOf(WriteMeta::class, $wm);
+
+        list($service, $qm, $err) = $client->service(self::ServiceName);
+        $this->assertNull($err, 'CatalogClient::service returned error: '.$err);
+        $this->assertInstanceOf(QueryMeta::class, $qm);
+        $this->assertCount(1, $service);
+        $this->assertInstanceOf(CatalogService::class, reset($service));
+    }
+
+    /**
+     * TODO: Update after multi-datacenter tests are possible...
+     *
+     * @depends testCanConstructClient
+     */
+    public function testCanGetDatacenters() {
+        $client = new CatalogClient(new Config());
+
+        list($dcs, $err) = $client->datacenters();
+
+        try {
+            $this->assertNull($err, 'CatalogClient::datacenters returned error: '.$err);
+            $this->assertInternalType('array', $dcs);
+            $this->assertCount(1, $dcs);
+            $this->assertEquals('dc1', $dcs[0]);
+        } catch (AssertionFailedError $e) {
+            var_dump($dcs);
+            throw $e;
+        }
+    }
+
+    /**
+     * @depends testCanConstructClient
+     */
+    public function testCanGetListOfNodes() {
+        $client = new CatalogClient(new Config());
+
+        list($nodes, $qm, $err) = $client->nodes();
+        try {
+            $this->assertNull($err, 'CatalogClient::nodes returned error: '.$err);
+            $this->assertInstanceOf(QueryMeta::class, $qm);
+            $this->assertInternalType('array', $nodes);
+            // TODO: figure out why there are 2 nodes returned by this call...
+            $this->assertCount(2, $nodes);
+            $this->assertContainsOnlyInstancesOf(CatalogNode::class, $nodes);
+        } catch (AssertionFailedError $e) {
+            var_dump($nodes);
+            throw $e;
+        }
+    }
+
+    /**
+     * @depends testCanGetListOfNodes
+     */
+    public function testCanGetNode() {
+        $client = new CatalogClient(new Config());
+
+        list($nodes) = $client->nodes();
+        try {
+            $this->assertInternalType('array', $nodes);
+            $this->assertCount(2, $nodes);
+            $this->assertContainsOnlyInstancesOf(CatalogNode::class, $nodes);
+
+            $id = null;
+            foreach ($nodes as $node) {
+                if ('' !== $node->ID) {
+                    $id = $node->ID;
+                    break;
+                }
+            }
+
+            $this->assertNotNull($id, 'Unable to get node with ID');
+        } catch (AssertionFailedError $e) {
+            var_dump($nodes);
+            throw $e;
+        }
+
+        list($node, $qm, $err) = $client->node($id);
+        try {
+            $this->assertNull($err, 'CatalogClient::node returned error: '.$err);
+            $this->assertInstanceOf(QueryMeta::class, $qm);
+            $this->assertInstanceOf(CatalogNode::class, $node);
+        } catch (AssertionFailedError $e) {
+            var_dump($node);
             throw $e;
         }
     }

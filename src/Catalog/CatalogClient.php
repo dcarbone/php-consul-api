@@ -77,7 +77,6 @@ class CatalogClient extends AbstractClient {
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($_, $response, $err) = $this->requireOK($this->doRequest($r));
-
         if (null !== $err) {
             return [null, $err];
         }
@@ -88,7 +87,7 @@ class CatalogClient extends AbstractClient {
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      * @return array(
-     * @type CatalogNode[]|null array of catalog nodes or null on error
+     * @type \DCarbone\PHPConsulAPI\Catalog\CatalogNode[]|null array of catalog nodes or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
@@ -104,7 +103,6 @@ class CatalogClient extends AbstractClient {
         }
 
         list($data, $err) = $this->decodeBody($response->getBody());
-
         if (null !== $err) {
             return [null, null, $err];
         }
@@ -114,9 +112,7 @@ class CatalogClient extends AbstractClient {
             $nodes[] = new CatalogNode($v);
         }
 
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
-        return [$nodes, $qm, null];
+        return [$nodes, $this->buildQueryMeta($duration, $response, $r->getUri()), null];
     }
 
     /**
@@ -142,9 +138,7 @@ class CatalogClient extends AbstractClient {
             return [null, null, $err];
         }
 
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
-        return [$data, $qm, $err];
+        return [$data, $this->buildQueryMeta($duration, $response, $r->getUri()), $err];
     }
 
     /**
@@ -152,7 +146,7 @@ class CatalogClient extends AbstractClient {
      * @param string $tag
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      * @return array(
-     * @type CatalogService[]|null array of services or null on error
+     * @type \DCarbone\PHPConsulAPI\Catalog\CatalogService[]|null array of services or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
@@ -171,12 +165,9 @@ class CatalogClient extends AbstractClient {
         }
 
         list($data, $err) = $this->decodeBody($response->getBody());
-
         if (null !== $err) {
             return [null, null, $err];
         }
-
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         $services = [];
         foreach ($data as $v) {
@@ -184,14 +175,14 @@ class CatalogClient extends AbstractClient {
             $services[$service->ServiceID] = $service;
         }
 
-        return [$services, $qm, null];
+        return [$services, $this->buildQueryMeta($duration, $response, $r->getUri()), null];
     }
 
     /**
      * @param string $node
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      * @return array(
-     * @type CatalogNode node or null on error
+     * @type \DCarbone\PHPConsulAPI\Catalog\CatalogNode|null node or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
@@ -206,14 +197,11 @@ class CatalogClient extends AbstractClient {
             return [null, null, $err];
         }
 
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
         list($data, $err) = $this->decodeBody($response->getBody());
-
         if (null !== $err) {
-            return [null, $qm, $err];
+            return [null, null, $err];
         }
 
-        return [new CatalogNode($data), $qm, null];
+        return [new CatalogNode($data), $this->buildQueryMeta($duration, $response, $r->getUri()), null];
     }
 }
