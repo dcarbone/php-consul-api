@@ -41,7 +41,7 @@ class CoordinateConfig extends AbstractModel {
     /** @var float */
     public $VivaldiCC = 0.0;
     /** @var int */
-    public $AdjustmentWithZero = 0;
+    public $AdjustmentWindowSize = 0;
     /** @var float */
     public $HeightMin = 0.0;
     /** @var int */
@@ -54,14 +54,14 @@ class CoordinateConfig extends AbstractModel {
      */
     public static function default(): CoordinateConfig {
         return new static([
-            'Dimensionality'     => static::DefaultDimensionality,
-            'VivaldiErrorMax'    => static::DefaultVivaldiErrorMax,
-            'VivaldiCE'          => static::DefaultVivaldiCE,
-            'VivaldiCC'          => static::DefaultVivaldiCC,
-            'AdjustmentWithZero' => static::DefaultAdjustmentWindowSize,
-            'HeightMin'          => static::DefaultHeightMin,
-            'LatencyFilterSize'  => static::DefaultAdjustmentWindowSize,
-            'GravityRho'         => static::DefaultGravityRho,
+            'Dimensionality'       => static::DefaultDimensionality,
+            'VivaldiErrorMax'      => static::DefaultVivaldiErrorMax,
+            'VivaldiCE'            => static::DefaultVivaldiCE,
+            'VivaldiCC'            => static::DefaultVivaldiCC,
+            'AdjustmentWindowSize' => static::DefaultAdjustmentWindowSize,
+            'HeightMin'            => static::DefaultHeightMin,
+            'LatencyFilterSize'    => static::DefaultLatencyFilterSize,
+            'GravityRho'           => static::DefaultGravityRho,
         ]);
     }
 
@@ -132,16 +132,16 @@ class CoordinateConfig extends AbstractModel {
     /**
      * @return int
      */
-    public function getAdjustmentWithZero(): int {
-        return $this->AdjustmentWithZero;
+    public function getAdjustmentWindowSize(): int {
+        return $this->AdjustmentWindowSize;
     }
 
     /**
-     * @param int $AdjustmentWithZero
+     * @param int $AdjustmentWindowSize
      * @return CoordinateConfig
      */
-    public function setAdjustmentWithZero(int $AdjustmentWithZero): CoordinateConfig {
-        $this->AdjustmentWithZero = $AdjustmentWithZero;
+    public function setAdjustmentWindowSize(int $AdjustmentWindowSize): CoordinateConfig {
+        $this->AdjustmentWindowSize = $AdjustmentWindowSize;
         return $this;
     }
 
