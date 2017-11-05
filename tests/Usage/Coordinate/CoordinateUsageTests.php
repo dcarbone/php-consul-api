@@ -34,4 +34,43 @@ class CoordinateUsageTests extends AbstractUsageTests {
         $this->assertEquals($coord->Vec[0], 0.1);
         $this->assertEquals($coord->Vec[1], 0.2);
     }
+
+    /**
+     * @depends testCanConstructCoordinateWithDefaultConfig
+     */
+    public function testIsValidStates() {
+        $coord = new Coordinate(CoordinateConfig::default());
+
+        $this->assertTrue($coord->isValid());
+
+        foreach($coord->Vec as &$field) {
+            $field = NAN;
+            $this->assertFalse($coord->isValid());
+
+            $field = 0.0;
+            $this->assertTrue($coord->isValid());
+
+            $field = INF;
+            $this->assertFalse($coord->isValid());
+
+            $field = 0.0;
+            $this->assertTrue($coord->isValid());
+        }
+
+        foreach([&$coord->Error, &$coord->Adjustment, &$coord->Height] as &$field) {
+            $field = NAN;
+            $this->assertFalse($coord->isValid());
+
+            $field = 0.0;
+            $this->assertTrue($coord->isValid());
+
+            $field = INF;
+            $this->assertFalse($coord->isValid());
+
+            $field = 0.0;
+            $this->assertTrue($coord->isValid());
+        }
+    }
+
+
 }
