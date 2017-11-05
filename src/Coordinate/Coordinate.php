@@ -77,17 +77,11 @@ class Coordinate extends AbstractModel {
     }
 
     /**
-     * TODO: Is the logic in here sufficient?
-     *
      * @param \DCarbone\PHPConsulAPI\Coordinate\Coordinate $other
      * @return bool
      */
     public function isCompatibleWith(Coordinate $other): bool {
-        return (null === $this->Vec && null === $other->Vec) // are they both null?
-            ||
-            (is_array($this->Vec) &&
-                is_array($other->Vec) &&
-                count($this->Vec) === count($other->Vec)); // Are they both arrays of the same length?
+        return count($this->Vec) === count($other->Vec);
     }
 
     /**
