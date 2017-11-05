@@ -38,6 +38,11 @@
             <file>./tests/Usage/Catalog/CatalogClientTests.php</file>
         </testsuite>
 
+        <testsuite name="usage-coordinate">
+            <file>./tests/USage/Coordinate/CoordinateUsageTests.php</file>
+            <file>./tests/Usage/Coordinate/CoordinateClientTests.php</file>
+        </testsuite>
+
         <testsuite name="usage-kv">
             <file>./tests/Usage/KV/KVCRUDTests.php</file>
         </testsuite>
