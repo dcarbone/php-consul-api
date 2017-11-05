@@ -39,23 +39,13 @@ class CoordinateConfigDefinitionTest extends AbstractDefinitionTestCases {
 
         $this->assertInstanceOf(CoordinateConfig::class, $config);
 
-        $this->assertEquals(CoordinateConfig::DefaultDimensionality,
-            $config->Dimensionality,
-            'Dimensionality default is incorrect');
-        $this->assertEquals(CoordinateConfig::DefaultVivaldiErrorMax,
-            $config->VivaldiErrorMax,
-            'VivaldiErrorMax default is incorrect');
+        $this->assertEquals(CoordinateConfig::DefaultDimensionality, $config->Dimensionality, 'Dimensionality default is incorrect');
+        $this->assertEquals(CoordinateConfig::DefaultVivaldiErrorMax, $config->VivaldiErrorMax, 'VivaldiErrorMax default is incorrect');
         $this->assertEquals(CoordinateConfig::DefaultVivaldiCE, $config->VivaldiCE, 'VivaldiCE default is incorrect');
         $this->assertEquals(CoordinateConfig::DefaultVivaldiCC, $config->VivaldiCC, 'VivaldiCC default is incorrect');
-        $this->assertEquals(CoordinateConfig::DefaultAdjustmentWindowSize,
-            $config->AdjustmentWindowSize,
-            'AdjustmentWindowSize default is incorrect');
+        $this->assertEquals(CoordinateConfig::DefaultAdjustmentWindowSize, $config->AdjustmentWindowSize, 'AdjustmentWindowSize default is incorrect');
         $this->assertEquals(CoordinateConfig::DefaultHeightMin, $config->HeightMin, 'HeightMin default is incorrect');
-        $this->assertEquals(CoordinateConfig::DefaultLatencyFilterSize,
-            $config->LatencyFilterSize,
-            'LatencyFilterSize default is incorrect');
-        $this->assertEquals(CoordinateConfig::DefaultGravityRho,
-            $config->GravityRho,
-            'GravityRho default is incorrect');
+        $this->assertEquals(CoordinateConfig::DefaultLatencyFilterSize, $config->LatencyFilterSize, 'LatencyFilterSize default is incorrect');
+        $this->assertEquals(CoordinateConfig::DefaultGravityRho, $config->GravityRho, 'GravityRho default is incorrect');
     }
 }
