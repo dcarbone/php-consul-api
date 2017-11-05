@@ -43,6 +43,9 @@ abstract class AbstractDefinitionTestCases extends TestCase {
     /** @var bool */
     protected $requiresSetters = false;
 
+    /** @var bool */
+    protected $variableFirstConstructorArgType = false;
+
     /**
      * @return string
      */
@@ -129,7 +132,7 @@ abstract class AbstractDefinitionTestCases extends TestCase {
                     ));
 
                 // First argument must always be an optional value of type array
-                if (0 === $i) {
+                if (!$this->variableFirstConstructorArgType && 0 === $i) {
                     // First argument must be array
                     $this->assertTrue($parameter->isArray(),
                         sprintf(

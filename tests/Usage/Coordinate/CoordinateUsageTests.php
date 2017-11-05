@@ -13,11 +13,25 @@ use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 class CoordinateUsageTests extends AbstractUsageTests {
     public function testCanConstructCoordinateWithDefaultConfig() {
         $config = CoordinateConfig::default();
-        $coord = new Coordinate();
+        $coord = new Coordinate($config);
+
+        $this->assertInternalType('array', $coord->Vec);
         $this->assertCount($config->Dimensionality, $coord->Vec);
-        $this->assertContainsOnly('double', $coord->Vec);
+        $this->assertContainsOnly('float', $coord->Vec);
         $this->assertEquals($config->VivaldiErrorMax, $coord->Error);
         $this->assertEquals($config->HeightMin, $coord->Height);
         $this->assertEquals(0.0, $coord->Adjustment);
+    }
+
+    public function testCanConstructCoordinateWithArrayOfValues() {
+        $coord = new Coordinate([
+            'Vec' => [0.1, 0.2],
+        ]);
+        $this->assertInstanceOf(Coordinate::class, $coord);
+        $this->assertInternalType('array', $coord->Vec);
+        $this->assertCount(2, $coord->Vec);
+        $this->assertContainsOnly('float', $coord->Vec);
+        $this->assertEquals($coord->Vec[0], 0.1);
+        $this->assertEquals($coord->Vec[1], 0.2);
     }
 }

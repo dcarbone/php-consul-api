@@ -25,6 +25,9 @@ use DCarbone\PHPConsulAPITests\Definition\AbstractDefinitionTestCases;
  * @package DCarbone\PHPConsulAPITests\Definition\Coordinate
  */
 class CoordinateDefinitionTest extends AbstractDefinitionTestCases {
+    /** @var bool */
+    protected $variableFirstConstructorArgType = true;
+
     /**
      * @return string
      */
