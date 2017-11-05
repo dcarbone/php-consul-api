@@ -118,11 +118,15 @@ class Coordinate extends AbstractModel {
         }
 
         $ret = clone $this;
+
         list($unit, $mag) = $this->unitVectorAt($this->Vec, $other->Vec);
-        $ret->Vec = $this->add($ret->Vec, $this->mul($unit, $mag));
+
+        $ret->Vec = $this->add($ret->Vec, $this->mul($unit, $force));
+
         if ($mag > static::ZeroThreshold) {
-            $ret->Height = max(($ret->Height + $other->Height) * ($force / $mag) + $ret->Height, $config->HeightMin);
+            $ret->Height = max(($ret->Height + $other->Height) * $force / $mag + $ret->Height, $config->HeightMin);
         }
+
         return $ret;
     }
 
@@ -140,7 +144,7 @@ class Coordinate extends AbstractModel {
         if ($adjustedDist > 0.0) {
             $dist = $adjustedDist;
         }
-        return (int)($dist * static::SecondsToNanoseconds);
+        return $dist * static::SecondsToNanoseconds;
     }
 
     /**
