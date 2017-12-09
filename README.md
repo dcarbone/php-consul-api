@@ -12,7 +12,7 @@ This library is loosely based upon the [official GO client](https://github.com/h
 |---|---|
 |0.3.x|0.6.4|
 |0.6.x|0.7-0.8|
-|0.7.x|0.9-1.0.0|
+|dev-master|0.9-1.0.0|
 
 Newer versions of the api lib will probably work in a limited capacity with older versions of Consul, but no guarantee 
 is made and backwards compatibility issues will not be addressed.
