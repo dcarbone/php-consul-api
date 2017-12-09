@@ -21,6 +21,9 @@
     "guzzlehttp/psr7": "~1"
   },
   "autoload": {
+    "files":[
+      "src/Coordinate/funcs.php"
+    ],
     "psr-4": {
       "DCarbone\\PHPConsulAPI\\": "src/"
     }
@@ -29,6 +32,9 @@
     "phpunit/phpunit": "^6.0"
   },
   "autoload-dev": {
+    "files":[
+      "src/Coordinate/funcs.php"
+    ],
     "psr-4": {
       "DCarbone\\PHPConsulAPI\\": "src/",
       "DCarbone\\PHPConsulAPITests\\": "tests/"

@@ -17,15 +17,13 @@
 */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\TimeDuration;
 
 /**
  * Class Coordinate
  * @package DCarbone\PHPConsulAPI\Coordinate
  */
 class Coordinate extends AbstractModel {
-    const SecondsToNanoseconds = 1.0e9;
-    const ZeroThreshold = 1.0e-6;
-
     /** @var int[] */
     public $Vec = [];
     /** @var float */
@@ -117,9 +115,9 @@ class Coordinate extends AbstractModel {
         }
 
         $ret = clone $this;
-        list($unit, $mag) = static::unitVectorAt($this->Vec, $other->Vec);
-        $ret->Vec = static::add($ret->Vec, static::mul($unit, $force));
-        if ($mag > static::ZeroThreshold) {
+        list($unit, $mag) = unitVectorAt($this->Vec, $other->Vec);
+        $ret->Vec = add($ret->Vec, mul($unit, $force));
+        if ($mag > ZeroThreshold) {
             $ret->Height = max(($ret->Height + $other->Height) * $force / $mag + $ret->Height, $config->HeightMin);
         }
 
@@ -128,9 +126,11 @@ class Coordinate extends AbstractModel {
 
     /**
      * @param \DCarbone\PHPConsulAPI\Coordinate\Coordinate $other
-     * @return int
+     * @return \DCarbone\PHPConsulAPI\TimeDuration
      */
-    public function distanceTo(Coordinate $other): int {
+    public function distanceTo(Coordinate $other): TimeDuration {
+        static $secondsToNanoseconds = 1.0e9;
+
         if (!$this->isCompatibleWith($other)) {
             throw new DimensionalityConflictException();
         }
@@ -140,7 +140,7 @@ class Coordinate extends AbstractModel {
         if ($adjustedDist > 0.0) {
             $dist = $adjustedDist;
         }
-        return $dist * static::SecondsToNanoseconds;
+        return new TimeDuration($dist * $secondsToNanoseconds);
     }
 
     /**
@@ -148,89 +148,6 @@ class Coordinate extends AbstractModel {
      * @return float
      */
     protected function rawDistanceTo(Coordinate $other): float {
-        return static::magnitude(static::diff($this->Vec, $other->Vec)) + $this->Height + $other->Height;
-    }
-
-    /**
-     * TODO: I am stupid, so this probably needs to be corrected.
-     *
-     * @param array $vec1
-     * @param array $vec2
-     * @return array(
-     * @type array
-     * @type float
-     * )
-     */
-    protected static function unitVectorAt(array $vec1, array $vec2): array {
-        $ret = static::diff($vec1, $vec2);
-
-        if (($mag = static::magnitude($ret)) && $mag > static::ZeroThreshold) {
-            return [static::mul($ret, 1.0 / $mag), (float)$mag];
-        }
-
-        foreach ($ret as $k => &$v) {
-            $v = lcg_value() - 0.5;
-        }
-
-        if (($mag = static::magnitude($ret)) && $mag > static::ZeroThreshold) {
-            return [static::mul($ret, 1.0 / $mag), 0.0];
-        }
-
-        $ret = array_fill(0, count($ret), 0.0);
-        $ret[0] = 1.0;
-        return $ret;
-    }
-
-
-
-    /**
-     * @param array $vec1
-     * @param array $vec2
-     * @return array
-     */
-    protected static function add(array $vec1, array $vec2): array {
-        $ret = [];
-        foreach ($vec1 as $k => $v) {
-            $ret[$k] = $v + $vec2[$k];
-        }
-        return $ret;
-    }
-
-    /**
-     * @param array $vec1
-     * @param array $vec2
-     * @return array
-     */
-    protected static function diff(array $vec1, array $vec2): array {
-        $ret = [];
-        foreach ($vec1 as $k => $v) {
-            $ret[$k] = $v - $vec2[$k];
-        }
-        return $ret;
-    }
-
-    /**
-     * @param array $vec
-     * @param float $factor
-     * @return array
-     */
-    protected static function mul(array $vec, float $factor): array {
-        $ret = [];
-        foreach ($vec as $k => $v) {
-            $ret[$k] = $v * $factor;
-        }
-        return $ret;
-    }
-
-    /**
-     * @param array $vec
-     * @return float
-     */
-    protected static function magnitude(array $vec): float {
-        $sum = 0.0;
-        foreach ($vec as $k => $v) {
-            $sum += ($v * $v);
-        }
-        return sqrt($sum);
+        return magnitude(diff($this->Vec, $other->Vec)) + $this->Height + $other->Height;
     }
 }

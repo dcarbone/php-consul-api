@@ -1,11 +1,13 @@
 <?php namespace DCarbone\PHPConsulAPITests\Usage\Coordinate;
 
-ini_set('precision', 17);
-
 use DCarbone\PHPConsulAPI\Coordinate\Coordinate;
 use DCarbone\PHPConsulAPI\Coordinate\CoordinateConfig;
 use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 use PHPUnit\Framework\AssertionFailedError;
+use function DCarbone\PHPConsulAPI\Coordinate\add;
+use function DCarbone\PHPConsulAPI\Coordinate\diff;
+use function DCarbone\PHPConsulAPI\Coordinate\magnitude;
+use function DCarbone\PHPConsulAPI\Coordinate\unitVectorAt;
 
 /**
  * These tests were largely pulled from https://github.com/hashicorp/serf/blob/master/coordinate/coordinate_test.go
@@ -15,6 +17,40 @@ use PHPUnit\Framework\AssertionFailedError;
  */
 class CoordinateUsageTests extends AbstractUsageTests {
     const ZeroThreshold = 1.0e-6;
+
+    public function testAdd() {
+        $vec1 = [1.0, -3.0, 3.0];
+        $vec2 = [-4.0, 5.0, 6.0];
+        $this->verifyEqualVectors(add($vec1, $vec2), [-3.0, 2.0, 9.0]);
+    }
+
+    public function testDiff() {
+        $vec1 = [1.0, -3.0, 3.0];
+        $vec2 = [-4.0, 5.0, 6.0];
+        $this->verifyEqualVectors(diff($vec1, $vec2), [5.0, -8.0, -3.0]);
+    }
+
+    public function testMagnitude() {
+        $zero = [0.0, 0.0, 0.0];
+        $this->verifyEqualFloats(magnitude($zero), 0.0);
+
+        $vec = [1.0, -2.0, 3.0];
+        $this->verifyEqualFloats(magnitude($vec), 3.7416573867739413);
+    }
+
+    public function testUnitVectorAt() {
+        $vec1 = [1.0, 2.0, 3.0];
+        $vec2 = [0.5, 0.6, 0.7];
+
+        list($u, $mag) = unitVectorAt($vec1, $vec2);
+        $this->verifyEqualVectors($u, [0.18257418583505536, 0.511207720338155, 0.8398412548412546]);
+        $this->verifyEqualFloats(magnitude($u), 1.0);
+        $this->verifyEqualFloats($mag, magnitude(diff($vec1, $vec2)));
+
+        list($u, $mag) = unitVectorAt($vec1, $vec1);
+        $this->verifyEqualFloats(magnitude($u), 1.0);
+        $this->verifyEqualFloats($mag, 0.0);
+    }
 
     public function testCanConstructCoordinateWithDefaultConfig() {
         $config = CoordinateConfig::default();
@@ -93,7 +129,7 @@ class CoordinateUsageTests extends AbstractUsageTests {
     }
 
     /**
-     * TODO: Have somebody who isn't terrible at math look at this...
+     * @expectedException \DCarbone\PHPConsulAPI\Coordinate\DimensionalityConflictException
      */
     public function testApplyForce() {
         $config = CoordinateConfig::default();
@@ -113,7 +149,7 @@ class CoordinateUsageTests extends AbstractUsageTests {
         $this->verifyEqualVectors($c->Vec, [-2.0, 0.0, -5.3]);
 
         $c = $origin->applyForce($config, 1.0, $origin);
-        $this->verifyEqualFloats($origin->distanceTo($c) / Coordinate::SecondsToNanoseconds, 1.0);
+        $this->verifyEqualFloats($origin->distanceTo($c)->Seconds(), 1.0);
 
         $config->HeightMin = 10.0e-6;
         $origin = new Coordinate($config);
@@ -125,17 +161,53 @@ class CoordinateUsageTests extends AbstractUsageTests {
         $this->verifyEqualVectors($c->Vec, [0.0, 0.0, 5.3]);
         $this->verifyEqualFloats($c->Height, $config->HeightMin);
 
-
+        $bad = clone $c;
+        $bad->Vec = array_fill(0, count($c->Vec) + 1, 0.0);
+        $c->applyForce($config, 1.0, $bad);
     }
 
     /**
-     * TODO: Is this a valid test...?
-     *
+     * @expectedException \DCarbone\PHPConsulAPI\Coordinate\DimensionalityConflictException
+     */
+    public function testDistanceTo() {
+        $config = CoordinateConfig::default();
+        $config->Dimensionality = 3;
+        $config->HeightMin = 0;
+
+        $c1 = new Coordinate($config);
+        $c2 = new Coordinate($config);
+        $c1->Vec = [-0.5, 1.3, 2.4];
+        $c2->Vec = [1.2, -2.3, 3.4];
+
+        $this->verifyEqualFloats($c1->distanceTo($c1)->Seconds(), 0.0);
+        $this->verifyEqualFloats($c1->distanceTo($c2)->Seconds(), $c2->distanceTo($c1)->Seconds());
+        $this->verifyEqualFloats($c1->distanceTo($c2)->Seconds(), 4.104875150354758);
+
+        $c1->Adjustment = -1.0e6;
+
+        $this->verifyEqualFloats($c1->distanceTo($c2)->Seconds(), 4.104875150354758);
+
+        $c1->Adjustment = 0.1;
+        $c2->Adjustment = 0.2;
+        $this->verifyEqualFloats($c1->distanceTo($c2)->Seconds(), 4.104875150354758 + 0.3);
+
+        $c1->Height = 0.7;
+        $c2->Height = 0.1;
+        $this->verifyEqualFloats($c1->distanceTo($c2)->Seconds(), 4.104875150354758 + 0.3 + 0.8);
+
+        $bad = clone $c1;
+        $bad->Vec = array_fill(0, count($c1->Vec) + 1, 0.0);
+        $c1->distanceTo($bad);
+    }
+
+    /**
      * @param float $f1
      * @param float $f2
      */
     protected function verifyEqualFloats(float $f1, float $f2): void {
-        $this->assertLessThanOrEqual(self::ZeroThreshold, abs($f1 - $f2), sprintf('equal assertion fail, %.6f != %.6f', $f1, $f2));
+        $this->assertLessThanOrEqual(self::ZeroThreshold,
+            abs($f1 - $f2),
+            sprintf('equal assertion fail, %.6f != %.6f', $f1, $f2));
     }
 
     /**
