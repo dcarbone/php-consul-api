@@ -16,6 +16,9 @@
    limitations under the License.
 */
 
+use DCarbone\PHPConsulAPI\Config;
+use DCarbone\PHPConsulAPI\Coordinate\CoordinateClient;
+use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 
 /**
@@ -26,5 +29,32 @@ class CoordinateClientTests extends AbstractUsageTests {
     /** @var bool */
     protected static $singlePerClass = true;
 
+    public function testCanConstructClient() {
+        $client = new CoordinateClient(new Config());
+        $this->assertInstanceOf(CoordinateClient::class, $client);
+    }
 
+    /**
+     * @depends testCanConstructClient
+     */
+    public function testDatacenters() {
+        $client = new CoordinateClient(new Config());
+
+        list($dcs, $err) = $client->datacenters();
+        $this->assertNull($err, sprintf('CoordinateClient::datacenters() - %s', $err));
+        $this->assertInternalType('array', $dcs);
+        $this->assertGreaterThan(0, count($dcs), 'Expected at least 1 datacenter');
+    }
+
+    /**
+     * @depends testCanConstructClient
+     */
+    public function testNodes() {
+        $client = new CoordinateClient(new Config());
+
+        list($nodes, $qm, $err) = $client->nodes();
+        $this->assertNull($err, sprintf('CoordinateClient::nodes() - %s', $err));
+        $this->assertInstanceOf(QueryMeta::class, $qm);
+        $this->assertInternalType('array', $nodes);
+    }
 }
