@@ -94,7 +94,6 @@ class Coordinate extends AbstractModel {
                 return false;
             }
         }
-
         return is_finite($this->Error) && is_finite($this->Adjustment) && is_finite($this->Height);
     }
 
@@ -118,11 +117,8 @@ class Coordinate extends AbstractModel {
         }
 
         $ret = clone $this;
-
-        list($unit, $mag) = $this->unitVectorAt($this->Vec, $other->Vec);
-
-        $ret->Vec = $this->add($ret->Vec, $this->mul($unit, $force));
-
+        list($unit, $mag) = static::unitVectorAt($this->Vec, $other->Vec);
+        $ret->Vec = static::add($ret->Vec, static::mul($unit, $force));
         if ($mag > static::ZeroThreshold) {
             $ret->Height = max(($ret->Height + $other->Height) * $force / $mag + $ret->Height, $config->HeightMin);
         }
@@ -148,62 +144,11 @@ class Coordinate extends AbstractModel {
     }
 
     /**
-     * @param array $vec1
-     * @param array $vec2
-     * @return array
-     */
-    protected function add(array $vec1, array $vec2): array {
-        $ret = [];
-        foreach ($vec1 as $k => $v) {
-            $ret[$k] = $v + $vec2[$k];
-        }
-        return $ret;
-    }
-
-    /**
-     * @param array $vec1
-     * @param array $vec2
-     * @return array
-     */
-    protected function diff(array $vec1, array $vec2): array {
-        $ret = [];
-        foreach ($vec1 as $k => $v) {
-            $ret[$k] = $v - $vec2[$k];
-        }
-        return $ret;
-    }
-
-    /**
-     * @param array $vec
-     * @param float $factor
-     * @return array
-     */
-    protected function mul(array $vec, float $factor): array {
-        $ret = [];
-        foreach ($vec as $k => $v) {
-            $ret[$k] = $v * $factor;
-        }
-        return $ret;
-    }
-
-    /**
-     * @param array $vec
-     * @return float
-     */
-    protected function magnitude(array $vec): float {
-        $sum = 0;
-        foreach ($vec as $k => $v) {
-            $sum += $v * $v;
-        }
-        return $sum;
-    }
-
-    /**
      * @param \DCarbone\PHPConsulAPI\Coordinate\Coordinate $other
      * @return float
      */
     protected function rawDistanceTo(Coordinate $other): float {
-        return $this->magnitude($this->diff($this->Vec, $other->Vec)) + $this->Height + $other->Height;
+        return static::magnitude(static::diff($this->Vec, $other->Vec)) + $this->Height + $other->Height;
     }
 
     /**
@@ -216,25 +161,76 @@ class Coordinate extends AbstractModel {
      * @type float
      * )
      */
-    protected function unitVectorAt(array $vec1, array $vec2): array {
-        $ret = $this->diff($vec1, $vec2);
+    protected static function unitVectorAt(array $vec1, array $vec2): array {
+        $ret = static::diff($vec1, $vec2);
 
-        $mag = $this->magnitude($ret);
-        if ($mag > static::ZeroThreshold) {
-            return [$this->mul($ret, 1.0 / $mag), (float)$mag];
+        if (($mag = static::magnitude($ret)) && $mag > static::ZeroThreshold) {
+            return [static::mul($ret, 1.0 / $mag), (float)$mag];
         }
 
         foreach ($ret as $k => &$v) {
-            $v = lcg_value(); // TODO: is this sufficient?
+            $v = lcg_value() - 0.5;
         }
 
-        $mag = $this->magnitude($ret);
-        if ($mag > static::ZeroThreshold) {
-            return [$this->mul($ret, 1.0 / $mag), 0.0];
+        if (($mag = static::magnitude($ret)) && $mag > static::ZeroThreshold) {
+            return [static::mul($ret, 1.0 / $mag), 0.0];
         }
 
         $ret = array_fill(0, count($ret), 0.0);
         $ret[0] = 1.0;
         return $ret;
+    }
+
+
+
+    /**
+     * @param array $vec1
+     * @param array $vec2
+     * @return array
+     */
+    protected static function add(array $vec1, array $vec2): array {
+        $ret = [];
+        foreach ($vec1 as $k => $v) {
+            $ret[$k] = $v + $vec2[$k];
+        }
+        return $ret;
+    }
+
+    /**
+     * @param array $vec1
+     * @param array $vec2
+     * @return array
+     */
+    protected static function diff(array $vec1, array $vec2): array {
+        $ret = [];
+        foreach ($vec1 as $k => $v) {
+            $ret[$k] = $v - $vec2[$k];
+        }
+        return $ret;
+    }
+
+    /**
+     * @param array $vec
+     * @param float $factor
+     * @return array
+     */
+    protected static function mul(array $vec, float $factor): array {
+        $ret = [];
+        foreach ($vec as $k => $v) {
+            $ret[$k] = $v * $factor;
+        }
+        return $ret;
+    }
+
+    /**
+     * @param array $vec
+     * @return float
+     */
+    protected static function magnitude(array $vec): float {
+        $sum = 0.0;
+        foreach ($vec as $k => $v) {
+            $sum += ($v * $v);
+        }
+        return sqrt($sum);
     }
 }

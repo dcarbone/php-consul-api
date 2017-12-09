@@ -96,34 +96,34 @@ class CoordinateUsageTests extends AbstractUsageTests {
      * TODO: Have somebody who isn't terrible at math look at this...
      */
     public function testApplyForce() {
-        $conf = CoordinateConfig::default();
-        $conf->Dimensionality = 3;
-        $conf->HeightMin = 0;
+        $config = CoordinateConfig::default();
+        $config->Dimensionality = 3;
+        $config->HeightMin = 0;
 
-        $origin = new Coordinate($conf);
+        $origin = new Coordinate($config);
 
-        $above = new Coordinate($conf);
+        $above = new Coordinate($config);
         $above->Vec = [0.0, 0.0, 2.9];
-        $c = $origin->applyForce($conf, 5.3, $above);
+        $c = $origin->applyForce($config, 5.3, $above);
         $this->verifyEqualVectors($c->Vec, [0.0, 0.0, -5.3]);
 
-        $right = new Coordinate($conf);
+        $right = new Coordinate($config);
         $right->Vec = [3.4, 0.0, -5.3];
-        $c = $c->applyForce($conf, 2.0, $right);
+        $c = $c->applyForce($config, 2.0, $right);
         $this->verifyEqualVectors($c->Vec, [-2.0, 0.0, -5.3]);
 
-        $c = $origin->applyForce($conf, 1.0, $origin);
+        $c = $origin->applyForce($config, 1.0, $origin);
         $this->verifyEqualFloats($origin->distanceTo($c) / Coordinate::SecondsToNanoseconds, 1.0);
 
-        $conf->HeightMin = 10.0e-6;
-        $origin = new Coordinate($conf);
-        $c = $origin->applyForce($conf, 5.3, $above);
+        $config->HeightMin = 10.0e-6;
+        $origin = new Coordinate($config);
+        $c = $origin->applyForce($config, 5.3, $above);
         $this->verifyEqualVectors($c->Vec, [0.0, 0.0, -5.3]);
-        $this->verifyEqualFloats($c->Height, $conf->HeightMin + 5.3 * $conf->HeightMin / 2.9);
+        $this->verifyEqualFloats($c->Height, $config->HeightMin + 5.3 * $config->HeightMin / 2.9);
 
-        $c = $origin->applyForce($conf, -5.3, $above);
+        $c = $origin->applyForce($config, -5.3, $above);
         $this->verifyEqualVectors($c->Vec, [0.0, 0.0, 5.3]);
-        $this->verifyEqualFloats($c->Height, $conf->HeightMin);
+        $this->verifyEqualFloats($c->Height, $config->HeightMin);
 
 
     }
@@ -135,11 +135,7 @@ class CoordinateUsageTests extends AbstractUsageTests {
      * @param float $f2
      */
     protected function verifyEqualFloats(float $f1, float $f2): void {
-        if (0.0 === $f1) {
-            $this->assertTrue(0.0 === $f2, 'Failed to assert (0.0 === '.$f2.')');
-        } else {
-            $this->assertGreaterThan(self::ZeroThreshold, abs($f1 - $f2));
-        }
+        $this->assertLessThanOrEqual(self::ZeroThreshold, abs($f1 - $f2), sprintf('equal assertion fail, %.6f != %.6f', $f1, $f2));
     }
 
     /**
