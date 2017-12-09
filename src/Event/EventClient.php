@@ -107,4 +107,27 @@ class EventClient extends AbstractClient {
 
         return [$events, $qm, null];
     }
+
+    /**
+     * @param string $uuid
+     * @return int
+     */
+    public function IDToIndex(string $uuid): int {
+        if (36 !== strlen($uuid)) {
+            throw new \InvalidArgumentException("{$uuid} is not a valid UUID");
+        }
+
+        $lower = substr($uuid, 0, 8) + substr($uuid, 9, 4) + substr($uuid, 14, 4);
+        $upper = substr($uuid, 19, 4) + substr($uuid, 24, 12);
+        $lowVal = (int)$lower;
+        if (0 >= $lowVal) {
+            throw new \InvalidArgumentException("{$lower} is not greater than 0");
+        }
+        $highVal = (int)$upper;
+        if (0 >= $highVal) {
+            throw new \InvalidArgumentException("{$upper} is not greater than 0");
+        }
+
+        return $lowVal ^ $highVal;
+    }
 }
