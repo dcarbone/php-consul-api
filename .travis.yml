@@ -20,5 +20,7 @@ install:
   - chmod +x $HOME/bin/consul
   - composer install --no-interaction --no-progress --no-suggest --optimize-autoloader
 
+before_script: phpenv config-add ./tests/php.ini
+
 script:
   - ./vendor/bin/phpunit -c phpunit.xml.dist
