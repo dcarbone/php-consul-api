@@ -14,14 +14,16 @@
     </php>
 
     <testsuites>
+        <testsuite name="timeduration">
+            <file>./tests/Usage/TimeDurationUsage.php</file>
+        </testsuite>
+
         <testsuite name="definition">
             <directory>./tests/Definition</directory>
         </testsuite>
-
         <testsuite name="usage-config">
             <file>./tests/Usage/ConfigUsageTest.php</file>
         </testsuite>
-
         <testsuite name="usage-request">
             <file>./tests/Usage/RequestUsageTest.php</file>
         </testsuite>
@@ -31,25 +33,19 @@
         <!--</testsuite>-->
 
         <testsuite name="usage-agent">
-            <file>./tests/Usage/Agent/AgentClientTests.php</file>
+            <directory>./tests/Usage/Agent</directory>
         </testsuite>
-
         <testsuite name="usage-catalog">
-            <file>./tests/Usage/Catalog/CatalogClientTests.php</file>
+            <directory>./tests/Usage/Catalog</directory>
         </testsuite>
-
         <testsuite name="usage-coordinate">
-            <file>./tests/USage/Coordinate/CoordinateUsageTests.php</file>
-            <file>./tests/Usage/Coordinate/CoordinateClientTests.php</file>
+            <directory>./tests/Usage/Coordinate</directory>
         </testsuite>
-
         <testsuite name="usage-kv">
-            <file>./tests/Usage/KV/KVCRUDTests.php</file>
+            <directory>./tests/Usage/KV</directory>
         </testsuite>
-
         <testsuite name="usage-operator">
-            <file>./tests/Usage/Operator/OperatorClientTests.php</file>
-            <file>./tests/Usage/Operator/OperatorAutopilotTests.php</file>
+            <directory>./tests/Usage/Operator</directory>
         </testsuite>
     </testsuites>
 

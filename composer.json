@@ -22,6 +22,7 @@
   },
   "autoload": {
     "files":[
+      "src/init.php",
       "src/Coordinate/funcs.php"
     ],
     "psr-4": {
@@ -33,6 +34,7 @@
   },
   "autoload-dev": {
     "files":[
+      "src/init.php",
       "src/Coordinate/funcs.php"
     ],
     "psr-4": {

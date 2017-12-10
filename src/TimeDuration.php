@@ -22,7 +22,7 @@
  * Class TimeDuration
  * @package DCarbone\PHPConsulAPI
  */
-class TimeDuration {
+class TimeDuration implements \JsonSerializable {
     const Nanosecond = 1;
     const Microsecond = 1000 * self::Nanosecond;
     const Millisecond = 1000 * self::Microsecond;
@@ -31,29 +31,29 @@ class TimeDuration {
     const Hour = 60 * self::Minute;
 
     /** @var int */
-    private $time = 0;
+    private $nanoseconds = 0;
 
     /**
      * TimeDuration constructor.
      * @param int $nanoseconds
      */
     public function __construct(int $nanoseconds = 0) {
-        $this->time = $nanoseconds;
+        $this->nanoseconds = $nanoseconds;
     }
 
     /**
      * @return int
      */
     public function Nanoseconds(): int {
-        return $this->time;
+        return $this->nanoseconds;
     }
 
     /**
      * @return float
      */
     public function Seconds(): float {
-        $sec = $this->time / self::Second;
-        $nsec = $this->time % self::Second;
+        $sec = $this->nanoseconds / self::Second;
+        $nsec = $this->nanoseconds % self::Second;
         return $sec + $nsec / PHPCONSULAPI_FLOAT_DIVISOR;
     }
 
@@ -61,8 +61,8 @@ class TimeDuration {
      * @return float
      */
     public function Minutes(): float {
-        $min = $this->time / self::Minute;
-        $nsec = $this->time % self::Minute;
+        $min = $this->nanoseconds / self::Minute;
+        $nsec = $this->nanoseconds % self::Minute;
         return $min + $nsec / (60 * PHPCONSULAPI_FLOAT_DIVISOR);
     }
 
@@ -70,18 +70,150 @@ class TimeDuration {
      * @return float
      */
     public function Hours(): float {
-        $hour = $this->time / self::Hour;
-        $nsec = $this->time % self::Hour;
+        $hour = $this->nanoseconds / self::Hour;
+        $nsec = $this->nanoseconds % self::Hour;
         return $hour + $nsec / (60 * 60 * PHPCONSULAPI_FLOAT_DIVISOR);
     }
-}
 
-(function() {
-    $p = (int)ini_get('precision');
-    if (0 === $p) {
-        $p = 17;
-        ini_set('precision', $p);
+    /**
+     * @return \DateTime
+     */
+    public function DateTime(): \DateTime {
+        return \DateTime::createFromFormat('U', $this->Seconds());
     }
-    define('PHPCONSULAPI_FLOAT_PRECISION', $p);
-    define('PHPCONSULAPI_FLOAT_DIVISOR', 1 * 10 ** $p);
-})->call(new TimeDuration());
+
+    /**
+     * @return int
+     */
+    public function jsonSerialize() {
+        return $this->nanoseconds;
+    }
+
+    /**
+     * @param string $s
+     * @return \DCarbone\PHPConsulAPI\TimeDuration
+     */
+    public static function ParseDuration(string $s): TimeDuration {
+        $orig = $s;
+        $d = 0;
+        $neg = false;
+
+        if ('' !== $s) {
+            $c = $s[0];
+            if ('-' === $c || '+' === $c) {
+                $neg = '-' === $c;
+                $s = substr($s, 1);
+            }
+        }
+        if ('0' === $s) {
+            return new TimeDuration(0);
+        }
+        if ('' === $s) {
+            throw new \InvalidArgumentException("Invalid duration: {$orig}");
+        }
+        while ('' !== $s) {
+            $v = $f = 0;
+            $scale = 1.0;
+            if (!('.' === $s[0] || 0 <= $s[0] && $s[0] <= 9)) {
+                throw new \InvalidArgumentException("Invalid duration: {$orig}");
+            }
+            $pl = strlen($s);
+
+        }
+    }
+
+    /**
+     * TODO: improve efficiency a bit...
+     *
+     * @return string
+     */
+    public function __toString() {
+        if (0 === $this->nanoseconds) {
+            return '0s';
+        }
+
+        $buff = '';
+
+        $u = $this->nanoseconds;
+        $neg = $this->nanoseconds < 0;
+        if ($neg) {
+            $u = -$u;
+        }
+
+        if ($u < self::Second) {
+            $prec = 0;
+            switch (true) {
+                case $u < self::Microsecond:
+                    $buff = 'ns';
+                    break;
+                case $u < self::Millisecond:
+                    $prec = 3;
+                    $buff = 'µs';
+                    break;
+                default:
+                    $prec = 6;
+                    $buff = 'ms';
+            }
+            $u = self::fmtFrac($buff, $u, $prec);
+            self::fmtInt($buff, $u);
+        } else {
+            $buff = "s{$buff}";
+            $u = self::fmtFrac($buff, $u, 9);
+
+            self::fmtInt($buff, $u % 60);
+
+            $u /= 60;
+
+            if ($u > 0) {
+                $buff = "m{$buff}";
+
+                self::fmtInt($buff, $u % 60);
+                $u /= 60;
+
+                if ($u > 0) {
+                    $buff = "h{$buff}";
+                    self::fmtInt($buff, $u);
+                }
+            }
+        }
+
+        if ($neg) {
+            $buff = "-{$buff}";
+        }
+
+        return trim($buff);
+    }
+
+    /**
+     * @param string $buff
+     * @param int $v
+     * @param int $prec
+     * @return int
+     */
+    protected static function fmtFrac(string &$buff, int $v, int $prec): int {
+        $print = false;
+        for ($i = 0; $i < $prec; $i++) {
+            $digit = $v % 10;
+            $print = $print || $digit != 0;
+            if ($print) {
+                $buff = "{$digit}{$buff}";
+            }
+            $v /= 10;
+        }
+        if ($print) {
+            $buff = ".{$buff}";
+        }
+        return $v;
+    }
+
+    /**
+     * @param string $buff
+     * @param int $v
+     */
+    protected static function fmtInt(string &$buff, int $v): void {
+        while ($v > 0) {
+            $buff = sprintf('%d%s', $v % 10, $buff);
+            $v = intval($v /= 10, 10);
+        }
+    }
+}
