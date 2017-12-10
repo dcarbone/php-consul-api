@@ -204,7 +204,7 @@ class CoordinateUsageTest extends AbstractUsageTests {
      * @param float $f1
      * @param float $f2
      */
-    protected function verifyEqualFloats(float $f1, float $f2): void {
+    protected function verifyEqualFloats(float $f1, float $f2) {
         $this->assertLessThanOrEqual(self::ZeroThreshold,
             abs($f1 - $f2),
             sprintf('equal assertion fail, %.6f != %.6f', $f1, $f2));
@@ -214,7 +214,7 @@ class CoordinateUsageTest extends AbstractUsageTests {
      * @param array $vec1
      * @param array $vec2
      */
-    protected function verifyEqualVectors(array $vec1, array $vec2): void {
+    protected function verifyEqualVectors(array $vec1, array $vec2) {
         $this->assertSameSize($vec1, $vec2);
         try {
             foreach ($vec1 as $k => $v) {
