@@ -21,10 +21,10 @@ use DCarbone\PHPConsulAPI\KV\KVClient;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class KVClientTests
+ * Class KVClientTest
  * @package DCarbone\PHPConsulAPITests\Usage\KV
  */
-class KVClientTests extends TestCase {
+class KVClientTest extends TestCase {
     public function testCanConstructClient() {
         $kv = new KVClient(new Config());
         $this->assertInstanceOf(KVClient::class, $kv);

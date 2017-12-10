@@ -23,10 +23,10 @@ use DCarbone\PHPConsulAPI\Operator\OperatorHealthReply;
 use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 
 /**
- * Class OperatorAutopilotTests
+ * Class OperatorAutopilotTest
  * @package DCarbone\PHPConsulAPITests\Usage\Operator
  */
-class OperatorAutopilotTests extends AbstractUsageTests {
+class OperatorAutopilotTest extends AbstractUsageTests {
     /** @var bool */
     protected static $singlePerClass = true;
 

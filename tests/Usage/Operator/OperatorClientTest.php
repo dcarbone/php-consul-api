@@ -21,10 +21,10 @@ use DCarbone\PHPConsulAPI\Operator\OperatorClient;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class OperatorClientTests
+ * Class OperatorClientTest
  * @package DCarbone\PHPConsulAPITests\Usage\Operator
  */
-class OperatorClientTests extends TestCase {
+class OperatorClientTest extends TestCase {
     public function testCanConstructOperatorClient() {
         $client = new OperatorClient(new Config());
         $this->assertInstanceOf(OperatorClient::class, $client);

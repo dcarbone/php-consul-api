@@ -12,10 +12,10 @@ use function DCarbone\PHPConsulAPI\Coordinate\unitVectorAt;
 /**
  * These tests were largely pulled from https://github.com/hashicorp/serf/blob/master/coordinate/coordinate_test.go
  *
- * Class CoordinateUsageTests
+ * Class CoordinateUsageTest
  * @package DCarbone\PHPConsulAPITests\Usage\Coordinate
  */
-class CoordinateUsageTests extends AbstractUsageTests {
+class CoordinateUsageTest extends AbstractUsageTests {
     const ZeroThreshold = 1.0e-6;
 
     public function testAdd() {

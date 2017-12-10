@@ -22,10 +22,10 @@ use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 
 /**
- * Class CoordinateClientTests
+ * Class CoordinateClientTest
  * @package DCarbone\PHPConsulAPITests\Usage\Coordinate
  */
-class CoordinateClientTests extends AbstractUsageTests {
+class CoordinateClientTest extends AbstractUsageTests {
     /** @var bool */
     protected static $singlePerClass = true;
 

@@ -27,6 +27,6 @@ use PHPUnit\Framework\TestCase;
 class ReadableDurationTest extends TestCase {
     public function testReadableJsonEncoding() {
         $rd = new ReadableDuration(time() * TimeDuration::Second);
-        $this->assertEquals((string)$rd, json_encode($rd));
+        $this->assertEquals('"'.(string)$rd.'"', json_encode($rd));
     }
 }

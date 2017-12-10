@@ -20,10 +20,10 @@ use DCarbone\PHPConsulAPI\TimeDuration;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class TimeDurationUsage
+ * Class TimeDurationTest
  * @package DCarbone\PHPConsulAPITests\Usage
  */
-class TimeDurationUsage extends TestCase {
+class TimeDurationTest extends TestCase {
     public function testCanConstructEmpty() {
         $d = new TimeDuration();
         $this->assertInstanceOf(TimeDuration::class, $d);

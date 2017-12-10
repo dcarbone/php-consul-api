@@ -29,10 +29,10 @@ use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 use PHPUnit\Framework\AssertionFailedError;
 
 /**
- * Class CatalogClientTests
+ * Class CatalogClientTest
  * @package DCarbone\PHPConsulAPITests\Usage\Catalog
  */
-class CatalogClientTests extends AbstractUsageTests {
+class CatalogClientTest extends AbstractUsageTests {
     const ServiceID1 = 'test1';
     const ServiceID2 = 'test2';
 

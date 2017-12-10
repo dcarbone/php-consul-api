@@ -23,10 +23,10 @@ use DCarbone\PHPConsulAPI\WriteMeta;
 use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 
 /**
- * Class ACLClientTests
+ * Class ACLClientTest
  * @package DCarbone\PHPConsulAPITests\Usage\ACL
  */
-class ACLClientTests extends AbstractUsageTests {
+class ACLClientTest extends AbstractUsageTests {
     /** @var bool */
     protected static $singlePerClass = true;
 

@@ -26,10 +26,10 @@ use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 use PHPUnit\Framework\AssertionFailedError;
 
 /**
- * Class AgentClientTests
+ * Class AgentClientTest
  * @package DCarbone\PHPConsulAPITests\Usage\Agent
  */
-class AgentClientTests extends AbstractUsageTests {
+class AgentClientTest extends AbstractUsageTests {
     /** @var bool */
     protected static $singlePerClass = true;
 

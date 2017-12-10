@@ -27,10 +27,10 @@ use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 use PHPUnit\Framework\AssertionFailedError;
 
 /**
- * Class KVCRUDTests
+ * Class KVCRUDTest
  * @package DCarbone\PHPConsulAPITests\Usage\KV
  */
-class KVCRUDTests extends AbstractUsageTests {
+class KVCRUDTest extends AbstractUsageTests {
     /** @var bool */
     protected $singlePerTest = true;
 
