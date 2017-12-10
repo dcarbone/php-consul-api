@@ -210,7 +210,7 @@ class TimeDuration implements \JsonSerializable {
      * @param string $buff
      * @param int $v
      */
-    protected static function fmtInt(string &$buff, int $v): void {
+    protected static function fmtInt(string &$buff, int $v) {
         while ($v > 0) {
             $buff = sprintf('%d%s', $v % 10, $buff);
             $v = intval($v /= 10, 10);
