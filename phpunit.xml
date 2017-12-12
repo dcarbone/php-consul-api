@@ -54,10 +54,4 @@
             <directory suffix=".php">./src</directory>
         </whitelist>
     </filter>
-
-    <logging>
-        <log type="coverage-html" target="./tmp/tests/html"/>
-        <log type="plain" target="./tmp/tests/php-consul-api-tests.log"/>
-    </logging>
-
 </phpunit>

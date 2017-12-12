@@ -1,4 +1,4 @@
-<?php namespace DCarbone\PHPConsulAPI;
+<?php namespace DCarbone\PHPConsulAPITests\Definition\Health;
 
 /*
    Copyright 2016-2017 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -16,12 +16,18 @@
    limitations under the License.
 */
 
+use DCarbone\PHPConsulAPI\Health\HealthCheckDefinition;
+use DCarbone\PHPConsulAPITests\Definition\AbstractDefinitionTestCases;
 
-$p = (int)ini_get('precision');
-if (0 === $p) {
-    $p = 17;
-    ini_set('precision', $p);
+/**
+ * Class HealthCheckDefinitionDefinitionTest
+ * @package DCarbone\PHPConsulAPITests\Definition\Health
+ */
+class HealthCheckDefinitionDefinitionTest extends AbstractDefinitionTestCases {
+    /**
+     * @return string
+     */
+    protected function getSubjectClassName() {
+        return HealthCheckDefinition::class;
+    }
 }
-define('PHPCONSULAPI_FLOAT_PRECISION', $p);
-define('PHPCONSULAPI_FLOAT_DIVISOR', 1 * 10 ** $p);
-unset($p);

@@ -359,9 +359,11 @@ abstract class AbstractDefinitionTestCases extends TestCase {
 
                 $implements = class_implements($fqsn);
 
-                // test for "slice" mimicking...
-                if (in_array('Iterator', $implements)) {
+                if (in_array('Iterator', $implements)) { // test for "slice" mimicking...
                     $failMessage = sprintf($failMessageTemplate, $fqsn);
+                    $this->assertInstanceOf($fqsn, $defaultValue, $failMessage);
+                } else if (in_array('DCarbone\\PHPConsulAPI\\ScalarType', $implements)) { // test for "typed scalars" mimicking...
+                    $failMessage = sprintf($failMessageTemplate, $defaultValue, $fqsn);
                     $this->assertInstanceOf($fqsn, $defaultValue, $failMessage);
                 } else {
                     $failMessage = sprintf($failMessageTemplate, 'null');

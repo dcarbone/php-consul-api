@@ -16,8 +16,8 @@
    limitations under the License.
 */
 
+use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\Operator\ReadableDuration;
-use DCarbone\PHPConsulAPI\TimeDuration;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -26,7 +26,7 @@ use PHPUnit\Framework\TestCase;
  */
 class ReadableDurationTest extends TestCase {
     public function testReadableJsonEncoding() {
-        $rd = new ReadableDuration(time() * TimeDuration::Second);
+        $rd = new ReadableDuration(time() * Time::Second);
         $this->assertEquals('"'.(string)$rd.'"', json_encode($rd));
     }
 }

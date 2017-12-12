@@ -16,19 +16,20 @@
    limitations under the License.
 */
 
-use DCarbone\PHPConsulAPI\TimeDuration;
+use DCarbone\Go\Time;
+use DCarbone\PHPConsulAPI\ScalarType;
 
 /**
  * Class ReadableDuration
  * @package DCarbone\PHPConsulAPI\Operator
  */
-class ReadableDuration extends TimeDuration implements \JsonSerializable {
+class ReadableDuration extends Time\Duration implements \JsonSerializable, ScalarType {
     /**
      * @param string $s
      * @return \DCarbone\PHPConsulAPI\Operator\ReadableDuration
      */
-    public static function fromString(string $s): ReadableDuration {
-
+    public static function fromDuration(string $s): ReadableDuration {
+        return new ReadableDuration(Time::ParseDuration($s)->Nanoseconds());
     }
 
     /**

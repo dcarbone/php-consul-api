@@ -50,13 +50,88 @@ class HealthCheckDefinition extends AbstractModel {
         if (null === $this->Interval) {
             $this->Interval = new ReadableDuration();
         } else if (is_string($this->Interval)) {
-
+            $this->Interval = ReadableDuration::fromDuration($this->Interval);
+        } else {
+            throw new \InvalidArgumentException(sprintf(
+                'Expected null or go time format string for Interval, saw %s',
+                gettype($this->Interval)
+            ));
         }
         if (null === $this->Timeout) {
             $this->Timeout = new ReadableDuration();
+        } else if (is_string($this->Timeout)) {
+            $this->Timeout = ReadableDuration::fromDuration($this->Timeout);
+        } else {
+            throw new \InvalidArgumentException(sprintf(
+                'Expected null or go time format string for Timeout, saw %s',
+                gettype($this->Timeout)
+            ));
         }
         if (null === $this->DeregisterCriticalServiceAfter) {
             $this->DeregisterCriticalServiceAfter = new ReadableDuration();
+        } else if (is_string($this->DeregisterCriticalServiceAfter)) {
+            $this->DeregisterCriticalServiceAfter = ReadableDuration::fromDuration($this->DeregisterCriticalServiceAfter);
+        } else {
+            throw new \InvalidArgumentException(sprintf(
+                'Expected null or go time format string for DeregisterCriticalServiceAfter, saw %s',
+                gettype($this->DeregisterCriticalServiceAfter)
+            ));
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getHTTP(): string {
+        return $this->HTTP;
+    }
+
+    /**
+     * @return array
+     */
+    public function getHeader(): array {
+        return $this->Header;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMethod(): string {
+        return $this->Method;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTLSSkipVerify(): bool {
+        return $this->TLSSkipVerify;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTCP(): string {
+        return $this->TCP;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Operator\ReadableDuration
+     */
+    public function getInterval(): ReadableDuration {
+        return $this->Interval;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Operator\ReadableDuration
+     */
+    public function getTimeout(): ReadableDuration {
+        return $this->Timeout;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Operator\ReadableDuration
+     */
+    public function getDeregisterCriticalServiceAfter(): ReadableDuration {
+        return $this->DeregisterCriticalServiceAfter;
     }
 }

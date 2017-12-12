@@ -16,8 +16,8 @@
    limitations under the License.
 */
 
+use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\TimeDuration;
 
 /**
  * Class Coordinate
@@ -126,9 +126,9 @@ class Coordinate extends AbstractModel {
 
     /**
      * @param \DCarbone\PHPConsulAPI\Coordinate\Coordinate $other
-     * @return \DCarbone\PHPConsulAPI\TimeDuration
+     * @return \DCarbone\Go\Time\Duration
      */
-    public function distanceTo(Coordinate $other): TimeDuration {
+    public function distanceTo(Coordinate $other): Time\Duration {
         static $secondsToNanoseconds = 1.0e9;
 
         if (!$this->isCompatibleWith($other)) {
@@ -140,7 +140,7 @@ class Coordinate extends AbstractModel {
         if ($adjustedDist > 0.0) {
             $dist = $adjustedDist;
         }
-        return new TimeDuration($dist * $secondsToNanoseconds);
+        return new Time\Duration($dist * $secondsToNanoseconds);
     }
 
     /**

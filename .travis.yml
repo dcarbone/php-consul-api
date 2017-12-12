@@ -23,4 +23,4 @@ install:
 before_script: phpenv config-add ./tests/php.ini
 
 script:
-  - ./vendor/bin/phpunit -c phpunit.xml.dist
+  - ./vendor/bin/phpunit -c phpunit.xml
