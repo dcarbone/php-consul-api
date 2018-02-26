@@ -1,26 +1,25 @@
 language: php
-
 dist: trusty
-
 sudo: false
 
 php:
   - 7.0
   - 7.1
+  - 7.2
 
 env:
   global:
     - CONSUL_HTTP_ADDR="127.0.0.1:8500"
 
+before_install: phpenv config-add ./tests/php.ini
+
 install:
   - mkdir -p $HOME/bin
   - export PATH="$HOME/bin:$PATH"
-  - wget "https://releases.hashicorp.com/consul/1.0.1/consul_1.0.1_linux_amd64.zip"
-  - unzip consul_1.0.1_linux_amd64.zip -d $HOME/bin
+  - wget "https://releases.hashicorp.com/consul/1.0.6/consul_1.0.6_linux_amd64.zip"
+  - unzip consul_1.0.6_linux_amd64.zip -d $HOME/bin
   - chmod +x $HOME/bin/consul
   - composer install --no-interaction --no-progress --no-suggest --optimize-autoloader
-
-before_script: phpenv config-add ./tests/php.ini
 
 script:
   - ./vendor/bin/phpunit -c phpunit.xml
