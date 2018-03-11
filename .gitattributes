@@ -2,6 +2,5 @@
 /.travis.yml export-ignore
 /.gitignore export-ignore
 /.gitattributes export-ignore
-/phpunit.local.xml export-ignore
-/phpunit.xml.dist export-ignore
+/phpunit.xml export-ignore
 /README.md export-ignore
