@@ -171,8 +171,7 @@ class CatalogClient extends AbstractClient {
 
         $services = [];
         foreach ($data as $v) {
-            $service = new CatalogService($v);
-            $services[] = $service;
+            $services[] = new CatalogService($v);
         }
 
         return [$services, $this->buildQueryMeta($duration, $response, $r->getUri()), null];
