@@ -154,7 +154,7 @@ class KVClient extends AbstractClient {
     public function keys(string $prefix = '', QueryOptions $options = null): array {
         $r = new Request('GET', sprintf('v1/kv/%s', $prefix), $this->config);
         $r->setQueryOptions($options);
-        $r->Params->set('keys', 'true');
+        $r->Params->set('keys', '');
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
