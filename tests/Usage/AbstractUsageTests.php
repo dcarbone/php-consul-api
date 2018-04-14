@@ -31,7 +31,7 @@ abstract class AbstractUsageTests extends TestCase {
 
     public static function setUpBeforeClass() {
         if (static::$singlePerClass) {
-            ConsulManager::startSingle();
+            ConsulManager::startSingleDev();
         }
     }
 
@@ -41,7 +41,7 @@ abstract class AbstractUsageTests extends TestCase {
 
     protected function setUp() {
         if ($this->singlePerTest) {
-            ConsulManager::startSingle();
+            ConsulManager::startSingleDev();
         }
     }
 

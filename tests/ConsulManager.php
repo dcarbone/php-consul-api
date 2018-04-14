@@ -22,23 +22,35 @@
  */
 abstract class ConsulManager {
 
-    const PID_FILE = __DIR__.'/../tmp/consul.pid';
+    const TMP_DIR = __DIR__.'/../tmp';
+    const DATA_DIR = self::TMP_DIR.'/consul-data';
 
     const START_SINGLE_CMD = __DIR__.'/run_consul.sh';
     const STOP_SINGLE_CMD = __DIR__.'/stop_consul.sh';
 
+    const PID_FILE = self::TMP_DIR.'/consul.pid';
+
     /**
-     * Start a single instance of a consul agent in -dev mode
+     * Start up single instance of Consul Agent with specified flags
+     *
+     * @param string $flags
      */
-    public static function startSingle() {
+    public static function startSingle(string $flags) {
         if (file_exists(self::PID_FILE)) {
             self::stopSingle();
         }
 
-        shell_exec(self::START_SINGLE_CMD);
+        shell_exec(self::START_SINGLE_CMD." {$flags}");
 
         // sleep to allow consul to setup
         sleep(3);
+    }
+
+    /**
+     * Start a single instance of a consul agent in "-dev" mode
+     */
+    public static function startSingleDev() {
+        self::startSingle('-dev');
     }
 
     /**

@@ -30,7 +30,7 @@ class ConfigUsageTest extends TestCase {
     const DEFAULT_SCHEME = 'http';
 
     protected function setUp() {
-        ConsulManager::startSingle();
+        ConsulManager::startSingleDev();
     }
 
     protected function tearDown() {
