@@ -37,16 +37,6 @@ class KVClient extends AbstractClient {
      * )
      */
     public function get(string $key, QueryOptions $options = null): array {
-        if (!is_string($key)) {
-            return [null,
-                null,
-                new Error(sprintf(
-                    '%s::get - Key expected to be string, %s seen.',
-                    get_class($this),
-                    gettype($key)
-                ))];
-        }
-
         $r = new Request('GET', sprintf('v1/kv/%s', $key), $this->config);
         $r->setQueryOptions($options);
 

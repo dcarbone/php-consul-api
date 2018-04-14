@@ -104,15 +104,6 @@ class SessionClient extends AbstractClient {
      * )
      */
     public function destroy(string $id, WriteOptions $options = null): array {
-        if (!is_string($id)) {
-            return [null,
-                new Error(sprintf(
-                    '%s::destroy - "$id" must be string, %s seen.',
-                    get_class($this),
-                    gettype($id)
-                ))];
-        }
-
         $r = new Request('PUT', sprintf('v1/session/destroy/%s', $id), $this->config);
         $r->setWriteOptions($options);
 
@@ -134,16 +125,6 @@ class SessionClient extends AbstractClient {
      * )
      */
     public function renew(string $id, WriteOptions $options = null): array {
-        if (!is_string($id)) {
-            return [null,
-                null,
-                new Error(sprintf(
-                    '%s::renew - "$id" must be string, %s seen.',
-                    get_class($this),
-                    gettype($id)
-                ))];
-        }
-
         $r = new Request('PUT', sprintf('v1/session/renew/%s', $id), $this->config);
         $r->setWriteOptions($options);
 
@@ -191,16 +172,6 @@ class SessionClient extends AbstractClient {
      * )
      */
     public function info(string $id, QueryOptions $options = null): array {
-        if (!is_string($id)) {
-            return [null,
-                null,
-                new Error(sprintf(
-                    '%s::info - "$id" must be string, %s seen.',
-                    get_class($this),
-                    gettype($id)
-                ))];
-        }
-
         $r = new Request('GET', sprintf('v1/session/info/%s', $id), $this->config);
         $r->setQueryOptions($options);
 
@@ -235,16 +206,6 @@ class SessionClient extends AbstractClient {
      * )
      */
     public function node(string $node, QueryOptions $options = null): array {
-        if (!is_string($node)) {
-            return [null,
-                null,
-                new Error(sprintf(
-                    '%s::node - "$node" must be string, %s seen.',
-                    get_class($this),
-                    gettype($node)
-                ))];
-        }
-
         $r = new Request('GET', sprintf('v1/session/node/%s', $node), $this->config);
         $r->setQueryOptions($options);
 

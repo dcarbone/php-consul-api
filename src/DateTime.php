@@ -35,13 +35,6 @@ class DateTime extends \DateTime implements \JsonSerializable {
      * @param string $format
      */
     public static function setDefaultFormat(string $format) {
-        if (!is_string($format)) {
-            throw new \InvalidArgumentException(sprintf(
-                'PHPConsulAPI - DateTime::setDefaultFormat expects argument 1 to be string, %s seen.',
-                gettype($format)
-            ));
-        }
-
         if (false === @date($format)) {
             throw new \InvalidArgumentException(sprintf(
                 'PHPConsulAPI - DateTime::setDefaultFormat specified invalid format "%s".  Please see http://php.net/manual/en/function.date.php.',

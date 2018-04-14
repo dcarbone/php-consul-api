@@ -314,10 +314,7 @@ class AgentClient extends AbstractClient {
                 $status = Consul::HealthCritical;
                 break;
             default:
-                return new Error(sprintf(
-                    '%s is not a valid status.  Allowed: ["pass", "warn", "fail"]',
-                    is_string($status) ? $status : gettype($status)
-                ));
+                return new Error("\"{$status}\" is not a valid status.  Allowed: [\"pass\", \"warn\", \"fail\"]");
         }
 
         $r = new Request('PUT',
