@@ -34,9 +34,21 @@ class ACLClientTest extends AbstractUsageTests {
 
     /**
      * @return string
+     * @throws \Exception
      */
     public function testCanBootstrapACL() {
-        ConsulManager::startSingleDev('-bind="127.0.0.1"');
+        $mt = uniqid();
+        ConsulManager::startSingle([
+            'server',
+            'bind'     => '127.0.0.1',
+            'data-dir' => ConsulManager::DATA_DIR,
+            'hcl'      => [
+                'acl_datacenter = "dc1"',
+                "acl_master_token = \"{$mt}\"",
+                'acl_default_policy = "allow"',
+
+            ],
+        ]);
 
         $client = new ACLClient(new Config());
 

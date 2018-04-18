@@ -28,9 +28,9 @@
             <file>./tests/Usage/RequestUsageTest.php</file>
         </testsuite>
 
-        <!--<testsuite name="usage-acl">-->
-            <!--<directory>./tests/Usage/ACL</directory>-->
-        <!--</testsuite>-->
+        <testsuite name="usage-acl">
+            <directory>./tests/Usage/ACL</directory>
+        </testsuite>
 
         <testsuite name="usage-agent">
             <directory>./tests/Usage/Agent</directory>

@@ -33,14 +33,27 @@ abstract class ConsulManager {
     /**
      * Start up single instance of Consul Agent with specified flags
      *
-     * @param string $flags
+     * @param string|array $flags
      */
-    public static function startSingle(string $flags) {
+    public static function startSingle($flags) {
+        if (is_array($flags)) {
+            $flags = self::compileFlags($flags);
+        }
+        if (!is_string($flags)) {
+            throw new \InvalidArgumentException(sprintf(
+                '$flags must be string or array of flags, %s seen.',
+                gettype($flags)
+            ));
+        }
         if (file_exists(self::PID_FILE)) {
             self::stopSingle();
         }
 
-        shell_exec(self::START_SINGLE_CMD." {$flags}");
+        if (false === strpos($flags, 'log-level')) {
+            $flags .= ' -log-level=debug';
+        }
+
+        shell_exec(self::START_SINGLE_CMD.' '.addcslashes($flags, '"\\'));
 
         // sleep to allow consul to setup
         sleep(3);
@@ -64,5 +77,85 @@ abstract class ConsulManager {
             }
             sleep(1);
         }
+    }
+
+    /**
+     * @param string $part
+     * @return string
+     */
+    protected static function trimPart(string $part): string {
+        return trim($part, " \t\n\r\0\x0B=");
+    }
+
+    /**
+     * @param string|int                       $k
+     * @param string|int|bool|float|null|array $v
+     * @return string
+     */
+    protected static function compileFlag($k, $v): string {
+        $f = '';
+        // a few type -> string conversions
+        switch (gettype($v)) {
+            case 'string':
+            case 'integer':
+            case 'double':
+                $v = (string)$v;
+                break;
+            case 'boolean':
+                $v = $v ? 'true' : 'false';
+                break;
+            case 'NULL':
+                $v = '';
+                break;
+
+            case 'array':
+                foreach ($v as $vv) {
+                    $f .= ' '.self::compileFlag($k, $vv);
+                }
+                return $f;
+
+            default:
+                throw new \InvalidArgumentException(sprintf(
+                    '%s::compileFlag - Don\'t know what to do with value of type %s',
+                    get_called_class(),
+                    gettype($v)
+                ));
+        }
+
+        // should have a string at this point.
+        $v = self::trimPart($v);
+
+        // if key is string, allow some flexibility...
+        if (is_string($k)) {
+            $k = self::trimPart($k);
+            if ('' === $k) {
+                if ('' === $v) {
+                    // why are you doing this...
+                    return '';
+                }
+                $f .= " {$v}";
+            } else if ('' === $v) {
+                $f .= ' -'.ltrim($k, '-');
+            } else {
+                $f .= sprintf(' -%s=%s', ltrim($k, '-'), escapeshellarg($v));
+            }
+        } else {
+            // if an int key is seen, assume the value is the entire flag
+            $f .= ' -'.ltrim($v, '-');
+        }
+
+        return $f;
+    }
+
+    /**
+     * @param array $flags
+     * @return string
+     */
+    protected static function compileFlags(array $flags): string {
+        $f = '';
+        foreach ($flags as $k => $v) {
+            $f .= self::compileFlag($k, $v);
+        }
+        return $f;
     }
 }
