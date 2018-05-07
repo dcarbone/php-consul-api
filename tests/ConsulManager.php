@@ -53,7 +53,7 @@ abstract class ConsulManager {
             $flags .= ' -log-level=debug';
         }
 
-        shell_exec(self::START_SINGLE_CMD.' '.addcslashes($flags, '"\\'));
+        shell_exec(self::START_SINGLE_CMD.' '.$flags);
 
         // sleep to allow consul to setup
         sleep(3);
@@ -133,15 +133,15 @@ abstract class ConsulManager {
                     // why are you doing this...
                     return '';
                 }
-                $f .= " {$v}";
+                $f .= sprintf(' %s', escapeshellarg($v));
             } else if ('' === $v) {
-                $f .= ' -'.ltrim($k, '-');
+                $f .= ' -'.escapeshellarg(ltrim($k, '-'));
             } else {
                 $f .= sprintf(' -%s=%s', ltrim($k, '-'), escapeshellarg($v));
             }
         } else {
             // if an int key is seen, assume the value is the entire flag
-            $f .= ' -'.ltrim($v, '-');
+            $f .= ' -'.escapeshellarg(ltrim($v, '-'));
         }
 
         return $f;
