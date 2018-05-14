@@ -14,10 +14,6 @@
     </php>
 
     <testsuites>
-        <testsuite name="timeduration">
-            <file>./tests/Usage/TimeDurationUsage.php</file>
-        </testsuite>
-
         <testsuite name="definition">
             <directory>./tests/Definition</directory>
         </testsuite>
