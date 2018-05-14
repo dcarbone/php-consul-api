@@ -28,7 +28,7 @@ use DCarbone\PHPConsulAPI\WriteOptions;
  */
 class KVClient extends AbstractClient {
     /**
-     * @param string $key Name of key to retrieve value for
+     * @param string                              $key Name of key to retrieve value for
      * @param \DCarbone\PHPConsulAPI\QueryOptions $options
      * @return array(
      * @type KVPair|null kv object or null on error
@@ -78,7 +78,7 @@ class KVClient extends AbstractClient {
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
+     * @param \DCarbone\PHPConsulAPI\KV\KVPair    $p
      * @param \DCarbone\PHPConsulAPI\WriteOptions $options
      * @return array(
      * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
@@ -101,7 +101,7 @@ class KVClient extends AbstractClient {
     }
 
     /**
-     * @param string $key
+     * @param string                                   $key
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
      * @return array(
      * @type \DCarbone\PHPConsulAPI\WriteMeta metadata about write
@@ -121,7 +121,7 @@ class KVClient extends AbstractClient {
     }
 
     /**
-     * @param string $prefix
+     * @param string                                   $prefix
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      * @return array(
      * @type KVPair[]|null array of KVPair objects under specified prefix
@@ -171,7 +171,7 @@ class KVClient extends AbstractClient {
     }
 
     /**
-     * @param string $prefix Prefix to search for.  Null returns all keys.
+     * @param string                              $prefix Prefix to search for.  Null returns all keys.
      * @param \DCarbone\PHPConsulAPI\QueryOptions $options
      * @return array(
      * @type string[]|null list of keys
@@ -211,9 +211,10 @@ class KVClient extends AbstractClient {
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
+     * @param \DCarbone\PHPConsulAPI\KV\KVPair    $p
      * @param \DCarbone\PHPConsulAPI\WriteOptions $options
      * @return array(
+     * @type bool whether the operation succeeded or not
      * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
@@ -225,17 +226,16 @@ class KVClient extends AbstractClient {
         if (0 !== $p->Flags) {
             $r->Params->set('flags', (string)$p->Flags);
         }
-
-        list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
+        /** @var \Psr\Http\Message\ResponseInterface $response */
+        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, $err];
         }
-
-        return [$this->buildWriteMeta($duration), null];
+        return [0 === strpos($response->getBody()->getContents(), 'true'), $this->buildWriteMeta($duration), null];
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
+     * @param \DCarbone\PHPConsulAPI\KV\KVPair    $p
      * @param \DCarbone\PHPConsulAPI\WriteOptions $options
      * @return array(
      * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
@@ -259,7 +259,28 @@ class KVClient extends AbstractClient {
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
+     * @param \DCarbone\PHPConsulAPI\KV\KVPair         $p
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
+     * @return array(
+     * @type bool
+     * @type \DCarbone\PHPConsulAPI\WriteMeta
+     * @type \DCarbone\PHPConsulAPI\Error|null
+     * )
+     */
+    public function deleteCAS(KVPair $p, WriteOptions $options = null) {
+        $r = new Request('DELETE', sprintf('v1/kv/%s', ltrim($p->Key, "/")), $this->config);
+        $r->setWriteOptions($options);
+        $r->Params['cas'] = (string)$p->ModifyIndex;
+        /** @var \Psr\Http\Message\ResponseInterface $response */
+        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        if (null !== $err) {
+            return [null, null, $err];
+        }
+        return [0 === strpos($response->getBody()->getContents(), 'true'), $this->buildWriteMeta($duration), null];
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\KV\KVPair    $p
      * @param \DCarbone\PHPConsulAPI\WriteOptions $options
      * @return array(
      * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
@@ -283,7 +304,7 @@ class KVClient extends AbstractClient {
     }
 
     /**
-     * @param null|string $prefix
+     * @param null|string                         $prefix
      * @param \DCarbone\PHPConsulAPI\QueryOptions $options
      * @return array(
      * @type KVPair[]|KVTree[]|null array of trees, values, or null on error

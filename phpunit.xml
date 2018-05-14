@@ -4,13 +4,8 @@
         xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/6.1/phpunit.xsd"
         bootstrap="./vendor/autoload.php"
         colors="true"
-        convertErrorsToExceptions="true"
-        convertNoticesToExceptions="true"
-        convertWarningsToExceptions="true"
         verbose="true"
         stopOnFailure="true"
-        processIsolation="false"
-        backupGlobals="false"
 >
 
     <php>
@@ -22,21 +17,18 @@
         <testsuite name="definition">
             <directory>./tests/Definition</directory>
         </testsuite>
-
         <testsuite name="usage-config">
             <file>./tests/Usage/ConfigUsageTest.php</file>
         </testsuite>
-
         <testsuite name="usage-request">
             <file>./tests/Usage/RequestUsageTest.php</file>
         </testsuite>
 
         <testsuite name="usage-agent">
-            <file>./tests/Usage/Agent/AgentClientUsageTests.php</file>
+            <directory>./tests/Usage/Agent</directory>
         </testsuite>
-
         <testsuite name="usage-kv">
-            <file>./tests/usage/KV/KVClientCRUDTests.php</file>
+            <directory>./tests/Usage/KV</directory>
         </testsuite>
     </testsuites>
 
@@ -45,10 +37,5 @@
             <directory suffix=".php">./src</directory>
         </whitelist>
     </filter>
-
-    <logging>
-        <log type="coverage-html" target="./tmp/tests/html"/>
-        <log type="plain" target="./tmp/tests/php-consul-api-tests.log"/>
-    </logging>
 
 </phpunit>
