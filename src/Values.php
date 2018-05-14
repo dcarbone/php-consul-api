@@ -20,7 +20,7 @@
  * Class Values
  * @package DCarbone\PHPConsulAPI
  */
-class Values implements \JsonSerializable, \Countable {
+class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable {
     /** @var array */
     private $values = [];
 
@@ -87,6 +87,66 @@ class Values implements \JsonSerializable, \Countable {
      */
     public function toPsr7Array(): array {
         return $this->values;
+    }
+
+    /**
+     * @return string|array
+     */
+    public function current() {
+        return current($this->values);
+    }
+
+    public function next() {
+        next($this->values);
+    }
+
+    /**
+     * @return string
+     */
+    public function key() {
+        return key($this->values);
+    }
+
+    /**
+     * @return bool
+     */
+    public function valid() {
+        return null !== key($this->values);
+    }
+
+    public function rewind() {
+        reset($this->values);
+    }
+
+    /**
+     * @param mixed $offset
+     * @return bool
+     */
+    public function offsetExists($offset) {
+        return isset($this->values[$offset]);
+    }
+
+    /**
+     * @param string $offset
+     * @return string
+     */
+    public function offsetGet($offset) {
+        return $this->get($offset);
+    }
+
+    /**
+     * @param string $offset
+     * @param string $value
+     */
+    public function offsetSet($offset, $value) {
+        $this->set($offset, $value);
+    }
+
+    /**
+     * @param string $offset
+     */
+    public function offsetUnset($offset) {
+        $this->delete($offset);
     }
 
     /**
