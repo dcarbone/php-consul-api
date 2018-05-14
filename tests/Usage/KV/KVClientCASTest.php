@@ -54,6 +54,7 @@ class KVClientCASTest extends AbstractUsageTests {
         $this->assertNull($err, sprintf('Error retrieving updated key: %s', $err));
         $this->assertInstanceOf(KVPair::class, $kv);
         $this->assertNotEquals($omi, $kv->ModifyIndex, 'Expected ModifyIndex to be different');
+        $this->assertEquals(self::KVUpdatedValue, $kv->Value, 'KV Value was not actually updated');
 
 
         list($ok, $_, $err) = $client->deleteCAS($kv);

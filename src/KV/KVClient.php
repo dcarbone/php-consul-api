@@ -56,7 +56,6 @@ class KVClient extends AbstractClient {
             }
 
             $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
             return [new KVPair($data[0], true), $qm, null];
         }
 
@@ -180,7 +179,7 @@ class KVClient extends AbstractClient {
      * )
      */
     public function cas(KVPair $p, WriteOptions $options = null): array {
-        $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config);
+        $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
         $r->setWriteOptions($options);
         $r->Params->set('cas', (string)$p->ModifyIndex);
         if (0 !== $p->Flags) {
