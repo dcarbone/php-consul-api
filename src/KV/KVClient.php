@@ -220,7 +220,7 @@ class KVClient extends AbstractClient {
      * )
      */
     public function cas(KVPair $p, WriteOptions $options = null) {
-        $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config);
+        $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
         $r->setWriteOptions($options);
         $r->Params->set('cas', (string)$p->ModifyIndex);
         if (0 !== $p->Flags) {
