@@ -243,7 +243,7 @@ class KVClient extends AbstractClient {
      * )
      */
     public function acquire(KVPair $p, WriteOptions $options = null) {
-        $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config);
+        $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
         $r->setWriteOptions($options);
         $r->Params->set('acquire', $p->Session);
         if (0 !== $p->Flags) {
@@ -288,7 +288,7 @@ class KVClient extends AbstractClient {
      * )
      */
     public function release(KVPair $p, WriteOptions $options = null) {
-        $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config);
+        $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
         $r->setWriteOptions($options);
         $r->Params->set('release', $p->Session);
         if (0 !== $p->Flags) {

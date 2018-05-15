@@ -48,6 +48,9 @@ class Consul {
     const HealthCritical = 'critical';
     const HealthMaint = 'maintenance';
 
+    const SessionBehaviorRelease = 'release';
+    const SessionBehaviorDelete = 'delete';
+
     /** @var \DCarbone\PHPConsulAPI\ACL\ACLClient */
     public $ACL;
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentClient */
