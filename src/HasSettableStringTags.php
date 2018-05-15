@@ -22,20 +22,20 @@
  */
 trait HasSettableStringTags {
     /**
-     * @param string[] $Tags
+     * @param string[] $tags
      * @return $this
      */
-    public function setTags(array $Tags) {
-        $this->Tags = $Tags;
+    public function setTags(array $tags) {
+        $this->Tags = $tags;
         return $this;
     }
 
     /**
-     * @param string $Tag
+     * @param string $tag
      * @return $this
      */
-    public function addTag(string $Tag) {
-        $this->Tags[] = $Tag;
+    public function addTag(string $tag) {
+        $this->Tags[] = $tag;
         return $this;
     }
 }

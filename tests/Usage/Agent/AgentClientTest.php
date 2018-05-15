@@ -47,7 +47,7 @@ class AgentClientTest extends AbstractUsageTests {
     public function testCanGetSelf() {
         $client = new AgentClient(new Config());
 
-        $self = $client->self();
+        $self = $client->Self();
         $this->assertInternalType(
             'array',
             $self,
@@ -63,7 +63,7 @@ class AgentClientTest extends AbstractUsageTests {
      */
     public function testCanReloadSelf() {
         $client = new AgentClient(new Config());
-        $err = $client->reload();
+        $err = $client->Reload();
         $this->assertNull($err, sprintf('AgentClient::reload returned error: %s', $err));
     }
 
@@ -73,7 +73,7 @@ class AgentClientTest extends AbstractUsageTests {
     public function testCanGetNodeName() {
         $client = new AgentClient(new Config());
 
-        list($nodeName, $err) = $client->nodeName();
+        list($nodeName, $err) = $client->NodeName();
         $this->assertNull($err, sprintf('Unable to get agent node name: %s', $err));
         $this->assertInternalType('string',
             $nodeName,
@@ -87,7 +87,7 @@ class AgentClientTest extends AbstractUsageTests {
     public function testCanGeMembers() {
         $client = new AgentClient(new Config());
 
-        list($members, $err) = $client->members();
+        list($members, $err) = $client->Members();
         $this->assertNull($err, sprintf('AgentClient::members returned error: %s', $err));
         $this->assertInternalType('array', $members);
         $this->assertContainsOnlyInstancesOf(AgentMember::class, $members);
@@ -106,7 +106,7 @@ class AgentClientTest extends AbstractUsageTests {
             ->setAddress('127.0.0.1')
             ->setPort(1234);
 
-        $err = $client->serviceRegister($svc);
+        $err = $client->ServiceRegister($svc);
         $this->assertNull($err, sprintf('AgentClient::serviceRegister returned error: %s', $err));
     }
 
@@ -125,7 +125,7 @@ class AgentClientTest extends AbstractUsageTests {
                 'TTL' => '5s',
             ]));
 
-        $err = $client->serviceRegister($svc);
+        $err = $client->ServiceRegister($svc);
         $this->assertNull($err, sprintf('AgentClient::serviceRegister returned error: %s', $err));
     }
 
@@ -137,7 +137,7 @@ class AgentClientTest extends AbstractUsageTests {
     public function testCanGetServiceList() {
         $client = new AgentClient(new Config());
 
-        list($svcs, $err) = $client->services();
+        list($svcs, $err) = $client->Services();
 
         try {
             $this->assertNull($err, sprintf('AgentClient::services return error: %s', $err));
@@ -162,10 +162,10 @@ class AgentClientTest extends AbstractUsageTests {
     public function testCanDeregisterService() {
         $client = new AgentClient(new Config());
 
-        $err = $client->serviceDeregister(self::Service1Name);
+        $err = $client->ServiceDeregister(self::Service1Name);
         $this->assertNull($err, sprintf('AgentClient::serviceDeregister returned error: %s', $err));
 
-        list($svcs, $err) = $client->services();
+        list($svcs, $err) = $client->Services();
 
         try {
             $this->assertNull($err, sprintf('AgentClient::services returned error: %s', $err));
@@ -197,12 +197,12 @@ class AgentClientTest extends AbstractUsageTests {
                 'Interval' => '30s',
             ]));
 
-        $err = $client->serviceRegister($svc);
+        $err = $client->ServiceRegister($svc);
         $this->assertNull($err, sprintf('Error registering service with check: %s', $err));
 
         sleep(2);
 
-        list($svcs, $err) = $client->services();
+        list($svcs, $err) = $client->Services();
 
         try {
             $this->assertNull($err, sprintf('AgentClient::services returned error: %s', $err));
@@ -217,7 +217,7 @@ class AgentClientTest extends AbstractUsageTests {
             throw $e;
         }
 
-        $err = $client->serviceDeregister(self::Service1Name);
+        $err = $client->ServiceDeregister(self::Service1Name);
         $this->assertNull($err, sprintf('Error deregistering service: %s', $err));
     }
 }

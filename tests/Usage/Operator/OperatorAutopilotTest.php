@@ -33,7 +33,7 @@ class OperatorAutopilotTest extends AbstractUsageTests {
     public function testCanGetAutopilotConfiguration() {
         $client = new OperatorClient(new Config());
 
-        list($conf, $err) = $client->autopilotGetConfiguration();
+        list($conf, $err) = $client->AutopilotGetConfiguration();
         $this->assertNull($err, sprintf('Unable to list autopilot configuration: %s', $err));
         $this->assertInstanceOf(AutopilotConfiguration::class,
             $conf,
@@ -48,12 +48,12 @@ class OperatorAutopilotTest extends AbstractUsageTests {
 
         /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration $current */
         /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration $updated */
-        list($current) = $client->autopilotGetConfiguration();
+        list($current) = $client->AutopilotGetConfiguration();
         $new = clone $current;
         $new->CleanupDeadServers = !$current->CleanupDeadServers;
-        $err = $client->autopilotSetConfiguration($new);
+        $err = $client->AutopilotSetConfiguration($new);
         $this->assertNull($err, 'Unable to update Autopilot configuration: '.$err);
-        list($updated, $err) = $client->autopilotGetConfiguration();
+        list($updated, $err) = $client->AutopilotGetConfiguration();
         $this->assertNull($err, 'Unable to get updated Autopilot configuration: '.$err);
         $this->assertInstanceOf(AutopilotConfiguration::class, $updated);
         if ($current->CleanupDeadServers) {
@@ -70,13 +70,13 @@ class OperatorAutopilotTest extends AbstractUsageTests {
         $client = new OperatorClient(new Config());
         /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration $current */
         /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration $updated */
-        list($current) = $client->autopilotGetConfiguration();
+        list($current) = $client->AutopilotGetConfiguration();
         $new = clone $current;
         $new->CleanupDeadServers = !$current->CleanupDeadServers;
-        list($ok, $err) = $client->autopilotCASConfiguration($new);
+        list($ok, $err) = $client->AutopilotCASConfiguration($new);
         $this->assertNull($err, 'Unable to update Autopilot configuration: '.$err);
         $this->assertTrue($ok);
-        list($updated, $err) = $client->autopilotGetConfiguration();
+        list($updated, $err) = $client->AutopilotGetConfiguration();
         $this->assertNull($err, 'Unable to get updated Autopilot configuration: '.$err);
         $this->assertInstanceOf(AutopilotConfiguration::class, $updated);
         if ($current->CleanupDeadServers) {
@@ -90,7 +90,7 @@ class OperatorAutopilotTest extends AbstractUsageTests {
         $client = new OperatorClient(new Config());
 
         /** @var \DCarbone\PHPConsulAPI\Operator\OperatorHealthReply $healths */
-        list($healths, $err) = $client->autopilotServerHealth();
+        list($healths, $err) = $client->AutopilotServerHealth();
         $this->assertNull($err, 'Unable to get Autopilot server health: %s'.$err);
         $this->assertInstanceOf(OperatorHealthReply::class, $healths);
         $this->assertCount(1, $healths->Servers);

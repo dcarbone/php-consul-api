@@ -42,11 +42,11 @@ class RaftServer extends AbstractModel {
     }
 
     /**
-     * @param string $ID
+     * @param string $id
      * @return \DCarbone\PHPConsulAPI\Operator\RaftServer
      */
-    public function setID(string $ID): RaftServer {
-        $this->ID = $ID;
+    public function setID(string $id): RaftServer {
+        $this->ID = $id;
         return $this;
     }
 
@@ -58,11 +58,11 @@ class RaftServer extends AbstractModel {
     }
 
     /**
-     * @param string $Node
+     * @param string $node
      * @return \DCarbone\PHPConsulAPI\Operator\RaftServer
      */
-    public function setNode(string $Node): RaftServer {
-        $this->Node = $Node;
+    public function setNode(string $node): RaftServer {
+        $this->Node = $node;
         return $this;
     }
 
@@ -74,11 +74,11 @@ class RaftServer extends AbstractModel {
     }
 
     /**
-     * @param string $Address
+     * @param string $address
      * @return \DCarbone\PHPConsulAPI\Operator\RaftServer
      */
-    public function setAddress(string $Address): RaftServer {
-        $this->Address = $Address;
+    public function setAddress(string $address): RaftServer {
+        $this->Address = $address;
         return $this;
     }
 
@@ -90,11 +90,11 @@ class RaftServer extends AbstractModel {
     }
 
     /**
-     * @param bool $Leader
+     * @param bool $leader
      * @return \DCarbone\PHPConsulAPI\Operator\RaftServer
      */
-    public function setLeader(bool $Leader): RaftServer {
-        $this->Leader = $Leader;
+    public function setLeader(bool $leader): RaftServer {
+        $this->Leader = $leader;
         return $this;
     }
 
@@ -106,11 +106,11 @@ class RaftServer extends AbstractModel {
     }
 
     /**
-     * @param bool $Voter
+     * @param bool $voter
      * @return \DCarbone\PHPConsulAPI\Operator\RaftServer
      */
-    public function setVoter(bool $Voter): RaftServer {
-        $this->Voter = $Voter;
+    public function setVoter(bool $voter): RaftServer {
+        $this->Voter = $voter;
         return $this;
     }
 }

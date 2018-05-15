@@ -16,6 +16,8 @@
    limitations under the License.
 */
 
+use DCarbone\Go\Time;
+
 /**
  * TODO: Make this better...
  *
@@ -23,7 +25,7 @@
  * @package DCarbone\PHPConsulAPI
  */
 class Error implements \JsonSerializable {
-    /** @var DateTime */
+    /** @var \DCarbone\Go\Time\Time */
     private $time;
 
     /** @var string */
@@ -34,14 +36,14 @@ class Error implements \JsonSerializable {
      * @param string $message
      */
     public function __construct($message) {
-        $this->time = new DateTime();
+        $this->time = Time::Now();
         $this->message = $message;
     }
 
     /**
-     * @return DateTime
+     * @return \DCarbone\Go\Time\Time
      */
-    public function getTime(): DateTime {
+    public function getTime(): Time\Time {
         return $this->time;
     }
 

@@ -48,7 +48,7 @@ class KVCRUDTest extends AbstractUsageTests {
     public function testCanPutKey() {
         $client = new KVClient(new Config());
 
-        list($wm, $err) = $client->put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
+        list($wm, $err) = $client->Put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
         $this->assertNull($err, sprintf('Unable to set kvp: %s', (string)$err));
         $this->assertInstanceOf(WriteMeta::class, $wm);
     }
@@ -58,9 +58,9 @@ class KVCRUDTest extends AbstractUsageTests {
      */
     public function testCanGetKey() {
         $client = new KVClient(new Config());
-        $client->put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
+        $client->Put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
 
-        list($kv, $qm, $err) = $client->get(self::KVKey1);
+        list($kv, $qm, $err) = $client->Get(self::KVKey1);
         $this->assertNull($err, sprintf('KV::get returned error: %s', (string)$err));
         $this->assertInstanceOf(QueryMeta::class, $qm);
         $this->assertInstanceOf(KVPair::class, $kv);
@@ -71,9 +71,9 @@ class KVCRUDTest extends AbstractUsageTests {
      */
     public function testCanDeleteKey() {
         $client = new KVClient(new Config());
-        $client->put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
+        $client->Put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
 
-        list($wm, $err) = $client->delete(self::KVKey1);
+        list($wm, $err) = $client->Delete(self::KVKey1);
         $this->assertNull($err, sprintf('KV::delete returned error: %s', $err));
         $this->assertInstanceOf(
             WriteMeta::class,
@@ -87,7 +87,7 @@ class KVCRUDTest extends AbstractUsageTests {
 
     public function testListReturnsErrorWithInvalidPrefix() {
         $client = new KVClient(new Config());
-        list($_, $_, $err) = $client->list(12345);
+        list($_, $_, $err) = $client->List(12345);
         $this->assertInstanceOf(
             Error::class,
             $err,
@@ -107,11 +107,11 @@ class KVCRUDTest extends AbstractUsageTests {
         /** @var \DCarbone\PHPConsulAPI\Error $err */
 
         $client = new KVClient(new Config());
-        $client->put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
-        $client->put(new KVPair(['Key' => self::KVKey2, 'Value' => self::KVValue2]));
-        $client->put(new KVPair(['Key' => self::KVKey3, 'Value' => self::KVValue3]));
+        $client->Put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
+        $client->Put(new KVPair(['Key' => self::KVKey2, 'Value' => self::KVValue2]));
+        $client->Put(new KVPair(['Key' => self::KVKey3, 'Value' => self::KVValue3]));
 
-        list($list, $qm, $err) = $client->list();
+        list($list, $qm, $err) = $client->List();
         $this->assertNull($err, sprintf('KV::valueList returned error: %s', $err));
 
         try {
@@ -154,11 +154,11 @@ class KVCRUDTest extends AbstractUsageTests {
         /** @var \DCarbone\PHPConsulAPI\Error $err */
 
         $client = new KVClient(new Config());
-        $client->put(new KVPair(['Key' => self::KVPrefix.'/'.self::KVKey1, 'Value' => self::KVValue1]));
-        $client->put(new KVPair(['Key' => self::KVPrefix.'/'.self::KVKey2, 'Value' => self::KVValue2]));
-        $client->put(new KVPair(['Key' => self::KVPrefix.'/'.self::KVKey3, 'Value' => self::KVValue3]));
+        $client->Put(new KVPair(['Key' => self::KVPrefix.'/'.self::KVKey1, 'Value' => self::KVValue1]));
+        $client->Put(new KVPair(['Key' => self::KVPrefix.'/'.self::KVKey2, 'Value' => self::KVValue2]));
+        $client->Put(new KVPair(['Key' => self::KVPrefix.'/'.self::KVKey3, 'Value' => self::KVValue3]));
 
-        list($list, $qm, $err) = $client->list(self::KVPrefix);
+        list($list, $qm, $err) = $client->List(self::KVPrefix);
         $this->assertNull($err, sprintf('KV::valueList returned error: %s', $err));
         $this->assertInstanceOf(QueryMeta::class, $qm);
 
@@ -195,7 +195,7 @@ class KVCRUDTest extends AbstractUsageTests {
 
     public function testKeysReturnsErrorWithInvalidPrefix() {
         $client = new KVClient(new Config());
-        list($_, $_, $err) = $client->keys(12345);
+        list($_, $_, $err) = $client->Keys(12345);
         $this->assertInstanceOf(
             Error::class,
             $err,
@@ -215,11 +215,11 @@ class KVCRUDTest extends AbstractUsageTests {
         /** @var \DCarbone\PHPConsulAPI\Error $err */
 
         $client = new KVClient(new Config());
-        $client->put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
-        $client->put(new KVPair(['Key' => self::KVKey2, 'Value' => self::KVValue2]));
-        $client->put(new KVPair(['Key' => self::KVKey3, 'Value' => self::KVValue3]));
+        $client->Put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
+        $client->Put(new KVPair(['Key' => self::KVKey2, 'Value' => self::KVValue2]));
+        $client->Put(new KVPair(['Key' => self::KVKey3, 'Value' => self::KVValue3]));
 
-        list($list, $qm, $err) = $client->keys();
+        list($list, $qm, $err) = $client->Keys();
         $this->assertNull($err, sprintf('KV::keys returned error: %s', $err));
         $this->assertInstanceOf(QueryMeta::class, $qm);
 

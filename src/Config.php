@@ -157,11 +157,11 @@ class Config {
     }
 
     /**
-     * @param string $Address
+     * @param string $address
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setAddress(string $Address): Config {
-        $this->Address = $Address;
+    public function setAddress(string $address): Config {
+        $this->Address = $address;
         return $this;
     }
 
@@ -173,11 +173,11 @@ class Config {
     }
 
     /**
-     * @param string $Scheme
+     * @param string $scheme
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setScheme(string $Scheme): Config {
-        $this->Scheme = $Scheme;
+    public function setScheme(string $scheme): Config {
+        $this->Scheme = $scheme;
         return $this;
     }
 
@@ -189,11 +189,11 @@ class Config {
     }
 
     /**
-     * @param string $Datacenter
+     * @param string $datacenter
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setDatacenter(string $Datacenter): Config {
-        $this->Datacenter = $Datacenter;
+    public function setDatacenter(string $datacenter): Config {
+        $this->Datacenter = $datacenter;
         return $this;
     }
 
@@ -205,11 +205,11 @@ class Config {
     }
 
     /**
-     * @param int $WaitTime
+     * @param int $waitTime
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setWaitTime(int $WaitTime): Config {
-        $this->WaitTime = $WaitTime;
+    public function setWaitTime(int $waitTime): Config {
+        $this->WaitTime = $waitTime;
         return $this;
     }
 
@@ -221,11 +221,11 @@ class Config {
     }
 
     /**
-     * @param string $Token
+     * @param string $token
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setToken(string $Token): Config {
-        $this->Token = $Token;
+    public function setToken(string $token): Config {
+        $this->Token = $token;
         return $this;
     }
 
@@ -237,11 +237,11 @@ class Config {
     }
 
     /**
-     * @param boolean $InsecureSkipVerify
+     * @param boolean $insecureSkipVerify
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setInsecureSkipVerify(bool $InsecureSkipVerify): Config {
-        $this->InsecureSkipVerify = $InsecureSkipVerify;
+    public function setInsecureSkipVerify(bool $insecureSkipVerify): Config {
+        $this->InsecureSkipVerify = $insecureSkipVerify;
         return $this;
     }
 
@@ -253,31 +253,31 @@ class Config {
     }
 
     /**
-     * @param string|HttpAuth $HttpAuth
+     * @param string|HttpAuth $httpAuth
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setHttpAuth($HttpAuth): Config {
-        if (is_string($HttpAuth)) {
-            $colon = strpos($HttpAuth, ':');
+    public function setHttpAuth($httpAuth): Config {
+        if (is_string($httpAuth)) {
+            $colon = strpos($httpAuth, ':');
             if (false === $colon) {
-                $username = $HttpAuth;
+                $username = $httpAuth;
                 $password = null;
             } else {
-                $username = substr($HttpAuth, 0, $colon);
-                $password = substr($HttpAuth, $colon + 1);
+                $username = substr($httpAuth, 0, $colon);
+                $password = substr($httpAuth, $colon + 1);
             }
-            $HttpAuth = new HttpAuth($username, $password);
+            $httpAuth = new HttpAuth($username, $password);
         }
 
-        if ($HttpAuth instanceof HttpAuth) {
-            $this->HttpAuth = $HttpAuth;
+        if ($httpAuth instanceof HttpAuth) {
+            $this->HttpAuth = $httpAuth;
             return $this;
         }
 
         throw new \InvalidArgumentException(sprintf(
             '%s::setHttpAuth - Value is expected to be string of "username:password" or instance of "\\DCarbone\\PHPConsulApi\\HttpAuth", %s seen.',
             get_class($this),
-            is_string($HttpAuth) ? $HttpAuth : gettype($HttpAuth)
+            is_string($httpAuth) ? $httpAuth : gettype($httpAuth)
         ));
     }
 
@@ -289,11 +289,11 @@ class Config {
     }
 
     /**
-     * @param string $CAFile
+     * @param string $caFile
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setCAFile(string $CAFile): Config {
-        $this->CAFile = $CAFile;
+    public function setCAFile(string $caFile): Config {
+        $this->CAFile = $caFile;
         return $this;
     }
 
@@ -305,11 +305,11 @@ class Config {
     }
 
     /**
-     * @param string $CertFile
+     * @param string $certFile
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setCertFile(string $CertFile): Config {
-        $this->CertFile = $CertFile;
+    public function setCertFile(string $certFile): Config {
+        $this->CertFile = $certFile;
         return $this;
     }
 
@@ -321,11 +321,11 @@ class Config {
     }
 
     /**
-     * @param string $KeyFile
+     * @param string $keyFile
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setKeyFile(string $KeyFile): Config {
-        $this->KeyFile = $KeyFile;
+    public function setKeyFile(string $keyFile): Config {
+        $this->KeyFile = $keyFile;
         return $this;
     }
 
@@ -337,11 +337,11 @@ class Config {
     }
 
     /**
-     * @param \GuzzleHttp\ClientInterface $HttpClient
+     * @param \GuzzleHttp\ClientInterface $httpClient
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setHttpClient(ClientInterface $HttpClient): Config {
-        $this->HttpClient = $HttpClient;
+    public function setHttpClient(ClientInterface $httpClient): Config {
+        $this->HttpClient = $httpClient;
         return $this;
     }
 
@@ -353,11 +353,11 @@ class Config {
     }
 
     /**
-     * @param boolean $TokenInHeader
+     * @param boolean $tokenInHeader
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setTokenInHeader(bool $TokenInHeader): Config {
-        $this->TokenInHeader = $TokenInHeader;
+    public function setTokenInHeader(bool $tokenInHeader): Config {
+        $this->TokenInHeader = $tokenInHeader;
         return $this;
     }
 
@@ -385,7 +385,7 @@ class Config {
     public function getGuzzleRequestOptions(): array {
         // TODO: Define once?
         $opts = [
-            RequestOptions::HTTP_ERRORS => false,
+            RequestOptions::HTTP_ERRORS    => false,
             RequestOptions::DECODE_CONTENT => false,
         ];
 
@@ -429,13 +429,13 @@ class Config {
     public static function getEnvironmentConfig(): array {
         $ret = [];
         foreach ([
-                     Consul::HTTPAddrEnvName => static::_tryGetEnvParam(Consul::HTTPAddrEnvName),
-                     Consul::HTTPAuthEnvName => static::_tryGetEnvParam(Consul::HTTPAuthEnvName),
-                     Consul::HTTPCAFileEnvName => static::_tryGetEnvParam(Consul::HTTPCAFileEnvName),
+                     Consul::HTTPAddrEnvName       => static::_tryGetEnvParam(Consul::HTTPAddrEnvName),
+                     Consul::HTTPAuthEnvName       => static::_tryGetEnvParam(Consul::HTTPAuthEnvName),
+                     Consul::HTTPCAFileEnvName     => static::_tryGetEnvParam(Consul::HTTPCAFileEnvName),
                      Consul::HTTPClientCertEnvName => static::_tryGetEnvParam(Consul::HTTPClientCertEnvName),
-                     Consul::HTTPClientKeyEnvName => static::_tryGetEnvParam(Consul::HTTPClientKeyEnvName),
-                     Consul::HTTPSSLEnvName => static::_tryGetEnvParam(Consul::HTTPSSLEnvName),
-                     Consul::HTTPSSLVerifyEnvName => static::_tryGetEnvParam(Consul::HTTPSSLVerifyEnvName),
+                     Consul::HTTPClientKeyEnvName  => static::_tryGetEnvParam(Consul::HTTPClientKeyEnvName),
+                     Consul::HTTPSSLEnvName        => static::_tryGetEnvParam(Consul::HTTPSSLEnvName),
+                     Consul::HTTPSSLVerifyEnvName  => static::_tryGetEnvParam(Consul::HTTPSSLVerifyEnvName),
                  ] as $k => $v) {
             if (null !== $v) {
                 $ret[$k] = $v;
@@ -450,7 +450,7 @@ class Config {
     private static function getDefaultConfig(): array {
         static $conf = [
             'Address' => '127.0.0.1:8500',
-            'Scheme' => 'http',
+            'Scheme'  => 'http',
         ];
 
         // parse env vars

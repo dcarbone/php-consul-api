@@ -36,11 +36,11 @@ class PointValue extends AbstractModel {
     }
 
     /**
-     * @param string $Name
+     * @param string $name
      * @return PointValue
      */
-    public function setName(string $Name): PointValue {
-        $this->Name = $Name;
+    public function setName(string $name): PointValue {
+        $this->Name = $name;
         return $this;
     }
 
@@ -52,11 +52,11 @@ class PointValue extends AbstractModel {
     }
 
     /**
-     * @param array $Points
+     * @param array $points
      * @return PointValue
      */
-    public function setPoints(array $Points): PointValue {
-        $this->Points = $Points;
+    public function setPoints(array $points): PointValue {
+        $this->Points = $points;
         return $this;
     }
 }

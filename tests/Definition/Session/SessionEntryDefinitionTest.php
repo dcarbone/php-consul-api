@@ -25,6 +25,9 @@ use DCarbone\PHPConsulAPITests\Definition\AbstractDefinitionTestCases;
  * @package DCarbone\PHPConsulAPITests\Definition\Session
  */
 class SessionEntryDefinitionTest extends AbstractDefinitionTestCases {
+    /** @var bool */
+    protected $requiresSetters = true;
+
     /**
      * @return string
      */

@@ -36,7 +36,6 @@ class CoordinateEntry extends AbstractModel {
      */
     public function __construct(array $data = []) {
         parent::__construct($data);
-
         if (null !== $this->Coord && !($this->Coord instanceof Coordinate)) {
             $this->Coord = new Coordinate((array)$this->Coord);
         }

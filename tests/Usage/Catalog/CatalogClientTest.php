@@ -65,7 +65,7 @@ class CatalogClientTest extends AbstractUsageTests {
             ]),
         ]);
 
-        list($wm, $err) = $client->register($registration);
+        list($wm, $err) = $client->Register($registration);
         $this->assertNull($err, 'CatalogClient::register returned error: '.$err);
         $this->assertInstanceOf(WriteMeta::class, $wm);
     }
@@ -76,7 +76,7 @@ class CatalogClientTest extends AbstractUsageTests {
     public function testCanGetService() {
         $client = new CatalogClient(new Config());
 
-        list($service, $qm, $err) = $client->service(self::ServiceName);
+        list($service, $qm, $err) = $client->Service(self::ServiceName);
         $this->assertNull($err, 'CatalogClient::service returned error: '.$err);
         $this->assertInstanceOf(QueryMeta::class, $qm);
         $this->assertInternalType('array', $service);
@@ -90,7 +90,7 @@ class CatalogClientTest extends AbstractUsageTests {
     public function testCanRegisterSecondServiceWithSameName() {
         $client = new CatalogClient(new Config());
 
-        list($wm, $err) = $client->register(new CatalogRegistration([
+        list($wm, $err) = $client->Register(new CatalogRegistration([
             'Node'    => 'dc1',
             'Address' => self::ServiceAddress,
             'Service' => new AgentService([
@@ -111,7 +111,7 @@ class CatalogClientTest extends AbstractUsageTests {
     public function testCanGetListOfService() {
         $client = new CatalogClient(new Config());
 
-        list($service, $qm, $err) = $client->service(self::ServiceName);
+        list($service, $qm, $err) = $client->Service(self::ServiceName);
         $this->assertNull($err, 'CatalogClient::service returned error: '.$err);
         $this->assertInstanceOf(QueryMeta::class, $qm);
         $this->assertInternalType('array', $service);
@@ -133,7 +133,7 @@ class CatalogClientTest extends AbstractUsageTests {
     public function testCanGetListOfServices() {
         $client = new CatalogClient(new Config());
 
-        list($services, $qm, $err) = $client->services();
+        list($services, $qm, $err) = $client->Services();
 
         try {
             $this->assertNull($err, 'CatalogClient::services returned error: '.$err);
@@ -154,14 +154,14 @@ class CatalogClientTest extends AbstractUsageTests {
         $client = new CatalogClient(new Config());
 
 
-        list($wm, $err) = $client->deregister(new CatalogDeregistration([
+        list($wm, $err) = $client->Deregister(new CatalogDeregistration([
             'Node'      => 'dc1',
             'ServiceID' => self::ServiceID1,
         ]));
         $this->assertNull($err, 'CatalogClient::deregister returned error: '.$err);
         $this->assertInstanceOf(WriteMeta::class, $wm);
 
-        list($service, $qm, $err) = $client->service(self::ServiceName);
+        list($service, $qm, $err) = $client->Service(self::ServiceName);
         $this->assertNull($err, 'CatalogClient::service returned error: '.$err);
         $this->assertInstanceOf(QueryMeta::class, $qm);
         $this->assertCount(1, $service);
@@ -176,7 +176,7 @@ class CatalogClientTest extends AbstractUsageTests {
     public function testCanGetDatacenters() {
         $client = new CatalogClient(new Config());
 
-        list($dcs, $err) = $client->datacenters();
+        list($dcs, $err) = $client->Datacenters();
 
         try {
             $this->assertNull($err, 'CatalogClient::datacenters returned error: '.$err);
@@ -195,7 +195,7 @@ class CatalogClientTest extends AbstractUsageTests {
     public function testCanGetListOfNodes() {
         $client = new CatalogClient(new Config());
 
-        list($nodes, $qm, $err) = $client->nodes();
+        list($nodes, $qm, $err) = $client->Nodes();
         try {
             $this->assertNull($err, 'CatalogClient::nodes returned error: '.$err);
             $this->assertInstanceOf(QueryMeta::class, $qm);
@@ -215,7 +215,7 @@ class CatalogClientTest extends AbstractUsageTests {
     public function testCanGetNode() {
         $client = new CatalogClient(new Config());
 
-        list($nodes) = $client->nodes();
+        list($nodes) = $client->Nodes();
         try {
             $this->assertInternalType('array', $nodes);
             $this->assertCount(2, $nodes);
@@ -235,7 +235,7 @@ class CatalogClientTest extends AbstractUsageTests {
             throw $e;
         }
 
-        list($node, $qm, $err) = $client->node($id);
+        list($node, $qm, $err) = $client->Node($id);
         try {
             $this->assertNull($err, 'CatalogClient::node returned error: '.$err);
             $this->assertInstanceOf(QueryMeta::class, $qm);

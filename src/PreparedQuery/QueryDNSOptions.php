@@ -34,11 +34,11 @@ class QueryDNSOptions extends AbstractModel {
     }
 
     /**
-     * @param string $TTL
+     * @param string $ttl
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions
      */
-    public function setTTL(string $TTL): QueryDNSOptions {
-        $this->TTL = $TTL;
+    public function setTTL(string $ttl): QueryDNSOptions {
+        $this->TTL = $ttl;
         return $this;
     }
 

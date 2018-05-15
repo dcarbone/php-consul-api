@@ -53,7 +53,7 @@ class CoordinateUsageTest extends AbstractUsageTests {
     }
 
     public function testCanConstructCoordinateWithDefaultConfig() {
-        $config = CoordinateConfig::default();
+        $config = CoordinateConfig::Default();
         $coord = new Coordinate($config);
 
         $this->assertInternalType('array', $coord->Vec);
@@ -80,41 +80,41 @@ class CoordinateUsageTest extends AbstractUsageTests {
      * @depends testCanConstructCoordinateWithDefaultConfig
      */
     public function testIsValidStates() {
-        $coord = new Coordinate(CoordinateConfig::default());
+        $coord = new Coordinate(CoordinateConfig::Default());
 
-        $this->assertTrue($coord->isValid());
+        $this->assertTrue($coord->IsValid());
 
         foreach ($coord->Vec as &$field) {
             $field = NAN;
-            $this->assertFalse($coord->isValid());
+            $this->assertFalse($coord->IsValid());
 
             $field = 0.0;
-            $this->assertTrue($coord->isValid());
+            $this->assertTrue($coord->IsValid());
 
             $field = INF;
-            $this->assertFalse($coord->isValid());
+            $this->assertFalse($coord->IsValid());
 
             $field = 0.0;
-            $this->assertTrue($coord->isValid());
+            $this->assertTrue($coord->IsValid());
         }
 
         foreach ([&$coord->Error, &$coord->Adjustment, &$coord->Height] as &$field) {
             $field = NAN;
-            $this->assertFalse($coord->isValid());
+            $this->assertFalse($coord->IsValid());
 
             $field = 0.0;
-            $this->assertTrue($coord->isValid());
+            $this->assertTrue($coord->IsValid());
 
             $field = INF;
-            $this->assertFalse($coord->isValid());
+            $this->assertFalse($coord->IsValid());
 
             $field = 0.0;
-            $this->assertTrue($coord->isValid());
+            $this->assertTrue($coord->IsValid());
         }
     }
 
     public function testIsCompatibleWith() {
-        $conf = CoordinateConfig::default();
+        $conf = CoordinateConfig::Default();
 
         $conf->Dimensionality = 3;
         $coord1 = new Coordinate($conf);
@@ -123,16 +123,16 @@ class CoordinateUsageTest extends AbstractUsageTests {
         $conf->Dimensionality = 2;
         $alien = new Coordinate($conf);
 
-        $this->assertTrue($coord1->isCompatibleWith($coord2), 'coord1 should be compatible with coord2');
-        $this->assertFalse($coord1->isCompatibleWith($alien), 'coord1 should NOT be compatible with alien');
-        $this->assertFalse($coord2->isCompatibleWith($alien), 'coord2 should NOT be compatible with alien');
+        $this->assertTrue($coord1->IsCompatibleWith($coord2), 'coord1 should be compatible with coord2');
+        $this->assertFalse($coord1->IsCompatibleWith($alien), 'coord1 should NOT be compatible with alien');
+        $this->assertFalse($coord2->IsCompatibleWith($alien), 'coord2 should NOT be compatible with alien');
     }
 
     /**
      * @expectedException \DCarbone\PHPConsulAPI\Coordinate\DimensionalityConflictException
      */
     public function testApplyForce() {
-        $config = CoordinateConfig::default();
+        $config = CoordinateConfig::Default();
         $config->Dimensionality = 3;
         $config->HeightMin = 0;
 
@@ -140,37 +140,37 @@ class CoordinateUsageTest extends AbstractUsageTests {
 
         $above = new Coordinate($config);
         $above->Vec = [0.0, 0.0, 2.9];
-        $c = $origin->applyForce($config, 5.3, $above);
+        $c = $origin->ApplyForce($config, 5.3, $above);
         $this->verifyEqualVectors($c->Vec, [0.0, 0.0, -5.3]);
 
         $right = new Coordinate($config);
         $right->Vec = [3.4, 0.0, -5.3];
-        $c = $c->applyForce($config, 2.0, $right);
+        $c = $c->ApplyForce($config, 2.0, $right);
         $this->verifyEqualVectors($c->Vec, [-2.0, 0.0, -5.3]);
 
-        $c = $origin->applyForce($config, 1.0, $origin);
-        $this->verifyEqualFloats($origin->distanceTo($c)->Seconds(), 1.0);
+        $c = $origin->ApplyForce($config, 1.0, $origin);
+        $this->verifyEqualFloats($origin->DistanceTo($c)->Seconds(), 1.0);
 
         $config->HeightMin = 10.0e-6;
         $origin = new Coordinate($config);
-        $c = $origin->applyForce($config, 5.3, $above);
+        $c = $origin->ApplyForce($config, 5.3, $above);
         $this->verifyEqualVectors($c->Vec, [0.0, 0.0, -5.3]);
         $this->verifyEqualFloats($c->Height, $config->HeightMin + 5.3 * $config->HeightMin / 2.9);
 
-        $c = $origin->applyForce($config, -5.3, $above);
+        $c = $origin->ApplyForce($config, -5.3, $above);
         $this->verifyEqualVectors($c->Vec, [0.0, 0.0, 5.3]);
         $this->verifyEqualFloats($c->Height, $config->HeightMin);
 
         $bad = clone $c;
         $bad->Vec = array_fill(0, count($c->Vec) + 1, 0.0);
-        $c->applyForce($config, 1.0, $bad);
+        $c->ApplyForce($config, 1.0, $bad);
     }
 
     /**
      * @expectedException \DCarbone\PHPConsulAPI\Coordinate\DimensionalityConflictException
      */
     public function testDistanceTo() {
-        $config = CoordinateConfig::default();
+        $config = CoordinateConfig::Default();
         $config->Dimensionality = 3;
         $config->HeightMin = 0;
 
@@ -179,25 +179,25 @@ class CoordinateUsageTest extends AbstractUsageTests {
         $c1->Vec = [-0.5, 1.3, 2.4];
         $c2->Vec = [1.2, -2.3, 3.4];
 
-        $this->verifyEqualFloats($c1->distanceTo($c1)->Seconds(), 0.0);
-        $this->verifyEqualFloats($c1->distanceTo($c2)->Seconds(), $c2->distanceTo($c1)->Seconds());
-        $this->verifyEqualFloats($c1->distanceTo($c2)->Seconds(), 4.104875150354758);
+        $this->verifyEqualFloats($c1->DistanceTo($c1)->Seconds(), 0.0);
+        $this->verifyEqualFloats($c1->DistanceTo($c2)->Seconds(), $c2->DistanceTo($c1)->Seconds());
+        $this->verifyEqualFloats($c1->DistanceTo($c2)->Seconds(), 4.104875150354758);
 
         $c1->Adjustment = -1.0e6;
 
-        $this->verifyEqualFloats($c1->distanceTo($c2)->Seconds(), 4.104875150354758);
+        $this->verifyEqualFloats($c1->DistanceTo($c2)->Seconds(), 4.104875150354758);
 
         $c1->Adjustment = 0.1;
         $c2->Adjustment = 0.2;
-        $this->verifyEqualFloats($c1->distanceTo($c2)->Seconds(), 4.104875150354758 + 0.3);
+        $this->verifyEqualFloats($c1->DistanceTo($c2)->Seconds(), 4.104875150354758 + 0.3);
 
         $c1->Height = 0.7;
         $c2->Height = 0.1;
-        $this->verifyEqualFloats($c1->distanceTo($c2)->Seconds(), 4.104875150354758 + 0.3 + 0.8);
+        $this->verifyEqualFloats($c1->DistanceTo($c2)->Seconds(), 4.104875150354758 + 0.3 + 0.8);
 
         $bad = clone $c1;
         $bad->Vec = array_fill(0, count($c1->Vec) + 1, 0.0);
-        $c1->distanceTo($bad);
+        $c1->DistanceTo($bad);
     }
 
     /**

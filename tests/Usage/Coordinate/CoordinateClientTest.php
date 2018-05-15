@@ -40,7 +40,7 @@ class CoordinateClientTest extends AbstractUsageTests {
     public function testDatacenters() {
         $client = new CoordinateClient(new Config());
 
-        list($dcs, $err) = $client->datacenters();
+        list($dcs, $err) = $client->Datacenters();
         $this->assertNull($err, sprintf('CoordinateClient::datacenters() - %s', $err));
         $this->assertInternalType('array', $dcs);
         $this->assertGreaterThan(0, count($dcs), 'Expected at least 1 datacenter');
@@ -52,7 +52,7 @@ class CoordinateClientTest extends AbstractUsageTests {
     public function testNodes() {
         $client = new CoordinateClient(new Config());
 
-        list($nodes, $qm, $err) = $client->nodes();
+        list($nodes, $qm, $err) = $client->Nodes();
         $this->assertNull($err, sprintf('CoordinateClient::nodes() - %s', $err));
         $this->assertInstanceOf(QueryMeta::class, $qm);
         $this->assertInternalType('array', $nodes);

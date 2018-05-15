@@ -40,9 +40,9 @@ class CatalogNode extends AbstractModel {
         }
         if (0 < count($this->Services)) {
             $this->Services = array_filter($this->Services);
-            foreach (array_keys($this->Services) as $service) {
+            foreach (array_keys($this->Services) as &$service) {
                 if (!($this->Services[$service] instanceof AgentService)) {
-                    $this->Services[$service] = new AgentService($this->Services[$service]);
+                    $service = new AgentService($this->Services[$service]);
                 }
             }
         }

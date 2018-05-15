@@ -40,16 +40,10 @@ class CoordinateDatacenterMap extends AbstractModel {
 
         // If we have data...
         if (0 < count($this->Coordinates)) {
-            // ...remove null
             $this->Coordinates = array_filter($this->Coordinates);
-
-            // ...and if we still have data
-            if (0 < ($cnt = count($this->Coordinates))) {
-                // ensure we have objects.
-                for ($i = 0; $i < $cnt; $i++) {
-                    if (!($this->Coordinates[$i] instanceof Coordinate)) {
-                        $this->Coordinates[$i] = new Coordinate((array)$this->Coordinates[$i]);
-                    }
+            foreach ($this->Coordinates as &$v) {
+                if (!($v instanceof Coordinate)) {
+                    $v = new Coordinate($v);
                 }
             }
         }

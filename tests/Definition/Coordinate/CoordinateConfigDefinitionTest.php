@@ -35,7 +35,7 @@ class CoordinateConfigDefinitionTest extends AbstractDefinitionTestCases {
     }
 
     public function testCanGetDefaultConfig() {
-        $config = CoordinateConfig::default();
+        $config = CoordinateConfig::Default();
 
         $this->assertInstanceOf(CoordinateConfig::class, $config);
 

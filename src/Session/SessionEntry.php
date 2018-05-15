@@ -16,6 +16,7 @@
    limitations under the License.
 */
 
+use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
@@ -33,18 +34,38 @@ class SessionEntry extends AbstractModel {
     public $Node = '';
     /** @var string[] */
     public $Checks = [];
-    /** @var int */
-    public $LockDelay = 0;
+    /** @var \DCarbone\Go\Time\Duration */
+    public $LockDelay = null;
     /** @var string */
     public $Behavior = '';
     /** @var string */
     public $TTL = '';
 
     /**
+     * SessionEntry constructor.
+     * @param array $data
+     */
+    public function __construct(array $data = []) {
+        parent::__construct($data);
+        if (!($this->LockDelay instanceof Time\Duration)) {
+            $this->LockDelay = new Time\Duration($this->LockDelay ?? 0);
+        }
+    }
+
+    /**
      * @return int
      */
     public function getCreateIndex(): int {
         return $this->CreateIndex;
+    }
+
+    /**
+     * @param int $createIndex
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
+     */
+    public function setCreateIndex(int $createIndex): SessionEntry {
+        $this->CreateIndex = $createIndex;
+        return $this;
     }
 
     /**
@@ -55,10 +76,28 @@ class SessionEntry extends AbstractModel {
     }
 
     /**
+     * @param string $id
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
+     */
+    public function setID(string $id): SessionEntry {
+        $this->ID = $id;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getName(): string {
         return $this->Name;
+    }
+
+    /**
+     * @param string $name
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
+     */
+    public function setName(string $name): SessionEntry {
+        $this->Name = $name;
+        return $this;
     }
 
     /**
@@ -69,6 +108,15 @@ class SessionEntry extends AbstractModel {
     }
 
     /**
+     * @param string $node
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
+     */
+    public function setNode(string $node): SessionEntry {
+        $this->Node = $node;
+        return $this;
+    }
+
+    /**
      * @return string[]
      */
     public function getChecks(): array {
@@ -76,10 +124,36 @@ class SessionEntry extends AbstractModel {
     }
 
     /**
-     * @return int
+     * @param string[] $checks
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function getLockDelay(): int {
+    public function setChecks(array $checks): SessionEntry {
+        $this->Checks = [];
+        foreach ($checks as $check) {
+            $this->addCheck($check);
+        }
+        return $this;
+    }
+
+    public function addCheck(string $check): SessionEntry {
+        $this->Checks[] = $check;
+        return $this;
+    }
+
+    /**
+     * @return \DCarbone\Go\Time\Duration
+     */
+    public function getLockDelay(): Time\Duration {
         return $this->LockDelay;
+    }
+
+    /**
+     * @param \DCarbone\Go\Time\Duration $lockDelay
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
+     */
+    public function setLockDelay(Time\Duration $lockDelay): SessionEntry {
+        $this->LockDelay = $lockDelay;
+        return $this;
     }
 
     /**
@@ -90,9 +164,27 @@ class SessionEntry extends AbstractModel {
     }
 
     /**
+     * @param string $behavior
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
+     */
+    public function setBehavior(string $behavior): SessionEntry {
+        $this->Behavior = $behavior;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getTTL(): string {
         return $this->TTL;
+    }
+
+    /**
+     * @param string $ttl
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
+     */
+    public function setTTL(string $ttl): SessionEntry {
+        $this->TTL = $ttl;
+        return $this;
     }
 }

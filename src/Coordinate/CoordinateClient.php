@@ -31,7 +31,7 @@ class CoordinateClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if an
      * )
      */
-    public function datacenters(): array {
+    public function Datacenters(): array {
         $r = new Request('GET', 'v1/coordinate/datacenters', $this->config);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -63,7 +63,7 @@ class CoordinateClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function nodes(QueryOptions $options = null): array {
+    public function Nodes(QueryOptions $options = null): array {
         $r = new Request('GET', 'v1/coordinate/nodes', $this->config);
         $r->setQueryOptions($options);
 

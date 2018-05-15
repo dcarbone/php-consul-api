@@ -40,11 +40,11 @@ class Area extends AbstractModel {
     }
 
     /**
-     * @param string $ID
+     * @param string $id
      * @return Area
      */
-    public function setID(string $ID): Area {
-        $this->ID = $ID;
+    public function setID(string $id): Area {
+        $this->ID = $id;
         return $this;
     }
 
@@ -56,11 +56,11 @@ class Area extends AbstractModel {
     }
 
     /**
-     * @param string $PeerDatacenter
+     * @param string $peerDatacenter
      * @return Area
      */
-    public function setPeerDatacenter(string $PeerDatacenter): Area {
-        $this->PeerDatacenter = $PeerDatacenter;
+    public function setPeerDatacenter(string $peerDatacenter): Area {
+        $this->PeerDatacenter = $peerDatacenter;
         return $this;
     }
 
@@ -72,11 +72,11 @@ class Area extends AbstractModel {
     }
 
     /**
-     * @param string[] $RetryJoin
+     * @param string[] $retryJoin
      * @return Area
      */
-    public function setRetryJoin(array $RetryJoin): Area {
-        $this->RetryJoin = $RetryJoin;
+    public function setRetryJoin(array $retryJoin): Area {
+        $this->RetryJoin = $retryJoin;
         return $this;
     }
 
@@ -88,11 +88,11 @@ class Area extends AbstractModel {
     }
 
     /**
-     * @param bool $UseTLS
+     * @param bool $useTLS
      * @return Area
      */
-    public function setUseTLS(bool $UseTLS): Area {
-        $this->UseTLS = $UseTLS;
+    public function setUseTLS(bool $useTLS): Area {
+        $this->UseTLS = $useTLS;
         return $this;
     }
 }

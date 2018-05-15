@@ -36,11 +36,11 @@ class MemberOpts extends AbstractModel {
     }
 
     /**
-     * @param bool $WAN
+     * @param bool $wan
      * @return \DCarbone\PHPConsulAPI\Agent\MemberOpts
      */
-    public function setWAN(bool $WAN): MemberOpts {
-        $this->WAN = $WAN;
+    public function setWAN(bool $wan): MemberOpts {
+        $this->WAN = $wan;
         return $this;
     }
 
@@ -52,11 +52,11 @@ class MemberOpts extends AbstractModel {
     }
 
     /**
-     * @param string $Segment
+     * @param string $segment
      * @return \DCarbone\PHPConsulAPI\Agent\MemberOpts
      */
-    public function setSegment(string $Segment): MemberOpts {
-        $this->Segment = $Segment;
+    public function setSegment(string $segment): MemberOpts {
+        $this->Segment = $segment;
         return $this;
     }
 }

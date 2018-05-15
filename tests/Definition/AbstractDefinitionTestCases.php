@@ -16,6 +16,7 @@
    limitations under the License.
 */
 
+use DCarbone\Go\Time;
 use phpDocumentor\Reflection\DocBlockFactory;
 use phpDocumentor\Reflection\Types\Array_;
 use phpDocumentor\Reflection\Types\Boolean;
@@ -244,7 +245,7 @@ abstract class AbstractDefinitionTestCases extends TestCase {
     }
 
     /**
-     * @param \ReflectionClass $reflectionClass
+     * @param \ReflectionClass    $reflectionClass
      * @param \ReflectionProperty $reflectionProperty
      */
     protected function _assertPropertyPHPDocExists(\ReflectionClass $reflectionClass,
@@ -280,7 +281,7 @@ abstract class AbstractDefinitionTestCases extends TestCase {
     }
 
     /**
-     * @param \ReflectionClass $reflectionClass
+     * @param \ReflectionClass    $reflectionClass
      * @param \ReflectionProperty $reflectionProperty
      */
     protected function _assertCorrectPropertyZeroValue(\ReflectionClass $reflectionClass,
@@ -344,7 +345,7 @@ abstract class AbstractDefinitionTestCases extends TestCase {
                 break;
 
             case $propertyVarType instanceof Object_:
-                $fqsn = (string)$propertyVarType->getFqsen();
+                $fqsn = ltrim((string)$propertyVarType->getFqsen(), "\\");
 
                 $isInterface = interface_exists($fqsn, true);
                 $isClass = class_exists($fqsn);
@@ -359,12 +360,20 @@ abstract class AbstractDefinitionTestCases extends TestCase {
 
                 $implements = class_implements($fqsn);
 
-                if (in_array('Iterator', $implements)) { // test for "slice" mimicking...
+                if (in_array('Iterator', $implements)) {
+                    // test for "slice" mimicking...
                     $failMessage = sprintf($failMessageTemplate, $fqsn);
                     $this->assertInstanceOf($fqsn, $defaultValue, $failMessage);
-                } else if (in_array('DCarbone\\PHPConsulAPI\\ScalarType', $implements)) { // test for "typed scalars" mimicking...
+                } else if (in_array('DCarbone\\PHPConsulAPI\\ScalarType', $implements)) {
+                    // test for "typed scalars" mimicking...
                     $failMessage = sprintf($failMessageTemplate, $defaultValue, $fqsn);
                     $this->assertInstanceOf($fqsn, $defaultValue, $failMessage);
+                } else if ($fqsn === Time\Time::class) {
+                    $failMessage = sprintf('instance of %s', Time\Time::class);
+                    $this->assertInstanceOf(Time\Time::class, $defaultValue, $failMessage);
+                } else if ($fqsn === Time\Duration::class) {
+                    $failMessage = sprintf('instance of %s', Time\Duration::class);
+                    $this->assertInstanceOf(Time\Duration::class, $defaultValue, $failMessage);
                 } else {
                     $failMessage = sprintf($failMessageTemplate, 'null');
                     $this->assertNull($defaultValue, $failMessage);
@@ -389,7 +398,7 @@ abstract class AbstractDefinitionTestCases extends TestCase {
     }
 
     /**
-     * @param \ReflectionClass $reflectionClass
+     * @param \ReflectionClass    $reflectionClass
      * @param \ReflectionProperty $reflectionProperty
      */
     protected function _assertCorrectGetterImplementation(\ReflectionClass $reflectionClass,
@@ -456,7 +465,7 @@ abstract class AbstractDefinitionTestCases extends TestCase {
     }
 
     /**
-     * @param \ReflectionClass $reflectionClass
+     * @param \ReflectionClass    $reflectionClass
      * @param \ReflectionProperty $reflectionProperty
      */
     protected function _assertCorrectSetterImplementation(\ReflectionClass $reflectionClass,
@@ -467,7 +476,47 @@ abstract class AbstractDefinitionTestCases extends TestCase {
 
         $className = $reflectionClass->getName();
         $propertyName = $reflectionProperty->getName();
+        switch ($propertyName) {
+            case 'ID':
+            case 'TTL':
+            case 'HTTP':
+            case 'HTTPS':
+            case 'TCP':
+            case 'UDP':
+            case 'WAN':
+            case 'LAN':
+            case 'DNS':
+                $expectedParamName = strtolower($propertyName);
+                break;
+            case 'TLSSkipVerify':
+                $expectedParamName = 'tlsSkipVerify';
+                break;
+            case 'CAFile':
+                $expectedParamName = 'caFile';
+                break;
+            case 'CACert':
+                $expectedParamName = 'caCert';
+                break;
+            default:
+                $expectedParamName = lcfirst($propertyName);
+        }
         $expectedSetterName = sprintf('set%s', ucfirst($propertyName));
+
+        $setterParamErrMsg = sprintf(
+            'Setter "%s" for property "%s" in class "%s" must have one required parameter named %s',
+            $expectedSetterName,
+            $propertyName,
+            $className,
+            $expectedParamName
+        );
+
+        $setterHintErrMsg = sprintf(
+            'Parameter "%s" in setter "%s" for property "%s" in class "%s" must have a type hint of "%%s"',
+            $expectedParamName,
+            $expectedSetterName,
+            $propertyName,
+            $className
+        );
 
         if ($this->requiresSetters) {
             $this->assertTrue(method_exists($className, $expectedSetterName),
@@ -485,35 +534,14 @@ abstract class AbstractDefinitionTestCases extends TestCase {
         $reflectionMethod = $reflectionClass->getMethod($expectedSetterName);
 
         // Validate we have one parameter
-        $this->assertEquals(1,
-            $reflectionMethod->getNumberOfParameters(),
-            sprintf(
-                'Setter "%s" for property "%s" in class "%s" must have one parameter',
-                $expectedSetterName,
-                $propertyName,
-                $className
-            ));
-        $this->assertEquals(1,
-            $reflectionMethod->getNumberOfRequiredParameters(),
-            sprintf(
-                'Setter "%s" for property "%s" in class "%s" must have one required parameter',
-                $expectedSetterName,
-                $propertyName,
-                $className
-            ));
+        $this->assertEquals(1, $reflectionMethod->getNumberOfParameters(), $setterParamErrMsg);
+        $this->assertEquals(1, $reflectionMethod->getNumberOfRequiredParameters(), $setterParamErrMsg);
 
         // Get first parameter
         $reflectionParameter = $reflectionMethod->getParameters()[0];
         // Validate name
         $parameterName = $reflectionParameter->getName();
-        $this->assertEquals($propertyName,
-            $parameterName,
-            sprintf(
-                'Setter "%s" for property "%s" in class "%s" must have a parameter with the same name as the property',
-                $expectedSetterName,
-                $propertyName,
-                $className
-            ));
+        $this->assertEquals($expectedParamName, $parameterName, $setterParamErrMsg);
 
         // Get method doc block
         $methodDockBlock = $this->docBlockFactory->create($reflectionMethod->getDocComment());
@@ -523,7 +551,7 @@ abstract class AbstractDefinitionTestCases extends TestCase {
             $methodParamTags,
             sprintf(
                 'Parameter "%s" for setter "%s" for property "%s" in class "%s" must have a "@param" doc block attribute',
-                $parameterName,
+                $expectedParamName,
                 $expectedSetterName,
                 $propertyName,
                 $className
@@ -546,7 +574,7 @@ abstract class AbstractDefinitionTestCases extends TestCase {
                 $this->assertNull($parameterClass,
                     sprintf(
                         'The "@param" docblock for parameter "%s" in setter "%s" for property "%s" in class "%s" indicates that the value can be one of "%s", but the param TypeHint explicitly requires "%s".',
-                        $parameterName,
+                        $expectedParamName,
                         $expectedSetterName,
                         $propertyName,
                         $className,
@@ -556,19 +584,29 @@ abstract class AbstractDefinitionTestCases extends TestCase {
                     ));
                 break;
 
-            // If we're dealing with a scalar types, don't allow type-hinting as we need to work with php5
             case $propertyVarType instanceof String_:
+                $this->assertTrue($reflectionParameter->hasType(), sprintf($setterHintErrMsg, 'string'));
+                $this->assertEquals('string',
+                    $reflectionParameter->getType()->getName(),
+                    sprintf($setterHintErrMsg, 'string'));
+                break;
             case $propertyVarType instanceof Integer:
+                $this->assertTrue($reflectionParameter->hasType(), sprintf($setterHintErrMsg, 'int'));
+                $this->assertStringStartsWith('int',
+                    $reflectionParameter->getType()->getName(),
+                    sprintf($setterHintErrMsg, 'int'));
+                break;
             case $propertyVarType instanceof Float_:
+                $this->assertTrue($reflectionParameter->hasType(), sprintf($setterHintErrMsg, 'float'));
+                $this->assertEquals('float',
+                    $reflectionParameter->getType()->getName(),
+                    sprintf($setterHintErrMsg, 'float'));
+                break;
             case $propertyVarType instanceof Boolean:
-                $this->assertNull($parameterClass,
-                    sprintf(
-                        'Parameter "%s" in setter "%s" for property "%s" in class "%s" must not use type-hinting to maintain php 5 compatibility',
-                        $parameterName,
-                        $expectedSetterName,
-                        $propertyName,
-                        $className
-                    ));
+                $this->assertTrue($reflectionParameter->hasType(), sprintf($setterHintErrMsg, 'bool'));
+                $this->assertEquals('bool',
+                    $reflectionParameter->getType()->getName(),
+                    sprintf($setterHintErrMsg, 'bool'));
                 break;
 
             case $propertyVarType instanceof Array_:

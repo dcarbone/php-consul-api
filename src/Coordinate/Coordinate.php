@@ -86,7 +86,7 @@ class Coordinate extends AbstractModel {
     /**
      * @return bool
      */
-    public function isValid(): bool {
+    public function IsValid(): bool {
         foreach ($this->Vec as $vec) {
             if (!is_finite($vec)) {
                 return false;
@@ -99,7 +99,7 @@ class Coordinate extends AbstractModel {
      * @param \DCarbone\PHPConsulAPI\Coordinate\Coordinate $other
      * @return bool
      */
-    public function isCompatibleWith(Coordinate $other): bool {
+    public function IsCompatibleWith(Coordinate $other): bool {
         return count($this->Vec) === count($other->Vec);
     }
 
@@ -109,8 +109,8 @@ class Coordinate extends AbstractModel {
      * @param \DCarbone\PHPConsulAPI\Coordinate\Coordinate $other
      * @return \DCarbone\PHPConsulAPI\Coordinate\Coordinate
      */
-    public function applyForce(CoordinateConfig $config, float $force, Coordinate $other): Coordinate {
-        if (!$this->isCompatibleWith($other)) {
+    public function ApplyForce(CoordinateConfig $config, float $force, Coordinate $other): Coordinate {
+        if (!$this->IsCompatibleWith($other)) {
             throw new DimensionalityConflictException();
         }
 
@@ -128,10 +128,10 @@ class Coordinate extends AbstractModel {
      * @param \DCarbone\PHPConsulAPI\Coordinate\Coordinate $other
      * @return \DCarbone\Go\Time\Duration
      */
-    public function distanceTo(Coordinate $other): Time\Duration {
+    public function DistanceTo(Coordinate $other): Time\Duration {
         static $secondsToNanoseconds = 1.0e9;
 
-        if (!$this->isCompatibleWith($other)) {
+        if (!$this->IsCompatibleWith($other)) {
             throw new DimensionalityConflictException();
         }
 

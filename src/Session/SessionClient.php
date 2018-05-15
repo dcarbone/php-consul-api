@@ -39,7 +39,7 @@ class SessionClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function createNoChecks(SessionEntry $sessionEntry = null, WriteOptions $options = null): array {
+    public function CreateNoChecks(SessionEntry $sessionEntry = null, WriteOptions $options = null): array {
         if (null === $sessionEntry) {
             $sessionEntry = new SessionEntry;
         } else {
@@ -62,7 +62,7 @@ class SessionClient extends AbstractClient {
             return ['', $wm, $err];
         }
 
-        return [$data['ID'], $wm, null];
+        return [$data['ID'] ?? '', $wm, null];
     }
 
     /**
@@ -74,7 +74,7 @@ class SessionClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function create(SessionEntry $sessionEntry = null, WriteOptions $options = null): array {
+    public function Create(SessionEntry $sessionEntry = null, WriteOptions $options = null): array {
         $r = new Request('PUT', 'v1/session/create', $this->config, $sessionEntry);
         $r->setWriteOptions($options);
 
@@ -92,7 +92,7 @@ class SessionClient extends AbstractClient {
             return ['', $wm, $err];
         }
 
-        return [$data['ID'], $wm, null];
+        return [$data['ID'] ?? '', $wm, null];
     }
 
     /**
@@ -103,7 +103,7 @@ class SessionClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function destroy(string $id, WriteOptions $options = null): array {
+    public function Destroy(string $id, WriteOptions $options = null): array {
         $r = new Request('PUT', sprintf('v1/session/destroy/%s', $id), $this->config);
         $r->setWriteOptions($options);
 
@@ -124,7 +124,7 @@ class SessionClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function renew(string $id, WriteOptions $options = null): array {
+    public function Renew(string $id, WriteOptions $options = null): array {
         $r = new Request('PUT', sprintf('v1/session/renew/%s', $id), $this->config);
         $r->setWriteOptions($options);
 
@@ -159,7 +159,7 @@ class SessionClient extends AbstractClient {
             return [null, $wm, $err];
         }
 
-        return [$this->_hydrateEntries($data), $wm, null];
+        return [$this->hydrateEntries($data), $wm, null];
     }
 
     /**
@@ -171,7 +171,7 @@ class SessionClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function info(string $id, QueryOptions $options = null): array {
+    public function Info(string $id, QueryOptions $options = null): array {
         $r = new Request('GET', sprintf('v1/session/info/%s', $id), $this->config);
         $r->setQueryOptions($options);
 
@@ -193,7 +193,7 @@ class SessionClient extends AbstractClient {
             return [null, $qm, null];
         }
 
-        return [$this->_hydrateEntries($data), $qm, null];
+        return [$this->hydrateEntries($data), $qm, null];
     }
 
     /**
@@ -205,7 +205,7 @@ class SessionClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function node(string $node, QueryOptions $options = null): array {
+    public function Node(string $node, QueryOptions $options = null): array {
         $r = new Request('GET', sprintf('v1/session/node/%s', $node), $this->config);
         $r->setQueryOptions($options);
 
@@ -223,7 +223,7 @@ class SessionClient extends AbstractClient {
             return [null, $qm, $err];
         }
 
-        return [$this->_hydrateEntries($data), $qm, null];
+        return [$this->hydrateEntries($data), $qm, null];
     }
 
     /**
@@ -234,7 +234,7 @@ class SessionClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function listSessions(QueryOptions $options = null): array {
+    public function List(QueryOptions $options = null): array {
         $r = new Request('GET', 'v1/session/list', $this->config);
         $r->setQueryOptions($options);
 
@@ -252,14 +252,14 @@ class SessionClient extends AbstractClient {
             return [null, $qm, $err];
         }
 
-        return [$this->_hydrateEntries($data), $qm, null];
+        return [$this->hydrateEntries($data), $qm, null];
     }
 
     /**
      * @param array $data
      * @return array
      */
-    private function _hydrateEntries(array $data) {
+    private function hydrateEntries(array $data) {
         $entries = [];
         foreach ($data as $entry) {
             $entries[] = new SessionEntry($entry);

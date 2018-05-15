@@ -58,11 +58,11 @@ class KVPair extends AbstractModel {
     }
 
     /**
-     * @param string $Key
+     * @param string $key
      * @return \DCarbone\PHPConsulAPI\KV\KVPair
      */
-    public function setKey(string $Key): KVPair {
-        $this->Key = $Key;
+    public function setKey(string $key): KVPair {
+        $this->Key = $key;
         return $this;
     }
 
@@ -74,11 +74,11 @@ class KVPair extends AbstractModel {
     }
 
     /**
-     * @param int $CreateIndex
+     * @param int $createIndex
      * @return \DCarbone\PHPConsulAPI\KV\KVPair
      */
-    public function setCreateIndex(int $CreateIndex): KVPair {
-        $this->CreateIndex = $CreateIndex;
+    public function setCreateIndex(int $createIndex): KVPair {
+        $this->CreateIndex = $createIndex;
         return $this;
     }
 
@@ -90,11 +90,11 @@ class KVPair extends AbstractModel {
     }
 
     /**
-     * @param int $ModifyIndex
+     * @param int $modifyIndex
      * @return \DCarbone\PHPConsulAPI\KV\KVPair
      */
-    public function setModifyIndex(int $ModifyIndex): KVPair {
-        $this->ModifyIndex = $ModifyIndex;
+    public function setModifyIndex(int $modifyIndex): KVPair {
+        $this->ModifyIndex = $modifyIndex;
         return $this;
     }
 
@@ -106,11 +106,11 @@ class KVPair extends AbstractModel {
     }
 
     /**
-     * @param int $LockIndex
+     * @param int $lockIndex
      * @return \DCarbone\PHPConsulAPI\KV\KVPair
      */
-    public function setLockIndex(int $LockIndex): KVPair {
-        $this->LockIndex = $LockIndex;
+    public function setLockIndex(int $lockIndex): KVPair {
+        $this->LockIndex = $lockIndex;
         return $this;
     }
 
@@ -122,11 +122,11 @@ class KVPair extends AbstractModel {
     }
 
     /**
-     * @param int $Flags
+     * @param int $flags
      * @return \DCarbone\PHPConsulAPI\KV\KVPair
      */
-    public function setFlags(int $Flags): KVPair {
-        $this->Flags = $Flags;
+    public function setFlags(int $flags): KVPair {
+        $this->Flags = $flags;
         return $this;
     }
 
@@ -138,11 +138,11 @@ class KVPair extends AbstractModel {
     }
 
     /**
-     * @param null|string $Value
+     * @param null|string $value
      * @return \DCarbone\PHPConsulAPI\KV\KVPair
      */
-    public function setValue(string $Value): KVPair {
-        $this->Value = $Value;
+    public function setValue(string $value): KVPair {
+        $this->Value = $value;
         return $this;
     }
 
@@ -154,11 +154,11 @@ class KVPair extends AbstractModel {
     }
 
     /**
-     * @param string $Session
+     * @param string $session
      * @return \DCarbone\PHPConsulAPI\KV\KVPair
      */
-    public function setSession(string $Session): KVPair {
-        $this->Session = $Session;
+    public function setSession(string $session): KVPair {
+        $this->Session = $session;
         return $this;
     }
 

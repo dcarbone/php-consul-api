@@ -48,12 +48,9 @@ class PreparedQueryExecuteResponse extends AbstractModel {
 
         if (0 < count($this->Nodes)) {
             $this->Nodes = array_filter($this->Nodes);
-            if (0 < ($cnt = count($this->Nodes))) {
-                for ($i = 0; $i < $cnt; $i++) {
-                    if (!($this->Nodes[$i] instanceof ServiceEntry)) {
-                        $this->Nodes[$i] = new ServiceEntry((array)$this->Nodes[$i]);
-                    }
-
+            foreach ($this->Nodes as &$v) {
+                if (!($v instanceof ServiceEntry)) {
+                    $v = new ServiceEntry($v);
                 }
             }
         }

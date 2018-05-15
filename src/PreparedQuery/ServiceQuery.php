@@ -55,11 +55,11 @@ class ServiceQuery extends AbstractModel {
     }
 
     /**
-     * @param string $Service
+     * @param string $service
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
-    public function setService(string $Service): ServiceQuery {
-        $this->Service = $Service;
+    public function setService(string $service): ServiceQuery {
+        $this->Service = $service;
         return $this;
     }
 
@@ -71,11 +71,11 @@ class ServiceQuery extends AbstractModel {
     }
 
     /**
-     * @param string $Near
+     * @param string $near
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
-    public function setNear(string $Near): ServiceQuery {
-        $this->Near = $Near;
+    public function setNear(string $near): ServiceQuery {
+        $this->Near = $near;
         return $this;
     }
 
@@ -87,11 +87,11 @@ class ServiceQuery extends AbstractModel {
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions $Failover
+     * @param \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions $failover
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
-    public function setFailover(QueryDatacenterOptions $Failover): ServiceQuery {
-        $this->Failover = $Failover;
+    public function setFailover(QueryDatacenterOptions $failover): ServiceQuery {
+        $this->Failover = $failover;
         return $this;
     }
 
@@ -103,11 +103,11 @@ class ServiceQuery extends AbstractModel {
     }
 
     /**
-     * @param boolean $OnlyPassing
+     * @param boolean $onlyPassing
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
-    public function setOnlyPassing(bool $OnlyPassing): ServiceQuery {
-        $this->OnlyPassing = $OnlyPassing;
+    public function setOnlyPassing(bool $onlyPassing): ServiceQuery {
+        $this->OnlyPassing = $onlyPassing;
         return $this;
     }
 }

@@ -66,6 +66,9 @@ class Consul {
     const KVCheckIndex = 'check-index';
     const KVCheckNotExists = 'check-not-exists';
 
+    const SessionBehaviorRelease = 'release';
+    const SessionBehaviorDelete = 'delete';
+
     /** @var \DCarbone\PHPConsulAPI\ACL\ACLClient */
     public $ACL;
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentClient */

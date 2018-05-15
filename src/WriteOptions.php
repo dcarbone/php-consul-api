@@ -36,10 +36,10 @@ class WriteOptions extends AbstractModel {
     }
 
     /**
-     * @param string $Datacenter
+     * @param string $datacenter
      */
-    public function setDatacenter(string $Datacenter) {
-        $this->Datacenter = $Datacenter;
+    public function setDatacenter(string $datacenter) {
+        $this->Datacenter = $datacenter;
     }
 
     /**
@@ -50,10 +50,10 @@ class WriteOptions extends AbstractModel {
     }
 
     /**
-     * @param string $Token
+     * @param string $token
      */
-    public function setToken(string $Token) {
-        $this->Token = $Token;
+    public function setToken(string $token) {
+        $this->Token = $token;
     }
 
     /**
@@ -64,9 +64,9 @@ class WriteOptions extends AbstractModel {
     }
 
     /**
-     * @param int $RelayFactor
+     * @param int $relayFactor
      */
-    public function setRelayFactor(int $RelayFactor) {
-        $this->RelayFactor = $RelayFactor;
+    public function setRelayFactor(int $relayFactor) {
+        $this->RelayFactor = $relayFactor;
     }
 }

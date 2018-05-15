@@ -46,11 +46,11 @@ class SampledValue extends AbstractModel {
     }
 
     /**
-     * @param string $Name
+     * @param string $name
      * @return SampledValue
      */
-    public function setName(string $Name): SampledValue {
-        $this->Name = $Name;
+    public function setName(string $name): SampledValue {
+        $this->Name = $name;
         return $this;
     }
 
@@ -62,11 +62,11 @@ class SampledValue extends AbstractModel {
     }
 
     /**
-     * @param int $Count
+     * @param int $count
      * @return SampledValue
      */
-    public function setCount(int $Count): SampledValue {
-        $this->Count = $Count;
+    public function setCount(int $count): SampledValue {
+        $this->Count = $count;
         return $this;
     }
 
@@ -78,11 +78,11 @@ class SampledValue extends AbstractModel {
     }
 
     /**
-     * @param float $Sum
+     * @param float $sum
      * @return SampledValue
      */
-    public function setSum(float $Sum): SampledValue {
-        $this->Sum = $Sum;
+    public function setSum(float $sum): SampledValue {
+        $this->Sum = $sum;
         return $this;
     }
 
@@ -94,11 +94,11 @@ class SampledValue extends AbstractModel {
     }
 
     /**
-     * @param float $Min
+     * @param float $min
      * @return SampledValue
      */
-    public function setMin(float $Min): SampledValue {
-        $this->Min = $Min;
+    public function setMin(float $min): SampledValue {
+        $this->Min = $min;
         return $this;
     }
 
@@ -110,11 +110,11 @@ class SampledValue extends AbstractModel {
     }
 
     /**
-     * @param float $Max
+     * @param float $max
      * @return SampledValue
      */
-    public function setMax(float $Max): SampledValue {
-        $this->Max = $Max;
+    public function setMax(float $max): SampledValue {
+        $this->Max = $max;
         return $this;
     }
 
@@ -126,11 +126,11 @@ class SampledValue extends AbstractModel {
     }
 
     /**
-     * @param float $Mean
+     * @param float $mean
      * @return SampledValue
      */
-    public function setMean(float $Mean): SampledValue {
-        $this->Mean = $Mean;
+    public function setMean(float $mean): SampledValue {
+        $this->Mean = $mean;
         return $this;
     }
 
@@ -142,11 +142,11 @@ class SampledValue extends AbstractModel {
     }
 
     /**
-     * @param array $Labels
+     * @param array $labels
      * @return SampledValue
      */
-    public function setLabels(array $Labels): SampledValue {
-        $this->Labels = $Labels;
+    public function setLabels(array $labels): SampledValue {
+        $this->Labels = $labels;
         return $this;
     }
 }

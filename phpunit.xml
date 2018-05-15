@@ -43,6 +43,9 @@
         <testsuite name="usage-operator">
             <directory>./tests/Usage/Operator</directory>
         </testsuite>
+        <testsuite name="usage-session">
+            <directory>./tests/Usage/Session</directory>
+        </testsuite>
     </testsuites>
 
     <filter>

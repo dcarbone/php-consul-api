@@ -51,10 +51,10 @@ class QueryOptions extends AbstractModel {
     }
 
     /**
-     * @param string $Datacenter
+     * @param string $datacenter
      */
-    public function setDatacenter(string $Datacenter) {
-        $this->Datacenter = $Datacenter;
+    public function setDatacenter(string $datacenter) {
+        $this->Datacenter = $datacenter;
     }
 
     /**
@@ -65,10 +65,10 @@ class QueryOptions extends AbstractModel {
     }
 
     /**
-     * @param bool $AllowStale
+     * @param bool $allowStale
      */
-    public function setAllowStale(bool $AllowStale) {
-        $this->AllowStale = $AllowStale;
+    public function setAllowStale(bool $allowStale) {
+        $this->AllowStale = $allowStale;
     }
 
     /**
@@ -79,10 +79,10 @@ class QueryOptions extends AbstractModel {
     }
 
     /**
-     * @param bool $RequireConsistent
+     * @param bool $requireConsistent
      */
-    public function setRequireConsistent(bool $RequireConsistent) {
-        $this->RequireConsistent = $RequireConsistent;
+    public function setRequireConsistent(bool $requireConsistent) {
+        $this->RequireConsistent = $requireConsistent;
     }
 
     /**
@@ -93,10 +93,10 @@ class QueryOptions extends AbstractModel {
     }
 
     /**
-     * @param int $WaitIndex
+     * @param int $waitIndex
      */
-    public function setWaitIndex(int $WaitIndex) {
-        $this->WaitIndex = $WaitIndex;
+    public function setWaitIndex(int $waitIndex) {
+        $this->WaitIndex = $waitIndex;
     }
 
     /**
@@ -107,10 +107,10 @@ class QueryOptions extends AbstractModel {
     }
 
     /**
-     * @param int $WaitTime
+     * @param int $waitTime
      */
-    public function setWaitTime(int $WaitTime) {
-        $this->WaitTime = $WaitTime;
+    public function setWaitTime(int $waitTime) {
+        $this->WaitTime = $waitTime;
     }
 
     /**
@@ -121,10 +121,10 @@ class QueryOptions extends AbstractModel {
     }
 
     /**
-     * @param string $Token
+     * @param string $token
      */
-    public function setToken(string $Token) {
-        $this->Token = $Token;
+    public function setToken(string $token) {
+        $this->Token = $token;
     }
 
     /**
@@ -135,10 +135,10 @@ class QueryOptions extends AbstractModel {
     }
 
     /**
-     * @param string $Near
+     * @param string $near
      */
-    public function setNear(string $Near) {
-        $this->Near = $Near;
+    public function setNear(string $near) {
+        $this->Near = $near;
     }
 
     /**
@@ -149,10 +149,10 @@ class QueryOptions extends AbstractModel {
     }
 
     /**
-     * @param array $NodeMeta
+     * @param array $nodeMeta
      */
-    public function setNodeMeta(array $NodeMeta) {
-        $this->NodeMeta = $NodeMeta;
+    public function setNodeMeta(array $nodeMeta) {
+        $this->NodeMeta = $nodeMeta;
     }
 
     /**
@@ -163,10 +163,10 @@ class QueryOptions extends AbstractModel {
     }
 
     /**
-     * @param int $RelayFactor
+     * @param int $relayFactor
      */
-    public function setRelayFactor(int $RelayFactor) {
-        $this->RelayFactor = $RelayFactor;
+    public function setRelayFactor(int $relayFactor) {
+        $this->RelayFactor = $relayFactor;
     }
 
     /**
@@ -177,9 +177,9 @@ class QueryOptions extends AbstractModel {
     }
 
     /**
-     * @param bool $Pretty
+     * @param bool $pretty
      */
-    public function setPretty(bool $Pretty) {
-        $this->Pretty = $Pretty;
+    public function setPretty(bool $pretty) {
+        $this->Pretty = $pretty;
     }
 }
