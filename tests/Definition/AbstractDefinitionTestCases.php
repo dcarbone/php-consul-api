@@ -587,25 +587,25 @@ abstract class AbstractDefinitionTestCases extends TestCase {
             case $propertyVarType instanceof String_:
                 $this->assertTrue($reflectionParameter->hasType(), sprintf($setterHintErrMsg, 'string'));
                 $this->assertEquals('string',
-                    $reflectionParameter->getType()->getName(),
+                    (string)$reflectionParameter->getType(),
                     sprintf($setterHintErrMsg, 'string'));
                 break;
             case $propertyVarType instanceof Integer:
                 $this->assertTrue($reflectionParameter->hasType(), sprintf($setterHintErrMsg, 'int'));
                 $this->assertStringStartsWith('int',
-                    $reflectionParameter->getType()->getName(),
+                    (string)$reflectionParameter->getType(),
                     sprintf($setterHintErrMsg, 'int'));
                 break;
             case $propertyVarType instanceof Float_:
                 $this->assertTrue($reflectionParameter->hasType(), sprintf($setterHintErrMsg, 'float'));
                 $this->assertEquals('float',
-                    $reflectionParameter->getType()->getName(),
+                    (string)$reflectionParameter->getType(),
                     sprintf($setterHintErrMsg, 'float'));
                 break;
             case $propertyVarType instanceof Boolean:
                 $this->assertTrue($reflectionParameter->hasType(), sprintf($setterHintErrMsg, 'bool'));
                 $this->assertEquals('bool',
-                    $reflectionParameter->getType()->getName(),
+                    (string)$reflectionParameter->getType(),
                     sprintf($setterHintErrMsg, 'bool'));
                 break;
 
