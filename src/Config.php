@@ -448,7 +448,7 @@ class Config {
      * @return array
      */
     private static function getDefaultConfig(): array {
-        static $conf = [
+        $conf = [
             'Address' => '127.0.0.1:8500',
             'Scheme'  => 'http',
         ];
