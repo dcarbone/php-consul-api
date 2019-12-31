@@ -298,7 +298,7 @@ class KVClient extends AbstractClient {
      * )
      */
     public function Txn(KVTxnOps $txn, QueryOptions $options = null): array {
-        $ops = new TxnOps();
+        $ops = new KVTxnOps();
         foreach ($txn as $op) {
             $ops->append(clone $op);
         }
