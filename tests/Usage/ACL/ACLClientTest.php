@@ -43,7 +43,7 @@ class ACLClientTest extends AbstractUsageTests {
         list($aclID, $wm, $err) = $client->bootstrap();
         $this->assertNull($err, 'ACL::bootstrap() returned error: '.$err);
         $this->assertInstanceOf(WriteMeta::class, $wm);
-        $this->assertInternalType('string', $aclID);
+        $this->assertIsString($aclID);
 
         return $aclID;
     }
@@ -58,7 +58,7 @@ class ACLClientTest extends AbstractUsageTests {
         list($acls, $qm, $err) = $client->info($aclID);
         $this->assertNull($err, 'ACL::info() return error: '.$err);
         $this->assertInstanceOf(QueryMeta::class, $qm);
-        $this->assertInternalType('array', $acls);
+        $this->assertIsArray($acls);
         var_dump($acls);
     }
 }

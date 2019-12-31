@@ -224,7 +224,7 @@ class KVCRUDTest extends AbstractUsageTests {
         $this->assertInstanceOf(QueryMeta::class, $qm);
 
         try {
-            $this->assertInternalType('array', $list);
+            $this->assertIsArray($list);
             $this->assertCount(3, $list);
             $this->assertContainsOnly('string', $list, true);
 

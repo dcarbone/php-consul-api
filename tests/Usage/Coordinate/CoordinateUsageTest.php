@@ -56,7 +56,7 @@ class CoordinateUsageTest extends AbstractUsageTests {
         $config = CoordinateConfig::Default();
         $coord = new Coordinate($config);
 
-        $this->assertInternalType('array', $coord->Vec);
+        $this->assertIsArray($coord->Vec);
         $this->assertCount($config->Dimensionality, $coord->Vec);
         $this->assertContainsOnly('float', $coord->Vec);
         $this->assertEquals($config->VivaldiErrorMax, $coord->Error);
@@ -69,7 +69,7 @@ class CoordinateUsageTest extends AbstractUsageTests {
             'Vec' => [0.1, 0.2],
         ]);
         $this->assertInstanceOf(Coordinate::class, $coord);
-        $this->assertInternalType('array', $coord->Vec);
+        $this->assertIsArray($coord->Vec);
         $this->assertCount(2, $coord->Vec);
         $this->assertContainsOnly('float', $coord->Vec);
         $this->assertEquals($coord->Vec[0], 0.1);

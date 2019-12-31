@@ -65,7 +65,7 @@ class ValuesUsageTest extends TestCase {
         $values->add('test', 'value3');
 
         $all = $values->getAll('test');
-        $this->assertInternalType('array', $all);
+        $this->assertIsArray($all);
         $this->assertCount(3, $all);
     }
 }

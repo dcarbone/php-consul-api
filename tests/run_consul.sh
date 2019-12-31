@@ -5,12 +5,12 @@ TMPDIR=${DIR}/../tmp
 
 FLAGS=""
 
-for flag in $@
+for flag in "$@"
 do
     FLAGS+=" ${flag}"
 done;
 
 # TODO: maybe some rtrimming?
-echo Starting Single consul instance with flags \""${FLAGS}"\" >> ${TMPDIR}/consul.log
+echo Starting Single consul instance with flags \""${FLAGS}"\" >> "${TMPDIR}"/consul.log
 
-/usr/bin/env consul agent${FLAGS} >> ${TMPDIR}/consul.log 2>&1 & echo $! > ${TMPDIR}/consul.pid
+/usr/bin/env consul agent"${FLAGS}" >> "${TMPDIR}"/consul.log 2>&1 & echo $! > "${TMPDIR}"/consul.pid

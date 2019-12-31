@@ -34,12 +34,12 @@ class SessionClientUsageTest extends AbstractUsageTests {
         ]));
         $this->assertNull($err, sprintf('Error creating session: %s', $err));
         $this->assertInstanceOf(WriteMeta::class, $wm);
-        $this->assertInternalType('string', $id, 'Expected ID to be string');
+        $this->assertIsString($id, 'Expected ID to be string');
 
         list($sessions, $qm, $err) = $client->Info($id);
         $this->assertNull($err, sprintf('Error getting %s info: %s', $id, $err));
         $this->assertInstanceOf(QueryMeta::class, $qm);
-        $this->assertInternalType('array', $sessions);
+        $this->assertIsArray($sessions);
         $this->assertCount(1, $sessions);
         $this->assertContainsOnly(SessionEntry::class, $sessions);
         $this->assertEquals($id, $sessions[0]->ID);
@@ -56,7 +56,7 @@ class SessionClientUsageTest extends AbstractUsageTests {
         list($sessions, $wm, $err) = $client->Renew($id);
         $this->assertNull($err, sprintf('Error renewing session: %s', $err));
         $this->assertInstanceOf(WriteMeta::class, $wm);
-        $this->assertInternalType('array', $sessions);
+        $this->assertIsArray($sessions);
         $this->assertCount(1, $sessions);
         $this->assertContainsOnlyInstancesOf(SessionEntry::class, $sessions);
 

@@ -29,23 +29,23 @@ abstract class AbstractUsageTests extends TestCase {
     /** @var bool */
     protected $singlePerTest = false;
 
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass(): void {
         if (static::$singlePerClass) {
             ConsulManager::startSingleDev();
         }
     }
 
-    public static function tearDownAfterClass() {
+    public static function tearDownAfterClass(): void {
         ConsulManager::stopSingle();
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         if ($this->singlePerTest) {
             ConsulManager::startSingleDev();
         }
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         if ($this->singlePerTest) {
             ConsulManager::stopSingle();
         }

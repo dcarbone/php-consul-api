@@ -28,8 +28,8 @@ class ConsulDefinitionTest extends TestCase {
 
     protected $clientClassnames = [];
 
-    protected function setUp() {
-        foreach (glob(__DIR__.'/../../src/*', GLOB_ONLYDIR) as $dir) {
+    protected function setUp(): void {
+        foreach (glob(__DIR__ . '/../../src/*', GLOB_ONLYDIR) as $dir) {
             $exp = explode('/', $dir);
             $this->clientClassnames[] = sprintf(
                 'DCarbone\\PHPConsulAPI\\%s\\%1$sClient',
@@ -57,6 +57,7 @@ class ConsulDefinitionTest extends TestCase {
             $exp = explode('\\', $clientClass);
             $propName = str_replace(['.php', 'Client'], '', end($exp));
             $this->assertClassHasAttribute($propName, Consul::class);
+            // TODO: refactor this in line with new shit: https://github.com/sebastianbergmann/phpunit/issues/3339
             $this->assertAttributeInstanceOf($clientClass, $propName, $consul);
         }
     }

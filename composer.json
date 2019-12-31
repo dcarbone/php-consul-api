@@ -16,7 +16,7 @@
     "php-consul-api"
   ],
   "require": {
-    "php": "^7.0",
+    "php": "^7.1",
     "dcarbone/gotime": "@stable",
     "guzzlehttp/guzzle": "~6",
     "guzzlehttp/psr7": "~1"

@@ -54,6 +54,7 @@ abstract class AbstractDefinitionTestCases extends TestCase {
 
     /**
      * @return \ReflectionClass
+     * @throws \ReflectionException
      */
     protected function getReflectionClass() {
         if (!isset($this->reflectionClass)) {
@@ -78,7 +79,7 @@ abstract class AbstractDefinitionTestCases extends TestCase {
     /**
      * @inheritdoc
      */
-    protected function setUp() {
+    protected function setUp(): void {
         $this->docBlockFactory = DocBlockFactory::createInstance();
     }
 
@@ -150,7 +151,7 @@ abstract class AbstractDefinitionTestCases extends TestCase {
                     $this->assertInstanceOf(Array_::class,
                         $parameterParamType,
                         sprintf(
-                            'The first parameter in constructor method for class "%s" must be simply "array", "%s" found',
+                            'The first parameter (%s) in constructor method for class "%s" must be simply "array", "%s" found',
                             $parameterName,
                             $className,
                             (string)$parameterParamType
@@ -245,7 +246,7 @@ abstract class AbstractDefinitionTestCases extends TestCase {
     }
 
     /**
-     * @param \ReflectionClass    $reflectionClass
+     * @param \ReflectionClass $reflectionClass
      * @param \ReflectionProperty $reflectionProperty
      */
     protected function _assertPropertyPHPDocExists(\ReflectionClass $reflectionClass,
@@ -281,7 +282,7 @@ abstract class AbstractDefinitionTestCases extends TestCase {
     }
 
     /**
-     * @param \ReflectionClass    $reflectionClass
+     * @param \ReflectionClass $reflectionClass
      * @param \ReflectionProperty $reflectionProperty
      */
     protected function _assertCorrectPropertyZeroValue(\ReflectionClass $reflectionClass,
@@ -323,24 +324,24 @@ abstract class AbstractDefinitionTestCases extends TestCase {
 
             case $propertyVarType instanceof Array_:
                 $failMessage = sprintf($failMessageTemplate, 'an array');
-                $this->assertInternalType('array', $defaultValue, $failMessage);
+                $this->assertIsArray($defaultValue, $failMessage);
                 break;
 
             case $propertyVarType instanceof Boolean:
                 $failMessage = sprintf($failMessageTemplate, 'the boolean value false');
-                $this->assertInternalType('boolean', $defaultValue, $failMessage);
+                $this->assertIsBool($defaultValue, $failMessage);
                 $this->assertFalse($defaultValue, $failMessage);
                 break;
 
             case $propertyVarType instanceof Float_:
                 $failMessage = sprintf($failMessageTemplate, 'a float value of 0.0');
-                $this->assertInternalType('float', $defaultValue, $failMessage);
+                $this->assertIsFloat($defaultValue, $failMessage);
                 $this->assertEquals(0.0, $defaultValue, $failMessage);
                 break;
 
             case $propertyVarType instanceof Integer:
                 $failMessage = sprintf($failMessageTemplate, 'the integer 0');
-                $this->assertInternalType('integer', $defaultValue, $failMessage);
+                $this->assertIsInt($defaultValue, $failMessage);
                 $this->assertEquals(0, $defaultValue, $failMessage);
                 break;
 
@@ -364,14 +365,14 @@ abstract class AbstractDefinitionTestCases extends TestCase {
                     // test for "slice" mimicking...
                     $failMessage = sprintf($failMessageTemplate, $fqsn);
                     $this->assertInstanceOf($fqsn, $defaultValue, $failMessage);
-                } else if (in_array('DCarbone\\PHPConsulAPI\\ScalarType', $implements)) {
+                } elseif (in_array('DCarbone\\PHPConsulAPI\\ScalarType', $implements)) {
                     // test for "typed scalars" mimicking...
                     $failMessage = sprintf($failMessageTemplate, $defaultValue, $fqsn);
                     $this->assertInstanceOf($fqsn, $defaultValue, $failMessage);
-                } else if ($fqsn === Time\Time::class) {
+                } elseif ($fqsn === Time\Time::class) {
                     $failMessage = sprintf('instance of %s', Time\Time::class);
                     $this->assertInstanceOf(Time\Time::class, $defaultValue, $failMessage);
-                } else if ($fqsn === Time\Duration::class) {
+                } elseif ($fqsn === Time\Duration::class) {
                     $failMessage = sprintf('instance of %s', Time\Duration::class);
                     $this->assertInstanceOf(Time\Duration::class, $defaultValue, $failMessage);
                 } else {
@@ -383,7 +384,7 @@ abstract class AbstractDefinitionTestCases extends TestCase {
 
             case $propertyVarType instanceof String_:
                 $failMessage = sprintf($failMessageTemplate, 'an empty string');
-                $this->assertInternalType('string', $defaultValue, $failMessage);
+                $this->assertIsString($defaultValue, $failMessage);
                 $this->assertEquals('', $defaultValue, $failMessage);
                 break;
 
@@ -398,8 +399,9 @@ abstract class AbstractDefinitionTestCases extends TestCase {
     }
 
     /**
-     * @param \ReflectionClass    $reflectionClass
+     * @param \ReflectionClass $reflectionClass
      * @param \ReflectionProperty $reflectionProperty
+     * @throws \ReflectionException
      */
     protected function _assertCorrectGetterImplementation(\ReflectionClass $reflectionClass,
                                                           \ReflectionProperty $reflectionProperty) {
@@ -465,8 +467,9 @@ abstract class AbstractDefinitionTestCases extends TestCase {
     }
 
     /**
-     * @param \ReflectionClass    $reflectionClass
+     * @param \ReflectionClass $reflectionClass
      * @param \ReflectionProperty $reflectionProperty
+     * @throws \ReflectionException
      */
     protected function _assertCorrectSetterImplementation(\ReflectionClass $reflectionClass,
                                                           \ReflectionProperty $reflectionProperty) {
@@ -526,7 +529,7 @@ abstract class AbstractDefinitionTestCases extends TestCase {
                     $expectedSetterName,
                     $propertyName
                 ));
-        } else if (!$reflectionClass->hasMethod($expectedSetterName)) {
+        } elseif (!$reflectionClass->hasMethod($expectedSetterName)) {
             return;
         }
 

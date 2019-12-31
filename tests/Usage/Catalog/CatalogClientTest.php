@@ -79,7 +79,7 @@ class CatalogClientTest extends AbstractUsageTests {
         list($service, $qm, $err) = $client->Service(self::ServiceName);
         $this->assertNull($err, 'CatalogClient::service returned error: '.$err);
         $this->assertInstanceOf(QueryMeta::class, $qm);
-        $this->assertInternalType('array', $service);
+        $this->assertIsArray($service);
         $this->assertCount(1, $service);
         $this->assertInstanceOf(CatalogService::class, reset($service));
     }
@@ -114,7 +114,7 @@ class CatalogClientTest extends AbstractUsageTests {
         list($service, $qm, $err) = $client->Service(self::ServiceName);
         $this->assertNull($err, 'CatalogClient::service returned error: '.$err);
         $this->assertInstanceOf(QueryMeta::class, $qm);
-        $this->assertInternalType('array', $service);
+        $this->assertIsArray($service);
 
         try {
             $this->assertCount(2, $service);
@@ -138,7 +138,7 @@ class CatalogClientTest extends AbstractUsageTests {
         try {
             $this->assertNull($err, 'CatalogClient::services returned error: '.$err);
             $this->assertInstanceOf(QueryMeta::class, $qm);
-            $this->assertInternalType('array', $services);
+            $this->assertIsArray($services);
             $this->assertCount(2, $services);
             $this->assertContainsOnly('array', $services);
         } catch (AssertionFailedError $e) {
@@ -180,7 +180,7 @@ class CatalogClientTest extends AbstractUsageTests {
 
         try {
             $this->assertNull($err, 'CatalogClient::datacenters returned error: '.$err);
-            $this->assertInternalType('array', $dcs);
+            $this->assertIsArray($dcs);
             $this->assertCount(1, $dcs);
             $this->assertEquals('dc1', $dcs[0]);
         } catch (AssertionFailedError $e) {
@@ -199,7 +199,7 @@ class CatalogClientTest extends AbstractUsageTests {
         try {
             $this->assertNull($err, 'CatalogClient::nodes returned error: '.$err);
             $this->assertInstanceOf(QueryMeta::class, $qm);
-            $this->assertInternalType('array', $nodes);
+            $this->assertIsArray($nodes);
             // TODO: figure out why there are 2 nodes returned by this call...
             $this->assertCount(2, $nodes);
             $this->assertContainsOnlyInstancesOf(CatalogNode::class, $nodes);
@@ -217,7 +217,7 @@ class CatalogClientTest extends AbstractUsageTests {
 
         list($nodes) = $client->Nodes();
         try {
-            $this->assertInternalType('array', $nodes);
+            $this->assertIsArray($nodes);
             $this->assertCount(2, $nodes);
             $this->assertContainsOnlyInstancesOf(CatalogNode::class, $nodes);
 

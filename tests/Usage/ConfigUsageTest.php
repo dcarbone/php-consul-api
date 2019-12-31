@@ -27,13 +27,13 @@ use PHPUnit\Framework\TestCase;
  */
 class ConfigUsageTest extends TestCase {
     const DEFAULT_ADDRESS = '127.0.0.1:8500';
-    const DEFAULT_SCHEME = 'http';
+    const DEFAULT_SCHEME  = 'http';
 
-    protected function setUp() {
+    protected function setUp(): void {
         ConsulManager::startSingleDev();
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         ConsulManager::stopSingle();
     }
 

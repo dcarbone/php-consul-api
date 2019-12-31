@@ -48,9 +48,7 @@ class AgentClientTest extends AbstractUsageTests {
         $client = new AgentClient(new Config());
 
         $self = $client->Self();
-        $this->assertInternalType(
-            'array',
-            $self,
+        $this->assertIsArray($self,
             sprintf(
                 'Expected AgentClient::self to return array, saw "%s"',
                 gettype($self)
@@ -75,8 +73,7 @@ class AgentClientTest extends AbstractUsageTests {
 
         list($nodeName, $err) = $client->NodeName();
         $this->assertNull($err, sprintf('Unable to get agent node name: %s', $err));
-        $this->assertInternalType('string',
-            $nodeName,
+        $this->assertIsString($nodeName,
             sprintf('node name expected to be string, %s seen', gettype($nodeName)));
         $this->assertNotEmpty($nodeName, 'NodeName was empty!');
     }
@@ -89,7 +86,7 @@ class AgentClientTest extends AbstractUsageTests {
 
         list($members, $err) = $client->Members();
         $this->assertNull($err, sprintf('AgentClient::members returned error: %s', $err));
-        $this->assertInternalType('array', $members);
+        $this->assertIsArray($members);
         $this->assertContainsOnlyInstancesOf(AgentMember::class, $members);
         $this->assertCount(1, $members);
     }
@@ -141,7 +138,7 @@ class AgentClientTest extends AbstractUsageTests {
 
         try {
             $this->assertNull($err, sprintf('AgentClient::services return error: %s', $err));
-            $this->assertInternalType('array', $svcs);
+            $this->assertIsArray($svcs);
             $this->assertContainsOnlyInstancesOf(AgentService::class, $svcs);
 
             // NOTE: will always contain "consul" service
@@ -169,7 +166,7 @@ class AgentClientTest extends AbstractUsageTests {
 
         try {
             $this->assertNull($err, sprintf('AgentClient::services returned error: %s', $err));
-            $this->assertInternalType('array', $svcs);
+            $this->assertIsArray($svcs);
             $this->assertContainsOnlyInstancesOf(AgentService::class, $svcs);
             $this->assertCount(1, $svcs);
         } catch (AssertionFailedError $e) {
@@ -206,7 +203,7 @@ class AgentClientTest extends AbstractUsageTests {
 
         try {
             $this->assertNull($err, sprintf('AgentClient::services returned error: %s', $err));
-            $this->assertInternalType('array', $svcs);
+            $this->assertIsArray($svcs);
             $this->assertContainsOnlyInstancesOf(AgentService::class, $svcs);
             $this->assertCount(2, $svcs);
         } catch (AssertionFailedError $e) {
