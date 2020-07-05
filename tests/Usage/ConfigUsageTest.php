@@ -1,8 +1,8 @@
 <?php namespace DCarbone\PHPConsulAPITests\Usage;
 
+use DCarbone\PHPConsulAPITests\ConsulManager;
 use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\Consul;
-use DCarbone\PHPConsulAPITests\ConsulManager;
 use PHPUnit\Framework\TestCase;
 
 /*
@@ -63,6 +63,6 @@ class ConfigUsageTest extends TestCase {
             sprintf('Default scheme is not "%s"', $expectedScheme));
         $this->assertNotNull($config->getHttpClient(), 'HttpClient is null');
         $this->assertFalse($config->isInsecureSkipVerify(), 'InsecureSkipVerify is not false');
-        $this->assertFalse($config->isTokenInHeader(), 'TokenInHeader is not false');
+        $this->assertTrue($config->isTokenInHeader(), 'TokenInHeader is true');
     }
 }
