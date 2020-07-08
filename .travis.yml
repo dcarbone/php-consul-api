@@ -17,8 +17,8 @@ before_install: phpenv config-add ./tests/php.ini
 install:
   - mkdir -p $HOME/bin
   - export PATH="$HOME/bin:$PATH"
-  - wget "https://releases.hashicorp.com/consul/1.6.2/consul_1.6.2_linux_amd64.zip"
-  - unzip consul_1.6.2_linux_amd64.zip -d $HOME/bin
+  - wget "https://releases.hashicorp.com/consul/1.7.3/consul_1.7.3_linux_amd64.zip"
+  - unzip consul_1.7.3_linux_amd64.zip -d $HOME/bin
   - chmod +x $HOME/bin/consul
   - composer install --no-interaction --no-progress --no-suggest --optimize-autoloader
 
