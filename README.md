@@ -14,7 +14,7 @@ This library is loosely based upon the [official GO client](https://github.com/h
 |0.6.x|0.7-0.8|
 |dev-master|0.9-1.0.0|
 
-Newer versions of the api lib will probably work in a limited capacity with older versions of Consul, but no guarantee 
+Newer versions of the api lib will probably work in a limited capacity with older versions of Consul, but no guarantee
 is made and backwards compatibility issues will not be addressed.
 
 ## Composer
@@ -54,12 +54,12 @@ You may alternatively define values yourself:
 $config = new \DCarbone\PHPConsulAPI\Config([
     'HttpClient' => $client,            // [required] Client conforming to GuzzleHttp\ClientInterface
     'Address' => 'address of server',   // [required]
-    
+
     'Scheme' => 'http or https',            // [optional] defaults to "http"
     'Datacenter' => 'name of datacenter',   // [optional]
     'HttpAuth' => 'user:pass',              // [optional]
     'Token' => 'auth token',                // [optional] default auth token to use
-    'TokenInHeader' => false,               // [optional] specifies whether to send the token in the header or query string
+    'TokenInHeader' => true,                // [optional] specifies whether to send the token in the header or query string
     'InsecureSkipVerify' => false,          // [optional] if set to true, ignores all SSL validation
     'CAFile' => '',                         // [optional] path to ca cert file, see http://docs.guzzlephp.org/en/latest/request-options.html#verify
     'CertFile' => '',                       // [optional] path to client public key.  if set, requires KeyFile also be set
@@ -81,7 +81,7 @@ As an example:
 ```php
 $proxyClient = new \GuzzleHttp\Client(['proxy' => 'whatever proxy you want']]);
 $config = new \DCarbone\PHPConsulAPI\Config([
-    'HttpClient' => $proxyClient,             
+    'HttpClient' => $proxyClient,
     'Address' => 'address of server',
 ]);
 ```

@@ -100,7 +100,7 @@ class Config {
      *
      * @var bool
      */
-    public $TokenInHeader = false;
+    public $TokenInHeader = true;
 
     /**
      * Your HttpClient of choice.
