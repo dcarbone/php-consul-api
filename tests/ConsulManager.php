@@ -20,27 +20,28 @@
  * Class ConsulManager
  * @package DCarbone\PHPConsulAPITests
  */
-abstract class ConsulManager {
+abstract class ConsulManager
+{
+    public const TMP_DIR = __DIR__ . '/../tmp';
+    public const DATA_DIR = self::TMP_DIR . '/consul-data';
 
-    const TMP_DIR = __DIR__.'/../tmp';
-    const DATA_DIR = self::TMP_DIR.'/consul-data';
+    public const START_SINGLE_CMD = __DIR__ . '/run_consul.sh';
+    public const STOP_SINGLE_CMD = __DIR__ . '/stop_consul.sh';
 
-    const START_SINGLE_CMD = __DIR__.'/run_consul.sh';
-    const STOP_SINGLE_CMD = __DIR__.'/stop_consul.sh';
-
-    const PID_FILE = self::TMP_DIR.'/consul.pid';
+    public const PID_FILE = self::TMP_DIR . '/consul.pid';
 
     /**
      * Start up single instance of Consul Agent with specified flags
      *
      * @param string $flags
      */
-    public static function startSingle(string $flags) {
+    public static function startSingle(string $flags)
+    {
         if (file_exists(self::PID_FILE)) {
             self::stopSingle();
         }
 
-        shell_exec(self::START_SINGLE_CMD." {$flags}");
+        shell_exec(self::START_SINGLE_CMD . " {$flags}");
 
         // sleep to allow consul to setup
         sleep(3);
@@ -49,14 +50,16 @@ abstract class ConsulManager {
     /**
      * Start a single instance of a consul agent in "-dev" mode
      */
-    public static function startSingleDev() {
+    public static function startSingleDev()
+    {
         self::startSingle('-dev');
     }
 
     /**
      * Stop running instance
      */
-    public static function stopSingle() {
+    public static function stopSingle()
+    {
         if (file_exists(self::PID_FILE)) {
             shell_exec(self::STOP_SINGLE_CMD);
             if (file_exists(self::PID_FILE)) {

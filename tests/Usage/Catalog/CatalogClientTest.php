@@ -33,12 +33,12 @@ use PHPUnit\Framework\AssertionFailedError;
  * @package DCarbone\PHPConsulAPITests\Usage\Catalog
  */
 class CatalogClientTest extends AbstractUsageTests {
-    const ServiceID1 = 'test1';
-    const ServiceID2 = 'test2';
+    public const ServiceID1 = 'test1';
+    public const ServiceID2 = 'test2';
 
-    const ServiceName = 'testservice';
-    const ServicePort = 1234;
-    const ServiceAddress = '127.0.0.1';
+    public const ServiceName = 'testservice';
+    public const ServicePort = 1234;
+    public const ServiceAddress = '127.0.0.1';
 
     /** @var bool */
     protected static $singlePerClass = true;

@@ -16,7 +16,7 @@ use function DCarbone\PHPConsulAPI\Coordinate\unitVectorAt;
  * @package DCarbone\PHPConsulAPITests\Usage\Coordinate
  */
 class CoordinateUsageTest extends AbstractUsageTests {
-    const ZeroThreshold = 1.0e-6;
+    public const ZeroThreshold = 1.0e-6;
 
     public function testAdd() {
         $vec1 = [1.0, -3.0, 3.0];

@@ -26,8 +26,8 @@ use PHPUnit\Framework\TestCase;
  * @package DCarbone\PHPConsulAPITests\Usage
  */
 class ConfigUsageTest extends TestCase {
-    const DEFAULT_ADDRESS = '127.0.0.1:8500';
-    const DEFAULT_SCHEME  = 'http';
+    public const DEFAULT_ADDRESS = '127.0.0.1:8500';
+    public const DEFAULT_SCHEME  = 'http';
 
     protected function setUp(): void {
         ConsulManager::startSingleDev();
@@ -63,6 +63,5 @@ class ConfigUsageTest extends TestCase {
             sprintf('Default scheme is not "%s"', $expectedScheme));
         $this->assertNotNull($config->getHttpClient(), 'HttpClient is null');
         $this->assertFalse($config->isInsecureSkipVerify(), 'InsecureSkipVerify is not false');
-        $this->assertTrue($config->isTokenInHeader(), 'TokenInHeader is true');
     }
 }

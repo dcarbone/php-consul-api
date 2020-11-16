@@ -13,10 +13,10 @@ class KVClientCASTest extends AbstractUsageTests {
     /** @var bool */
     protected static $singlePerClass = true;
 
-    const KVKey1          = 'testcaskey';
-    const KVOriginalValue = 'originalvalue';
-    const KVUpdatedValue  = 'updatedvalue';
-    const KVUpdatedValue2 = 'updatedvalue2';
+    public const KVKey1          = 'testcaskey';
+    public const KVOriginalValue = 'originalvalue';
+    public const KVUpdatedValue  = 'updatedvalue';
+    public const KVUpdatedValue2 = 'updatedvalue2';
 
     public function testKVWithCAS() {
         /** @var \DCarbone\PHPConsulAPI\KV\KVPair $kv */

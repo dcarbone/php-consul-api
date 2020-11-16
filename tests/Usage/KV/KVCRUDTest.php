@@ -34,16 +34,16 @@ class KVCRUDTest extends AbstractUsageTests {
     /** @var bool */
     protected $singlePerTest = true;
 
-    const KVKey1 = 'testkey1';
-    const KVValue1 = 'testvalue1';
+    public const KVKey1 = 'testkey1';
+    public const KVValue1 = 'testvalue1';
 
-    const KVKey2 = 'testkey2';
-    const KVValue2 = 'testvalue2';
+    public const KVKey2 = 'testkey2';
+    public const KVValue2 = 'testvalue2';
 
-    const KVKey3 = 'testkey3';
-    const KVValue3 = 'testvalue3';
+    public const KVKey3 = 'testkey3';
+    public const KVValue3 = 'testvalue3';
 
-    const KVPrefix = 'tests';
+    public const KVPrefix = 'tests';
 
     public function testCanPutKey() {
         $client = new KVClient(new Config());

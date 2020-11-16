@@ -23,14 +23,14 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * @package DCarbone\PHPConsulAPI\Coordinate
  */
 class CoordinateConfig extends AbstractModel {
-    const DefaultDimensionality       = 8;
-    const DefaultVivaldiErrorMax      = 1.5;
-    const DefaultVivaldiCE            = 0.25;
-    const DefaultVivaldiCC            = 0.25;
-    const DefaultAdjustmentWindowSize = 20;
-    const DefaultHeightMin            = 10.0e-6;
-    const DefaultLatencyFilterSize    = 3;
-    const DefaultGravityRho           = 150.0;
+    public const DefaultDimensionality       = 8;
+    public const DefaultVivaldiErrorMax      = 1.5;
+    public const DefaultVivaldiCE            = 0.25;
+    public const DefaultVivaldiCC            = 0.25;
+    public const DefaultAdjustmentWindowSize = 20;
+    public const DefaultHeightMin            = 10.0e-6;
+    public const DefaultLatencyFilterSize    = 3;
+    public const DefaultGravityRho           = 150.0;
 
     /** @var int */
     public $Dimensionality = 0;

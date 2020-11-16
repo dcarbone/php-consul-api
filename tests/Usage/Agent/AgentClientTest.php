@@ -33,8 +33,8 @@ class AgentClientTest extends AbstractUsageTests {
     /** @var bool */
     protected static $singlePerClass = true;
 
-    const Service1Name = 'test_1_service';
-    const Service2Name = 'test_2_service';
+    public const Service1Name = 'test_1_service';
+    public const Service2Name = 'test_2_service';
 
     public function testCanConstructAgentClient() {
         $client = new AgentClient(new Config());

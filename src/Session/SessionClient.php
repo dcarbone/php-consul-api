@@ -27,8 +27,8 @@ use DCarbone\PHPConsulAPI\WriteOptions;
  * @package DCarbone\PHPConsulAPI\Session
  */
 class SessionClient extends AbstractClient {
-    const SessionBehaviorRelease = 'release';
-    const SessionBehaviorDelete = 'DELETE';
+    public const SessionBehaviorRelease = 'release';
+    public const SessionBehaviorDelete = 'DELETE';
 
     /**
      * @param SessionEntry|null $sessionEntry

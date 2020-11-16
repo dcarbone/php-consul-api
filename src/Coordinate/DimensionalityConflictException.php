@@ -21,7 +21,7 @@
  * @package DCarbone\PHPConsulAPI\Coordinate
  */
 class DimensionalityConflictException extends \DomainException {
-    const DefaultMessage = 'coordinate dimensionality does not match';
+    public const DefaultMessage = 'coordinate dimensionality does not match';
 
     /**
      * DimensionalityConflictException constructor.
