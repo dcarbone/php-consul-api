@@ -3,7 +3,6 @@ dist: xenial
 sudo: false
 
 php:
-  - 7.1
   - 7.2
   - 7.3
   - 7.4
@@ -17,8 +16,8 @@ before_install: phpenv config-add ./tests/php.ini
 install:
   - mkdir -p $HOME/bin
   - export PATH="$HOME/bin:$PATH"
-  - wget "https://releases.hashicorp.com/consul/1.7.3/consul_1.7.3_linux_amd64.zip"
-  - unzip consul_1.7.3_linux_amd64.zip -d $HOME/bin
+  - wget "https://releases.hashicorp.com/consul/1.8.5/consul_1.8.5_linux_amd64.zip"
+  - unzip consul_1.8.5_linux_amd64.zip -d $HOME/bin
   - chmod +x $HOME/bin/consul
   - composer install --no-interaction --no-progress --no-suggest --optimize-autoloader
 
