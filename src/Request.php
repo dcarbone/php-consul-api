@@ -138,11 +138,7 @@ class Request
             $this->Params->set('wait', $this->config->intToMillisecond($options->WaitTime));
         }
         if ('' !== $options->Token) {
-            if ($this->config->TokenInHeader) {
-                $this->Headers->set('X-Consul-Token', $options->Token);
-            } else {
-                $this->Params->set('token', $options->Token);
-            }
+            $this->Headers->set('X-Consul-Token', $options->Token);
         }
         if ('' !== $options->Near) {
             $this->Params->set('near', $options->Near);
