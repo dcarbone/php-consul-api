@@ -70,7 +70,7 @@ abstract class AbstractDefinitionTestCases extends TestCase {
     protected function getEmptyInstance() {
         if (!isset($this->emptyInstance)) {
             $class = $this->getSubjectClassName();
-            $this->emptyInstance = new $class;
+            $this->emptyInstance = new $class();
         }
 
         return $this->emptyInstance;
@@ -254,7 +254,7 @@ abstract class AbstractDefinitionTestCases extends TestCase {
         $className = $reflectionClass->getName();
         $propertyName = $reflectionProperty->getName();
 
-        $this->assertRegExp('/^[A-Z]/S',
+        $this->assertMatchesRegularExpression('/^[A-Z]/S',
             $propertyName,
             sprintf(
                 'The %s property "%s" is public but does not start with a capital letter.',
@@ -590,25 +590,25 @@ abstract class AbstractDefinitionTestCases extends TestCase {
             case $propertyVarType instanceof String_:
                 $this->assertTrue($reflectionParameter->hasType(), sprintf($setterHintErrMsg, 'string'));
                 $this->assertEquals('string',
-                    (string)$reflectionParameter->getType(),
+                    $reflectionParameter->getType()->getName(),
                     sprintf($setterHintErrMsg, 'string'));
                 break;
             case $propertyVarType instanceof Integer:
                 $this->assertTrue($reflectionParameter->hasType(), sprintf($setterHintErrMsg, 'int'));
                 $this->assertStringStartsWith('int',
-                    (string)$reflectionParameter->getType(),
+                    $reflectionParameter->getType()->getName(),
                     sprintf($setterHintErrMsg, 'int'));
                 break;
             case $propertyVarType instanceof Float_:
                 $this->assertTrue($reflectionParameter->hasType(), sprintf($setterHintErrMsg, 'float'));
                 $this->assertEquals('float',
-                    (string)$reflectionParameter->getType(),
+                    $reflectionParameter->getType()->getName(),
                     sprintf($setterHintErrMsg, 'float'));
                 break;
             case $propertyVarType instanceof Boolean:
                 $this->assertTrue($reflectionParameter->hasType(), sprintf($setterHintErrMsg, 'bool'));
                 $this->assertEquals('bool',
-                    (string)$reflectionParameter->getType(),
+                    $reflectionParameter->getType()->getName(),
                     sprintf($setterHintErrMsg, 'bool'));
                 break;
 

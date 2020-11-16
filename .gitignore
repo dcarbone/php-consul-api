@@ -4,3 +4,4 @@
 /*.iml
 /composer.lock
 /consul.log
+/.phpunit.result.cache

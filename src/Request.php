@@ -26,7 +26,8 @@ use Psr\Http\Message\UriInterface;
  * Class Request
  * @package DCarbone\PHPConsulAPI
  */
-class Request {
+class Request
+{
     /** @var \DCarbone\PHPConsulAPI\Values */
     public $Headers;
     /** @var \DCarbone\PHPConsulAPI\Params */
@@ -54,7 +55,8 @@ class Request {
      * @param \DCarbone\PHPConsulAPI\Config $config
      * @param mixed $body
      */
-    public function __construct(string $method, string $path, Config $config, $body = null) {
+    public function __construct(string $method, string $path, Config $config, $body = null)
+    {
         $this->config = $config;
 
         $this->method = strtoupper($method);
@@ -72,11 +74,7 @@ class Request {
         }
 
         if ('' !== $config->Token) {
-            if ($config->TokenInHeader) {
-                $this->Headers->set('X-Consul-Token', $config->Token);
-            } else {
-                $this->Params->set('token', $config->Token);
-            }
+            $this->Headers->set('X-Consul-Token', $config->Token);
         }
 
         if (null !== $body) {
@@ -108,7 +106,8 @@ class Request {
     /**
      * Attempt to close body stream, if set.
      */
-    public function __destruct() {
+    public function __destruct()
+    {
         if (isset($this->body) && 'resource' === gettype($this->body)) {
             @fclose($this->body);
         }
@@ -117,7 +116,8 @@ class Request {
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      */
-    public function setQueryOptions(QueryOptions $options = null) {
+    public function setQueryOptions(QueryOptions $options = null)
+    {
         if (null === $options) {
             return;
         }
@@ -165,7 +165,8 @@ class Request {
     /**
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
      */
-    public function setWriteOptions(WriteOptions $options = null) {
+    public function setWriteOptions(WriteOptions $options = null)
+    {
         if (null === $options) {
             return;
         }
@@ -174,11 +175,7 @@ class Request {
             $this->Params->set('dc', $options->Datacenter);
         }
         if ('' !== $options->Token) {
-            if ($this->config->TokenInHeader) {
-                $this->Headers->set('X-Consul-Token', $options->Token);
-            } else {
-                $this->Params->set('token', $options->Token);
-            }
+            $this->Headers->set('X-Consul-Token', $options->Token);
         }
         if (0 !== $options->RelayFactor) {
             $this->Params->set('relay-factor', (string)$options->RelayFactor);
@@ -190,7 +187,8 @@ class Request {
     /**
      * @return \Psr\Http\Message\UriInterface
      */
-    public function getUri(): UriInterface {
+    public function getUri(): UriInterface
+    {
         if (!isset($this->uri)) {
             $uri = sprintf(
                 '%s://%s/%s',
@@ -213,7 +211,8 @@ class Request {
      *
      * @return \Psr\Http\Message\RequestInterface
      */
-    public function toPsrRequest(): RequestInterface {
+    public function toPsrRequest(): RequestInterface
+    {
         return new Psr7Request(
             $this->method,
             $this->getUri(),

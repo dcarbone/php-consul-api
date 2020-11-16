@@ -111,13 +111,6 @@ class Config
     public $InsecureSkipVerify = false;
 
     /**
-     * Whether to use Consul 0.7.0-style X-Consul-Token header or the older query-param style for passing ACL tokens
-     *
-     * @var bool
-     */
-    public $TokenInHeader = true;
-
-    /**
      * Your HttpClient of choice.
      *
      * @var \GuzzleHttp\ClientInterface
@@ -198,9 +191,6 @@ class Config
         }
         if ($inc->InsecureSkipVerify) {
             $actual->InsecureSkipVerify = true;
-        }
-        if ($inc->TokenInHeader) {
-            $actual->TokenInHeader = true;
         }
         if (null !== $inc->HttpClient) {
             $actual->HttpClient = $inc->HttpClient;
@@ -317,12 +307,12 @@ class Config
     }
 
     /**
-     * @param string $TokenFile
+     * @param string $tokenFile
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setTokenFile(string $TokenFile): Config
+    public function setTokenFile(string $tokenFile): Config
     {
-        $this->TokenFile = $TokenFile;
+        $this->TokenFile = $tokenFile;
         return $this;
     }
 
@@ -455,24 +445,6 @@ class Config
     }
 
     /**
-     * @return bool
-     */
-    public function isTokenInHeader(): bool
-    {
-        return $this->TokenInHeader;
-    }
-
-    /**
-     * @param bool $tokenInHeader
-     * @return \DCarbone\PHPConsulAPI\Config
-     */
-    public function setTokenInHeader(bool $tokenInHeader): Config
-    {
-        $this->TokenInHeader = $tokenInHeader;
-        return $this;
-    }
-
-    /**
      * @param int $in
      * @return string
      */
@@ -574,7 +546,7 @@ class Config
                 $conf['Address'] = $v;
             } else if (Consul::HTTPTokenEnvName === $k) {
                 $conf['Token'] = $v;
-            } else if (Consul::HTTPTokenFileEnvName) {
+            } else if (Consul::HTTPTokenFileEnvName === $k) {
                 $conf['TokenFile'] = $v;
             } else if (Consul::HTTPAuthEnvName === $k) {
                 $conf['HttpAuth'] = $v;
