@@ -82,7 +82,7 @@ class Request
             switch (gettype($body)) {
                 case 'object':
                 case 'array':
-                    $str = json_encode($body);
+                    $str = json_encode($body, $config->JSONEncodeOpts);
                     break;
 
                 case 'integer':
@@ -116,7 +116,7 @@ class Request
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      */
-    public function setQueryOptions(QueryOptions $options = null)
+    public function setQueryOptions(QueryOptions $options = null): void
     {
         if (null === $options) {
             return;
@@ -161,7 +161,7 @@ class Request
     /**
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
      */
-    public function setWriteOptions(WriteOptions $options = null)
+    public function setWriteOptions(WriteOptions $options = null): void
     {
         if (null === $options) {
             return;

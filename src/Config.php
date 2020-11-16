@@ -29,6 +29,7 @@ class Config
     private const DefaultConfig = [
         'Address' => '127.0.0.1:8500',
         'Scheme' => 'http',
+        'JSONEncodeOpts' => JSON_UNESCAPED_SLASHES,
     ];
 
     /**
@@ -118,6 +119,13 @@ class Config
     public $HttpClient = null;
 
     /**
+     * Bitwise options to provide to JSON encoder when encoding request bodies
+     *
+     * @var int
+     */
+    public $JSONEncodeOpts = 0;
+
+    /**
      * Config constructor.
      * @param array $config
      */
@@ -194,6 +202,9 @@ class Config
         }
         if (null !== $inc->HttpClient) {
             $actual->HttpClient = $inc->HttpClient;
+        }
+        if (0 !== $inc->JSONEncodeOpts) {
+            $actual->JSONEncodeOpts = $inc->JSONEncodeOpts;
         }
         return $actual;
     }
@@ -441,6 +452,24 @@ class Config
     public function setHttpClient(ClientInterface $httpClient): Config
     {
         $this->HttpClient = $httpClient;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getJSONEncodeOpts(): int
+    {
+        return $this->JSONEncodeOpts;
+    }
+
+    /**
+     * @param int $jsonEncodeOpts
+     * @return \DCarbone\PHPConsulAPI\Config
+     */
+    public function setJSONEncodeOpts(int $jsonEncodeOpts): Config
+    {
+        $this->JSONEncodeOpts = $jsonEncodeOpts;
         return $this;
     }
 

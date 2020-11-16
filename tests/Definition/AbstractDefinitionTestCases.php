@@ -31,7 +31,8 @@ use PHPUnit\Framework\TestCase;
  * Class AbstractDefinitionTestCases
  * @package DCarbone\PHPConsulAPITests\Definition
  */
-abstract class AbstractDefinitionTestCases extends TestCase {
+abstract class AbstractDefinitionTestCases extends TestCase
+{
     /** @var \ReflectionClass */
     protected $reflectionClass;
 
@@ -56,7 +57,8 @@ abstract class AbstractDefinitionTestCases extends TestCase {
      * @return \ReflectionClass
      * @throws \ReflectionException
      */
-    protected function getReflectionClass() {
+    protected function getReflectionClass()
+    {
         if (!isset($this->reflectionClass)) {
             $this->reflectionClass = new \ReflectionClass($this->getSubjectClassName());
         }
@@ -67,7 +69,8 @@ abstract class AbstractDefinitionTestCases extends TestCase {
     /**
      * @return object
      */
-    protected function getEmptyInstance() {
+    protected function getEmptyInstance()
+    {
         if (!isset($this->emptyInstance)) {
             $class = $this->getSubjectClassName();
             $this->emptyInstance = new $class();
@@ -79,11 +82,13 @@ abstract class AbstractDefinitionTestCases extends TestCase {
     /**
      * @inheritdoc
      */
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         $this->docBlockFactory = DocBlockFactory::createInstance();
     }
 
-    public function testClassConstructorImplementation() {
+    public function testClassConstructorImplementation()
+    {
         /** @var \phpDocumentor\Reflection\DocBlock\Tags\Param $parameterParamTag */
 
         $reflectionClass = $this->getReflectionClass();
@@ -233,7 +238,8 @@ abstract class AbstractDefinitionTestCases extends TestCase {
         }
     }
 
-    public function testClassPropertyDefinitionAndImplementation() {
+    public function testClassPropertyDefinitionAndImplementation()
+    {
         $reflectionClass = $this->getReflectionClass();
 
         // For now, only interested in Public properties, may expand later.
@@ -250,7 +256,8 @@ abstract class AbstractDefinitionTestCases extends TestCase {
      * @param \ReflectionProperty $reflectionProperty
      */
     protected function _assertPropertyPHPDocExists(\ReflectionClass $reflectionClass,
-                                                   \ReflectionProperty $reflectionProperty) {
+                                                   \ReflectionProperty $reflectionProperty)
+    {
         $className = $reflectionClass->getName();
         $propertyName = $reflectionProperty->getName();
 
@@ -286,7 +293,8 @@ abstract class AbstractDefinitionTestCases extends TestCase {
      * @param \ReflectionProperty $reflectionProperty
      */
     protected function _assertCorrectPropertyZeroValue(\ReflectionClass $reflectionClass,
-                                                       \ReflectionProperty $reflectionProperty) {
+                                                       \ReflectionProperty $reflectionProperty)
+    {
         /** @var \phpDocumentor\Reflection\Type $propertyVarType */
 
         $className = $reflectionClass->getName();
@@ -404,7 +412,8 @@ abstract class AbstractDefinitionTestCases extends TestCase {
      * @throws \ReflectionException
      */
     protected function _assertCorrectGetterImplementation(\ReflectionClass $reflectionClass,
-                                                          \ReflectionProperty $reflectionProperty) {
+                                                          \ReflectionProperty $reflectionProperty)
+    {
         /** @var \phpDocumentor\Reflection\Type $propertyVarType */
         /** @var \phpDocumentor\Reflection\DocBlock\Tags\Return_ $methodReturnTag */
 
@@ -472,7 +481,8 @@ abstract class AbstractDefinitionTestCases extends TestCase {
      * @throws \ReflectionException
      */
     protected function _assertCorrectSetterImplementation(\ReflectionClass $reflectionClass,
-                                                          \ReflectionProperty $reflectionProperty) {
+                                                          \ReflectionProperty $reflectionProperty)
+    {
         /** @var \phpDocumentor\Reflection\Type $propertyVarType */
         /** @var \phpDocumentor\Reflection\DocBlock\Tags\Param $methodParamTag */
         /** @var \phpDocumentor\Reflection\DocBlock\Tags\Return_ $methodReturnTag */
@@ -499,6 +509,9 @@ abstract class AbstractDefinitionTestCases extends TestCase {
                 break;
             case 'CACert':
                 $expectedParamName = 'caCert';
+                break;
+            case 'JSONEncodeOpts':
+                $expectedParamName = 'jsonEncodeOpts';
                 break;
             default:
                 $expectedParamName = lcfirst($propertyName);
