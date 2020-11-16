@@ -25,7 +25,8 @@ use DCarbone\PHPConsulAPI\Request;
  * Class HealthClient
  * @package DCarbone\PHPConsulAPI\Health
  */
-class HealthClient extends AbstractClient {
+class HealthClient extends AbstractClient
+{
     /**
      * @param string $node
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
@@ -35,7 +36,8 @@ class HealthClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function Node(string $node, QueryOptions $options = null): array {
+    public function Node(string $node, QueryOptions $options = null): array
+    {
         $r = new Request('GET', sprintf('v1/health/node/%s', $node), $this->config);
         $r->setQueryOptions($options);
 
@@ -64,7 +66,8 @@ class HealthClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function Checks(string $service, QueryOptions $options = null): array {
+    public function Checks(string $service, QueryOptions $options = null): array
+    {
         /** @var \Psr\Http\Message\ResponseInterface $response */
         $r = new Request('GET', sprintf('v1/health/checks/%s', $service), $this->config);
         $r->setQueryOptions($options);
@@ -98,7 +101,8 @@ class HealthClient extends AbstractClient {
     public function Service(string $service,
                             string $tag = '',
                             bool $passingOnly = false,
-                            QueryOptions $options = null): array {
+                            QueryOptions $options = null): array
+    {
         $r = new Request('GET', sprintf('v1/health/service/%s', $service), $this->config);
         $r->setQueryOptions($options);
         if ('' !== $tag) {
@@ -139,7 +143,8 @@ class HealthClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function State(string $state, QueryOptions $options = null): array {
+    public function State(string $state, QueryOptions $options = null): array
+    {
         static $validStates = ['any', 'warning', 'critical', 'passing', 'unknown'];
 
         if (!in_array($state, $validStates, true)) {

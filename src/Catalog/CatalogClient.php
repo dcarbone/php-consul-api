@@ -25,7 +25,8 @@ use DCarbone\PHPConsulAPI\WriteOptions;
  * Class CatalogClient
  * @package DCarbone\PHPConsulAPI\Catalog
  */
-class CatalogClient extends AbstractClient {
+class CatalogClient extends AbstractClient
+{
     /**
      * @param \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration $catalogRegistration
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
@@ -34,7 +35,8 @@ class CatalogClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function Register(CatalogRegistration $catalogRegistration, WriteOptions $options = null): array {
+    public function Register(CatalogRegistration $catalogRegistration, WriteOptions $options = null): array
+    {
         $r = new Request('PUT', 'v1/catalog/register', $this->config, $catalogRegistration);
         $r->setWriteOptions($options);
 
@@ -54,7 +56,8 @@ class CatalogClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function Deregister(CatalogDeregistration $catalogDeregistration, WriteOptions $options = null): array {
+    public function Deregister(CatalogDeregistration $catalogDeregistration, WriteOptions $options = null): array
+    {
         $r = new Request('PUT', 'v1/catalog/deregister', $this->config, $catalogDeregistration);
         $r->setWriteOptions($options);
 
@@ -72,7 +75,8 @@ class CatalogClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function Datacenters(): array {
+    public function Datacenters(): array
+    {
         $r = new Request('GET', 'v1/catalog/datacenters', $this->config);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -92,7 +96,8 @@ class CatalogClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function Nodes(QueryOptions $options = null): array {
+    public function Nodes(QueryOptions $options = null): array
+    {
         $r = new Request('GET', 'v1/catalog/nodes', $this->config);
         $r->setQueryOptions($options);
 
@@ -123,7 +128,8 @@ class CatalogClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function Services(QueryOptions $options = null): array {
+    public function Services(QueryOptions $options = null): array
+    {
         $r = new Request('GET', 'v1/catalog/services', $this->config);
         $r->setQueryOptions($options);
 
@@ -151,7 +157,8 @@ class CatalogClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function Service(string $service, string $tag = '', QueryOptions $options = null): array {
+    public function Service(string $service, string $tag = '', QueryOptions $options = null): array
+    {
         $r = new Request('GET', sprintf('v1/catalog/service/%s', $service), $this->config);
         $r->setQueryOptions($options);
         if ('' !== $tag) {
@@ -186,7 +193,8 @@ class CatalogClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function Node(string $node, QueryOptions $options = null): array {
+    public function Node(string $node, QueryOptions $options = null): array
+    {
         $r = new Request('GET', sprintf('v1/catalog/node/%s', $node), $this->config);
         $r->setQueryOptions($options);
 

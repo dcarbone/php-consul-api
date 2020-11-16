@@ -20,7 +20,8 @@
  * Class HttpAuth
  * @package DCarbone\PHPConsulAPI
  */
-class HttpAuth implements \JsonSerializable {
+class HttpAuth implements \JsonSerializable
+{
     /** @var string */
     private $_username = '';
     /** @var string */
@@ -31,7 +32,8 @@ class HttpAuth implements \JsonSerializable {
      * @param string $username
      * @param string $password
      */
-    public function __construct(string $username = '', string $password = '') {
+    public function __construct(string $username = '', string $password = '')
+    {
         $this->_username = $username;
         $this->_password = $password;
     }
@@ -39,42 +41,48 @@ class HttpAuth implements \JsonSerializable {
     /**
      * @return array
      */
-    public function __debugInfo() {
+    public function __debugInfo()
+    {
         return ['username' => $this->_username];
     }
 
     /**
      * @return string
      */
-    public function getUsername(): string {
+    public function getUsername(): string
+    {
         return $this->_username;
     }
 
     /**
      * @return string
      */
-    public function getPassword(): string {
+    public function getPassword(): string
+    {
         return $this->_password;
     }
 
     /**
      * @return string
      */
-    public function compileAuthString(): string {
+    public function compileAuthString(): string
+    {
         return (string)$this;
     }
 
     /**
      * @return array
      */
-    public function jsonSerialize() {
+    public function jsonSerialize()
+    {
         return ['username' => $this->_username, 'password' => $this->_password];
     }
 
     /**
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         return trim(sprintf('%s:%s', $this->_username, $this->_password), ":");
     }
 }

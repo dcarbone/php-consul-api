@@ -25,7 +25,8 @@ use DCarbone\PHPConsulAPI\WriteOptions;
  * Class EventClient
  * @package DCarbone\PHPConsulAPI\Event
  */
-class EventClient extends AbstractClient {
+class EventClient extends AbstractClient
+{
     /**
      * @param \DCarbone\PHPConsulAPI\Event\UserEvent $event
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
@@ -35,7 +36,8 @@ class EventClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error error, if any
      * )
      */
-    public function Fire(UserEvent $event, WriteOptions $options = null): array {
+    public function Fire(UserEvent $event, WriteOptions $options = null): array
+    {
         $r = new Request(
             'PUT',
             sprintf('v1/event/fire/%s', $event->Name),
@@ -79,7 +81,8 @@ class EventClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error error, if any
      * )
      */
-    public function List(string $name = '', QueryOptions $options = null): array {
+    public function List(string $name = '', QueryOptions $options = null): array
+    {
         $r = new Request('GET', 'v1/event/list', $this->config);
         if ('' !== (string)$name) {
             $r->Params->set('name', $name);
@@ -112,7 +115,8 @@ class EventClient extends AbstractClient {
      * @param string $uuid
      * @return int
      */
-    public function IDToIndex(string $uuid): int {
+    public function IDToIndex(string $uuid): int
+    {
         if (36 !== strlen($uuid)) {
             throw new \InvalidArgumentException("{$uuid} is not a valid UUID");
         }

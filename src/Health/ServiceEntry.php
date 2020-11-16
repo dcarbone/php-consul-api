@@ -23,7 +23,8 @@ use DCarbone\PHPConsulAPI\Agent\AgentService;
  * Class ServiceEntry
  * @package DCarbone\PHPConsulAPI\Health
  */
-class ServiceEntry extends AbstractModel {
+class ServiceEntry extends AbstractModel
+{
     /** @var string */
     public $Node = '';
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentService */
@@ -35,7 +36,8 @@ class ServiceEntry extends AbstractModel {
      * ServiceEntry constructor.
      * @param array $data
      */
-    public function __construct(array $data = []) {
+    public function __construct(array $data = [])
+    {
         parent::__construct($data);
         if (null !== $this->Service && !($this->Service instanceof AgentService)) {
             $this->Service = new AgentService((array)$this->Service);
@@ -48,21 +50,24 @@ class ServiceEntry extends AbstractModel {
     /**
      * @return string
      */
-    public function getNode(): string {
+    public function getNode(): string
+    {
         return $this->Node;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentService
      */
-    public function getService() {
+    public function getService()
+    {
         return $this->Service;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Health\HealthChecks
      */
-    public function getChecks(): HealthChecks {
+    public function getChecks(): HealthChecks
+    {
         return $this->Checks;
     }
 }

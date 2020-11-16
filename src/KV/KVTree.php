@@ -20,7 +20,8 @@
  * Class KVTree
  * @package DCarbone\PHPConsulAPI\KV
  */
-class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \ArrayAccess {
+class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \ArrayAccess
+{
     /** @var string */
     private $_prefix;
 
@@ -31,35 +32,40 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
      * KVTree constructor.
      * @param string $prefix
      */
-    public function __construct($prefix) {
+    public function __construct($prefix)
+    {
         $this->_prefix = $prefix;
     }
 
     /**
      * @return string
      */
-    public function getPrefix(): string {
+    public function getPrefix(): string
+    {
         return $this->_prefix;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\KV\KVTree|\DCarbone\PHPConsulAPI\KV\KVPair Can return any type.
      */
-    public function current() {
+    public function current()
+    {
         return current($this->_children);
     }
 
     /**
      * @return void Any returned value is ignored.
      */
-    public function next() {
+    public function next()
+    {
         next($this->_children);
     }
 
     /**
      * @return string scalar on success, or null on failure.
      */
-    public function key() {
+    public function key()
+    {
         return key($this->_children);
     }
 
@@ -67,35 +73,40 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
      * @return bool The return value will be casted to boolean and then evaluated.
      * Returns true on success or false on failure.
      */
-    public function valid() {
+    public function valid()
+    {
         return null !== key($this->_children);
     }
 
     /**
      * @return void Any returned value is ignored.
      */
-    public function rewind() {
+    public function rewind()
+    {
         reset($this->_children);
     }
 
     /**
      * @return bool true if the current entry can be iterated over, otherwise returns false.
      */
-    public function hasChildren() {
+    public function hasChildren()
+    {
         return $this->current() instanceof KVTree;
     }
 
     /**
      * @return \RecursiveIterator An iterator for the current entry.
      */
-    public function getChildren() {
+    public function getChildren()
+    {
         return $this->current();
     }
 
     /**
      * @return int The custom count as an integer.
      */
-    public function count() {
+    public function count()
+    {
         return count($this->_children);
     }
 
@@ -103,7 +114,8 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
      * @param mixed $offset An offset to check for.
      * @return bool true on success or false on failure.
      */
-    public function offsetExists($offset) {
+    public function offsetExists($offset)
+    {
         if (is_string($offset)) {
             $subPath = str_replace($this->_prefix, '', $offset);
             $cnt = substr_count($subPath, '/');
@@ -123,7 +135,8 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
      * @param mixed $offset The offset to retrieve.
      * @return \DCarbone\PHPConsulAPI\KV\KVTree|\DCarbone\PHPConsulAPI\KV\KVPair
      */
-    public function offsetGet($offset) {
+    public function offsetGet($offset)
+    {
         if (is_string($offset)) {
             $subPath = str_replace($this->_prefix, '', $offset);
             $cnt = substr_count($subPath, '/');
@@ -154,7 +167,8 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
      * @param mixed $value The value to set.
      * @return void
      */
-    public function offsetSet($offset, $value) {
+    public function offsetSet($offset, $value)
+    {
         if ('string' === gettype($offset)) {
             $subPath = str_replace($this->_prefix, '', $offset);
             $cnt = substr_count($subPath, '/');
@@ -176,14 +190,16 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
      * @param mixed $offset The offset to unset.
      * @return void
      */
-    public function offsetUnset($offset) {
+    public function offsetUnset($offset)
+    {
         // do nothing, yo...
     }
 
     /**
      * @return array
      */
-    public function jsonSerialize() {
+    public function jsonSerialize()
+    {
         $json = [$this->_prefix => []];
         foreach ($this->_children as $k => $child) {
             if ($child instanceof KVTree) {
@@ -198,7 +214,8 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     /**
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         return $this->_prefix;
     }
 }

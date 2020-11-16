@@ -23,7 +23,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class Coordinate
  * @package DCarbone\PHPConsulAPI\Coordinate
  */
-class Coordinate extends AbstractModel {
+class Coordinate extends AbstractModel
+{
     /** @var int[] */
     public $Vec = [];
     /** @var float */
@@ -37,7 +38,8 @@ class Coordinate extends AbstractModel {
      * Coordinate constructor.
      * @param array|\DCarbone\PHPConsulAPI\Coordinate\CoordinateConfig $data
      */
-    public function __construct($data = []) {
+    public function __construct($data = [])
+    {
         if (is_array($data)) {
             parent::__construct($data);
         } else if ($data instanceof CoordinateConfig) {
@@ -58,35 +60,40 @@ class Coordinate extends AbstractModel {
     /**
      * @return int[]
      */
-    public function getVec(): array {
+    public function getVec(): array
+    {
         return $this->Vec;
     }
 
     /**
      * @return float
      */
-    public function getError(): float {
+    public function getError(): float
+    {
         return $this->Error;
     }
 
     /**
      * @return float
      */
-    public function getAdjustment(): float {
+    public function getAdjustment(): float
+    {
         return $this->Adjustment;
     }
 
     /**
      * @return float
      */
-    public function getHeight(): float {
+    public function getHeight(): float
+    {
         return $this->Height;
     }
 
     /**
      * @return bool
      */
-    public function IsValid(): bool {
+    public function IsValid(): bool
+    {
         foreach ($this->Vec as $vec) {
             if (!is_finite($vec)) {
                 return false;
@@ -99,7 +106,8 @@ class Coordinate extends AbstractModel {
      * @param \DCarbone\PHPConsulAPI\Coordinate\Coordinate $other
      * @return bool
      */
-    public function IsCompatibleWith(Coordinate $other): bool {
+    public function IsCompatibleWith(Coordinate $other): bool
+    {
         return count($this->Vec) === count($other->Vec);
     }
 
@@ -109,7 +117,8 @@ class Coordinate extends AbstractModel {
      * @param \DCarbone\PHPConsulAPI\Coordinate\Coordinate $other
      * @return \DCarbone\PHPConsulAPI\Coordinate\Coordinate
      */
-    public function ApplyForce(CoordinateConfig $config, float $force, Coordinate $other): Coordinate {
+    public function ApplyForce(CoordinateConfig $config, float $force, Coordinate $other): Coordinate
+    {
         if (!$this->IsCompatibleWith($other)) {
             throw new DimensionalityConflictException();
         }
@@ -128,7 +137,8 @@ class Coordinate extends AbstractModel {
      * @param \DCarbone\PHPConsulAPI\Coordinate\Coordinate $other
      * @return \DCarbone\Go\Time\Duration
      */
-    public function DistanceTo(Coordinate $other): Time\Duration {
+    public function DistanceTo(Coordinate $other): Time\Duration
+    {
         static $secondsToNanoseconds = 1.0e9;
 
         if (!$this->IsCompatibleWith($other)) {
@@ -147,7 +157,8 @@ class Coordinate extends AbstractModel {
      * @param \DCarbone\PHPConsulAPI\Coordinate\Coordinate $other
      * @return float
      */
-    protected function rawDistanceTo(Coordinate $other): float {
+    protected function rawDistanceTo(Coordinate $other): float
+    {
         return magnitude(diff($this->Vec, $other->Vec)) + $this->Height + $other->Height;
     }
 }

@@ -23,7 +23,8 @@ use DCarbone\PHPConsulAPI\AbstractModels;
  * Class TxnOps
  * @package DCarbone\PHPConsulAPI\KV
  */
-class TxnOps extends AbstractModels {
+class TxnOps extends AbstractModels
+{
     /** @var string */
     protected $containedClass = TxnOp::class;
 
@@ -31,7 +32,8 @@ class TxnOps extends AbstractModels {
      * @param array|null $data
      * @return \DCarbone\PHPConsulAPI\AbstractModel
      */
-    protected function newChild($data): AbstractModel {
+    protected function newChild($data): AbstractModel
+    {
         return new TxnOp($data);
     }
 }

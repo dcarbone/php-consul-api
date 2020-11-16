@@ -22,7 +22,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class TxnResponse
  * @package DCarbone\PHPConsulAPI\KV
  */
-class TxnResponse extends AbstractModel {
+class TxnResponse extends AbstractModel
+{
     /** @var \DCarbone\PHPConsulAPI\KV\TxnResults */
     public $Results = null;
     /** @var \DCarbone\PHPConsulAPI\KV\TxnErrors */
@@ -32,7 +33,8 @@ class TxnResponse extends AbstractModel {
      * TxnResponse constructor.
      * @param array $data
      */
-    public function __construct(array $data = []) {
+    public function __construct(array $data = [])
+    {
         parent::__construct($data);
         if (!($this->Results instanceof TxnResults)) {
             $this->Results = new TxnResults((array)$this->Results);
@@ -45,14 +47,16 @@ class TxnResponse extends AbstractModel {
     /**
      * @return \DCarbone\PHPConsulAPI\KV\TxnResults
      */
-    public function getResults(): TxnResults {
+    public function getResults(): TxnResults
+    {
         return $this->Results;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\KV\TxnErrors
      */
-    public function getErrors(): TxnErrors {
+    public function getErrors(): TxnErrors
+    {
         return $this->Errors;
     }
 }

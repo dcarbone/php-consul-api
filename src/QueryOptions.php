@@ -20,7 +20,8 @@
  * Class QueryOptions
  * @package DCarbone\PHPConsulAPI
  */
-class QueryOptions extends AbstractModel {
+class QueryOptions extends AbstractModel
+{
     /** @var string */
     public $Datacenter = '';
     /** @var bool */
@@ -46,140 +47,160 @@ class QueryOptions extends AbstractModel {
     /**
      * @return string
      */
-    public function getDatacenter(): string {
+    public function getDatacenter(): string
+    {
         return $this->Datacenter;
     }
 
     /**
      * @param string $datacenter
      */
-    public function setDatacenter(string $datacenter) {
+    public function setDatacenter(string $datacenter): void
+    {
         $this->Datacenter = $datacenter;
     }
 
     /**
      * @return bool
      */
-    public function isAllowStale(): bool {
+    public function isAllowStale(): bool
+    {
         return $this->AllowStale;
     }
 
     /**
      * @param bool $allowStale
      */
-    public function setAllowStale(bool $allowStale) {
+    public function setAllowStale(bool $allowStale)
+    {
         $this->AllowStale = $allowStale;
     }
 
     /**
      * @return bool
      */
-    public function isRequireConsistent(): bool {
+    public function isRequireConsistent(): bool
+    {
         return $this->RequireConsistent;
     }
 
     /**
      * @param bool $requireConsistent
      */
-    public function setRequireConsistent(bool $requireConsistent) {
+    public function setRequireConsistent(bool $requireConsistent)
+    {
         $this->RequireConsistent = $requireConsistent;
     }
 
     /**
      * @return int
      */
-    public function getWaitIndex(): int {
+    public function getWaitIndex(): int
+    {
         return $this->WaitIndex;
     }
 
     /**
      * @param int $waitIndex
      */
-    public function setWaitIndex(int $waitIndex) {
+    public function setWaitIndex(int $waitIndex)
+    {
         $this->WaitIndex = $waitIndex;
     }
 
     /**
      * @return int
      */
-    public function getWaitTime(): int {
+    public function getWaitTime(): int
+    {
         return $this->WaitTime;
     }
 
     /**
      * @param int $waitTime
      */
-    public function setWaitTime(int $waitTime) {
+    public function setWaitTime(int $waitTime)
+    {
         $this->WaitTime = $waitTime;
     }
 
     /**
      * @return string
      */
-    public function getToken(): string {
+    public function getToken(): string
+    {
         return $this->Token;
     }
 
     /**
      * @param string $token
      */
-    public function setToken(string $token) {
+    public function setToken(string $token)
+    {
         $this->Token = $token;
     }
 
     /**
      * @return string
      */
-    public function getNear(): string {
+    public function getNear(): string
+    {
         return $this->Near;
     }
 
     /**
      * @param string $near
      */
-    public function setNear(string $near) {
+    public function setNear(string $near)
+    {
         $this->Near = $near;
     }
 
     /**
      * @return array
      */
-    public function getNodeMeta(): array {
+    public function getNodeMeta(): array
+    {
         return $this->NodeMeta;
     }
 
     /**
      * @param array $nodeMeta
      */
-    public function setNodeMeta(array $nodeMeta) {
+    public function setNodeMeta(array $nodeMeta)
+    {
         $this->NodeMeta = $nodeMeta;
     }
 
     /**
      * @return int
      */
-    public function getRelayFactor(): int {
+    public function getRelayFactor(): int
+    {
         return $this->RelayFactor;
     }
 
     /**
      * @param int $relayFactor
      */
-    public function setRelayFactor(int $relayFactor) {
+    public function setRelayFactor(int $relayFactor)
+    {
         $this->RelayFactor = $relayFactor;
     }
 
     /**
      * @return bool
      */
-    public function isPretty(): bool {
+    public function isPretty(): bool
+    {
         return $this->Pretty;
     }
 
     /**
      * @param bool $pretty
      */
-    public function setPretty(bool $pretty) {
+    public function setPretty(bool $pretty)
+    {
         $this->Pretty = $pretty;
     }
 }

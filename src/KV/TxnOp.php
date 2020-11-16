@@ -22,7 +22,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class TxnOp
  * @package DCarbone\PHPConsulAPI\KV
  */
-class TxnOp extends AbstractModel {
+class TxnOp extends AbstractModel
+{
     /** @var \DCarbone\PHPConsulAPI\KV\KVTxnOp|null */
     public $KV = null;
 
@@ -30,7 +31,8 @@ class TxnOp extends AbstractModel {
      * TxnOp constructor.
      * @param array $data
      */
-    public function __construct(array $data = []) {
+    public function __construct(array $data = [])
+    {
         parent::__construct($data);
         if (null !== $this->KV && !($this->KV instanceof KVTxnOp)) {
             $this->KV = new KVTxnOp((array)$this->KV);
@@ -40,7 +42,8 @@ class TxnOp extends AbstractModel {
     /**
      * @return \DCarbone\PHPConsulAPI\KV\KVTxnOp|null
      */
-    public function getKV() {
+    public function getKV()
+    {
         return $this->KV;
     }
 }

@@ -22,7 +22,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class GaugeValue
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class GaugeValue extends AbstractModel {
+class GaugeValue extends AbstractModel
+{
     /** @var string */
     public $Name = '';
     /** @var float */
@@ -33,7 +34,8 @@ class GaugeValue extends AbstractModel {
     /**
      * @return string
      */
-    public function getName(): string {
+    public function getName(): string
+    {
         return $this->Name;
     }
 
@@ -41,7 +43,8 @@ class GaugeValue extends AbstractModel {
      * @param string $name
      * @return \DCarbone\PHPConsulAPI\Agent\GaugeValue
      */
-    public function setName(string $name): GaugeValue {
+    public function setName(string $name): GaugeValue
+    {
         $this->Name = $name;
         return $this;
     }
@@ -49,7 +52,8 @@ class GaugeValue extends AbstractModel {
     /**
      * @return float
      */
-    public function getValue(): float {
+    public function getValue(): float
+    {
         return $this->Value;
     }
 
@@ -57,7 +61,8 @@ class GaugeValue extends AbstractModel {
      * @param float $value
      * @return \DCarbone\PHPConsulAPI\Agent\GaugeValue
      */
-    public function setValue(float $value): GaugeValue {
+    public function setValue(float $value): GaugeValue
+    {
         $this->Value = $value;
         return $this;
     }
@@ -65,7 +70,8 @@ class GaugeValue extends AbstractModel {
     /**
      * @return array
      */
-    public function getLabels(): array {
+    public function getLabels(): array
+    {
         return $this->Labels;
     }
 
@@ -73,7 +79,8 @@ class GaugeValue extends AbstractModel {
      * @param array $labels
      * @return \DCarbone\PHPConsulAPI\Agent\GaugeValue
      */
-    public function setLabels(array $labels): GaugeValue {
+    public function setLabels(array $labels): GaugeValue
+    {
         $this->Labels = $labels;
         return $this;
     }

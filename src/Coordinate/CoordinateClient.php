@@ -24,14 +24,16 @@ use DCarbone\PHPConsulAPI\Request;
  * Class CoordinateClient
  * @package DCarbone\PHPConsulAPI\Coordinate
  */
-class CoordinateClient extends AbstractClient {
+class CoordinateClient extends AbstractClient
+{
     /**
      * @return array(
      * @type \DCarbone\PHPConsulAPI\Coordinate\CoordinateDatacenterMap[]|null datacenter map or null on error
      * @type \DCarbone\PHPConsulAPI\Error|null error, if an
      * )
      */
-    public function Datacenters(): array {
+    public function Datacenters(): array
+    {
         $r = new Request('GET', 'v1/coordinate/datacenters', $this->config);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -63,7 +65,8 @@ class CoordinateClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function Nodes(QueryOptions $options = null): array {
+    public function Nodes(QueryOptions $options = null): array
+    {
         $r = new Request('GET', 'v1/coordinate/nodes', $this->config);
         $r->setQueryOptions($options);
 

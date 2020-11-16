@@ -24,7 +24,8 @@ use DCarbone\Go\Time;
  * Class Error
  * @package DCarbone\PHPConsulAPI
  */
-class Error implements \JsonSerializable {
+class Error implements \JsonSerializable
+{
     /** @var \DCarbone\Go\Time\Time */
     private $time;
 
@@ -35,7 +36,8 @@ class Error implements \JsonSerializable {
      * Error constructor.
      * @param string $message
      */
-    public function __construct($message) {
+    public function __construct($message)
+    {
         $this->time = Time::Now();
         $this->message = $message;
     }
@@ -43,21 +45,24 @@ class Error implements \JsonSerializable {
     /**
      * @return \DCarbone\Go\Time\Time
      */
-    public function getTime(): Time\Time {
+    public function getTime(): Time\Time
+    {
         return $this->time;
     }
 
     /**
      * @return string
      */
-    public function getMessage(): string {
+    public function getMessage(): string
+    {
         return $this->message;
     }
 
     /**
      * @return array
      */
-    public function jsonSerialize() {
+    public function jsonSerialize()
+    {
         return [
             'message' => $this->message,
             'timestamp' => $this->time
@@ -67,7 +72,8 @@ class Error implements \JsonSerializable {
     /**
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         return $this->message;
     }
 }

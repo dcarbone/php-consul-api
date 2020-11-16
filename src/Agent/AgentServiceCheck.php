@@ -22,7 +22,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class AgentServiceCheck
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentServiceCheck extends AbstractModel {
+class AgentServiceCheck extends AbstractModel
+{
     /** @var string */
     public $CheckID = '';
     /** @var string */
@@ -59,14 +60,16 @@ class AgentServiceCheck extends AbstractModel {
     /**
      * @return string
      */
-    public function getCheckID(): string {
+    public function getCheckID(): string
+    {
         return $this->CheckID;
     }
 
     /**
      * @return string
      */
-    public function getName(): string {
+    public function getName(): string
+    {
         return $this->Name;
     }
 
@@ -74,7 +77,8 @@ class AgentServiceCheck extends AbstractModel {
      * @param string $name
      * @return AgentServiceCheck
      */
-    public function setName(string $name): AgentServiceCheck {
+    public function setName(string $name): AgentServiceCheck
+    {
         $this->Name = $name;
         return $this;
     }
@@ -82,7 +86,8 @@ class AgentServiceCheck extends AbstractModel {
     /**
      * @return string[]
      */
-    public function getArgs(): array {
+    public function getArgs(): array
+    {
         return $this->Args;
     }
 
@@ -90,7 +95,8 @@ class AgentServiceCheck extends AbstractModel {
      * @param string[] $args
      * @return AgentServiceCheck
      */
-    public function setArgs(array $args): AgentServiceCheck {
+    public function setArgs(array $args): AgentServiceCheck
+    {
         $this->Args = $args;
         return $this;
     }
@@ -99,7 +105,8 @@ class AgentServiceCheck extends AbstractModel {
      * @param string $checkID
      * @return AgentServiceCheck
      */
-    public function setCheckID(string $checkID): AgentServiceCheck {
+    public function setCheckID(string $checkID): AgentServiceCheck
+    {
         $this->CheckID = $checkID;
         return $this;
     }
@@ -107,7 +114,8 @@ class AgentServiceCheck extends AbstractModel {
     /**
      * @return string
      */
-    public function getDockerContainerID(): string {
+    public function getDockerContainerID(): string
+    {
         return $this->DockerContainerID;
     }
 
@@ -115,7 +123,8 @@ class AgentServiceCheck extends AbstractModel {
      * @param string $dockerContainerID
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
-    public function setDockerContainerID(string $dockerContainerID): AgentServiceCheck {
+    public function setDockerContainerID(string $dockerContainerID): AgentServiceCheck
+    {
         $this->DockerContainerID = $dockerContainerID;
         return $this;
     }
@@ -123,7 +132,8 @@ class AgentServiceCheck extends AbstractModel {
     /**
      * @return string
      */
-    public function getShell(): string {
+    public function getShell(): string
+    {
         return $this->Shell;
     }
 
@@ -131,7 +141,8 @@ class AgentServiceCheck extends AbstractModel {
      * @param string $shell
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
-    public function setShell(string $shell): AgentServiceCheck {
+    public function setShell(string $shell): AgentServiceCheck
+    {
         $this->Shell = $shell;
         return $this;
     }
@@ -139,7 +150,8 @@ class AgentServiceCheck extends AbstractModel {
     /**
      * @return string
      */
-    public function getInterval(): string {
+    public function getInterval(): string
+    {
         return $this->Interval;
     }
 
@@ -147,7 +159,8 @@ class AgentServiceCheck extends AbstractModel {
      * @param string $interval
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
-    public function setInterval(string $interval): AgentServiceCheck {
+    public function setInterval(string $interval): AgentServiceCheck
+    {
         $this->Interval = $interval;
         return $this;
     }
@@ -155,7 +168,8 @@ class AgentServiceCheck extends AbstractModel {
     /**
      * @return string
      */
-    public function getTimeout(): string {
+    public function getTimeout(): string
+    {
         return $this->Timeout;
     }
 
@@ -163,7 +177,8 @@ class AgentServiceCheck extends AbstractModel {
      * @param string $timeout
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
-    public function setTimeout(string $timeout): AgentServiceCheck {
+    public function setTimeout(string $timeout): AgentServiceCheck
+    {
         $this->Timeout = $timeout;
         return $this;
     }
@@ -171,7 +186,8 @@ class AgentServiceCheck extends AbstractModel {
     /**
      * @return string
      */
-    public function getTTL(): string {
+    public function getTTL(): string
+    {
         return $this->TTL;
     }
 
@@ -179,7 +195,8 @@ class AgentServiceCheck extends AbstractModel {
      * @param string $ttl
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
-    public function setTTL(string $ttl): AgentServiceCheck {
+    public function setTTL(string $ttl): AgentServiceCheck
+    {
         $this->TTL = $ttl;
         return $this;
     }
@@ -187,7 +204,8 @@ class AgentServiceCheck extends AbstractModel {
     /**
      * @return string
      */
-    public function getHTTP(): string {
+    public function getHTTP(): string
+    {
         return $this->HTTP;
     }
 
@@ -195,7 +213,8 @@ class AgentServiceCheck extends AbstractModel {
      * @param string $http
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
-    public function setHTTP(string $http): AgentServiceCheck {
+    public function setHTTP(string $http): AgentServiceCheck
+    {
         $this->HTTP = $http;
         return $this;
     }
@@ -203,7 +222,8 @@ class AgentServiceCheck extends AbstractModel {
     /**
      * @return array
      */
-    public function getHeader(): array {
+    public function getHeader(): array
+    {
         return $this->Header;
     }
 
@@ -211,7 +231,8 @@ class AgentServiceCheck extends AbstractModel {
      * @param array $header
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
-    public function setHeader(array $header): AgentServiceCheck {
+    public function setHeader(array $header): AgentServiceCheck
+    {
         $this->Header = $header;
         return $this;
     }
@@ -219,7 +240,8 @@ class AgentServiceCheck extends AbstractModel {
     /**
      * @return string
      */
-    public function getMethod(): string {
+    public function getMethod(): string
+    {
         return $this->Method;
     }
 
@@ -227,7 +249,8 @@ class AgentServiceCheck extends AbstractModel {
      * @param string $method
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
-    public function setMethod(string $method): AgentServiceCheck {
+    public function setMethod(string $method): AgentServiceCheck
+    {
         $this->Method = $method;
         return $this;
     }
@@ -235,7 +258,8 @@ class AgentServiceCheck extends AbstractModel {
     /**
      * @return string
      */
-    public function getTCP(): string {
+    public function getTCP(): string
+    {
         return $this->TCP;
     }
 
@@ -243,7 +267,8 @@ class AgentServiceCheck extends AbstractModel {
      * @param string $tcp
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
-    public function setTCP(string $tcp): AgentServiceCheck {
+    public function setTCP(string $tcp): AgentServiceCheck
+    {
         $this->TCP = $tcp;
         return $this;
     }
@@ -251,7 +276,8 @@ class AgentServiceCheck extends AbstractModel {
     /**
      * @return string
      */
-    public function getStatus(): string {
+    public function getStatus(): string
+    {
         return $this->Status;
     }
 
@@ -259,7 +285,8 @@ class AgentServiceCheck extends AbstractModel {
      * @param string $status
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
-    public function setStatus(string $status): AgentServiceCheck {
+    public function setStatus(string $status): AgentServiceCheck
+    {
         $this->Status = $status;
         return $this;
     }
@@ -267,7 +294,8 @@ class AgentServiceCheck extends AbstractModel {
     /**
      * @return string
      */
-    public function getNotes(): string {
+    public function getNotes(): string
+    {
         return $this->Notes;
     }
 
@@ -275,7 +303,8 @@ class AgentServiceCheck extends AbstractModel {
      * @param string $notes
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
-    public function setNotes(string $notes): AgentServiceCheck {
+    public function setNotes(string $notes): AgentServiceCheck
+    {
         $this->Notes = $notes;
         return $this;
     }
@@ -283,7 +312,8 @@ class AgentServiceCheck extends AbstractModel {
     /**
      * @return bool
      */
-    public function isTLSSkipVerify(): bool {
+    public function isTLSSkipVerify(): bool
+    {
         return $this->TLSSkipVerify;
     }
 
@@ -291,7 +321,8 @@ class AgentServiceCheck extends AbstractModel {
      * @param bool $tlsSkipVerify
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
-    public function setTLSSkipVerify(bool $tlsSkipVerify): AgentServiceCheck {
+    public function setTLSSkipVerify(bool $tlsSkipVerify): AgentServiceCheck
+    {
         $this->TLSSkipVerify = $tlsSkipVerify;
         return $this;
     }
@@ -299,7 +330,8 @@ class AgentServiceCheck extends AbstractModel {
     /**
      * @return string
      */
-    public function getDeregisterCriticalServiceAfter(): string {
+    public function getDeregisterCriticalServiceAfter(): string
+    {
         return $this->DeregisterCriticalServiceAfter;
     }
 
@@ -307,7 +339,8 @@ class AgentServiceCheck extends AbstractModel {
      * @param string $deregisterCriticalServiceAfter
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
-    public function setDeregisterCriticalServiceAfter(string $deregisterCriticalServiceAfter): AgentServiceCheck {
+    public function setDeregisterCriticalServiceAfter(string $deregisterCriticalServiceAfter): AgentServiceCheck
+    {
         $this->DeregisterCriticalServiceAfter = $deregisterCriticalServiceAfter;
         return $this;
     }

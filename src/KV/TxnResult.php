@@ -22,7 +22,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class TxnResult
  * @package DCarbone\PHPConsulAPI\KV
  */
-class TxnResult extends AbstractModel {
+class TxnResult extends AbstractModel
+{
     /** @var \DCarbone\PHPConsulAPI\KV\KVPair|null */
     public $KV = null;
 
@@ -30,7 +31,8 @@ class TxnResult extends AbstractModel {
      * TxnResult constructor.
      * @param array $data
      */
-    public function __construct(array $data = []) {
+    public function __construct(array $data = [])
+    {
         parent::__construct($data);
         if (null !== $this->KV && !($this->KV instanceof KVPair)) {
             $this->KV = new KVPair((array)$this->KV, true);
@@ -40,7 +42,8 @@ class TxnResult extends AbstractModel {
     /**
      * @return \DCarbone\PHPConsulAPI\KV\KVPair|null
      */
-    public function getKV() {
+    public function getKV()
+    {
         return $this->KV;
     }
 }

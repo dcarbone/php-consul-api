@@ -22,7 +22,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class TxnError
  * @package DCarbone\PHPConsulAPI\KV
  */
-class TxnError extends AbstractModel {
+class TxnError extends AbstractModel
+{
     /** @var int */
     public $OpIndex = 0;
     /** @var string */
@@ -31,14 +32,16 @@ class TxnError extends AbstractModel {
     /**
      * @return int
      */
-    public function getOpIndex(): int {
+    public function getOpIndex(): int
+    {
         return $this->OpIndex;
     }
 
     /**
      * @return string
      */
-    public function getWhat(): string {
+    public function getWhat(): string
+    {
         return $this->What;
     }
 }

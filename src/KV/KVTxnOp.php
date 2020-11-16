@@ -22,7 +22,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class KVTxnOp
  * @package DCarbone\PHPConsulAPI\KV
  */
-class KVTxnOp extends AbstractModel {
+class KVTxnOp extends AbstractModel
+{
     /** @var string */
     public $Verb = '';
     /** @var string */
@@ -41,7 +42,8 @@ class KVTxnOp extends AbstractModel {
      * @param array $data
      * @param bool $_decodeValue
      */
-    public function __construct(array $data = [], $_decodeValue = false) {
+    public function __construct(array $data = [], $_decodeValue = false)
+    {
         parent::__construct($data);
         if ((bool)$_decodeValue && isset($this->Value)) {
             $this->Value = base64_decode($this->Value);
@@ -51,42 +53,48 @@ class KVTxnOp extends AbstractModel {
     /**
      * @return string
      */
-    public function getVerb(): string {
+    public function getVerb(): string
+    {
         return $this->Verb;
     }
 
     /**
      * @return string
      */
-    public function getKey(): string {
+    public function getKey(): string
+    {
         return $this->Key;
     }
 
     /**
      * @return null|string
      */
-    public function getValue() {
+    public function getValue()
+    {
         return $this->Value;
     }
 
     /**
      * @return int
      */
-    public function getFlags(): int {
+    public function getFlags(): int
+    {
         return $this->Flags;
     }
 
     /**
      * @return int
      */
-    public function getIndex(): int {
+    public function getIndex(): int
+    {
         return $this->Index;
     }
 
     /**
      * @return string
      */
-    public function getSession(): string {
+    public function getSession(): string
+    {
         return $this->Session;
     }
 }

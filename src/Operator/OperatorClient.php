@@ -25,9 +25,10 @@ use DCarbone\PHPConsulAPI\WriteOptions;
  * Class OperatorClient
  * @package DCarbone\PHPConsulAPI\Operator
  */
-class OperatorClient extends AbstractClient {
+class OperatorClient extends AbstractClient
+{
     /**
-     * @param \DCarbone\PHPConsulAPI\Operator\Area     $area
+     * @param \DCarbone\PHPConsulAPI\Operator\Area $area
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
      * @return array(
      * @type string
@@ -35,7 +36,8 @@ class OperatorClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null
      * )
      */
-    public function AreaCreate(Area $area, WriteOptions $options = null): array {
+    public function AreaCreate(Area $area, WriteOptions $options = null): array
+    {
         $r = new Request('POST', 'v1/operator/area', $this->config, $area);
         $r->setWriteOptions($options);
 
@@ -54,8 +56,8 @@ class OperatorClient extends AbstractClient {
     }
 
     /**
-     * @param string                                   $areaID
-     * @param \DCarbone\PHPConsulAPI\Operator\Area     $area
+     * @param string $areaID
+     * @param \DCarbone\PHPConsulAPI\Operator\Area $area
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
      * @return array(
      * @type string
@@ -63,8 +65,9 @@ class OperatorClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null
      * )
      */
-    public function AreaUpdate(string $areaID, Area $area, WriteOptions $options = null): array {
-        $r = new Request('PUT', 'v1/operator/area/'.$areaID, $this->config, $area);
+    public function AreaUpdate(string $areaID, Area $area, WriteOptions $options = null): array
+    {
+        $r = new Request('PUT', 'v1/operator/area/' . $areaID, $this->config, $area);
         $r->setWriteOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -82,7 +85,7 @@ class OperatorClient extends AbstractClient {
     }
 
     /**
-     * @param string                                   $areaID
+     * @param string $areaID
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      * @return array(
      * @type \DCarbone\PHPConsulAPI\Operator\Area[]|null
@@ -90,8 +93,9 @@ class OperatorClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null
      * )
      */
-    public function AreaGet(string $areaID, QueryOptions $options = null): array {
-        $r = new Request('GET', 'v1/operator/area/'.$areaID, $this->config);
+    public function AreaGet(string $areaID, QueryOptions $options = null): array
+    {
+        $r = new Request('GET', 'v1/operator/area/' . $areaID, $this->config);
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -121,7 +125,8 @@ class OperatorClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null
      * )
      */
-    public function AreaList(QueryOptions $options = null): array {
+    public function AreaList(QueryOptions $options = null): array
+    {
         $r = new Request('GET', 'v1/operator/area', $this->config);
         $r->setQueryOptions($options);
 
@@ -145,15 +150,16 @@ class OperatorClient extends AbstractClient {
     }
 
     /**
-     * @param string                                   $areaID
+     * @param string $areaID
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
      * @return array(
      * @type \DCarbone\PHPConsulAPI\WriteMeta|null
      * @type \DCarbone\PHPConsulAPI\Error|null
      * )
      */
-    public function AreaDelete(string $areaID, WriteOptions $options = null): array {
-        $r = new Request('DELETE', 'v1/operator/area/'.$areaID, $this->config);
+    public function AreaDelete(string $areaID, WriteOptions $options = null): array
+    {
+        $r = new Request('DELETE', 'v1/operator/area/' . $areaID, $this->config);
         $r->setWriteOptions($options);
 
         list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
@@ -165,8 +171,8 @@ class OperatorClient extends AbstractClient {
     }
 
     /**
-     * @param string                                   $areaID
-     * @param array                                    $addresses
+     * @param string $areaID
+     * @param array $addresses
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
      * @return array(
      * @type \DCarbone\PHPConsulAPI\Operator\AreaJoinResponse[]|null
@@ -174,8 +180,9 @@ class OperatorClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null
      * )
      */
-    public function AreaJoin(string $areaID, array $addresses, WriteOptions $options = null): array {
-        $r = new Request('PUT', 'v1/operator/area/'.$areaID.'/join', $this->config, $addresses);
+    public function AreaJoin(string $areaID, array $addresses, WriteOptions $options = null): array
+    {
+        $r = new Request('PUT', 'v1/operator/area/' . $areaID . '/join', $this->config, $addresses);
         $r->setWriteOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -198,7 +205,7 @@ class OperatorClient extends AbstractClient {
     }
 
     /**
-     * @param string                                   $areaID
+     * @param string $areaID
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
      * @return array(
      * @type \DCarbone\PHPConsulAPI\Operator\SerfMember[]|null
@@ -206,8 +213,9 @@ class OperatorClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null
      * )
      */
-    public function AreaMembers(string $areaID, QueryOptions $options = null): array {
-        $r = new Request('GET', 'v1/operator/area/'.$areaID.'/members', $this->config);
+    public function AreaMembers(string $areaID, QueryOptions $options = null): array
+    {
+        $r = new Request('GET', 'v1/operator/area/' . $areaID . '/members', $this->config);
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -236,7 +244,8 @@ class OperatorClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null
      * )
      */
-    public function AutopilotGetConfiguration(QueryOptions $options = null): array {
+    public function AutopilotGetConfiguration(QueryOptions $options = null): array
+    {
         $r = new Request('GET', 'v1/operator/autopilot/configuration', $this->config);
         $r->setQueryOptions($options);
 
@@ -256,10 +265,11 @@ class OperatorClient extends AbstractClient {
 
     /**
      * @param \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration $conf
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null               $options
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function AutopilotSetConfiguration(AutopilotConfiguration $conf, WriteOptions $options = null) {
+    public function AutopilotSetConfiguration(AutopilotConfiguration $conf, WriteOptions $options = null)
+    {
         $r = new Request('PUT', 'v1/operator/autopilot/configuration', $this->config, $conf);
         $r->setWriteOptions($options);
 
@@ -269,13 +279,14 @@ class OperatorClient extends AbstractClient {
 
     /**
      * @param \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration $conf
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null               $options
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
      * @return array(
      * @type bool
      * @type \DCarbone\PHPConsulAPI\Error|null
      * )
      */
-    public function AutopilotCASConfiguration(AutopilotConfiguration $conf, WriteOptions $options = null): array {
+    public function AutopilotCASConfiguration(AutopilotConfiguration $conf, WriteOptions $options = null): array
+    {
         $r = new Request('PUT', 'v1/operator/autopilot/configuration', $this->config, $conf);
         $r->setWriteOptions($options);
         $r->Params->set('cas', $conf->ModifyIndex);
@@ -296,7 +307,8 @@ class OperatorClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error|null
      * )
      */
-    public function AutopilotServerHealth(QueryOptions $options = null): array {
+    public function AutopilotServerHealth(QueryOptions $options = null): array
+    {
         $r = new Request('GET', 'v1/operator/autopilot/health', $this->config);
         $r->setQueryOptions($options);
 
@@ -322,7 +334,8 @@ class OperatorClient extends AbstractClient {
      * @type \DCarbone\PHPConsulAPI\Error error, if any
      * )
      */
-    public function RaftGetConfiguration(QueryOptions $options = null): array {
+    public function RaftGetConfiguration(QueryOptions $options = null): array
+    {
         $r = new Request('GET', 'v1/operator/raft/configuration', $this->config);
         $r->setQueryOptions($options);
 
@@ -344,11 +357,12 @@ class OperatorClient extends AbstractClient {
     }
 
     /**
-     * @param string                                   $address
+     * @param string $address
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
      * @return \DCarbone\PHPConsulAPI\Error|null error, if any
      */
-    public function RaftRemovePeerByAddress(string $address, WriteOptions $options = null) {
+    public function RaftRemovePeerByAddress(string $address, WriteOptions $options = null)
+    {
         $r = new Request('DELETE', 'v1/operator/raft/peer', $this->config);
         $r->setWriteOptions($options);
         $r->Params->set('address', (string)$address);

@@ -22,7 +22,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class MetricsInfo
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class MetricsInfo extends AbstractModel {
+class MetricsInfo extends AbstractModel
+{
     /** @var string */
     public $Timestamp = '';
     /** @var \DCarbone\PHPConsulAPI\Agent\GaugeValue[] */
@@ -38,7 +39,8 @@ class MetricsInfo extends AbstractModel {
      * MetricsInfo constructor.
      * @param array $data
      */
-    public function __construct(array $data = []) {
+    public function __construct(array $data = [])
+    {
         parent::__construct($data);
 
         if (0 < count($this->Gauges)) {
@@ -78,7 +80,8 @@ class MetricsInfo extends AbstractModel {
     /**
      * @return string
      */
-    public function getTimestamp(): string {
+    public function getTimestamp(): string
+    {
         return $this->Timestamp;
     }
 
@@ -86,7 +89,8 @@ class MetricsInfo extends AbstractModel {
      * @param string $timestamp
      * @return MetricsInfo
      */
-    public function setTimestamp(string $timestamp): MetricsInfo {
+    public function setTimestamp(string $timestamp): MetricsInfo
+    {
         $this->Timestamp = $timestamp;
         return $this;
     }
@@ -94,7 +98,8 @@ class MetricsInfo extends AbstractModel {
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\GaugeValue[]
      */
-    public function getGauges(): array {
+    public function getGauges(): array
+    {
         return $this->Gauges;
     }
 
@@ -102,7 +107,8 @@ class MetricsInfo extends AbstractModel {
      * @param \DCarbone\PHPConsulAPI\Agent\GaugeValue[] $gauges
      * @return MetricsInfo
      */
-    public function setGauges(array $gauges): MetricsInfo {
+    public function setGauges(array $gauges): MetricsInfo
+    {
         $this->Gauges = $gauges;
         return $this;
     }
@@ -110,7 +116,8 @@ class MetricsInfo extends AbstractModel {
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\PointValue[]
      */
-    public function getPoints(): array {
+    public function getPoints(): array
+    {
         return $this->Points;
     }
 
@@ -118,7 +125,8 @@ class MetricsInfo extends AbstractModel {
      * @param \DCarbone\PHPConsulAPI\Agent\PointValue[] $points
      * @return MetricsInfo
      */
-    public function setPoints(array $points): MetricsInfo {
+    public function setPoints(array $points): MetricsInfo
+    {
         $this->Points = $points;
         return $this;
     }
@@ -126,7 +134,8 @@ class MetricsInfo extends AbstractModel {
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\SampledValue[]
      */
-    public function getCounters(): array {
+    public function getCounters(): array
+    {
         return $this->Counters;
     }
 
@@ -134,7 +143,8 @@ class MetricsInfo extends AbstractModel {
      * @param \DCarbone\PHPConsulAPI\Agent\SampledValue[] $counters
      * @return MetricsInfo
      */
-    public function setCounters(array $counters): MetricsInfo {
+    public function setCounters(array $counters): MetricsInfo
+    {
         $this->Counters = $counters;
         return $this;
     }
@@ -142,7 +152,8 @@ class MetricsInfo extends AbstractModel {
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\SampledValue[]
      */
-    public function getSamples(): array {
+    public function getSamples(): array
+    {
         return $this->Samples;
     }
 
@@ -150,7 +161,8 @@ class MetricsInfo extends AbstractModel {
      * @param \DCarbone\PHPConsulAPI\Agent\SampledValue[] $samples
      * @return MetricsInfo
      */
-    public function setSamples(array $samples): MetricsInfo {
+    public function setSamples(array $samples): MetricsInfo
+    {
         $this->Samples = $samples;
         return $this;
     }

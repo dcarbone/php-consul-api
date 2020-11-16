@@ -23,19 +23,22 @@ use DCarbone\PHPConsulAPI\ScalarType;
  * Class ReadableDuration
  * @package DCarbone\PHPConsulAPI\Operator
  */
-class ReadableDuration extends Time\Duration implements \JsonSerializable, ScalarType {
+class ReadableDuration extends Time\Duration implements \JsonSerializable, ScalarType
+{
     /**
      * @param string $s
      * @return \DCarbone\PHPConsulAPI\Operator\ReadableDuration
      */
-    public static function fromDuration(string $s): ReadableDuration {
+    public static function fromDuration(string $s): ReadableDuration
+    {
         return new ReadableDuration(Time::ParseDuration($s)->Nanoseconds());
     }
 
     /**
      * @return string
      */
-    public function jsonSerialize() {
+    public function jsonSerialize()
+    {
         return (string)$this;
     }
 }

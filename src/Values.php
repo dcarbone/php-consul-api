@@ -20,7 +20,8 @@
  * Class Values
  * @package DCarbone\PHPConsulAPI
  */
-class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable {
+class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
+{
     /** @var array */
     private $values = [];
 
@@ -28,7 +29,8 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable {
      * @param string $key
      * @return string
      */
-    public function get(string $key): string {
+    public function get(string $key): string
+    {
         if (isset($this->values[$key])) {
             return $this->values[$key][0];
         }
@@ -40,7 +42,8 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable {
      * @param string $key
      * @return string[]
      */
-    public function getAll(string $key): array {
+    public function getAll(string $key): array
+    {
         if (isset($this->values[$key])) {
             return $this->values[$key];
         }
@@ -52,7 +55,8 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable {
      * @param string $key
      * @param string $value
      */
-    public function set(string $key, string $value) {
+    public function set(string $key, string $value)
+    {
         $this->values[$key] = [$value];
     }
 
@@ -60,7 +64,8 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable {
      * @param string $key
      * @param string $value
      */
-    public function add(string $key, string $value) {
+    public function add(string $key, string $value)
+    {
         if (isset($this->values[$key])) {
             $this->values[$key][] = $value;
         } else {
@@ -71,50 +76,58 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable {
     /**
      * @param string $key
      */
-    public function delete(string $key) {
+    public function delete(string $key)
+    {
         unset($this->values[$key]);
     }
 
     /**
      * @return int
      */
-    public function count(): int {
+    public function count(): int
+    {
         return count($this->values);
     }
 
     /**
      * @return array
      */
-    public function toPsr7Array(): array {
+    public function toPsr7Array(): array
+    {
         return $this->values;
     }
 
     /**
      * @return string|array
      */
-    public function current() {
+    public function current()
+    {
         return current($this->values);
     }
 
-    public function next() {
+    public function next()
+    {
         next($this->values);
     }
 
     /**
      * @return string
      */
-    public function key() {
+    public function key()
+    {
         return key($this->values);
     }
 
     /**
      * @return bool
      */
-    public function valid() {
+    public function valid()
+    {
         return null !== key($this->values);
     }
 
-    public function rewind() {
+    public function rewind()
+    {
         reset($this->values);
     }
 
@@ -122,7 +135,8 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable {
      * @param mixed $offset
      * @return bool
      */
-    public function offsetExists($offset) {
+    public function offsetExists($offset)
+    {
         return isset($this->values[$offset]);
     }
 
@@ -130,7 +144,8 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable {
      * @param string $offset
      * @return string
      */
-    public function offsetGet($offset) {
+    public function offsetGet($offset)
+    {
         return $this->get($offset);
     }
 
@@ -138,28 +153,32 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable {
      * @param string $offset
      * @param string $value
      */
-    public function offsetSet($offset, $value) {
+    public function offsetSet($offset, $value)
+    {
         $this->set($offset, $value);
     }
 
     /**
      * @param string $offset
      */
-    public function offsetUnset($offset) {
+    public function offsetUnset($offset)
+    {
         $this->delete($offset);
     }
 
     /**
      * @return array
      */
-    public function jsonSerialize() {
+    public function jsonSerialize()
+    {
         return $this->values;
     }
 
     /**
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         $str = '';
         foreach ($this->values as $k => $vs) {
             foreach ($vs as $v) {
@@ -180,7 +199,8 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable {
      * @param string $v
      * @return string
      */
-    protected function encode(string $v): string {
+    protected function encode(string $v): string
+    {
         return $v;
     }
 }

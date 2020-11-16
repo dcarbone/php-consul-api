@@ -22,7 +22,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class CatalogService
  * @package DCarbone\PHPConsulAPI\Catalog
  */
-class CatalogService extends AbstractModel {
+class CatalogService extends AbstractModel
+{
     /** @var string */
     public $ID = '';
     /** @var string */
@@ -55,98 +56,112 @@ class CatalogService extends AbstractModel {
     /**
      * @return string
      */
-    public function getID(): string {
+    public function getID(): string
+    {
         return $this->ID;
     }
 
     /**
      * @return string
      */
-    public function getNode(): string {
+    public function getNode(): string
+    {
         return $this->Node;
     }
 
     /**
      * @return string
      */
-    public function getAddress(): string {
+    public function getAddress(): string
+    {
         return $this->Address;
     }
 
     /**
      * @return string
      */
-    public function getDatacenter(): string {
+    public function getDatacenter(): string
+    {
         return $this->Datacenter;
     }
 
     /**
      * @return array
      */
-    public function getTaggedAddresses(): array {
+    public function getTaggedAddresses(): array
+    {
         return $this->TaggedAddresses;
     }
 
     /**
      * @return array
      */
-    public function getNodeMeta(): array {
+    public function getNodeMeta(): array
+    {
         return $this->NodeMeta;
     }
 
     /**
      * @return string
      */
-    public function getServiceID(): string {
+    public function getServiceID(): string
+    {
         return $this->ServiceID;
     }
 
     /**
      * @return string
      */
-    public function getServiceName(): string {
+    public function getServiceName(): string
+    {
         return $this->ServiceName;
     }
 
     /**
      * @return string
      */
-    public function getServiceAddress(): string {
+    public function getServiceAddress(): string
+    {
         return $this->ServiceAddress;
     }
 
     /**
      * @return string[]
      */
-    public function getServiceTags(): array {
+    public function getServiceTags(): array
+    {
         return $this->ServiceTags;
     }
 
     /**
      * @return int
      */
-    public function getServicePort(): int {
+    public function getServicePort(): int
+    {
         return $this->ServicePort;
     }
 
     /**
      * @return bool
      */
-    public function isServiceEnableTagOverride(): bool {
+    public function isServiceEnableTagOverride(): bool
+    {
         return $this->ServiceEnableTagOverride;
     }
 
     /**
      * @return int
      */
-    public function getCreateIndex(): int {
+    public function getCreateIndex(): int
+    {
         return $this->CreateIndex;
     }
 
     /**
      * @return int
      */
-    public function getModifyIndex(): int {
+    public function getModifyIndex(): int
+    {
         return $this->ModifyIndex;
     }
 }

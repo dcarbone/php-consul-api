@@ -22,7 +22,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class PointValue
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class PointValue extends AbstractModel {
+class PointValue extends AbstractModel
+{
     /** @var string */
     public $Name = '';
     /** @var array */
@@ -31,7 +32,8 @@ class PointValue extends AbstractModel {
     /**
      * @return string
      */
-    public function getName(): string {
+    public function getName(): string
+    {
         return $this->Name;
     }
 
@@ -39,7 +41,8 @@ class PointValue extends AbstractModel {
      * @param string $name
      * @return PointValue
      */
-    public function setName(string $name): PointValue {
+    public function setName(string $name): PointValue
+    {
         $this->Name = $name;
         return $this;
     }
@@ -47,7 +50,8 @@ class PointValue extends AbstractModel {
     /**
      * @return array
      */
-    public function getPoints(): array {
+    public function getPoints(): array
+    {
         return $this->Points;
     }
 
@@ -55,7 +59,8 @@ class PointValue extends AbstractModel {
      * @param array $points
      * @return PointValue
      */
-    public function setPoints(array $points): PointValue {
+    public function setPoints(array $points): PointValue
+    {
         $this->Points = $points;
         return $this;
     }

@@ -22,7 +22,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class ACLReplicationStatus
  * @package DCarbone\PHPConsulAPI\ACL
  */
-class ACLReplicationStatus extends AbstractModel {
+class ACLReplicationStatus extends AbstractModel
+{
     /** @var bool */
     public $Enabled = false;
     /** @var bool */
@@ -39,42 +40,48 @@ class ACLReplicationStatus extends AbstractModel {
     /**
      * @return bool
      */
-    public function isEnabled(): bool {
+    public function isEnabled(): bool
+    {
         return $this->Enabled;
     }
 
     /**
      * @return bool
      */
-    public function isRunning(): bool {
+    public function isRunning(): bool
+    {
         return $this->Running;
     }
 
     /**
      * @return string
      */
-    public function getSourceDatacenter(): string {
+    public function getSourceDatacenter(): string
+    {
         return $this->SourceDatacenter;
     }
 
     /**
      * @return int
      */
-    public function getReplicatedIndex(): int {
+    public function getReplicatedIndex(): int
+    {
         return $this->ReplicatedIndex;
     }
 
     /**
      * @return null|string
      */
-    public function getLastSuccess() {
+    public function getLastSuccess()
+    {
         return $this->LastSuccess;
     }
 
     /**
      * @return null|string
      */
-    public function getLastError() {
+    public function getLastError()
+    {
         return $this->LastError;
     }
 }

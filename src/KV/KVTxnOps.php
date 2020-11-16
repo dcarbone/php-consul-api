@@ -23,7 +23,8 @@ use DCarbone\PHPConsulAPI\AbstractModels;
  * Class KVTxnOps
  * @package DCarbone\PHPConsulAPI\KV
  */
-class KVTxnOps extends AbstractModels {
+class KVTxnOps extends AbstractModels
+{
     /** @var string */
     protected $containedClass = KVTxnOp::class;
 
@@ -31,7 +32,8 @@ class KVTxnOps extends AbstractModels {
      * @param $data
      * @return \DCarbone\PHPConsulAPI\AbstractModel
      */
-    protected function newChild($data): AbstractModel {
+    protected function newChild($data): AbstractModel
+    {
         return new KVTxnOp($data);
     }
 }

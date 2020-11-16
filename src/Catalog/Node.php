@@ -22,7 +22,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class Node
  * @package DCarbone\PHPConsulAPI\Catalog
  */
-class Node extends AbstractModel {
+class Node extends AbstractModel
+{
     /** @var string */
     public $ID = '';
     /** @var string */
@@ -43,56 +44,64 @@ class Node extends AbstractModel {
     /**
      * @return string
      */
-    public function getID(): string {
+    public function getID(): string
+    {
         return $this->ID;
     }
 
     /**
      * @return string
      */
-    public function getNode(): string {
+    public function getNode(): string
+    {
         return $this->Node;
     }
 
     /**
      * @return string
      */
-    public function getAddress(): string {
+    public function getAddress(): string
+    {
         return $this->Address;
     }
 
     /**
      * @return string
      */
-    public function getDatacenter(): string {
+    public function getDatacenter(): string
+    {
         return $this->Datacenter;
     }
 
     /**
      * @return array
      */
-    public function getTaggedAddresses(): array {
+    public function getTaggedAddresses(): array
+    {
         return $this->TaggedAddresses;
     }
 
     /**
      * @return array
      */
-    public function getMeta(): array {
+    public function getMeta(): array
+    {
         return $this->Meta;
     }
 
     /**
      * @return int
      */
-    public function getCreateIndex(): int {
+    public function getCreateIndex(): int
+    {
         return $this->CreateIndex;
     }
 
     /**
      * @return int
      */
-    public function getModifyIndex(): int {
+    public function getModifyIndex(): int
+    {
         return $this->ModifyIndex;
     }
 }

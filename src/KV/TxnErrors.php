@@ -23,7 +23,8 @@ use DCarbone\PHPConsulAPI\AbstractModels;
  * Class TxnErrors
  * @package DCarbone\PHPConsulAPI\KV
  */
-class TxnErrors extends AbstractModels {
+class TxnErrors extends AbstractModels
+{
     /** @var string */
     protected $containedClass = TxnError::class;
 
@@ -31,7 +32,8 @@ class TxnErrors extends AbstractModels {
      * @param array|null $data
      * @return \DCarbone\PHPConsulAPI\AbstractModel
      */
-    protected function newChild($data): AbstractModel {
+    protected function newChild($data): AbstractModel
+    {
         return new TxnError($data);
     }
 }

@@ -22,7 +22,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class ServerHealth
  * @package DCarbone\PHPConsulAPI\Operator
  */
-class ServerHealth extends AbstractModel {
+class ServerHealth extends AbstractModel
+{
     /** @var string */
     public $ID = '';
     /** @var string */
@@ -51,84 +52,96 @@ class ServerHealth extends AbstractModel {
     /**
      * @return string
      */
-    public function getID(): string {
+    public function getID(): string
+    {
         return $this->ID;
     }
 
     /**
      * @return string
      */
-    public function getName(): string {
+    public function getName(): string
+    {
         return $this->Name;
     }
 
     /**
      * @return string
      */
-    public function getAddress(): string {
+    public function getAddress(): string
+    {
         return $this->Address;
     }
 
     /**
      * @return string
      */
-    public function getSerfStatus(): string {
+    public function getSerfStatus(): string
+    {
         return $this->SerfStatus;
     }
 
     /**
      * @return string
      */
-    public function getVersion(): string {
+    public function getVersion(): string
+    {
         return $this->Version;
     }
 
     /**
      * @return bool
      */
-    public function isLeader(): bool {
+    public function isLeader(): bool
+    {
         return $this->Leader;
     }
 
     /**
      * @return string
      */
-    public function getLastContact(): string {
+    public function getLastContact(): string
+    {
         return $this->LastContact;
     }
 
     /**
      * @return int
      */
-    public function getLastTerm(): int {
+    public function getLastTerm(): int
+    {
         return $this->LastTerm;
     }
 
     /**
      * @return int
      */
-    public function getLastIndex(): int {
+    public function getLastIndex(): int
+    {
         return $this->LastIndex;
     }
 
     /**
      * @return bool
      */
-    public function isHealthy(): bool {
+    public function isHealthy(): bool
+    {
         return $this->Healthy;
     }
 
     /**
      * @return bool
      */
-    public function isVoter(): bool {
+    public function isVoter(): bool
+    {
         return $this->Voter;
     }
 
     /**
      * @return string
      */
-    public function getStableSince(): string {
+    public function getStableSince(): string
+    {
         return $this->StableSince;
     }
 }

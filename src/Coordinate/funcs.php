@@ -28,7 +28,8 @@ const ZeroThreshold = 1.0e-6;
  * @type float
  * )
  */
-function unitVectorAt(array $vec1, array $vec2): array {
+function unitVectorAt(array $vec1, array $vec2): array
+{
     $ret = diff($vec1, $vec2);
 
     if (($mag = magnitude($ret)) && $mag > ZeroThreshold) {
@@ -53,7 +54,8 @@ function unitVectorAt(array $vec1, array $vec2): array {
  * @param array $vec2
  * @return array
  */
-function add(array $vec1, array $vec2): array {
+function add(array $vec1, array $vec2): array
+{
     $ret = [];
     foreach ($vec1 as $k => $v) {
         $ret[$k] = $v + $vec2[$k];
@@ -66,7 +68,8 @@ function add(array $vec1, array $vec2): array {
  * @param array $vec2
  * @return array
  */
-function diff(array $vec1, array $vec2): array {
+function diff(array $vec1, array $vec2): array
+{
     $ret = [];
     foreach ($vec1 as $k => $v) {
         $ret[$k] = $v - $vec2[$k];
@@ -79,7 +82,8 @@ function diff(array $vec1, array $vec2): array {
  * @param float $factor
  * @return array
  */
-function mul(array $vec, float $factor): array {
+function mul(array $vec, float $factor): array
+{
     $ret = [];
     foreach ($vec as $k => $v) {
         $ret[$k] = $v * $factor;
@@ -91,7 +95,8 @@ function mul(array $vec, float $factor): array {
  * @param array $vec
  * @return float
  */
-function magnitude(array $vec): float {
+function magnitude(array $vec): float
+{
     $sum = 0.0;
     foreach ($vec as $k => $v) {
         $sum += ($v * $v);

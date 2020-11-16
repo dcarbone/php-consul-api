@@ -24,14 +24,16 @@ use DCarbone\PHPConsulAPI\Consul;
  * Class HealthChecks
  * @package DCarbone\PHPConsulAPI\Health
  */
-class HealthChecks extends AbstractModels {
+class HealthChecks extends AbstractModels
+{
     /** @var string */
     protected $containedClass = HealthCheck::class;
 
     /**
      * @return string
      */
-    public function AggregatedStatus(): string {
+    public function AggregatedStatus(): string
+    {
         $passing = $warning = $critical = $maintenance = false;
         foreach ($this->_list as $check) {
             /** @var \DCarbone\PHPConsulAPI\Health\HealthCheck $check */
@@ -73,7 +75,8 @@ class HealthChecks extends AbstractModels {
      * @param null|array $data
      * @return \DCarbone\PHPConsulAPI\AbstractModel
      */
-    protected function newChild($data): AbstractModel {
+    protected function newChild($data): AbstractModel
+    {
         return new HealthCheck($data);
     }
 }

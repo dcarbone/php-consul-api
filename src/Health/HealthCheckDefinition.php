@@ -23,7 +23,8 @@ use DCarbone\PHPConsulAPI\Operator\ReadableDuration;
  * Class HealthCheckDefinition
  * @package DCarbone\PHPConsulAPI\Health
  */
-class HealthCheckDefinition extends AbstractModel {
+class HealthCheckDefinition extends AbstractModel
+{
     /** @var string */
     public $HTTP = '';
     /** @var array */
@@ -45,7 +46,8 @@ class HealthCheckDefinition extends AbstractModel {
      * HealthCheckDefinition constructor.
      * @param array $data
      */
-    public function __construct(array $data = []) {
+    public function __construct(array $data = [])
+    {
         parent::__construct($data);
         if (null === $this->Interval) {
             $this->Interval = new ReadableDuration();
@@ -82,56 +84,64 @@ class HealthCheckDefinition extends AbstractModel {
     /**
      * @return string
      */
-    public function getHTTP(): string {
+    public function getHTTP(): string
+    {
         return $this->HTTP;
     }
 
     /**
      * @return array
      */
-    public function getHeader(): array {
+    public function getHeader(): array
+    {
         return $this->Header;
     }
 
     /**
      * @return string
      */
-    public function getMethod(): string {
+    public function getMethod(): string
+    {
         return $this->Method;
     }
 
     /**
      * @return bool
      */
-    public function isTLSSkipVerify(): bool {
+    public function isTLSSkipVerify(): bool
+    {
         return $this->TLSSkipVerify;
     }
 
     /**
      * @return string
      */
-    public function getTCP(): string {
+    public function getTCP(): string
+    {
         return $this->TCP;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\ReadableDuration
      */
-    public function getInterval(): ReadableDuration {
+    public function getInterval(): ReadableDuration
+    {
         return $this->Interval;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\ReadableDuration
      */
-    public function getTimeout(): ReadableDuration {
+    public function getTimeout(): ReadableDuration
+    {
         return $this->Timeout;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\ReadableDuration
      */
-    public function getDeregisterCriticalServiceAfter(): ReadableDuration {
+    public function getDeregisterCriticalServiceAfter(): ReadableDuration
+    {
         return $this->DeregisterCriticalServiceAfter;
     }
 }

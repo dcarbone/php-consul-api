@@ -23,7 +23,8 @@ use DCarbone\PHPConsulAPI\AbstractModels;
  * Class KVPairs
  * @package DCarbone\PHPConsulAPI\KV
  */
-class KVPairs extends AbstractModels {
+class KVPairs extends AbstractModels
+{
     /** @var string */
     protected $containedClass = KVPair::class;
 
@@ -31,7 +32,8 @@ class KVPairs extends AbstractModels {
      * @param null|array $data
      * @return \DCarbone\PHPConsulAPI\AbstractModel
      */
-    protected function newChild($data): AbstractModel {
+    protected function newChild($data): AbstractModel
+    {
         return new KVPair($data, true);
     }
 }

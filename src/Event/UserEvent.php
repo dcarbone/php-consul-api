@@ -23,7 +23,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class UserEvent
  * @package DCarbone\PHPConsulAPI\Event
  */
-class UserEvent extends AbstractModel {
+class UserEvent extends AbstractModel
+{
     /** @var string */
     public $ID = '';
     /** @var string */
@@ -47,7 +48,8 @@ class UserEvent extends AbstractModel {
      * @param array $data
      * @param bool $_decodeValue
      */
-    public function __construct(array $data = [], $_decodeValue = false) {
+    public function __construct(array $data = [], $_decodeValue = false)
+    {
         parent::__construct($data);
         if ((bool)$_decodeValue && isset($this->Payload)) {
             $this->Payload = base64_decode($this->Payload);
@@ -57,56 +59,64 @@ class UserEvent extends AbstractModel {
     /**
      * @return string
      */
-    public function getID(): string {
+    public function getID(): string
+    {
         return $this->ID;
     }
 
     /**
      * @return string
      */
-    public function getName(): string {
+    public function getName(): string
+    {
         return $this->Name;
     }
 
     /**
      * @return string
      */
-    public function getPayload(): string {
+    public function getPayload(): string
+    {
         return $this->Payload;
     }
 
     /**
      * @return string
      */
-    public function getNodeFilter(): string {
+    public function getNodeFilter(): string
+    {
         return $this->NodeFilter;
     }
 
     /**
      * @return string
      */
-    public function getServiceFilter(): string {
+    public function getServiceFilter(): string
+    {
         return $this->ServiceFilter;
     }
 
     /**
      * @return string
      */
-    public function getTagFilter(): string {
+    public function getTagFilter(): string
+    {
         return $this->TagFilter;
     }
 
     /**
      * @return int
      */
-    public function getVersion(): int {
+    public function getVersion(): int
+    {
         return $this->Version;
     }
 
     /**
      * @return int
      */
-    public function getLTime(): int {
+    public function getLTime(): int
+    {
         return $this->LTime;
     }
 }

@@ -20,12 +20,14 @@
  * Class Params
  * @package DCarbone\PHPConsulAPI
  */
-class Params extends Values {
+class Params extends Values
+{
     /**
      * @param string $v
      * @return string
      */
-    protected function encode(string $v): string {
+    protected function encode(string $v): string
+    {
         return urlencode($v);
     }
 }

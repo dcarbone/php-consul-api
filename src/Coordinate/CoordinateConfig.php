@@ -22,15 +22,16 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class CoordinateConfig
  * @package DCarbone\PHPConsulAPI\Coordinate
  */
-class CoordinateConfig extends AbstractModel {
-    public const DefaultDimensionality       = 8;
-    public const DefaultVivaldiErrorMax      = 1.5;
-    public const DefaultVivaldiCE            = 0.25;
-    public const DefaultVivaldiCC            = 0.25;
+class CoordinateConfig extends AbstractModel
+{
+    public const DefaultDimensionality = 8;
+    public const DefaultVivaldiErrorMax = 1.5;
+    public const DefaultVivaldiCE = 0.25;
+    public const DefaultVivaldiCC = 0.25;
     public const DefaultAdjustmentWindowSize = 20;
-    public const DefaultHeightMin            = 10.0e-6;
-    public const DefaultLatencyFilterSize    = 3;
-    public const DefaultGravityRho           = 150.0;
+    public const DefaultHeightMin = 10.0e-6;
+    public const DefaultLatencyFilterSize = 3;
+    public const DefaultGravityRho = 150.0;
 
     /** @var int */
     public $Dimensionality = 0;
@@ -52,23 +53,25 @@ class CoordinateConfig extends AbstractModel {
     /**
      * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateConfig
      */
-    public static function Default(): CoordinateConfig {
+    public static function Default(): CoordinateConfig
+    {
         return new static([
-            'Dimensionality'       => static::DefaultDimensionality,
-            'VivaldiErrorMax'      => static::DefaultVivaldiErrorMax,
-            'VivaldiCE'            => static::DefaultVivaldiCE,
-            'VivaldiCC'            => static::DefaultVivaldiCC,
+            'Dimensionality' => static::DefaultDimensionality,
+            'VivaldiErrorMax' => static::DefaultVivaldiErrorMax,
+            'VivaldiCE' => static::DefaultVivaldiCE,
+            'VivaldiCC' => static::DefaultVivaldiCC,
             'AdjustmentWindowSize' => static::DefaultAdjustmentWindowSize,
-            'HeightMin'            => static::DefaultHeightMin,
-            'LatencyFilterSize'    => static::DefaultLatencyFilterSize,
-            'GravityRho'           => static::DefaultGravityRho,
+            'HeightMin' => static::DefaultHeightMin,
+            'LatencyFilterSize' => static::DefaultLatencyFilterSize,
+            'GravityRho' => static::DefaultGravityRho,
         ]);
     }
 
     /**
      * @return int
      */
-    public function getDimensionality(): int {
+    public function getDimensionality(): int
+    {
         return $this->Dimensionality;
     }
 
@@ -76,7 +79,8 @@ class CoordinateConfig extends AbstractModel {
      * @param int $dimensionality
      * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateConfig
      */
-    public function setDimensionality(int $dimensionality): CoordinateConfig {
+    public function setDimensionality(int $dimensionality): CoordinateConfig
+    {
         $this->Dimensionality = $dimensionality;
         return $this;
     }
@@ -84,7 +88,8 @@ class CoordinateConfig extends AbstractModel {
     /**
      * @return float
      */
-    public function getVivaldiErrorMax(): float {
+    public function getVivaldiErrorMax(): float
+    {
         return $this->VivaldiErrorMax;
     }
 
@@ -92,7 +97,8 @@ class CoordinateConfig extends AbstractModel {
      * @param float $vivaldiErrorMax
      * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateConfig
      */
-    public function setVivaldiErrorMax(float $vivaldiErrorMax): CoordinateConfig {
+    public function setVivaldiErrorMax(float $vivaldiErrorMax): CoordinateConfig
+    {
         $this->VivaldiErrorMax = $vivaldiErrorMax;
         return $this;
     }
@@ -100,7 +106,8 @@ class CoordinateConfig extends AbstractModel {
     /**
      * @return float
      */
-    public function getVivaldiCE(): float {
+    public function getVivaldiCE(): float
+    {
         return $this->VivaldiCE;
     }
 
@@ -108,7 +115,8 @@ class CoordinateConfig extends AbstractModel {
      * @param float $vivaldiCE
      * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateConfig
      */
-    public function setVivaldiCE(float $vivaldiCE): CoordinateConfig {
+    public function setVivaldiCE(float $vivaldiCE): CoordinateConfig
+    {
         $this->VivaldiCE = $vivaldiCE;
         return $this;
     }
@@ -116,7 +124,8 @@ class CoordinateConfig extends AbstractModel {
     /**
      * @return float
      */
-    public function getVivaldiCC(): float {
+    public function getVivaldiCC(): float
+    {
         return $this->VivaldiCC;
     }
 
@@ -124,7 +133,8 @@ class CoordinateConfig extends AbstractModel {
      * @param float $vivaldiCC
      * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateConfig
      */
-    public function setVivaldiCC(float $vivaldiCC): CoordinateConfig {
+    public function setVivaldiCC(float $vivaldiCC): CoordinateConfig
+    {
         $this->VivaldiCC = $vivaldiCC;
         return $this;
     }
@@ -132,7 +142,8 @@ class CoordinateConfig extends AbstractModel {
     /**
      * @return int
      */
-    public function getAdjustmentWindowSize(): int {
+    public function getAdjustmentWindowSize(): int
+    {
         return $this->AdjustmentWindowSize;
     }
 
@@ -140,7 +151,8 @@ class CoordinateConfig extends AbstractModel {
      * @param int $adjustmentWindowSize
      * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateConfig
      */
-    public function setAdjustmentWindowSize(int $adjustmentWindowSize): CoordinateConfig {
+    public function setAdjustmentWindowSize(int $adjustmentWindowSize): CoordinateConfig
+    {
         $this->AdjustmentWindowSize = $adjustmentWindowSize;
         return $this;
     }
@@ -148,7 +160,8 @@ class CoordinateConfig extends AbstractModel {
     /**
      * @return float
      */
-    public function getHeightMin(): float {
+    public function getHeightMin(): float
+    {
         return $this->HeightMin;
     }
 
@@ -156,7 +169,8 @@ class CoordinateConfig extends AbstractModel {
      * @param float $heightMin
      * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateConfig
      */
-    public function setHeightMin(float $heightMin): CoordinateConfig {
+    public function setHeightMin(float $heightMin): CoordinateConfig
+    {
         $this->HeightMin = $heightMin;
         return $this;
     }
@@ -164,7 +178,8 @@ class CoordinateConfig extends AbstractModel {
     /**
      * @return int
      */
-    public function getLatencyFilterSize(): int {
+    public function getLatencyFilterSize(): int
+    {
         return $this->LatencyFilterSize;
     }
 
@@ -172,7 +187,8 @@ class CoordinateConfig extends AbstractModel {
      * @param int $latencyFilterSize
      * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateConfig
      */
-    public function setLatencyFilterSize(int $latencyFilterSize): CoordinateConfig {
+    public function setLatencyFilterSize(int $latencyFilterSize): CoordinateConfig
+    {
         $this->LatencyFilterSize = $latencyFilterSize;
         return $this;
     }
@@ -180,7 +196,8 @@ class CoordinateConfig extends AbstractModel {
     /**
      * @return float
      */
-    public function getGravityRho(): float {
+    public function getGravityRho(): float
+    {
         return $this->GravityRho;
     }
 
@@ -188,7 +205,8 @@ class CoordinateConfig extends AbstractModel {
      * @param float $gravityRho
      * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateConfig
      */
-    public function setGravityRho(float $gravityRho): CoordinateConfig {
+    public function setGravityRho(float $gravityRho): CoordinateConfig
+    {
         $this->GravityRho = $gravityRho;
         return $this;
     }

@@ -22,7 +22,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class KVTxnResponse
  * @package DCarbone\PHPConsulAPI\KV
  */
-class KVTxnResponse extends AbstractModel {
+class KVTxnResponse extends AbstractModel
+{
     /** @var \DCarbone\PHPConsulAPI\KV\KVPair[] */
     public $Results = [];
     /** @var \DCarbone\PHPConsulAPI\KV\TxnErrors */
@@ -32,7 +33,8 @@ class KVTxnResponse extends AbstractModel {
      * KVTxnResponse constructor.
      * @param array $data
      */
-    public function __construct(array $data = []) {
+    public function __construct(array $data = [])
+    {
         parent::__construct($data);
         if (is_array($this->Results)) {
             $this->Results = array_filter((array)$this->Results);
@@ -50,14 +52,16 @@ class KVTxnResponse extends AbstractModel {
     /**
      * @return \DCarbone\PHPConsulAPI\KV\KVPair[]
      */
-    public function getResults(): array {
+    public function getResults(): array
+    {
         return $this->Results;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\KV\TxnErrors
      */
-    public function getErrors(): TxnErrors {
+    public function getErrors(): TxnErrors
+    {
         return $this->Errors;
     }
 }

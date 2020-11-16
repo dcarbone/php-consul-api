@@ -23,7 +23,8 @@ use DCarbone\PHPConsulAPI\HasStringTags;
  * Class AgentService
  * @package DCarbone\PHPConsulAPI\Agent
  */
-class AgentService extends AbstractModel {
+class AgentService extends AbstractModel
+{
     use HasStringTags;
 
     /** @var string */
@@ -44,56 +45,64 @@ class AgentService extends AbstractModel {
     /**
      * @return string
      */
-    public function getID(): string {
+    public function getID(): string
+    {
         return $this->ID;
     }
 
     /**
      * @return string
      */
-    public function getService(): string {
+    public function getService(): string
+    {
         return $this->Service;
     }
 
     /**
      * @return string
      */
-    public function getAddress(): string {
+    public function getAddress(): string
+    {
         return $this->Address;
     }
 
     /**
      * @return int
      */
-    public function getPort(): int {
+    public function getPort(): int
+    {
         return $this->Port;
     }
 
     /**
      * @return bool
      */
-    public function isEnableTagOverride(): bool {
+    public function isEnableTagOverride(): bool
+    {
         return $this->EnableTagOverride;
     }
 
     /**
      * @return int
      */
-    public function getCreateIndex(): int {
+    public function getCreateIndex(): int
+    {
         return $this->CreateIndex;
     }
 
     /**
      * @return int
      */
-    public function getModifyIndex(): int {
+    public function getModifyIndex(): int
+    {
         return $this->ModifyIndex;
     }
 
     /**
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         return $this->ID;
     }
 }

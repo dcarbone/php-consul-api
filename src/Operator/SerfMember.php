@@ -22,7 +22,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class SerfMember
  * @package DCarbone\PHPConsulAPI\Operator
  */
-class SerfMember extends AbstractModel {
+class SerfMember extends AbstractModel
+{
     /** @var string */
     public $ID = '';
     /** @var string */
@@ -47,70 +48,80 @@ class SerfMember extends AbstractModel {
     /**
      * @return string
      */
-    public function getID(): string {
+    public function getID(): string
+    {
         return $this->ID;
     }
 
     /**
      * @return string
      */
-    public function getName(): string {
+    public function getName(): string
+    {
         return $this->Name;
     }
 
     /**
      * @return string
      */
-    public function getAddr(): string {
+    public function getAddr(): string
+    {
         return $this->Addr;
     }
 
     /**
      * @return int
      */
-    public function getPort(): int {
+    public function getPort(): int
+    {
         return $this->Port;
     }
 
     /**
      * @return string
      */
-    public function getDatacenter(): string {
+    public function getDatacenter(): string
+    {
         return $this->Datacenter;
     }
 
     /**
      * @return string
      */
-    public function getRole(): string {
+    public function getRole(): string
+    {
         return $this->Role;
     }
 
     /**
      * @return string
      */
-    public function getBuild(): string {
+    public function getBuild(): string
+    {
         return $this->Build;
     }
 
     /**
      * @return int
      */
-    public function getProtocol(): int {
+    public function getProtocol(): int
+    {
         return $this->Protocol;
     }
 
     /**
      * @return string
      */
-    public function getStatus(): string {
+    public function getStatus(): string
+    {
         return $this->Status;
     }
 
     /**
      * @return int
      */
-    public function getRTT(): int {
+    public function getRTT(): int
+    {
         return $this->RTT;
     }
 }

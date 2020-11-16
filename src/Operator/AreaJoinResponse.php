@@ -22,7 +22,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class AreaJoinResponse
  * @package DCarbone\PHPConsulAPI\Operator
  */
-class AreaJoinResponse extends AbstractModel {
+class AreaJoinResponse extends AbstractModel
+{
     /** @var string */
     public $Address = '';
     /** @var bool */
@@ -33,21 +34,24 @@ class AreaJoinResponse extends AbstractModel {
     /**
      * @return string
      */
-    public function getAddress(): string {
+    public function getAddress(): string
+    {
         return $this->Address;
     }
 
     /**
      * @return bool
      */
-    public function isJoined(): bool {
+    public function isJoined(): bool
+    {
         return $this->Joined;
     }
 
     /**
      * @return string
      */
-    public function getError(): string {
+    public function getError(): string
+    {
         return $this->Error;
     }
 }

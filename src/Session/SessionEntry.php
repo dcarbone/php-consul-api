@@ -23,7 +23,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class SessionEntry
  * @package DCarbone\PHPConsulAPI\Session
  */
-class SessionEntry extends AbstractModel {
+class SessionEntry extends AbstractModel
+{
     /** @var int */
     public $CreateIndex = 0;
     /** @var string */
@@ -45,7 +46,8 @@ class SessionEntry extends AbstractModel {
      * SessionEntry constructor.
      * @param array $data
      */
-    public function __construct(array $data = []) {
+    public function __construct(array $data = [])
+    {
         parent::__construct($data);
         if (!($this->LockDelay instanceof Time\Duration)) {
             $this->LockDelay = new Time\Duration($this->LockDelay ?? 0);
@@ -55,7 +57,8 @@ class SessionEntry extends AbstractModel {
     /**
      * @return int
      */
-    public function getCreateIndex(): int {
+    public function getCreateIndex(): int
+    {
         return $this->CreateIndex;
     }
 
@@ -63,7 +66,8 @@ class SessionEntry extends AbstractModel {
      * @param int $createIndex
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function setCreateIndex(int $createIndex): SessionEntry {
+    public function setCreateIndex(int $createIndex): SessionEntry
+    {
         $this->CreateIndex = $createIndex;
         return $this;
     }
@@ -71,7 +75,8 @@ class SessionEntry extends AbstractModel {
     /**
      * @return string
      */
-    public function getID(): string {
+    public function getID(): string
+    {
         return $this->ID;
     }
 
@@ -79,7 +84,8 @@ class SessionEntry extends AbstractModel {
      * @param string $id
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function setID(string $id): SessionEntry {
+    public function setID(string $id): SessionEntry
+    {
         $this->ID = $id;
         return $this;
     }
@@ -87,7 +93,8 @@ class SessionEntry extends AbstractModel {
     /**
      * @return string
      */
-    public function getName(): string {
+    public function getName(): string
+    {
         return $this->Name;
     }
 
@@ -95,7 +102,8 @@ class SessionEntry extends AbstractModel {
      * @param string $name
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function setName(string $name): SessionEntry {
+    public function setName(string $name): SessionEntry
+    {
         $this->Name = $name;
         return $this;
     }
@@ -103,7 +111,8 @@ class SessionEntry extends AbstractModel {
     /**
      * @return string
      */
-    public function getNode(): string {
+    public function getNode(): string
+    {
         return $this->Node;
     }
 
@@ -111,7 +120,8 @@ class SessionEntry extends AbstractModel {
      * @param string $node
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function setNode(string $node): SessionEntry {
+    public function setNode(string $node): SessionEntry
+    {
         $this->Node = $node;
         return $this;
     }
@@ -119,7 +129,8 @@ class SessionEntry extends AbstractModel {
     /**
      * @return string[]
      */
-    public function getChecks(): array {
+    public function getChecks(): array
+    {
         return $this->Checks;
     }
 
@@ -127,7 +138,8 @@ class SessionEntry extends AbstractModel {
      * @param string[] $checks
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function setChecks(array $checks): SessionEntry {
+    public function setChecks(array $checks): SessionEntry
+    {
         $this->Checks = [];
         foreach ($checks as $check) {
             $this->addCheck($check);
@@ -135,7 +147,8 @@ class SessionEntry extends AbstractModel {
         return $this;
     }
 
-    public function addCheck(string $check): SessionEntry {
+    public function addCheck(string $check): SessionEntry
+    {
         $this->Checks[] = $check;
         return $this;
     }
@@ -143,7 +156,8 @@ class SessionEntry extends AbstractModel {
     /**
      * @return \DCarbone\Go\Time\Duration
      */
-    public function getLockDelay(): Time\Duration {
+    public function getLockDelay(): Time\Duration
+    {
         return $this->LockDelay;
     }
 
@@ -151,7 +165,8 @@ class SessionEntry extends AbstractModel {
      * @param \DCarbone\Go\Time\Duration $lockDelay
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function setLockDelay(Time\Duration $lockDelay): SessionEntry {
+    public function setLockDelay(Time\Duration $lockDelay): SessionEntry
+    {
         $this->LockDelay = $lockDelay;
         return $this;
     }
@@ -159,7 +174,8 @@ class SessionEntry extends AbstractModel {
     /**
      * @return string
      */
-    public function getBehavior(): string {
+    public function getBehavior(): string
+    {
         return $this->Behavior;
     }
 
@@ -167,7 +183,8 @@ class SessionEntry extends AbstractModel {
      * @param string $behavior
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function setBehavior(string $behavior): SessionEntry {
+    public function setBehavior(string $behavior): SessionEntry
+    {
         $this->Behavior = $behavior;
         return $this;
     }
@@ -175,7 +192,8 @@ class SessionEntry extends AbstractModel {
     /**
      * @return string
      */
-    public function getTTL(): string {
+    public function getTTL(): string
+    {
         return $this->TTL;
     }
 
@@ -183,7 +201,8 @@ class SessionEntry extends AbstractModel {
      * @param string $ttl
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function setTTL(string $ttl): SessionEntry {
+    public function setTTL(string $ttl): SessionEntry
+    {
         $this->TTL = $ttl;
         return $this;
     }

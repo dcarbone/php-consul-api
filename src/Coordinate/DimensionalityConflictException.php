@@ -20,7 +20,8 @@
  * Class DimensionalityConflictException
  * @package DCarbone\PHPConsulAPI\Coordinate
  */
-class DimensionalityConflictException extends \DomainException {
+class DimensionalityConflictException extends \DomainException
+{
     public const DefaultMessage = 'coordinate dimensionality does not match';
 
     /**
@@ -29,7 +30,8 @@ class DimensionalityConflictException extends \DomainException {
      * @param int $code
      * @param \Throwable|null $previous
      */
-    public function __construct($message = "", $code = 0, \Throwable $previous = null) {
+    public function __construct($message = "", $code = 0, \Throwable $previous = null)
+    {
         parent::__construct('' === $message ? static::DefaultMessage : $message, $code, $previous);
     }
 }

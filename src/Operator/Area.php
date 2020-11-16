@@ -22,7 +22,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class Area
  * @package DCarbone\PHPConsulAPI\Operator
  */
-class Area extends AbstractModel {
+class Area extends AbstractModel
+{
     /** @var string */
     public $ID = '';
     /** @var string */
@@ -35,7 +36,8 @@ class Area extends AbstractModel {
     /**
      * @return string
      */
-    public function getID(): string {
+    public function getID(): string
+    {
         return $this->ID;
     }
 
@@ -43,7 +45,8 @@ class Area extends AbstractModel {
      * @param string $id
      * @return Area
      */
-    public function setID(string $id): Area {
+    public function setID(string $id): Area
+    {
         $this->ID = $id;
         return $this;
     }
@@ -51,7 +54,8 @@ class Area extends AbstractModel {
     /**
      * @return string
      */
-    public function getPeerDatacenter(): string {
+    public function getPeerDatacenter(): string
+    {
         return $this->PeerDatacenter;
     }
 
@@ -59,7 +63,8 @@ class Area extends AbstractModel {
      * @param string $peerDatacenter
      * @return Area
      */
-    public function setPeerDatacenter(string $peerDatacenter): Area {
+    public function setPeerDatacenter(string $peerDatacenter): Area
+    {
         $this->PeerDatacenter = $peerDatacenter;
         return $this;
     }
@@ -67,7 +72,8 @@ class Area extends AbstractModel {
     /**
      * @return string[]
      */
-    public function getRetryJoin(): array {
+    public function getRetryJoin(): array
+    {
         return $this->RetryJoin;
     }
 
@@ -75,7 +81,8 @@ class Area extends AbstractModel {
      * @param string[] $retryJoin
      * @return Area
      */
-    public function setRetryJoin(array $retryJoin): Area {
+    public function setRetryJoin(array $retryJoin): Area
+    {
         $this->RetryJoin = $retryJoin;
         return $this;
     }
@@ -83,7 +90,8 @@ class Area extends AbstractModel {
     /**
      * @return bool
      */
-    public function isUseTLS(): bool {
+    public function isUseTLS(): bool
+    {
         return $this->UseTLS;
     }
 
@@ -91,7 +99,8 @@ class Area extends AbstractModel {
      * @param bool $useTLS
      * @return Area
      */
-    public function setUseTLS(bool $useTLS): Area {
+    public function setUseTLS(bool $useTLS): Area
+    {
         $this->UseTLS = $useTLS;
         return $this;
     }

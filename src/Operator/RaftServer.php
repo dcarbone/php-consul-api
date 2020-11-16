@@ -22,7 +22,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class RaftServer
  * @package DCarbone\PHPConsulAPI\Operator
  */
-class RaftServer extends AbstractModel {
+class RaftServer extends AbstractModel
+{
     /** @var string */
     public $ID = '';
     /** @var string */
@@ -37,7 +38,8 @@ class RaftServer extends AbstractModel {
     /**
      * @return string
      */
-    public function getID(): string {
+    public function getID(): string
+    {
         return $this->ID;
     }
 
@@ -45,7 +47,8 @@ class RaftServer extends AbstractModel {
      * @param string $id
      * @return \DCarbone\PHPConsulAPI\Operator\RaftServer
      */
-    public function setID(string $id): RaftServer {
+    public function setID(string $id): RaftServer
+    {
         $this->ID = $id;
         return $this;
     }
@@ -53,7 +56,8 @@ class RaftServer extends AbstractModel {
     /**
      * @return string
      */
-    public function getNode(): string {
+    public function getNode(): string
+    {
         return $this->Node;
     }
 
@@ -61,7 +65,8 @@ class RaftServer extends AbstractModel {
      * @param string $node
      * @return \DCarbone\PHPConsulAPI\Operator\RaftServer
      */
-    public function setNode(string $node): RaftServer {
+    public function setNode(string $node): RaftServer
+    {
         $this->Node = $node;
         return $this;
     }
@@ -69,7 +74,8 @@ class RaftServer extends AbstractModel {
     /**
      * @return string
      */
-    public function getAddress(): string {
+    public function getAddress(): string
+    {
         return $this->Address;
     }
 
@@ -77,7 +83,8 @@ class RaftServer extends AbstractModel {
      * @param string $address
      * @return \DCarbone\PHPConsulAPI\Operator\RaftServer
      */
-    public function setAddress(string $address): RaftServer {
+    public function setAddress(string $address): RaftServer
+    {
         $this->Address = $address;
         return $this;
     }
@@ -85,7 +92,8 @@ class RaftServer extends AbstractModel {
     /**
      * @return bool
      */
-    public function isLeader(): bool {
+    public function isLeader(): bool
+    {
         return $this->Leader;
     }
 
@@ -93,7 +101,8 @@ class RaftServer extends AbstractModel {
      * @param bool $leader
      * @return \DCarbone\PHPConsulAPI\Operator\RaftServer
      */
-    public function setLeader(bool $leader): RaftServer {
+    public function setLeader(bool $leader): RaftServer
+    {
         $this->Leader = $leader;
         return $this;
     }
@@ -101,7 +110,8 @@ class RaftServer extends AbstractModel {
     /**
      * @return bool
      */
-    public function isVoter(): bool {
+    public function isVoter(): bool
+    {
         return $this->Voter;
     }
 
@@ -109,7 +119,8 @@ class RaftServer extends AbstractModel {
      * @param bool $voter
      * @return \DCarbone\PHPConsulAPI\Operator\RaftServer
      */
-    public function setVoter(bool $voter): RaftServer {
+    public function setVoter(bool $voter): RaftServer
+    {
         $this->Voter = $voter;
         return $this;
     }

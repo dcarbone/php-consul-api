@@ -23,7 +23,8 @@ use DCarbone\PHPConsulAPI\Agent\AgentService;
  * Class CatalogNode
  * @package DCarbone\PHPConsulAPI\Catalog
  */
-class CatalogNode extends AbstractModel {
+class CatalogNode extends AbstractModel
+{
     /** @var \DCarbone\PHPConsulAPI\Catalog\Node */
     public $Node = null;
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentService[] */
@@ -33,7 +34,8 @@ class CatalogNode extends AbstractModel {
      * CatalogNode constructor.
      * @param array $data
      */
-    public function __construct(array $data = []) {
+    public function __construct(array $data = [])
+    {
         parent::__construct($data);
         if (is_array($this->Node)) {
             $this->Node = new Node($this->Node);
@@ -51,14 +53,16 @@ class CatalogNode extends AbstractModel {
     /**
      * @return \DCarbone\PHPConsulAPI\Catalog\Node
      */
-    public function getNode(): Node {
+    public function getNode(): Node
+    {
         return $this->Node;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentService[]
      */
-    public function getServices(): array {
+    public function getServices(): array
+    {
         return $this->Services;
     }
 }
