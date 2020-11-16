@@ -1,7 +1,7 @@
 <?php namespace DCarbone\PHPConsulAPI;
 
 /*
-   Copyright 2016-2018 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2020 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -24,7 +24,13 @@ use GuzzleHttp\RequestOptions;
  * Class Config
  * @package DCarbone\PHPConsulAPI
  */
-class Config {
+class Config
+{
+    private const DefaultConfig = [
+        'Address' => '127.0.0.1:8500',
+        'Scheme' => 'http',
+    ];
+
     /**
      * The address, including port, of your Consul Agent
      *
@@ -66,6 +72,15 @@ class Config {
      * @var string
      */
     public $Token = '';
+
+    /**
+     * File containing the current token to use for this client.
+     *
+     * If provided, it is read once at startup and never again
+     *
+     * @var string
+     */
+    public $TokenFile = '';
 
     /**
      * Optional path to CA certificate
@@ -113,8 +128,9 @@ class Config {
      * Config constructor.
      * @param array $config
      */
-    public function __construct(array $config = []) {
-        foreach ($config + self::getDefaultConfig() as $k => $v) {
+    public function __construct(array $config = [])
+    {
+        foreach ($config + self::_getDefaultConfig() as $k => $v) {
             $this->{"set{$k}"}($v);
         }
 
@@ -141,18 +157,72 @@ class Config {
     }
 
     /**
+     * @param \DCarbone\PHPConsulAPI\Config|null $inc
+     * @return \DCarbone\PHPConsulAPI\Config
+     */
+    public static function merge(?Config $inc): Config
+    {
+        $actual = static::newDefaultConfig();
+        if (null === $inc) {
+            return $actual;
+        }
+        if ('' !== $inc->Address) {
+            $actual->Address = $inc->Address;
+        }
+        if ('' !== $inc->Scheme) {
+            $actual->Scheme = $inc->Scheme;
+        }
+        if ('' !== $inc->Datacenter) {
+            $actual->Datacenter = $inc->Datacenter;
+        }
+        if (null !== $inc->HttpAuth) {
+            $actual->HttpAuth = clone($inc->HttpAuth);
+        }
+        if (0 !== $inc->WaitTime) {
+            $actual->WaitTime = $inc->WaitTime;
+        }
+        if ('' !== $inc->Token) {
+            $actual->Token = $inc->Token;
+        }
+        if ('' !== $inc->TokenFile) {
+            $actual->TokenFile = $inc->TokenFile;
+        }
+        if ('' !== $inc->CAFile) {
+            $actual->CAFile = $inc->CAFile;
+        }
+        if ('' !== $inc->CertFile) {
+            $actual->CertFile = $inc->CertFile;
+        }
+        if ('' !== $inc->KeyFile) {
+            $actual->KeyFile = $inc->KeyFile;
+        }
+        if ($inc->InsecureSkipVerify) {
+            $actual->InsecureSkipVerify = true;
+        }
+        if ($inc->TokenInHeader) {
+            $actual->TokenInHeader = true;
+        }
+        if (null !== $inc->HttpClient) {
+            $actual->HttpClient = $inc->HttpClient;
+        }
+        return $actual;
+    }
+
+    /**
      * Construct a configuration object from Environment Variables and use bare guzzle client instance
      *
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public static function newDefaultConfig(): Config {
-        return new static(self::getDefaultConfig());
+    public static function newDefaultConfig(): Config
+    {
+        return new static(self::_getDefaultConfig());
     }
 
     /**
      * @return string
      */
-    public function getAddress(): string {
+    public function getAddress(): string
+    {
         return $this->Address;
     }
 
@@ -160,7 +230,8 @@ class Config {
      * @param string $address
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setAddress(string $address): Config {
+    public function setAddress(string $address): Config
+    {
         $this->Address = $address;
         return $this;
     }
@@ -168,7 +239,8 @@ class Config {
     /**
      * @return string
      */
-    public function getScheme(): string {
+    public function getScheme(): string
+    {
         return $this->Scheme;
     }
 
@@ -176,7 +248,8 @@ class Config {
      * @param string $scheme
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setScheme(string $scheme): Config {
+    public function setScheme(string $scheme): Config
+    {
         $this->Scheme = $scheme;
         return $this;
     }
@@ -184,7 +257,8 @@ class Config {
     /**
      * @return string
      */
-    public function getDatacenter(): string {
+    public function getDatacenter(): string
+    {
         return $this->Datacenter;
     }
 
@@ -192,7 +266,8 @@ class Config {
      * @param string $datacenter
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setDatacenter(string $datacenter): Config {
+    public function setDatacenter(string $datacenter): Config
+    {
         $this->Datacenter = $datacenter;
         return $this;
     }
@@ -200,7 +275,8 @@ class Config {
     /**
      * @return int
      */
-    public function getWaitTime(): int {
+    public function getWaitTime(): int
+    {
         return $this->WaitTime;
     }
 
@@ -208,7 +284,8 @@ class Config {
      * @param int $waitTime
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setWaitTime(int $waitTime): Config {
+    public function setWaitTime(int $waitTime): Config
+    {
         $this->WaitTime = $waitTime;
         return $this;
     }
@@ -216,7 +293,8 @@ class Config {
     /**
      * @return string
      */
-    public function getToken(): string {
+    public function getToken(): string
+    {
         return $this->Token;
     }
 
@@ -224,23 +302,44 @@ class Config {
      * @param string $token
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setToken(string $token): Config {
+    public function setToken(string $token): Config
+    {
         $this->Token = $token;
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return string
      */
-    public function isInsecureSkipVerify(): bool {
+    public function getTokenFile(): string
+    {
+        return $this->TokenFile;
+    }
+
+    /**
+     * @param string $TokenFile
+     * @return \DCarbone\PHPConsulAPI\Config
+     */
+    public function setTokenFile(string $TokenFile): Config
+    {
+        $this->TokenFile = $TokenFile;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInsecureSkipVerify(): bool
+    {
         return $this->InsecureSkipVerify;
     }
 
     /**
-     * @param boolean $insecureSkipVerify
+     * @param bool $insecureSkipVerify
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setInsecureSkipVerify(bool $insecureSkipVerify): Config {
+    public function setInsecureSkipVerify(bool $insecureSkipVerify): Config
+    {
         $this->InsecureSkipVerify = $insecureSkipVerify;
         return $this;
     }
@@ -248,7 +347,8 @@ class Config {
     /**
      * @return \DCarbone\PHPConsulAPI\HttpAuth
      */
-    public function getHttpAuth(): HttpAuth {
+    public function getHttpAuth(): HttpAuth
+    {
         return $this->HttpAuth;
     }
 
@@ -256,7 +356,8 @@ class Config {
      * @param string|HttpAuth $httpAuth
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setHttpAuth($httpAuth): Config {
+    public function setHttpAuth($httpAuth): Config
+    {
         if (is_string($httpAuth)) {
             $colon = strpos($httpAuth, ':');
             if (false === $colon) {
@@ -284,7 +385,8 @@ class Config {
     /**
      * @return string
      */
-    public function getCAFile(): string {
+    public function getCAFile(): string
+    {
         return $this->CAFile;
     }
 
@@ -292,7 +394,8 @@ class Config {
      * @param string $caFile
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setCAFile(string $caFile): Config {
+    public function setCAFile(string $caFile): Config
+    {
         $this->CAFile = $caFile;
         return $this;
     }
@@ -300,7 +403,8 @@ class Config {
     /**
      * @return string
      */
-    public function getCertFile(): string {
+    public function getCertFile(): string
+    {
         return $this->CertFile;
     }
 
@@ -308,7 +412,8 @@ class Config {
      * @param string $certFile
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setCertFile(string $certFile): Config {
+    public function setCertFile(string $certFile): Config
+    {
         $this->CertFile = $certFile;
         return $this;
     }
@@ -316,7 +421,8 @@ class Config {
     /**
      * @return string
      */
-    public function getKeyFile(): string {
+    public function getKeyFile(): string
+    {
         return $this->KeyFile;
     }
 
@@ -324,7 +430,8 @@ class Config {
      * @param string $keyFile
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setKeyFile(string $keyFile): Config {
+    public function setKeyFile(string $keyFile): Config
+    {
         $this->KeyFile = $keyFile;
         return $this;
     }
@@ -332,7 +439,8 @@ class Config {
     /**
      * @return \GuzzleHttp\ClientInterface
      */
-    public function getHttpClient(): ClientInterface {
+    public function getHttpClient(): ClientInterface
+    {
         return $this->HttpClient;
     }
 
@@ -340,23 +448,26 @@ class Config {
      * @param \GuzzleHttp\ClientInterface $httpClient
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setHttpClient(ClientInterface $httpClient): Config {
+    public function setHttpClient(ClientInterface $httpClient): Config
+    {
         $this->HttpClient = $httpClient;
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
-    public function isTokenInHeader(): bool {
+    public function isTokenInHeader(): bool
+    {
         return $this->TokenInHeader;
     }
 
     /**
-     * @param boolean $tokenInHeader
+     * @param bool $tokenInHeader
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setTokenInHeader(bool $tokenInHeader): Config {
+    public function setTokenInHeader(bool $tokenInHeader): Config
+    {
         $this->TokenInHeader = $tokenInHeader;
         return $this;
     }
@@ -365,7 +476,8 @@ class Config {
      * @param int $in
      * @return string
      */
-    public function intToMillisecond(int $in): string {
+    public function intToMillisecond(int $in): string
+    {
         if (!is_int($in)) {
             throw new \InvalidArgumentException(sprintf('$in must be integer, saw "%s".', gettype($in)));
         }
@@ -382,10 +494,11 @@ class Config {
     /**
      * @return array
      */
-    public function getGuzzleRequestOptions(): array {
+    public function getGuzzleRequestOptions(): array
+    {
         // TODO: Define once?
         $opts = [
-            RequestOptions::HTTP_ERRORS    => false,
+            RequestOptions::HTTP_ERRORS => false,
             RequestOptions::DECODE_CONTENT => false,
         ];
 
@@ -407,7 +520,8 @@ class Config {
      * @param string $param
      * @return string|null
      */
-    protected static function _tryGetEnvParam(string $param) {
+    protected static function _tryGetEnvParam(string $param)
+    {
         if (isset($_ENV[$param])) {
             return $_ENV[$param];
         }
@@ -426,16 +540,19 @@ class Config {
     /**
      * @return array
      */
-    public static function getEnvironmentConfig(): array {
+    public static function getEnvironmentConfig(): array
+    {
         $ret = [];
         foreach ([
-                     Consul::HTTPAddrEnvName       => static::_tryGetEnvParam(Consul::HTTPAddrEnvName),
-                     Consul::HTTPAuthEnvName       => static::_tryGetEnvParam(Consul::HTTPAuthEnvName),
-                     Consul::HTTPCAFileEnvName     => static::_tryGetEnvParam(Consul::HTTPCAFileEnvName),
+                     Consul::HTTPAddrEnvName => static::_tryGetEnvParam(Consul::HTTPAddrEnvName),
+                     Consul::HTTPTokenEnvName => static::_tryGetEnvParam(Consul::HTTPTokenEnvName),
+                     Consul::HTTPTokenFileEnvName => static::_tryGetEnvParam(Consul::HTTPTokenFileEnvName),
+                     Consul::HTTPAuthEnvName => static::_tryGetEnvParam(Consul::HTTPAuthEnvName),
+                     Consul::HTTPCAFileEnvName => static::_tryGetEnvParam(Consul::HTTPCAFileEnvName),
                      Consul::HTTPClientCertEnvName => static::_tryGetEnvParam(Consul::HTTPClientCertEnvName),
-                     Consul::HTTPClientKeyEnvName  => static::_tryGetEnvParam(Consul::HTTPClientKeyEnvName),
-                     Consul::HTTPSSLEnvName        => static::_tryGetEnvParam(Consul::HTTPSSLEnvName),
-                     Consul::HTTPSSLVerifyEnvName  => static::_tryGetEnvParam(Consul::HTTPSSLVerifyEnvName),
+                     Consul::HTTPClientKeyEnvName => static::_tryGetEnvParam(Consul::HTTPClientKeyEnvName),
+                     Consul::HTTPSSLEnvName => static::_tryGetEnvParam(Consul::HTTPSSLEnvName),
+                     Consul::HTTPSSLVerifyEnvName => static::_tryGetEnvParam(Consul::HTTPSSLVerifyEnvName),
                  ] as $k => $v) {
             if (null !== $v) {
                 $ret[$k] = $v;
@@ -447,11 +564,9 @@ class Config {
     /**
      * @return array
      */
-    private static function getDefaultConfig(): array {
-        $conf = [
-            'Address' => '127.0.0.1:8500',
-            'Scheme'  => 'http',
-        ];
+    private static function _getDefaultConfig(): array
+    {
+        $conf = self::DefaultConfig;
 
         // parse env vars
         foreach (static::getEnvironmentConfig() as $k => $v) {
@@ -459,6 +574,8 @@ class Config {
                 $conf['Address'] = $v;
             } else if (Consul::HTTPTokenEnvName === $k) {
                 $conf['Token'] = $v;
+            } else if (Consul::HTTPTokenFileEnvName) {
+                $conf['TokenFile'] = $v;
             } else if (Consul::HTTPAuthEnvName === $k) {
                 $conf['HttpAuth'] = $v;
             } else if (Consul::HTTPCAFileEnvName === $k) {

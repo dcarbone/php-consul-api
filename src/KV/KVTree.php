@@ -1,7 +1,7 @@
 <?php namespace DCarbone\PHPConsulAPI\KV;
 
 /*
-   Copyright 2016-2018 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2020 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -64,7 +64,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     }
 
     /**
-     * @return boolean The return value will be casted to boolean and then evaluated.
+     * @return bool The return value will be casted to boolean and then evaluated.
      * Returns true on success or false on failure.
      */
     public function valid() {
@@ -101,7 +101,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
 
     /**
      * @param mixed $offset An offset to check for.
-     * @return boolean true on success or false on failure.
+     * @return bool true on success or false on failure.
      */
     public function offsetExists($offset) {
         if (is_string($offset)) {

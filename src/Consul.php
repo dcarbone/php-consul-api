@@ -1,7 +1,7 @@
 <?php namespace DCarbone\PHPConsulAPI;
 
 /*
-   Copyright 2016-2018 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2020 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -32,42 +32,44 @@ use DCarbone\PHPConsulAPI\Status\StatusClient;
  * Class Consul
  * @package DCarbone\PHPConsulAPI
  */
-class Consul {
-    const HTTPAddrEnvName = 'CONSUL_HTTP_ADDR';
-    const HTTPTokenEnvName = 'CONSUL_HTTP_TOKEN';
-    const HTTPAuthEnvName = 'CONSUL_HTTP_AUTH';
-    const HTTPCAFileEnvName = "CONSUL_CACERT";
-    const HTTPClientCertEnvName = "CONSUL_CLIENT_CERT";
-    const HTTPClientKeyEnvName = "CONSUL_CLIENT_KEY";
-    const HTTPSSLEnvName = 'CONSUL_HTTP_SSL';
-    const HTTPSSLVerifyEnvName = 'CONSUL_HTTP_SSL_VERIFY';
+class Consul
+{
+    public const HTTPAddrEnvName = 'CONSUL_HTTP_ADDR';
+    public const HTTPTokenEnvName = 'CONSUL_HTTP_TOKEN';
+    public const HTTPTokenFileEnvName = 'CONSUL_HTTP_TOKEN_FILE';
+    public const HTTPAuthEnvName = 'CONSUL_HTTP_AUTH';
+    public const HTTPCAFileEnvName = "CONSUL_CACERT";
+    public const HTTPClientCertEnvName = "CONSUL_CLIENT_CERT";
+    public const HTTPClientKeyEnvName = "CONSUL_CLIENT_KEY";
+    public const HTTPSSLEnvName = 'CONSUL_HTTP_SSL';
+    public const HTTPSSLVerifyEnvName = 'CONSUL_HTTP_SSL_VERIFY';
 
-    const HealthAny = 'any';
-    const HealthPassing = 'passing';
-    const HealthWarning = 'warning';
-    const HealthCritical = 'critical';
-    const HealthMaint = 'maintenance';
+    public const HealthAny = 'any';
+    public const HealthPassing = 'passing';
+    public const HealthWarning = 'warning';
+    public const HealthCritical = 'critical';
+    public const HealthMaint = 'maintenance';
 
-    const NodeMaint = '_node_maintenance';
-    const ServiceMaintPrefix = '_service_maintenance';
+    public const NodeMaint = '_node_maintenance';
+    public const ServiceMaintPrefix = '_service_maintenance';
 
-    const AllSegments = '_all';
+    public const AllSegments = '_all';
 
-    const KVSet = 'set';
-    const KVDelete = 'delete';
-    const KVDeleteCAS = 'delete-cas';
-    const KVDeleteTree = 'delete-tree';
-    const KVCAS = 'cas';
-    const KVLock = 'lock';
-    const KVUnlock = 'unlock';
-    const KVGet = 'get';
-    const KVGetTree = 'get-tree';
-    const KVCheckSession = 'check-session';
-    const KVCheckIndex = 'check-index';
-    const KVCheckNotExists = 'check-not-exists';
+    public const KVSet = 'set';
+    public const KVDelete = 'delete';
+    public const KVDeleteCAS = 'delete-cas';
+    public const KVDeleteTree = 'delete-tree';
+    public const KVCAS = 'cas';
+    public const KVLock = 'lock';
+    public const KVUnlock = 'unlock';
+    public const KVGet = 'get';
+    public const KVGetTree = 'get-tree';
+    public const KVCheckSession = 'check-session';
+    public const KVCheckIndex = 'check-index';
+    public const KVCheckNotExists = 'check-not-exists';
 
-    const SessionBehaviorRelease = 'release';
-    const SessionBehaviorDelete = 'delete';
+    public const SessionBehaviorRelease = 'release';
+    public const SessionBehaviorDelete = 'delete';
 
     /** @var \DCarbone\PHPConsulAPI\ACL\ACLClient */
     public $ACL;
@@ -94,20 +96,22 @@ class Consul {
 
     /**
      * Client constructor.
-     * @param Config $config
+     * @param \DCarbone\PHPConsulAPI\Config|null $config
      */
-    public function __construct(Config $config = null) {
-        if (null === $config) {
-            $config = Config::newDefaultConfig();
-        } else {
-            $def = Config::newDefaultConfig();
+    public function __construct(Config $config = null)
+    {
+        $config = Config::merge($config);
 
-            if ('' === $config->getAddress()) {
-                $config->setAddress($def->getAddress());
+        if ('' !== $config->TokenFile) {
+            if (!file_exists($config->TokenFile) || !is_readable($config->TokenFile)) {
+                throw new \RuntimeException(sprintf(
+                    'Provided $TokenFile "%s" either does not exist or is not readable',
+                    $config->TokenFile
+                ));
             }
-
-            if ('' === $config->getScheme()) {
-                $config->setScheme($def->getScheme());
+            $data = trim(file_get_contents($config->TokenFile));
+            if ('' === $config->Token && '' !== $data) {
+                $config->Token = $data;
             }
         }
 
@@ -127,77 +131,88 @@ class Consul {
     /**
      * @return \DCarbone\PHPConsulAPI\ACL\ACLClient
      */
-    public function ACL(): ACLClient {
+    public function ACL(): ACLClient
+    {
         return $this->ACL;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentClient
      */
-    public function Agent(): AgentClient {
+    public function Agent(): AgentClient
+    {
         return $this->Agent;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogClient
      */
-    public function Catalog(): CatalogClient {
+    public function Catalog(): CatalogClient
+    {
         return $this->Catalog;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateClient
      */
-    public function Coordinate(): CoordinateClient {
+    public function Coordinate(): CoordinateClient
+    {
         return $this->Coordinate;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Event\EventClient
      */
-    public function Event(): EventClient {
+    public function Event(): EventClient
+    {
         return $this->Event;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Health\HealthClient
      */
-    public function Health(): HealthClient {
+    public function Health(): HealthClient
+    {
         return $this->Health;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\KV\KVClient
      */
-    public function KV(): KVClient {
+    public function KV(): KVClient
+    {
         return $this->KV;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\OperatorClient
      */
-    public function Operator(): OperatorClient {
+    public function Operator(): OperatorClient
+    {
         return $this->Operator;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryClient
      */
-    public function PreparedQuery(): PreparedQueryClient {
+    public function PreparedQuery(): PreparedQueryClient
+    {
         return $this->PreparedQuery;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Session\SessionClient
      */
-    public function Session(): SessionClient {
+    public function Session(): SessionClient
+    {
         return $this->Session;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Status\StatusClient
      */
-    public function Status(): StatusClient {
+    public function Status(): StatusClient
+    {
         return $this->Status;
     }
 }

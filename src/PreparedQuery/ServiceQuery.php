@@ -1,7 +1,7 @@
 <?php namespace DCarbone\PHPConsulAPI\PreparedQuery;
 
 /*
-   Copyright 2016-2018 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2020 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -96,14 +96,14 @@ class ServiceQuery extends AbstractModel {
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isOnlyPassing(): bool {
         return $this->OnlyPassing;
     }
 
     /**
-     * @param boolean $onlyPassing
+     * @param bool $onlyPassing
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
     public function setOnlyPassing(bool $onlyPassing): ServiceQuery {
