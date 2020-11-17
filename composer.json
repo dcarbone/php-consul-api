@@ -18,7 +18,7 @@
   "require": {
     "php": "^7.2",
     "ext-json": "*",
-    "dcarbone/gotime": "0.3.*",
+    "dcarbone/gotime": "0.4.*",
     "guzzlehttp/guzzle": "~7",
     "guzzlehttp/psr7": "~1"
   },

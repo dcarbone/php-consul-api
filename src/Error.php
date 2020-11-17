@@ -36,7 +36,7 @@ class Error implements \JsonSerializable
      * Error constructor.
      * @param string $message
      */
-    public function __construct($message)
+    public function __construct(string $message)
     {
         $this->time = Time::Now();
         $this->message = $message;

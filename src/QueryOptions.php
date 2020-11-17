@@ -16,6 +16,8 @@
    limitations under the License.
 */
 
+use DCarbone\Go\Time;
+
 /**
  * Class QueryOptions
  * @package DCarbone\PHPConsulAPI
@@ -23,13 +25,23 @@
 class QueryOptions extends AbstractModel
 {
     /** @var string */
+    public $Namespace = '';
+    /** @var string */
     public $Datacenter = '';
     /** @var bool */
     public $AllowStale = false;
     /** @var bool */
     public $RequireConsistent = false;
+    /** @var bool */
+    public $UsageCache = false;
+    /** @var \DCarbone\Go\Time\Duration|null */
+    public $MaxAge = null;
+    /** @var \DCarbone\Go\Time\Duration|null */
+    public $StaleIfError = null;
     /** @var int */
     public $WaitIndex = 0;
+    /** @var string */
+    public $WaitHash = '';
     /** @var int */
     public $WaitTime = 0;
     /** @var string */
@@ -40,9 +52,29 @@ class QueryOptions extends AbstractModel
     public $NodeMeta = [];
     /** @var int */
     public $RelayFactor = 0;
+    /** @var bool */
+    public $LocalOnly = false;
+    /** @var bool */
+    public $Connect = false;
 
     /** @var bool */
     public $Pretty = false;
+
+    /**
+     * @return string
+     */
+    public function getNamespace(): string
+    {
+        return $this->Namespace;
+    }
+
+    /**
+     * @param string $Namespace
+     */
+    public function setNamespace(string $Namespace): void
+    {
+        $this->Namespace = $Namespace;
+    }
 
     /**
      * @return string
@@ -71,7 +103,7 @@ class QueryOptions extends AbstractModel
     /**
      * @param bool $allowStale
      */
-    public function setAllowStale(bool $allowStale)
+    public function setAllowStale(bool $allowStale): void
     {
         $this->AllowStale = $allowStale;
     }
@@ -87,9 +119,57 @@ class QueryOptions extends AbstractModel
     /**
      * @param bool $requireConsistent
      */
-    public function setRequireConsistent(bool $requireConsistent)
+    public function setRequireConsistent(bool $requireConsistent): void
     {
         $this->RequireConsistent = $requireConsistent;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUsageCache(): bool
+    {
+        return $this->UsageCache;
+    }
+
+    /**
+     * @param bool $UsageCache
+     */
+    public function setUsageCache(bool $UsageCache): void
+    {
+        $this->UsageCache = $UsageCache;
+    }
+
+    /**
+     * @return \DCarbone\Go\Time\Duration|null
+     */
+    public function getMaxAge(): ?\DCarbone\Go\Time\Duration
+    {
+        return $this->MaxAge;
+    }
+
+    /**
+     * @param \DCarbone\Go\Time\Duration|null $MaxAge
+     */
+    public function setMaxAge(?\DCarbone\Go\Time\Duration $MaxAge): void
+    {
+        $this->MaxAge = $MaxAge;
+    }
+
+    /**
+     * @return \DCarbone\Go\Time\Duration|null
+     */
+    public function getStaleIfError(): ?\DCarbone\Go\Time\Duration
+    {
+        return $this->StaleIfError;
+    }
+
+    /**
+     * @param \DCarbone\Go\Time\Duration|string|int|float|null $staleIfError
+     */
+    public function setStaleIfError($staleIfError): void
+    {
+        $this->StaleIfError = Time::Duration($staleIfError);
     }
 
     /**
@@ -103,7 +183,7 @@ class QueryOptions extends AbstractModel
     /**
      * @param int $waitIndex
      */
-    public function setWaitIndex(int $waitIndex)
+    public function setWaitIndex(int $waitIndex): void
     {
         $this->WaitIndex = $waitIndex;
     }
@@ -119,7 +199,7 @@ class QueryOptions extends AbstractModel
     /**
      * @param int $waitTime
      */
-    public function setWaitTime(int $waitTime)
+    public function setWaitTime(int $waitTime): void
     {
         $this->WaitTime = $waitTime;
     }
@@ -135,7 +215,7 @@ class QueryOptions extends AbstractModel
     /**
      * @param string $token
      */
-    public function setToken(string $token)
+    public function setToken(string $token): void
     {
         $this->Token = $token;
     }
@@ -151,7 +231,7 @@ class QueryOptions extends AbstractModel
     /**
      * @param string $near
      */
-    public function setNear(string $near)
+    public function setNear(string $near): void
     {
         $this->Near = $near;
     }
@@ -167,7 +247,7 @@ class QueryOptions extends AbstractModel
     /**
      * @param array $nodeMeta
      */
-    public function setNodeMeta(array $nodeMeta)
+    public function setNodeMeta(array $nodeMeta): void
     {
         $this->NodeMeta = $nodeMeta;
     }
@@ -183,7 +263,7 @@ class QueryOptions extends AbstractModel
     /**
      * @param int $relayFactor
      */
-    public function setRelayFactor(int $relayFactor)
+    public function setRelayFactor(int $relayFactor): void
     {
         $this->RelayFactor = $relayFactor;
     }
@@ -199,7 +279,7 @@ class QueryOptions extends AbstractModel
     /**
      * @param bool $pretty
      */
-    public function setPretty(bool $pretty)
+    public function setPretty(bool $pretty): void
     {
         $this->Pretty = $pretty;
     }
