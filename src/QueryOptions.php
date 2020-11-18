@@ -33,7 +33,7 @@ class QueryOptions extends AbstractModel
     /** @var bool */
     public $RequireConsistent = false;
     /** @var bool */
-    public $UsageCache = false;
+    public $UseCache = false;
     /** @var \DCarbone\Go\Time\Duration|null */
     public $MaxAge = null;
     /** @var \DCarbone\Go\Time\Duration|null */
@@ -48,6 +48,8 @@ class QueryOptions extends AbstractModel
     public $Token = '';
     /** @var string */
     public $Near = '';
+    /** @var string */
+    public $Filter = '';
     /** @var array */
     public $NodeMeta = [];
     /** @var int */
@@ -56,6 +58,9 @@ class QueryOptions extends AbstractModel
     public $LocalOnly = false;
     /** @var bool */
     public $Connect = false;
+
+    /** @var \DCarbone\Go\Time\Duration|null */
+    public $Timeout = null;
 
     /** @var bool */
     public $Pretty = false;
@@ -127,39 +132,39 @@ class QueryOptions extends AbstractModel
     /**
      * @return bool
      */
-    public function isUsageCache(): bool
+    public function isUseCache(): bool
     {
-        return $this->UsageCache;
+        return $this->UseCache;
     }
 
     /**
-     * @param bool $UsageCache
+     * @param bool $useCache
      */
-    public function setUsageCache(bool $UsageCache): void
+    public function setUseCache(bool $useCache): void
     {
-        $this->UsageCache = $UsageCache;
+        $this->UseCache = $useCache;
     }
 
     /**
      * @return \DCarbone\Go\Time\Duration|null
      */
-    public function getMaxAge(): ?\DCarbone\Go\Time\Duration
+    public function getMaxAge(): ?Time\Duration
     {
         return $this->MaxAge;
     }
 
     /**
-     * @param \DCarbone\Go\Time\Duration|null $MaxAge
+     * @param \DCarbone\Go\Time\Duration|string|int|float|null $MaxAge
      */
-    public function setMaxAge(?\DCarbone\Go\Time\Duration $MaxAge): void
+    public function setMaxAge($MaxAge): void
     {
-        $this->MaxAge = $MaxAge;
+        $this->MaxAge = Time::Duration($MaxAge);
     }
 
     /**
      * @return \DCarbone\Go\Time\Duration|null
      */
-    public function getStaleIfError(): ?\DCarbone\Go\Time\Duration
+    public function getStaleIfError(): ?Time\Duration
     {
         return $this->StaleIfError;
     }
@@ -207,6 +212,22 @@ class QueryOptions extends AbstractModel
     /**
      * @return string
      */
+    public function getWaitHash(): string
+    {
+        return $this->WaitHash;
+    }
+
+    /**
+     * @param string $WaitHash
+     */
+    public function setWaitHash(string $WaitHash): void
+    {
+        $this->WaitHash = $WaitHash;
+    }
+
+    /**
+     * @return string
+     */
     public function getToken(): string
     {
         return $this->Token;
@@ -234,6 +255,22 @@ class QueryOptions extends AbstractModel
     public function setNear(string $near): void
     {
         $this->Near = $near;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFilter(): string
+    {
+        return $this->Filter;
+    }
+
+    /**
+     * @param string $Filter
+     */
+    public function setFilter(string $Filter): void
+    {
+        $this->Filter = $Filter;
     }
 
     /**
@@ -266,6 +303,54 @@ class QueryOptions extends AbstractModel
     public function setRelayFactor(int $relayFactor): void
     {
         $this->RelayFactor = $relayFactor;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLocalOnly(): bool
+    {
+        return $this->LocalOnly;
+    }
+
+    /**
+     * @param bool $LocalOnly
+     */
+    public function setLocalOnly(bool $LocalOnly): void
+    {
+        $this->LocalOnly = $LocalOnly;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isConnect(): bool
+    {
+        return $this->Connect;
+    }
+
+    /**
+     * @param bool $Connect
+     */
+    public function setConnect(bool $Connect): void
+    {
+        $this->Connect = $Connect;
+    }
+
+    /**
+     * @return \DCarbone\Go\Time\Duration|null
+     */
+    public function getTimeout(): ?Time\Duration
+    {
+        return $this->Timeout;
+    }
+
+    /**
+     * @param \DCarbone\Go\Time\Duration|string|int|float|null $timeout
+     */
+    public function setTimeout($timeout): void
+    {
+        $this->Timeout = Time::Duration($timeout);
     }
 
     /**

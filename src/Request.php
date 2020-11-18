@@ -33,6 +33,9 @@ class Request
     /** @var \DCarbone\PHPConsulAPI\Params */
     public $Params;
 
+    /** @var \DCarbone\Go\Time\Duration|null */
+    public $Timeout = null;
+
     /** @var \DCarbone\PHPConsulAPI\Config */
     private $config;
 
@@ -114,44 +117,77 @@ class Request
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      */
-    public function setQueryOptions(QueryOptions $options = null): void
+    public function setQueryOptions(?QueryOptions $opts): void
     {
-        if (null === $options) {
+        if (null === $opts) {
             return;
         }
 
-        if ('' !== $options->Datacenter) {
-            $this->Params->set('dc', $options->Datacenter);
+        if ('' !== $opts->Namespace) {
+            $this->Params->set('ns', $opts->Namespace);
         }
-        if ($options->AllowStale) {
+        if ('' !== $opts->Datacenter) {
+            $this->Params->set('dc', $opts->Datacenter);
+        }
+        if ($opts->AllowStale) {
             $this->Params->set('stale', '');
         }
-        if ($options->RequireConsistent) {
+        if ($opts->RequireConsistent) {
             $this->Params->set('consistent', '');
         }
-        if (0 !== $options->WaitIndex) {
-            $this->Params->set('index', (string)$options->WaitIndex);
+        if (0 !== $opts->WaitIndex) {
+            $this->Params->set('index', (string)$opts->WaitIndex);
         }
-        if (0 !== $options->WaitTime) {
-            $this->Params->set('wait', $this->config->intToMillisecond($options->WaitTime));
+        if (0 !== $opts->WaitTime) {
+            $this->Params->set('wait', $this->config->intToMillisecond($opts->WaitTime));
         }
-        if ('' !== $options->Token) {
-            $this->Headers->set('X-Consul-Token', $options->Token);
+        if ('' !== $opts->WaitHash) {
+            $this->Params->set('hash', $opts->WaitHash);
         }
-        if ('' !== $options->Near) {
-            $this->Params->set('near', $options->Near);
+        if ('' !== $opts->Token) {
+            $this->Headers->set('X-Consul-Token', $opts->Token);
         }
-        if (isset($options->NodeMeta) && 0 < count($options->NodeMeta)) {
-            foreach ($options->NodeMeta as $k => $v) {
+        if ('' !== $opts->Near) {
+            $this->Params->set('near', $opts->Near);
+        }
+        if ('' !== $opts->Filter) {
+            $this->Params->set('filter', $opts->Filter);
+        }
+        if (isset($opts->NodeMeta) && [] !== $opts->NodeMeta) {
+            foreach ($opts->NodeMeta as $k => $v) {
                 $this->Params->add('node-meta', "{$k}:{$v}");
             }
         }
-        if (0 !== $options->RelayFactor) {
-            $this->Params->set('relay-factor', (string)$options->RelayFactor);
+        if (0 !== $opts->RelayFactor) {
+            $this->Params->set('relay-factor', (string)$opts->RelayFactor);
         }
-        if ($options->Pretty) {
+        if ($opts->LocalOnly) {
+            $this->Params->set('local-only', 'true');
+        }
+        if ($opts->Connect) {
+            $this->Params->set('connect', 'true');
+        }
+        if ($opts->UseCache && !$opts->RequireConsistent) {
+            $this->Params->set('cached', '');
+            $cc = [];
+            if (null !== $opts->MaxAge) {
+                $cc[] = sprintf('max-age=%.0f', $opts->MaxAge->Seconds());
+            }
+            if (null !== $opts->StaleIfError) {
+                $cc[] = sprintf('stale-if-error=%.0f', $opts->StaleIfError->Seconds());
+            }
+            if ([] !== $cc) {
+                $this->Headers->set('Cache-Control', implode(', ', $cc));
+            }
+        }
+
+        if (null !== $opts->Timeout) {
+            $this->Timeout = $opts->Timeout;
+        }
+
+        if ($opts->Pretty) {
             $this->Params->set('pretty', '');
         }
 
@@ -190,8 +226,10 @@ class Request
                 '%s://%s/%s',
                 $this->config->getScheme(),
                 $this->config->Address,
-                ltrim(rtrim($this->path, " \t\n\r\0\x0B&?"),
-                    " \t\n\r\0\x0B/") // TODO: Lessen # of things being looked for?
+                ltrim(
+                    rtrim($this->path, " \t\n\r\0\x0B&?"),
+                    " \t\n\r\0\x0B/"
+                ) // TODO: Lessen # of things being looked for?
             );
             if (0 < count($this->Params)) {
                 $uri = sprintf('%s?%s', $uri, (string)$this->Params);

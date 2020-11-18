@@ -27,9 +27,14 @@ use GuzzleHttp\RequestOptions;
 class Config
 {
     private const DefaultConfig = [
-        'Address' => '127.0.0.1:8500',
-        'Scheme' => 'http',
+        'Address'        => '127.0.0.1:8500',
+        'Scheme'         => 'http',
         'JSONEncodeOpts' => JSON_UNESCAPED_SLASHES,
+    ];
+
+    private const DefaultRequestOptions = [
+        RequestOptions::HTTP_ERRORS    => false,
+        RequestOptions::DECODE_CONTENT => false,
     ];
 
     /**
@@ -52,6 +57,11 @@ class Config
      * @var string
      */
     public $Datacenter = '';
+
+    /**
+     * @var string
+     */
+    public $Namespace = '';
 
     /**
      * HTTP authentication, if used
@@ -143,12 +153,14 @@ class Config
         $c = $this->getCertFile();
         $k = $this->getKeyFile();
         if (('' !== $k && '' === $c) || ('' !== $c && '' === $k)) {
-            throw new \InvalidArgumentException(sprintf(
-                '%s - CertFile and KeyFile must be both either empty or populated.  Key: %s; Cert: %s',
-                get_class($this),
-                $k,
-                $c
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    '%s - CertFile and KeyFile must be both either empty or populated.  Key: %s; Cert: %s',
+                    get_class($this),
+                    $k,
+                    $c
+                )
+            );
         }
 
         // if client hasn't been constructed, construct.
@@ -175,6 +187,9 @@ class Config
         }
         if ('' !== $inc->Datacenter) {
             $actual->Datacenter = $inc->Datacenter;
+        }
+        if ('' !== $inc->Namespace) {
+            $actual->Namespace = $inc->Namespace;
         }
         if (null !== $inc->HttpAuth) {
             $actual->HttpAuth = clone($inc->HttpAuth);
@@ -271,6 +286,22 @@ class Config
     {
         $this->Datacenter = $datacenter;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNamespace(): string
+    {
+        return $this->Namespace;
+    }
+
+    /**
+     * @param string $Namespace
+     */
+    public function setNamespace(string $Namespace): void
+    {
+        $this->Namespace = $Namespace;
     }
 
     /**
@@ -376,11 +407,13 @@ class Config
             return $this;
         }
 
-        throw new \InvalidArgumentException(sprintf(
-            '%s::setHttpAuth - Value is expected to be string of "username:password" or instance of "\\DCarbone\\PHPConsulApi\\HttpAuth", %s seen.',
-            get_class($this),
-            is_string($httpAuth) ? $httpAuth : gettype($httpAuth)
-        ));
+        throw new \InvalidArgumentException(
+            sprintf(
+                '%s::setHttpAuth - Value is expected to be string of "username:password" or instance of "\\DCarbone\\PHPConsulApi\\HttpAuth", %s seen.',
+                get_class($this),
+                is_string($httpAuth) ? $httpAuth : gettype($httpAuth)
+            )
+        );
     }
 
     /**
@@ -493,25 +526,27 @@ class Config
     }
 
     /**
+     * @param \DCarbone\PHPConsulAPI\Request $request
      * @return array
      */
-    public function getGuzzleRequestOptions(): array
+    public function getGuzzleRequestOptions(Request $request): array
     {
         // TODO: Define once?
-        $opts = [
-            RequestOptions::HTTP_ERRORS => false,
-            RequestOptions::DECODE_CONTENT => false,
-        ];
+        $opts = self::DefaultRequestOptions;
 
         if (!$this->isInsecureSkipVerify()) {
             $opts[RequestOptions::VERIFY] = false;
-        } else if ('' !== ($b = $this->getCAFile())) {
+        } elseif ('' !== ($b = $this->getCAFile())) {
             $opts[RequestOptions::VERIFY] = $b;
         }
 
         if ('' !== ($c = $this->getCertFile())) {
             $opts[RequestOptions::CERT] = $c;
             $opts[RequestOptions::SSL_KEY] = $this->getKeyFile();
+        }
+
+        if (null !== $request->Timeout && 0 < ($ttl = intval($request->Timeout->Seconds(), 10))) {
+            $opts[RequestOptions::TIMEOUT] = $ttl;
         }
 
         return $opts;
@@ -544,17 +579,19 @@ class Config
     public static function getEnvironmentConfig(): array
     {
         $ret = [];
-        foreach ([
-                     Consul::HTTPAddrEnvName => static::_tryGetEnvParam(Consul::HTTPAddrEnvName),
-                     Consul::HTTPTokenEnvName => static::_tryGetEnvParam(Consul::HTTPTokenEnvName),
-                     Consul::HTTPTokenFileEnvName => static::_tryGetEnvParam(Consul::HTTPTokenFileEnvName),
-                     Consul::HTTPAuthEnvName => static::_tryGetEnvParam(Consul::HTTPAuthEnvName),
-                     Consul::HTTPCAFileEnvName => static::_tryGetEnvParam(Consul::HTTPCAFileEnvName),
-                     Consul::HTTPClientCertEnvName => static::_tryGetEnvParam(Consul::HTTPClientCertEnvName),
-                     Consul::HTTPClientKeyEnvName => static::_tryGetEnvParam(Consul::HTTPClientKeyEnvName),
-                     Consul::HTTPSSLEnvName => static::_tryGetEnvParam(Consul::HTTPSSLEnvName),
-                     Consul::HTTPSSLVerifyEnvName => static::_tryGetEnvParam(Consul::HTTPSSLVerifyEnvName),
-                 ] as $k => $v) {
+        foreach (
+            [
+                Consul::HTTPAddrEnvName       => static::_tryGetEnvParam(Consul::HTTPAddrEnvName),
+                Consul::HTTPTokenEnvName      => static::_tryGetEnvParam(Consul::HTTPTokenEnvName),
+                Consul::HTTPTokenFileEnvName  => static::_tryGetEnvParam(Consul::HTTPTokenFileEnvName),
+                Consul::HTTPAuthEnvName       => static::_tryGetEnvParam(Consul::HTTPAuthEnvName),
+                Consul::HTTPCAFileEnvName     => static::_tryGetEnvParam(Consul::HTTPCAFileEnvName),
+                Consul::HTTPClientCertEnvName => static::_tryGetEnvParam(Consul::HTTPClientCertEnvName),
+                Consul::HTTPClientKeyEnvName  => static::_tryGetEnvParam(Consul::HTTPClientKeyEnvName),
+                Consul::HTTPSSLEnvName        => static::_tryGetEnvParam(Consul::HTTPSSLEnvName),
+                Consul::HTTPSSLVerifyEnvName  => static::_tryGetEnvParam(Consul::HTTPSSLVerifyEnvName),
+            ] as $k => $v
+        ) {
             if (null !== $v) {
                 $ret[$k] = $v;
             }
@@ -573,23 +610,23 @@ class Config
         foreach (static::getEnvironmentConfig() as $k => $v) {
             if (Consul::HTTPAddrEnvName === $k) {
                 $conf['Address'] = $v;
-            } else if (Consul::HTTPTokenEnvName === $k) {
+            } elseif (Consul::HTTPTokenEnvName === $k) {
                 $conf['Token'] = $v;
-            } else if (Consul::HTTPTokenFileEnvName === $k) {
+            } elseif (Consul::HTTPTokenFileEnvName === $k) {
                 $conf['TokenFile'] = $v;
-            } else if (Consul::HTTPAuthEnvName === $k) {
+            } elseif (Consul::HTTPAuthEnvName === $k) {
                 $conf['HttpAuth'] = $v;
-            } else if (Consul::HTTPCAFileEnvName === $k) {
+            } elseif (Consul::HTTPCAFileEnvName === $k) {
                 $conf['CAFile'] = $v;
-            } else if (Consul::HTTPClientCertEnvName === $k) {
+            } elseif (Consul::HTTPClientCertEnvName === $k) {
                 $conf['CertFile'] = $v;
-            } else if (Consul::HTTPClientKeyEnvName === $k) {
+            } elseif (Consul::HTTPClientKeyEnvName === $k) {
                 $conf['KeyFile'] = $v;
-            } else if (Consul::HTTPSSLEnvName === $k) {
+            } elseif (Consul::HTTPSSLEnvName === $k) {
                 if ((bool)$v) {
                     $conf['Scheme'] = 'https';
                 }
-            } else if (Consul::HTTPSSLVerifyEnvName === $k) {
+            } elseif (Consul::HTTPSSLVerifyEnvName === $k) {
                 if ((bool)$v) {
                     $conf['InsecureSkipVerify'] = true;
                 }
