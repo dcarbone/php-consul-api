@@ -59,14 +59,14 @@ class EventClient extends AbstractClient
         }
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, null, $err];
         }
 
         $wm = $this->buildWriteMeta($duration);
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
         if ($err !== null) {
             return [null, $wm, $err];
         }
@@ -92,14 +92,14 @@ class EventClient extends AbstractClient
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, null, $err];
         }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
 
         if (null !== $err) {
             return [null, $qm, $err];

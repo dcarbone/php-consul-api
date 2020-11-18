@@ -39,13 +39,13 @@ class CoordinateClient extends AbstractClient
         $r = new Request('GET', 'v1/coordinate/datacenters', $this->config);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($_, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$_, $response, $err] = $this->requireOK($this->doRequest($r));
 
         if (null !== $err) {
             return [null, $err];
         }
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
 
         if (null !== $err) {
             return [null, $err];
@@ -80,7 +80,7 @@ class CoordinateClient extends AbstractClient
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
             return [null, $qm, $err];
         }

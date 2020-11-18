@@ -18,63 +18,102 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
 */
 
+use DCarbone\Go\Time;
+
 /**
  * Class QueryMeta
  * @package DCarbone\PHPConsulAPI
  */
-class QueryMeta {
+class QueryMeta
+{
     /** @var string */
     public $RequestUrl = '';
     /** @var int */
     public $LastIndex = 0;
+    /** @var string */
+    public $LastContentHash = '';
     /** @var int */
     public $LastContact = 0;
     /** @var bool */
     public $KnownLeader = false;
-    /** @var int */
-    public $RequestTime = 0;
+    /** @var \DCarbone\Go\Time\Duration */
+    public $RequestTime = null;
     /** @var bool */
     public $AddressTranslationEnabled = false;
+    /** @var bool */
+    public $CacheHit = false;
+    /** @var \DCarbone\Go\Time\Duration|null */
+    public $CacheAge = null;
 
     /**
      * @return string
      */
-    public function getRequestUrl(): string {
+    public function getRequestUrl(): string
+    {
         return $this->RequestUrl;
     }
 
     /**
      * @return int
      */
-    public function getLastIndex(): int {
+    public function getLastIndex(): int
+    {
         return $this->LastIndex;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastContentHash(): string
+    {
+        return $this->LastContentHash;
     }
 
     /**
      * @return int
      */
-    public function getLastContact(): int {
+    public function getLastContact(): int
+    {
         return $this->LastContact;
     }
 
     /**
      * @return bool
      */
-    public function isKnownLeader(): bool {
+    public function isKnownLeader(): bool
+    {
         return $this->KnownLeader;
     }
 
     /**
-     * @return int
+     * @return \DCarbone\Go\Time\Duration|null
      */
-    public function getRequestTime(): int {
+    public function getRequestTime(): ?Time\Duration
+    {
         return $this->RequestTime;
     }
 
     /**
      * @return bool
      */
-    public function isAddressTranslationEnabled(): bool {
+    public function isAddressTranslationEnabled(): bool
+    {
         return $this->AddressTranslationEnabled;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCacheHit(): bool
+    {
+        return $this->CacheHit;
+    }
+
+    /**
+     * @return \DCarbone\Go\Time\Duration|null
+     */
+    public function getCacheAge(): ?Time\Duration
+    {
+        return $this->CacheAge;
     }
 }

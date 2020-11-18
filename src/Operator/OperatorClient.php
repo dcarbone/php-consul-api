@@ -44,12 +44,12 @@ class OperatorClient extends AbstractClient
         $r->setWriteOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return ['', null, $err];
         }
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
             return ['', null, $err];
         }
@@ -73,12 +73,12 @@ class OperatorClient extends AbstractClient
         $r->setWriteOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return ['', null, $err];
         }
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
             return ['', null, $err];
         }
@@ -101,12 +101,12 @@ class OperatorClient extends AbstractClient
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, null, $err];
         }
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
             return [null, null, $err];
         }
@@ -133,12 +133,12 @@ class OperatorClient extends AbstractClient
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, null, $err];
         }
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
             return [null, null, $err];
         }
@@ -164,7 +164,7 @@ class OperatorClient extends AbstractClient
         $r = new Request('DELETE', 'v1/operator/area/' . $areaID, $this->config);
         $r->setWriteOptions($options);
 
-        list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, $err];
         }
@@ -188,12 +188,12 @@ class OperatorClient extends AbstractClient
         $r->setWriteOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, null, $err];
         }
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
             return [null, null, $err];
         }
@@ -221,12 +221,12 @@ class OperatorClient extends AbstractClient
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, null, $err];
         }
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
             return [null, null, $err];
         }
@@ -252,12 +252,12 @@ class OperatorClient extends AbstractClient
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($_, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$_, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, $err];
         }
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
             return [null, $err];
         }
@@ -275,7 +275,7 @@ class OperatorClient extends AbstractClient
         $r = new Request('PUT', 'v1/operator/autopilot/configuration', $this->config, $conf);
         $r->setWriteOptions($options);
 
-        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
+        [$_, $_, $err] = $this->requireOK($this->doRequest($r));
         return $err;
     }
 
@@ -291,10 +291,10 @@ class OperatorClient extends AbstractClient
     {
         $r = new Request('PUT', 'v1/operator/autopilot/configuration', $this->config, $conf);
         $r->setWriteOptions($options);
-        $r->Params->set('cas', $conf->ModifyIndex);
+        $r->Params->set('cas', strval($conf->ModifyIndex));
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($_, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$_, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [false, $err];
         }
@@ -315,12 +315,12 @@ class OperatorClient extends AbstractClient
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($_, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$_, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, $err];
         }
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
             return [null, $err];
         }
@@ -342,12 +342,12 @@ class OperatorClient extends AbstractClient
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, null, $err];
         }
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
 
         if (null !== $err) {
             return [null, null, $err];
@@ -369,7 +369,7 @@ class OperatorClient extends AbstractClient
         $r->setWriteOptions($options);
         $r->Params->set('address', (string)$address);
 
-        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
+        [$_, $_, $err] = $this->requireOK($this->doRequest($r));
 
         return $err;
     }

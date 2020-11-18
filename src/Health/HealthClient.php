@@ -44,12 +44,12 @@ class HealthClient extends AbstractClient
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, null, $err];
         }
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
             return [null, null, $err];
         }
@@ -74,12 +74,12 @@ class HealthClient extends AbstractClient
         $r = new Request('GET', sprintf('v1/health/checks/%s', $service), $this->config);
         $r->setQueryOptions($options);
 
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, null, $err];
         }
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
             return [null, null, $err];
         }
@@ -115,14 +115,14 @@ class HealthClient extends AbstractClient
         }
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, null, $err];
         }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
 
         if (null !== $err) {
             return [null, $qm, $err];
@@ -164,12 +164,12 @@ class HealthClient extends AbstractClient
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, null, $err];
         }
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
             return [null, null, $err];
         }

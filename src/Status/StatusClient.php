@@ -38,7 +38,7 @@ class StatusClient extends AbstractClient
         $r = new Request('GET', 'v1/status/leader', $this->config);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($_, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$_, $response, $err] = $this->requireOK($this->doRequest($r));
 
         if (null !== $err) {
             return ['', $err];
@@ -55,7 +55,7 @@ class StatusClient extends AbstractClient
         $r = new Request('GET', 'v1/status/peers', $this->config);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($_, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$_, $response, $err] = $this->requireOK($this->doRequest($r));
 
         if (null !== $err) {
             return [null, $err];

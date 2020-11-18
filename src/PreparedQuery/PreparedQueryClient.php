@@ -42,7 +42,7 @@ class PreparedQueryClient extends AbstractClient {
         $r->setWriteOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return ['', null, $err];
         }
@@ -63,7 +63,7 @@ class PreparedQueryClient extends AbstractClient {
         $r->setWriteOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, $err];
         }
@@ -84,14 +84,14 @@ class PreparedQueryClient extends AbstractClient {
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, null, $err];
         }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
-        list($body, $err) = $this->decodeBody($response->getBody());
+        [$body, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
             return [null, $qm, $err];
         }
@@ -117,14 +117,14 @@ class PreparedQueryClient extends AbstractClient {
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, null, $err];
         }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
-        list($body, $err) = $this->decodeBody($response->getBody());
+        [$body, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
             return [null, $qm, $err];
         }
@@ -149,12 +149,12 @@ class PreparedQueryClient extends AbstractClient {
         $r->setWriteOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, $err];
         }
 
-        list($_, $err) = $this->decodeBody($response->getBody());
+        [$_, $err] = $this->decodeBody($response->getBody());
 
         return [$this->buildWriteMeta($duration), null];
     }
@@ -173,14 +173,14 @@ class PreparedQueryClient extends AbstractClient {
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, null, $err];
         }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
-        list($body, $err) = $this->decodeBody($response->getBody());
+        [$body, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
             return [null, $qm, $err];
         }

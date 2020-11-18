@@ -44,14 +44,14 @@ class AgentClient extends AbstractClient
         $r = new Request('GET', 'v1/agent/self', $this->config);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, null, $err];
         }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
 
         if (null !== $err) {
             return [null, $qm, $err];
@@ -73,14 +73,14 @@ class AgentClient extends AbstractClient
         $r = new Request('GET', 'v1/agent/metrics', $this->config);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, null, $err];
         }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
 
         if (null !== $err) {
             return [null, $qm, $err];
@@ -108,7 +108,7 @@ class AgentClient extends AbstractClient
     public function NodeName(): array
     {
         if (null === $this->_self) {
-            list($_, $_, $err) = $this->Self();
+            [$_, $_, $err] = $this->Self();
             if (null !== $err) {
                 return ['', $err];
             }
@@ -132,13 +132,13 @@ class AgentClient extends AbstractClient
         $r = new Request('GET', 'v1/agent/checks', $this->config);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($_, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$_, $response, $err] = $this->requireOK($this->doRequest($r));
 
         if (null !== $err) {
             return [null, $err];
         }
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
 
         if (null !== $err) {
             return [null, $err];
@@ -163,13 +163,13 @@ class AgentClient extends AbstractClient
         $r = new Request('GET', 'v1/agent/services', $this->config);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($_, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$_, $response, $err] = $this->requireOK($this->doRequest($r));
 
         if (null !== $err) {
             return [null, $err];
         }
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
 
         if (null !== $err) {
             return [null, $err];
@@ -194,12 +194,12 @@ class AgentClient extends AbstractClient
         $r = new Request('GET', 'v1/agent/members', $this->config);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($_, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$_, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, $err];
         }
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
             return [null, $err];
         }
@@ -224,16 +224,16 @@ class AgentClient extends AbstractClient
         $r = new Request('GET', 'v1/agent/members', $this->config);
         $r->Params->set('segment', $opts->Segment);
         if ($opts->WAN) {
-            $r->Params->set('wan', 1);
+            $r->Params->set('wan', '1');
         }
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($_, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$_, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, $err];
         }
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
             return [null, $err];
         }
@@ -334,10 +334,12 @@ class AgentClient extends AbstractClient
                 return new Error("\"{$status}\" is not a valid status.  Allowed: [\"pass\", \"warn\", \"fail\"]");
         }
 
-        $r = new Request('PUT',
+        $r = new Request(
+            'PUT',
             sprintf('v1/agent/check/update/%s', $checkID),
             $this->config,
-            new AgentCheckUpdate(['Output' => $output, 'Status' => $status]));
+            new AgentCheckUpdate(['Output' => $output, 'Status' => $status])
+        );
 
         return $this->requireOK($this->doRequest($r))[2];
     }
@@ -376,7 +378,7 @@ class AgentClient extends AbstractClient
             $r->Params->set('wan', '1');
         }
 
-        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
+        [$_, $_, $err] = $this->requireOK($this->doRequest($r));
 
         return $err;
     }
@@ -389,7 +391,7 @@ class AgentClient extends AbstractClient
     {
         $r = new Request('PUT', sprintf('v1/agent/force-leave/%s', $node), $this->config);
 
-        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
+        [$_, $_, $err] = $this->requireOK($this->doRequest($r));
 
         return $err;
     }
@@ -405,7 +407,7 @@ class AgentClient extends AbstractClient
         $r->Params->set('enable', 'true');
         $r->Params->set('reason', $reason);
 
-        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
+        [$_, $_, $err] = $this->requireOK($this->doRequest($r));
 
         return $err;
     }
@@ -419,7 +421,7 @@ class AgentClient extends AbstractClient
         $r = new Request('PUT', sprintf('v1/agent/service/maintenance/%s', $serviceID), $this->config);
         $r->Params->set('enable', 'false');
 
-        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
+        [$_, $_, $err] = $this->requireOK($this->doRequest($r));
 
         return $err;
     }
@@ -434,7 +436,7 @@ class AgentClient extends AbstractClient
         $r->Params->set('enable', 'true');
         $r->Params->set('reason', $reason);
 
-        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
+        [$_, $_, $err] = $this->requireOK($this->doRequest($r));
 
         return $err;
     }
@@ -447,7 +449,7 @@ class AgentClient extends AbstractClient
         $r = new Request('PUT', 'v1/agent/maintenance', $this->config);
         $r->Params->set('enable', 'false');
 
-        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
+        [$_, $_, $err] = $this->requireOK($this->doRequest($r));
 
         return $err;
     }
@@ -459,7 +461,7 @@ class AgentClient extends AbstractClient
     {
         $r = new Request('PUT', 'v1/agent/leave', $this->config);
 
-        list($_, $_, $err) = $this->requireOK($this->doRequest($r));
+        [$_, $_, $err] = $this->requireOK($this->doRequest($r));
 
         return $err;
     }

@@ -41,12 +41,12 @@ class ACLClient extends AbstractClient
         $r = new Request('PUT', 'v1/acl/bootstrap', $this->config);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return ['', null, $err];
         }
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
             return ['', null, $err];
         }
@@ -71,14 +71,14 @@ class ACLClient extends AbstractClient
         $r->setWriteOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return ['', null, $err];
         }
 
         $wm = $this->buildWriteMeta($duration);
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
             return ['', $wm, $err];
         }
@@ -99,7 +99,7 @@ class ACLClient extends AbstractClient
         $r = new Request('PUT', 'v1/acl/update', $this->config, $acl);
         $r->setWriteOptions($options);
 
-        list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
 
         if (null !== $err) {
             return [null, $err];
@@ -121,7 +121,7 @@ class ACLClient extends AbstractClient
         $r = new Request('PUT', sprintf('v1/acl/destroy/%s', $id), $this->config);
         $r->setWriteOptions($options);
 
-        list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
 
         if (null !== $err) {
             return [null, $err];
@@ -145,14 +145,14 @@ class ACLClient extends AbstractClient
         $r->setWriteOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return ['', null, $err];
         }
 
         $wm = $this->buildWriteMeta($duration);
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
             return ['', $wm, $err];
         }
@@ -175,14 +175,14 @@ class ACLClient extends AbstractClient
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, null, $err];
         }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
             return [null, $qm, $err];
         }
@@ -209,14 +209,14 @@ class ACLClient extends AbstractClient
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, null, $err];
         }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
             return [null, $qm, $err];
         }
@@ -243,14 +243,14 @@ class ACLClient extends AbstractClient
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, null, $err];
         }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
             return [null, $qm, $err];
         }

@@ -45,7 +45,7 @@ class KVClient extends AbstractClient
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->doRequest($r);
+        [$duration, $response, $err] = $this->doRequest($r);
         if (null !== $err) {
             return [null, null, $err];
         }
@@ -53,7 +53,7 @@ class KVClient extends AbstractClient
         $code = $response->getStatusCode();
 
         if (200 === $code) {
-            list($data, $err) = $this->decodeBody($response->getBody());
+            [$data, $err] = $this->decodeBody($response->getBody());
 
             if (null !== $err) {
                 return [null, null, $err];
@@ -88,7 +88,7 @@ class KVClient extends AbstractClient
             $r->Params->set('flags', (string)$p->Flags);
         }
 
-        list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, $err];
         }
@@ -133,12 +133,12 @@ class KVClient extends AbstractClient
         $r->Params->set('recurse', '');
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, null, $err];
         }
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
             return [null, null, $err];
         }
@@ -164,12 +164,12 @@ class KVClient extends AbstractClient
         $r->Params->set('keys', '');
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, null, $err];
         }
 
-        list($data, $err) = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
             return [null, null, $err];
         }
@@ -196,7 +196,7 @@ class KVClient extends AbstractClient
         }
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, $err];
         }
@@ -221,7 +221,7 @@ class KVClient extends AbstractClient
             $r->Params->set('flags', (string)$p->Flags);
         }
 
-        list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, $err];
         }
@@ -245,7 +245,7 @@ class KVClient extends AbstractClient
         $r->Params['cas'] = (string)$p->ModifyIndex;
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, null, $err];
         }
@@ -270,7 +270,7 @@ class KVClient extends AbstractClient
             $r->Params->set('flags', (string)$p->Flags);
         }
 
-        list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, $err];
         }
@@ -292,7 +292,7 @@ class KVClient extends AbstractClient
         $r->Params['recurse'] = '';
         $r->setWriteOptions($options);
 
-        list($duration, $_, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, $err];
         }
@@ -321,7 +321,7 @@ class KVClient extends AbstractClient
         $r->setQueryOptions($options);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list($duration, $response, $err) = $this->doRequest($r);
+        [$duration, $response, $err] = $this->doRequest($r);
         if (null !== $err) {
             return [false, null, null, $err];
         }
@@ -330,7 +330,7 @@ class KVClient extends AbstractClient
 
         $code = $response->getStatusCode();
         if (200 === $code || 409 === $code) {
-            list($data, $err) = $this->decodeBody($response->getBody());
+            [$data, $err] = $this->decodeBody($response->getBody());
             if (null !== $err) {
                 return [false, null, null, $err];
             }
@@ -359,7 +359,7 @@ class KVClient extends AbstractClient
      */
     public function Tree(string $prefix = '', QueryOptions $options = null): array
     {
-        list($valueList, $_, $err) = $this->List($prefix, $options);
+        [$valueList, $_, $err] = $this->List($prefix, $options);
 
         if (null !== $err) {
             return [null, $err];

@@ -18,18 +18,22 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
 */
 
+use DCarbone\Go\Time;
+
 /**
  * Class WriteMeta
  * @package DCarbone\PHPConsulAPI
  */
-class WriteMeta {
-    /** @var int */
-    public $RequestTime = 0;
+class WriteMeta
+{
+    /** @var \DCarbone\Go\Time\Duration */
+    public $RequestTime = null;
 
     /**
-     * @return int
+     * @return \DCarbone\Go\Time\Duration|null
      */
-    public function getRequestTime(): int {
+    public function getRequestTime(): ?Time\Duration
+    {
         return $this->RequestTime;
     }
 }
