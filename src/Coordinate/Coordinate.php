@@ -1,4 +1,6 @@
-<?php namespace DCarbone\PHPConsulAPI\Coordinate;
+<?php declare(strict_types=1);
+
+namespace DCarbone\PHPConsulAPI\Coordinate;
 
 /*
    Copyright 2016-2020 Daniel Carbone (daniel.p.carbone@gmail.com)

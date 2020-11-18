@@ -1,4 +1,6 @@
-<?php namespace DCarbone\PHPConsulAPI;
+<?php declare(strict_types=1);
+
+namespace DCarbone\PHPConsulAPI;
 
 /*
    Copyright 2016-2020 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -195,22 +197,29 @@ class Request
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      */
-    public function setWriteOptions(WriteOptions $options = null): void
+    public function setWriteOptions(WriteOptions $opts = null): void
     {
-        if (null === $options) {
+        if (null === $opts) {
             return;
         }
 
-        if ('' !== $options->Datacenter) {
-            $this->Params->set('dc', $options->Datacenter);
+        if ('' !== $opts->Namespace) {
+            $this->Params->set('ns', $opts->Namespace);
         }
-        if ('' !== $options->Token) {
-            $this->Headers->set('X-Consul-Token', $options->Token);
+        if ('' !== $opts->Datacenter) {
+            $this->Params->set('dc', $opts->Datacenter);
         }
-        if (0 !== $options->RelayFactor) {
-            $this->Params->set('relay-factor', (string)$options->RelayFactor);
+        if ('' !== $opts->Token) {
+            $this->Headers->set('X-Consul-Token', $opts->Token);
+        }
+        if (0 !== $opts->RelayFactor) {
+            $this->Params->set('relay-factor', (string)$opts->RelayFactor);
+        }
+
+        if (null !== $opts->Timeout) {
+            $this->Timeout = $opts->Timeout;
         }
 
         $this->uri = null;

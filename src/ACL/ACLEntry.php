@@ -1,4 +1,6 @@
-<?php namespace DCarbone\PHPConsulAPI\ACL;
+<?php declare(strict_types=1);
+
+namespace DCarbone\PHPConsulAPI\ACL;
 
 /*
    Copyright 2016-2020 Daniel Carbone (daniel.p.carbone@gmail.com)

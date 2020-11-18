@@ -1,4 +1,6 @@
-<?php namespace DCarbone\PHPConsulAPI;
+<?php declare(strict_types=1);
+
+namespace DCarbone\PHPConsulAPI;
 
 /*
    Copyright 2016-2020 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -110,7 +112,7 @@ abstract class AbstractClient {
             // If we actually have a client defined...
             if (isset($this->config->HttpClient) && $this->config->HttpClient instanceof ClientInterface) {
                 $response =
-                    $this->config->HttpClient->send($r->toPsrRequest(), $this->config->getGuzzleRequestOptions());
+                    $this->config->HttpClient->send($r->toPsrRequest(), $this->config->getGuzzleRequestOptions($r));
             } // Otherwise, throw error to be caught below
             else {
                 throw new \RuntimeException('Unable to execute query as no HttpClient has been defined.');

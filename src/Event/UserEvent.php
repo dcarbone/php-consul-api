@@ -1,4 +1,6 @@
-<?php namespace DCarbone\PHPConsulAPI\Event;
+<?php declare(strict_types=1);
+
+namespace DCarbone\PHPConsulAPI\Event;
 
 
 /*

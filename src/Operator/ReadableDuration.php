@@ -1,4 +1,6 @@
-<?php namespace DCarbone\PHPConsulAPI\Operator;
+<?php declare(strict_types=1);
+
+namespace DCarbone\PHPConsulAPI\Operator;
 
 /*
    Copyright 2016-2020 Daniel Carbone (daniel.p.carbone@gmail.com)
