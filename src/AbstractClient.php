@@ -107,6 +107,7 @@ abstract class AbstractClient
         $rt = microtime(true);
         $response = null;
         $err = null;
+
         try {
             // If we actually have a client defined...
             if (isset($this->config->HttpClient) && $this->config->HttpClient instanceof ClientInterface) {
