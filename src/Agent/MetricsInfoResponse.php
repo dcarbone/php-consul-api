@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
    Copyright 2016-2020 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -18,23 +18,38 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
 */
 
+use DCarbone\PHPConsulAPI\AbstractValuedResponse;
+use DCarbone\PHPConsulAPI\Error;
+use DCarbone\PHPConsulAPI\ResponseErrorTrait;
+
 /**
- * Class AbstractValuedQueryResponse
- * @package DCarbone\PHPConsulAPI
+ * Class MetricsInfoResponse
+ * @package DCarbone\PHPConsulAPI\Agent
  */
-abstract class AbstractValuedQueryResponse extends AbstractValuedResponse implements \ArrayAccess
+class MetricsInfoResponse extends AbstractValuedResponse implements \ArrayAccess
 {
-    use ResponseQueryMetaTrait;
+    use ResponseErrorTrait;
+
+    /** @var \DCarbone\PHPConsulAPI\Agent\MetricsInfo|null */
+    public $MetricsInfo = null;
 
     /**
-     * AbstractValuedQueryResponse constructor.
-     * @param \DCarbone\PHPConsulAPI\QueryMeta|null $qm
+     * MetricsInfoResponse constructor.
+     * @param \DCarbone\PHPConsulAPI\Agent\MetricsInfo|null $metricsInfo
      * @param \DCarbone\PHPConsulAPI\Error|null $err
      */
-    public function __construct(?QueryMeta $qm, ?Error $err)
+    public function __construct(?MetricsInfo $metricsInfo, ?Error $err)
     {
-        $this->QueryMeta = $qm;
+        $this->MetricsInfo = $metricsInfo;
         parent::__construct($err);
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Agent\MetricsInfo|null
+     */
+    public function getValue()
+    {
+        return $this->MetricsInfo;
     }
 
     /**
@@ -43,20 +58,14 @@ abstract class AbstractValuedQueryResponse extends AbstractValuedResponse implem
      */
     public function offsetExists($offset)
     {
-        return is_int($offset) && 0 <= $offset && $offset < 3;
+        return is_int($offset) && 0 <= $offset && $offset < 2;
     }
 
-    /**
-     * @param mixed $offset
-     * @return \DCarbone\PHPConsulAPI\Error|\DCarbone\PHPConsulAPI\QueryMeta|mixed|null
-     */
     public function offsetGet($offset)
     {
         if (0 === $offset) {
             return $this->getValue();
         } elseif (1 === $offset) {
-            return $this->QueryMeta;
-        } elseif (2 === $offset) {
             return $this->Err;
         } else {
             throw new \OutOfBoundsException(sprintf('Offset %s does not exist', var_export($offset, true)));

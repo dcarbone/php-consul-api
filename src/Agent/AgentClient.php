@@ -22,6 +22,7 @@ use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Consul;
 use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\Request;
+use DCarbone\PHPConsulAPI\ValuedStringResponse;
 
 /**
  * Class AgentClient
@@ -33,20 +34,17 @@ class AgentClient extends AbstractClient
     private $_self = null;
 
     /**
-     * @return array(
-     * @type array|null agent info or null on error
-     * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentSelfResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Self(): array
+    public function Self(): AgentSelfResponse
     {
         $r = new Request('GET', 'v1/agent/self', $this->config);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, null, $err];
+            return new AgentSelfResponse(null, null, $err);
         }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
@@ -54,209 +52,198 @@ class AgentClient extends AbstractClient
         [$data, $err] = $this->decodeBody($response->getBody());
 
         if (null !== $err) {
-            return [null, $qm, $err];
+            return new AgentSelfResponse(null, $qm, $err);
         }
 
         $this->_self = $data;
 
-        return [$this->_self, $qm, null];
+        return new AgentSelfResponse($data, $qm, null);
     }
 
     /**
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\Agent\MetricsInfo
-     * @type \DCarbone\PHPConsulAPI\Error|null
-     * )
+     * @return \DCarbone\PHPConsulAPI\Agent\MetricsInfoResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Metrics(): array
+    public function Metrics(): MetricsInfoResponse
     {
         $r = new Request('GET', 'v1/agent/metrics', $this->config);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, null, $err];
+            return new MetricsInfoResponse(null, $err);
         }
-
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         [$data, $err] = $this->decodeBody($response->getBody());
 
         if (null !== $err) {
-            return [null, $qm, $err];
+            return new MetricsInfoResponse(null, $err);
         }
 
-        return [new MetricsInfo($data), null];
+        return new MetricsInfoResponse(new MetricsInfo($data), null);
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Error|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Reload()
+    public function Reload(): ?Error
     {
         $r = new Request('PUT', 'v1/agent/reload', $this->config);
 
-        return $this->requireOK($this->doRequest($r))[2];
+        return $this->requireOK($this->doRequest($r))->Err;
     }
 
     /**
-     * @return array(
-     * @type string name of node or null on error
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
+     * @return \DCarbone\PHPConsulAPI\ValuedStringResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function NodeName(): array
+    public function NodeName(): ValuedStringResponse
     {
         if (null === $this->_self) {
             [$_, $_, $err] = $this->Self();
             if (null !== $err) {
-                return ['', $err];
+                return new ValuedStringResponse('', $err);
             }
         }
 
         if (isset($this->_self['Config']) && isset($this->_self['Config']['NodeName'])) {
-            return [$this->_self['Config']['NodeName'], null];
+            return new ValuedStringResponse($this->_self['Config']['NodeName'], null);
         }
 
-        return ['', null];
+        return new ValuedStringResponse('', null);
     }
 
     /**
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\Agent\AgentCheck[]|null array of agent checks or null on error
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
+     * @param string $filter
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentChecksResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Checks(): array
+    public function ChecksWithFilter(string $filter): AgentChecksResponse
     {
         $r = new Request('GET', 'v1/agent/checks', $this->config);
+        $r->filterQuery($filter);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$_, $response, $err] = $this->requireOK($this->doRequest($r));
 
         if (null !== $err) {
-            return [null, $err];
+            return new AgentChecksResponse(null, $err);
         }
 
         [$data, $err] = $this->decodeBody($response->getBody());
 
-        if (null !== $err) {
-            return [null, $err];
-        }
-
-        $checks = [];
-        foreach ($data as $k => $v) {
-            $checks[$k] = new AgentCheck($v);
-        }
-
-        return [$checks, null];
+        return new AgentChecksResponse($data, $err);
     }
 
     /**
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\Agent\AgentService[]|null list of agent services or null on error
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentChecksResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Services(): array
+    public function Checks(): AgentChecksResponse
+    {
+        return $this->checksWithFilter('');
+    }
+
+    /**
+     * @param string $filter
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServicesResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function ServicesWithFilter(string $filter): AgentServicesResponse
     {
         $r = new Request('GET', 'v1/agent/services', $this->config);
+        $r->filterQuery($filter);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$_, $response, $err] = $this->requireOK($this->doRequest($r));
 
         if (null !== $err) {
-            return [null, $err];
+            return new AgentServicesResponse(null, $err);
         }
 
         [$data, $err] = $this->decodeBody($response->getBody());
 
-        if (null !== $err) {
-            return [null, $err];
-        }
-
-        $services = [];
-        foreach ($data as $k => $v) {
-            $services[$k] = new AgentService($v);
-        }
-
-        return [$services, null];
+        return new AgentServicesResponse($data, $err);
     }
 
     /**
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\Agent\AgentMember[]|null array of agent members or null on error
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServicesResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Members(): array
+    public function Services(): AgentServicesResponse
+    {
+        return $this->ServicesWithFilter('');
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentMembersResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function Members(): AgentMembersResponse
     {
         $r = new Request('GET', 'v1/agent/members', $this->config);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$_, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, $err];
+            return new AgentMembersResponse(null, $err);
         }
 
         [$data, $err] = $this->decodeBody($response->getBody());
-        if (null !== $err) {
-            return [null, $err];
-        }
 
-        $members = [];
-        foreach ($data as $v) {
-            $members[] = new AgentMember($v);
-        }
-
-        return [$members, null];
+        return new AgentMembersResponse($data, $err);
     }
 
     /**
      * @param \DCarbone\PHPConsulAPI\Agent\MemberOpts $opts
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\Agent\AgentMember[]
-     * @type \DCarbone\PHPConsulAPI\Error|null
-     * )
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentMembersResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function MemberOpts(MemberOpts $opts): array
+    public function MemberOpts(MemberOpts $opts): AgentMembersResponse
     {
         $r = new Request('GET', 'v1/agent/members', $this->config);
-        $r->Params->set('segment', $opts->Segment);
+        $r->params->set('segment', $opts->Segment);
         if ($opts->WAN) {
-            $r->Params->set('wan', '1');
+            $r->params->set('wan', '1');
         }
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$_, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, $err];
+            return new AgentMembersResponse(null, $err);
         }
 
         [$data, $err] = $this->decodeBody($response->getBody());
-        if (null !== $err) {
-            return [null, $err];
-        }
 
-        $members = [];
-        foreach ($data as $v) {
-            $members[] = new AgentMember($v);
-        }
+        return new AgentMembersResponse($data, $err);
+    }
 
-        return [$members, null];
+    /**
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration $service
+     * @param \DCarbone\PHPConsulAPI\Agent\ServiceRegisterOpts $opts
+     * @return \DCarbone\PHPConsulAPI\Error|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function ServiceRegisterOpts(AgentServiceRegistration $service, ServiceRegisterOpts $opts): ?Error
+    {
+        $r = new Request('PUT', 'v1/agent/service/register', $this->config, $service);
+        if ($opts->ReplaceExistingChecks) {
+            $r->params->set('replace-existing-checks', 'true');
+        }
+        return $this->requireOK($this->doRequest($r))->Err;
     }
 
     /**
      * Register a service within Consul
      *
-     * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration $agentServiceRegistration
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration $service
      * @return \DCarbone\PHPConsulAPI\Error|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function ServiceRegister(AgentServiceRegistration $agentServiceRegistration)
+    public function ServiceRegister(AgentServiceRegistration $service): ?Error
     {
-        $r = new Request('PUT', 'v1/agent/service/register', $this->config, $agentServiceRegistration);
-
-        return $this->requireOK($this->doRequest($r))[2];
+        return $this->ServiceRegisterOpts($service, new ServiceRegisterOpts(['ReplaceExistingChecks' => false]));
     }
 
     /**
@@ -264,12 +251,12 @@ class AgentClient extends AbstractClient
      *
      * @param string $serviceID
      * @return \DCarbone\PHPConsulAPI\Error|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function ServiceDeregister(string $serviceID)
+    public function ServiceDeregister(string $serviceID): ?Error
     {
         $r = new Request('PUT', sprintf('v1/agent/service/deregister/%s', $serviceID), $this->config);
-
-        return $this->requireOK($this->doRequest($r))[2];
+        return $this->requireOK($this->doRequest($r))->Err;
     }
 
     /**
@@ -278,8 +265,10 @@ class AgentClient extends AbstractClient
      * @param string $checkID
      * @param string $note
      * @return \DCarbone\PHPConsulAPI\Error|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @deprecated use UpdateTTL
      */
-    public function PassTTL(string $checkID, string $note)
+    public function PassTTL(string $checkID, string $note): ?Error
     {
         return $this->UpdateTTL($checkID, $note, 'pass');
     }
@@ -290,8 +279,10 @@ class AgentClient extends AbstractClient
      * @param string $checkID
      * @param string $note
      * @return \DCarbone\PHPConsulAPI\Error|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @deprecated use UpdateTTL
      */
-    public function WarnTTL(string $checkID, string $note)
+    public function WarnTTL(string $checkID, string $note): ?Error
     {
         return $this->UpdateTTL($checkID, $note, 'warn');
     }
@@ -302,8 +293,10 @@ class AgentClient extends AbstractClient
      * @param string $checkID
      * @param string $note
      * @return \DCarbone\PHPConsulAPI\Error|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @deprecated use UpdateTTL
      */
-    public function FailTTL(string $checkID, string $note)
+    public function FailTTL(string $checkID, string $note): ?Error
     {
         return $this->UpdateTTL($checkID, $note, 'fail');
     }
@@ -313,8 +306,9 @@ class AgentClient extends AbstractClient
      * @param string $output
      * @param string $status
      * @return \DCarbone\PHPConsulAPI\Error|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function UpdateTTL(string $checkID, string $output, string $status)
+    public function UpdateTTL(string $checkID, string $output, string $status): ?Error
     {
         switch ($status) {
             case Consul::HealthPassing:
@@ -341,128 +335,128 @@ class AgentClient extends AbstractClient
             new AgentCheckUpdate(['Output' => $output, 'Status' => $status])
         );
 
-        return $this->requireOK($this->doRequest($r))[2];
+        return $this->requireOK($this->doRequest($r))->Err;
     }
 
     /**
      * @param \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration $agentCheckRegistration
      * @return \DCarbone\PHPConsulAPI\Error|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function CheckRegister(AgentCheckRegistration $agentCheckRegistration)
+    public function CheckRegister(AgentCheckRegistration $agentCheckRegistration): ?Error
     {
         $r = new Request('PUT', 'v1/agent/check/register', $this->config, $agentCheckRegistration);
 
-        return $this->requireOK($this->doRequest($r))[2];
+        return $this->requireOK($this->doRequest($r))->Err;
     }
 
     /**
      * @param string $checkID
      * @return \DCarbone\PHPConsulAPI\Error|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function CheckDeregister(string $checkID)
+    public function CheckDeregister(string $checkID): ?Error
     {
         $r = new Request('PUT', sprintf('v1/agent/check/deregister/%s', $checkID), $this->config);
 
-        return $this->requireOK($this->doRequest($r))[2];
+        return $this->requireOK($this->doRequest($r))->Err;
     }
 
     /**
      * @param string $addr
      * @param bool $wan
      * @return \DCarbone\PHPConsulAPI\Error|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Join(string $addr, bool $wan = false)
+    public function Join(string $addr, bool $wan = false): ?Error
     {
         $r = new Request('PUT', sprintf('v1/agent/join/%s', $addr), $this->config);
         if ($wan) {
-            $r->Params->set('wan', '1');
+            $r->params->set('wan', '1');
         }
+        return $this->requireOK($this->doRequest($r))->Err;
+    }
 
-        [$_, $_, $err] = $this->requireOK($this->doRequest($r));
-
-        return $err;
+    /**
+     * @return \DCarbone\PHPConsulAPI\Error|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function Leave(): ?Error
+    {
+        $r = new Request('PUT', 'v1/agent/leave', $this->config);
+        return $this->requireOK($this->doRequest($r))->Err;
     }
 
     /**
      * @param string $node
      * @return \DCarbone\PHPConsulAPI\Error|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function ForceLeave(string $node)
+    public function ForceLeave(string $node): ?Error
     {
         $r = new Request('PUT', sprintf('v1/agent/force-leave/%s', $node), $this->config);
+        return $this->requireOK($this->doRequest($r))->Err;
+    }
 
-        [$_, $_, $err] = $this->requireOK($this->doRequest($r));
-
-        return $err;
+    /**
+     * @param string $node
+     * @return \DCarbone\PHPConsulAPI\Error|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function ForceLeavePrune(string $node): ?Error
+    {
+        $r = new Request('PUT', sprintf('v1/agent/force-leave/%s', $node), $this->config);
+        $r->params->set('prune', '1');
+        return $this->requireOK($this->doRequest($r))->Err;
     }
 
     /**
      * @param string $serviceID
      * @param string $reason
      * @return \DCarbone\PHPConsulAPI\Error|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function EnableServiceMaintenance(string $serviceID, string $reason = '')
+    public function EnableServiceMaintenance(string $serviceID, string $reason = ''): ?Error
     {
         $r = new Request('PUT', sprintf('v1/agent/service/maintenance/%s', $serviceID), $this->config);
-        $r->Params->set('enable', 'true');
-        $r->Params->set('reason', $reason);
-
-        [$_, $_, $err] = $this->requireOK($this->doRequest($r));
-
-        return $err;
+        $r->params->set('enable', 'true');
+        $r->params->set('reason', $reason);
+        return $this->requireOK($this->doRequest($r))->Err;
     }
 
     /**
      * @param string $serviceID
      * @return \DCarbone\PHPConsulAPI\Error|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function DisableServiceMaintenance(string $serviceID)
+    public function DisableServiceMaintenance(string $serviceID): ?Error
     {
         $r = new Request('PUT', sprintf('v1/agent/service/maintenance/%s', $serviceID), $this->config);
-        $r->Params->set('enable', 'false');
-
-        [$_, $_, $err] = $this->requireOK($this->doRequest($r));
-
-        return $err;
+        $r->params->set('enable', 'false');
+        return $this->requireOK($this->doRequest($r))->Err;
     }
 
     /**
      * @param string $reason
      * @return \DCarbone\PHPConsulAPI\Error|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function EnableNodeMaintenance(string $reason = '')
+    public function EnableNodeMaintenance(string $reason = ''): ?Error
     {
         $r = new Request('PUT', 'v1/agent/maintenance', $this->config);
-        $r->Params->set('enable', 'true');
-        $r->Params->set('reason', $reason);
-
-        [$_, $_, $err] = $this->requireOK($this->doRequest($r));
-
-        return $err;
+        $r->params->set('enable', 'true');
+        $r->params->set('reason', $reason);
+        return $this->requireOK($this->doRequest($r))->Err;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Error|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function DisableNodeMaintenance()
+    public function DisableNodeMaintenance(): ?Error
     {
         $r = new Request('PUT', 'v1/agent/maintenance', $this->config);
-        $r->Params->set('enable', 'false');
-
-        [$_, $_, $err] = $this->requireOK($this->doRequest($r));
-
-        return $err;
-    }
-
-    /**
-     * @return \DCarbone\PHPConsulAPI\Error|null
-     */
-    public function Leave()
-    {
-        $r = new Request('PUT', 'v1/agent/leave', $this->config);
-
-        [$_, $_, $err] = $this->requireOK($this->doRequest($r));
-
-        return $err;
+        $r->params->set('enable', 'false');
+        return $this->requireOK($this->doRequest($r))->Err;
     }
 }

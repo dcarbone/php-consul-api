@@ -108,10 +108,10 @@ class HealthClient extends AbstractClient
         $r = new Request('GET', sprintf('v1/health/service/%s', $service), $this->config);
         $r->setQueryOptions($options);
         if ('' !== $tag) {
-            $r->Params->set('tag', $tag);
+            $r->params->set('tag', $tag);
         }
         if ($passingOnly) {
-            $r->Params->set('passing', '1');
+            $r->params->set('passing', '1');
         }
 
         /** @var \Psr\Http\Message\ResponseInterface $response */

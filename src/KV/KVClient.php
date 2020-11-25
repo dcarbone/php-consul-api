@@ -85,7 +85,7 @@ class KVClient extends AbstractClient
         $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
         $r->setWriteOptions($options);
         if (0 !== $p->Flags) {
-            $r->Params->set('flags', (string)$p->Flags);
+            $r->params->set('flags', (string)$p->Flags);
         }
 
         [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
@@ -109,7 +109,7 @@ class KVClient extends AbstractClient
         $r = new Request('DELETE', sprintf('v1/kv/%s', $key), $this->config);
         $r->setWriteOptions($options);
 
-        list ($duration, $_, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
             return [null, $err];
         }
@@ -130,7 +130,7 @@ class KVClient extends AbstractClient
     {
         $r = new Request('GET', sprintf('v1/kv/%s', $prefix), $this->config);
         $r->setQueryOptions($options);
-        $r->Params->set('recurse', '');
+        $r->params->set('recurse', '');
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
@@ -161,7 +161,7 @@ class KVClient extends AbstractClient
     {
         $r = new Request('GET', sprintf('v1/kv/%s', $prefix), $this->config);
         $r->setQueryOptions($options);
-        $r->Params->set('keys', '');
+        $r->params->set('keys', '');
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
@@ -190,9 +190,9 @@ class KVClient extends AbstractClient
     {
         $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
         $r->setWriteOptions($options);
-        $r->Params->set('cas', (string)$p->ModifyIndex);
+        $r->params->set('cas', (string)$p->ModifyIndex);
         if (0 !== $p->Flags) {
-            $r->Params->set('flags', (string)$p->Flags);
+            $r->params->set('flags', (string)$p->Flags);
         }
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -216,9 +216,9 @@ class KVClient extends AbstractClient
     {
         $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
         $r->setWriteOptions($options);
-        $r->Params->set('acquire', $p->Session);
+        $r->params->set('acquire', $p->Session);
         if (0 !== $p->Flags) {
-            $r->Params->set('flags', (string)$p->Flags);
+            $r->params->set('flags', (string)$p->Flags);
         }
 
         [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
@@ -242,7 +242,7 @@ class KVClient extends AbstractClient
     {
         $r = new Request('DELETE', sprintf('v1/kv/%s', ltrim($p->Key, "/")), $this->config);
         $r->setWriteOptions($options);
-        $r->Params['cas'] = (string)$p->ModifyIndex;
+        $r->params['cas'] = (string)$p->ModifyIndex;
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
@@ -265,9 +265,9 @@ class KVClient extends AbstractClient
     {
         $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
         $r->setWriteOptions($options);
-        $r->Params->set('release', $p->Session);
+        $r->params->set('release', $p->Session);
         if (0 !== $p->Flags) {
-            $r->Params->set('flags', (string)$p->Flags);
+            $r->params->set('flags', (string)$p->Flags);
         }
 
         [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
@@ -289,7 +289,7 @@ class KVClient extends AbstractClient
     public function DeleteTree(string $prefix, QueryOptions $options = null): array
     {
         $r = new Request('DELETE', sprintf('v1/kv/%s', $prefix), $this->config);
-        $r->Params['recurse'] = '';
+        $r->params['recurse'] = '';
         $r->setWriteOptions($options);
 
         [$duration, $_, $err] = $this->requireOK($this->doRequest($r));

@@ -40,7 +40,7 @@ class ACLClientTest extends AbstractUsageTests {
 
         $client = new ACLClient(new Config());
 
-        list($aclID, $wm, $err) = $client->bootstrap();
+        list($aclID, $wm, $err) = $client->Bootstrap();
         $this->assertNull($err, 'ACL::bootstrap() returned error: '.$err);
         $this->assertInstanceOf(WriteMeta::class, $wm);
         $this->assertIsString($aclID);
@@ -55,7 +55,7 @@ class ACLClientTest extends AbstractUsageTests {
     public function testCanGetBootstrappedACL(string $aclID) {
         $client = new ACLClient(new Config());
 
-        list($acls, $qm, $err) = $client->info($aclID);
+        list($acls, $qm, $err) = $client->Info($aclID);
         $this->assertNull($err, 'ACL::info() return error: '.$err);
         $this->assertInstanceOf(QueryMeta::class, $qm);
         $this->assertIsArray($acls);

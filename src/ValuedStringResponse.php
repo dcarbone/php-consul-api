@@ -19,22 +19,26 @@ namespace DCarbone\PHPConsulAPI;
 */
 
 /**
- * Class AbstractValuedQueryResponse
+ * Class ValuedStringResponse
  * @package DCarbone\PHPConsulAPI
  */
-abstract class AbstractValuedQueryResponse extends AbstractValuedResponse implements \ArrayAccess
+class ValuedStringResponse extends AbstractValuedResponse implements \ArrayAccess
 {
-    use ResponseQueryMetaTrait;
+    /** @var string */
+    public $Value = '';
+
+    public function __construct(string $value, ?Error $err)
+    {
+        $this->Value = $value;
+        parent::__construct($err);
+    }
 
     /**
-     * AbstractValuedQueryResponse constructor.
-     * @param \DCarbone\PHPConsulAPI\QueryMeta|null $qm
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
+     * @return string
      */
-    public function __construct(?QueryMeta $qm, ?Error $err)
+    public function getValue()
     {
-        $this->QueryMeta = $qm;
-        parent::__construct($err);
+        return $this->Value;
     }
 
     /**
@@ -43,20 +47,18 @@ abstract class AbstractValuedQueryResponse extends AbstractValuedResponse implem
      */
     public function offsetExists($offset)
     {
-        return is_int($offset) && 0 <= $offset && $offset < 3;
+        return is_int($offset) && 0 <= $offset && $offset < 2;
     }
 
     /**
      * @param mixed $offset
-     * @return \DCarbone\PHPConsulAPI\Error|\DCarbone\PHPConsulAPI\QueryMeta|mixed|null
+     * @return \DCarbone\PHPConsulAPI\Error|mixed|string|null
      */
     public function offsetGet($offset)
     {
         if (0 === $offset) {
             return $this->getValue();
         } elseif (1 === $offset) {
-            return $this->QueryMeta;
-        } elseif (2 === $offset) {
             return $this->Err;
         } else {
             throw new \OutOfBoundsException(sprintf('Offset %s does not exist', var_export($offset, true)));

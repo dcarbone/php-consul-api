@@ -291,7 +291,7 @@ class OperatorClient extends AbstractClient
     {
         $r = new Request('PUT', 'v1/operator/autopilot/configuration', $this->config, $conf);
         $r->setWriteOptions($options);
-        $r->Params->set('cas', strval($conf->ModifyIndex));
+        $r->params->set('cas', strval($conf->ModifyIndex));
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$_, $response, $err] = $this->requireOK($this->doRequest($r));
@@ -367,7 +367,7 @@ class OperatorClient extends AbstractClient
     {
         $r = new Request('DELETE', 'v1/operator/raft/peer', $this->config);
         $r->setWriteOptions($options);
-        $r->Params->set('address', (string)$address);
+        $r->params->set('address', (string)$address);
 
         [$_, $_, $err] = $this->requireOK($this->doRequest($r));
 

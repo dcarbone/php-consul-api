@@ -33,7 +33,7 @@ class Request
     /** @var \DCarbone\PHPConsulAPI\Values */
     public $Headers;
     /** @var \DCarbone\PHPConsulAPI\Params */
-    public $Params;
+    public $params;
 
     /** @var \DCarbone\Go\Time\Duration|null */
     public $Timeout = null;
@@ -68,14 +68,14 @@ class Request
         $this->path = $path; // TODO: perform some kind of path input validation?
 
         $this->Headers = new Values();
-        $this->Params = new Params();
+        $this->params = new Params();
 
         if ('' !== $config->Datacenter) {
-            $this->Params->set('dc', $config->Datacenter);
+            $this->params->set('dc', $config->Datacenter);
         }
 
         if (0 !== $config->WaitTime) {
-            $this->Params->set('wait', $config->intToMillisecond($config->WaitTime));
+            $this->params->set('wait', $config->intToMillisecond($config->WaitTime));
         }
 
         if ('' !== $config->Token) {
@@ -128,51 +128,51 @@ class Request
         }
 
         if ('' !== $opts->Namespace) {
-            $this->Params->set('ns', $opts->Namespace);
+            $this->params->set('ns', $opts->Namespace);
         }
         if ('' !== $opts->Datacenter) {
-            $this->Params->set('dc', $opts->Datacenter);
+            $this->params->set('dc', $opts->Datacenter);
         }
         if ($opts->AllowStale) {
-            $this->Params->set('stale', '');
+            $this->params->set('stale', '');
         }
         if ($opts->RequireConsistent) {
-            $this->Params->set('consistent', '');
+            $this->params->set('consistent', '');
         }
         if (0 !== $opts->WaitIndex) {
-            $this->Params->set('index', (string)$opts->WaitIndex);
+            $this->params->set('index', (string)$opts->WaitIndex);
         }
         if (0 !== $opts->WaitTime) {
-            $this->Params->set('wait', $this->config->intToMillisecond($opts->WaitTime));
+            $this->params->set('wait', $this->config->intToMillisecond($opts->WaitTime));
         }
         if ('' !== $opts->WaitHash) {
-            $this->Params->set('hash', $opts->WaitHash);
+            $this->params->set('hash', $opts->WaitHash);
         }
         if ('' !== $opts->Token) {
             $this->Headers->set('X-Consul-Token', $opts->Token);
         }
         if ('' !== $opts->Near) {
-            $this->Params->set('near', $opts->Near);
+            $this->params->set('near', $opts->Near);
         }
         if ('' !== $opts->Filter) {
-            $this->Params->set('filter', $opts->Filter);
+            $this->params->set('filter', $opts->Filter);
         }
         if (isset($opts->NodeMeta) && [] !== $opts->NodeMeta) {
             foreach ($opts->NodeMeta as $k => $v) {
-                $this->Params->add('node-meta', "{$k}:{$v}");
+                $this->params->add('node-meta', "{$k}:{$v}");
             }
         }
         if (0 !== $opts->RelayFactor) {
-            $this->Params->set('relay-factor', (string)$opts->RelayFactor);
+            $this->params->set('relay-factor', (string)$opts->RelayFactor);
         }
         if ($opts->LocalOnly) {
-            $this->Params->set('local-only', 'true');
+            $this->params->set('local-only', 'true');
         }
         if ($opts->Connect) {
-            $this->Params->set('connect', 'true');
+            $this->params->set('connect', 'true');
         }
         if ($opts->UseCache && !$opts->RequireConsistent) {
-            $this->Params->set('cached', '');
+            $this->params->set('cached', '');
             $cc = [];
             if (null !== $opts->MaxAge) {
                 $cc[] = sprintf('max-age=%.0f', $opts->MaxAge->Seconds());
@@ -190,7 +190,7 @@ class Request
         }
 
         if ($opts->Pretty) {
-            $this->Params->set('pretty', '');
+            $this->params->set('pretty', '');
         }
 
         $this->uri = null;
@@ -206,16 +206,16 @@ class Request
         }
 
         if ('' !== $opts->Namespace) {
-            $this->Params->set('ns', $opts->Namespace);
+            $this->params->set('ns', $opts->Namespace);
         }
         if ('' !== $opts->Datacenter) {
-            $this->Params->set('dc', $opts->Datacenter);
+            $this->params->set('dc', $opts->Datacenter);
         }
         if ('' !== $opts->Token) {
             $this->Headers->set('X-Consul-Token', $opts->Token);
         }
         if (0 !== $opts->RelayFactor) {
-            $this->Params->set('relay-factor', (string)$opts->RelayFactor);
+            $this->params->set('relay-factor', (string)$opts->RelayFactor);
         }
 
         if (null !== $opts->Timeout) {
@@ -223,6 +223,16 @@ class Request
         }
 
         $this->uri = null;
+    }
+
+    /**
+     * @param string $filter
+     */
+    public function filterQuery(string $filter = ''): void {
+        if ('' === $filter) {
+            return;
+        }
+        $this->params->set('filter', $filter);
     }
 
     /**
@@ -240,8 +250,8 @@ class Request
                     " \t\n\r\0\x0B/"
                 ) // TODO: Lessen # of things being looked for?
             );
-            if (0 < count($this->Params)) {
-                $uri = sprintf('%s?%s', $uri, (string)$this->Params);
+            if (0 < count($this->params)) {
+                $uri = sprintf('%s?%s', $uri, (string)$this->params);
             }
             $this->uri = new Uri($uri);
         }

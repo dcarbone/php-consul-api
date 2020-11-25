@@ -22,12 +22,10 @@ namespace DCarbone\PHPConsulAPI;
  * Class AbstractValuedWriteResponse
  * @package DCarbone\PHPConsulAPI
  */
-abstract class AbstractValuedWriteResponse implements \ArrayAccess
+abstract class AbstractValuedWriteResponse extends AbstractValuedResponse implements \ArrayAccess
 {
-    /** @var \DCarbone\PHPConsulAPI\WriteMeta|null */
-    public $WriteMeta = null;
-    /** @var \DCarbone\PHPConsulAPI\Error|null */
-    public $Err = null;
+    use ResponseErrorTrait;
+    use ResponseWriteMetaTrait;
 
     /**
      * AbstractValuedWriteResponse constructor.
@@ -37,28 +35,7 @@ abstract class AbstractValuedWriteResponse implements \ArrayAccess
     public function __construct(?WriteMeta $wm, ?Error $err)
     {
         $this->WriteMeta = $wm;
-        $this->Err = $err;
-    }
-
-    /**
-     * @return mixed
-     */
-    abstract public function getValue();
-
-    /**
-     * @return \DCarbone\PHPConsulAPI\WriteMeta|null
-     */
-    public function getWriteMeta(): ?WriteMeta
-    {
-        return $this->WriteMeta;
-    }
-
-    /**
-     * @return \DCarbone\PHPConsulAPI\Error|null
-     */
-    public function getErr(): ?Error
-    {
-        return $this->Err;
+        parent::__construct($err);
     }
 
     /**
@@ -85,22 +62,5 @@ abstract class AbstractValuedWriteResponse implements \ArrayAccess
         } else {
             throw new \OutOfBoundsException(sprintf('Offset %s does not exist', var_export($offset, true)));
         }
-    }
-
-    /**
-     * @param mixed $offset
-     * @param mixed $value
-     */
-    public function offsetSet($offset, $value)
-    {
-        throw new \BadMethodCallException(sprintf('Cannot call %s on %s', __METHOD__, __CLASS__));
-    }
-
-    /**
-     * @param mixed $offset
-     */
-    public function offsetUnset($offset)
-    {
-        throw new \BadMethodCallException(sprintf('Cannot call %s on %s', __METHOD__, __CLASS__));
     }
 }
