@@ -22,7 +22,8 @@ namespace DCarbone\PHPConsulAPI;
  * Class AbstractModels
  * @package DCarbone\PHPConsulAPI
  */
-abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable {
+abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
+{
     /** @var \DCarbone\PHPConsulAPI\AbstractModel[] */
     protected $_list = [];
 
@@ -31,118 +32,134 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
 
     /**
      * AbstractModels constructor.
-     * @param array $children
+     * @param array|null $children
      */
-    public function __construct($children = []) {
+    public function __construct(?array $children = [])
+    {
         if (is_array($children)) {
             foreach (array_filter($children) as $child) {
                 if (is_array($child)) {
                     $this->_list[] = $this->newChild($child);
-                } else if ($child instanceof $this->containedClass) {
+                } elseif ($child instanceof $this->containedClass) {
                     $this->_list[] = $child;
                 } else {
-                    throw new \InvalidArgumentException(sprintf(
-                        get_class($this).' accepts only '.$this->containedClass.' as a child, saw %s',
-                        is_object($child) ? get_class($child) : gettype($child)));
+                    throw new \InvalidArgumentException(
+                        sprintf(
+                            get_class($this) . ' accepts only ' . $this->containedClass . ' as a child, saw %s',
+                            is_object($child) ? get_class($child) : gettype($child)
+                        )
+                    );
                 }
             }
-        } else if (null === $children) {
-            // do nothin
-        } else {
-            throw new \InvalidArgumentException(get_class($this).
-                '::__construct accepts only array of '.
-                $this->containedClass.
-                '\'s or null as values');
         }
     }
 
     /**
      * @param \DCarbone\PHPConsulAPI\AbstractModel|null $value
      */
-    public function append(AbstractModel $value = null) {
+    public function append(AbstractModel $value = null)
+    {
         if (null === $value || $value instanceof $this->containedClass) {
             $this->_list[] = $value;
         } else {
-            throw new \InvalidArgumentException(get_class($this).
-                ' accepts only objects of type '.
-                $this->containedClass.
-                ' or null as values');
+            throw new \InvalidArgumentException(
+                get_class($this) .
+                ' accepts only objects of type ' .
+                $this->containedClass .
+                ' or null as values'
+            );
         }
     }
 
-    public function current() {
+    /**
+     * @return \DCarbone\PHPConsulAPI\AbstractModel|mixed
+     */
+    public function current()
+    {
         return current($this->_list);
     }
 
-    public function next() {
+    public function next()
+    {
         next($this->_list);
     }
 
     /**
      * @return int|null
      */
-    public function key() {
+    public function key()
+    {
         return key($this->_list);
     }
 
     /**
      * @return bool
      */
-    public function valid() {
+    public function valid()
+    {
         return null !== key($this->_list);
     }
 
-    public function rewind() {
+    public function rewind()
+    {
         reset($this->_list);
     }
 
     /**
-     * @param int $offset
+     * @param mixed $offset
      * @return bool
      */
-    public function offsetExists($offset) {
+    public function offsetExists($offset)
+    {
         return is_int($offset) && isset($this->_list[$offset]);
     }
 
-    public function offsetGet($offset) {
+    public function offsetGet($offset)
+    {
         if (is_int($offset) && isset($this->_list[$offset])) {
             return $this->_list[$offset];
         }
-        throw new \OutOfRangeException(sprintf(
-            'Offset %s does not exist in this list',
-            is_int($offset) ? (string)$offset : gettype($offset)
-        ));
+        throw new \OutOfRangeException(
+            sprintf(
+                'Offset %s does not exist in this list',
+                is_int($offset) ? (string)$offset : gettype($offset)
+            )
+        );
     }
 
     /**
-     * @param int $offset
-     * @param \DCarbone\PHPConsulAPI\KV\KVPair $value
+     * @param mixed $offset
+     * @param mixed $value
      */
-    public function offsetSet($offset, $value) {
+    public function offsetSet($offset, $value)
+    {
         if (!is_int($offset)) {
             throw new \InvalidArgumentException('Offset must be int');
         }
         if (null !== $value && !($value instanceof $this->containedClass)) {
-            throw new \InvalidArgumentException('Value must be instance of '.$this->containedClass);
+            throw new \InvalidArgumentException('Value must be instance of ' . $this->containedClass);
         }
         $this->_list[$offset] = $value;
     }
 
     /**
-     * @param int $offset
+     * @param mixed $offset
      */
-    public function offsetUnset($offset) {
+    public function offsetUnset($offset)
+    {
         unset($this->_list[$offset]);
     }
 
     /**
      * @return int
      */
-    public function count() {
+    public function count()
+    {
         return count($this->_list);
     }
 
-    public function jsonSerialize() {
+    public function jsonSerialize()
+    {
         return $this->_list;
     }
 

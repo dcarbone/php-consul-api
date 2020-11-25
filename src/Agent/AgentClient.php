@@ -18,6 +18,7 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
 */
 
+use DCarbone\Go\HTTP;
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Consul;
 use DCarbone\PHPConsulAPI\Error;
@@ -174,6 +175,92 @@ class AgentClient extends AbstractClient
     public function Services(): AgentServicesResponse
     {
         return $this->ServicesWithFilter('');
+    }
+
+    /**
+     * @param string $service
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentHealthServiceResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function AgentHealthServiceByName(string $service): AgentHealthServiceResponse
+    {
+        $r = new Request('GET', sprintf('v1/agent/health/service/name/%s', urlencode($service)), $this->config);
+        $r->params->add('format', 'json');
+        $r->header->set('Accept', 'application/json');
+
+        $res = $this->doRequest($r);
+        if (null !== $res->Err) {
+            return new AgentHealthServiceResponse(Consul::HealthCritical, null, $res->Err);
+        }
+
+        if (HTTP\StatusNotFound === $res->Response->getStatusCode()) {
+            return new AgentHealthServiceResponse(Consul::HealthCritical, null, null);
+        }
+
+        [$data, $err] = $this->decodeBody($res->Response->getBody());
+        if (null !== $err) {
+            return new AgentHealthServiceResponse(Consul::HealthCritical, null, $res->Err);
+        }
+
+        switch ($res->Response->getStatusCode()) {
+            case HTTP\StatusOK:
+                $status = Consul::HealthPassing;
+                break;
+            case HTTP\StatusTooManyRequests:
+                $status = Consul::HealthWarning;
+                break;
+            case HTTP\StatusServiceUnavailable:
+                $status = Consul::HealthCritical;
+                break;
+
+            default:
+                $status = Consul::HealthCritical;
+        }
+
+        return new AgentHealthServiceResponse($status, $data, null);
+    }
+
+    /**
+     * @param string $id
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentHealthServiceResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function AgentHealthServiceByID(string $id): AgentHealthServiceResponse
+    {
+        $r = new Request('GET', sprintf('v1/agent/health/service/id/%s', $id), $this->config);
+        $r->params->add('format', 'json');
+        $r->header->set('Accept', 'application/json');
+
+        $res = $this->doRequest($r);
+        if (null !== $res->Err) {
+            return new AgentHealthServiceResponse(Consul::HealthCritical, null, $res->Err);
+        }
+
+        if (HTTP\StatusNotFound === $res->Response->getStatusCode()) {
+            return new AgentHealthServiceResponse(Consul::HealthCritical, null, null);
+        }
+
+        [$data, $err] = $this->decodeBody($res->Response->getBody());
+        if (null !== $err) {
+            return new AgentHealthServiceResponse(Consul::HealthCritical, null, $res->Err);
+        }
+
+        switch ($res->Response->getStatusCode()) {
+            case HTTP\StatusOK:
+                $status = Consul::HealthPassing;
+                break;
+            case HTTP\StatusTooManyRequests:
+                $status = Consul::HealthWarning;
+                break;
+            case HTTP\StatusServiceUnavailable:
+                $status = Consul::HealthCritical;
+                break;
+
+            default:
+                $status = Consul::HealthCritical;
+        }
+
+        return new AgentHealthServiceResponse($status, $data, null);
     }
 
     /**

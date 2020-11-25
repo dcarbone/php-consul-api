@@ -53,33 +53,40 @@ class HealthCheckDefinition extends AbstractModel
         parent::__construct($data);
         if (null === $this->Interval) {
             $this->Interval = new ReadableDuration();
-        } else if (is_string($this->Interval)) {
+        } elseif (is_string($this->Interval)) {
             $this->Interval = ReadableDuration::fromDuration($this->Interval);
         } else {
-            throw new \InvalidArgumentException(sprintf(
-                'Expected null or go time format string for Interval, saw %s',
-                gettype($this->Interval)
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Expected null or go time format string for Interval, saw %s',
+                    gettype($this->Interval)
+                )
+            );
         }
         if (null === $this->Timeout) {
             $this->Timeout = new ReadableDuration();
-        } else if (is_string($this->Timeout)) {
+        } elseif (is_string($this->Timeout)) {
             $this->Timeout = ReadableDuration::fromDuration($this->Timeout);
         } else {
-            throw new \InvalidArgumentException(sprintf(
-                'Expected null or go time format string for Timeout, saw %s',
-                gettype($this->Timeout)
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Expected null or go time format string for Timeout, saw %s',
+                    gettype($this->Timeout)
+                )
+            );
         }
         if (null === $this->DeregisterCriticalServiceAfter) {
             $this->DeregisterCriticalServiceAfter = new ReadableDuration();
-        } else if (is_string($this->DeregisterCriticalServiceAfter)) {
-            $this->DeregisterCriticalServiceAfter = ReadableDuration::fromDuration($this->DeregisterCriticalServiceAfter);
+        } elseif (is_string($this->DeregisterCriticalServiceAfter)) {
+            $this->DeregisterCriticalServiceAfter =
+                ReadableDuration::fromDuration($this->DeregisterCriticalServiceAfter);
         } else {
-            throw new \InvalidArgumentException(sprintf(
-                'Expected null or go time format string for DeregisterCriticalServiceAfter, saw %s',
-                gettype($this->DeregisterCriticalServiceAfter)
-            ));
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Expected null or go time format string for DeregisterCriticalServiceAfter, saw %s',
+                    gettype($this->DeregisterCriticalServiceAfter)
+                )
+            );
         }
     }
 

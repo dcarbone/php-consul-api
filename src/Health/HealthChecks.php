@@ -62,11 +62,11 @@ class HealthChecks extends AbstractModels
 
         if ($maintenance) {
             return Consul::HealthMaint;
-        } else if ($critical) {
+        } elseif ($critical) {
             return Consul::HealthCritical;
-        } else if ($warning) {
+        } elseif ($warning) {
             return Consul::HealthWarning;
-        } else if ($passing) {
+        } elseif ($passing) {
             return Consul::HealthPassing;
         } else {
             return Consul::HealthPassing;

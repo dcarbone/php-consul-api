@@ -28,4 +28,22 @@ class ServiceRegisterOpts extends AbstractModel
 {
     /** @var bool */
     public $ReplaceExistingChecks = false;
+
+    /**
+     * @return bool
+     */
+    public function isReplaceExistingChecks(): bool
+    {
+        return $this->ReplaceExistingChecks;
+    }
+
+    /**
+     * @param bool $replaceExistingChecks
+     * @return ServiceRegisterOpts
+     */
+    public function setReplaceExistingChecks(bool $replaceExistingChecks): ServiceRegisterOpts
+    {
+        $this->ReplaceExistingChecks = $replaceExistingChecks;
+        return $this;
+    }
 }

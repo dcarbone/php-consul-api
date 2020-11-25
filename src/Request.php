@@ -31,7 +31,7 @@ use Psr\Http\Message\UriInterface;
 class Request
 {
     /** @var \DCarbone\PHPConsulAPI\Values */
-    public $Headers;
+    public $header;
     /** @var \DCarbone\PHPConsulAPI\Params */
     public $params;
 
@@ -67,7 +67,7 @@ class Request
         $this->method = strtoupper($method);
         $this->path = $path; // TODO: perform some kind of path input validation?
 
-        $this->Headers = new Values();
+        $this->header = new Values();
         $this->params = new Params();
 
         if ('' !== $config->Datacenter) {
@@ -79,7 +79,7 @@ class Request
         }
 
         if ('' !== $config->Token) {
-            $this->Headers->set('X-Consul-Token', $config->Token);
+            $this->header->set('X-Consul-Token', $config->Token);
         }
 
         if (null !== $body) {
@@ -149,7 +149,7 @@ class Request
             $this->params->set('hash', $opts->WaitHash);
         }
         if ('' !== $opts->Token) {
-            $this->Headers->set('X-Consul-Token', $opts->Token);
+            $this->header->set('X-Consul-Token', $opts->Token);
         }
         if ('' !== $opts->Near) {
             $this->params->set('near', $opts->Near);
@@ -181,7 +181,7 @@ class Request
                 $cc[] = sprintf('stale-if-error=%.0f', $opts->StaleIfError->Seconds());
             }
             if ([] !== $cc) {
-                $this->Headers->set('Cache-Control', implode(', ', $cc));
+                $this->header->set('Cache-Control', implode(', ', $cc));
             }
         }
 
@@ -212,7 +212,7 @@ class Request
             $this->params->set('dc', $opts->Datacenter);
         }
         if ('' !== $opts->Token) {
-            $this->Headers->set('X-Consul-Token', $opts->Token);
+            $this->header->set('X-Consul-Token', $opts->Token);
         }
         if (0 !== $opts->RelayFactor) {
             $this->params->set('relay-factor', (string)$opts->RelayFactor);
@@ -269,7 +269,7 @@ class Request
         return new Psr7Request(
             $this->method,
             $this->getUri(),
-            $this->Headers->toPsr7Array(),
+            $this->header->toPsr7Array(),
             isset($this->body) ? new Psr7Stream($this->body) : null
         );
     }

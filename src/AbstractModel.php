@@ -22,8 +22,8 @@ namespace DCarbone\PHPConsulAPI;
  * Class AbstractModel
  * @package DCarbone\PHPConsulAPI
  */
-abstract class AbstractModel implements \JsonSerializable {
-
+abstract class AbstractModel implements \JsonSerializable
+{
     /**
      * AbstractModel constructor.
      *
@@ -32,7 +32,8 @@ abstract class AbstractModel implements \JsonSerializable {
      *
      * @param array $data
      */
-    public function __construct(array $data = []) {
+    public function __construct(array $data = [])
+    {
         foreach ($data as $k => $v) {
             $this->{$k} = $v;
         }
@@ -45,14 +46,16 @@ abstract class AbstractModel implements \JsonSerializable {
      *
      * @return array
      */
-    function jsonSerialize() {
+    public function jsonSerialize()
+    {
         return array_filter((array)$this);
     }
 
     /**
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         return get_class($this);
     }
 }
