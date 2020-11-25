@@ -31,17 +31,17 @@ class HealthClient extends AbstractClient
 {
     /**
      * @param string $node
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @return array(
      * @type \DCarbone\PHPConsulAPI\Health\HealthChecks|null list of health checks or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query meta
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function Node(string $node, QueryOptions $options = null): array
+    public function Node(string $node, QueryOptions $opts = null): array
     {
         $r = new Request('GET', sprintf('v1/health/node/%s', $node), $this->config);
-        $r->setQueryOptions($options);
+        $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
@@ -61,18 +61,18 @@ class HealthClient extends AbstractClient
 
     /**
      * @param string $service
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @return array(
      * @type \DCarbone\PHPConsulAPI\Health\HealthChecks|null list of health checks or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function Checks(string $service, QueryOptions $options = null): array
+    public function Checks(string $service, QueryOptions $opts = null): array
     {
         /** @var \Psr\Http\Message\ResponseInterface $response */
         $r = new Request('GET', sprintf('v1/health/checks/%s', $service), $this->config);
-        $r->setQueryOptions($options);
+        $r->setQueryOptions($opts);
 
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
@@ -93,7 +93,7 @@ class HealthClient extends AbstractClient
      * @param string $service
      * @param string $tag
      * @param bool $passingOnly
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @return array (
      * @type \DCarbone\PHPConsulAPI\Health\ServiceEntry[]|null list of service entries or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
@@ -103,10 +103,10 @@ class HealthClient extends AbstractClient
     public function Service(string $service,
                             string $tag = '',
                             bool $passingOnly = false,
-                            QueryOptions $options = null): array
+                            QueryOptions $opts = null): array
     {
         $r = new Request('GET', sprintf('v1/health/service/%s', $service), $this->config);
-        $r->setQueryOptions($options);
+        $r->setQueryOptions($opts);
         if ('' !== $tag) {
             $r->params->set('tag', $tag);
         }
@@ -138,14 +138,14 @@ class HealthClient extends AbstractClient
 
     /**
      * @param string $state
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @return array(
      * @type \DCarbone\PHPConsulAPI\Health\HealthChecks|null array of heath checks or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata or null on error
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function State(string $state, QueryOptions $options = null): array
+    public function State(string $state, QueryOptions $opts = null): array
     {
         static $validStates = ['any', 'warning', 'critical', 'passing', 'unknown'];
 
@@ -161,7 +161,7 @@ class HealthClient extends AbstractClient
         }
 
         $r = new Request('GET', sprintf('v1/health/state/%s', $state), $this->config);
-        $r->setQueryOptions($options);
+        $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));

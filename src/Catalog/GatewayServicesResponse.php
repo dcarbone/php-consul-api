@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI\ACL;
+namespace DCarbone\PHPConsulAPI\Catalog;
 
 /*
    Copyright 2016-2020 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -23,33 +23,36 @@ use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\QueryMeta;
 
 /**
- * Class ACLReplicationStatusResponse
- * @package DCarbone\PHPConsulAPI\ACL
+ * Class GatewayServicesResponse
+ * @package DCarbone\PHPConsulAPI\Catalog
  */
-class ACLReplicationStatusResponse extends AbstractValuedQueryResponse
+class GatewayServicesResponse extends AbstractValuedQueryResponse
 {
-    /** @var \DCarbone\PHPConsulAPI\ACL\ACLReplicationStatus|null */
-    public $ACLReplicationStatus = null;
+    /** @var \DCarbone\PHPConsulAPI\Catalog\GatewayService[]|null */
+    public $GatewayServices = null;
 
     /**
-     * ACLReplicationStatusResponse constructor.
-     * @param array|null $status
+     * CatalogNodesResponse constructor.
+     * @param array|null $services
      * @param \DCarbone\PHPConsulAPI\QueryMeta|null $qm
      * @param \DCarbone\PHPConsulAPI\Error|null $err
      */
-    public function __construct(?array $status, ?QueryMeta $qm, ?Error $err)
+    public function __construct(?array $services, ?QueryMeta $qm, ?Error $err)
     {
-        if (null !== $status) {
-            $this->ACLReplicationStatus = new ACLReplicationStatus($status);
+        if (null !== $services) {
+            $this->GatewayServices = [];
+            foreach ($services as $service) {
+                $this->GatewayServices[] = new GatewayService($service);
+            }
         }
         parent::__construct($qm, $err);
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\ACL\ACLReplicationStatus|null
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogNode[]|null
      */
     public function getValue()
     {
-        return $this->ACLReplicationStatus;
+        return $this->GatewayServices;
     }
 }

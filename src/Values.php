@@ -55,23 +55,23 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
 
     /**
      * @param string $key
-     * @param string $value
+     * @param string ...$value
      */
-    public function set(string $key, string $value)
+    public function set(string $key, string ...$value)
     {
-        $this->values[$key] = [$value];
+        $this->values[$key] = $value;
     }
 
     /**
      * @param string $key
-     * @param string $value
+     * @param string ...$value
      */
-    public function add(string $key, string $value)
+    public function add(string $key, string ...$value)
     {
         if (isset($this->values[$key])) {
-            $this->values[$key][] = $value;
+            $this->values[$key] = array_merge($this->values[$key], $value);
         } else {
-            $this->values[$key] = [$value];
+            $this->values[$key] = $value;
         }
     }
 

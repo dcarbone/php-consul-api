@@ -39,7 +39,12 @@ class ACLEntriesResponse extends AbstractValuedQueryResponse
      */
     public function __construct(?array $entries, ?QueryMeta $qm, ?Error $err)
     {
-        $this->ACLEntries = $entries;
+        if (null !== $entries) {
+            $this->ACLEntries = [];
+            foreach ($entries as $entry) {
+                $this->ACLEntries[] = new ACLEntry($entry);
+            }
+        }
         parent::__construct($qm, $err);
     }
 

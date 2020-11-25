@@ -57,14 +57,14 @@ class ACLClient extends AbstractClient
 
     /**
      * @param \DCarbone\PHPConsulAPI\ACL\ACLEntry $acl
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Create(ACLEntry $acl, WriteOptions $options = null): ValuedWriteStringResponse
+    public function Create(ACLEntry $acl, WriteOptions $opts = null): ValuedWriteStringResponse
     {
         $r = new Request('PUT', 'v1/acl/create', $this->config, $acl);
-        $r->setWriteOptions($options);
+        $r->setWriteOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
@@ -84,14 +84,14 @@ class ACLClient extends AbstractClient
 
     /**
      * @param \DCarbone\PHPConsulAPI\ACL\ACLEntry $acl
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @return \DCarbone\PHPConsulAPI\WriteResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Update(ACLEntry $acl, WriteOptions $options = null): WriteResponse
+    public function Update(ACLEntry $acl, WriteOptions $opts = null): WriteResponse
     {
         $r = new Request('PUT', 'v1/acl/update', $this->config, $acl);
-        $r->setWriteOptions($options);
+        $r->setWriteOptions($opts);
 
         [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
 
@@ -100,14 +100,14 @@ class ACLClient extends AbstractClient
 
     /**
      * @param string $id
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @return \DCarbone\PHPConsulAPI\WriteResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Destroy(string $id, WriteOptions $options = null): WriteResponse
+    public function Destroy(string $id, WriteOptions $opts = null): WriteResponse
     {
         $r = new Request('PUT', sprintf('v1/acl/destroy/%s', $id), $this->config);
-        $r->setWriteOptions($options);
+        $r->setWriteOptions($opts);
 
         [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
 
@@ -116,14 +116,14 @@ class ACLClient extends AbstractClient
 
     /**
      * @param string $id
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Clone(string $id, WriteOptions $options = null): ValuedWriteStringResponse
+    public function Clone(string $id, WriteOptions $opts = null): ValuedWriteStringResponse
     {
         $r = new Request('PUT', sprintf('v1/acl/clone/%s', $id), $this->config);
-        $r->setWriteOptions($options);
+        $r->setWriteOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
@@ -143,14 +143,14 @@ class ACLClient extends AbstractClient
 
     /**
      * @param string $id
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @return \DCarbone\PHPConsulAPI\ACL\ACLEntriesResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Info(string $id, QueryOptions $options = null): ACLEntriesResponse
+    public function Info(string $id, QueryOptions $opts = null): ACLEntriesResponse
     {
         $r = new Request('GET', sprintf('v1/acl/info/%s', $id), $this->config);
-        $r->setQueryOptions($options);
+        $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
@@ -165,23 +165,18 @@ class ACLClient extends AbstractClient
             return new ACLEntriesResponse(null, $qm, $err);
         }
 
-        $entries = [];
-        foreach ($data as $entry) {
-            $entries[] = new ACLEntry($entry);
-        }
-
-        return new ACLEntriesResponse($entries, $qm, null);
+        return new ACLEntriesResponse($data, $qm, null);
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @return \DCarbone\PHPConsulAPI\ACL\ACLEntriesResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function List(QueryOptions $options = null): ACLEntriesResponse
+    public function List(QueryOptions $opts = null): ACLEntriesResponse
     {
         $r = new Request('GET', 'v1/acl/list', $this->config);
-        $r->setQueryOptions($options);
+        $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
@@ -196,23 +191,18 @@ class ACLClient extends AbstractClient
             return new ACLEntriesResponse(null, $qm, $err);
         }
 
-        $entries = [];
-        foreach ($data as $entry) {
-            $entries[] = new ACLEntry($entry);
-        }
-
-        return new ACLEntriesResponse($entries, $qm, null);
+        return new ACLEntriesResponse($data, $qm, null);
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @return \DCarbone\PHPConsulAPI\ACL\ACLReplicationStatusResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Replication(QueryOptions $options = null): ACLReplicationStatusResponse
+    public function Replication(QueryOptions $opts = null): ACLReplicationStatusResponse
     {
         $r = new Request('GET', '/v1/acl/replication', $this->config);
-        $r->setQueryOptions($options);
+        $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
@@ -227,6 +217,6 @@ class ACLClient extends AbstractClient
             return new ACLReplicationStatusResponse(null, $qm, $err);
         }
 
-        return new ACLReplicationStatusResponse(new ACLReplicationStatus($data), $qm, null);
+        return new ACLReplicationStatusResponse($data, $qm, null);
     }
 }

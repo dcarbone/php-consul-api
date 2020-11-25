@@ -19,19 +19,19 @@ namespace DCarbone\PHPConsulAPI;
 */
 
 /**
- * Class ValuedStringResponse
+ * Class ValuedStringsResponse
  * @package DCarbone\PHPConsulAPI
  */
-class ValuedStringResponse extends AbstractValuedResponse implements \ArrayAccess
+class ValuedStringsResponse extends AbstractValuedResponse implements \ArrayAccess
 {
-    use ResponseValueStringTrait;
+    use ResponseValueStringsTrait;
 
     /**
-     * ValuedStringResponse constructor.
-     * @param string $value
+     * ValuedStringsResponse constructor.
+     * @param array|null $value
      * @param \DCarbone\PHPConsulAPI\Error|null $err
      */
-    public function __construct(string $value, ?Error $err)
+    public function __construct(?array $value, ?Error $err)
     {
         $this->Value = $value;
         parent::__construct($err);
@@ -48,7 +48,7 @@ class ValuedStringResponse extends AbstractValuedResponse implements \ArrayAcces
 
     /**
      * @param mixed $offset
-     * @return \DCarbone\PHPConsulAPI\Error|mixed|string|null
+     * @return \DCarbone\PHPConsulAPI\Error|string[]|null
      */
     public function offsetGet($offset)
     {

@@ -36,42 +36,51 @@ use DCarbone\PHPConsulAPI\Status\StatusClient;
  */
 class Consul
 {
-    public const HTTPAddrEnvName = 'CONSUL_HTTP_ADDR';
-    public const HTTPTokenEnvName = 'CONSUL_HTTP_TOKEN';
-    public const HTTPTokenFileEnvName = 'CONSUL_HTTP_TOKEN_FILE';
-    public const HTTPAuthEnvName = 'CONSUL_HTTP_AUTH';
-    public const HTTPCAFileEnvName = "CONSUL_CACERT";
+    public const HTTPAddrEnvName       = 'CONSUL_HTTP_ADDR';
+    public const HTTPTokenEnvName      = 'CONSUL_HTTP_TOKEN';
+    public const HTTPTokenFileEnvName  = 'CONSUL_HTTP_TOKEN_FILE';
+    public const HTTPAuthEnvName       = 'CONSUL_HTTP_AUTH';
+    public const HTTPCAFileEnvName     = "CONSUL_CACERT";
     public const HTTPClientCertEnvName = "CONSUL_CLIENT_CERT";
-    public const HTTPClientKeyEnvName = "CONSUL_CLIENT_KEY";
-    public const HTTPSSLEnvName = 'CONSUL_HTTP_SSL';
-    public const HTTPSSLVerifyEnvName = 'CONSUL_HTTP_SSL_VERIFY';
+    public const HTTPClientKeyEnvName  = "CONSUL_CLIENT_KEY";
+    public const HTTPSSLEnvName        = 'CONSUL_HTTP_SSL';
+    public const HTTPSSLVerifyEnvName  = 'CONSUL_HTTP_SSL_VERIFY';
 
-    public const HealthAny = 'any';
-    public const HealthPassing = 'passing';
-    public const HealthWarning = 'warning';
+    public const HealthAny      = 'any';
+    public const HealthPassing  = 'passing';
+    public const HealthWarning  = 'warning';
     public const HealthCritical = 'critical';
-    public const HealthMaint = 'maintenance';
+    public const HealthMaint    = 'maintenance';
 
-    public const NodeMaint = '_node_maintenance';
+    public const NodeMaint          = '_node_maintenance';
     public const ServiceMaintPrefix = '_service_maintenance';
 
     public const AllSegments = '_all';
 
-    public const KVSet = 'set';
-    public const KVDelete = 'delete';
-    public const KVDeleteCAS = 'delete-cas';
-    public const KVDeleteTree = 'delete-tree';
-    public const KVCAS = 'cas';
-    public const KVLock = 'lock';
-    public const KVUnlock = 'unlock';
-    public const KVGet = 'get';
-    public const KVGetTree = 'get-tree';
-    public const KVCheckSession = 'check-session';
-    public const KVCheckIndex = 'check-index';
+    public const KVSet            = 'set';
+    public const KVDelete         = 'delete';
+    public const KVDeleteCAS      = 'delete-cas';
+    public const KVDeleteTree     = 'delete-tree';
+    public const KVCAS            = 'cas';
+    public const KVLock           = 'lock';
+    public const KVUnlock         = 'unlock';
+    public const KVGet            = 'get';
+    public const KVGetTree        = 'get-tree';
+    public const KVCheckSession   = 'check-session';
+    public const KVCheckIndex     = 'check-index';
     public const KVCheckNotExists = 'check-not-exists';
 
     public const SessionBehaviorRelease = 'release';
-    public const SessionBehaviorDelete = 'delete';
+    public const SessionBehaviorDelete  = 'delete';
+
+    public const ServiceKindTypical            = '';
+    public const ServiceKindConnectProxy       = 'connect-proxy';
+    public const ServiceKindMeshGateway        = 'mesh-gateway';
+    public const ServiceKindTerminatingGateway = 'terminating-gateway';
+    public const ServiceKindIngressGateway     = 'ingress-gateway';
+
+    public const UpstreamDestTypeService       = 'service';
+    public const UpstreamDestTypePreparedQuery = 'prepared_query';
 
     /** @var \DCarbone\PHPConsulAPI\ACL\ACLClient */
     public $ACL;
@@ -106,10 +115,12 @@ class Consul
 
         if ('' !== $config->TokenFile) {
             if (!file_exists($config->TokenFile) || !is_readable($config->TokenFile)) {
-                throw new \RuntimeException(sprintf(
-                    'Provided $TokenFile "%s" either does not exist or is not readable',
-                    $config->TokenFile
-                ));
+                throw new \RuntimeException(
+                    sprintf(
+                        'Provided $TokenFile "%s" either does not exist or is not readable',
+                        $config->TokenFile
+                    )
+                );
             }
             $data = trim(file_get_contents($config->TokenFile));
             if ('' === $config->Token && '' !== $data) {

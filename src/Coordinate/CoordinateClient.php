@@ -60,17 +60,17 @@ class CoordinateClient extends AbstractClient
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @return array(
      * @type \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry[]|null coordinate list or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function Nodes(QueryOptions $options = null): array
+    public function Nodes(QueryOptions $opts = null): array
     {
         $r = new Request('GET', 'v1/coordinate/nodes', $this->config);
-        $r->setQueryOptions($options);
+        $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list ($duration, $response, $err) = $this->requireOK($this->doRequest($r));

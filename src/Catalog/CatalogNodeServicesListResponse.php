@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI\ACL;
+namespace DCarbone\PHPConsulAPI\Catalog;
 
 /*
    Copyright 2016-2020 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -23,33 +23,33 @@ use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\QueryMeta;
 
 /**
- * Class ACLReplicationStatusResponse
- * @package DCarbone\PHPConsulAPI\ACL
+ * Class CatalogNodeServicesListResponse
+ * @package DCarbone\PHPConsulAPI\Catalog
  */
-class ACLReplicationStatusResponse extends AbstractValuedQueryResponse
+class CatalogNodeServicesListResponse extends AbstractValuedQueryResponse
 {
-    /** @var \DCarbone\PHPConsulAPI\ACL\ACLReplicationStatus|null */
-    public $ACLReplicationStatus = null;
+    /** @var \DCarbone\PHPConsulAPI\Catalog\CatalogNodeServiceList */
+    public $CatalogNodeServiceList = null;
 
     /**
-     * ACLReplicationStatusResponse constructor.
-     * @param array|null $status
+     * CatalogNodeServicesListResponse constructor.
+     * @param array|null $data
      * @param \DCarbone\PHPConsulAPI\QueryMeta|null $qm
      * @param \DCarbone\PHPConsulAPI\Error|null $err
      */
-    public function __construct(?array $status, ?QueryMeta $qm, ?Error $err)
+    public function __construct(?array $data, ?QueryMeta $qm, ?Error $err)
     {
-        if (null !== $status) {
-            $this->ACLReplicationStatus = new ACLReplicationStatus($status);
+        if (null !== $data) {
+            $this->CatalogNodeServiceList = new CatalogNodeServiceList($data);
         }
         parent::__construct($qm, $err);
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\ACL\ACLReplicationStatus|null
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogNodeServiceList|null
      */
     public function getValue()
     {
-        return $this->ACLReplicationStatus;
+        return $this->CatalogNodeServiceList;
     }
 }

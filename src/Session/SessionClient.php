@@ -35,14 +35,14 @@ class SessionClient extends AbstractClient
 
     /**
      * @param SessionEntry|null $sessionEntry
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @return array(
      * @type string
      * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function CreateNoChecks(SessionEntry $sessionEntry = null, WriteOptions $options = null): array
+    public function CreateNoChecks(SessionEntry $sessionEntry = null, WriteOptions $opts = null): array
     {
         if (null === $sessionEntry) {
             $sessionEntry = new SessionEntry();
@@ -51,7 +51,7 @@ class SessionClient extends AbstractClient
         }
 
         $r = new Request('PUT', 'v1/session/create', $this->config, $sessionEntry);
-        $r->setWriteOptions($options);
+        $r->setWriteOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
@@ -71,17 +71,17 @@ class SessionClient extends AbstractClient
 
     /**
      * @param SessionEntry|null $sessionEntry
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @return array(
      * @type string
      * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function Create(SessionEntry $sessionEntry = null, WriteOptions $options = null): array
+    public function Create(SessionEntry $sessionEntry = null, WriteOptions $opts = null): array
     {
         $r = new Request('PUT', 'v1/session/create', $this->config, $sessionEntry);
-        $r->setWriteOptions($options);
+        $r->setWriteOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
@@ -102,16 +102,16 @@ class SessionClient extends AbstractClient
 
     /**
      * @param string $id
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @return array(
      * @type \DCarbone\PHPConsulAPI\WriteMeta|null write metadata or null on error
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function Destroy(string $id, WriteOptions $options = null): array
+    public function Destroy(string $id, WriteOptions $opts = null): array
     {
         $r = new Request('PUT', sprintf('v1/session/destroy/%s', $id), $this->config);
-        $r->setWriteOptions($options);
+        $r->setWriteOptions($opts);
 
         [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
@@ -123,17 +123,17 @@ class SessionClient extends AbstractClient
 
     /**
      * @param string $id
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @return array(
      * @type \DCarbone\PHPConsulAPI\Session\SessionEntry[]|null list of session entries or null on error
      * @type \DCarbone\PHPConsulAPI\WriteMeta|null write metadata or null on error
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function Renew(string $id, WriteOptions $options = null): array
+    public function Renew(string $id, WriteOptions $opts = null): array
     {
         $r = new Request('PUT', sprintf('v1/session/renew/%s', $id), $this->config);
-        $r->setWriteOptions($options);
+        $r->setWriteOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list ($duration, $response, $err) = $this->doRequest($r);
@@ -171,17 +171,17 @@ class SessionClient extends AbstractClient
 
     /**
      * @param string $id
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @return array(
      * @type \DCarbone\PHPConsulAPI\Session\SessionEntry[]|null list of session entries or null on error / empty response
      * @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata or null on error
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function Info(string $id, QueryOptions $options = null): array
+    public function Info(string $id, QueryOptions $opts = null): array
     {
         $r = new Request('GET', sprintf('v1/session/info/%s', $id), $this->config);
-        $r->setQueryOptions($options);
+        $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
@@ -206,17 +206,17 @@ class SessionClient extends AbstractClient
 
     /**
      * @param string $node
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @return array(
      * @type \DCarbone\PHPConsulAPI\Session\SessionEntry[]|null list of session entries or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata or null on error
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function Node(string $node, QueryOptions $options = null): array
+    public function Node(string $node, QueryOptions $opts = null): array
     {
         $r = new Request('GET', sprintf('v1/session/node/%s', $node), $this->config);
-        $r->setQueryOptions($options);
+        $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
@@ -236,17 +236,17 @@ class SessionClient extends AbstractClient
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @return array(
      * @type \DCarbone\PHPConsulAPI\Session\SessionEntry[]|null list of session entries or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function List(QueryOptions $options = null): array
+    public function List(QueryOptions $opts = null): array
     {
         $r = new Request('GET', 'v1/session/list', $this->config);
-        $r->setQueryOptions($options);
+        $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));

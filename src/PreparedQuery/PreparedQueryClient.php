@@ -30,16 +30,16 @@ use DCarbone\PHPConsulAPI\WriteOptions;
 class PreparedQueryClient extends AbstractClient {
     /**
      * @param PreparedQueryDefinition $query
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @return array(
      * @type string prepared query id
      * @type \DCarbone\PHPConsulAPI\WriteMeta write meta data
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function Create(PreparedQueryDefinition $query, WriteOptions $options = null): array {
+    public function Create(PreparedQueryDefinition $query, WriteOptions $opts = null): array {
         $r = new Request('POST', 'v1/query', $this->config, $query);
-        $r->setWriteOptions($options);
+        $r->setWriteOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
@@ -52,15 +52,15 @@ class PreparedQueryClient extends AbstractClient {
 
     /**
      * @param PreparedQueryDefinition $query
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @return array(
      * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function Update(PreparedQueryDefinition $query, WriteOptions $options = null): array {
+    public function Update(PreparedQueryDefinition $query, WriteOptions $opts = null): array {
         $r = new Request('PUT', 'v1/query', $this->config, $query);
-        $r->setWriteOptions($options);
+        $r->setWriteOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
@@ -72,16 +72,16 @@ class PreparedQueryClient extends AbstractClient {
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @return array(
      * @type \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition[]|null
      * @type \DCarbone\PHPConsulAPI\QueryMeta|null
      * @type \DCarbone\PHPConsulAPI\Error|null
      * )
      */
-    public function List(QueryOptions $options = null): array {
+    public function List(QueryOptions $opts = null): array {
         $r = new Request('GET', 'v1/query', $this->config);
-        $r->setQueryOptions($options);
+        $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
@@ -105,16 +105,16 @@ class PreparedQueryClient extends AbstractClient {
 
     /**
      * @param string $queryID
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @return array(
      * @type \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition[]|null
      * @type \DCarbone\PHPConsulAPI\QueryMeta|null
      * @type \DCarbone\PHPConsulAPI\Error|null
      * )
      */
-    public function Get(string $queryID, QueryOptions $options = null): array {
+    public function Get(string $queryID, QueryOptions $opts = null): array {
         $r = new Request('GET', sprintf('v1/query/%s', $queryID), $this->config);
-        $r->setQueryOptions($options);
+        $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
@@ -138,15 +138,15 @@ class PreparedQueryClient extends AbstractClient {
 
     /**
      * @param string $queryID
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @return array(
      * @type \DCarbone\PHPConsulAPI\WriteMeta Write meta data
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function Delete(string $queryID, WriteOptions $options = null): array {
+    public function Delete(string $queryID, WriteOptions $opts = null): array {
         $r = new Request('DELETE', sprintf('v1/query/%s', $queryID), $this->config);
-        $r->setWriteOptions($options);
+        $r->setWriteOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
@@ -161,16 +161,16 @@ class PreparedQueryClient extends AbstractClient {
 
     /**
      * @param string $queryIDOrName
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @return array(
      * @type \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryExecuteResponse|null prepared query response or null
      * @type \DCarbone\PHPConsulAPI\QueryMeta Query meta data
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function Execute(string $queryIDOrName, QueryOptions $options = null): array {
+    public function Execute(string $queryIDOrName, QueryOptions $opts = null): array {
         $r = new Request('GET', sprintf('v1/query/%s/execute', $queryIDOrName), $this->config);
-        $r->setQueryOptions($options);
+        $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));

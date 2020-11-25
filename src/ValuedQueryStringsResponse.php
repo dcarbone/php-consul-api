@@ -19,22 +19,22 @@ namespace DCarbone\PHPConsulAPI;
 */
 
 /**
- * Class ValuedWriteStringResponse
+ * Class ValuedQueryStringsResponse
  * @package DCarbone\PHPConsulAPI
  */
-class ValuedWriteStringResponse extends AbstractValuedWriteResponse
+class ValuedQueryStringsResponse extends AbstractValuedQueryResponse
 {
-    use ResponseValueStringTrait;
+    use ResponseValueStringsTrait;
 
     /**
-     * ValuedWriteStringResponse constructor.
-     * @param string $value
-     * @param \DCarbone\PHPConsulAPI\WriteMeta|null $wm
+     * ValuedQueryStringsResponse constructor.
+     * @param array|null $values
+     * @param \DCarbone\PHPConsulAPI\QueryMeta|null $qm
      * @param \DCarbone\PHPConsulAPI\Error|null $err
      */
-    public function __construct(string $value, ?WriteMeta $wm, ?Error $err)
+    public function __construct(?array $values, ?QueryMeta $qm, ?Error $err)
     {
-        $this->Value = $value;
-        parent::__construct($wm, $err);
+        $this->Value = $values;
+        parent::__construct($qm, $err);
     }
 }

@@ -31,14 +31,14 @@ class EventClient extends AbstractClient
 {
     /**
      * @param \DCarbone\PHPConsulAPI\Event\UserEvent $event
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @return array(
      * @type UserEvent|null user event that was fired or null on error
      * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
      * @type \DCarbone\PHPConsulAPI\Error error, if any
      * )
      */
-    public function Fire(UserEvent $event, WriteOptions $options = null): array
+    public function Fire(UserEvent $event, WriteOptions $opts = null): array
     {
         $r = new Request(
             'PUT',
@@ -46,7 +46,7 @@ class EventClient extends AbstractClient
             $this->config,
             '' !== $event->Payload ? $event->Payload : null);
 
-        $r->setWriteOptions($options);
+        $r->setWriteOptions($opts);
 
         if ('' !== ($nf = $event->NodeFilter)) {
             $r->params->set('node', $nf);
@@ -76,20 +76,20 @@ class EventClient extends AbstractClient
 
     /**
      * @param string $name
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $options
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @return array(
      * @type UserEvent[] list of user events or null on error
      * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
      * @type \DCarbone\PHPConsulAPI\Error error, if any
      * )
      */
-    public function List(string $name = '', QueryOptions $options = null): array
+    public function List(string $name = '', QueryOptions $opts = null): array
     {
         $r = new Request('GET', 'v1/event/list', $this->config);
         if ('' !== (string)$name) {
             $r->params->set('name', $name);
         }
-        $r->setQueryOptions($options);
+        $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));

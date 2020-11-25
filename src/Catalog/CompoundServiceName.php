@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\Catalog;
 
 /*
    Copyright 2016-2020 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -18,23 +18,32 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
 */
 
+use DCarbone\PHPConsulAPI\AbstractModel;
+
 /**
- * Class ValuedWriteStringResponse
- * @package DCarbone\PHPConsulAPI
+ * Class CompoundServiceName
+ * @package DCarbone\PHPConsulAPI\Catalog
  */
-class ValuedWriteStringResponse extends AbstractValuedWriteResponse
+class CompoundServiceName extends AbstractModel
 {
-    use ResponseValueStringTrait;
+    /** @var string */
+    public $Name = '';
+    /** @var string */
+    public $Namespace = '';
 
     /**
-     * ValuedWriteStringResponse constructor.
-     * @param string $value
-     * @param \DCarbone\PHPConsulAPI\WriteMeta|null $wm
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
+     * @return string
      */
-    public function __construct(string $value, ?WriteMeta $wm, ?Error $err)
+    public function getName(): string
     {
-        $this->Value = $value;
-        parent::__construct($wm, $err);
+        return $this->Name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNamespace(): string
+    {
+        return $this->Namespace;
     }
 }
