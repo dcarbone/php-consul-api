@@ -299,11 +299,11 @@ class Config
     }
 
     /**
-     * @param string $Namespace
+     * @param string $namespace
      */
-    public function setNamespace(string $Namespace): void
+    public function setNamespace(string $namespace): void
     {
-        $this->Namespace = $Namespace;
+        $this->Namespace = $namespace;
     }
 
     /**
