@@ -18,9 +18,12 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
    limitations under the License.
 */
 
+use DCarbone\Go\HTTP;
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Request;
+use DCarbone\PHPConsulAPI\WriteOptions;
+use DCarbone\PHPConsulAPI\WriteResponse;
 
 /**
  * Class CoordinateClient
@@ -29,12 +32,10 @@ use DCarbone\PHPConsulAPI\Request;
 class CoordinateClient extends AbstractClient
 {
     /**
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\Coordinate\CoordinateDatacenterMap[]|null datacenter map or null on error
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if an
-     * )
+     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateDatacentersResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Datacenters(): array
+    public function Datacenters(): CoordinateDatacentersResponse
     {
         $r = new Request('GET', 'v1/coordinate/datacenters', $this->config);
 
@@ -42,54 +43,73 @@ class CoordinateClient extends AbstractClient
         [$_, $response, $err] = $this->requireOK($this->doRequest($r));
 
         if (null !== $err) {
-            return [null, $err];
+            return new CoordinateDatacentersResponse(null, $err);
         }
 
         [$data, $err] = $this->decodeBody($response->getBody());
 
-        if (null !== $err) {
-            return [null, $err];
-        }
-
-        $datacenters = [];
-        foreach ($data as $v) {
-            $datacenters[] = new CoordinateDatacenterMap($v);
-        }
-
-        return [$data, null];
+        return new CoordinateDatacentersResponse($data, $err);
     }
 
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry[]|null coordinate list or null on error
-     * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
+     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntriesResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Nodes(QueryOptions $opts = null): array
+    public function Nodes(QueryOptions $opts = null): CoordinateEntriesResponse
     {
         $r = new Request('GET', 'v1/coordinate/nodes', $this->config);
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list ($duration, $response, $err) = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, null, $err];
+            return new CoordinateEntriesResponse(null, null, $err);
         }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         [$data, $err] = $this->decodeBody($response->getBody());
+        return new CoordinateEntriesResponse($data, $qm, $err);
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry $coordinateEntry
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function Update(CoordinateEntry $coordinateEntry, ?WriteOptions $opts = null): WriteResponse
+    {
+        $r = new Request(HTTP\MethodPut, 'v1/coordinate/update', $this->config, $coordinateEntry);
+        $r->setWriteOptions($opts);
+
+        /** @var \Psr\Http\Message\ResponseInterface $response */
+        [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
+
+        return new WriteResponse($this->buildWriteMeta($duration), $err);
+    }
+
+    /**
+     * @param string $node
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntriesResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function Node(string $node, ?QueryOptions $opts = null): CoordinateEntriesResponse
+    {
+        $r = new Request(HTTP\MethodGet, sprintf('v1/coordinate/node/%s', $node), $this->config);
+        $r->setQueryOptions($opts);
+
+        /** @var \Psr\Http\Message\ResponseInterface $response */
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, $qm, $err];
+            return new CoordinateEntriesResponse(null, null, $err);
         }
 
-        $coordinates = [];
-        foreach ($data as $coord) {
-            $coordinates[] = new CoordinateEntry($coord);
-        }
+        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
-        return [$coordinates, $qm, null];
+        [$data, $err] = $this->decodeBody($response->getBody());
+        return new CoordinateEntriesResponse($data, $qm, $err);
     }
 }

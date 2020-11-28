@@ -63,12 +63,12 @@ class GatewayService extends AbstractModel
         parent::__construct($data);
         if (is_array($this->Gateway)) {
             $this->Gateway = new CompoundServiceName($this->Gateway);
-        } else {
+        } elseif (!($this->Gateway instanceof CompoundServiceName)) {
             $this->Gateway = new CompoundServiceName();
         }
         if (is_array($this->Service)) {
             $this->Service = new CompoundServiceName($this->Service);
-        } else {
+        } elseif (!($this->Gateway instanceof CompoundServiceName)) {
             $this->Service = new CompoundServiceName();
         }
     }
