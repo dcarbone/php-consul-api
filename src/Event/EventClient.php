@@ -32,19 +32,17 @@ class EventClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\Event\UserEvent $event
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return array(
-     * @type UserEvent|null user event that was fired or null on error
-     * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
-     * @type \DCarbone\PHPConsulAPI\Error error, if any
-     * )
+     * @return \DCarbone\PHPConsulAPI\Event\UserEventResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Fire(UserEvent $event, WriteOptions $opts = null): array
+    public function Fire(UserEvent $event, WriteOptions $opts = null): UserEventResponse
     {
         $r = new Request(
             'PUT',
             sprintf('v1/event/fire/%s', $event->Name),
             $this->config,
-            '' !== $event->Payload ? $event->Payload : null);
+            '' !== $event->Payload ? $event->Payload : null
+        );
 
         $r->setWriteOptions($opts);
 
@@ -61,29 +59,22 @@ class EventClient extends AbstractClient
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, null, $err];
+            return new UserEventResponse(null, null, $err);
         }
 
         $wm = $this->buildWriteMeta($duration);
 
         [$data, $err] = $this->decodeBody($response->getBody());
-        if ($err !== null) {
-            return [null, $wm, $err];
-        }
-
-        return [new UserEvent($data), $wm, null];
+        return new UserEventResponse($data, $wm, $err);
     }
 
     /**
      * @param string $name
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return array(
-     * @type UserEvent[] list of user events or null on error
-     * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
-     * @type \DCarbone\PHPConsulAPI\Error error, if any
-     * )
+     * @return \DCarbone\PHPConsulAPI\Event\UserEventsResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function List(string $name = '', QueryOptions $opts = null): array
+    public function List(string $name = '', QueryOptions $opts = null): UserEventsResponse
     {
         $r = new Request('GET', 'v1/event/list', $this->config);
         if ('' !== (string)$name) {
@@ -94,23 +85,14 @@ class EventClient extends AbstractClient
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, null, $err];
+            return new UserEventsResponse(null, null, $err);
         }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         [$data, $err] = $this->decodeBody($response->getBody());
 
-        if (null !== $err) {
-            return [null, $qm, $err];
-        }
-
-        $events = [];
-        foreach ($data as $event) {
-            $events[] = new UserEvent($event);
-        }
-
-        return [$events, $qm, null];
+        return new UserEventsResponse($data, $qm, $err);
     }
 
     /**
