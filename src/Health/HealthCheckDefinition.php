@@ -18,6 +18,8 @@ namespace DCarbone\PHPConsulAPI\Health;
    limitations under the License.
 */
 
+use DCarbone\Go\Time;
+use DCarbone\Go\Time\Duration;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Operator\ReadableDuration;
 
@@ -37,11 +39,27 @@ class HealthCheckDefinition extends AbstractModel
     public $TLSSkipVerify = false;
     /** @var string */
     public $TCP = '';
-    /** @var \DCarbone\PHPConsulAPI\Operator\ReadableDuration */
+    /** @var \DCarbone\Go\Time\Duration */
+    public $IntervalDuration = null;
+    /** @var \DCarbone\Go\Time\Duration */
+    public $TimeoutDuration = null;
+    /** @var \DCarbone\Go\Time\Duration */
+    public $DeregisterCriticalServiceAfterDuration = null;
+
+    /**
+     * @var \DCarbone\PHPConsulAPI\Operator\ReadableDuration
+     * @deprecated use $IntervalDuration
+     */
     public $Interval = null;
-    /** @var \DCarbone\PHPConsulAPI\Operator\ReadableDuration */
+    /**
+     * @var \DCarbone\PHPConsulAPI\Operator\ReadableDuration
+     * @deprecated use $TimeoutDuration
+     */
     public $Timeout = null;
-    /** @var \DCarbone\PHPConsulAPI\Operator\ReadableDuration */
+    /**
+     * @var \DCarbone\PHPConsulAPI\Operator\ReadableDuration
+     * @deprecated use $DeregisterCriticalServiceAfterDuration
+     */
     public $DeregisterCriticalServiceAfter = null;
 
     /**
@@ -55,37 +73,37 @@ class HealthCheckDefinition extends AbstractModel
             $this->Interval = new ReadableDuration();
         } elseif (is_string($this->Interval)) {
             $this->Interval = ReadableDuration::fromDuration($this->Interval);
-        } else {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'Expected null or go time format string for Interval, saw %s',
-                    gettype($this->Interval)
-                )
-            );
         }
         if (null === $this->Timeout) {
             $this->Timeout = new ReadableDuration();
         } elseif (is_string($this->Timeout)) {
             $this->Timeout = ReadableDuration::fromDuration($this->Timeout);
-        } else {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'Expected null or go time format string for Timeout, saw %s',
-                    gettype($this->Timeout)
-                )
-            );
         }
         if (null === $this->DeregisterCriticalServiceAfter) {
             $this->DeregisterCriticalServiceAfter = new ReadableDuration();
         } elseif (is_string($this->DeregisterCriticalServiceAfter)) {
-            $this->DeregisterCriticalServiceAfter =
-                ReadableDuration::fromDuration($this->DeregisterCriticalServiceAfter);
+            $this->DeregisterCriticalServiceAfter = ReadableDuration::fromDuration(
+                $this->DeregisterCriticalServiceAfter
+            );
+        }
+
+        if (null === $this->IntervalDuration) {
+            $this->IntervalDuration = Time::ParseDuration((string)$this->Interval);
         } else {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'Expected null or go time format string for DeregisterCriticalServiceAfter, saw %s',
-                    gettype($this->DeregisterCriticalServiceAfter)
-                )
+            $this->Interval = ReadableDuration::fromDuration((string)$this->IntervalDuration);
+        }
+        if (null === $this->TimeoutDuration) {
+            $this->TimeoutDuration = Time::ParseDuration((string)$this->Timeout);
+        } else {
+            $this->Timeout = ReadableDuration::fromDuration((string)$this->TimeoutDuration);
+        }
+        if (null === $this->DeregisterCriticalServiceAfterDuration) {
+            $this->DeregisterCriticalServiceAfterDuration = Time::ParseDuration(
+                (string)$this->DeregisterCriticalServiceAfter
+            );
+        } else {
+            $this->DeregisterCriticalServiceAfter = ReadableDuration::fromDuration(
+                (string)$this->DeregisterCriticalServiceAfterDuration
             );
         }
     }
@@ -131,7 +149,32 @@ class HealthCheckDefinition extends AbstractModel
     }
 
     /**
+     * @return \DCarbone\Go\Time\Duration
+     */
+    public function getIntervalDuration(): Duration
+    {
+        return $this->IntervalDuration;
+    }
+
+    /**
+     * @return \DCarbone\Go\Time\Duration
+     */
+    public function getTimeoutDuration(): Duration
+    {
+        return $this->TimeoutDuration;
+    }
+
+    /**
+     * @return \DCarbone\Go\Time\Duration
+     */
+    public function getDeregisterCriticalServiceAfterDuration(): Duration
+    {
+        return $this->DeregisterCriticalServiceAfterDuration;
+    }
+
+    /**
      * @return \DCarbone\PHPConsulAPI\Operator\ReadableDuration
+     * @deprecated
      */
     public function getInterval(): ReadableDuration
     {
@@ -140,6 +183,7 @@ class HealthCheckDefinition extends AbstractModel
 
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\ReadableDuration
+     * @deprecated
      */
     public function getTimeout(): ReadableDuration
     {
@@ -148,9 +192,38 @@ class HealthCheckDefinition extends AbstractModel
 
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\ReadableDuration
+     * @deprecated
      */
     public function getDeregisterCriticalServiceAfter(): ReadableDuration
     {
         return $this->DeregisterCriticalServiceAfter;
+    }
+
+    public function jsonSerialize()
+    {
+        $out = [
+            'HTTP'          => $this->HTTP,
+            'Header'        => $this->Header,
+            'Method'        => $this->Method,
+            'TLSSkipVerify' => $this->TLSSkipVerify,
+            'TCP'           => $this->TCP,
+
+        ];
+        if (0 !== $this->IntervalDuration->Nanoseconds()) {
+            $out['Interval'] = (string)$this->IntervalDuration;
+        } elseif (0 !== $this->Interval->Nanoseconds()) {
+            $out['Interval'] = (string)$this->Interval;
+        }
+        if (0 !== $this->TimeoutDuration->Nanoseconds()) {
+            $out['Timeout'] = (string)$this->TimeoutDuration;
+        } elseif (0 !== $this->Timeout->Nanoseconds()) {
+            $out['Timeout'] = (string)$this->Timeout;
+        }
+        if (0 !== $this->DeregisterCriticalServiceAfterDuration->Nanoseconds()) {
+            $out['DeregisterCriticalServiceAfter'] = (string)$this->DeregisterCriticalServiceAfterDuration;
+        } elseif (0 !== $this->DeregisterCriticalServiceAfter->Nanoseconds()) {
+            $out['DeregisterCriticalServiceAfter'] = (string)$this->DeregisterCriticalServiceAfter;
+        }
+        return $out;
     }
 }

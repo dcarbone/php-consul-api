@@ -29,16 +29,17 @@ use DCarbone\PHPConsulAPI\Request;
  */
 class HealthClient extends AbstractClient
 {
+    private const serviceHealth = 'service';
+    private const connectHealth = 'connect';
+    private const ingressHealth = 'ingress';
+
     /**
      * @param string $node
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\Health\HealthChecks|null list of health checks or null on error
-     * @type \DCarbone\PHPConsulAPI\QueryMeta query meta
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
+     * @return \DCarbone\PHPConsulAPI\Health\HealthChecksResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Node(string $node, QueryOptions $opts = null): array
+    public function Node(string $node, QueryOptions $opts = null): HealthChecksResponse
     {
         $r = new Request('GET', sprintf('v1/health/node/%s', $node), $this->config);
         $r->setQueryOptions($opts);
@@ -46,29 +47,26 @@ class HealthClient extends AbstractClient
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, null, $err];
+            return new HealthChecksResponse(null, null, $err);
         }
 
         [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
-            return [null, null, $err];
+            return new HealthChecksResponse(null, null, $err);
         }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
-        return [new HealthChecks($data), $qm, null];
+        return new HealthChecksResponse($data, $qm, null);
     }
 
     /**
      * @param string $service
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\Health\HealthChecks|null list of health checks or null on error
-     * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
+     * @return \DCarbone\PHPConsulAPI\Health\HealthChecksResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Checks(string $service, QueryOptions $opts = null): array
+    public function Checks(string $service, QueryOptions $opts = null): HealthChecksResponse
     {
         /** @var \Psr\Http\Message\ResponseInterface $response */
         $r = new Request('GET', sprintf('v1/health/checks/%s', $service), $this->config);
@@ -76,17 +74,34 @@ class HealthClient extends AbstractClient
 
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, null, $err];
+            return new HealthChecksResponse(null, null, $err);
         }
 
         [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
-            return [null, null, $err];
+            return new HealthChecksResponse(null, null, $err);
         }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
-        return [new HealthChecks($data), $qm, null];
+        return new HealthChecksResponse($data, $qm, null);
+    }
+
+    /**
+     * @param string $service
+     * @param array $tags
+     * @param bool $passingOnly
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\Health\ServiceEntriesResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function ServiceMultipleTags(
+        string $service,
+        array $tags = [],
+        bool $passingOnly = false,
+        ?QueryOptions $opts = null
+    ): ServiceEntriesResponse {
+        return $this->_service($service, $tags, $passingOnly, $opts, self::serviceHealth);
     }
 
     /**
@@ -94,21 +109,49 @@ class HealthClient extends AbstractClient
      * @param string $tag
      * @param bool $passingOnly
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return array (
-     * @type \DCarbone\PHPConsulAPI\Health\ServiceEntry[]|null list of service entries or null on error
-     * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
+     * @return \DCarbone\PHPConsulAPI\Health\ServiceEntriesResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Service(string $service,
-                            string $tag = '',
-                            bool $passingOnly = false,
-                            QueryOptions $opts = null): array
-    {
-        $r = new Request('GET', sprintf('v1/health/service/%s', $service), $this->config);
+    public function Service(
+        string $service,
+        string $tag = '',
+        bool $passingOnly = false,
+        QueryOptions $opts = null
+    ): ServiceEntriesResponse {
+        return $this->ServiceMultipleTags($service, '' !== $tag ? [$tag] : [], $passingOnly, $opts);
+    }
+
+    /**
+     * @param string $service
+     * @param array $tags
+     * @param bool $passingOnly
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @param string $healthType
+     * @return \DCarbone\PHPConsulAPI\Health\ServiceEntriesResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function _service(
+        string $service,
+        array $tags,
+        bool $passingOnly,
+        ?QueryOptions $opts,
+        string $healthType
+    ): ServiceEntriesResponse {
+        switch ($healthType) {
+            case self::connectHealth:
+                $uri = 'v1/health/connect/%s';
+                break;
+            case self::ingressHealth:
+                $uri = 'v1/health/ingress/%s';
+                break;
+            default:
+                $uri = 'v1/health/service/%s';
+        }
+
+        $r = new Request('GET', sprintf($uri, $service), $this->config);
         $r->setQueryOptions($opts);
-        if ('' !== $tag) {
-            $r->params->set('tag', $tag);
+        if ([] !== $tags) {
+            $r->params->set('tag', ...$tags);
         }
         if ($passingOnly) {
             $r->params->set('passing', '1');
@@ -117,47 +160,39 @@ class HealthClient extends AbstractClient
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, null, $err];
+            return new ServiceEntriesResponse(null, null, $err);
         }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         [$data, $err] = $this->decodeBody($response->getBody());
 
-        if (null !== $err) {
-            return [null, $qm, $err];
-        }
-
-        $services = [];
-        foreach ($data as $service) {
-            $services[] = new ServiceEntry($service);
-        }
-
-        return [$services, $qm, null];
+        return new ServiceEntriesResponse($data, $qm, $err);
     }
 
     /**
      * @param string $state
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\Health\HealthChecks|null array of heath checks or null on error
-     * @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata or null on error
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
+     * @return \DCarbone\PHPConsulAPI\Health\HealthChecksResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function State(string $state, QueryOptions $opts = null): array
+    public function State(string $state, QueryOptions $opts = null): HealthChecksResponse
     {
         static $validStates = ['any', 'warning', 'critical', 'passing', 'unknown'];
 
         if (!in_array($state, $validStates, true)) {
-            return [null,
+            return new HealthChecksResponse(
                 null,
-                new Error(sprintf(
-                    '%s::state - "$state" must be string with value of ["%s"].  %s seen.',
-                    get_class($this),
-                    implode('", "', $validStates),
-                    $state
-                ))];
+                null,
+                new Error(
+                    sprintf(
+                        '%s::state - "$state" must be string with value of ["%s"].  %s seen.',
+                        get_class($this),
+                        implode('", "', $validStates),
+                        $state
+                    )
+                )
+            );
         }
 
         $r = new Request('GET', sprintf('v1/health/state/%s', $state), $this->config);
@@ -166,16 +201,13 @@ class HealthClient extends AbstractClient
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, null, $err];
+            return new HealthChecksResponse(null, null, $err);
         }
 
         [$data, $err] = $this->decodeBody($response->getBody());
-        if (null !== $err) {
-            return [null, null, $err];
-        }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
-        return [new HealthChecks($data), $qm, null];
+        return new HealthChecksResponse($data, $qm, $err);
     }
 }

@@ -36,20 +36,21 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
      */
     public function __construct(?array $children = [])
     {
-        if (is_array($children)) {
-            foreach (array_filter($children) as $child) {
-                if (is_array($child)) {
-                    $this->_list[] = $this->newChild($child);
-                } elseif ($child instanceof $this->containedClass) {
-                    $this->_list[] = $child;
-                } else {
-                    throw new \InvalidArgumentException(
-                        sprintf(
-                            get_class($this) . ' accepts only ' . $this->containedClass . ' as a child, saw %s',
-                            is_object($child) ? get_class($child) : gettype($child)
-                        )
-                    );
-                }
+        if (null === $children) {
+            return;
+        }
+        foreach (array_filter($children) as $child) {
+            if (is_array($child)) {
+                $this->_list[] = $this->newChild($child);
+            } elseif ($child instanceof $this->containedClass) {
+                $this->_list[] = $child;
+            } else {
+                throw new \InvalidArgumentException(
+                    sprintf(
+                        get_class($this) . ' accepts only ' . $this->containedClass . ' as a child, saw %s',
+                        is_object($child) ? get_class($child) : gettype($child)
+                    )
+                );
             }
         }
     }
@@ -164,7 +165,7 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
     }
 
     /**
-     * @param $data
+     * @param mixed $data
      * @return mixed
      */
     abstract protected function newChild($data): AbstractModel;

@@ -107,11 +107,11 @@ class EventClient extends AbstractClient
 
         $lower = substr($uuid, 0, 8) + substr($uuid, 9, 4) + substr($uuid, 14, 4);
         $upper = substr($uuid, 19, 4) + substr($uuid, 24, 12);
-        $lowVal = (int)$lower;
+        $lowVal = intval($lower, 10);
         if (0 >= $lowVal) {
             throw new \InvalidArgumentException("{$lower} is not greater than 0");
         }
-        $highVal = (int)$upper;
+        $highVal = intval($upper, 10);
         if (0 >= $highVal) {
             throw new \InvalidArgumentException("{$upper} is not greater than 0");
         }
