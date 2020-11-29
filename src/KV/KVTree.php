@@ -154,12 +154,14 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
             return $this->_children[$offset];
         }
 
-        trigger_error(sprintf(
-            '%s - Requested offset %s does not exist in tree with prefix "%s".',
-            get_class($this),
-            $offset,
-            $this->getPrefix()
-        ));
+        trigger_error(
+            sprintf(
+                '%s - Requested offset %s does not exist in tree with prefix "%s".',
+                get_class($this),
+                $offset,
+                $this->getPrefix()
+            )
+        );
 
         return null;
     }
@@ -181,7 +183,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
             } else {
                 $this->_children[$offset] = $value;
             }
-        } else if (null === $offset) {
+        } elseif (null === $offset) {
             $this->_children[] = $value;
         } else {
             $this->_children[$offset] = $value;
@@ -206,7 +208,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
         foreach ($this->_children as $k => $child) {
             if ($child instanceof KVTree) {
                 $json[$this->_prefix] = $child;
-            } else if ($child instanceof KVPair) {
+            } elseif ($child instanceof KVPair) {
                 $json[$this->_prefix][$child->Key] = $child;
             }
         }

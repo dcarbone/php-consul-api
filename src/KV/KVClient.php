@@ -22,7 +22,10 @@ use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Request;
+use DCarbone\PHPConsulAPI\ValuedQueryStringsResponse;
+use DCarbone\PHPConsulAPI\ValuedWriteBoolResponse;
 use DCarbone\PHPConsulAPI\WriteOptions;
+use DCarbone\PHPConsulAPI\WriteResponse;
 
 /**
  * Class KVClient
@@ -31,15 +34,12 @@ use DCarbone\PHPConsulAPI\WriteOptions;
 class KVClient extends AbstractClient
 {
     /**
-     * @param string $key Name of key to retrieve value for
-     * @param \DCarbone\PHPConsulAPI\QueryOptions $opts
-     * @return array(
-     * @type KVPair|null kv object or null on error
-     * @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata object or null on error
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
+     * @param string $key
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\KV\KVPairResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Get(string $key, QueryOptions $opts = null): array
+    public function Get(string $key, QueryOptions $opts = null): KVPairResponse
     {
         $r = new Request('GET', sprintf('v1/kv/%s', $key), $this->config);
         $r->setQueryOptions($opts);
@@ -47,7 +47,7 @@ class KVClient extends AbstractClient
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->doRequest($r);
         if (null !== $err) {
-            return [null, null, $err];
+            return new KVPairResponse(null, null, $err);
         }
 
         $code = $response->getStatusCode();
@@ -56,31 +56,33 @@ class KVClient extends AbstractClient
             [$data, $err] = $this->decodeBody($response->getBody());
 
             if (null !== $err) {
-                return [null, null, $err];
+                return new KVPairResponse(null, null, $err);
             }
 
             $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-            return [new KVPair($data[0], true), $qm, null];
+            return new KVPairResponse($data[0], $qm, null);
         }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         if (404 === $code) {
-            return [null, $qm, null];
+            return new KVPairResponse(null, $qm, null);
         }
 
-        return [null, $qm, new Error(sprintf('%s: %s', $response->getStatusCode(), $response->getReasonPhrase()))];
+        return new KVPairResponse(
+            null,
+            $qm,
+            new Error(sprintf('%s: %s', $response->getStatusCode(), $response->getReasonPhrase()))
+        );
     }
 
     /**
      * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
-     * @param \DCarbone\PHPConsulAPI\WriteOptions $opts
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Put(KVPair $p, WriteOptions $opts = null): array
+    public function Put(KVPair $p, WriteOptions $opts = null): WriteResponse
     {
         $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
         $r->setWriteOptions($opts);
@@ -90,43 +92,38 @@ class KVClient extends AbstractClient
 
         [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, $err];
+            return new WriteResponse(null, $err);
         }
 
-        return [$this->buildWriteMeta($duration), null];
+        return new WriteResponse($this->buildWriteMeta($duration), null);
     }
 
     /**
      * @param string $key
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\WriteMeta metadata about write
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Delete(string $key, WriteOptions $opts = null): array
+    public function Delete(string $key, WriteOptions $opts = null): WriteResponse
     {
         $r = new Request('DELETE', sprintf('v1/kv/%s', $key), $this->config);
         $r->setWriteOptions($opts);
 
         [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, $err];
+            return new WriteResponse(null, $err);
         }
 
-        return [$this->buildWriteMeta($duration), null];
+        return new WriteResponse($this->buildWriteMeta($duration), null);
     }
 
     /**
      * @param string $prefix
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\KV\KVPairs|null array of KVPair objects under specified prefix
-     * @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
+     * @return \DCarbone\PHPConsulAPI\KV\KVPairsResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function List(string $prefix = '', QueryOptions $opts = null): array
+    public function List(string $prefix = '', QueryOptions $opts = null): KVPairsResponse
     {
         $r = new Request('GET', sprintf('v1/kv/%s', $prefix), $this->config);
         $r->setQueryOptions($opts);
@@ -135,29 +132,26 @@ class KVClient extends AbstractClient
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, null, $err];
+            return new KVPairsResponse(null, null, $err);
         }
 
         [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
-            return [null, null, $err];
+            return new KVPairsResponse(null, null, $err);
         }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
-        return [new KVPairs($data), $qm, null];
+        return new KVPairsResponse($data, $qm, null);
     }
 
     /**
-     * @param string $prefix Prefix to search for.  Null returns all keys.
-     * @param \DCarbone\PHPConsulAPI\QueryOptions $opts
-     * @return array(
-     * @type string[]|null list of keys
-     * @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
+     * @param string $prefix
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\ValuedQueryStringsResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Keys(string $prefix = '', QueryOptions $opts = null): array
+    public function Keys(string $prefix = '', QueryOptions $opts = null): ValuedQueryStringsResponse
     {
         $r = new Request('GET', sprintf('v1/kv/%s', $prefix), $this->config);
         $r->setQueryOptions($opts);
@@ -166,27 +160,24 @@ class KVClient extends AbstractClient
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, null, $err];
+            return new ValuedQueryStringsResponse(null, null, $err);
         }
 
         [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
-            return [null, null, $err];
+            return new ValuedQueryStringsResponse(null, null, $err);
         }
 
-        return [$data, $this->buildQueryMeta($duration, $response, $r->getUri()), $err];
+        return new ValuedQueryStringsResponse($data, $this->buildQueryMeta($duration, $response, $r->getUri()), $err);
     }
 
     /**
      * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
-     * @param \DCarbone\PHPConsulAPI\WriteOptions $opts
-     * @return array(
-     * @type bool whether the operation succeeded or not
-     * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\ValuedWriteBoolResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function CAS(KVPair $p, WriteOptions $opts = null): array
+    public function CAS(KVPair $p, WriteOptions $opts = null): ValuedWriteBoolResponse
     {
         $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
         $r->setWriteOptions($opts);
@@ -198,21 +189,23 @@ class KVClient extends AbstractClient
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, $err];
+            return new ValuedWriteBoolResponse(false, null, $err);
         }
 
-        return [0 === strpos($response->getBody()->getContents(), 'true'), $this->buildWriteMeta($duration), null];
+        return new ValuedWriteBoolResponse(
+            0 === strpos($response->getBody()->getContents(), 'true'),
+            $this->buildWriteMeta($duration),
+            null
+        );
     }
 
     /**
      * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
-     * @param \DCarbone\PHPConsulAPI\WriteOptions $opts
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Acquire(KVPair $p, WriteOptions $opts = null): array
+    public function Acquire(KVPair $p, WriteOptions $opts = null): WriteResponse
     {
         $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
         $r->setWriteOptions($opts);
@@ -223,22 +216,19 @@ class KVClient extends AbstractClient
 
         [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, $err];
+            return new WriteResponse(null, $err);
         }
 
-        return [$this->buildWriteMeta($duration), null];
+        return new WriteResponse($this->buildWriteMeta($duration), null);
     }
 
     /**
      * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return array(
-     * @type bool
-     * @type \DCarbone\PHPConsulAPI\WriteMeta
-     * @type \DCarbone\PHPConsulAPI\Error|null
-     * )
+     * @return \DCarbone\PHPConsulAPI\ValuedWriteBoolResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function DeleteCAS(KVPair $p, WriteOptions $opts = null): array
+    public function DeleteCAS(KVPair $p, WriteOptions $opts = null): ValuedWriteBoolResponse
     {
         $r = new Request('DELETE', sprintf('v1/kv/%s', ltrim($p->Key, "/")), $this->config);
         $r->setWriteOptions($opts);
@@ -247,21 +237,23 @@ class KVClient extends AbstractClient
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, null, $err];
+            return new ValuedWriteBoolResponse(false, null, $err);
         }
 
-        return [0 === strpos($response->getBody()->getContents(), 'true'), $this->buildWriteMeta($duration), null];
+        return new ValuedWriteBoolResponse(
+            0 === strpos($response->getBody()->getContents(), 'true'),
+            $this->buildWriteMeta($duration),
+            null
+        );
     }
 
     /**
      * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
-     * @param \DCarbone\PHPConsulAPI\WriteOptions $opts
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Release(KVPair $p, WriteOptions $opts = null): array
+    public function Release(KVPair $p, WriteOptions $opts = null): WriteResponse
     {
         $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
         $r->setWriteOptions($opts);
@@ -272,21 +264,19 @@ class KVClient extends AbstractClient
 
         [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, $err];
+            return new WriteResponse(null, $err);
         }
 
-        return [$this->buildWriteMeta($duration), null];
+        return new WriteResponse($this->buildWriteMeta($duration), null);
     }
 
     /**
      * @param string $prefix
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\WriteMeta|null
-     * @type \DCarbone\PHPConsulAPI\Error|null
-     * )
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function DeleteTree(string $prefix, QueryOptions $opts = null): array
+    public function DeleteTree(string $prefix, WriteOptions $opts = null): WriteResponse
     {
         $r = new Request('DELETE', sprintf('v1/kv/%s', $prefix), $this->config);
         $r->params['recurse'] = '';
@@ -294,23 +284,19 @@ class KVClient extends AbstractClient
 
         [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, $err];
+            return new WriteResponse(null, $err);
         }
 
-        return [$this->buildWriteMeta($duration), null];
+        return new WriteResponse($this->buildWriteMeta($duration), null);
     }
 
     /**
      * @param \DCarbone\PHPConsulAPI\KV\KVTxnOps $txn
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return array(
-     * @type bool
-     * @type \DCarbone\PHPConsulAPI\KV\KVTxnResponse|null
-     * @type \DCarbone\PHPConsulAPI\QueryOptions|null
-     * @type \DCarbone\PHPConsulAPI\Error|null
-     * )
+     * @return \DCarbone\PHPConsulAPI\KV\KVTxnAPIResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Txn(KVTxnOps $txn, QueryOptions $opts = null): array
+    public function Txn(KVTxnOps $txn, QueryOptions $opts = null): KVTxnAPIResponse
     {
         $ops = new KVTxnOps();
         foreach ($txn as $op) {
@@ -323,7 +309,7 @@ class KVClient extends AbstractClient
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->doRequest($r);
         if (null !== $err) {
-            return [false, null, null, $err];
+            return new KVTxnAPIResponse(false, null, null, $err);
         }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
@@ -332,21 +318,21 @@ class KVClient extends AbstractClient
         if (200 === $code || 409 === $code) {
             [$data, $err] = $this->decodeBody($response->getBody());
             if (null !== $err) {
-                return [false, null, null, $err];
+                return new KVTxnAPIResponse(false, null, null, $err);
             }
 
             // TODO: Maybe go straight to actual response?  What is the benefit of this...
             $internal = new TxnResponse($data);
 
             $resp = new KVTxnResponse(['Errors' => $internal->Errors, 'Results' => $internal->Results]);
-            return [200 === $code, $resp, $qm, null];
+            return new KVTxnAPIResponse(200 === $code, $resp, $qm, null);
         }
 
         if ('' === ($body = $response->getBody()->getContents())) {
-            return [false, null, null, new Error('Unable to read response')];
+            return new KVTxnAPIResponse(false, null, null, new Error('Unable to read response'));
         }
 
-        return [false, null, null, new Error('Failed request: ' . $body)];
+        return new KVTxnAPIResponse(false, null, null, new Error('Failed request: ' . $body));
     }
 
     /**
@@ -357,7 +343,7 @@ class KVClient extends AbstractClient
      * @type \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function Tree(string $prefix = '', QueryOptions $opts = null): array
+    public function Tree(string $prefix = '', ?QueryOptions $opts = null): array
     {
         [$valueList, $_, $err] = $this->List($prefix, $opts);
 
