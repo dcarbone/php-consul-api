@@ -126,6 +126,74 @@ class HealthClient extends AbstractClient
      * @param array $tags
      * @param bool $passingOnly
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\Health\ServiceEntriesResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function IngressMultipleTags(
+        string $service,
+        array $tags = [],
+        bool $passingOnly = false,
+        ?QueryOptions $opts = null
+    ): ServiceEntriesResponse {
+        return $this->_service($service, $tags, $passingOnly, $opts, self::ingressHealth);
+    }
+
+    /**
+     * @param string $service
+     * @param string $tag
+     * @param bool $passingOnly
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\Health\ServiceEntriesResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function Ingress(
+        string $service,
+        string $tag = '',
+        bool $passingOnly = false,
+        ?QueryOptions $opts = null
+    ): ServiceEntriesResponse {
+        return $this->IngressMultipleTags($service, '' !== $tag ? [$tag] : [], $passingOnly, $opts);
+    }
+
+    /**
+     * @param string $service
+     * @param array $tags
+     * @param bool $passingOnly
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\Health\ServiceEntriesResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function ConnectMultipleTags(
+        string $service,
+        array $tags = [],
+        bool $passingOnly = false,
+        ?QueryOptions $opts = null
+    ): ServiceEntriesResponse {
+        return $this->_service($service, $tags, $passingOnly, $opts, self::connectHealth);
+    }
+
+    /**
+     * @param string $service
+     * @param string $tag
+     * @param bool $passingOnly
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\Health\ServiceEntriesResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function Connect(
+        string $service,
+        string $tag = '',
+        bool $passingOnly = false,
+        ?QueryOptions $opts = null
+    ): ServiceEntriesResponse {
+        return $this->ConnectMultipleTags($service, '' !== $tag ? [$tag] : [], $passingOnly, $opts);
+    }
+
+    /**
+     * @param string $service
+     * @param array $tags
+     * @param bool $passingOnly
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @param string $healthType
      * @return \DCarbone\PHPConsulAPI\Health\ServiceEntriesResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
