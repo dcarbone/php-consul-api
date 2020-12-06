@@ -18,6 +18,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
 */
 
+use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
@@ -44,8 +45,18 @@ class SerfMember extends AbstractModel
     public $Protocol = 0;
     /** @var string */
     public $Status = '';
-    /** @var int */
-    public $RTT = 0;
+    /** @var \DCarbone\Go\Time\Duration */
+    public $RTT = null;
+
+    /**
+     * SerfMember constructor.
+     * @param array $data
+     */
+    public function __construct(array $data = [])
+    {
+        parent::__construct($data);
+        $this->RTT = Time::Duration($this->RTT);
+    }
 
     /**
      * @return string
@@ -120,9 +131,9 @@ class SerfMember extends AbstractModel
     }
 
     /**
-     * @return int
+     * @return \DCarbone\Go\Time\Duration
      */
-    public function getRTT(): int
+    public function getRTT(): Time\Duration
     {
         return $this->RTT;
     }

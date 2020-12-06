@@ -18,10 +18,15 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
 */
 
+use DCarbone\Go\HTTP;
 use DCarbone\PHPConsulAPI\AbstractClient;
+use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Request;
+use DCarbone\PHPConsulAPI\ValuedBoolResponse;
+use DCarbone\PHPConsulAPI\ValuedWriteStringResponse;
 use DCarbone\PHPConsulAPI\WriteOptions;
+use DCarbone\PHPConsulAPI\WriteResponse;
 
 /**
  * Class OperatorClient
@@ -32,13 +37,10 @@ class OperatorClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\Operator\Area $area
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return array(
-     * @type string
-     * @type \DCarbone\PHPConsulAPI\WriteMeta|null
-     * @type \DCarbone\PHPConsulAPI\Error|null
-     * )
+     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function AreaCreate(Area $area, WriteOptions $opts = null): array
+    public function AreaCreate(Area $area, WriteOptions $opts = null): ValuedWriteStringResponse
     {
         $r = new Request('POST', 'v1/operator/area', $this->config, $area);
         $r->setWriteOptions($opts);
@@ -46,28 +48,25 @@ class OperatorClient extends AbstractClient
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return ['', null, $err];
+            return new ValuedWriteStringResponse('', null, $err);
         }
 
         [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
-            return ['', null, $err];
+            return new ValuedWriteStringResponse('', null, $err);
         }
 
-        return [$data['ID'] ?? '', $this->buildWriteMeta($duration), null];
+        return new ValuedWriteStringResponse($data['ID'] ?? '', $this->buildWriteMeta($duration), null);
     }
 
     /**
      * @param string $areaID
      * @param \DCarbone\PHPConsulAPI\Operator\Area $area
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return array(
-     * @type string
-     * @type \DCarbone\PHPConsulAPI\WriteMeta|null
-     * @type \DCarbone\PHPConsulAPI\Error|null
-     * )
+     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function AreaUpdate(string $areaID, Area $area, WriteOptions $opts = null): array
+    public function AreaUpdate(string $areaID, Area $area, WriteOptions $opts = null): ValuedWriteStringResponse
     {
         $r = new Request('PUT', 'v1/operator/area/' . $areaID, $this->config, $area);
         $r->setWriteOptions($opts);
@@ -75,59 +74,44 @@ class OperatorClient extends AbstractClient
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return ['', null, $err];
+            return new ValuedWriteStringResponse('', null, $err);
         }
 
         [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
-            return ['', null, $err];
+            return new ValuedWriteStringResponse('', null, $err);
         }
 
-        return [$data['ID'] ?? '', $this->buildWriteMeta($duration), null];
+        return new ValuedWriteStringResponse($data['ID'] ?? '', $this->buildWriteMeta($duration), null);
     }
 
     /**
      * @param string $areaID
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\Operator\Area[]|null
-     * @type \DCarbone\PHPConsulAPI\QueryMeta|null
-     * @type \DCarbone\PHPConsulAPI\Error|null
-     * )
+     * @return \DCarbone\PHPConsulAPI\Operator\OperatorAreasResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function AreaGet(string $areaID, QueryOptions $opts = null): array
+    public function AreaGet(string $areaID, QueryOptions $opts = null): OperatorAreasResponse
     {
-        $r = new Request('GET', 'v1/operator/area/' . $areaID, $this->config);
+        $r = new Request('GET', sprintf('v1/operator/area/%s', urlencode($areaID)), $this->config);
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, null, $err];
+            return new OperatorAreasResponse(null, null, $err);
         }
 
         [$data, $err] = $this->decodeBody($response->getBody());
-        if (null !== $err) {
-            return [null, null, $err];
-        }
-
-        $resp = [];
-        foreach ($data as $datum) {
-            $resp = new Area($datum);
-        }
-
-        return [$resp, $this->buildQueryMeta($duration, $response, $r->getUri()), null];
+        return new OperatorAreasResponse($data, $this->buildQueryMeta($duration, $response, $r->getUri()), $err);
     }
 
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\Operator\Area[]|null
-     * @type \DCarbone\PHPConsulAPI\QueryMeta|null
-     * @type \DCarbone\PHPConsulAPI\Error|null
-     * )
+     * @return \DCarbone\PHPConsulAPI\Operator\OperatorAreasResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function AreaList(QueryOptions $opts = null): array
+    public function AreaList(QueryOptions $opts = null): OperatorAreasResponse
     {
         $r = new Request('GET', 'v1/operator/area', $this->config);
         $r->setQueryOptions($opts);
@@ -135,54 +119,40 @@ class OperatorClient extends AbstractClient
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, null, $err];
+            return new OperatorAreasResponse(null, null, $err);
         }
 
         [$data, $err] = $this->decodeBody($response->getBody());
-        if (null !== $err) {
-            return [null, null, $err];
-        }
-
-        $resp = [];
-        foreach ($data as $datum) {
-            $resp = new Area($datum);
-        }
-
-        return [$resp, $this->buildQueryMeta($duration, $response, $r->getUri()), null];
+        return new OperatorAreasResponse($data, $this->buildQueryMeta($duration, $response, $r->getUri()), $err);
     }
 
     /**
      * @param string $areaID
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\WriteMeta|null
-     * @type \DCarbone\PHPConsulAPI\Error|null
-     * )
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function AreaDelete(string $areaID, WriteOptions $opts = null): array
+    public function AreaDelete(string $areaID, WriteOptions $opts = null): WriteResponse
     {
         $r = new Request('DELETE', 'v1/operator/area/' . $areaID, $this->config);
         $r->setWriteOptions($opts);
 
         [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, $err];
+            return new WriteResponse(null, $err);
         }
 
-        return [$this->buildWriteMeta($duration), null];
+        return new WriteResponse($this->buildWriteMeta($duration), null);
     }
 
     /**
      * @param string $areaID
      * @param array $addresses
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\Operator\AreaJoinResponse[]|null
-     * @type \DCarbone\PHPConsulAPI\WriteMeta|null
-     * @type \DCarbone\PHPConsulAPI\Error|null
-     * )
+     * @return \DCarbone\PHPConsulAPI\Operator\OperatorAreaJoinResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function AreaJoin(string $areaID, array $addresses, WriteOptions $opts = null): array
+    public function AreaJoin(string $areaID, array $addresses, WriteOptions $opts = null): OperatorAreaJoinResponse
     {
         $r = new Request('PUT', 'v1/operator/area/' . $areaID . '/join', $this->config, $addresses);
         $r->setWriteOptions($opts);
@@ -190,32 +160,24 @@ class OperatorClient extends AbstractClient
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, null, $err];
+            return new OperatorAreaJoinResponse(null, null, $err);
         }
 
         [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
-            return [null, null, $err];
+            return new OperatorAreaJoinResponse(null, null, $err);
         }
 
-        $resp = [];
-        foreach ($data as $datum) {
-            $resp[] = new AreaJoinResponse($datum);
-        }
-
-        return [$resp, $this->buildWriteMeta($duration), null];
+        return new OperatorAreaJoinResponse($data, $this->buildWriteMeta($duration), null);
     }
 
     /**
      * @param string $areaID
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\Operator\SerfMember[]|null
-     * @type \DCarbone\PHPConsulAPI\QueryMeta|null
-     * @type \DCarbone\PHPConsulAPI\Error|null
-     * )
+     * @return \DCarbone\PHPConsulAPI\Operator\OperatorSerfMembersResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function AreaMembers(string $areaID, QueryOptions $opts = null): array
+    public function AreaMembers(string $areaID, QueryOptions $opts = null): OperatorSerfMembersResponse
     {
         $r = new Request('GET', 'v1/operator/area/' . $areaID . '/members', $this->config);
         $r->setQueryOptions($opts);
@@ -223,30 +185,23 @@ class OperatorClient extends AbstractClient
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, null, $err];
+            return new OperatorSerfMembersResponse(null, null, $err);
         }
 
         [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
-            return [null, null, $err];
+            return new OperatorSerfMembersResponse(null, null, $err);
         }
 
-        $resp = [];
-        foreach ($data as $datum) {
-            $resp[] = new SerfMember($datum);
-        }
-
-        return [$resp, $this->buildQueryMeta($duration, $response, $r->getUri()), null];
+        return new OperatorSerfMembersResponse($data, $this->buildQueryMeta($duration, $response, $r->getUri()), null);
     }
 
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration|null
-     * @type \DCarbone\PHPConsulAPI\Error|null
-     * )
+     * @return \DCarbone\PHPConsulAPI\Operator\OperatorAutopilotConfigurationResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function AutopilotGetConfiguration(QueryOptions $opts = null): array
+    public function AutopilotGetConfiguration(QueryOptions $opts = null): OperatorAutopilotConfigurationResponse
     {
         $r = new Request('GET', 'v1/operator/autopilot/configuration', $this->config);
         $r->setQueryOptions($opts);
@@ -254,41 +209,41 @@ class OperatorClient extends AbstractClient
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$_, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, $err];
+            return new OperatorAutopilotConfigurationResponse(null, $err);
         }
 
         [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
-            return [null, $err];
+            return new OperatorAutopilotConfigurationResponse(null, $err);
         }
 
-        return [new AutopilotConfiguration($data), null];
+        return new OperatorAutopilotConfigurationResponse($data, null);
     }
 
     /**
      * @param \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration $conf
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @return \DCarbone\PHPConsulAPI\Error|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function AutopilotSetConfiguration(AutopilotConfiguration $conf, WriteOptions $opts = null)
+    public function AutopilotSetConfiguration(AutopilotConfiguration $conf, WriteOptions $opts = null): ?Error
     {
         $r = new Request('PUT', 'v1/operator/autopilot/configuration', $this->config, $conf);
         $r->setWriteOptions($opts);
 
-        [$_, $_, $err] = $this->requireOK($this->doRequest($r));
-        return $err;
+        return $this->requireOK($this->doRequest($r))->Err;
     }
 
     /**
      * @param \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration $conf
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return array(
-     * @type bool
-     * @type \DCarbone\PHPConsulAPI\Error|null
-     * )
+     * @return \DCarbone\PHPConsulAPI\ValuedBoolResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function AutopilotCASConfiguration(AutopilotConfiguration $conf, WriteOptions $opts = null): array
-    {
+    public function AutopilotCASConfiguration(
+        AutopilotConfiguration $conf,
+        WriteOptions $opts = null
+    ): ValuedBoolResponse {
         $r = new Request('PUT', 'v1/operator/autopilot/configuration', $this->config, $conf);
         $r->setWriteOptions($opts);
         $r->params->set('cas', strval($conf->ModifyIndex));
@@ -296,20 +251,18 @@ class OperatorClient extends AbstractClient
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$_, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [false, $err];
+            return new ValuedBoolResponse(false, $err);
         }
 
-        return [false !== strpos($response->getBody()->getContents(), 'true'), null];
+        return new ValuedBoolResponse(false !== strpos($response->getBody()->getContents(), 'true'), null);
     }
 
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\Operator\ServerHealth[]|null
-     * @type \DCarbone\PHPConsulAPI\Error|null
-     * )
+     * @return \DCarbone\PHPConsulAPI\Operator\OperatorServerHealthsResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function AutopilotServerHealth(QueryOptions $opts = null): array
+    public function AutopilotServerHealth(QueryOptions $opts = null): OperatorServerHealthsResponse
     {
         $r = new Request('GET', 'v1/operator/autopilot/health', $this->config);
         $r->setQueryOptions($opts);
@@ -317,26 +270,49 @@ class OperatorClient extends AbstractClient
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$_, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, $err];
+            return new OperatorServerHealthsResponse(null, $err);
         }
 
         [$data, $err] = $this->decodeBody($response->getBody());
         if (null !== $err) {
-            return [null, $err];
+            return new OperatorServerHealthsResponse(null, $err);
         }
 
-        return [new OperatorHealthReply($data), null];
+        return new OperatorServerHealthsResponse($data, null);
     }
 
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\Operator\RaftConfiguration|null Current Raft Configuration or null on error
-     * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
-     * @type \DCarbone\PHPConsulAPI\Error error, if any
-     * )
+     * @return \DCarbone\PHPConsulAPI\Operator\OperatorAutopilotStateResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function RaftGetConfiguration(QueryOptions $opts = null): array
+    public function AutopilotState(?QueryOptions $opts = null): OperatorAutopilotStateResponse
+    {
+        $r = new Request(HTTP\MethodGet, 'v1/operator/autopilot/state', $this->config);
+        $r->setQueryOptions($opts);
+
+        /** @var \Psr\Http\Message\ResponseInterface $response */
+        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        if (null !== $err) {
+            return new OperatorAutopilotStateResponse(null, null, $err);
+        }
+
+        [$data, $err] = $this->decodeBody($response->getBody());
+        if (null !== $err) {
+            return new OperatorAutopilotStateResponse(null, null, $err);
+        }
+
+        return new OperatorAutopilotStateResponse(
+            $data, $this->buildQueryMeta($duration, $response, $r->getUri()), null
+        );
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\Operator\OperatorRaftConfigurationResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function RaftGetConfiguration(QueryOptions $opts = null): OperatorRaftConfigurationResponse
     {
         $r = new Request('GET', 'v1/operator/raft/configuration', $this->config);
         $r->setQueryOptions($opts);
@@ -344,33 +320,32 @@ class OperatorClient extends AbstractClient
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
         if (null !== $err) {
-            return [null, null, $err];
+            return new OperatorRaftConfigurationResponse(null, null, $err);
         }
 
         [$data, $err] = $this->decodeBody($response->getBody());
 
         if (null !== $err) {
-            return [null, null, $err];
+            return new OperatorRaftConfigurationResponse(null, null, $err);
         }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
-        return [new RaftConfiguration($data), $qm, null];
+        return new OperatorRaftConfigurationResponse($data, $qm, null);
     }
 
     /**
      * @param string $address
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\Error|null error, if any
+     * @return \DCarbone\PHPConsulAPI\Error|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function RaftRemovePeerByAddress(string $address, WriteOptions $opts = null)
+    public function RaftRemovePeerByAddress(string $address, WriteOptions $opts = null): ?Error
     {
         $r = new Request('DELETE', 'v1/operator/raft/peer', $this->config);
         $r->setWriteOptions($opts);
         $r->params->set('address', (string)$address);
 
-        [$_, $_, $err] = $this->requireOK($this->doRequest($r));
-
-        return $err;
+        return $this->requireOK($this->doRequest($r))->Err;
     }
 }
