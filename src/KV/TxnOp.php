@@ -44,7 +44,7 @@ class TxnOp extends AbstractModel
     /**
      * @return \DCarbone\PHPConsulAPI\KV\KVTxnOp|null
      */
-    public function getKV()
+    public function getKV(): ?KVTxnOp
     {
         return $this->KV;
     }
