@@ -45,7 +45,7 @@ class KVClient extends AbstractClient
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->doRequest($r);
+        [$duration, $response, $err] = $this->do($r);
         if (null !== $err) {
             return new KVPairResponse(null, null, $err);
         }
@@ -90,7 +90,7 @@ class KVClient extends AbstractClient
             $r->params->set('flags', (string)$p->Flags);
         }
 
-        [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $_, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new WriteResponse(null, $err);
         }
@@ -109,7 +109,7 @@ class KVClient extends AbstractClient
         $r = new Request('DELETE', sprintf('v1/kv/%s', $key), $this->config);
         $r->setWriteOptions($opts);
 
-        [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $_, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new WriteResponse(null, $err);
         }
@@ -130,7 +130,7 @@ class KVClient extends AbstractClient
         $r->params->set('recurse', '');
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new KVPairsResponse(null, null, $err);
         }
@@ -158,7 +158,7 @@ class KVClient extends AbstractClient
         $r->params->set('keys', '');
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new ValuedQueryStringsResponse(null, null, $err);
         }
@@ -187,7 +187,7 @@ class KVClient extends AbstractClient
         }
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new ValuedWriteBoolResponse(false, null, $err);
         }
@@ -214,7 +214,7 @@ class KVClient extends AbstractClient
             $r->params->set('flags', (string)$p->Flags);
         }
 
-        [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $_, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new WriteResponse(null, $err);
         }
@@ -235,7 +235,7 @@ class KVClient extends AbstractClient
         $r->params['cas'] = (string)$p->ModifyIndex;
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new ValuedWriteBoolResponse(false, null, $err);
         }
@@ -262,7 +262,7 @@ class KVClient extends AbstractClient
             $r->params->set('flags', (string)$p->Flags);
         }
 
-        [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $_, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new WriteResponse(null, $err);
         }
@@ -282,7 +282,7 @@ class KVClient extends AbstractClient
         $r->params['recurse'] = '';
         $r->setWriteOptions($opts);
 
-        [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $_, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new WriteResponse(null, $err);
         }
@@ -307,7 +307,7 @@ class KVClient extends AbstractClient
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->doRequest($r);
+        [$duration, $response, $err] = $this->do($r);
         if (null !== $err) {
             return new KVTxnAPIResponse(false, null, null, $err);
         }

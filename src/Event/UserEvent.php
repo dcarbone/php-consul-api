@@ -50,7 +50,7 @@ class UserEvent extends AbstractModel
      * @param array $data
      * @param bool $_decodeValue
      */
-    public function __construct(array $data = [], $_decodeValue = false)
+    public function __construct(array $data = [], bool $_decodeValue = false)
     {
         parent::__construct($data);
         if ((bool)$_decodeValue && isset($this->Payload)) {

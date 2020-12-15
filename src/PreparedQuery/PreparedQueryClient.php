@@ -42,7 +42,7 @@ class PreparedQueryClient extends AbstractClient {
         $r->setWriteOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return ['', null, $err];
         }
@@ -63,7 +63,7 @@ class PreparedQueryClient extends AbstractClient {
         $r->setWriteOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $_, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return [null, $err];
         }
@@ -84,7 +84,7 @@ class PreparedQueryClient extends AbstractClient {
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return [null, null, $err];
         }
@@ -117,7 +117,7 @@ class PreparedQueryClient extends AbstractClient {
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return [null, null, $err];
         }
@@ -149,7 +149,7 @@ class PreparedQueryClient extends AbstractClient {
         $r->setWriteOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return [null, $err];
         }
@@ -173,7 +173,7 @@ class PreparedQueryClient extends AbstractClient {
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return [null, null, $err];
         }

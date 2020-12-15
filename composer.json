@@ -16,7 +16,7 @@
     "php-consul-api"
   ],
   "require": {
-    "php": "^7.2",
+    "php": ">=7.2",
     "ext-json": "*",
     "dcarbone/gotime": "0.4.*",
     "dcarbone/gohttp": "v0.3.*",
@@ -36,7 +36,8 @@
   },
   "autoload-dev": {
     "files": [
-      "src/Coordinate/funcs.php"
+      "src/Coordinate/funcs.php",
+      "tests/funcs.php"
     ],
     "psr-4": {
       "DCarbone\\PHPConsulAPI\\": "src/",

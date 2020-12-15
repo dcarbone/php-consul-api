@@ -57,7 +57,7 @@ class EventClient extends AbstractClient
         }
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new UserEventResponse(null, null, $err);
         }
@@ -83,7 +83,7 @@ class EventClient extends AbstractClient
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new UserEventsResponse(null, null, $err);
         }

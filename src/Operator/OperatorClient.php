@@ -46,7 +46,7 @@ class OperatorClient extends AbstractClient
         $r->setWriteOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new ValuedWriteStringResponse('', null, $err);
         }
@@ -72,7 +72,7 @@ class OperatorClient extends AbstractClient
         $r->setWriteOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new ValuedWriteStringResponse('', null, $err);
         }
@@ -97,7 +97,7 @@ class OperatorClient extends AbstractClient
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new OperatorAreasResponse(null, null, $err);
         }
@@ -117,7 +117,7 @@ class OperatorClient extends AbstractClient
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new OperatorAreasResponse(null, null, $err);
         }
@@ -137,7 +137,7 @@ class OperatorClient extends AbstractClient
         $r = new Request('DELETE', 'v1/operator/area/' . $areaID, $this->config);
         $r->setWriteOptions($opts);
 
-        [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $_, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new WriteResponse(null, $err);
         }
@@ -158,7 +158,7 @@ class OperatorClient extends AbstractClient
         $r->setWriteOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new OperatorAreaJoinResponse(null, null, $err);
         }
@@ -183,7 +183,7 @@ class OperatorClient extends AbstractClient
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new OperatorSerfMembersResponse(null, null, $err);
         }
@@ -207,7 +207,7 @@ class OperatorClient extends AbstractClient
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$_, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$_, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new OperatorAutopilotConfigurationResponse(null, $err);
         }
@@ -231,7 +231,7 @@ class OperatorClient extends AbstractClient
         $r = new Request('PUT', 'v1/operator/autopilot/configuration', $this->config, $conf);
         $r->setWriteOptions($opts);
 
-        return $this->requireOK($this->doRequest($r))->Err;
+        return $this->requireOK($this->do($r))->Err;
     }
 
     /**
@@ -249,7 +249,7 @@ class OperatorClient extends AbstractClient
         $r->params->set('cas', strval($conf->ModifyIndex));
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$_, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$_, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new ValuedBoolResponse(false, $err);
         }
@@ -268,7 +268,7 @@ class OperatorClient extends AbstractClient
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$_, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$_, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new OperatorServerHealthsResponse(null, $err);
         }
@@ -292,7 +292,7 @@ class OperatorClient extends AbstractClient
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new OperatorAutopilotStateResponse(null, null, $err);
         }
@@ -318,7 +318,7 @@ class OperatorClient extends AbstractClient
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new OperatorRaftConfigurationResponse(null, null, $err);
         }
@@ -346,6 +346,6 @@ class OperatorClient extends AbstractClient
         $r->setWriteOptions($opts);
         $r->params->set('address', (string)$address);
 
-        return $this->requireOK($this->doRequest($r))->Err;
+        return $this->requireOK($this->do($r))->Err;
     }
 }

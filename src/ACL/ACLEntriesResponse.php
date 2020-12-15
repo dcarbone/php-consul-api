@@ -51,7 +51,7 @@ class ACLEntriesResponse extends AbstractValuedQueryResponse
     /**
      * @return \DCarbone\PHPConsulAPI\ACL\ACLEntry[]|null
      */
-    public function getValue()
+    public function getValue(): ?array
     {
         return $this->ACLEntries;
     }

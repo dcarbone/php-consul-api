@@ -49,7 +49,7 @@ class AgentChecksResponse extends AbstractValuedResponse
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentCheck[]|null
      */
-    public function getValue()
+    public function getValue(): ?array
     {
         return $this->Checks;
     }

@@ -40,7 +40,7 @@ class ACLClient extends AbstractClient
         $r = new Request('PUT', 'v1/acl/bootstrap', $this->config);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new ValuedWriteStringResponse('', null, $err);
         }
@@ -67,7 +67,7 @@ class ACLClient extends AbstractClient
         $r->setWriteOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new ValuedWriteStringResponse('', null, $err);
         }
@@ -93,7 +93,7 @@ class ACLClient extends AbstractClient
         $r = new Request('PUT', 'v1/acl/update', $this->config, $acl);
         $r->setWriteOptions($opts);
 
-        [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $_, $err] = $this->requireOK($this->do($r));
 
         return new WriteResponse($this->buildWriteMeta($duration), $err);
     }
@@ -109,7 +109,7 @@ class ACLClient extends AbstractClient
         $r = new Request('PUT', sprintf('v1/acl/destroy/%s', $id), $this->config);
         $r->setWriteOptions($opts);
 
-        [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $_, $err] = $this->requireOK($this->do($r));
 
         return new WriteResponse($this->buildWriteMeta($duration), $err);
     }
@@ -126,7 +126,7 @@ class ACLClient extends AbstractClient
         $r->setWriteOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new ValuedWriteStringResponse('', null, $err);
         }
@@ -153,7 +153,7 @@ class ACLClient extends AbstractClient
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new ACLEntriesResponse(null, null, $err);
         }
@@ -179,7 +179,7 @@ class ACLClient extends AbstractClient
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new ACLEntriesResponse(null, null, $err);
         }
@@ -205,7 +205,7 @@ class ACLClient extends AbstractClient
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new ACLReplicationStatusResponse(null, null, $err);
         }

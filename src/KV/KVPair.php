@@ -149,7 +149,7 @@ class KVPair extends AbstractModel
     /**
      * @return null|string
      */
-    public function getValue()
+    public function getValue(): ?string
     {
         return $this->Value;
     }
@@ -185,7 +185,25 @@ class KVPair extends AbstractModel
     /**
      * @return string
      */
-    public function __toString()
+    public function getNamespace(): string
+    {
+        return $this->Namespace;
+    }
+
+    /**
+     * @param string $namespace
+     * @return \DCarbone\PHPConsulAPI\KV\KVPair
+     */
+    public function setNamespace(string $namespace): KVPair
+    {
+        $this->Namespace = $namespace;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
     {
         return (string)$this->Value;
     }

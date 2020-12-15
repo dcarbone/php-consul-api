@@ -48,7 +48,7 @@ class KVPairResponse extends AbstractValuedQueryResponse
     /**
      * @return \DCarbone\PHPConsulAPI\KV\KVPair|null
      */
-    public function getValue()
+    public function getValue(): ?KVPair
     {
         return $this->KVPair;
     }

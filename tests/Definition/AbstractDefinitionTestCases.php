@@ -26,6 +26,7 @@ use phpDocumentor\Reflection\Types\Integer;
 use phpDocumentor\Reflection\Types\Object_;
 use phpDocumentor\Reflection\Types\String_;
 use PHPUnit\Framework\TestCase;
+use function DCarbone\PHPConsulAPITests\determine_param_hint;
 
 /**
  * Class AbstractDefinitionTestCases
@@ -188,27 +189,61 @@ abstract class AbstractDefinitionTestCases extends TestCase
 
                     switch (true) {
                         case $parameterParamType instanceof Compound:
-                            $this->assertNull(
-                                $parameterType,
-                                sprintf(
-                                    'The %d parameter "%s" in constructor for class "%s" specifies multiple allowable types of "%s" in it\'s @param doc block tag but type-hints "%s".  These must be made equal.',
-                                    $i + 1,
-                                    $parameterName,
-                                    $className,
-                                    (string)$parameterParamType,
-                                    (string)$parameterType
-                                )
-                            );
+                            [$nullable, $expectedHint] = determine_param_hint($parameterParamType);
+                            if ($nullable) {
+                                if (null === $expectedHint) {
+                                    // if can be nullable or multiple concrete types, must not use typehint
+                                    $this->assertNull(
+                                        $parameterType,
+                                        sprintf(
+                                            'The %d parameter "%s" in constructor for class "%s" specifies multiple allowable types of "%s" in it\'s @param doc block tag but typehints "%s".  This parameter must have no typehint.',
+                                            $i + 1,
+                                            $parameterName,
+                                            $className,
+                                            (string)$parameterParamType,
+                                            (string)$parameterType
+                                        )
+                                    );
+                                } else {
+                                    // if can be nullable or singular concrete type, must hint concrete type
+                                    $this->assertNotNull(
+                                        $parameterType,
+                                        sprintf(
+                                            'The %d parameter "%s" in constructor for class "%s" specifies multiple allowable types of "%s" in it\'s @param doc block tag but typehints "%s".  This parameter must use typehint of %s',
+                                            $i + 1,
+                                            $parameterName,
+                                            $className,
+                                            (string)$parameterParamType,
+                                            (string)$parameterType,
+                                            (string)$expectedHint
+                                        )
+                                    );
+                                }
+                            } else {
+                                // if can be one of multiple concrete types, must not specify typehint
+                                $this->assertNull(
+                                    $parameterType,
+                                    sprintf(
+                                        'The %d parameter "%s" in constructor for class "%s" specifies multiple allowable types of "%s" in it\'s @param doc block tag but typehints "%s".  This parameter must have no typehint.',
+                                        $i + 1,
+                                        $parameterName,
+                                        $className,
+                                        (string)$parameterParamType,
+                                        (string)$parameterType
+                                    )
+                                );
+                            }
                             break;
 
                         case $parameterParamType instanceof String_:
                         case $parameterParamType instanceof Integer:
                         case $parameterParamType instanceof Float_:
                         case $parameterParamType instanceof Boolean:
-                            $this->assertNull(
-                                $parameterType,
+                            $this->assertEquals(
+                                (string)$parameterParamType,
+                                (string)$parameterType,
                                 sprintf(
-                                    'The %d parameter "%s" in constructor for class "%s" is specified as a scalar type by it\'s doc block @param tag of "%s" yet type hints "%s".  Either the param tag must be corrected or the type-hinting must be removed to retain php 5.6 compatibility',
+                                    'The %d parameter "%s" in constructor for class "%s" is specified as a scalar type by it\'s doc block @param tag of "%s" yet type hints "%s".  These must match.',
                                     $i + 1,
                                     $parameterName,
                                     $className,
@@ -223,7 +258,7 @@ abstract class AbstractDefinitionTestCases extends TestCase
                                 Array_::class,
                                 $parameterParamType,
                                 sprintf(
-                                    'The %d parameter "%s" in constructor for class "%s" specifies an "array" param type yet specifies "%s" as it\'s type-hint.  This must be corrected.',
+                                    'The %d parameter "%s" in constructor for class "%s" specifies an "array" param type yet specifies "%s" as it\'s typehint.  This must be corrected.',
                                     $i + 1,
                                     $parameterName,
                                     $className,
@@ -238,7 +273,7 @@ abstract class AbstractDefinitionTestCases extends TestCase
                                 $fqsn,
                                 $parameterType,
                                 sprintf(
-                                    'The %d parameter "%s" in constructor for class "%s" specifies value of "%s" but type-hints "%s"',
+                                    'The %d parameter "%s" in constructor for class "%s" specifies value of "%s" but typehints "%s"',
                                     $i + 1,
                                     $parameterName,
                                     $className,
@@ -283,7 +318,8 @@ abstract class AbstractDefinitionTestCases extends TestCase
     protected function _assertPropertyPHPDocExists(
         \ReflectionClass $reflectionClass,
         \ReflectionProperty $reflectionProperty
-    ) {
+    )
+    {
         $className = $reflectionClass->getName();
         $propertyName = $reflectionProperty->getName();
 
@@ -326,7 +362,8 @@ abstract class AbstractDefinitionTestCases extends TestCase
     protected function _assertCorrectPropertyZeroValue(
         \ReflectionClass $reflectionClass,
         \ReflectionProperty $reflectionProperty
-    ) {
+    )
+    {
         /** @var \phpDocumentor\Reflection\Type $propertyVarType */
 
         $className = $reflectionClass->getName();
@@ -452,7 +489,8 @@ abstract class AbstractDefinitionTestCases extends TestCase
     protected function _assertCorrectGetterImplementation(
         \ReflectionClass $reflectionClass,
         \ReflectionProperty $reflectionProperty
-    ) {
+    )
+    {
         /** @var \phpDocumentor\Reflection\Type $propertyVarType */
         /** @var \phpDocumentor\Reflection\DocBlock\Tags\Return_ $methodReturnTag */
 
@@ -530,7 +568,8 @@ abstract class AbstractDefinitionTestCases extends TestCase
     protected function _assertCorrectSetterImplementation(
         \ReflectionClass $reflectionClass,
         \ReflectionProperty $reflectionProperty
-    ) {
+    )
+    {
         /** @var \phpDocumentor\Reflection\Type $propertyVarType */
         /** @var \phpDocumentor\Reflection\DocBlock\Tags\Param $methodParamTag */
         /** @var \phpDocumentor\Reflection\DocBlock\Tags\Return_ $methodReturnTag */
@@ -637,21 +676,58 @@ abstract class AbstractDefinitionTestCases extends TestCase
         // Finally, attempt to validate setter declaration sanity
         switch (true) {
             // If the setter is designed to expect more than 1 type of variable, ensure that
-            // there is no type-hinting going on.
+            // there is no typehinting going on.
             case $methodParamType instanceof Compound:
-                $this->assertNull(
-                    $reflectionParamType,
-                    sprintf(
-                        'The "@param" docblock for parameter "%s" in setter "%s" for property "%s" in class "%s" indicates that the value can be one of "%s", but the param TypeHint explicitly requires "%s".',
-                        $expectedParamName,
-                        $expectedSetterName,
-                        $propertyName,
-                        $className,
-                        (string)$methodParamType,
-                        // Dumb.
-                        null !== $reflectionParamType ? $reflectionParamType->getName() : ''
-                    )
-                );
+                [$nullable, $expectedHint] = determine_param_hint($methodParamType);
+                if ($nullable) {
+                    if (null === $expectedHint) {
+                        // if can be nullable or multiple concrete types, must not use typehint
+                        $this->assertNull(
+                            $reflectionParamType,
+                            sprintf(
+                                'The "@param" docblock for parameter "%s" in setter "%s" for property "%s" in class "%s" indicates that the value can be one of "%s", but the param typehint explicitly requires "%s".  This parameter must have no typehint.',
+                                $expectedParamName,
+                                $expectedSetterName,
+                                $propertyName,
+                                $className,
+                                (string)$methodParamType,
+                                // Dumb.
+                                null !== $reflectionParamType ? $reflectionParamType->getName() : ''
+                            )
+                        );
+                    } else {
+                        // if can be null or singular concrete type, must hint concrete type
+                        $this->assertEquals(
+                            (string)$reflectionParamType,
+                            (string)$expectedHint,
+                            sprintf(
+                                'The "@param" docblock for parameter "%s" in setter "%s" for property "%s" in class "%s" indicates that the value can be one of "%s", but the param typehint explicitly requires "%s".  This parameter must use typehint "%s"',
+                                $expectedParamName,
+                                $expectedSetterName,
+                                $propertyName,
+                                $className,
+                                (string)$methodParamType,
+                                // Dumb.
+                                null !== $reflectionParamType ? $reflectionParamType->getName() : '',
+                                (string)$expectedHint
+                            )
+                        );
+                    }
+                } else {
+                    $this->assertNull(
+                        $reflectionParamType,
+                        sprintf(
+                            'The "@param" docblock for parameter "%s" in setter "%s" for property "%s" in class "%s" indicates that the value can be one of "%s", but the param typehint explicitly requires "%s".  This parameter must have no typehint',
+                            $expectedParamName,
+                            $expectedSetterName,
+                            $propertyName,
+                            $className,
+                            (string)$methodParamType,
+                            // Dumb.
+                            null !== $reflectionParamType ? $reflectionParamType->getName() : ''
+                        )
+                    );
+                }
                 break;
 
             case $propertyVarType instanceof String_:
@@ -692,7 +768,7 @@ abstract class AbstractDefinitionTestCases extends TestCase
                     'array',
                     $reflectionParamType->getName(),
                     sprintf(
-                        'Parameter "%s" in setter "%s" for property "%s" in class "%s" must use type-hint of "array" or have it\'s doc block param tag value changed.',
+                        'Parameter "%s" in setter "%s" for property "%s" in class "%s" must use typehint of "array" or have it\'s doc block param tag value changed.',
                         $parameterName,
                         $expectedSetterName,
                         $propertyName,
@@ -707,7 +783,7 @@ abstract class AbstractDefinitionTestCases extends TestCase
                     $fqsn,
                     $reflectionParamType,
                     sprintf(
-                        'Parameter "%s" in setter "%s" for property "%s" in class "%s" must use type-hint equal to "%s".  Currently specifies "%s"',
+                        'Parameter "%s" in setter "%s" for property "%s" in class "%s" must use typehint equal to "%s".  Currently specifies "%s"',
                         $parameterName,
                         $expectedSetterName,
                         $propertyName,

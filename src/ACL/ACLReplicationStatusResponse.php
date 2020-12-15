@@ -48,7 +48,7 @@ class ACLReplicationStatusResponse extends AbstractValuedQueryResponse
     /**
      * @return \DCarbone\PHPConsulAPI\ACL\ACLReplicationStatus|null
      */
-    public function getValue()
+    public function getValue(): ?ACLReplicationStatus
     {
         return $this->ACLReplicationStatus;
     }

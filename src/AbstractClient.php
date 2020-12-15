@@ -18,6 +18,7 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
 */
 
+use DCarbone\Go\HTTP;
 use DCarbone\Go\Time;
 use GuzzleHttp\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -30,6 +31,14 @@ use Psr\Http\Message\UriInterface;
  */
 abstract class AbstractClient
 {
+    private const headerConsulPrefix = 'X-Consul-';
+    private const headerConsulIndex = self::headerConsulPrefix . 'Index';
+    private const headerConsulContentHash = self::headerConsulPrefix . 'ContentHash';
+    private const headerConsulKnownLeader = self::headerConsulPrefix . 'KnownLeader';
+    private const headerConsulLastContact = self::headerConsulPrefix . 'LastContact';
+    private const headerConsulTranslateAddresses = self::headerConsulPrefix . 'Translate-Addresses';
+    private const headerCache = 'X-Cache';
+
     /** @var Config */
     protected $config;
 
@@ -53,9 +62,10 @@ abstract class AbstractClient
 
     /**
      * @param \DCarbone\PHPConsulAPI\RequestResponse $r
+     * @param int $desiredCode
      * @return \DCarbone\PHPConsulAPI\RequestResponse
      */
-    protected function requireOK(RequestResponse $r): RequestResponse
+    protected function requireCode(RequestResponse $r, int $desiredCode): RequestResponse
     {
         // If a previous error occurred, just return as-is.
         if (null !== $r->Err) {
@@ -67,19 +77,20 @@ abstract class AbstractClient
             // If this is a response...
             if ($r->Response instanceof ResponseInterface) {
                 // Get the response code...
-                $code = $r->Response->getStatusCode();
+                $actualCode = $r->Response->getStatusCode();
 
-                // If 200, move right along
-                if (200 === $code) {
+                // If $desiredCode, move right along
+                if ($desiredCode === $actualCode) {
                     return $r;
                 }
 
                 // Otherwise, return error
                 $r->Err = new Error(
                     sprintf(
-                        '%s - Non-200 response seen.  Response code: %d.  Message: %s',
+                        '%s - Non-%d response seen.  Response code: %d.  Message: %s',
                         get_class($this),
-                        $code,
+                        $desiredCode,
+                        $actualCode,
                         $r->Response->getReasonPhrase()
                     )
                 );
@@ -98,11 +109,20 @@ abstract class AbstractClient
     }
 
     /**
+     * @param \DCarbone\PHPConsulAPI\RequestResponse $r
+     * @return \DCarbone\PHPConsulAPI\RequestResponse
+     */
+    protected function requireOK(RequestResponse $r): RequestResponse
+    {
+        return $this->requireCode($r, HTTP\StatusOK);
+    }
+
+    /**
      * @param \DCarbone\PHPConsulAPI\Request $r
      * @return \DCarbone\PHPConsulAPI\RequestResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    protected function doRequest(Request $r): RequestResponse
+    protected function do(Request $r): RequestResponse
     {
         $rt = microtime(true);
         $response = null;
@@ -145,35 +165,33 @@ abstract class AbstractClient
         Time\Duration $duration,
         ResponseInterface $response,
         UriInterface $uri
-    ): QueryMeta {
+    ): QueryMeta
+    {
         $qm = new QueryMeta();
 
         $qm->RequestTime = $duration;
         $qm->RequestUrl = (string)$uri;
 
-        if ('' !== ($h = $response->getHeaderLine('X-Consul-Index'))) {
+        if ('' !== ($h = $response->getHeaderLine(self::headerConsulIndex))) {
             $qm->LastIndex = (int)$h;
         }
 
-        $qm->LastContentHash = $response->getHeaderLine('X-Consul-ContentHash');
+        $qm->LastContentHash = $response->getHeaderLine(self::headerConsulContentHash);
 
-        if ('' !== ($h = $response->getHeaderLine('X-Consul-KnownLeader'))) {
-            $qm->KnownLeader = (bool)$h;
-        } elseif ('' !== ($h = $response->getHeaderLine('X-Consul-Knownleader'))) {
+        // note: do not need to check both as guzzle response compares headers insensitively
+        if ('' !== ($h = $response->getHeaderLine(self::headerConsulKnownLeader))) {
             $qm->KnownLeader = (bool)$h;
         }
-
-        if ('' !== ($h = $response->getHeaderLine('X-Consul-LastContact'))) {
-            $qm->LastContact = (int)$h;
-        } elseif ('' !== ($h = $response->getHeaderLine('X-Consul-Lastcontact'))) {
+        // note: do not need to check both as guzzle response compares headers insensitively
+        if ('' !== ($h = $response->getHeaderLine(self::headerConsulLastContact))) {
             $qm->LastContact = (int)$h;
         }
 
-        if ('' !== ($h = $response->getHeaderLine('X-Consul-Translate-Addresses'))) {
+        if ('' !== ($h = $response->getHeaderLine(self::headerConsulTranslateAddresses))) {
             $qm->AddressTranslationEnabled = (bool)$h;
         }
 
-        if ('' !== ($h = $response->getHeaderLine('X-Cache'))) {
+        if ('' !== ($h = $response->getHeaderLine(self::headerCache))) {
             $qm->CacheAge = Time::Duration(intval($h, 10) * Time::Second);
         }
 

@@ -44,7 +44,7 @@ class CatalogClient extends AbstractClient
         $r = new Request('PUT', 'v1/catalog/register', $this->config, $catalogRegistration);
         $r->setWriteOptions($opts);
 
-        [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $_, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new WriteResponse(null, $err);
         }
@@ -63,7 +63,7 @@ class CatalogClient extends AbstractClient
         $r = new Request('PUT', 'v1/catalog/deregister', $this->config, $catalogDeregistration);
         $r->setWriteOptions($opts);
 
-        [$duration, $_, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $_, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new WriteResponse(null, $err);
         }
@@ -80,7 +80,7 @@ class CatalogClient extends AbstractClient
         $r = new Request('GET', 'v1/catalog/datacenters', $this->config);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$_, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$_, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new ValuedStringsResponse(null, $err);
         }
@@ -99,7 +99,7 @@ class CatalogClient extends AbstractClient
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new CatalogNodesResponse(null, null, $err);
         }
@@ -123,7 +123,7 @@ class CatalogClient extends AbstractClient
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new ValuedQueryStringsResponse(null, null, $err);
         }
@@ -148,7 +148,7 @@ class CatalogClient extends AbstractClient
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new CatalogNodeServicesListResponse(null, null, $err);
         }
@@ -184,7 +184,7 @@ class CatalogClient extends AbstractClient
         }
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new CatalogServicesResponse(null, null, $err);
         }
@@ -221,7 +221,7 @@ class CatalogClient extends AbstractClient
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new CatalogNodeResponse(null, null, $err);
         }
@@ -246,7 +246,7 @@ class CatalogClient extends AbstractClient
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->doRequest($r));
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
             return new GatewayServicesResponse(null, null, $err);
         }
