@@ -25,9 +25,12 @@ use DCarbone\PHPConsulAPI\Health\ServiceEntry;
  * Class PreparedQueryExecuteResponse
  * @package DCarbone\PHPConsulAPI\PreparedQuery
  */
-class PreparedQueryExecuteResponse extends AbstractModel {
+class PreparedQueryExecuteResponse extends AbstractModel
+{
     /** @var string */
     public $Service = '';
+    /** @var string */
+    public $Namespace = '';
     /** @var \DCarbone\PHPConsulAPI\Health\ServiceEntry[] */
     public $Nodes = [];
     /** @var \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions */
@@ -41,10 +44,11 @@ class PreparedQueryExecuteResponse extends AbstractModel {
      * PreparedQueryExecuteResponse constructor.
      * @param array $data
      */
-    public function __construct(array $data = []) {
+    public function __construct(array $data = [])
+    {
         parent::__construct($data);
 
-        if (null !== $this->DNS && !($this->DNS instanceof QueryDNSOptions)) {
+        if (!($this->DNS instanceof QueryDNSOptions)) {
             $this->DNS = new QueryDNSOptions((array)$this->DNS);
         }
 
@@ -61,35 +65,48 @@ class PreparedQueryExecuteResponse extends AbstractModel {
     /**
      * @return string
      */
-    public function getService(): string {
+    public function getService(): string
+    {
         return $this->Service;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNamespace(): string
+    {
+        return $this->Namespace;
     }
 
     /**
      * @return \DCarbone\PHPConsulAPI\Health\ServiceEntry[]
      */
-    public function getNodes(): array {
+    public function getNodes(): array
+    {
         return $this->Nodes;
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions|null
      */
-    public function getDNS() {
+    public function getDNS(): ?QueryDNSOptions
+    {
         return $this->DNS;
     }
 
     /**
      * @return string
      */
-    public function getDatacenter(): string {
+    public function getDatacenter(): string
+    {
         return $this->Datacenter;
     }
 
     /**
      * @return int
      */
-    public function getFailovers(): int {
+    public function getFailovers(): int
+    {
         return $this->Failovers;
     }
 }

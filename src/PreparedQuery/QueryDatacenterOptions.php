@@ -24,7 +24,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class QueryDatacenterOptions
  * @package DCarbone\PHPConsulAPI\PreparedQuery
  */
-class QueryDatacenterOptions extends AbstractModel {
+class QueryDatacenterOptions extends AbstractModel
+{
     /** @var int */
     public $NearestN = 0;
     /** @var string[] */
@@ -33,7 +34,8 @@ class QueryDatacenterOptions extends AbstractModel {
     /**
      * @return int
      */
-    public function getNearestN(): int {
+    public function getNearestN(): int
+    {
         return $this->NearestN;
     }
 
@@ -41,7 +43,8 @@ class QueryDatacenterOptions extends AbstractModel {
      * @param int $nearestN
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions
      */
-    public function setNearestN(int $nearestN): QueryDatacenterOptions {
+    public function setNearestN(int $nearestN): QueryDatacenterOptions
+    {
         $this->NearestN = $nearestN;
         return $this;
     }
@@ -49,7 +52,8 @@ class QueryDatacenterOptions extends AbstractModel {
     /**
      * @return string[]
      */
-    public function getDatacenters(): array {
+    public function getDatacenters(): array
+    {
         return $this->Datacenters;
     }
 
@@ -57,7 +61,8 @@ class QueryDatacenterOptions extends AbstractModel {
      * @param string[] $datacenters
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions
      */
-    public function setDatacenters(array $datacenters): QueryDatacenterOptions {
+    public function setDatacenters(array $datacenters): QueryDatacenterOptions
+    {
         $this->Datacenters = [];
         foreach ($datacenters as $datacenter) {
             $this->addDatacenter($datacenter);
@@ -69,7 +74,8 @@ class QueryDatacenterOptions extends AbstractModel {
      * @param string $datacenter
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions
      */
-    public function addDatacenter(string $datacenter): QueryDatacenterOptions {
+    public function addDatacenter(string $datacenter): QueryDatacenterOptions
+    {
         $this->Datacenters[] = $datacenter;
         return $this;
     }

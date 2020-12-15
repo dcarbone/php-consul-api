@@ -34,11 +34,21 @@ class ServiceQuery extends AbstractModel
     /** @var string */
     public $Service = '';
     /** @var string */
+    public $Namespace = '';
+    /** @var string */
     public $Near = '';
+    /** @var string[] */
+    public $IgnoreCheckIDs = null;
     /** @var \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions */
     public $Failover = null;
     /** @var bool */
     public $OnlyPassing = false;
+    /** @var array|null */
+    public $NodeMeta = null;
+    /** @var array|null */
+    public $ServiceMeta = null;
+    /** @var bool */
+    public $Connect = false;
 
     /**
      * ServiceQuery constructor.
@@ -47,7 +57,7 @@ class ServiceQuery extends AbstractModel
     public function __construct(array $data = [])
     {
         parent::__construct($data);
-        if (null !== $this->Failover && !($this->Failover instanceof QueryDatacenterOptions)) {
+        if (!($this->Failover instanceof QueryDatacenterOptions)) {
             $this->Failover = new QueryDatacenterOptions((array)$this->Failover);
         }
     }
@@ -73,6 +83,24 @@ class ServiceQuery extends AbstractModel
     /**
      * @return string
      */
+    public function getNamespace(): string
+    {
+        return $this->Namespace;
+    }
+
+    /**
+     * @param string $namespace
+     * @return ServiceQuery
+     */
+    public function setNamespace(string $namespace): ServiceQuery
+    {
+        $this->Namespace = $namespace;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
     public function getNear(): string
     {
         return $this->Near;
@@ -91,7 +119,7 @@ class ServiceQuery extends AbstractModel
     /**
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions
      */
-    public function getFailover()
+    public function getFailover(): QueryDatacenterOptions
     {
         return $this->Failover;
     }
@@ -121,6 +149,78 @@ class ServiceQuery extends AbstractModel
     public function setOnlyPassing(bool $onlyPassing): ServiceQuery
     {
         $this->OnlyPassing = $onlyPassing;
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getIgnoreCheckIDs(): ?array
+    {
+        return $this->IgnoreCheckIDs;
+    }
+
+    /**
+     * @param string[] $ignoreCheckIDs
+     * @return ServiceQuery
+     */
+    public function setIgnoreCheckIDs(?array $ignoreCheckIDs): ServiceQuery
+    {
+        $this->IgnoreCheckIDs = $ignoreCheckIDs;
+        return $this;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getNodeMeta(): ?array
+    {
+        return $this->NodeMeta;
+    }
+
+    /**
+     * @param array|null $nodeMeta
+     * @return ServiceQuery
+     */
+    public function setNodeMeta(?array $nodeMeta): ServiceQuery
+    {
+        $this->NodeMeta = $nodeMeta;
+        return $this;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getServiceMeta(): ?array
+    {
+        return $this->ServiceMeta;
+    }
+
+    /**
+     * @param array|null $serviceMeta
+     * @return ServiceQuery
+     */
+    public function setServiceMeta(?array $serviceMeta): ServiceQuery
+    {
+        $this->ServiceMeta = $serviceMeta;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isConnect(): bool
+    {
+        return $this->Connect;
+    }
+
+    /**
+     * @param bool $connect
+     * @return ServiceQuery
+     */
+    public function setConnect(bool $connect): ServiceQuery
+    {
+        $this->Connect = $connect;
         return $this;
     }
 }

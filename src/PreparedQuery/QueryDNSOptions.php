@@ -24,14 +24,16 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  * Class QueryDNSOptions
  * @package DCarbone\PHPConsulAPI\PreparedQuery
  */
-class QueryDNSOptions extends AbstractModel {
+class QueryDNSOptions extends AbstractModel
+{
     /** @var string */
     public $TTL = '';
 
     /**
      * @return string
      */
-    public function getTTL(): string {
+    public function getTTL(): string
+    {
         return (string)$this->TTL;
     }
 
@@ -39,7 +41,8 @@ class QueryDNSOptions extends AbstractModel {
      * @param string $ttl
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions
      */
-    public function setTTL(string $ttl): QueryDNSOptions {
+    public function setTTL(string $ttl): QueryDNSOptions
+    {
         $this->TTL = $ttl;
         return $this;
     }
@@ -47,7 +50,8 @@ class QueryDNSOptions extends AbstractModel {
     /**
      * @return string
      */
-    public function __toString() {
+    public function __toString(): string
+    {
         return (string)$this->TTL;
     }
 }
