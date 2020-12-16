@@ -36,13 +36,13 @@ final class RequestResponse implements \ArrayAccess
 
     /**
      * RequestResponse constructor.
-     * @param float $durf
+     * @param \DCarbone\Go\Time\Duration $durf
      * @param \Psr\Http\Message\ResponseInterface|null $resp
      * @param \DCarbone\PHPConsulAPI\Error|null $err
      */
-    public function __construct(float $durf, ?ResponseInterface $resp, ?Error $err)
+    public function __construct(Time\Duration $durf, ?ResponseInterface $resp, ?Error $err)
     {
-        $this->Duration = Time::Duration($durf * Time::Second);
+        $this->Duration = $durf;
         $this->Response = $resp;
         $this->Err = $err;
     }
@@ -75,7 +75,7 @@ final class RequestResponse implements \ArrayAccess
      * @param mixed $offset
      * @return bool
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return is_int($offset) && $offset >= 0 && $offset < 3;
     }

@@ -39,7 +39,7 @@ class KVClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\KV\KVPairResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Get(string $key,?QueryOptions $opts = null): KVPairResponse
+    public function Get(string $key, ?QueryOptions $opts = null): KVPairResponse
     {
         $r = new Request('GET', sprintf('v1/kv/%s', $key), $this->config);
         $r->setQueryOptions($opts);
@@ -82,7 +82,7 @@ class KVClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\WriteResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Put(KVPair $p,?WriteOptions $opts = null): WriteResponse
+    public function Put(KVPair $p, ?WriteOptions $opts = null): WriteResponse
     {
         $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
         $r->setWriteOptions($opts);
@@ -104,7 +104,7 @@ class KVClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\WriteResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Delete(string $key,?WriteOptions $opts = null): WriteResponse
+    public function Delete(string $key, ?WriteOptions $opts = null): WriteResponse
     {
         $r = new Request('DELETE', sprintf('v1/kv/%s', $key), $this->config);
         $r->setWriteOptions($opts);
@@ -123,7 +123,7 @@ class KVClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\KV\KVPairsResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function List(string $prefix = '',?QueryOptions $opts = null): KVPairsResponse
+    public function List(string $prefix = '', ?QueryOptions $opts = null): KVPairsResponse
     {
         $r = new Request('GET', sprintf('v1/kv/%s', $prefix), $this->config);
         $r->setQueryOptions($opts);
@@ -151,7 +151,7 @@ class KVClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\ValuedQueryStringsResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Keys(string $prefix = '',?QueryOptions $opts = null): ValuedQueryStringsResponse
+    public function Keys(string $prefix = '', ?QueryOptions $opts = null): ValuedQueryStringsResponse
     {
         $r = new Request('GET', sprintf('v1/kv/%s', $prefix), $this->config);
         $r->setQueryOptions($opts);
@@ -177,7 +177,7 @@ class KVClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\ValuedWriteBoolResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function CAS(KVPair $p,?WriteOptions $opts = null): ValuedWriteBoolResponse
+    public function CAS(KVPair $p, ?WriteOptions $opts = null): ValuedWriteBoolResponse
     {
         $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
         $r->setWriteOptions($opts);
@@ -205,7 +205,7 @@ class KVClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\WriteResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Acquire(KVPair $p,?WriteOptions $opts = null): WriteResponse
+    public function Acquire(KVPair $p, ?WriteOptions $opts = null): WriteResponse
     {
         $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
         $r->setWriteOptions($opts);
@@ -228,7 +228,7 @@ class KVClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\ValuedWriteBoolResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function DeleteCAS(KVPair $p,?WriteOptions $opts = null): ValuedWriteBoolResponse
+    public function DeleteCAS(KVPair $p, ?WriteOptions $opts = null): ValuedWriteBoolResponse
     {
         $r = new Request('DELETE', sprintf('v1/kv/%s', ltrim($p->Key, "/")), $this->config);
         $r->setWriteOptions($opts);
@@ -253,7 +253,7 @@ class KVClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\WriteResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Release(KVPair $p,?WriteOptions $opts = null): WriteResponse
+    public function Release(KVPair $p, ?WriteOptions $opts = null): WriteResponse
     {
         $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
         $r->setWriteOptions($opts);
@@ -276,7 +276,7 @@ class KVClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\WriteResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function DeleteTree(string $prefix,?WriteOptions $opts = null): WriteResponse
+    public function DeleteTree(string $prefix, ?WriteOptions $opts = null): WriteResponse
     {
         $r = new Request('DELETE', sprintf('v1/kv/%s', $prefix), $this->config);
         $r->params['recurse'] = '';
@@ -296,7 +296,7 @@ class KVClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\KV\KVTxnAPIResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Txn(KVTxnOps $txn,?QueryOptions $opts = null): KVTxnAPIResponse
+    public function Txn(KVTxnOps $txn, ?QueryOptions $opts = null): KVTxnAPIResponse
     {
         $ops = new KVTxnOps();
         foreach ($txn as $op) {

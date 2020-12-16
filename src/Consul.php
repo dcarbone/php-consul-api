@@ -36,6 +36,8 @@ use DCarbone\PHPConsulAPI\Status\StatusClient;
  */
 class Consul
 {
+    // "public" consts
+
     public const HTTPAddrEnvName       = 'CONSUL_HTTP_ADDR';
     public const HTTPTokenEnvName      = 'CONSUL_HTTP_TOKEN';
     public const HTTPTokenFileEnvName  = 'CONSUL_HTTP_TOKEN_FILE';
@@ -102,6 +104,16 @@ class Consul
     public const AutopilotUpgradeAwaitNewServers    = 'await-new-servers';
     public const AutopilotUpgradeAwaitServerRemoval = 'await-server-removal';
     public const AutopilotUpgradeDisabled           = 'disabled';
+
+    // "private" consts
+
+    public const headerConsulPrefix             = 'X-Consul-';
+    public const headerConsulIndex              = self::headerConsulPrefix . 'Index';
+    public const headerConsulContentHash        = self::headerConsulPrefix . 'ContentHash';
+    public const headerConsulKnownLeader        = self::headerConsulPrefix . 'KnownLeader';
+    public const headerConsulLastContact        = self::headerConsulPrefix . 'LastContact';
+    public const headerConsulTranslateAddresses = self::headerConsulPrefix . 'Translate-Addresses';
+    public const headerCache                    = 'X-Cache';
 
     /** @var \DCarbone\PHPConsulAPI\ACL\ACLClient */
     public $ACL;

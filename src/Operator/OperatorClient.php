@@ -40,7 +40,7 @@ class OperatorClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function AreaCreate(Area $area,?WriteOptions $opts = null): ValuedWriteStringResponse
+    public function AreaCreate(Area $area, ?WriteOptions $opts = null): ValuedWriteStringResponse
     {
         $r = new Request('POST', 'v1/operator/area', $this->config, $area);
         $r->setWriteOptions($opts);
@@ -66,7 +66,7 @@ class OperatorClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function AreaUpdate(string $areaID, Area $area,?WriteOptions $opts = null): ValuedWriteStringResponse
+    public function AreaUpdate(string $areaID, Area $area, ?WriteOptions $opts = null): ValuedWriteStringResponse
     {
         $r = new Request('PUT', 'v1/operator/area/' . $areaID, $this->config, $area);
         $r->setWriteOptions($opts);
@@ -91,7 +91,7 @@ class OperatorClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\Operator\OperatorAreasResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function AreaGet(string $areaID,?QueryOptions $opts = null): OperatorAreasResponse
+    public function AreaGet(string $areaID, ?QueryOptions $opts = null): OperatorAreasResponse
     {
         $r = new Request('GET', sprintf('v1/operator/area/%s', urlencode($areaID)), $this->config);
         $r->setQueryOptions($opts);
@@ -132,7 +132,7 @@ class OperatorClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\WriteResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function AreaDelete(string $areaID,?WriteOptions $opts = null): WriteResponse
+    public function AreaDelete(string $areaID, ?WriteOptions $opts = null): WriteResponse
     {
         $r = new Request('DELETE', 'v1/operator/area/' . $areaID, $this->config);
         $r->setWriteOptions($opts);
@@ -152,7 +152,7 @@ class OperatorClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\Operator\OperatorAreaJoinResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function AreaJoin(string $areaID, array $addresses,?WriteOptions $opts = null): OperatorAreaJoinResponse
+    public function AreaJoin(string $areaID, array $addresses, ?WriteOptions $opts = null): OperatorAreaJoinResponse
     {
         $r = new Request('PUT', 'v1/operator/area/' . $areaID . '/join', $this->config, $addresses);
         $r->setWriteOptions($opts);
@@ -177,7 +177,7 @@ class OperatorClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\Operator\OperatorSerfMembersResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function AreaMembers(string $areaID,?QueryOptions $opts = null): OperatorSerfMembersResponse
+    public function AreaMembers(string $areaID, ?QueryOptions $opts = null): OperatorSerfMembersResponse
     {
         $r = new Request('GET', 'v1/operator/area/' . $areaID . '/members', $this->config);
         $r->setQueryOptions($opts);
@@ -226,7 +226,7 @@ class OperatorClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\Error|null
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function AutopilotSetConfiguration(AutopilotConfiguration $conf,?WriteOptions $opts = null): ?Error
+    public function AutopilotSetConfiguration(AutopilotConfiguration $conf, ?WriteOptions $opts = null): ?Error
     {
         $r = new Request('PUT', 'v1/operator/autopilot/configuration', $this->config, $conf);
         $r->setWriteOptions($opts);
@@ -340,7 +340,7 @@ class OperatorClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\Error|null
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function RaftRemovePeerByAddress(string $address,?WriteOptions $opts = null): ?Error
+    public function RaftRemovePeerByAddress(string $address, ?WriteOptions $opts = null): ?Error
     {
         $r = new Request('DELETE', 'v1/operator/raft/peer', $this->config);
         $r->setWriteOptions($opts);

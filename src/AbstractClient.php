@@ -31,14 +31,6 @@ use Psr\Http\Message\UriInterface;
  */
 abstract class AbstractClient
 {
-    private const headerConsulPrefix = 'X-Consul-';
-    private const headerConsulIndex = self::headerConsulPrefix . 'Index';
-    private const headerConsulContentHash = self::headerConsulPrefix . 'ContentHash';
-    private const headerConsulKnownLeader = self::headerConsulPrefix . 'KnownLeader';
-    private const headerConsulLastContact = self::headerConsulPrefix . 'LastContact';
-    private const headerConsulTranslateAddresses = self::headerConsulPrefix . 'Translate-Addresses';
-    private const headerCache = 'X-Cache';
-
     /** @var Config */
     protected $config;
 
@@ -124,7 +116,7 @@ abstract class AbstractClient
      */
     protected function do(Request $r): RequestResponse
     {
-        $rt = microtime(true);
+        $start = microtime(true);
         $response = null;
         $err = null;
 
@@ -152,7 +144,7 @@ abstract class AbstractClient
         }
 
         // Calculate duration and move along whatever response and error we see (if any)
-        return new RequestResponse(intval((microtime(true) - $rt)), $response, $err);
+        return new RequestResponse(Time::Duration(intval((microtime(true) - $start) * Time::Second)), $response, $err);
     }
 
     /**
@@ -161,37 +153,33 @@ abstract class AbstractClient
      * @param \Psr\Http\Message\UriInterface $uri
      * @return \DCarbone\PHPConsulAPI\QueryMeta
      */
-    protected function buildQueryMeta(
-        Time\Duration $duration,
-        ResponseInterface $response,
-        UriInterface $uri
-    ): QueryMeta
+    protected function buildQueryMeta(Time\Duration $duration, ResponseInterface $response, UriInterface $uri): QueryMeta
     {
         $qm = new QueryMeta();
 
         $qm->RequestTime = $duration;
         $qm->RequestUrl = (string)$uri;
 
-        if ('' !== ($h = $response->getHeaderLine(self::headerConsulIndex))) {
+        if ('' !== ($h = $response->getHeaderLine(Consul::headerConsulIndex))) {
             $qm->LastIndex = (int)$h;
         }
 
-        $qm->LastContentHash = $response->getHeaderLine(self::headerConsulContentHash);
+        $qm->LastContentHash = $response->getHeaderLine(Consul::headerConsulContentHash);
 
         // note: do not need to check both as guzzle response compares headers insensitively
-        if ('' !== ($h = $response->getHeaderLine(self::headerConsulKnownLeader))) {
+        if ('' !== ($h = $response->getHeaderLine(Consul::headerConsulKnownLeader))) {
             $qm->KnownLeader = (bool)$h;
         }
         // note: do not need to check both as guzzle response compares headers insensitively
-        if ('' !== ($h = $response->getHeaderLine(self::headerConsulLastContact))) {
+        if ('' !== ($h = $response->getHeaderLine(Consul::headerConsulLastContact))) {
             $qm->LastContact = (int)$h;
         }
 
-        if ('' !== ($h = $response->getHeaderLine(self::headerConsulTranslateAddresses))) {
+        if ('' !== ($h = $response->getHeaderLine(Consul::headerConsulTranslateAddresses))) {
             $qm->AddressTranslationEnabled = (bool)$h;
         }
 
-        if ('' !== ($h = $response->getHeaderLine(self::headerCache))) {
+        if ('' !== ($h = $response->getHeaderLine(Consul::headerCache))) {
             $qm->CacheAge = Time::Duration(intval($h, 10) * Time::Second);
         }
 
@@ -232,5 +220,33 @@ abstract class AbstractClient
                 )
             )
         );
+    }
+
+    /**
+     * @param string $path
+     * @param mixed $body
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    protected function _putStrResp(string $path, $body, ?WriteOptions $opts): ValuedWriteStringResponse
+    {
+        $r = new Request(HTTP\MethodPut, $path, $this->config, $body);
+        $r->setWriteOptions($opts);
+
+        /** @var \Psr\Http\Message\ResponseInterface $response */
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
+        if (null !== $err) {
+            return new ValuedWriteStringResponse('', null, $err);
+        }
+
+        [$data, $err] = $this->decodeBody($response->getBody());
+        if (null !== $err) {
+            return new ValuedWriteStringResponse('', null, $err);
+        }
+
+        $wm = $this->buildWriteMeta($duration);
+
+        return new ValuedWriteStringResponse($data, $wm, null);
     }
 }
