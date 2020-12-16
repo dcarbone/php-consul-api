@@ -199,7 +199,7 @@ class Request
     /**
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      */
-    public function setWriteOptions(WriteOptions $opts = null): void
+    public function setWriteOptions(?WriteOptions $opts): void
     {
         if (null === $opts) {
             return;

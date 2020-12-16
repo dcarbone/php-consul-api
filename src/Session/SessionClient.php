@@ -18,11 +18,14 @@ namespace DCarbone\PHPConsulAPI\Session;
    limitations under the License.
 */
 
+use DCarbone\Go\HTTP;
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Request;
+use DCarbone\PHPConsulAPI\ValuedWriteStringResponse;
 use DCarbone\PHPConsulAPI\WriteOptions;
+use DCarbone\PHPConsulAPI\WriteResponse;
 
 /**
  * Class SessionClient
@@ -30,115 +33,72 @@ use DCarbone\PHPConsulAPI\WriteOptions;
  */
 class SessionClient extends AbstractClient
 {
-    public const SessionBehaviorRelease = 'release';
-    public const SessionBehaviorDelete = 'DELETE';
-
     /**
-     * @param SessionEntry|null $sessionEntry
+     * @param \DCarbone\PHPConsulAPI\Session\SessionEntry|null $sessionEntry
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return array(
-     * @type string
-     * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
+     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function CreateNoChecks(SessionEntry $sessionEntry = null, WriteOptions $opts = null): array
+    public function CreateNoChecks(?SessionEntry $sessionEntry = null, ?WriteOptions $opts = null): ValuedWriteStringResponse
     {
         if (null === $sessionEntry) {
-            $sessionEntry = new SessionEntry();
+            $body = new SessionEntry();
         } else {
-            $sessionEntry->Checks = [];
+            $body = clone $sessionEntry;
         }
 
-        $r = new Request('PUT', 'v1/session/create', $this->config, $sessionEntry);
-        $r->setWriteOptions($opts);
+        $body->Checks = [];
+        $body->NodeChecks = [];
+        $body->ServiceChecks = [];
 
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->do($r));
-        if (null !== $err) {
-            return ['', null, $err];
-        }
-
-        $wm = $this->buildWriteMeta($duration);
-
-        [$data, $err] = $this->decodeBody($response->getBody());
-        if (null !== $err) {
-            return ['', $wm, $err];
-        }
-
-        return [$data['ID'] ?? '', $wm, null];
+        return $this->_create('v1/session/create', $body, $opts);
     }
 
     /**
-     * @param SessionEntry|null $sessionEntry
+     * @param \DCarbone\PHPConsulAPI\Session\SessionEntry|null $sessionEntry
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return array(
-     * @type string
-     * @type \DCarbone\PHPConsulAPI\WriteMeta write metadata
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
+     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Create(SessionEntry $sessionEntry = null, WriteOptions $opts = null): array
+    public function Create(?SessionEntry $sessionEntry = null, ?WriteOptions $opts = null): ValuedWriteStringResponse
     {
-        $r = new Request('PUT', 'v1/session/create', $this->config, $sessionEntry);
-        $r->setWriteOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->do($r));
-        if (null !== $err) {
-            return ['', null, $err];
-        }
-
-        $wm = $this->buildWriteMeta($duration);
-
-        [$data, $err] = $this->decodeBody($response->getBody());
-
-        if (null !== $err) {
-            return ['', $wm, $err];
-        }
-
-        return [$data['ID'] ?? '', $wm, null];
+        return $this->_create('v1/session/create', $sessionEntry, $opts);
     }
 
     /**
      * @param string $id
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\WriteMeta|null write metadata or null on error
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Destroy(string $id, WriteOptions $opts = null): array
+    public function Destroy(string $id, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = new Request('PUT', sprintf('v1/session/destroy/%s', $id), $this->config);
+        $r = new Request(HTTP\MethodPut, sprintf('v1/session/destroy/%s', $id), $this->config);
         $r->setWriteOptions($opts);
 
         [$duration, $_, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
-            return [null, $err];
+            return new WriteResponse(null, $err);
         }
 
-        return [$this->buildWriteMeta($duration), null];
+        return new WriteResponse($this->buildWriteMeta($duration), null);
     }
 
     /**
      * @param string $id
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\Session\SessionEntry[]|null list of session entries or null on error
-     * @type \DCarbone\PHPConsulAPI\WriteMeta|null write metadata or null on error
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntriesWriteResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Renew(string $id, WriteOptions $opts = null): array
+    public function Renew(string $id, ?WriteOptions $opts = null): SessionEntriesWriteResponse
     {
-        $r = new Request('PUT', sprintf('v1/session/renew/%s', $id), $this->config);
+        $r = new Request(HTTP\MethodPut, sprintf('v1/session/renew/%s', $id), $this->config);
         $r->setWriteOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list ($duration, $response, $err) = $this->do($r);
         if (null !== $err) {
-            return [null, null, $err];
+            return new SessionEntriesWriteResponse(null, null, $err);
         }
 
         $wm = $this->buildWriteMeta($duration);
@@ -146,136 +106,104 @@ class SessionClient extends AbstractClient
         $code = $response->getStatusCode();
 
         if (404 === $code) {
-            return [null, $wm, null];
+            return new SessionEntriesWriteResponse(null, $wm, null);
         }
 
         if (200 !== $code) {
-            return [null,
+            return new SessionEntriesWriteResponse(null,
                 $wm,
                 new Error(sprintf(
                     '%s::renew - Unexpected response code %d.  Reason: %s',
                     get_class($this),
                     $code,
                     $response->getReasonPhrase()
-                ))];
+                )));
         }
 
         [$data, $err] = $this->decodeBody($response->getBody());
-
-        if (null !== $err) {
-            return [null, $wm, $err];
-        }
-
-        return [$this->hydrateEntries($data), $wm, null];
+        return new SessionEntriesWriteResponse($data, $wm, $err);
     }
 
     /**
      * @param string $id
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\Session\SessionEntry[]|null list of session entries or null on error / empty response
-     * @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata or null on error
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntriesQueryResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Info(string $id, QueryOptions $opts = null): array
+    public function Info(string $id, ?QueryOptions $opts = null): SessionEntriesQueryResponse
     {
-        $r = new Request('GET', sprintf('v1/session/info/%s', $id), $this->config);
-        $r->setQueryOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->do($r));
-        if (null !== $err) {
-            return [null, null, $err];
-        }
-
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
-        [$data, $err] = $this->decodeBody($response->getBody());
-
-        if (null !== $err) {
-            return [null, $qm, $err];
-        }
-
-        if (!is_array($data) || 0 === count($data)) {
-            return [null, $qm, null];
-        }
-
-        return [$this->hydrateEntries($data), $qm, null];
+        return $this->_get(sprintf('v1/session/info/%s', $id), $opts);
     }
 
     /**
      * @param string $node
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\Session\SessionEntry[]|null list of session entries or null on error
-     * @type \DCarbone\PHPConsulAPI\QueryMeta|null query metadata or null on error
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntriesQueryResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Node(string $node, QueryOptions $opts = null): array
+    public function Node(string $node, ?QueryOptions $opts = null): SessionEntriesQueryResponse
     {
-        $r = new Request('GET', sprintf('v1/session/node/%s', $node), $this->config);
-        $r->setQueryOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->do($r));
-        if (null !== $err) {
-            return [null, null, $err];
-        }
-
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
-        [$data, $err] = $this->decodeBody($response->getBody());
-
-        if (null !== $err) {
-            return [null, $qm, $err];
-        }
-
-        return [$this->hydrateEntries($data), $qm, null];
+        return $this->_get(sprintf('v1/session/node/%s', $node), $opts);
     }
 
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return array(
-     * @type \DCarbone\PHPConsulAPI\Session\SessionEntry[]|null list of session entries or null on error
-     * @type \DCarbone\PHPConsulAPI\QueryMeta query metadata
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntriesQueryResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function List(QueryOptions $opts = null): array
+    public function List(?QueryOptions $opts = null): SessionEntriesQueryResponse
     {
-        $r = new Request('GET', 'v1/session/list', $this->config);
+        return $this->_get('v1/session/list', $opts);
+    }
+
+    /**
+     * @param string $path
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntriesQueryResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    private function _get(string $path, ?QueryOptions $opts): SessionEntriesQueryResponse
+    {
+        $r = new Request(HTTP\MethodGet, $path, $this->config);
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->requireOK($this->do($r));
         if (null !== $err) {
-            return [null, null, $err];
+            return new SessionEntriesQueryResponse(null, null, $err);
         }
 
         $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
 
         [$data, $err] = $this->decodeBody($response->getBody());
-
-        if (null !== $err) {
-            return [null, $qm, $err];
-        }
-
-        return [$this->hydrateEntries($data), $qm, null];
+        return new SessionEntriesQueryResponse($data, $qm, $err);
     }
 
     /**
-     * @param array $data
-     * @return array
+     * @param string $path
+     * @param \DCarbone\PHPConsulAPI\Session\SessionEntry $entry
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    private function hydrateEntries(array $data)
+    private function _create(string $path, SessionEntry $entry, ?WriteOptions $opts): ValuedWriteStringResponse
     {
-        $entries = [];
-        foreach ($data as $entry) {
-            $entries[] = new SessionEntry($entry);
+        $r = new Request(HTTP\MethodPut, $path, $this->config, $entry->_toAPIPayload());
+        $r->setWriteOptions($opts);
+
+        /** @var \Psr\Http\Message\ResponseInterface $response */
+        [$duration, $response, $err] = $this->requireOK($this->do($r));
+        if (null !== $err) {
+            return new ValuedWriteStringResponse('', null, $err);
         }
 
-        return $entries;
+        $wm = $this->buildWriteMeta($duration);
+
+        [$data, $err] = $this->decodeBody($response->getBody());
+        if (null !== $err) {
+            return new ValuedWriteStringResponse('', $wm, $err);
+        }
+
+        return new ValuedWriteStringResponse($data['ID'] ?? '', $wm, null);
     }
 }

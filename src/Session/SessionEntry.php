@@ -35,14 +35,20 @@ class SessionEntry extends AbstractModel
     public $Name = '';
     /** @var string */
     public $Node = '';
-    /** @var string[] */
-    public $Checks = [];
     /** @var \DCarbone\Go\Time\Duration */
     public $LockDelay = null;
     /** @var string */
     public $Behavior = '';
     /** @var string */
     public $TTL = '';
+    /** @var string */
+    public $Namespace = '';
+    /** @var string[] */
+    public $Checks = [];
+    /** @var string[] */
+    public $NodeChecks = [];
+    /** @var \DCarbone\PHPConsulAPI\Session\ServiceCheck[] */
+    public $ServiceChecks = [];
 
     /**
      * SessionEntry constructor.
@@ -52,7 +58,12 @@ class SessionEntry extends AbstractModel
     {
         parent::__construct($data);
         if (!($this->LockDelay instanceof Time\Duration)) {
-            $this->LockDelay = new Time\Duration($this->LockDelay ?? 0);
+            $this->LockDelay = Time::Duration($this->LockDelay);
+        }
+        foreach ($this->ServiceChecks as &$check) {
+            if (!($check instanceof ServiceCheck)) {
+                $check = new ServiceCheck((array)$check);
+            }
         }
     }
 
@@ -207,5 +218,113 @@ class SessionEntry extends AbstractModel
     {
         $this->TTL = $ttl;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNamespace(): string
+    {
+        return $this->Namespace;
+    }
+
+    /**
+     * @param string $namespace
+     * @return SessionEntry
+     */
+    public function setNamespace(string $namespace): SessionEntry
+    {
+        $this->Namespace = $namespace;
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getNodeChecks(): array
+    {
+        return $this->NodeChecks;
+    }
+
+    /**
+     * @param string $check
+     * @return $this
+     */
+    public function addNodeCheck(string $check): SessionEntry
+    {
+        $this->NodeChecks[] = $check;
+        return $this;
+    }
+
+    /**
+     * @param string[] $nodeChecks
+     * @return SessionEntry
+     */
+    public function setNodeChecks(array $nodeChecks): SessionEntry
+    {
+        $this->NodeChecks = [];
+        foreach ($nodeChecks as $check) {
+            $this->addNodeCheck($check);
+        }
+        return $this;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Session\ServiceCheck[]
+     */
+    public function getServiceChecks(): array
+    {
+        return $this->ServiceChecks;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Session\ServiceCheck $check
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
+     */
+    public function addServiceCheck(ServiceCheck $check): SessionEntry
+    {
+        $this->ServiceChecks[] = $check;
+        return $this;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Session\ServiceCheck[] $serviceChecks
+     * @return SessionEntry
+     */
+    public function setServiceChecks(array $serviceChecks): SessionEntry
+    {
+        $this->ServiceChecks = [];
+        foreach ($serviceChecks as $check) {
+            $this->addServiceCheck($check);
+        }
+        return $this;
+    }
+
+    /**
+     * @param \DCarbone\Go\Time\Duration|null $dur
+     * @return string
+     */
+    private static function durToMsec(?Time\Duration $dur): string
+    {
+        if (null === $dur) {
+            return '0ms';
+        }
+        $ns = $dur->Nanoseconds();
+        $ms = intval($ns / Time::Millisecond);
+        if (0 < $ns && 0 === $ms) {
+            return '1ms';
+        }
+        return sprintf('%dms', $ms);
+    }
+
+
+    /**
+     * @return array
+     */
+    public function _toAPIPayload(): array
+    {
+        $a = self::jsonSerialize();
+        $a['LockDelay'] = self::durToMsec($this->LockDelay);
+        return $a;
     }
 }

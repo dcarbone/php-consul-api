@@ -19,7 +19,10 @@ namespace DCarbone\PHPConsulAPI\Status;
 */
 
 use DCarbone\PHPConsulAPI\AbstractClient;
+use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Request;
+use DCarbone\PHPConsulAPI\ValuedStringResponse;
+use DCarbone\PHPConsulAPI\ValuedStringsResponse;
 
 /**
  * Class StatusClient
@@ -28,39 +31,61 @@ use DCarbone\PHPConsulAPI\Request;
 class StatusClient extends AbstractClient
 {
     /**
-     * @return array(
-     * @type string
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\ValuedStringResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Leader(): array
+    public function LeaderWithQueryOptions(?QueryOptions $opts): ValuedStringResponse
     {
         $r = new Request('GET', 'v1/status/leader', $this->config);
+        $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$_, $response, $err] = $this->requireOK($this->do($r));
 
         if (null !== $err) {
-            return ['', $err];
+            return new ValuedStringResponse('', $err);
         }
 
-        return $this->decodeBody($response->getBody());
+        $d = $this->decodeBody($response->getBody());
+        return new ValuedStringResponse($d->Decoded, $d->Err);
     }
 
     /**
-     * @return array|null
+     * @return \DCarbone\PHPConsulAPI\ValuedStringResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Peers()
+    public function Leader(): ValuedStringResponse
+    {
+        return $this->LeaderWithQueryOptions(null);
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\ValuedStringsResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function PeersWithQueryOptions(?QueryOptions $opts): ValuedStringsResponse
     {
         $r = new Request('GET', 'v1/status/peers', $this->config);
+        $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$_, $response, $err] = $this->requireOK($this->do($r));
 
         if (null !== $err) {
-            return [null, $err];
+            return new ValuedStringsResponse(null, $err);
         }
+        $d = $this->decodeBody($response->getBody());
+        return new ValuedStringsResponse($d->Decoded, $d->Err);
+    }
 
-        return $this->decodeBody($response->getBody());
+    /**
+     * @return \DCarbone\PHPConsulAPI\ValuedStringsResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function Peers(): ValuedStringsResponse
+    {
+        return $this->PeersWithQueryOptions(null);
     }
 }

@@ -56,7 +56,7 @@ class CoordinateClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntriesResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Nodes(QueryOptions $opts = null): CoordinateEntriesResponse
+    public function Nodes(?QueryOptions $opts = null): CoordinateEntriesResponse
     {
         $r = new Request('GET', 'v1/coordinate/nodes', $this->config);
         $r->setQueryOptions($opts);

@@ -37,7 +37,7 @@ class PreparedQueryClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Create(PreparedQueryDefinition $query, WriteOptions $opts = null): ValuedWriteStringResponse
+    public function Create(PreparedQueryDefinition $query,?WriteOptions $opts = null): ValuedWriteStringResponse
     {
         $r = new Request('POST', 'v1/query', $this->config, $query);
         $r->setWriteOptions($opts);
@@ -57,7 +57,7 @@ class PreparedQueryClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\WriteResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Update(PreparedQueryDefinition $query, WriteOptions $opts = null): WriteResponse
+    public function Update(PreparedQueryDefinition $query,?WriteOptions $opts = null): WriteResponse
     {
         $r = new Request('PUT', 'v1/query', $this->config, $query);
         $r->setWriteOptions($opts);
@@ -76,7 +76,7 @@ class PreparedQueryClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinitionsResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function List(QueryOptions $opts = null): PreparedQueryDefinitionsResponse
+    public function List(?QueryOptions $opts = null): PreparedQueryDefinitionsResponse
     {
         $r = new Request('GET', 'v1/query', $this->config);
         $r->setQueryOptions($opts);
@@ -99,7 +99,7 @@ class PreparedQueryClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinitionsResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Get(string $queryID, QueryOptions $opts = null): PreparedQueryDefinitionsResponse
+    public function Get(string $queryID,?QueryOptions $opts = null): PreparedQueryDefinitionsResponse
     {
         $r = new Request('GET', sprintf('v1/query/%s', $queryID), $this->config);
         $r->setQueryOptions($opts);
@@ -122,7 +122,7 @@ class PreparedQueryClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\WriteResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Delete(string $queryID, WriteOptions $opts = null): WriteResponse
+    public function Delete(string $queryID,?WriteOptions $opts = null): WriteResponse
     {
         $r = new Request('DELETE', sprintf('v1/query/%s', $queryID), $this->config);
         $r->setWriteOptions($opts);
@@ -144,7 +144,7 @@ class PreparedQueryClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryExecuteResponseResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Execute(string $queryIDOrName, QueryOptions $opts = null): PreparedQueryExecuteResponseResponse
+    public function Execute(string $queryIDOrName,?QueryOptions $opts = null): PreparedQueryExecuteResponseResponse
     {
         $r = new Request('GET', sprintf('v1/query/%s/execute', $queryIDOrName), $this->config);
         $r->setQueryOptions($opts);

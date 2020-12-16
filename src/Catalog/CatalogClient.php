@@ -39,7 +39,7 @@ class CatalogClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\WriteResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Register(CatalogRegistration $catalogRegistration, WriteOptions $opts = null): WriteResponse
+    public function Register(CatalogRegistration $catalogRegistration,?WriteOptions $opts = null): WriteResponse
     {
         $r = new Request('PUT', 'v1/catalog/register', $this->config, $catalogRegistration);
         $r->setWriteOptions($opts);
@@ -58,7 +58,7 @@ class CatalogClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\WriteResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Deregister(CatalogDeregistration $catalogDeregistration, WriteOptions $opts = null): WriteResponse
+    public function Deregister(CatalogDeregistration $catalogDeregistration,?WriteOptions $opts = null): WriteResponse
     {
         $r = new Request('PUT', 'v1/catalog/deregister', $this->config, $catalogDeregistration);
         $r->setWriteOptions($opts);
@@ -93,7 +93,7 @@ class CatalogClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogNodesResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Nodes(QueryOptions $opts = null): CatalogNodesResponse
+    public function Nodes(?QueryOptions $opts = null): CatalogNodesResponse
     {
         $r = new Request('GET', 'v1/catalog/nodes', $this->config);
         $r->setQueryOptions($opts);
@@ -117,7 +117,7 @@ class CatalogClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\ValuedQueryStringsResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Services(QueryOptions $opts = null): ValuedQueryStringsResponse
+    public function Services(?QueryOptions $opts = null): ValuedQueryStringsResponse
     {
         $r = new Request('GET', 'v1/catalog/services', $this->config);
         $r->setQueryOptions($opts);
@@ -142,7 +142,7 @@ class CatalogClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogNodeServicesListResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function NodeServicesList(string $node, QueryOptions $opts = null): CatalogNodeServicesListResponse
+    public function NodeServicesList(string $node,?QueryOptions $opts = null): CatalogNodeServicesListResponse
     {
         $r = new Request(HTTP\MethodGet, sprintf('v1/catalog/node-services/%s', urlencode($node)), $this->config);
         $r->setQueryOptions($opts);
@@ -175,7 +175,7 @@ class CatalogClient extends AbstractClient
     public function ServiceMultipleTags(
         string $service,
         array $tags,
-        QueryOptions $opts = null
+       ?QueryOptions $opts = null
     ): CatalogServicesResponse {
         $r = new Request('GET', sprintf('v1/catalog/service/%s', $service), $this->config);
         $r->setQueryOptions($opts);
@@ -204,7 +204,7 @@ class CatalogClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogServicesResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Service(string $service, string $tag = '', QueryOptions $opts = null): CatalogServicesResponse
+    public function Service(string $service, string $tag = '',?QueryOptions $opts = null): CatalogServicesResponse
     {
         return $this->ServiceMultipleTags($service, '' !== $tag ? [$tag] : [], $opts);
     }
@@ -215,7 +215,7 @@ class CatalogClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogNodeResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Node(string $node, QueryOptions $opts = null): CatalogNodeResponse
+    public function Node(string $node,?QueryOptions $opts = null): CatalogNodeResponse
     {
         $r = new Request('GET', sprintf('v1/catalog/node/%s', $node), $this->config);
         $r->setQueryOptions($opts);
@@ -240,7 +240,7 @@ class CatalogClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\Catalog\GatewayServicesResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function GatewayServices(string $gateway, QueryOptions $opts = null): GatewayServicesResponse
+    public function GatewayServices(string $gateway,?QueryOptions $opts = null): GatewayServicesResponse
     {
         $r = new Request(HTTP\MethodGet, sprintf('v1/catalog/gateway-services/%s', urlencode($gateway)), $this->config);
         $r->setQueryOptions($opts);

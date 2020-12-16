@@ -35,7 +35,7 @@ class EventClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\Event\UserEventResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Fire(UserEvent $event, WriteOptions $opts = null): UserEventResponse
+    public function Fire(UserEvent $event,?WriteOptions $opts = null): UserEventResponse
     {
         $r = new Request(
             'PUT',
@@ -74,7 +74,7 @@ class EventClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\Event\UserEventsResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function List(string $name = '', QueryOptions $opts = null): UserEventsResponse
+    public function List(string $name = '',?QueryOptions $opts = null): UserEventsResponse
     {
         $r = new Request('GET', 'v1/event/list', $this->config);
         if ('' !== (string)$name) {

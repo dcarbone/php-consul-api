@@ -39,7 +39,7 @@ class HealthClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\Health\HealthChecksResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Node(string $node, QueryOptions $opts = null): HealthChecksResponse
+    public function Node(string $node,?QueryOptions $opts = null): HealthChecksResponse
     {
         $r = new Request('GET', sprintf('v1/health/node/%s', $node), $this->config);
         $r->setQueryOptions($opts);
@@ -66,7 +66,7 @@ class HealthClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\Health\HealthChecksResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function Checks(string $service, QueryOptions $opts = null): HealthChecksResponse
+    public function Checks(string $service,?QueryOptions $opts = null): HealthChecksResponse
     {
         /** @var \Psr\Http\Message\ResponseInterface $response */
         $r = new Request('GET', sprintf('v1/health/checks/%s', $service), $this->config);
@@ -116,7 +116,7 @@ class HealthClient extends AbstractClient
         string $service,
         string $tag = '',
         bool $passingOnly = false,
-        QueryOptions $opts = null
+       ?QueryOptions $opts = null
     ): ServiceEntriesResponse {
         return $this->ServiceMultipleTags($service, '' !== $tag ? [$tag] : [], $passingOnly, $opts);
     }
@@ -244,7 +244,7 @@ class HealthClient extends AbstractClient
      * @return \DCarbone\PHPConsulAPI\Health\HealthChecksResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function State(string $state, QueryOptions $opts = null): HealthChecksResponse
+    public function State(string $state,?QueryOptions $opts = null): HealthChecksResponse
     {
         static $validStates = ['any', 'warning', 'critical', 'passing', 'unknown'];
 
