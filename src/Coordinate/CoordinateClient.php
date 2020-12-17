@@ -37,10 +37,10 @@ class CoordinateClient extends AbstractClient
      */
     public function Datacenters(): CoordinateDatacentersResponse
     {
-        $r = new Request('GET', 'v1/coordinate/datacenters', $this->config);
+        $r = new Request('GET', 'v1/coordinate/datacenters', $this->config, null);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$_, $response, $err] = $this->requireOK($this->do($r));
+        [$_, $response, $err] = $this->_requireOK($this->_do($r));
 
         if (null !== $err) {
             return new CoordinateDatacentersResponse(null, $err);
@@ -58,11 +58,11 @@ class CoordinateClient extends AbstractClient
      */
     public function Nodes(?QueryOptions $opts = null): CoordinateEntriesResponse
     {
-        $r = new Request('GET', 'v1/coordinate/nodes', $this->config);
+        $r = new Request('GET', 'v1/coordinate/nodes', $this->config, null);
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->do($r));
+        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
         if (null !== $err) {
             return new CoordinateEntriesResponse(null, null, $err);
         }
@@ -85,7 +85,7 @@ class CoordinateClient extends AbstractClient
         $r->setWriteOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $_, $err] = $this->requireOK($this->do($r));
+        [$duration, $_, $err] = $this->_requireOK($this->_do($r));
 
         return new WriteResponse($this->buildWriteMeta($duration), $err);
     }
@@ -98,11 +98,11 @@ class CoordinateClient extends AbstractClient
      */
     public function Node(string $node, ?QueryOptions $opts = null): CoordinateEntriesResponse
     {
-        $r = new Request(HTTP\MethodGet, sprintf('v1/coordinate/node/%s', $node), $this->config);
+        $r = new Request(HTTP\MethodGet, sprintf('v1/coordinate/node/%s', $node), $this->config, null);
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->do($r));
+        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
         if (null !== $err) {
             return new CoordinateEntriesResponse(null, null, $err);
         }

@@ -24,7 +24,7 @@ use DCarbone\Go\Time;
  * Class QueryOptions
  * @package DCarbone\PHPConsulAPI
  */
-class QueryOptions extends AbstractModel
+class QueryOptions extends AbstractModel implements RequestDecoratorInterface
 {
     /** @var string */
     public $Namespace = '';
@@ -44,8 +44,8 @@ class QueryOptions extends AbstractModel
     public $WaitIndex = 0;
     /** @var string */
     public $WaitHash = '';
-    /** @var int */
-    public $WaitTime = 0;
+    /** @var \DCarbone\Go\Time\Duration */
+    public $WaitTime = null;
     /** @var string */
     public $Token = '';
     /** @var string */
@@ -66,6 +66,27 @@ class QueryOptions extends AbstractModel
 
     /** @var bool */
     public $Pretty = false;
+
+    /**
+     * QueryOptions constructor.
+     * @param array $data
+     */
+    public function __construct(array $data = [])
+    {
+        parent::__construct($data);
+        if (!($this->MaxAge instanceof Time\Duration)) {
+            $this->MaxAge = Time::Duration($this->MaxAge);
+        }
+        if (!($this->StaleIfError instanceof Time\Duration)) {
+            $this->StaleIfError = Time::Duration($this->StaleIfError);
+        }
+        if (!($this->WaitTime instanceof Time\Duration)) {
+            $this->WaitTime = Time::Duration($this->WaitTime);
+        }
+        if (!($this->Timeout instanceof Time\Duration)) {
+            $this->Timeout = Time::Duration($this->Timeout);
+        }
+    }
 
     /**
      * @return string
@@ -148,9 +169,9 @@ class QueryOptions extends AbstractModel
     }
 
     /**
-     * @return \DCarbone\Go\Time\Duration|null
+     * @return \DCarbone\Go\Time\Duration
      */
-    public function getMaxAge(): ?Time\Duration
+    public function getMaxAge(): Time\Duration
     {
         return $this->MaxAge;
     }
@@ -164,9 +185,9 @@ class QueryOptions extends AbstractModel
     }
 
     /**
-     * @return \DCarbone\Go\Time\Duration|null
+     * @return \DCarbone\Go\Time\Duration
      */
-    public function getStaleIfError(): ?Time\Duration
+    public function getStaleIfError(): Time\Duration
     {
         return $this->StaleIfError;
     }
@@ -196,9 +217,9 @@ class QueryOptions extends AbstractModel
     }
 
     /**
-     * @return int
+     * @return \DCarbone\Go\Time\Duration
      */
-    public function getWaitTime(): int
+    public function getWaitTime(): Time\Duration
     {
         return $this->WaitTime;
     }
@@ -369,5 +390,76 @@ class QueryOptions extends AbstractModel
     public function setPretty(bool $pretty): void
     {
         $this->Pretty = $pretty;
+    }
+
+    public function decorate(Request $r): void
+    {
+        if ('' !== $this->Namespace) {
+            $r->params->set('ns', $this->Namespace);
+        }
+        if ('' !== $this->Datacenter) {
+            $r->params->set('dc', $this->Datacenter);
+        }
+        if ($this->AllowStale) {
+            $r->params->set('stale', '');
+        }
+        if ($this->RequireConsistent) {
+            $r->params->set('consistent', '');
+        }
+        if (0 !== $this->WaitIndex) {
+            $r->params->set('index', (string)$this->WaitIndex);
+        }
+        if (0 !== $this->WaitTime) {
+            $r->params->set('wait', $this->config->intToMillisecond($this->WaitTime));
+        }
+        if ('' !== $this->WaitHash) {
+            $r->params->set('hash', $this->WaitHash);
+        }
+        if ('' !== $this->Token) {
+            $r->header->set('X-Consul-Token', $this->Token);
+        }
+        if ('' !== $this->Near) {
+            $r->params->set('near', $this->Near);
+        }
+        if ('' !== $this->Filter) {
+            $r->params->set('filter', $this->Filter);
+        }
+        if (isset($this->NodeMeta) && [] !== $this->NodeMeta) {
+            foreach ($this->NodeMeta as $k => $v) {
+                $r->params->add('node-meta', "{$k}:{$v}");
+            }
+        }
+        if (0 !== $this->RelayFactor) {
+            $r->params->set('relay-factor', (string)$this->RelayFactor);
+        }
+        if ($this->LocalOnly) {
+            $r->params->set('local-only', 'true');
+        }
+        if ($this->Connect) {
+            $r->params->set('connect', 'true');
+        }
+        if ($this->UseCache && !$this->RequireConsistent) {
+            $r->params->set('cached', '');
+            $cc = [];
+            if (null !== $this->MaxAge) {
+                $cc[] = sprintf('max-age=%.0f', $this->MaxAge->Seconds());
+            }
+            if (null !== $this->StaleIfError) {
+                $cc[] = sprintf('stale-if-error=%.0f', $this->StaleIfError->Seconds());
+            }
+            if ([] !== $cc) {
+                $r->header->set('Cache-Control', implode(', ', $cc));
+            }
+        }
+
+        if (null !== $this->Timeout) {
+            $r->timeout = $this->Timeout;
+        }
+
+        if ($this->Pretty) {
+            $r->params->set('pretty', '');
+        }
+
+        $this->uri = null;
     }
 }

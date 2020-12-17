@@ -34,13 +34,15 @@ abstract class AbstractClient
     /** @var Config */
     protected $config;
 
+    /** @var \GuzzleHttp\ClientInterface */
+    protected $httpClient;
+
     /**
      * AbstractConsulClient constructor.
      * @param Config $config
      */
     public function __construct(Config $config)
     {
-        // TODO: Clone config?
         $this->config = clone $config;
     }
 
@@ -54,10 +56,10 @@ abstract class AbstractClient
 
     /**
      * @param \DCarbone\PHPConsulAPI\RequestResponse $r
-     * @param int $desiredCode
+     * @param int $statusCode
      * @return \DCarbone\PHPConsulAPI\RequestResponse
      */
-    protected function requireCode(RequestResponse $r, int $desiredCode): RequestResponse
+    protected function _requireStatus(RequestResponse $r, int $statusCode): RequestResponse
     {
         // If a previous error occurred, just return as-is.
         if (null !== $r->Err) {
@@ -72,7 +74,7 @@ abstract class AbstractClient
                 $actualCode = $r->Response->getStatusCode();
 
                 // If $desiredCode, move right along
-                if ($desiredCode === $actualCode) {
+                if ($statusCode === $actualCode) {
                     return $r;
                 }
 
@@ -81,7 +83,7 @@ abstract class AbstractClient
                     sprintf(
                         '%s - Non-%d response seen.  Response code: %d.  Message: %s',
                         get_class($this),
-                        $desiredCode,
+                        $statusCode,
                         $actualCode,
                         $r->Response->getReasonPhrase()
                     )
@@ -101,20 +103,11 @@ abstract class AbstractClient
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\RequestResponse $r
-     * @return \DCarbone\PHPConsulAPI\RequestResponse
-     */
-    protected function requireOK(RequestResponse $r): RequestResponse
-    {
-        return $this->requireCode($r, HTTP\StatusOK);
-    }
-
-    /**
      * @param \DCarbone\PHPConsulAPI\Request $r
      * @return \DCarbone\PHPConsulAPI\RequestResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    protected function do(Request $r): RequestResponse
+    protected function _do(Request $r): RequestResponse
     {
         $start = microtime(true);
         $response = null;
@@ -143,8 +136,19 @@ abstract class AbstractClient
             );
         }
 
-        // Calculate duration and move along whatever response and error we see (if any)
-        return new RequestResponse(Time::Duration(intval((microtime(true) - $start) * Time::Second)), $response, $err);
+        // calculate execution time
+        $dur = new Time\Duration(intval((microtime(true) - $start) * Time::Second));
+
+        return new RequestResponse($dur, $response, $err);
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\RequestResponse $r
+     * @return \DCarbone\PHPConsulAPI\RequestResponse
+     */
+    protected function _requireOK(RequestResponse $r): RequestResponse
+    {
+        return $this->_requireStatus($r, HTTP\StatusOK);
     }
 
     /**
@@ -226,6 +230,59 @@ abstract class AbstractClient
      * @param string $path
      * @param mixed $body
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\Request
+     */
+    protected function _writeRequest(string $path, $body, ?WriteOptions $opts): Request
+    {
+        $r = new Request(HTTP\MethodPut, $path, $this->config, $body);
+        $r->setWriteOptions($opts);
+        return $r;
+    }
+
+    /**
+     * @param string $path
+     * @param $body
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\Request
+     */
+    protected function _queryRequest(string $path, $body, ?QueryOptions $opts): Request
+    {
+        $r = new Request(HTTP\MethodGet, $path, $this->config, $body);
+        $r->setQueryOptions($opts);
+        return $r;
+    }
+
+    /**
+     * @param string $path
+     * @param mixed $body
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    protected function _put(string $path, $body, ?WriteOptions $opts): WriteResponse
+    {
+        $resp = $this->_requireOK($this->_do($this->_writeRequest($path, $body, $opts)));
+        return new WriteResponse($this->buildWriteMeta($resp->Duration), $resp->Err);
+    }
+
+    /**
+     * @param string $path
+     * @param mixed $body
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\Error|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    protected function _putNoResp(string $path, $body, ?WriteOptions $opts): ?Error
+    {
+        $r = new Request(HTTP\MethodPut, $path, $this->config, $body);
+        $r->setWriteOptions($opts);
+        return $this->_requireOK($this->_do($r))->Err;
+    }
+
+    /**
+     * @param string $path
+     * @param mixed $body
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
@@ -234,19 +291,18 @@ abstract class AbstractClient
         $r = new Request(HTTP\MethodPut, $path, $this->config, $body);
         $r->setWriteOptions($opts);
 
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->do($r));
-        if (null !== $err) {
-            return new ValuedWriteStringResponse('', null, $err);
+        $resp = $this->_requireOK($this->_do($r));
+        if (null !== $resp->Err) {
+            return new ValuedWriteStringResponse('', null, $resp->Err);
         }
 
-        [$data, $err] = $this->decodeBody($response->getBody());
-        if (null !== $err) {
-            return new ValuedWriteStringResponse('', null, $err);
+        $decoded = $this->decodeBody($resp->Response->getBody());
+        if (null !== $decoded->Err) {
+            return new ValuedWriteStringResponse('', null, $decoded->Err);
         }
 
-        $wm = $this->buildWriteMeta($duration);
+        $wm = $this->buildWriteMeta($resp->Duration);
 
-        return new ValuedWriteStringResponse($data, $wm, null);
+        return new ValuedWriteStringResponse($decoded->Decoded, $wm, null);
     }
 }

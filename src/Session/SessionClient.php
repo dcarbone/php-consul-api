@@ -73,10 +73,10 @@ class SessionClient extends AbstractClient
      */
     public function Destroy(string $id, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = new Request(HTTP\MethodPut, sprintf('v1/session/destroy/%s', $id), $this->config);
+        $r = new Request(HTTP\MethodPut, sprintf('v1/session/destroy/%s', $id), $this->config, null);
         $r->setWriteOptions($opts);
 
-        [$duration, $_, $err] = $this->requireOK($this->do($r));
+        [$duration, $_, $err] = $this->_requireOK($this->_do($r));
         if (null !== $err) {
             return new WriteResponse(null, $err);
         }
@@ -92,11 +92,11 @@ class SessionClient extends AbstractClient
      */
     public function Renew(string $id, ?WriteOptions $opts = null): SessionEntriesWriteResponse
     {
-        $r = new Request(HTTP\MethodPut, sprintf('v1/session/renew/%s', $id), $this->config);
+        $r = new Request(HTTP\MethodPut, sprintf('v1/session/renew/%s', $id), $this->config, null);
         $r->setWriteOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list ($duration, $response, $err) = $this->do($r);
+        list ($duration, $response, $err) = $this->_do($r);
         if (null !== $err) {
             return new SessionEntriesWriteResponse(null, null, $err);
         }
@@ -164,11 +164,11 @@ class SessionClient extends AbstractClient
      */
     private function _get(string $path, ?QueryOptions $opts): SessionEntriesQueryResponse
     {
-        $r = new Request(HTTP\MethodGet, $path, $this->config);
+        $r = new Request(HTTP\MethodGet, $path, $this->config, null);
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->do($r));
+        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
         if (null !== $err) {
             return new SessionEntriesQueryResponse(null, null, $err);
         }
@@ -192,7 +192,7 @@ class SessionClient extends AbstractClient
         $r->setWriteOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->do($r));
+        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
         if (null !== $err) {
             return new ValuedWriteStringResponse('', null, $err);
         }

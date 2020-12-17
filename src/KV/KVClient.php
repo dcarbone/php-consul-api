@@ -41,11 +41,11 @@ class KVClient extends AbstractClient
      */
     public function Get(string $key, ?QueryOptions $opts = null): KVPairResponse
     {
-        $r = new Request('GET', sprintf('v1/kv/%s', $key), $this->config);
+        $r = new Request('GET', sprintf('v1/kv/%s', $key), $this->config, null);
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->do($r);
+        [$duration, $response, $err] = $this->_do($r);
         if (null !== $err) {
             return new KVPairResponse(null, null, $err);
         }
@@ -90,7 +90,7 @@ class KVClient extends AbstractClient
             $r->params->set('flags', (string)$p->Flags);
         }
 
-        [$duration, $_, $err] = $this->requireOK($this->do($r));
+        [$duration, $_, $err] = $this->_requireOK($this->_do($r));
         if (null !== $err) {
             return new WriteResponse(null, $err);
         }
@@ -106,10 +106,10 @@ class KVClient extends AbstractClient
      */
     public function Delete(string $key, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = new Request('DELETE', sprintf('v1/kv/%s', $key), $this->config);
+        $r = new Request('DELETE', sprintf('v1/kv/%s', $key), $this->config, null);
         $r->setWriteOptions($opts);
 
-        [$duration, $_, $err] = $this->requireOK($this->do($r));
+        [$duration, $_, $err] = $this->_requireOK($this->_do($r));
         if (null !== $err) {
             return new WriteResponse(null, $err);
         }
@@ -125,12 +125,12 @@ class KVClient extends AbstractClient
      */
     public function List(string $prefix = '', ?QueryOptions $opts = null): KVPairsResponse
     {
-        $r = new Request('GET', sprintf('v1/kv/%s', $prefix), $this->config);
+        $r = new Request('GET', sprintf('v1/kv/%s', $prefix), $this->config, null);
         $r->setQueryOptions($opts);
         $r->params->set('recurse', '');
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->do($r));
+        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
         if (null !== $err) {
             return new KVPairsResponse(null, null, $err);
         }
@@ -153,12 +153,12 @@ class KVClient extends AbstractClient
      */
     public function Keys(string $prefix = '', ?QueryOptions $opts = null): ValuedQueryStringsResponse
     {
-        $r = new Request('GET', sprintf('v1/kv/%s', $prefix), $this->config);
+        $r = new Request('GET', sprintf('v1/kv/%s', $prefix), $this->config, null);
         $r->setQueryOptions($opts);
         $r->params->set('keys', '');
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->do($r));
+        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
         if (null !== $err) {
             return new ValuedQueryStringsResponse(null, null, $err);
         }
@@ -187,7 +187,7 @@ class KVClient extends AbstractClient
         }
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->do($r));
+        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
         if (null !== $err) {
             return new ValuedWriteBoolResponse(false, null, $err);
         }
@@ -214,7 +214,7 @@ class KVClient extends AbstractClient
             $r->params->set('flags', (string)$p->Flags);
         }
 
-        [$duration, $_, $err] = $this->requireOK($this->do($r));
+        [$duration, $_, $err] = $this->_requireOK($this->_do($r));
         if (null !== $err) {
             return new WriteResponse(null, $err);
         }
@@ -230,12 +230,12 @@ class KVClient extends AbstractClient
      */
     public function DeleteCAS(KVPair $p, ?WriteOptions $opts = null): ValuedWriteBoolResponse
     {
-        $r = new Request('DELETE', sprintf('v1/kv/%s', ltrim($p->Key, "/")), $this->config);
+        $r = new Request('DELETE', sprintf('v1/kv/%s', ltrim($p->Key, "/")), $this->config, null);
         $r->setWriteOptions($opts);
         $r->params['cas'] = (string)$p->ModifyIndex;
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->do($r));
+        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
         if (null !== $err) {
             return new ValuedWriteBoolResponse(false, null, $err);
         }
@@ -262,7 +262,7 @@ class KVClient extends AbstractClient
             $r->params->set('flags', (string)$p->Flags);
         }
 
-        [$duration, $_, $err] = $this->requireOK($this->do($r));
+        [$duration, $_, $err] = $this->_requireOK($this->_do($r));
         if (null !== $err) {
             return new WriteResponse(null, $err);
         }
@@ -278,11 +278,11 @@ class KVClient extends AbstractClient
      */
     public function DeleteTree(string $prefix, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = new Request('DELETE', sprintf('v1/kv/%s', $prefix), $this->config);
+        $r = new Request('DELETE', sprintf('v1/kv/%s', $prefix), $this->config, null);
         $r->params['recurse'] = '';
         $r->setWriteOptions($opts);
 
-        [$duration, $_, $err] = $this->requireOK($this->do($r));
+        [$duration, $_, $err] = $this->_requireOK($this->_do($r));
         if (null !== $err) {
             return new WriteResponse(null, $err);
         }
@@ -307,7 +307,7 @@ class KVClient extends AbstractClient
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->do($r);
+        [$duration, $response, $err] = $this->_do($r);
         if (null !== $err) {
             return new KVTxnAPIResponse(false, null, null, $err);
         }

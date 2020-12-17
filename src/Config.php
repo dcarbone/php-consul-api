@@ -509,31 +509,11 @@ class Config
     }
 
     /**
-     * @param int $in
-     * @return string
-     */
-    public function intToMillisecond(int $in): string
-    {
-        if (!is_int($in)) {
-            throw new \InvalidArgumentException(sprintf('$in must be integer, saw "%s".', gettype($in)));
-        }
-
-        $ms = intval($in / 1000000, 10);
-
-        if (0 < $in && 0 === $ms) {
-            $ms = 1;
-        }
-
-        return sprintf('%dms', $ms);
-    }
-
-    /**
      * @param \DCarbone\PHPConsulAPI\Request $request
      * @return array
      */
     public function getGuzzleRequestOptions(Request $request): array
     {
-        // TODO: Define once?
         $opts = self::DefaultRequestOptions;
 
         if (!$this->isInsecureSkipVerify()) {
@@ -547,7 +527,7 @@ class Config
             $opts[RequestOptions::SSL_KEY] = $this->getKeyFile();
         }
 
-        if (null !== $request->Timeout && 0 < ($ttl = intval($request->Timeout->Seconds(), 10))) {
+        if (null !== $request->timeout && 0 < ($ttl = intval($request->timeout->Seconds(), 10))) {
             $opts[RequestOptions::TIMEOUT] = $ttl;
         }
 

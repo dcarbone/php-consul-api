@@ -38,7 +38,7 @@ class ACLClient extends AbstractClient
      */
     public function Bootstrap(): ValuedWriteStringResponse
     {
-        return $this->_putStrResp('v1/acl/bootstrap',null, null);
+        return $this->_putStrResp('v1/acl/bootstrap', null, null);
     }
 
     /**
@@ -60,12 +60,7 @@ class ACLClient extends AbstractClient
      */
     public function Update(ACLEntry $acl, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = new Request(HTTP\MethodPut, 'v1/acl/update', $this->config, $acl);
-        $r->setWriteOptions($opts);
-
-        [$duration, $_, $err] = $this->requireOK($this->do($r));
-
-        return new WriteResponse($this->buildWriteMeta($duration), $err);
+        return $this->_put('v1/acl/update', $acl, $opts);
     }
 
     /**
@@ -76,12 +71,7 @@ class ACLClient extends AbstractClient
      */
     public function Destroy(string $id, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = new Request(HTTP\MethodPut, sprintf('v1/acl/destroy/%s', $id), $this->config);
-        $r->setWriteOptions($opts);
-
-        [$duration, $_, $err] = $this->requireOK($this->do($r));
-
-        return new WriteResponse($this->buildWriteMeta($duration), $err);
+        return $this->_put(sprintf('v1/acl/destroy/%s', $id), null, $opts);
     }
 
     /**
@@ -92,23 +82,7 @@ class ACLClient extends AbstractClient
      */
     public function Clone(string $id, ?WriteOptions $opts = null): ValuedWriteStringResponse
     {
-        $r = new Request(HTTP\MethodPut, sprintf('v1/acl/clone/%s', $id), $this->config);
-        $r->setWriteOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->do($r));
-        if (null !== $err) {
-            return new ValuedWriteStringResponse('', null, $err);
-        }
-
-        $wm = $this->buildWriteMeta($duration);
-
-        [$data, $err] = $this->decodeBody($response->getBody());
-        if (null !== $err) {
-            return new ValuedWriteStringResponse('', $wm, $err);
-        }
-
-        return new ValuedWriteStringResponse($data, $wm, null);
+        return $this->_putStrResp(sprintf('v1/acl/clone/%s', $id), null, $opts);
     }
 
     /**
@@ -119,11 +93,11 @@ class ACLClient extends AbstractClient
      */
     public function Info(string $id, ?QueryOptions $opts = null): ACLEntriesResponse
     {
-        $r = new Request(HTTP\MethodGet, sprintf('v1/acl/info/%s', $id), $this->config);
+        $r = new Request(HTTP\MethodGet, sprintf('v1/acl/info/%s', $id), $this->config, null);
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->do($r));
+        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
         if (null !== $err) {
             return new ACLEntriesResponse(null, null, $err);
         }
@@ -145,11 +119,11 @@ class ACLClient extends AbstractClient
      */
     public function List(?QueryOptions $opts = null): ACLEntriesResponse
     {
-        $r = new Request(HTTP\MethodGet, 'v1/acl/list', $this->config);
+        $r = new Request(HTTP\MethodGet, 'v1/acl/list', $this->config, null);
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->do($r));
+        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
         if (null !== $err) {
             return new ACLEntriesResponse(null, null, $err);
         }
@@ -171,11 +145,11 @@ class ACLClient extends AbstractClient
      */
     public function Replication(?QueryOptions $opts = null): ACLReplicationStatusResponse
     {
-        $r = new Request(HTTP\MethodGet, '/v1/acl/replication', $this->config);
+        $r = new Request(HTTP\MethodGet, '/v1/acl/replication', $this->config, null);
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->do($r));
+        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
         if (null !== $err) {
             return new ACLReplicationStatusResponse(null, null, $err);
         }
@@ -189,6 +163,4 @@ class ACLClient extends AbstractClient
 
         return new ACLReplicationStatusResponse($data, $qm, null);
     }
-
-
 }

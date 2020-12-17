@@ -25,7 +25,8 @@
   },
   "autoload": {
     "files": [
-      "src/Coordinate/funcs.php"
+      "src/Coordinate/funcs.php",
+      "src/funcs.php"
     ],
     "psr-4": {
       "DCarbone\\PHPConsulAPI\\": "src/"

@@ -57,7 +57,7 @@ class EventClient extends AbstractClient
         }
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->do($r));
+        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
         if (null !== $err) {
             return new UserEventResponse(null, null, $err);
         }
@@ -76,14 +76,14 @@ class EventClient extends AbstractClient
      */
     public function List(string $name = '', ?QueryOptions $opts = null): UserEventsResponse
     {
-        $r = new Request('GET', 'v1/event/list', $this->config);
+        $r = new Request('GET', 'v1/event/list', $this->config, null);
         if ('' !== (string)$name) {
             $r->params->set('name', $name);
         }
         $r->setQueryOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->requireOK($this->do($r));
+        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
         if (null !== $err) {
             return new UserEventsResponse(null, null, $err);
         }

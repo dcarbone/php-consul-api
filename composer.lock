@@ -57,16 +57,16 @@
         },
         {
             "name": "dcarbone/gotime",
-            "version": "v0.4.2",
+            "version": "v0.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dcarbone/gotime.git",
-                "reference": "aaaa581184a4cf6bdea95a86a529ac2ad7d5e634"
+                "reference": "31ef39cd99a25b76fe86f5f7bd910faf6d437406"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dcarbone/gotime/zipball/aaaa581184a4cf6bdea95a86a529ac2ad7d5e634",
-                "reference": "aaaa581184a4cf6bdea95a86a529ac2ad7d5e634",
+                "url": "https://api.github.com/repos/dcarbone/gotime/zipball/31ef39cd99a25b76fe86f5f7bd910faf6d437406",
+                "reference": "31ef39cd99a25b76fe86f5f7bd910faf6d437406",
                 "shasum": ""
             },
             "require": {
@@ -103,9 +103,9 @@
             "homepage": "https://github.com/dcarbone/gotime",
             "support": {
                 "issues": "https://github.com/dcarbone/gotime/issues",
-                "source": "https://github.com/dcarbone/gotime/tree/v0.4.2"
+                "source": "https://github.com/dcarbone/gotime/tree/v0.4.3"
             },
-            "time": "2020-12-16T22:50:56+00:00"
+            "time": "2020-12-17T19:00:50+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",

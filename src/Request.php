@@ -36,7 +36,7 @@ class Request
     public $params;
 
     /** @var \DCarbone\Go\Time\Duration|null */
-    public $Timeout = null;
+    public $timeout = null;
 
     /** @var \DCarbone\PHPConsulAPI\Config */
     private $config;
@@ -60,7 +60,7 @@ class Request
      * @param \DCarbone\PHPConsulAPI\Config $config
      * @param mixed $body
      */
-    public function __construct(string $method, string $path, Config $config, $body = null)
+    public function __construct(string $method, string $path, Config $config, $body)
     {
         $this->config = $config;
 
@@ -73,11 +73,12 @@ class Request
         if ('' !== $config->Datacenter) {
             $this->params->set('dc', $config->Datacenter);
         }
-
+        if ('' !== $config->Namespace) {
+            $this->params->set('ns', $config->Namespace);
+        }
         if (0 !== $config->WaitTime) {
             $this->params->set('wait', $config->intToMillisecond($config->WaitTime));
         }
-
         if ('' !== $config->Token) {
             $this->header->set('X-Consul-Token', $config->Token);
         }
@@ -127,73 +128,7 @@ class Request
             return;
         }
 
-        if ('' !== $opts->Namespace) {
-            $this->params->set('ns', $opts->Namespace);
-        }
-        if ('' !== $opts->Datacenter) {
-            $this->params->set('dc', $opts->Datacenter);
-        }
-        if ($opts->AllowStale) {
-            $this->params->set('stale', '');
-        }
-        if ($opts->RequireConsistent) {
-            $this->params->set('consistent', '');
-        }
-        if (0 !== $opts->WaitIndex) {
-            $this->params->set('index', (string)$opts->WaitIndex);
-        }
-        if (0 !== $opts->WaitTime) {
-            $this->params->set('wait', $this->config->intToMillisecond($opts->WaitTime));
-        }
-        if ('' !== $opts->WaitHash) {
-            $this->params->set('hash', $opts->WaitHash);
-        }
-        if ('' !== $opts->Token) {
-            $this->header->set('X-Consul-Token', $opts->Token);
-        }
-        if ('' !== $opts->Near) {
-            $this->params->set('near', $opts->Near);
-        }
-        if ('' !== $opts->Filter) {
-            $this->params->set('filter', $opts->Filter);
-        }
-        if (isset($opts->NodeMeta) && [] !== $opts->NodeMeta) {
-            foreach ($opts->NodeMeta as $k => $v) {
-                $this->params->add('node-meta', "{$k}:{$v}");
-            }
-        }
-        if (0 !== $opts->RelayFactor) {
-            $this->params->set('relay-factor', (string)$opts->RelayFactor);
-        }
-        if ($opts->LocalOnly) {
-            $this->params->set('local-only', 'true');
-        }
-        if ($opts->Connect) {
-            $this->params->set('connect', 'true');
-        }
-        if ($opts->UseCache && !$opts->RequireConsistent) {
-            $this->params->set('cached', '');
-            $cc = [];
-            if (null !== $opts->MaxAge) {
-                $cc[] = sprintf('max-age=%.0f', $opts->MaxAge->Seconds());
-            }
-            if (null !== $opts->StaleIfError) {
-                $cc[] = sprintf('stale-if-error=%.0f', $opts->StaleIfError->Seconds());
-            }
-            if ([] !== $cc) {
-                $this->header->set('Cache-Control', implode(', ', $cc));
-            }
-        }
 
-        if (null !== $opts->Timeout) {
-            $this->Timeout = $opts->Timeout;
-        }
-
-        if ($opts->Pretty) {
-            $this->params->set('pretty', '');
-        }
-
-        $this->uri = null;
     }
 
     /**
@@ -219,7 +154,7 @@ class Request
         }
 
         if (null !== $opts->Timeout) {
-            $this->Timeout = $opts->Timeout;
+            $this->timeout = $opts->Timeout;
         }
 
         $this->uri = null;
@@ -228,7 +163,8 @@ class Request
     /**
      * @param string $filter
      */
-    public function filterQuery(string $filter = ''): void {
+    public function filterQuery(string $filter = ''): void
+    {
         if ('' === $filter) {
             return;
         }
