@@ -43,7 +43,7 @@ class OperatorClient extends AbstractClient
     public function AreaCreate(Area $area, ?WriteOptions $opts = null): ValuedWriteStringResponse
     {
         $r = new Request('POST', 'v1/operator/area', $this->config, $area);
-        $r->setWriteOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));
@@ -69,7 +69,7 @@ class OperatorClient extends AbstractClient
     public function AreaUpdate(string $areaID, Area $area, ?WriteOptions $opts = null): ValuedWriteStringResponse
     {
         $r = new Request('PUT', 'v1/operator/area/' . $areaID, $this->config, $area);
-        $r->setWriteOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));
@@ -94,7 +94,7 @@ class OperatorClient extends AbstractClient
     public function AreaGet(string $areaID, ?QueryOptions $opts = null): OperatorAreasResponse
     {
         $r = new Request('GET', sprintf('v1/operator/area/%s', urlencode($areaID)), $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));
@@ -114,7 +114,7 @@ class OperatorClient extends AbstractClient
     public function AreaList(?QueryOptions $opts = null): OperatorAreasResponse
     {
         $r = new Request('GET', 'v1/operator/area', $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));
@@ -135,7 +135,7 @@ class OperatorClient extends AbstractClient
     public function AreaDelete(string $areaID, ?WriteOptions $opts = null): WriteResponse
     {
         $r = new Request('DELETE', 'v1/operator/area/' . $areaID, $this->config, null);
-        $r->setWriteOptions($opts);
+        $r->applyOptions($opts);
 
         [$duration, $_, $err] = $this->_requireOK($this->_do($r));
         if (null !== $err) {
@@ -155,7 +155,7 @@ class OperatorClient extends AbstractClient
     public function AreaJoin(string $areaID, array $addresses, ?WriteOptions $opts = null): OperatorAreaJoinResponse
     {
         $r = new Request('PUT', 'v1/operator/area/' . $areaID . '/join', $this->config, $addresses);
-        $r->setWriteOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));
@@ -180,7 +180,7 @@ class OperatorClient extends AbstractClient
     public function AreaMembers(string $areaID, ?QueryOptions $opts = null): OperatorSerfMembersResponse
     {
         $r = new Request('GET', 'v1/operator/area/' . $areaID . '/members', $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));
@@ -204,7 +204,7 @@ class OperatorClient extends AbstractClient
     public function AutopilotGetConfiguration(?QueryOptions $opts = null): OperatorAutopilotConfigurationResponse
     {
         $r = new Request('GET', 'v1/operator/autopilot/configuration', $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$_, $response, $err] = $this->_requireOK($this->_do($r));
@@ -229,7 +229,7 @@ class OperatorClient extends AbstractClient
     public function AutopilotSetConfiguration(AutopilotConfiguration $conf, ?WriteOptions $opts = null): ?Error
     {
         $r = new Request('PUT', 'v1/operator/autopilot/configuration', $this->config, $conf);
-        $r->setWriteOptions($opts);
+        $r->applyOptions($opts);
 
         return $this->_requireOK($this->_do($r))->Err;
     }
@@ -245,7 +245,7 @@ class OperatorClient extends AbstractClient
        ?WriteOptions $opts = null
     ): ValuedBoolResponse {
         $r = new Request('PUT', 'v1/operator/autopilot/configuration', $this->config, $conf);
-        $r->setWriteOptions($opts);
+        $r->applyOptions($opts);
         $r->params->set('cas', strval($conf->ModifyIndex));
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -265,7 +265,7 @@ class OperatorClient extends AbstractClient
     public function AutopilotServerHealth(?QueryOptions $opts = null): OperatorServerHealthsResponse
     {
         $r = new Request('GET', 'v1/operator/autopilot/health', $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$_, $response, $err] = $this->_requireOK($this->_do($r));
@@ -289,7 +289,7 @@ class OperatorClient extends AbstractClient
     public function AutopilotState(?QueryOptions $opts = null): OperatorAutopilotStateResponse
     {
         $r = new Request(HTTP\MethodGet, 'v1/operator/autopilot/state', $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));
@@ -315,7 +315,7 @@ class OperatorClient extends AbstractClient
     public function RaftGetConfiguration(?QueryOptions $opts = null): OperatorRaftConfigurationResponse
     {
         $r = new Request('GET', 'v1/operator/raft/configuration', $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));
@@ -343,7 +343,7 @@ class OperatorClient extends AbstractClient
     public function RaftRemovePeerByAddress(string $address, ?WriteOptions $opts = null): ?Error
     {
         $r = new Request('DELETE', 'v1/operator/raft/peer', $this->config, null);
-        $r->setWriteOptions($opts);
+        $r->applyOptions($opts);
         $r->params->set('address', (string)$address);
 
         return $this->_requireOK($this->_do($r))->Err;

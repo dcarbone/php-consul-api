@@ -42,7 +42,7 @@ class HealthClient extends AbstractClient
     public function Node(string $node, ?QueryOptions $opts = null): HealthChecksResponse
     {
         $r = new Request('GET', sprintf('v1/health/node/%s', $node), $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));
@@ -70,7 +70,7 @@ class HealthClient extends AbstractClient
     {
         /** @var \Psr\Http\Message\ResponseInterface $response */
         $r = new Request('GET', sprintf('v1/health/checks/%s', $service), $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));
         if (null !== $err) {
@@ -217,7 +217,7 @@ class HealthClient extends AbstractClient
         }
 
         $r = new Request('GET', sprintf($uri, $service), $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
         if ([] !== $tags) {
             $r->params->set('tag', ...$tags);
         }
@@ -264,7 +264,7 @@ class HealthClient extends AbstractClient
         }
 
         $r = new Request('GET', sprintf('v1/health/state/%s', $state), $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));

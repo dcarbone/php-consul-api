@@ -41,15 +41,7 @@ class CatalogClient extends AbstractClient
      */
     public function Register(CatalogRegistration $catalogRegistration, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = new Request('PUT', 'v1/catalog/register', $this->config, $catalogRegistration);
-        $r->setWriteOptions($opts);
-
-        [$duration, $_, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new WriteResponse(null, $err);
-        }
-
-        return new WriteResponse($this->buildWriteMeta($duration), null);
+        return $this->_executePut('v1/catalog/register', $catalogRegistration, $opts);
     }
 
     /**
@@ -60,15 +52,7 @@ class CatalogClient extends AbstractClient
      */
     public function Deregister(CatalogDeregistration $catalogDeregistration, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = new Request('PUT', 'v1/catalog/deregister', $this->config, $catalogDeregistration);
-        $r->setWriteOptions($opts);
-
-        [$duration, $_, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new WriteResponse(null, $err);
-        }
-
-        return new WriteResponse($this->buildWriteMeta($duration), null);
+        return $this->_executePut('v1/catalog/deregister', $catalogDeregistration, $opts);
     }
 
     /**
@@ -96,7 +80,7 @@ class CatalogClient extends AbstractClient
     public function Nodes(?QueryOptions $opts = null): CatalogNodesResponse
     {
         $r = new Request('GET', 'v1/catalog/nodes', $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));
@@ -120,7 +104,7 @@ class CatalogClient extends AbstractClient
     public function Services(?QueryOptions $opts = null): ValuedQueryStringsResponse
     {
         $r = new Request('GET', 'v1/catalog/services', $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));
@@ -145,7 +129,7 @@ class CatalogClient extends AbstractClient
     public function NodeServicesList(string $node, ?QueryOptions $opts = null): CatalogNodeServicesListResponse
     {
         $r = new Request(HTTP\MethodGet, sprintf('v1/catalog/node-services/%s', urlencode($node)), $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));
@@ -175,10 +159,11 @@ class CatalogClient extends AbstractClient
     public function ServiceMultipleTags(
         string $service,
         array $tags,
-       ?QueryOptions $opts = null
-    ): CatalogServicesResponse {
+        ?QueryOptions $opts = null
+    ): CatalogServicesResponse
+    {
         $r = new Request('GET', sprintf('v1/catalog/service/%s', $service), $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
         if ([] !== $tags) {
             $r->params->set('tag', ...$tags);
         }
@@ -218,7 +203,7 @@ class CatalogClient extends AbstractClient
     public function Node(string $node, ?QueryOptions $opts = null): CatalogNodeResponse
     {
         $r = new Request('GET', sprintf('v1/catalog/node/%s', $node), $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));
@@ -242,8 +227,13 @@ class CatalogClient extends AbstractClient
      */
     public function GatewayServices(string $gateway, ?QueryOptions $opts = null): GatewayServicesResponse
     {
-        $r = new Request(HTTP\MethodGet, sprintf('v1/catalog/gateway-services/%s', urlencode($gateway)), $this->config, null);
-        $r->setQueryOptions($opts);
+        $r = new Request(
+            HTTP\MethodGet,
+            sprintf('v1/catalog/gateway-services/%s', urlencode($gateway)),
+            $this->config,
+            null
+        );
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));

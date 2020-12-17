@@ -2,8 +2,6 @@
 
 namespace DCarbone\PHPConsulAPI;
 
-use DCarbone\Go\Time;
-
 /*
    Copyright 2016-2020 Daniel Carbone (daniel.p.carbone@gmail.com)
 
@@ -20,11 +18,13 @@ use DCarbone\Go\Time;
    limitations under the License.
 */
 
+use DCarbone\Go\Time;
+
 /**
  * Class WriteOptions
  * @package DCarbone\PHPConsulAPI
  */
-class WriteOptions extends AbstractModel
+class WriteOptions extends AbstractModel implements RequestOptions
 {
     /** @var string */
     public $Namespace = '';
@@ -36,6 +36,18 @@ class WriteOptions extends AbstractModel
     public $RelayFactor = 0;
     /** @var \DCarbone\Go\Time\Duration|null */
     public $Timeout = null;
+
+    /**
+     * WriteOptions constructor.
+     * @param array $data
+     */
+    public function __construct(array $data = [])
+    {
+        parent::__construct($data);
+        if (!($this->Timeout instanceof Time\Duration)) {
+            $this->Timeout = Time::Duration($this->Timeout);
+        }
+    }
 
     /**
      * @return string
@@ -115,5 +127,28 @@ class WriteOptions extends AbstractModel
     public function setTimeout($timeout): void
     {
         $this->Timeout = Time::Duration($timeout);
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Request $r
+     */
+    public function apply(Request $r): void
+    {
+        if ('' !== $this->Namespace) {
+            $r->params->set('ns', $this->Namespace);
+        }
+        if ('' !== $this->Datacenter) {
+            $r->params->set('dc', $this->Datacenter);
+        }
+        if ('' !== $this->Token) {
+            $r->header->set('X-Consul-Token', $this->Token);
+        }
+        if (0 !== $this->RelayFactor) {
+            $r->params->set('relay-factor', (string)$this->RelayFactor);
+        }
+
+        if (null !== $this->Timeout) {
+            $r->timeout = $this->Timeout;
+        }
     }
 }

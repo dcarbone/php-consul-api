@@ -40,7 +40,7 @@ class AgentClient extends AbstractClient
      */
     public function Self(): AgentSelfResponse
     {
-        $r = $this->_queryRequest('v1/agent/self', null, null);
+        $r = $this->_newGetRequest('v1/agent/self', null);
 
         $resp = $this->_requireOK($this->_do($r));
         if (null !== $resp->Err) {
@@ -66,7 +66,7 @@ class AgentClient extends AbstractClient
      */
     public function Metrics(): MetricsInfoResponse
     {
-        $r = $this->_queryRequest('v1/agent/metrics', null, null);
+        $r = $this->_newGetRequest('v1/agent/metrics', null);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$_, $response, $err] = $this->_requireOK($this->_do($r));
@@ -183,8 +183,7 @@ class AgentClient extends AbstractClient
      */
     public function AgentHealthServiceByName(string $service): AgentHealthServiceResponse
     {
-        $r =
-            new Request(HTTP\MethodGet, sprintf('v1/agent/health/service/name/%s', urlencode($service)), $this->config, null);
+        $r = $this->_newGetRequest(sprintf('v1/agent/health/service/name/%s', urlencode($service)), null);
         $r->params->add('format', 'json');
         $r->header->set('Accept', 'application/json');
 
@@ -227,7 +226,7 @@ class AgentClient extends AbstractClient
      */
     public function AgentHealthServiceByID(string $id): AgentHealthServiceResponse
     {
-        $r = new Request(HTTP\MethodGet, sprintf('v1/agent/health/service/id/%s', $id), $this->config, null);
+        $r = $this->_newGetRequest(sprintf('v1/agent/health/service/id/%s', $id), null);
         $r->params->add('format', 'json');
         $r->header->set('Accept', 'application/json');
 
@@ -444,7 +443,7 @@ class AgentClient extends AbstractClient
      */
     public function CheckDeregister(string $checkID): ?Error
     {
-        return $this->_putNoResp(sprintf('v1/agent/check/deregister/%s', $checkID), null, null);
+        return $this->_executePut(sprintf('v1/agent/check/deregister/%s', $checkID), null, null)->Err;
     }
 
     /**
@@ -455,7 +454,7 @@ class AgentClient extends AbstractClient
      */
     public function Join(string $addr, bool $wan = false): ?Error
     {
-        $r = $this->_writeRequest(sprintf('v1/agent/join/%s', $addr), null, null);
+        $r = $this->_newPutRequest(sprintf('v1/agent/join/%s', $addr), null, null);
         if ($wan) {
             $r->params->set('wan', '1');
         }
@@ -468,7 +467,7 @@ class AgentClient extends AbstractClient
      */
     public function Leave(): ?Error
     {
-        return $this->_putNoResp('v1/agent/leave', null, null);
+        return $this->_executePut('v1/agent/leave', null, null)->Err;
     }
 
     /**
@@ -478,7 +477,7 @@ class AgentClient extends AbstractClient
      */
     public function ForceLeave(string $node): ?Error
     {
-        return $this->_putNoResp(sprintf('v1/agent/force-leave/%s', $node), null, null);
+        return $this->_executePut(sprintf('v1/agent/force-leave/%s', $node), null, null)->Err;
     }
 
     /**
@@ -488,7 +487,7 @@ class AgentClient extends AbstractClient
      */
     public function ForceLeavePrune(string $node): ?Error
     {
-        $r = new Request(HTTP\MethodPut, sprintf('v1/agent/force-leave/%s', $node), $this->config, null);
+        $r = $this->_newPutRequest(sprintf('v1/agent/force-leave/%s', $node), null, null);
         $r->params->set('prune', '1');
         return $this->_requireOK($this->_do($r))->Err;
     }
@@ -501,7 +500,7 @@ class AgentClient extends AbstractClient
      */
     public function EnableServiceMaintenance(string $serviceID, string $reason = ''): ?Error
     {
-        $r = $this->_writeRequest(sprintf('v1/agent/service/maintenance/%s', $serviceID), null, null);
+        $r = $this->_newPutRequest(sprintf('v1/agent/service/maintenance/%s', $serviceID), null, null);
         $r->params->set('enable', 'true');
         $r->params->set('reason', $reason);
         return $this->_requireOK($this->_do($r))->Err;
@@ -514,7 +513,7 @@ class AgentClient extends AbstractClient
      */
     public function DisableServiceMaintenance(string $serviceID): ?Error
     {
-        $r = new Request(HTTP\MethodPut, sprintf('v1/agent/service/maintenance/%s', $serviceID), $this->config, null);
+        $r = $this->_newPutRequest(sprintf('v1/agent/service/maintenance/%s', $serviceID), null, null);
         $r->params->set('enable', 'false');
         return $this->_requireOK($this->_do($r))->Err;
     }
@@ -526,7 +525,7 @@ class AgentClient extends AbstractClient
      */
     public function EnableNodeMaintenance(string $reason = ''): ?Error
     {
-        $r = new Request(HTTP\MethodPut, 'v1/agent/maintenance', $this->config, null);
+        $r = $this->_newPutRequest('v1/agent/maintenance', null, null);
         $r->params->set('enable', 'true');
         $r->params->set('reason', $reason);
         return $this->_requireOK($this->_do($r))->Err;
@@ -538,7 +537,7 @@ class AgentClient extends AbstractClient
      */
     public function DisableNodeMaintenance(): ?Error
     {
-        $r = new Request(HTTP\MethodPut, 'v1/agent/maintenance', $this->config, null);
+        $r = $this->_newPutRequest('v1/agent/maintenance', null, null);
         $r->params->set('enable', 'false');
         return $this->_requireOK($this->_do($r))->Err;
     }

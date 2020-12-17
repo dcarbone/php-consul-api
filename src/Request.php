@@ -77,7 +77,7 @@ class Request
             $this->params->set('ns', $config->Namespace);
         }
         if (0 !== $config->WaitTime) {
-            $this->params->set('wait', $config->intToMillisecond($config->WaitTime));
+            $this->params->set('wait', dur_to_millisecond($config->WaitTime));
         }
         if ('' !== $config->Token) {
             $this->header->set('X-Consul-Token', $config->Token);
@@ -120,44 +120,14 @@ class Request
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @param \DCarbone\PHPConsulAPI\RequestOptions|null $opts
      */
-    public function setQueryOptions(?QueryOptions $opts): void
+    public function applyOptions(?RequestOptions $opts): void
     {
         if (null === $opts) {
             return;
         }
-
-
-    }
-
-    /**
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     */
-    public function setWriteOptions(?WriteOptions $opts): void
-    {
-        if (null === $opts) {
-            return;
-        }
-
-        if ('' !== $opts->Namespace) {
-            $this->params->set('ns', $opts->Namespace);
-        }
-        if ('' !== $opts->Datacenter) {
-            $this->params->set('dc', $opts->Datacenter);
-        }
-        if ('' !== $opts->Token) {
-            $this->header->set('X-Consul-Token', $opts->Token);
-        }
-        if (0 !== $opts->RelayFactor) {
-            $this->params->set('relay-factor', (string)$opts->RelayFactor);
-        }
-
-        if (null !== $opts->Timeout) {
-            $this->timeout = $opts->Timeout;
-        }
-
-        $this->uri = null;
+        $opts->apply($this);
     }
 
     /**

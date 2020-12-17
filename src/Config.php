@@ -18,6 +18,7 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
 */
 
+use DCarbone\Go\Time;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\RequestOptions;
@@ -29,13 +30,13 @@ use GuzzleHttp\RequestOptions;
 class Config
 {
     private const DefaultConfig = [
-        'Address'        => '127.0.0.1:8500',
-        'Scheme'         => 'http',
+        'Address' => '127.0.0.1:8500',
+        'Scheme' => 'http',
         'JSONEncodeOpts' => JSON_UNESCAPED_SLASHES,
     ];
 
     private const DefaultRequestOptions = [
-        RequestOptions::HTTP_ERRORS    => false,
+        RequestOptions::HTTP_ERRORS => false,
         RequestOptions::DECODE_CONTENT => false,
     ];
 
@@ -75,9 +76,9 @@ class Config
     /**
      * Time to wait on certain blockable endpoints
      *
-     * @var int
+     * @var \DCarbone\Go\Time\Duration
      */
-    public $WaitTime = 0;
+    public $WaitTime = null;
 
     /**
      * ACL token to use by default
@@ -194,7 +195,7 @@ class Config
             $actual->Namespace = $inc->Namespace;
         }
         if (null !== $inc->HttpAuth) {
-            $actual->HttpAuth = clone($inc->HttpAuth);
+            $actual->HttpAuth = clone $inc->HttpAuth;
         }
         if (0 !== $inc->WaitTime) {
             $actual->WaitTime = $inc->WaitTime;
@@ -307,20 +308,20 @@ class Config
     }
 
     /**
-     * @return int
+     * @return \DCarbone\Go\Time\Duration
      */
-    public function getWaitTime(): int
+    public function getWaitTime(): Time\Duration
     {
         return $this->WaitTime;
     }
 
     /**
-     * @param int $waitTime
+     * @param mixed $waitTime
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setWaitTime(int $waitTime): Config
+    public function setWaitTime($waitTime): Config
     {
-        $this->WaitTime = $waitTime;
+        $this->WaitTime = Time::Duration($waitTime);
         return $this;
     }
 
@@ -538,7 +539,7 @@ class Config
      * @param string $param
      * @return string|null
      */
-    protected static function _tryGetEnvParam(string $param)
+    protected static function _tryGetEnvParam(string $param): ?string
     {
         if (isset($_ENV[$param])) {
             return $_ENV[$param];
@@ -563,15 +564,15 @@ class Config
         $ret = [];
         foreach (
             [
-                Consul::HTTPAddrEnvName       => static::_tryGetEnvParam(Consul::HTTPAddrEnvName),
-                Consul::HTTPTokenEnvName      => static::_tryGetEnvParam(Consul::HTTPTokenEnvName),
-                Consul::HTTPTokenFileEnvName  => static::_tryGetEnvParam(Consul::HTTPTokenFileEnvName),
-                Consul::HTTPAuthEnvName       => static::_tryGetEnvParam(Consul::HTTPAuthEnvName),
-                Consul::HTTPCAFileEnvName     => static::_tryGetEnvParam(Consul::HTTPCAFileEnvName),
+                Consul::HTTPAddrEnvName => static::_tryGetEnvParam(Consul::HTTPAddrEnvName),
+                Consul::HTTPTokenEnvName => static::_tryGetEnvParam(Consul::HTTPTokenEnvName),
+                Consul::HTTPTokenFileEnvName => static::_tryGetEnvParam(Consul::HTTPTokenFileEnvName),
+                Consul::HTTPAuthEnvName => static::_tryGetEnvParam(Consul::HTTPAuthEnvName),
+                Consul::HTTPCAFileEnvName => static::_tryGetEnvParam(Consul::HTTPCAFileEnvName),
                 Consul::HTTPClientCertEnvName => static::_tryGetEnvParam(Consul::HTTPClientCertEnvName),
-                Consul::HTTPClientKeyEnvName  => static::_tryGetEnvParam(Consul::HTTPClientKeyEnvName),
-                Consul::HTTPSSLEnvName        => static::_tryGetEnvParam(Consul::HTTPSSLEnvName),
-                Consul::HTTPSSLVerifyEnvName  => static::_tryGetEnvParam(Consul::HTTPSSLVerifyEnvName),
+                Consul::HTTPClientKeyEnvName => static::_tryGetEnvParam(Consul::HTTPClientKeyEnvName),
+                Consul::HTTPSSLEnvName => static::_tryGetEnvParam(Consul::HTTPSSLEnvName),
+                Consul::HTTPSSLVerifyEnvName => static::_tryGetEnvParam(Consul::HTTPSSLVerifyEnvName),
             ] as $k => $v
         ) {
             if (null !== $v) {

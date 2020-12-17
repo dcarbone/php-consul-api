@@ -55,6 +55,41 @@ abstract class AbstractClient
     }
 
     /**
+     * @param string $method
+     * @param string $path
+     * @param mixed $body
+     * @param \DCarbone\PHPConsulAPI\RequestOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\Request
+     */
+    protected function _newRequest(string $method, string $path, $body, ?RequestOptions $opts): Request
+    {
+        $r = new Request($method, $path, $this->config, $body);
+        $r->applyOptions($opts);
+        return $r;
+    }
+
+    /**
+     * @param string $path
+     * @param mixed $body
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\Request
+     */
+    protected function _newPutRequest(string $path, $body, ?WriteOptions $opts): Request
+    {
+        return $this->_newRequest(HTTP\MethodPut, $path, $body, $opts);
+    }
+
+    /**
+     * @param string $path
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\Request
+     */
+    protected function _newGetRequest(string $path, ?QueryOptions $opts): Request
+    {
+        return $this->_newRequest(HTTP\MethodGet, $path, null, $opts);
+    }
+
+    /**
      * @param \DCarbone\PHPConsulAPI\RequestResponse $r
      * @param int $statusCode
      * @return \DCarbone\PHPConsulAPI\RequestResponse
@@ -152,6 +187,29 @@ abstract class AbstractClient
     }
 
     /**
+     * @param string $path
+     * @param $body
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\RequestResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    protected function _doPut(string $path, $body, ?WriteOptions $opts): RequestResponse
+    {
+        return $this->_do($this->_newPutRequest($path, $body, $opts));
+    }
+
+    /**
+     * @param string $path
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\RequestResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    protected function _doGet(string $path, ?QueryOptions $opts): RequestResponse
+    {
+        return $this->_do($this->_newGetRequest($path, $opts));
+    }
+
+    /**
      * @param \DCarbone\Go\Time\Duration $duration
      * @param \Psr\Http\Message\ResponseInterface $response
      * @param \Psr\Http\Message\UriInterface $uri
@@ -230,53 +288,13 @@ abstract class AbstractClient
      * @param string $path
      * @param mixed $body
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\Request
-     */
-    protected function _writeRequest(string $path, $body, ?WriteOptions $opts): Request
-    {
-        $r = new Request(HTTP\MethodPut, $path, $this->config, $body);
-        $r->setWriteOptions($opts);
-        return $r;
-    }
-
-    /**
-     * @param string $path
-     * @param $body
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\Request
-     */
-    protected function _queryRequest(string $path, $body, ?QueryOptions $opts): Request
-    {
-        $r = new Request(HTTP\MethodGet, $path, $this->config, $body);
-        $r->setQueryOptions($opts);
-        return $r;
-    }
-
-    /**
-     * @param string $path
-     * @param mixed $body
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @return \DCarbone\PHPConsulAPI\WriteResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    protected function _put(string $path, $body, ?WriteOptions $opts): WriteResponse
+    protected function _executePut(string $path, $body, ?WriteOptions $opts): WriteResponse
     {
-        $resp = $this->_requireOK($this->_do($this->_writeRequest($path, $body, $opts)));
+        $resp = $this->_requireOK($this->_doPut($path, $body, $opts));
         return new WriteResponse($this->buildWriteMeta($resp->Duration), $resp->Err);
-    }
-
-    /**
-     * @param string $path
-     * @param mixed $body
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\Error|null
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    protected function _putNoResp(string $path, $body, ?WriteOptions $opts): ?Error
-    {
-        $r = new Request(HTTP\MethodPut, $path, $this->config, $body);
-        $r->setWriteOptions($opts);
-        return $this->_requireOK($this->_do($r))->Err;
     }
 
     /**
@@ -286,23 +304,60 @@ abstract class AbstractClient
      * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    protected function _putStrResp(string $path, $body, ?WriteOptions $opts): ValuedWriteStringResponse
+    protected function _doPutValuedStr(string $path, $body, ?WriteOptions $opts): ValuedWriteStringResponse
     {
-        $r = new Request(HTTP\MethodPut, $path, $this->config, $body);
-        $r->setWriteOptions($opts);
-
+        $r = $this->_newPutRequest($path, $body, $opts);
         $resp = $this->_requireOK($this->_do($r));
         if (null !== $resp->Err) {
             return new ValuedWriteStringResponse('', null, $resp->Err);
         }
-
         $decoded = $this->decodeBody($resp->Response->getBody());
         if (null !== $decoded->Err) {
             return new ValuedWriteStringResponse('', null, $decoded->Err);
         }
-
         $wm = $this->buildWriteMeta($resp->Duration);
-
         return new ValuedWriteStringResponse($decoded->Decoded, $wm, null);
+    }
+
+    /**
+     * @param string $path
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\ValuedQueryStringResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    protected function _doGetValuedStr(string $path, ?QueryOptions $opts): ValuedQueryStringResponse
+    {
+        $r = $this->_newGetRequest($path, $opts);
+        $resp = $this->_requireOK($this->_do($r));
+        if (null !== $resp->Err) {
+            return new ValuedQueryStringResponse('', null, $resp->Err);
+        }
+        $decoded = $this->decodeBody($resp->Response->getBody());
+        if (null !== $decoded->Err) {
+            return new ValuedQueryStringResponse('', null, $decoded->Err);
+        }
+        $qm = $this->buildQueryMeta($resp->Duration, $resp->Response, $r->getUri());
+        return new ValuedQueryStringResponse($decoded->Decoded, $qm, null);
+    }
+
+    /**
+     * @param string $path
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\ValuedQueryStringsResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    protected function _doGetValuedStrs(string $path, ?QueryOptions $opts): ValuedQueryStringsResponse
+    {
+        $r = $this->_newGetRequest($path, $opts);
+        $resp = $this->_requireOK($this->_do($r));
+        if (null !== $resp->Err) {
+            return new ValuedQueryStringsResponse(null, null, $resp->Err);
+        }
+        $decoded = $this->decodeBody($resp->Response->getBody());
+        if (null !== $decoded->Err) {
+            return new ValuedQueryStringsResponse(null, null, $decoded->Err);
+        }
+        $qm = $this->buildQueryMeta($resp->Duration, $resp->Response, $r->getUri());
+        return new ValuedQueryStringsResponse($decoded->Decoded, $qm, null);
     }
 }

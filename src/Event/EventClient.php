@@ -44,7 +44,7 @@ class EventClient extends AbstractClient
             '' !== $event->Payload ? $event->Payload : null
         );
 
-        $r->setWriteOptions($opts);
+        $r->applyOptions($opts);
 
         if ('' !== ($nf = $event->NodeFilter)) {
             $r->params->set('node', $nf);
@@ -80,7 +80,7 @@ class EventClient extends AbstractClient
         if ('' !== (string)$name) {
             $r->params->set('name', $name);
         }
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));

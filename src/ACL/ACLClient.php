@@ -38,7 +38,7 @@ class ACLClient extends AbstractClient
      */
     public function Bootstrap(): ValuedWriteStringResponse
     {
-        return $this->_putStrResp('v1/acl/bootstrap', null, null);
+        return $this->_doPutValuedStr('v1/acl/bootstrap', null, null);
     }
 
     /**
@@ -49,7 +49,7 @@ class ACLClient extends AbstractClient
      */
     public function Create(ACLEntry $acl, ?WriteOptions $opts = null): ValuedWriteStringResponse
     {
-        return $this->_putStrResp('v1/acl/create', $acl, $opts);
+        return $this->_doPutValuedStr('v1/acl/create', $acl, $opts);
     }
 
     /**
@@ -60,7 +60,7 @@ class ACLClient extends AbstractClient
      */
     public function Update(ACLEntry $acl, ?WriteOptions $opts = null): WriteResponse
     {
-        return $this->_put('v1/acl/update', $acl, $opts);
+        return $this->_executePut('v1/acl/update', $acl, $opts);
     }
 
     /**
@@ -71,7 +71,7 @@ class ACLClient extends AbstractClient
      */
     public function Destroy(string $id, ?WriteOptions $opts = null): WriteResponse
     {
-        return $this->_put(sprintf('v1/acl/destroy/%s', $id), null, $opts);
+        return $this->_executePut(sprintf('v1/acl/destroy/%s', $id), null, $opts);
     }
 
     /**
@@ -82,7 +82,7 @@ class ACLClient extends AbstractClient
      */
     public function Clone(string $id, ?WriteOptions $opts = null): ValuedWriteStringResponse
     {
-        return $this->_putStrResp(sprintf('v1/acl/clone/%s', $id), null, $opts);
+        return $this->_doPutValuedStr(sprintf('v1/acl/clone/%s', $id), null, $opts);
     }
 
     /**
@@ -94,7 +94,7 @@ class ACLClient extends AbstractClient
     public function Info(string $id, ?QueryOptions $opts = null): ACLEntriesResponse
     {
         $r = new Request(HTTP\MethodGet, sprintf('v1/acl/info/%s', $id), $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));
@@ -120,7 +120,7 @@ class ACLClient extends AbstractClient
     public function List(?QueryOptions $opts = null): ACLEntriesResponse
     {
         $r = new Request(HTTP\MethodGet, 'v1/acl/list', $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));
@@ -146,7 +146,7 @@ class ACLClient extends AbstractClient
     public function Replication(?QueryOptions $opts = null): ACLReplicationStatusResponse
     {
         $r = new Request(HTTP\MethodGet, '/v1/acl/replication', $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));

@@ -74,7 +74,7 @@ class SessionClient extends AbstractClient
     public function Destroy(string $id, ?WriteOptions $opts = null): WriteResponse
     {
         $r = new Request(HTTP\MethodPut, sprintf('v1/session/destroy/%s', $id), $this->config, null);
-        $r->setWriteOptions($opts);
+        $r->applyOptions($opts);
 
         [$duration, $_, $err] = $this->_requireOK($this->_do($r));
         if (null !== $err) {
@@ -93,7 +93,7 @@ class SessionClient extends AbstractClient
     public function Renew(string $id, ?WriteOptions $opts = null): SessionEntriesWriteResponse
     {
         $r = new Request(HTTP\MethodPut, sprintf('v1/session/renew/%s', $id), $this->config, null);
-        $r->setWriteOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         list ($duration, $response, $err) = $this->_do($r);
@@ -165,7 +165,7 @@ class SessionClient extends AbstractClient
     private function _get(string $path, ?QueryOptions $opts): SessionEntriesQueryResponse
     {
         $r = new Request(HTTP\MethodGet, $path, $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));
@@ -189,7 +189,7 @@ class SessionClient extends AbstractClient
     private function _create(string $path, SessionEntry $entry, ?WriteOptions $opts): ValuedWriteStringResponse
     {
         $r = new Request(HTTP\MethodPut, $path, $this->config, $entry->_toAPIPayload());
-        $r->setWriteOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));

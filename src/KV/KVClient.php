@@ -42,7 +42,7 @@ class KVClient extends AbstractClient
     public function Get(string $key, ?QueryOptions $opts = null): KVPairResponse
     {
         $r = new Request('GET', sprintf('v1/kv/%s', $key), $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_do($r);
@@ -85,7 +85,7 @@ class KVClient extends AbstractClient
     public function Put(KVPair $p, ?WriteOptions $opts = null): WriteResponse
     {
         $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
-        $r->setWriteOptions($opts);
+        $r->applyOptions($opts);
         if (0 !== $p->Flags) {
             $r->params->set('flags', (string)$p->Flags);
         }
@@ -107,7 +107,7 @@ class KVClient extends AbstractClient
     public function Delete(string $key, ?WriteOptions $opts = null): WriteResponse
     {
         $r = new Request('DELETE', sprintf('v1/kv/%s', $key), $this->config, null);
-        $r->setWriteOptions($opts);
+        $r->applyOptions($opts);
 
         [$duration, $_, $err] = $this->_requireOK($this->_do($r));
         if (null !== $err) {
@@ -126,7 +126,7 @@ class KVClient extends AbstractClient
     public function List(string $prefix = '', ?QueryOptions $opts = null): KVPairsResponse
     {
         $r = new Request('GET', sprintf('v1/kv/%s', $prefix), $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
         $r->params->set('recurse', '');
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -154,7 +154,7 @@ class KVClient extends AbstractClient
     public function Keys(string $prefix = '', ?QueryOptions $opts = null): ValuedQueryStringsResponse
     {
         $r = new Request('GET', sprintf('v1/kv/%s', $prefix), $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
         $r->params->set('keys', '');
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -180,7 +180,7 @@ class KVClient extends AbstractClient
     public function CAS(KVPair $p, ?WriteOptions $opts = null): ValuedWriteBoolResponse
     {
         $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
-        $r->setWriteOptions($opts);
+        $r->applyOptions($opts);
         $r->params->set('cas', (string)$p->ModifyIndex);
         if (0 !== $p->Flags) {
             $r->params->set('flags', (string)$p->Flags);
@@ -208,7 +208,7 @@ class KVClient extends AbstractClient
     public function Acquire(KVPair $p, ?WriteOptions $opts = null): WriteResponse
     {
         $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
-        $r->setWriteOptions($opts);
+        $r->applyOptions($opts);
         $r->params->set('acquire', $p->Session);
         if (0 !== $p->Flags) {
             $r->params->set('flags', (string)$p->Flags);
@@ -231,7 +231,7 @@ class KVClient extends AbstractClient
     public function DeleteCAS(KVPair $p, ?WriteOptions $opts = null): ValuedWriteBoolResponse
     {
         $r = new Request('DELETE', sprintf('v1/kv/%s', ltrim($p->Key, "/")), $this->config, null);
-        $r->setWriteOptions($opts);
+        $r->applyOptions($opts);
         $r->params['cas'] = (string)$p->ModifyIndex;
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -256,7 +256,7 @@ class KVClient extends AbstractClient
     public function Release(KVPair $p, ?WriteOptions $opts = null): WriteResponse
     {
         $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
-        $r->setWriteOptions($opts);
+        $r->applyOptions($opts);
         $r->params->set('release', $p->Session);
         if (0 !== $p->Flags) {
             $r->params->set('flags', (string)$p->Flags);
@@ -280,7 +280,7 @@ class KVClient extends AbstractClient
     {
         $r = new Request('DELETE', sprintf('v1/kv/%s', $prefix), $this->config, null);
         $r->params['recurse'] = '';
-        $r->setWriteOptions($opts);
+        $r->applyOptions($opts);
 
         [$duration, $_, $err] = $this->_requireOK($this->_do($r));
         if (null !== $err) {
@@ -304,7 +304,7 @@ class KVClient extends AbstractClient
         }
 
         $r = new Request('PUT', 'v1/txn', $this->config, $ops);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_do($r);

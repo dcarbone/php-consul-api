@@ -40,7 +40,7 @@ class PreparedQueryClient extends AbstractClient
     public function Create(PreparedQueryDefinition $query, ?WriteOptions $opts = null): ValuedWriteStringResponse
     {
         $r = new Request('POST', 'v1/query', $this->config, $query);
-        $r->setWriteOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));
@@ -60,7 +60,7 @@ class PreparedQueryClient extends AbstractClient
     public function Update(PreparedQueryDefinition $query, ?WriteOptions $opts = null): WriteResponse
     {
         $r = new Request('PUT', 'v1/query', $this->config, $query);
-        $r->setWriteOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $_, $err] = $this->_requireOK($this->_do($r));
@@ -79,7 +79,7 @@ class PreparedQueryClient extends AbstractClient
     public function List(?QueryOptions $opts = null): PreparedQueryDefinitionsResponse
     {
         $r = new Request('GET', 'v1/query', $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));
@@ -102,7 +102,7 @@ class PreparedQueryClient extends AbstractClient
     public function Get(string $queryID, ?QueryOptions $opts = null): PreparedQueryDefinitionsResponse
     {
         $r = new Request('GET', sprintf('v1/query/%s', $queryID), $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));
@@ -125,7 +125,7 @@ class PreparedQueryClient extends AbstractClient
     public function Delete(string $queryID, ?WriteOptions $opts = null): WriteResponse
     {
         $r = new Request('DELETE', sprintf('v1/query/%s', $queryID), $this->config, null);
-        $r->setWriteOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));
@@ -147,7 +147,7 @@ class PreparedQueryClient extends AbstractClient
     public function Execute(string $queryIDOrName, ?QueryOptions $opts = null): PreparedQueryExecuteResponseResponse
     {
         $r = new Request('GET', sprintf('v1/query/%s/execute', $queryIDOrName), $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));

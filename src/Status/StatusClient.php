@@ -38,7 +38,7 @@ class StatusClient extends AbstractClient
     public function LeaderWithQueryOptions(?QueryOptions $opts): ValuedStringResponse
     {
         $r = new Request('GET', 'v1/status/leader', $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$_, $response, $err] = $this->_requireOK($this->_do($r));
@@ -68,7 +68,7 @@ class StatusClient extends AbstractClient
     public function PeersWithQueryOptions(?QueryOptions $opts): ValuedStringsResponse
     {
         $r = new Request('GET', 'v1/status/peers', $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$_, $response, $err] = $this->_requireOK($this->_do($r));

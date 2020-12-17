@@ -59,7 +59,7 @@ class CoordinateClient extends AbstractClient
     public function Nodes(?QueryOptions $opts = null): CoordinateEntriesResponse
     {
         $r = new Request('GET', 'v1/coordinate/nodes', $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));
@@ -82,7 +82,7 @@ class CoordinateClient extends AbstractClient
     public function Update(CoordinateEntry $coordinateEntry, ?WriteOptions $opts = null): WriteResponse
     {
         $r = new Request(HTTP\MethodPut, 'v1/coordinate/update', $this->config, $coordinateEntry);
-        $r->setWriteOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $_, $err] = $this->_requireOK($this->_do($r));
@@ -99,7 +99,7 @@ class CoordinateClient extends AbstractClient
     public function Node(string $node, ?QueryOptions $opts = null): CoordinateEntriesResponse
     {
         $r = new Request(HTTP\MethodGet, sprintf('v1/coordinate/node/%s', $node), $this->config, null);
-        $r->setQueryOptions($opts);
+        $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));

@@ -24,7 +24,7 @@ use DCarbone\Go\Time;
  * Class QueryOptions
  * @package DCarbone\PHPConsulAPI
  */
-class QueryOptions extends AbstractModel implements RequestDecoratorInterface
+class QueryOptions extends AbstractModel implements RequestOptions
 {
     /** @var string */
     public $Namespace = '';
@@ -97,11 +97,11 @@ class QueryOptions extends AbstractModel implements RequestDecoratorInterface
     }
 
     /**
-     * @param string $Namespace
+     * @param string $namespace
      */
-    public function setNamespace(string $Namespace): void
+    public function setNamespace(string $namespace): void
     {
-        $this->Namespace = $Namespace;
+        $this->Namespace = $namespace;
     }
 
     /**
@@ -177,11 +177,11 @@ class QueryOptions extends AbstractModel implements RequestDecoratorInterface
     }
 
     /**
-     * @param \DCarbone\Go\Time\Duration|string|int|float|null $MaxAge
+     * @param \DCarbone\Go\Time\Duration|string|int|float|null $maxAge
      */
-    public function setMaxAge($MaxAge): void
+    public function setMaxAge($maxAge): void
     {
-        $this->MaxAge = Time::Duration($MaxAge);
+        $this->MaxAge = Time::Duration($maxAge);
     }
 
     /**
@@ -225,11 +225,11 @@ class QueryOptions extends AbstractModel implements RequestDecoratorInterface
     }
 
     /**
-     * @param int $waitTime
+     * @param mixed $waitTime
      */
-    public function setWaitTime(int $waitTime): void
+    public function setWaitTime($waitTime): void
     {
-        $this->WaitTime = $waitTime;
+        $this->WaitTime = Time::Duration($waitTime);
     }
 
     /**
@@ -241,11 +241,11 @@ class QueryOptions extends AbstractModel implements RequestDecoratorInterface
     }
 
     /**
-     * @param string $WaitHash
+     * @param string $waitHash
      */
-    public function setWaitHash(string $WaitHash): void
+    public function setWaitHash(string $waitHash): void
     {
-        $this->WaitHash = $WaitHash;
+        $this->WaitHash = $waitHash;
     }
 
     /**
@@ -289,11 +289,11 @@ class QueryOptions extends AbstractModel implements RequestDecoratorInterface
     }
 
     /**
-     * @param string $Filter
+     * @param string $filter
      */
-    public function setFilter(string $Filter): void
+    public function setFilter(string $filter): void
     {
-        $this->Filter = $Filter;
+        $this->Filter = $filter;
     }
 
     /**
@@ -337,11 +337,11 @@ class QueryOptions extends AbstractModel implements RequestDecoratorInterface
     }
 
     /**
-     * @param bool $LocalOnly
+     * @param bool $localOnly
      */
-    public function setLocalOnly(bool $LocalOnly): void
+    public function setLocalOnly(bool $localOnly): void
     {
-        $this->LocalOnly = $LocalOnly;
+        $this->LocalOnly = $localOnly;
     }
 
     /**
@@ -353,11 +353,11 @@ class QueryOptions extends AbstractModel implements RequestDecoratorInterface
     }
 
     /**
-     * @param bool $Connect
+     * @param bool $connect
      */
-    public function setConnect(bool $Connect): void
+    public function setConnect(bool $connect): void
     {
-        $this->Connect = $Connect;
+        $this->Connect = $connect;
     }
 
     /**
@@ -392,7 +392,10 @@ class QueryOptions extends AbstractModel implements RequestDecoratorInterface
         $this->Pretty = $pretty;
     }
 
-    public function decorate(Request $r): void
+    /**
+     * @param \DCarbone\PHPConsulAPI\Request $r
+     */
+    public function apply(Request $r): void
     {
         if ('' !== $this->Namespace) {
             $r->params->set('ns', $this->Namespace);
@@ -410,7 +413,7 @@ class QueryOptions extends AbstractModel implements RequestDecoratorInterface
             $r->params->set('index', (string)$this->WaitIndex);
         }
         if (0 !== $this->WaitTime) {
-            $r->params->set('wait', $this->config->intToMillisecond($this->WaitTime));
+            $r->params->set('wait', dur_to_millisecond($this->WaitTime));
         }
         if ('' !== $this->WaitHash) {
             $r->params->set('hash', $this->WaitHash);
@@ -441,11 +444,13 @@ class QueryOptions extends AbstractModel implements RequestDecoratorInterface
         if ($this->UseCache && !$this->RequireConsistent) {
             $r->params->set('cached', '');
             $cc = [];
-            if (null !== $this->MaxAge) {
-                $cc[] = sprintf('max-age=%.0f', $this->MaxAge->Seconds());
+            $s = $this->MaxAge->Seconds();
+            if (0 < $s) {
+                $cc[] = sprintf('max-age=%.0f', $s);
             }
-            if (null !== $this->StaleIfError) {
-                $cc[] = sprintf('stale-if-error=%.0f', $this->StaleIfError->Seconds());
+            $s = $this->StaleIfError->Seconds();
+            if (0 < $s) {
+                $cc[] = sprintf('stale-if-error=%.0f', $s);
             }
             if ([] !== $cc) {
                 $r->header->set('Cache-Control', implode(', ', $cc));
@@ -459,7 +464,5 @@ class QueryOptions extends AbstractModel implements RequestDecoratorInterface
         if ($this->Pretty) {
             $r->params->set('pretty', '');
         }
-
-        $this->uri = null;
     }
 }

@@ -19,13 +19,13 @@ namespace DCarbone\PHPConsulAPI;
 */
 
 /**
- * Interface RequestDecoratorInterface
+ * Interface RequestOptions
  * @package DCarbone\PHPConsulAPI
  */
-interface RequestDecoratorInterface
+interface RequestOptions
 {
     /**
      * @param \DCarbone\PHPConsulAPI\Request $r
      */
-    public function decorate(Request $r): void;
+    public function apply(Request $r): void;
 }
