@@ -28,7 +28,8 @@ class CoordinateDatacenterMapDefinitionTest extends AbstractDefinitionTestCases 
     /**
      * @return mixed
      */
-    protected function getSubjectClassName() {
+    protected function getSubjectClassName(): string
+    {
         return CoordinateDatacenterMap::class;
     }
 }

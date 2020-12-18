@@ -27,7 +27,8 @@ class CatalogNodeDefinitionTest extends AbstractDefinitionTestCases {
     /**
      * @inheritDoc
      */
-    protected function getSubjectClassName() {
+    protected function getSubjectClassName(): string
+    {
         return CatalogNode::class;
     }
 }

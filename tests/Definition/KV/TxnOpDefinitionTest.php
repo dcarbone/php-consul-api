@@ -27,7 +27,8 @@ class TxnOpDefinitionTest extends AbstractDefinitionTestCases {
     /**
      * @return string
      */
-    protected function getSubjectClassName() {
+    protected function getSubjectClassName(): string
+    {
         return TxnOp::class;
     }
 }

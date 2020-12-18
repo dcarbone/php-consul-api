@@ -30,7 +30,8 @@ class CatalogRegistrationDefinitionTest extends AbstractDefinitionTestCases {
     /**
      * @inheritDoc
      */
-    protected function getSubjectClassName() {
+    protected function getSubjectClassName(): string
+    {
         return CatalogRegistration::class;
     }
 }

@@ -27,7 +27,8 @@ class CatalogServiceDefinitionTest extends AbstractDefinitionTestCases {
     /**
      * @inheritDoc
      */
-    protected function getSubjectClassName() {
+    protected function getSubjectClassName(): string
+    {
         return CatalogService::class;
     }
 }

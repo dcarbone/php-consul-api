@@ -28,7 +28,8 @@ class PreparedQueryExecuteResponseDefinitionTest extends AbstractDefinitionTestC
     /**
      * @return string
      */
-    protected function getSubjectClassName() {
+    protected function getSubjectClassName(): string
+    {
         return PreparedQueryExecuteResponse::class;
     }
 }

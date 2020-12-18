@@ -28,7 +28,8 @@ class RaftConfigurationDefinitionTest extends AbstractDefinitionTestCases {
     /** @var bool */
     protected $requiresSetters = true;
 
-    protected function getSubjectClassName() {
+    protected function getSubjectClassName(): string
+    {
         return RaftConfiguration::class;
     }
 }

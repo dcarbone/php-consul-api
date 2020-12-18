@@ -27,7 +27,8 @@ class KVTxnOpDefinitionTest extends AbstractDefinitionTestCases {
     /**
      * @return string
      */
-    protected function getSubjectClassName() {
+    protected function getSubjectClassName(): string
+    {
         return KVTxnOp::class;
     }
 }

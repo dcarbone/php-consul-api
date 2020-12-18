@@ -52,13 +52,13 @@ abstract class AbstractDefinitionTestCases extends TestCase
     /**
      * @return string
      */
-    abstract protected function getSubjectClassName();
+    abstract protected function getSubjectClassName(): string;
 
     /**
      * @return \ReflectionClass
      * @throws \ReflectionException
      */
-    protected function getReflectionClass()
+    protected function getReflectionClass(): \ReflectionClass
     {
         if (!isset($this->reflectionClass)) {
             $this->reflectionClass = new \ReflectionClass($this->getSubjectClassName());
@@ -70,7 +70,7 @@ abstract class AbstractDefinitionTestCases extends TestCase
     /**
      * @return object
      */
-    protected function getEmptyInstance()
+    protected function getEmptyInstance(): object
     {
         if (!isset($this->emptyInstance)) {
             $class = $this->getSubjectClassName();
@@ -451,10 +451,11 @@ abstract class AbstractDefinitionTestCases extends TestCase
                     $failMessage = sprintf($failMessageTemplate, $defaultValue, $fqsn);
                     $this->assertInstanceOf($fqsn, $defaultValue, $failMessage);
                 } elseif ($fqsn === Time\Time::class) {
-                    $failMessage = sprintf('instance of %s', Time\Time::class);
+                    $failMessage = sprintf($failMessageTemplate, Time\Time::class);
                     $this->assertInstanceOf(Time\Time::class, $defaultValue, $failMessage);
                 } elseif ($fqsn === Time\Duration::class) {
-                    $failMessage = sprintf('instance of %s', Time\Duration::class);
+                    var_dump($emptyInstance);
+                    $failMessage = sprintf($failMessageTemplate, Time\Duration::class);
                     $this->assertInstanceOf(Time\Duration::class, $defaultValue, $failMessage);
                 } else {
                     $failMessage = sprintf($failMessageTemplate, 'null');

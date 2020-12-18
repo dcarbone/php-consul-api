@@ -30,7 +30,8 @@ class AgentCheckRegistrationDefinitionTest extends AbstractDefinitionTestCases {
     /**
      * @inheritDoc
      */
-    protected function getSubjectClassName() {
+    protected function getSubjectClassName(): string
+    {
         return AgentCheckRegistration::class;
     }
 }

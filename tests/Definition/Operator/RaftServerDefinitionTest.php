@@ -31,7 +31,8 @@ class RaftServerDefinitionTest extends AbstractDefinitionTestCases {
     /**
      * @return mixed
      */
-    protected function getSubjectClassName() {
+    protected function getSubjectClassName(): string
+    {
         return RaftServer::class;
     }
 }

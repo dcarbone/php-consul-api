@@ -27,7 +27,8 @@ class AgentServiceDefinitionTest extends AbstractDefinitionTestCases {
     /**
      * @inheritDoc
      */
-    protected function getSubjectClassName() {
+    protected function getSubjectClassName(): string
+    {
         return AgentService::class;
     }
 }

@@ -166,6 +166,10 @@ class Config
             );
         }
 
+        if (!($this->WaitTime instanceof Time\Duration)) {
+            $this->WaitTime = Time::Duration($this->WaitTime);
+        }
+
         // if client hasn't been constructed, construct.
         if (null === $this->HttpClient) {
             $this->HttpClient = new Client();
@@ -197,8 +201,8 @@ class Config
         if (null !== $inc->HttpAuth) {
             $actual->HttpAuth = clone $inc->HttpAuth;
         }
-        if (0 !== $inc->WaitTime) {
-            $actual->WaitTime = $inc->WaitTime;
+        if (null !== $inc->WaitTime) {
+            $actual->WaitTime = Time::Duration($inc->WaitTime);
         }
         if ('' !== $inc->Token) {
             $actual->Token = $inc->Token;
