@@ -16,7 +16,7 @@
     "php-consul-api"
   ],
   "require": {
-    "php": ">=7.2",
+    "php": ">=7.4",
     "ext-json": "*",
     "dcarbone/gotime": "0.4.*",
     "dcarbone/gohttp": "v0.3.*",

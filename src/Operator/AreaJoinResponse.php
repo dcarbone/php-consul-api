@@ -27,11 +27,11 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 class AreaJoinResponse extends AbstractModel
 {
     /** @var string */
-    public $Address = '';
+    public string $Address = '';
     /** @var bool */
-    public $Joined = false;
+    public bool $Joined = false;
     /** @var string */
-    public $Error = '';
+    public string $Error = '';
 
     /**
      * @return string

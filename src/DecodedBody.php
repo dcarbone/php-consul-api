@@ -26,8 +26,8 @@ final class DecodedBody implements \ArrayAccess
 {
     /** @var mixed */
     public $Decoded = null;
-    /** @var \DCarbone\PHPConsulAPI\Error */
-    public $Err;
+    /** @var \DCarbone\PHPConsulAPI\Error|null */
+    public ?Error $Err = null;
 
     /**
      * DecodedBody constructor.
@@ -51,7 +51,7 @@ final class DecodedBody implements \ArrayAccess
     /**
      * @return \DCarbone\PHPConsulAPI\Error
      */
-    public function getErr(): \DCarbone\PHPConsulAPI\Error
+    public function getErr(): Error
     {
         return $this->Err;
     }

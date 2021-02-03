@@ -19,6 +19,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
 */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class Area
@@ -26,14 +27,21 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  */
 class Area extends AbstractModel
 {
+    private const FIELD_RETRY_JOIN = 'RetryJoin';
+
     /** @var string */
-    public $ID = '';
+    public string $ID = '';
     /** @var string */
-    public $PeerDatacenter = '';
+    public string $PeerDatacenter = '';
     /** @var string[] */
-    public $RetryJoin = [];
+    public array $RetryJoin = [];
     /** @var bool */
-    public $UseTLS = false;
+    public bool $UseTLS = false;
+
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_RETRY_JOIN => Hydration::HYDRATE_ARRAY_STRING,
+    ];
 
     /**
      * @return string
@@ -44,12 +52,12 @@ class Area extends AbstractModel
     }
 
     /**
-     * @param string $id
+     * @param string $ID
      * @return Area
      */
-    public function setID(string $id): Area
+    public function setID(string $ID): Area
     {
-        $this->ID = $id;
+        $this->ID = $ID;
         return $this;
     }
 
@@ -62,12 +70,12 @@ class Area extends AbstractModel
     }
 
     /**
-     * @param string $peerDatacenter
+     * @param string $PeerDatacenter
      * @return Area
      */
-    public function setPeerDatacenter(string $peerDatacenter): Area
+    public function setPeerDatacenter(string $PeerDatacenter): Area
     {
-        $this->PeerDatacenter = $peerDatacenter;
+        $this->PeerDatacenter = $PeerDatacenter;
         return $this;
     }
 
@@ -80,12 +88,12 @@ class Area extends AbstractModel
     }
 
     /**
-     * @param string[] $retryJoin
+     * @param string[] $RetryJoin
      * @return Area
      */
-    public function setRetryJoin(array $retryJoin): Area
+    public function setRetryJoin(array $RetryJoin): Area
     {
-        $this->RetryJoin = $retryJoin;
+        $this->RetryJoin = $RetryJoin;
         return $this;
     }
 
@@ -98,12 +106,12 @@ class Area extends AbstractModel
     }
 
     /**
-     * @param bool $useTLS
+     * @param bool $UseTLS
      * @return Area
      */
-    public function setUseTLS(bool $useTLS): Area
+    public function setUseTLS(bool $UseTLS): Area
     {
-        $this->UseTLS = $useTLS;
+        $this->UseTLS = $UseTLS;
         return $this;
     }
 }

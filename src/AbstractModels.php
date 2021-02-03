@@ -25,10 +25,10 @@ namespace DCarbone\PHPConsulAPI;
 abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
 {
     /** @var \DCarbone\PHPConsulAPI\AbstractModel[] */
-    protected $_list = [];
+    protected array $_list = [];
 
-    /** @var null|string */
-    protected $containedClass = null;
+    /** @var string */
+    protected string $containedClass;
 
     /**
      * AbstractModels constructor.
@@ -64,10 +64,11 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
             $this->_list[] = $value;
         } else {
             throw new \InvalidArgumentException(
-                get_class($this) .
-                ' accepts only objects of type ' .
-                $this->containedClass .
-                ' or null as values'
+                sprintf(
+                    '%s accepts only objects of type %s or null as values',
+                    get_class($this),
+                    $this->containedClass,
+                )
             );
         }
     }
@@ -154,19 +155,22 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
     /**
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->_list);
     }
 
-    public function jsonSerialize()
+    /**
+     * @return \DCarbone\PHPConsulAPI\AbstractModel[]
+     */
+    public function jsonSerialize(): array
     {
-        return $this->_list;
+        return array_filter((array)$this->_list);
     }
 
     /**
-     * @param mixed $data
-     * @return mixed
+     * @param array $data
+     * @return static
      */
-    abstract protected function newChild($data): AbstractModel;
+    abstract protected function newChild(array $data): AbstractModel;
 }

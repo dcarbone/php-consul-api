@@ -29,7 +29,7 @@ use DCarbone\PHPConsulAPI\QueryMeta;
 class KVPairResponse extends AbstractValuedQueryResponse
 {
     /** @var \DCarbone\PHPConsulAPI\KV\KVPair|null */
-    public $KVPair = null;
+    public ?KVPair $KVPair = null;
 
     /**
      * KVPairResponse constructor.

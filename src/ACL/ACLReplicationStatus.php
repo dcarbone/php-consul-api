@@ -27,17 +27,17 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 class ACLReplicationStatus extends AbstractModel
 {
     /** @var bool */
-    public $Enabled = false;
+    public bool $Enabled = false;
     /** @var bool */
-    public $Running = false;
+    public bool $Running = false;
     /** @var string */
-    public $SourceDatacenter = '';
+    public string $SourceDatacenter = '';
     /** @var int */
-    public $ReplicatedIndex = 0;
-    /** @var null|string */
-    public $LastSuccess = null;
-    /** @var null|string */
-    public $LastError = null;
+    public int $ReplicatedIndex = 0;
+    /** @var string */
+    public string $LastSuccess = '';
+    /** @var string */
+    public string $LastError = '';
 
     /**
      * @return bool
@@ -72,17 +72,17 @@ class ACLReplicationStatus extends AbstractModel
     }
 
     /**
-     * @return null|string
+     * @return string
      */
-    public function getLastSuccess()
+    public function getLastSuccess(): string
     {
         return $this->LastSuccess;
     }
 
     /**
-     * @return null|string
+     * @return string
      */
-    public function getLastError()
+    public function getLastError(): string
     {
         return $this->LastError;
     }

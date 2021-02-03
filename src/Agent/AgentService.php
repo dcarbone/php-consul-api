@@ -30,19 +30,19 @@ class AgentService extends AbstractModel
     use HasStringTags;
 
     /** @var string */
-    public $ID = '';
+    public string $ID = '';
     /** @var string */
-    public $Service = '';
+    public string $Service = '';
     /** @var string */
-    public $Address = '';
+    public string $Address = '';
     /** @var int */
-    public $Port = 0;
+    public int $Port = 0;
     /** @var bool */
-    public $EnableTagOverride = false;
+    public bool $EnableTagOverride = false;
     /** @var int */
-    public $CreateIndex = 0;
+    public int $CreateIndex = 0;
     /** @var int */
-    public $ModifyIndex = 0;
+    public int $ModifyIndex = 0;
 
     /**
      * @return string
@@ -103,7 +103,7 @@ class AgentService extends AbstractModel
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->ID;
     }

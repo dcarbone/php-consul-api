@@ -29,7 +29,7 @@ use DCarbone\PHPConsulAPI\QueryMeta;
 class ACLEntriesResponse extends AbstractValuedQueryResponse
 {
     /** @var \DCarbone\PHPConsulAPI\ACL\ACLEntry[]|null */
-    public $ACLEntries = null;
+    public array $ACLEntries = [];
 
     /**
      * ACLEntriesResponse constructor.
@@ -40,7 +40,6 @@ class ACLEntriesResponse extends AbstractValuedQueryResponse
     public function __construct(?array $entries, ?QueryMeta $qm, ?Error $err)
     {
         if (null !== $entries) {
-            $this->ACLEntries = [];
             foreach ($entries as $entry) {
                 $this->ACLEntries[] = new ACLEntry($entry);
             }

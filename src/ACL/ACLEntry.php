@@ -27,17 +27,17 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 class ACLEntry extends AbstractModel
 {
     /** @var int */
-    public $CreateIndex = 0;
+    public int $CreateIndex = 0;
     /** @var int */
-    public $ModifyIndex = 0;
+    public int $ModifyIndex = 0;
     /** @var string */
-    public $ID = '';
+    public string $ID = '';
     /** @var string */
-    public $Name = '';
+    public string $Name = '';
     /** @var string */
-    public $Type = '';
+    public string $Type = '';
     /** @var string */
-    public $Rules = '';
+    public string $Rules = '';
 
     /**
      * @return int
@@ -48,11 +48,13 @@ class ACLEntry extends AbstractModel
     }
 
     /**
-     * @param int $createIndex
+     * @param int $CreateIndex
+     * @return ACLEntry
      */
-    public function setCreateIndex(int $createIndex)
+    public function setCreateIndex(int $CreateIndex): ACLEntry
     {
-        $this->CreateIndex = $createIndex;
+        $this->CreateIndex = $CreateIndex;
+        return $this;
     }
 
     /**
@@ -64,11 +66,13 @@ class ACLEntry extends AbstractModel
     }
 
     /**
-     * @param int $modifyIndex
+     * @param int $ModifyIndex
+     * @return ACLEntry
      */
-    public function setModifyIndex(int $modifyIndex)
+    public function setModifyIndex(int $ModifyIndex): ACLEntry
     {
-        $this->ModifyIndex = $modifyIndex;
+        $this->ModifyIndex = $ModifyIndex;
+        return $this;
     }
 
     /**
@@ -80,11 +84,13 @@ class ACLEntry extends AbstractModel
     }
 
     /**
-     * @param string $id
+     * @param string $ID
+     * @return ACLEntry
      */
-    public function setID(string $id)
+    public function setID(string $ID): ACLEntry
     {
-        $this->ID = $id;
+        $this->ID = $ID;
+        return $this;
     }
 
     /**
@@ -96,11 +102,13 @@ class ACLEntry extends AbstractModel
     }
 
     /**
-     * @param string $name
+     * @param string $Name
+     * @return ACLEntry
      */
-    public function setName(string $name)
+    public function setName(string $Name): ACLEntry
     {
-        $this->Name = $name;
+        $this->Name = $Name;
+        return $this;
     }
 
     /**
@@ -112,11 +120,13 @@ class ACLEntry extends AbstractModel
     }
 
     /**
-     * @param string $type
+     * @param string $Type
+     * @return ACLEntry
      */
-    public function setType(string $type)
+    public function setType(string $Type): ACLEntry
     {
-        $this->Type = $type;
+        $this->Type = $Type;
+        return $this;
     }
 
     /**
@@ -128,10 +138,12 @@ class ACLEntry extends AbstractModel
     }
 
     /**
-     * @param string $rules
+     * @param string $Rules
+     * @return ACLEntry
      */
-    public function setRules(string $rules)
+    public function setRules(string $Rules): ACLEntry
     {
-        $this->Rules = $rules;
+        $this->Rules = $Rules;
+        return $this;
     }
 }

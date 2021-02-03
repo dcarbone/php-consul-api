@@ -20,6 +20,7 @@ namespace DCarbone\PHPConsulAPI\Agent;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Health\HealthChecks;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class AgentServiceChecksInfo
@@ -27,27 +28,37 @@ use DCarbone\PHPConsulAPI\Health\HealthChecks;
  */
 class AgentServiceChecksInfo extends AbstractModel
 {
+    private const FIELD_SERVICE = 'Service';
+    private const FIELD_CHECKS  = 'Checks';
+
     /** @var string */
-    public $AggregatedStatus = '';
+    public string $AggregatedStatus = '';
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentService|null */
-    public $Service = null;
+    public ?AgentService $Service = null;
     /** @var \DCarbone\PHPConsulAPI\Health\HealthChecks|null */
-    public $Checks = null;
+    public ?HealthChecks $Checks = null;
+
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_SERVICE => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => AgentService::class,
+        ],
+        self::FIELD_CHECKS  => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => HealthChecks::class,
+        ],
+    ];
 
     /**
      * AgentServiceChecksInfo constructor.
      * @param array $data
      */
-    public function __construct(array $data)
+    public function __construct(array $data = [])
     {
-        if (isset($data['AggregatedStatus'])) {
-            $this->AggregatedStatus = $data['AggregatedStatus'];
-        }
-        if (isset($data['Service'])) {
-            $this->Service = new AgentService($data['Service']);
-        }
-        if (isset($data['Checks'])) {
-            $this->Checks = new HealthChecks($data['Checks']);
+        parent::__construct($data);
+        if (!isset($this->Checks)) {
+            $this->Checks = new HealthChecks();
         }
     }
 
@@ -108,7 +119,7 @@ class AgentServiceChecksInfo extends AbstractModel
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->AggregatedStatus;
     }

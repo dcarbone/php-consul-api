@@ -19,6 +19,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
 */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class AutopilotState
@@ -26,50 +27,43 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  */
 class AutopilotState extends AbstractModel
 {
-    /** @var bool */
-    public $Healthy = false;
-    /** @var int */
-    public $FailureTolerance = 0;
-    /** @var int */
-    public $OptimisticFailureTolerance = 0;
-    /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotState[]|null */
-    public $Servers = null;
-    /** @var string */
-    public $Leader = '';
-    /** @var string[]|null */
-    public $Voters = null;
-    /** @var string[]|null */
-    public $ReadReplicas = null;
-    /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotZone[]|null */
-    public $RedundancyZone = null;
-    /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotUpgrade|null */
-    public $Upgrade = null;
+    private const FIELD_SERVERS         = 'Servers';
+    private const FIELD_REDUNDANCY_ZONE = 'RedundancyZone';
+    private const FIELD_UPGRADE         = 'Upgrade';
 
-    /**
-     * AutopilotState constructor.
-     * @param array $data
-     */
-    public function __construct(array $data = [])
-    {
-        parent::__construct($data);
-        if (is_array($this->Servers)) {
-            foreach ($this->Servers as &$v) {
-                if (is_array($v)) {
-                    $v = new AutopilotState($v);
-                }
-            }
-        }
-        if (is_array($this->RedundancyZone)) {
-            foreach ($this->RedundancyZone as &$v) {
-                if (is_array($v)) {
-                    $v = new AutopilotZone($v);
-                }
-            }
-        }
-        if (is_array($this->Upgrade)) {
-            $this->Upgrade = new AutopilotUpgrade($this->Upgrade);
-        }
-    }
+    /** @var bool */
+    public bool $Healthy = false;
+    /** @var int */
+    public int $FailureTolerance = 0;
+    /** @var int */
+    public int $OptimisticFailureTolerance = 0;
+    /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotState[] */
+    public array $Servers = [];
+    /** @var string */
+    public string $Leader = '';
+    /** @var string[] */
+    public array $Voters = [];
+    /** @var string[] */
+    public array $ReadReplicas = [];
+    /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotZone[] */
+    public array $RedundancyZone = [];
+    /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotUpgrade|null */
+    public ?AutopilotUpgrade $Upgrade = null;
+
+    protected static array $fields = [
+        self::FIELD_SERVERS         => [
+            Hydration::FIELD_TYPE  => Hydration::ARRAY,
+            Hydration::FIELD_CLASS => AutopilotState::class,
+        ],
+        self::FIELD_REDUNDANCY_ZONE => [
+            Hydration::FIELD_TYPE  => Hydration::ARRAY,
+            Hydration::FIELD_CLASS => AutopilotZone::class,
+        ],
+        self::FIELD_UPGRADE         => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => AutopilotUpgrade::class,
+        ],
+    ];
 
     /**
      * @return bool
@@ -98,7 +92,7 @@ class AutopilotState extends AbstractModel
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\AutopilotState[]|null
      */
-    public function getServers(): ?array
+    public function getServers(): array
     {
         return $this->Servers;
     }
@@ -130,7 +124,7 @@ class AutopilotState extends AbstractModel
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\AutopilotZone[]|null
      */
-    public function getRedundancyZone(): ?array
+    public function getRedundancyZone(): array
     {
         return $this->RedundancyZone;
     }

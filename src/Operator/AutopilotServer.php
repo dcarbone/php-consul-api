@@ -20,6 +20,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class AutopilotServer
@@ -27,52 +28,49 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  */
 class AutopilotServer extends AbstractModel implements \JsonSerializable
 {
-    /** @var string */
-    public $ID = '';
-    /** @var string */
-    public $Name = '';
-    /** @var string */
-    public $Address = '';
-    /** @var string */
-    public $NodeStatus = '';
-    /** @var string */
-    public $Version = '';
-    /** @var \DCarbone\PHPConsulAPI\Operator\ReadableDuration|null */
-    public $LastContact = null;
-    /** @var int */
-    public $LastTerm = 0;
-    /** @var int */
-    public $LastIndex = 0;
-    /** @var \DCarbone\Go\Time\Time|null */
-    public $StableSince = null;
-    /** @var string */
-    public $RedundancyZone = '';
-    /** @var string */
-    public $UpgradeVersion = '';
-    /** @var bool */
-    public $ReadReplica = false;
-    /** @var string */
-    public $Status = '';
-    /** @var array|null */
-    public $Meta = null;
-    /** @var string */
-    public $NodeType = '';
+    private const FIELD_LAST_CONTACT = 'LastContact';
+    private const FIELD_STABLE_SINCE = 'StableSince';
 
-    /**
-     * AutopilotServer constructor.
-     * @param array $data
-     * @throws \Exception
-     */
-    public function __construct(array $data = [])
-    {
-        parent::__construct($data);
-        if (!($this->LastContact instanceof ReadableDuration)) {
-            $this->LastContact = new ReadableDuration(intval($this->LastContact, 10));
-        }
-        if (!($this->StableSince instanceof Time\Time)) {
-            $this->StableSince = Time\Time::createFromFormat(Time\Time::DefaultFormat, strval($this->StableSince));
-        }
-    }
+    /** @var string */
+    public string $ID = '';
+    /** @var string */
+    public string $Name = '';
+    /** @var string */
+    public string $Address = '';
+    /** @var string */
+    public string $NodeStatus = '';
+    /** @var string */
+    public string $Version = '';
+    /** @var \DCarbone\PHPConsulAPI\Operator\ReadableDuration|null */
+    public ?ReadableDuration $LastContact = null;
+    /** @var int */
+    public int $LastTerm = 0;
+    /** @var int */
+    public int $LastIndex = 0;
+    /** @var \DCarbone\Go\Time\Time|null */
+    public ?Time\Time $StableSince = null;
+    /** @var string */
+    public string $RedundancyZone = '';
+    /** @var string */
+    public string $UpgradeVersion = '';
+    /** @var bool */
+    public bool $ReadReplica = false;
+    /** @var string */
+    public string $Status = '';
+    /** @var array */
+    public array $Meta = [];
+    /** @var string */
+    public string $NodeType = '';
+
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_LAST_CONTACT => [
+            Hydration::FIELD_HYDRATE_CALLABLE => [ReadableDuration::class, 'hydrate'],
+        ],
+        self::FIELD_STABLE_SINCE => [
+            Hydration::FIELD_HYDRATE_CALLABLE => Hydration::HYDRATE_TIME_CALLABLE,
+        ],
+    ];
 
     /**
      * @return string
@@ -197,10 +195,12 @@ class AutopilotServer extends AbstractModel implements \JsonSerializable
     /**
      * @return array|mixed|void
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         $arr = parent::jsonSerialize();
-        $arr['StableSince'] = $this->StableSince->format(Time\Time::DefaultFormat);
+        if (isset($this->StableSince)) {
+            $arr[self::FIELD_STABLE_SINCE] = $this->StableSince->format(Time\Time::DefaultFormat);
+        }
         return $arr;
     }
 }

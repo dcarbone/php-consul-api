@@ -19,6 +19,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
 */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class AutopilotZone
@@ -26,25 +27,34 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  */
 class AutopilotZone extends AbstractModel
 {
-    /** @var string[]|null */
-    public $Servers = null;
-    /** @var string[]|null */
-    public $Voters = null;
+    private const FIELD_SERVERS = 'Servers';
+    private const FIELD_VOTERS  = 'Voters';
+
+    /** @var string[] */
+    public array $Servers = [];
+    /** @var string[] */
+    public array $Voters = [];
     /** @var int */
-    public $FailureTolerance = 0;
+    public int $FailureTolerance = 0;
+
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_SERVERS => Hydration::HYDRATE_ARRAY_STRING,
+        self::FIELD_VOTERS  => Hydration::HYDRATE_ARRAY_STRING,
+    ];
 
     /**
-     * @return string[]|null
+     * @return string[]
      */
-    public function getServers(): ?array
+    public function getServers(): array
     {
         return $this->Servers;
     }
 
     /**
-     * @return string[]|null
+     * @return string[]
      */
-    public function getVoters(): ?array
+    public function getVoters(): array
     {
         return $this->Voters;
     }

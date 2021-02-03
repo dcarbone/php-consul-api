@@ -27,21 +27,24 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 class KVPair extends AbstractModel
 {
     /** @var string */
-    public $Key = '';
+    public string $Key = '';
     /** @var int */
-    public $CreateIndex = 0;
+    public int $CreateIndex = 0;
     /** @var int */
-    public $ModifyIndex = 0;
+    public int $ModifyIndex = 0;
     /** @var int */
-    public $LockIndex = 0;
+    public int $LockIndex = 0;
     /** @var int */
-    public $Flags = 0;
-    /** @var null|string */
-    public $Value = null;
+    public int $Flags = 0;
     /** @var string */
-    public $Session = '';
+    public string $Value = '';
     /** @var string */
-    public $Namespace = '';
+    public string $Session = '';
+    /** @var string */
+    public string $Namespace = '';
+
+    /** @var bool */
+    private bool $_valueDecoded = false;
 
     /**
      * KVPair constructor.
@@ -51,8 +54,9 @@ class KVPair extends AbstractModel
     public function __construct(array $data = [], bool $_decodeValue = false)
     {
         parent::__construct($data);
-        if ((bool)$_decodeValue && isset($this->Value)) {
+        if ($_decodeValue && !$this->_valueDecoded) {
             $this->Value = base64_decode($this->Value);
+            $this->_valueDecoded = true;
         }
     }
 
@@ -155,7 +159,7 @@ class KVPair extends AbstractModel
     }
 
     /**
-     * @param null|string $value
+     * @param string $value
      * @return \DCarbone\PHPConsulAPI\KV\KVPair
      */
     public function setValue(string $value): KVPair
@@ -205,6 +209,6 @@ class KVPair extends AbstractModel
      */
     public function __toString(): string
     {
-        return (string)$this->Value;
+        return $this->Value;
     }
 }

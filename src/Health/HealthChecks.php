@@ -29,7 +29,7 @@ use DCarbone\PHPConsulAPI\Consul;
 class HealthChecks extends AbstractModels
 {
     /** @var string */
-    protected $containedClass = HealthCheck::class;
+    protected string $containedClass = HealthCheck::class;
 
     /**
      * @return string
@@ -37,7 +37,7 @@ class HealthChecks extends AbstractModels
     public function AggregatedStatus(): string
     {
         $passing = $warning = $critical = $maintenance = false;
-        foreach ($this->_list as $check) {
+        foreach ($this as $check) {
             /** @var \DCarbone\PHPConsulAPI\Health\HealthCheck $check */
             if ($check->CheckID === Consul::NodeMaint || 0 === strpos($check->CheckID, Consul::ServiceMaintPrefix)) {
                 // TODO: Maybe just return maintenance right now...?
@@ -77,7 +77,7 @@ class HealthChecks extends AbstractModels
      * @param null|array $data
      * @return \DCarbone\PHPConsulAPI\AbstractModel
      */
-    protected function newChild($data): AbstractModel
+    protected function newChild(?array $data): AbstractModel
     {
         return new HealthCheck($data);
     }

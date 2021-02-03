@@ -24,6 +24,8 @@ namespace DCarbone\PHPConsulAPI;
  */
 abstract class AbstractModel implements \JsonSerializable
 {
+    use FieldHydration;
+
     /**
      * AbstractModel constructor.
      *
@@ -35,7 +37,7 @@ abstract class AbstractModel implements \JsonSerializable
     public function __construct(array $data = [])
     {
         foreach ($data as $k => $v) {
-            $this->{$k} = $v;
+            $this->hydrateField($k, $v);
         }
     }
 
@@ -46,7 +48,7 @@ abstract class AbstractModel implements \JsonSerializable
      *
      * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return array_filter((array)$this);
     }
@@ -54,7 +56,7 @@ abstract class AbstractModel implements \JsonSerializable
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return get_class($this);
     }

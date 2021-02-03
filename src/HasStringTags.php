@@ -22,14 +22,16 @@ namespace DCarbone\PHPConsulAPI;
  * Class HasStringTags
  * @package DCarbone\PHPConsulAPI
  */
-trait HasStringTags {
+trait HasStringTags
+{
     /** @var string[] */
-    public $Tags = [];
+    public array $Tags = [];
 
     /**
      * @return string[]
      */
-    public function getTags(): array {
+    public function getTags(): array
+    {
         return $this->Tags;
     }
 }

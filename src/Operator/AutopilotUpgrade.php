@@ -19,6 +19,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
 */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class AutopilotUpgrade
@@ -26,40 +27,47 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  */
 class AutopilotUpgrade extends AbstractModel
 {
-    /** @var string */
-    public $Status = '';
-    /** @var string */
-    public $TargetVersion = '';
-    /** @var string[]|null */
-    public $TargetVersionVoters = null;
-    /** @var string[]|null */
-    public $TargetVersionNonVoters = null;
-    /** @var string[]|null */
-    public $TargetVersionReadReplicas = null;
-    /** @var string[]|null */
-    public $OtherVersionVoters = null;
-    /** @var string[]|null */
-    public $OtherVersionNonVoters = null;
-    /** @var string[]|null */
-    public $OtherVersionReadReplicas = null;
-    /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotZoneUpgradeVersions[]|null */
-    public $RedundancyZones = null;
+    private const FIELD_TARGET_VERSION_VOTERS        = 'TargetVersionVoters';
+    private const FIELD_TARGET_VERSION_NON_VOTERS    = 'TargetVersionNonVoters';
+    private const FIELD_TARGET_VERSION_READ_REPLICAS = 'TargetVersionReadReplicas';
+    private const FIELD_OTHER_VERSION_VOTERS         = 'OtherVersionVoters';
+    private const FIELD_OTHER_VERSION_NON_VOTERS     = 'OtherVersionNonVoters';
+    private const FIELD_OTHER_VERSION_READ_REPLICAS  = 'OtherVersionReadReplicas';
+    private const FIELD_REDUNDANCY_ZONES             = 'RedundancyZones';
 
-    /**
-     * AutopilotUpgrade constructor.
-     * @param array $data
-     */
-    public function __construct(array $data = [])
-    {
-        parent::__construct($data);
-        if (is_array($this->RedundancyZones)) {
-            foreach ($this->RedundancyZones as &$v) {
-                if (is_array($v)) {
-                    $v = new AutopilotZoneUpgradeVersions($v);
-                }
-            }
-        }
-    }
+    /** @var string */
+    public string $Status = '';
+    /** @var string */
+    public string $TargetVersion = '';
+    /** @var string[] */
+    public array $TargetVersionVoters = [];
+    /** @var string[] */
+    public array $TargetVersionNonVoters = [];
+    /** @var string[] */
+    public array $TargetVersionReadReplicas = [];
+    /** @var string[] */
+    public array $OtherVersionVoters = [];
+    /** @var string[] */
+    public array $OtherVersionNonVoters = [];
+    /** @var string[] */
+    public array $OtherVersionReadReplicas = [];
+    /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotZoneUpgradeVersions[] */
+    public array $RedundancyZones = [];
+
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_TARGET_VERSION_VOTERS        => Hydration::HYDRATE_ARRAY_STRING,
+        self::FIELD_TARGET_VERSION_NON_VOTERS    => Hydration::HYDRATE_ARRAY_STRING,
+        self::FIELD_TARGET_VERSION_READ_REPLICAS => Hydration::HYDRATE_ARRAY_STRING,
+        self::FIELD_OTHER_VERSION_VOTERS         => Hydration::HYDRATE_ARRAY_STRING,
+        self::FIELD_OTHER_VERSION_NON_VOTERS     => Hydration::HYDRATE_ARRAY_STRING,
+        self::FIELD_OTHER_VERSION_READ_REPLICAS  => Hydration::HYDRATE_ARRAY_STRING,
+        self::FIELD_REDUNDANCY_ZONES             => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => AutopilotZoneUpgradeVersions::class,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+        ],
+    ];
 
     /**
      * @return string
@@ -78,57 +86,57 @@ class AutopilotUpgrade extends AbstractModel
     }
 
     /**
-     * @return string[]|null
+     * @return string[]
      */
-    public function getTargetVersionVoters(): ?array
+    public function getTargetVersionVoters(): array
     {
         return $this->TargetVersionVoters;
     }
 
     /**
-     * @return string[]|null
+     * @return string[]
      */
-    public function getTargetVersionNonVoters(): ?array
+    public function getTargetVersionNonVoters(): array
     {
         return $this->TargetVersionNonVoters;
     }
 
     /**
-     * @return string[]|null
+     * @return string[]
      */
-    public function getTargetVersionReadReplicas(): ?array
+    public function getTargetVersionReadReplicas(): array
     {
         return $this->TargetVersionReadReplicas;
     }
 
     /**
-     * @return string[]|null
+     * @return string[]
      */
-    public function getOtherVersionVoters(): ?array
+    public function getOtherVersionVoters(): array
     {
         return $this->OtherVersionVoters;
     }
 
     /**
-     * @return string[]|null
+     * @return string[]
      */
-    public function getOtherVersionNonVoters(): ?array
+    public function getOtherVersionNonVoters(): array
     {
         return $this->OtherVersionNonVoters;
     }
 
     /**
-     * @return string[]|null
+     * @return string[]
      */
-    public function getOtherVersionReadReplicas(): ?array
+    public function getOtherVersionReadReplicas(): array
     {
         return $this->OtherVersionReadReplicas;
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotZoneUpgradeVersions[]|null
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotZoneUpgradeVersions[]
      */
-    public function getRedundancyZones(): ?array
+    public function getRedundancyZones(): array
     {
         return $this->RedundancyZones;
     }

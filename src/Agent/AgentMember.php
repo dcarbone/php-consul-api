@@ -30,25 +30,25 @@ class AgentMember extends AbstractModel
     use HasStringTags;
 
     /** @var string */
-    public $Name = '';
+    public string $Name = '';
     /** @var string */
-    public $Addr = '';
+    public string $Addr = '';
     /** @var int */
-    public $Port = 0;
+    public int $Port = 0;
     /** @var string */
-    public $Status = '';
+    public string $Status = '';
     /** @var int */
-    public $ProtocolMin = 0;
+    public int $ProtocolMin = 0;
     /** @var int */
-    public $ProtocolMax = 0;
+    public int $ProtocolMax = 0;
     /** @var int */
-    public $ProtocolCur = 0;
+    public int $ProtocolCur = 0;
     /** @var int */
-    public $DelegateMin = 0;
+    public int $DelegateMin = 0;
     /** @var int */
-    public $DelegateMax = 0;
+    public int $DelegateMax = 0;
     /** @var int */
-    public $DelegateCur = 0;
+    public int $DelegateCur = 0;
 
     /**
      * @return string
@@ -133,7 +133,7 @@ class AgentMember extends AbstractModel
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->Name;
     }

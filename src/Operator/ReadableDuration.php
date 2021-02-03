@@ -28,6 +28,16 @@ use DCarbone\PHPConsulAPI\ScalarType;
 class ReadableDuration extends Time\Duration implements \JsonSerializable, ScalarType
 {
     /**
+     * @param object $instance
+     * @param string $field
+     * @param mixed $value
+     */
+    public static function hydrate(object $instance, string $field, $value): void
+    {
+        $instance->{$field} = new ReadableDuration(intval($value, 10));
+    }
+
+    /**
      * @param string $s
      * @return \DCarbone\PHPConsulAPI\Operator\ReadableDuration
      */

@@ -19,6 +19,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
 */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class AutopilotZoneUpgradeVersions
@@ -26,14 +27,26 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  */
 class AutopilotZoneUpgradeVersions extends AbstractModel
 {
+    private const FIELD_TARGET_VERSION_VOTERS     = 'TargetVersionVoters';
+    private const FIELD_TARGET_VERSION_NON_VOTERS = 'TargetVersionNonVoters';
+    private const FIELD_OTHER_VERSION_VOTERS      = 'OtherVersionVoters';
+    private const FIELD_OTHER_VERSION_NON_VOTERS  = 'OtherVersionNonVoters';
+
     /** @var string[]|null */
-    public $TargetVersionVoters = null;
+    public array $TargetVersionVoters = [];
     /** @var string[]|null */
-    public $TargetVersionNonVoters = null;
+    public array $TargetVersionNonVoters = [];
     /** @var string[]|null */
-    public $OtherVersionVoters = null;
+    public array $OtherVersionVoters = [];
     /** @var string[]|null */
-    public $OtherVersionNonVoters = null;
+    public array $OtherVersionNonVoters = [];
+
+    protected static array $fields = [
+        self::FIELD_TARGET_VERSION_VOTERS     => Hydration::HYDRATE_ARRAY_STRING,
+        self::FIELD_TARGET_VERSION_NON_VOTERS => Hydration::HYDRATE_ARRAY_STRING,
+        self::FIELD_OTHER_VERSION_VOTERS      => Hydration::HYDRATE_ARRAY_STRING,
+        self::FIELD_OTHER_VERSION_NON_VOTERS  => Hydration::HYDRATE_ARRAY_STRING,
+    ];
 
     /**
      * @return string[]|null
