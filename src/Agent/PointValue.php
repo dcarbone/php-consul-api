@@ -27,9 +27,9 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 class PointValue extends AbstractModel
 {
     /** @var string */
-    public $Name = '';
+    public string $Name = '';
     /** @var array */
-    public $Points = [];
+    public array $Points = [];
 
     /**
      * @return string
@@ -40,12 +40,12 @@ class PointValue extends AbstractModel
     }
 
     /**
-     * @param string $name
+     * @param string $Name
      * @return PointValue
      */
-    public function setName(string $name): PointValue
+    public function setName(string $Name): PointValue
     {
-        $this->Name = $name;
+        $this->Name = $Name;
         return $this;
     }
 
@@ -58,12 +58,12 @@ class PointValue extends AbstractModel
     }
 
     /**
-     * @param array $points
+     * @param array $Points
      * @return PointValue
      */
-    public function setPoints(array $points): PointValue
+    public function setPoints(array $Points): PointValue
     {
-        $this->Points = $points;
+        $this->Points = $Points;
         return $this;
     }
 }

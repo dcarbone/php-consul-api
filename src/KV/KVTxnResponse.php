@@ -19,6 +19,7 @@ namespace DCarbone\PHPConsulAPI\KV;
 */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class KVTxnResponse
@@ -26,30 +27,26 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  */
 class KVTxnResponse extends AbstractModel
 {
-    /** @var \DCarbone\PHPConsulAPI\KV\KVPair[] */
-    public $Results = [];
-    /** @var \DCarbone\PHPConsulAPI\KV\TxnErrors */
-    public $Errors = null;
+    private const FIELD_RESULTS = 'Results';
+    private const FIELD_ERRORS  = 'Errors';
 
-    /**
-     * KVTxnResponse constructor.
-     * @param array $data
-     */
-    public function __construct(array $data = [])
-    {
-        parent::__construct($data);
-        if (is_array($this->Results)) {
-            $this->Results = array_filter((array)$this->Results);
-            foreach ($this->Results as &$result) {
-                if (!($result instanceof KVPair)) {
-                    $result = new KVPair($result, true);
-                }
-            }
-        }
-        if (!($this->Errors instanceof TxnErrors)) {
-            $this->Errors = new TxnErrors($this->Errors);
-        }
-    }
+    /** @var \DCarbone\PHPConsulAPI\KV\KVPair[] */
+    public array $Results = [];
+    /** @var \DCarbone\PHPConsulAPI\KV\TxnErrors|null */
+    public ?TxnErrors $Errors = null;
+
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_RESULTS => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => KVPair::class,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+        ],
+        self::FIELD_ERRORS  => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => TxnErrors::class,
+        ],
+    ];
 
     /**
      * @return \DCarbone\PHPConsulAPI\KV\KVPair[]
@@ -60,9 +57,9 @@ class KVTxnResponse extends AbstractModel
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\KV\TxnErrors
+     * @return \DCarbone\PHPConsulAPI\KV\TxnErrors|null
      */
-    public function getErrors(): TxnErrors
+    public function getErrors(): ?TxnErrors
     {
         return $this->Errors;
     }

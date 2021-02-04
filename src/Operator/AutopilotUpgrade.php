@@ -27,12 +27,6 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class AutopilotUpgrade extends AbstractModel
 {
-    private const FIELD_TARGET_VERSION_VOTERS        = 'TargetVersionVoters';
-    private const FIELD_TARGET_VERSION_NON_VOTERS    = 'TargetVersionNonVoters';
-    private const FIELD_TARGET_VERSION_READ_REPLICAS = 'TargetVersionReadReplicas';
-    private const FIELD_OTHER_VERSION_VOTERS         = 'OtherVersionVoters';
-    private const FIELD_OTHER_VERSION_NON_VOTERS     = 'OtherVersionNonVoters';
-    private const FIELD_OTHER_VERSION_READ_REPLICAS  = 'OtherVersionReadReplicas';
     private const FIELD_REDUNDANCY_ZONES             = 'RedundancyZones';
 
     /** @var string */
@@ -56,12 +50,6 @@ class AutopilotUpgrade extends AbstractModel
 
     /** @var array[] */
     protected static array $fields = [
-        self::FIELD_TARGET_VERSION_VOTERS        => Hydration::HYDRATE_ARRAY_STRING,
-        self::FIELD_TARGET_VERSION_NON_VOTERS    => Hydration::HYDRATE_ARRAY_STRING,
-        self::FIELD_TARGET_VERSION_READ_REPLICAS => Hydration::HYDRATE_ARRAY_STRING,
-        self::FIELD_OTHER_VERSION_VOTERS         => Hydration::HYDRATE_ARRAY_STRING,
-        self::FIELD_OTHER_VERSION_NON_VOTERS     => Hydration::HYDRATE_ARRAY_STRING,
-        self::FIELD_OTHER_VERSION_READ_REPLICAS  => Hydration::HYDRATE_ARRAY_STRING,
         self::FIELD_REDUNDANCY_ZONES             => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_CLASS      => AutopilotZoneUpgradeVersions::class,

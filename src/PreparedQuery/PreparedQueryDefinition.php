@@ -19,6 +19,7 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
 */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class PreparedQueryDefinition
@@ -26,38 +27,40 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  */
 class PreparedQueryDefinition extends AbstractModel
 {
-    /** @var string */
-    public $ID = '';
-    /** @var string */
-    public $Name = '';
-    /** @var string */
-    public $Session = '';
-    /** @var string */
-    public $Token = '';
-    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery */
-    public $Service = null;
-    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions */
-    public $DNS = null;
-    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\QueryTemplate */
-    public $Template = null;
+    private const FIELD_SERVICE  = 'Service';
+    private const FIELD_DNS      = 'DNS';
+    private const FIELD_Template = 'Template';
 
-    /**
-     * PreparedQueryDefinition constructor.
-     * @param array $data
-     */
-    public function __construct(array $data = [])
-    {
-        parent::__construct($data);
-        if (!($this->Service instanceof ServiceQuery)) {
-            $this->Service = new ServiceQuery((array)$this->Service);
-        }
-        if (!($this->DNS instanceof QueryDNSOptions)) {
-            $this->DNS = new QueryDNSOptions((array)$this->DNS);
-        }
-        if (!($this->Template instanceof QueryTemplate)) {
-            $this->Template = new QueryTemplate((array)$this->Template);
-        }
-    }
+    /** @var string */
+    public string $ID = '';
+    /** @var string */
+    public string $Name = '';
+    /** @var string */
+    public string $Session = '';
+    /** @var string */
+    public string $Token = '';
+    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery|null */
+    public ?ServiceQuery $Service = null;
+    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions|null */
+    public ?QueryDNSOptions $DNS = null;
+    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\QueryTemplate|null */
+    public ?QueryTemplate $Template = null;
+
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_SERVICE  => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => ServiceQuery::class,
+        ],
+        self::FIELD_DNS      => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => QueryDNSOptions::class,
+        ],
+        self::FIELD_Template => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => QueryTemplate::class,
+        ],
+    ];
 
     /**
      * @return string
@@ -68,12 +71,12 @@ class PreparedQueryDefinition extends AbstractModel
     }
 
     /**
-     * @param string $id
-     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition
+     * @param string $ID
+     * @return PreparedQueryDefinition
      */
-    public function setID(string $id): PreparedQueryDefinition
+    public function setID(string $ID): PreparedQueryDefinition
     {
-        $this->ID = $id;
+        $this->ID = $ID;
         return $this;
     }
 
@@ -86,12 +89,12 @@ class PreparedQueryDefinition extends AbstractModel
     }
 
     /**
-     * @param string $name
-     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition
+     * @param string $Name
+     * @return PreparedQueryDefinition
      */
-    public function setName(string $name): PreparedQueryDefinition
+    public function setName(string $Name): PreparedQueryDefinition
     {
-        $this->Name = $name;
+        $this->Name = $Name;
         return $this;
     }
 
@@ -104,12 +107,12 @@ class PreparedQueryDefinition extends AbstractModel
     }
 
     /**
-     * @param string $session
-     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition
+     * @param string $Session
+     * @return PreparedQueryDefinition
      */
-    public function setSession(string $session): PreparedQueryDefinition
+    public function setSession(string $Session): PreparedQueryDefinition
     {
-        $this->Session = $session;
+        $this->Session = $Session;
         return $this;
     }
 
@@ -122,12 +125,12 @@ class PreparedQueryDefinition extends AbstractModel
     }
 
     /**
-     * @param string $token
-     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition
+     * @param string $Token
+     * @return PreparedQueryDefinition
      */
-    public function setToken(string $token): PreparedQueryDefinition
+    public function setToken(string $Token): PreparedQueryDefinition
     {
-        $this->Token = $token;
+        $this->Token = $Token;
         return $this;
     }
 
@@ -140,12 +143,12 @@ class PreparedQueryDefinition extends AbstractModel
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery $service
-     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition
+     * @param \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery|null $Service
+     * @return PreparedQueryDefinition
      */
-    public function setService(ServiceQuery $service): PreparedQueryDefinition
+    public function setService(?ServiceQuery $Service): PreparedQueryDefinition
     {
-        $this->Service = $service;
+        $this->Service = $Service;
         return $this;
     }
 
@@ -158,12 +161,12 @@ class PreparedQueryDefinition extends AbstractModel
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions $dns
-     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition
+     * @param \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions|null $DNS
+     * @return PreparedQueryDefinition
      */
-    public function setDNS(QueryDNSOptions $dns): PreparedQueryDefinition
+    public function setDNS(?QueryDNSOptions $DNS): PreparedQueryDefinition
     {
-        $this->DNS = $dns;
+        $this->DNS = $DNS;
         return $this;
     }
 
@@ -176,12 +179,12 @@ class PreparedQueryDefinition extends AbstractModel
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\PreparedQuery\QueryTemplate $template
-     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition
+     * @param \DCarbone\PHPConsulAPI\PreparedQuery\QueryTemplate|null $Template
+     * @return PreparedQueryDefinition
      */
-    public function setTemplate(QueryTemplate $template): PreparedQueryDefinition
+    public function setTemplate(?QueryTemplate $Template): PreparedQueryDefinition
     {
-        $this->Template = $template;
+        $this->Template = $Template;
         return $this;
     }
 }

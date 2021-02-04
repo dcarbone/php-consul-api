@@ -27,23 +27,23 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 class HealthCheck extends AbstractModel
 {
     /** @var string */
-    public $Node = '';
+    public string $Node = '';
     /** @var string */
-    public $CheckID = '';
+    public string $CheckID = '';
     /** @var string */
-    public $Name = '';
+    public string $Name = '';
     /** @var string */
-    public $Status = '';
+    public string $Status = '';
     /** @var string */
-    public $Notes = '';
+    public string $Notes = '';
     /** @var string */
-    public $Output = '';
+    public string $Output = '';
     /** @var string */
-    public $ServiceID = '';
+    public string $ServiceID = '';
     /** @var string */
-    public $ServiceName = '';
+    public string $ServiceName = '';
     /** @var string[] */
-    public $ServiceTags = [];
+    public array $ServiceTags = [];
 
     /**
      * @return string

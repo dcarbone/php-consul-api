@@ -28,13 +28,13 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 class Coordinate extends AbstractModel
 {
     /** @var int[] */
-    public $Vec = [];
+    public array $Vec = [];
     /** @var float */
-    public $Error = 0.0;
+    public float $Error = 0.0;
     /** @var float */
-    public $Adjustment = 0.0;
+    public float $Adjustment = 0.0;
     /** @var float */
-    public $Height = 0.0;
+    public float $Height = 0.0;
 
     /**
      * Coordinate constructor.

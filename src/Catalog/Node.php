@@ -27,21 +27,21 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 class Node extends AbstractModel
 {
     /** @var string */
-    public $ID = '';
+    public string $ID = '';
     /** @var string */
-    public $Node = '';
+    public string $Node = '';
     /** @var string */
-    public $Address = '';
+    public string $Address = '';
     /** @var string */
-    public $Datacenter = '';
+    public string $Datacenter = '';
     /** @var array */
-    public $TaggedAddresses = [];
+    public array $TaggedAddresses = [];
     /** @var array */
-    public $Meta = [];
+    public array $Meta = [];
     /** @var int */
-    public $CreateIndex = 0;
+    public int $CreateIndex = 0;
     /** @var int */
-    public $ModifyIndex = 0;
+    public int $ModifyIndex = 0;
 
     /**
      * @return string

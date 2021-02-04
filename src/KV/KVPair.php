@@ -55,7 +55,11 @@ class KVPair extends AbstractModel
     {
         parent::__construct($data);
         if ($_decodeValue && !$this->_valueDecoded) {
-            $this->Value = base64_decode($this->Value);
+            $dec = base64_decode($this->Value);
+            if (false === $dec) {
+                throw new \InvalidArgumentException(sprintf('Could not base64 decode value "%s"', $this->Value));
+            }
+            $this->Value = $dec;
             $this->_valueDecoded = true;
         }
     }
@@ -69,12 +73,12 @@ class KVPair extends AbstractModel
     }
 
     /**
-     * @param string $key
-     * @return \DCarbone\PHPConsulAPI\KV\KVPair
+     * @param string $Key
+     * @return KVPair
      */
-    public function setKey(string $key): KVPair
+    public function setKey(string $Key): KVPair
     {
-        $this->Key = $key;
+        $this->Key = $Key;
         return $this;
     }
 
@@ -87,12 +91,12 @@ class KVPair extends AbstractModel
     }
 
     /**
-     * @param int $createIndex
-     * @return \DCarbone\PHPConsulAPI\KV\KVPair
+     * @param int $CreateIndex
+     * @return KVPair
      */
-    public function setCreateIndex(int $createIndex): KVPair
+    public function setCreateIndex(int $CreateIndex): KVPair
     {
-        $this->CreateIndex = $createIndex;
+        $this->CreateIndex = $CreateIndex;
         return $this;
     }
 
@@ -105,12 +109,12 @@ class KVPair extends AbstractModel
     }
 
     /**
-     * @param int $modifyIndex
-     * @return \DCarbone\PHPConsulAPI\KV\KVPair
+     * @param int $ModifyIndex
+     * @return KVPair
      */
-    public function setModifyIndex(int $modifyIndex): KVPair
+    public function setModifyIndex(int $ModifyIndex): KVPair
     {
-        $this->ModifyIndex = $modifyIndex;
+        $this->ModifyIndex = $ModifyIndex;
         return $this;
     }
 
@@ -123,12 +127,12 @@ class KVPair extends AbstractModel
     }
 
     /**
-     * @param int $lockIndex
-     * @return \DCarbone\PHPConsulAPI\KV\KVPair
+     * @param int $LockIndex
+     * @return KVPair
      */
-    public function setLockIndex(int $lockIndex): KVPair
+    public function setLockIndex(int $LockIndex): KVPair
     {
-        $this->LockIndex = $lockIndex;
+        $this->LockIndex = $LockIndex;
         return $this;
     }
 
@@ -141,30 +145,30 @@ class KVPair extends AbstractModel
     }
 
     /**
-     * @param int $flags
-     * @return \DCarbone\PHPConsulAPI\KV\KVPair
+     * @param int $Flags
+     * @return KVPair
      */
-    public function setFlags(int $flags): KVPair
+    public function setFlags(int $Flags): KVPair
     {
-        $this->Flags = $flags;
+        $this->Flags = $Flags;
         return $this;
     }
 
     /**
-     * @return null|string
+     * @return string
      */
-    public function getValue(): ?string
+    public function getValue(): string
     {
         return $this->Value;
     }
 
     /**
-     * @param string $value
-     * @return \DCarbone\PHPConsulAPI\KV\KVPair
+     * @param string $Value
+     * @return KVPair
      */
-    public function setValue(string $value): KVPair
+    public function setValue(string $Value): KVPair
     {
-        $this->Value = $value;
+        $this->Value = $Value;
         return $this;
     }
 
@@ -177,12 +181,12 @@ class KVPair extends AbstractModel
     }
 
     /**
-     * @param string $session
-     * @return \DCarbone\PHPConsulAPI\KV\KVPair
+     * @param string $Session
+     * @return KVPair
      */
-    public function setSession(string $session): KVPair
+    public function setSession(string $Session): KVPair
     {
-        $this->Session = $session;
+        $this->Session = $Session;
         return $this;
     }
 
@@ -195,12 +199,12 @@ class KVPair extends AbstractModel
     }
 
     /**
-     * @param string $namespace
-     * @return \DCarbone\PHPConsulAPI\KV\KVPair
+     * @param string $Namespace
+     * @return KVPair
      */
-    public function setNamespace(string $namespace): KVPair
+    public function setNamespace(string $Namespace): KVPair
     {
-        $this->Namespace = $namespace;
+        $this->Namespace = $Namespace;
         return $this;
     }
 

@@ -27,17 +27,20 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 class KVTxnOp extends AbstractModel
 {
     /** @var string */
-    public $Verb = '';
+    public string $Verb = '';
     /** @var string */
-    public $Key = '';
-    /** @var null|string */
-    public $Value = null;
-    /** @var int */
-    public $Flags = 0;
-    /** @var int */
-    public $Index = 0;
+    public string $Key = '';
     /** @var string */
-    public $Session = '';
+    public string $Value = '';
+    /** @var int */
+    public int $Flags = 0;
+    /** @var int */
+    public int $Index = 0;
+    /** @var string */
+    public string $Session = '';
+
+    /** @var bool */
+    private bool $_valueDecoded = false;
 
     /**
      * KVTxnOp constructor.
@@ -47,8 +50,13 @@ class KVTxnOp extends AbstractModel
     public function __construct(array $data = [], bool $_decodeValue = false)
     {
         parent::__construct($data);
-        if ((bool)$_decodeValue && isset($this->Value)) {
-            $this->Value = base64_decode($this->Value);
+        if ($_decodeValue && !$this->_valueDecoded) {
+            $dec = base64_decode($this->Value);
+            if (false === $dec) {
+                throw new \InvalidArgumentException(sprintf('Could not base64 decode value "%s"', $this->Value));
+            }
+            $this->Value = $dec;
+            $this->_valueDecoded = true;
         }
     }
 
@@ -69,9 +77,9 @@ class KVTxnOp extends AbstractModel
     }
 
     /**
-     * @return null|string
+     * @return string
      */
-    public function getValue(): ?string
+    public function getValue(): string
     {
         return $this->Value;
     }

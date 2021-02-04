@@ -21,6 +21,7 @@ namespace DCarbone\PHPConsulAPI\Catalog;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Agent\AgentCheck;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class CatalogRegistration
@@ -28,38 +29,37 @@ use DCarbone\PHPConsulAPI\Agent\AgentService;
  */
 class CatalogRegistration extends AbstractModel
 {
-    /** @var string */
-    public $ID = '';
-    /** @var string */
-    public $Node = '';
-    /** @var string */
-    public $Address = '';
-    /** @var array */
-    public $TaggedAddresses = [];
-    /** @var array */
-    public $NodeMeta = [];
-    /** @var string */
-    public $Datacenter = '';
-    /** @var \DCarbone\PHPConsulAPI\Agent\AgentService */
-    public $Service = null;
-    /** @var \DCarbone\PHPConsulAPI\Agent\AgentCheck */
-    public $Check = null;
+    private const FIELD_SERVICE = 'Service';
+    private const FIELD_CHECK   = 'Check';
 
-    /**
-     * CatalogRegistration constructor.
-     *
-     * @param array $data
-     */
-    public function __construct(array $data = [])
-    {
-        parent::__construct($data);
-        if (null !== $this->Service && !($this->Service instanceof AgentService)) {
-            $this->Service = new AgentService((array)$this->Service);
-        }
-        if (null !== $this->Check && !($this->Check instanceof AgentCheck)) {
-            $this->Check = new AgentCheck((array)$this->Check);
-        }
-    }
+    /** @var string */
+    public string $ID = '';
+    /** @var string */
+    public string $Node = '';
+    /** @var string */
+    public string $Address = '';
+    /** @var array */
+    public array $TaggedAddresses = [];
+    /** @var array */
+    public array $NodeMeta = [];
+    /** @var string */
+    public string $Datacenter = '';
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentService|null */
+    public ?AgentService $Service = null;
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentCheck|null */
+    public ?AgentCheck $Check = null;
+
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_SERVICE => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => AgentService::class,
+        ],
+        self::FIELD_CHECK   => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => AgentCheck::class,
+        ],
+    ];
 
     /**
      * @return string
@@ -70,12 +70,12 @@ class CatalogRegistration extends AbstractModel
     }
 
     /**
-     * @param string $id
+     * @param string $ID
      * @return CatalogRegistration
      */
-    public function setID(string $id): CatalogRegistration
+    public function setID(string $ID): CatalogRegistration
     {
-        $this->ID = $id;
+        $this->ID = $ID;
         return $this;
     }
 
@@ -88,12 +88,12 @@ class CatalogRegistration extends AbstractModel
     }
 
     /**
-     * @param string $node
+     * @param string $Node
      * @return CatalogRegistration
      */
-    public function setNode(string $node): CatalogRegistration
+    public function setNode(string $Node): CatalogRegistration
     {
-        $this->Node = $node;
+        $this->Node = $Node;
         return $this;
     }
 
@@ -106,12 +106,12 @@ class CatalogRegistration extends AbstractModel
     }
 
     /**
-     * @param string $address
+     * @param string $Address
      * @return CatalogRegistration
      */
-    public function setAddress(string $address): CatalogRegistration
+    public function setAddress(string $Address): CatalogRegistration
     {
-        $this->Address = $address;
+        $this->Address = $Address;
         return $this;
     }
 
@@ -124,12 +124,12 @@ class CatalogRegistration extends AbstractModel
     }
 
     /**
-     * @param array $taggedAddresses
+     * @param array $TaggedAddresses
      * @return CatalogRegistration
      */
-    public function setTaggedAddresses(array $taggedAddresses): CatalogRegistration
+    public function setTaggedAddresses(array $TaggedAddresses): CatalogRegistration
     {
-        $this->TaggedAddresses = $taggedAddresses;
+        $this->TaggedAddresses = $TaggedAddresses;
         return $this;
     }
 
@@ -142,12 +142,12 @@ class CatalogRegistration extends AbstractModel
     }
 
     /**
-     * @param array $nodeMeta
+     * @param array $NodeMeta
      * @return CatalogRegistration
      */
-    public function setNodeMeta(array $nodeMeta): CatalogRegistration
+    public function setNodeMeta(array $NodeMeta): CatalogRegistration
     {
-        $this->NodeMeta = $nodeMeta;
+        $this->NodeMeta = $NodeMeta;
         return $this;
     }
 
@@ -160,48 +160,48 @@ class CatalogRegistration extends AbstractModel
     }
 
     /**
-     * @param string $datacenter
+     * @param string $Datacenter
      * @return CatalogRegistration
      */
-    public function setDatacenter(string $datacenter): CatalogRegistration
+    public function setDatacenter(string $Datacenter): CatalogRegistration
     {
-        $this->Datacenter = $datacenter;
+        $this->Datacenter = $Datacenter;
         return $this;
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentService
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentService|null
      */
-    public function getService(): AgentService
+    public function getService(): ?AgentService
     {
         return $this->Service;
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Agent\AgentService $service
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentService|null $Service
      * @return CatalogRegistration
      */
-    public function setService(AgentService $service): CatalogRegistration
+    public function setService(?AgentService $Service): CatalogRegistration
     {
-        $this->Service = $service;
+        $this->Service = $Service;
         return $this;
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheck|null
      */
-    public function getCheck(): AgentCheck
+    public function getCheck(): ?AgentCheck
     {
         return $this->Check;
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Agent\AgentCheck $check
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentCheck|null $Check
      * @return CatalogRegistration
      */
-    public function setCheck(AgentCheck $check): CatalogRegistration
+    public function setCheck(?AgentCheck $Check): CatalogRegistration
     {
-        $this->Check = $check;
+        $this->Check = $Check;
         return $this;
     }
 }

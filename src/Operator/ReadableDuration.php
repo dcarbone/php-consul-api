@@ -49,7 +49,7 @@ class ReadableDuration extends Time\Duration implements \JsonSerializable, Scala
     /**
      * @return string
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): string
     {
         return (string)$this;
     }

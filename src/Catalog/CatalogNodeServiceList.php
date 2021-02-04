@@ -19,6 +19,8 @@ namespace DCarbone\PHPConsulAPI\Catalog;
 */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Agent\AgentService;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class CatalogNodeServiceList
@@ -26,30 +28,26 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  */
 class CatalogNodeServiceList extends AbstractModel
 {
-    /** @var \DCarbone\PHPConsulAPI\Catalog\Node|null */
-    public $Node = null;
-    /** @var \DCarbone\PHPConsulAPI\Catalog\CatalogService[]|null */
-    public $Services = null;
+    private const FIELD_NODE     = 'Node';
+    private const FIELD_SERVICES = 'Services';
 
-    /**
-     * CatalogNodeServiceList constructor.
-     * @param array|null $data
-     */
-    public function __construct(?array $data = [])
-    {
-        if (null === $data) {
-            return;
-        }
-        if (isset($data['Node'])) {
-            $this->Node = new Node($data['Node']);
-        }
-        if (isset($data['Services'])) {
-            $this->Services = [];
-            foreach ($data['Services'] as $service) {
-                $this->Services[] = new CatalogService($service);
-            }
-        }
-    }
+    /** @var \DCarbone\PHPConsulAPI\Catalog\Node|null */
+    public ?Node $Node = null;
+    /** @var \DCarbone\PHPConsulAPI\Catalog\CatalogService[] */
+    public array $Services = [];
+
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_NODE     => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => Node::class,
+        ],
+        self::FIELD_SERVICES => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => AgentService::class,
+            Hydration::FIELD_ARRAY_TYPE => HYdration::OBJECT,
+        ],
+    ];
 
     /**
      * @return \DCarbone\PHPConsulAPI\Catalog\Node|null
@@ -60,9 +58,9 @@ class CatalogNodeServiceList extends AbstractModel
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogService[]|null
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogService[]
      */
-    public function getServices(): ?array
+    public function getServices(): array
     {
         return $this->Services;
     }

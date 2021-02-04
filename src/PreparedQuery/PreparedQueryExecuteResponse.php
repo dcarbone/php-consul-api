@@ -20,6 +20,7 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Health\ServiceEntry;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class PreparedQueryExecuteResponse
@@ -27,40 +28,34 @@ use DCarbone\PHPConsulAPI\Health\ServiceEntry;
  */
 class PreparedQueryExecuteResponse extends AbstractModel
 {
+    private const FIELD_NODES = 'Nodes';
+    private const FIELD_DNS   = 'DNS';
+
     /** @var string */
-    public $Service = '';
+    public string $Service = '';
     /** @var string */
-    public $Namespace = '';
+    public string $Namespace = '';
     /** @var \DCarbone\PHPConsulAPI\Health\ServiceEntry[] */
-    public $Nodes = [];
-    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions */
-    public $DNS = null;
+    public array $Nodes = [];
+    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions|null */
+    public ?QueryDNSOptions $DNS = null;
     /** @var string */
-    public $Datacenter = '';
+    public string $Datacenter = '';
     /** @var int */
-    public $Failovers = 0;
+    public int $Failovers = 0;
 
-    /**
-     * PreparedQueryExecuteResponse constructor.
-     * @param array $data
-     */
-    public function __construct(array $data = [])
-    {
-        parent::__construct($data);
-
-        if (!($this->DNS instanceof QueryDNSOptions)) {
-            $this->DNS = new QueryDNSOptions((array)$this->DNS);
-        }
-
-        if (0 < count($this->Nodes)) {
-            $this->Nodes = array_filter($this->Nodes);
-            foreach ($this->Nodes as &$v) {
-                if (!($v instanceof ServiceEntry)) {
-                    $v = new ServiceEntry($v);
-                }
-            }
-        }
-    }
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_NODES => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => ServiceEntry::class,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+        ],
+        self::FIELD_DNS   => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => QueryDNSOptions::class,
+        ],
+    ];
 
     /**
      * @return string

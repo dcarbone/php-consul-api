@@ -19,6 +19,7 @@ namespace DCarbone\PHPConsulAPI\Agent;
 */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class MetricsInfo
@@ -26,58 +27,45 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  */
 class MetricsInfo extends AbstractModel
 {
+    private const FIELD_GAUGES   = 'Gauges';
+    private const FIELD_POINTS   = 'Points';
+    private const FIELD_COUNTERS = 'Counters';
+    private const FIELD_SAMPLES  = 'Samples';
+
     /** @var string */
-    public $Timestamp = '';
+    public string $Timestamp = '';
     /** @var \DCarbone\PHPConsulAPI\Agent\GaugeValue[] */
-    public $Gauges = [];
+    public array $Gauges = [];
     /** @var \DCarbone\PHPConsulAPI\Agent\PointValue[] */
-    public $Points = [];
+    public array $Points = [];
     /** @var \DCarbone\PHPConsulAPI\Agent\SampledValue[] */
-    public $Counters = [];
+    public array $Counters = [];
     /** @var \DCarbone\PHPConsulAPI\Agent\SampledValue[] */
-    public $Samples = [];
+    public array $Samples = [];
 
-    /**
-     * MetricsInfo constructor.
-     * @param array $data
-     */
-    public function __construct(array $data = [])
-    {
-        parent::__construct($data);
-
-        if (0 < count($this->Gauges)) {
-            $this->Gauges = array_filter($this->Gauges);
-            foreach ($this->Gauges as &$v) {
-                if (!($v instanceof GaugeValue)) {
-                    $v = new GaugeValue($v);
-                }
-            }
-        }
-        if (0 < count($this->Points)) {
-            $this->Points = array_filter($this->Points);
-            foreach ($this->Points as &$v) {
-                if (!($v instanceof PointValue)) {
-                    $v = new PointValue($v);
-                }
-            }
-        }
-        if (0 < count($this->Counters)) {
-            $this->Counters = array_filter($this->Counters);
-            foreach ($this->Counters as &$v) {
-                if (!($v instanceof SampledValue)) {
-                    $v = new SampledValue($v);
-                }
-            }
-        }
-        if (0 < count($this->Samples)) {
-            $this->Samples = array_filter($this->Samples);
-            foreach ($this->Samples as &$v) {
-                if (!($v instanceof SampledValue)) {
-                    $v = new SampledValue($v);
-                }
-            }
-        }
-    }
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_GAUGES   => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => GaugeValue::class,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+        ],
+        self::FIELD_POINTS   => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => PointValue::class,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+        ],
+        self::FIELD_COUNTERS => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => SampledValue::class,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+        ],
+        self::FIELD_SAMPLES  => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => SampledValue::class,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+        ],
+    ];
 
     /**
      * @return string
@@ -88,12 +76,12 @@ class MetricsInfo extends AbstractModel
     }
 
     /**
-     * @param string $timestamp
+     * @param string $Timestamp
      * @return MetricsInfo
      */
-    public function setTimestamp(string $timestamp): MetricsInfo
+    public function setTimestamp(string $Timestamp): MetricsInfo
     {
-        $this->Timestamp = $timestamp;
+        $this->Timestamp = $Timestamp;
         return $this;
     }
 
@@ -106,12 +94,12 @@ class MetricsInfo extends AbstractModel
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Agent\GaugeValue[] $gauges
+     * @param \DCarbone\PHPConsulAPI\Agent\GaugeValue[] $Gauges
      * @return MetricsInfo
      */
-    public function setGauges(array $gauges): MetricsInfo
+    public function setGauges(array $Gauges): MetricsInfo
     {
-        $this->Gauges = $gauges;
+        $this->Gauges = $Gauges;
         return $this;
     }
 
@@ -124,12 +112,12 @@ class MetricsInfo extends AbstractModel
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Agent\PointValue[] $points
+     * @param \DCarbone\PHPConsulAPI\Agent\PointValue[] $Points
      * @return MetricsInfo
      */
-    public function setPoints(array $points): MetricsInfo
+    public function setPoints(array $Points): MetricsInfo
     {
-        $this->Points = $points;
+        $this->Points = $Points;
         return $this;
     }
 
@@ -142,12 +130,12 @@ class MetricsInfo extends AbstractModel
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Agent\SampledValue[] $counters
+     * @param \DCarbone\PHPConsulAPI\Agent\SampledValue[] $Counters
      * @return MetricsInfo
      */
-    public function setCounters(array $counters): MetricsInfo
+    public function setCounters(array $Counters): MetricsInfo
     {
-        $this->Counters = $counters;
+        $this->Counters = $Counters;
         return $this;
     }
 
@@ -160,12 +148,12 @@ class MetricsInfo extends AbstractModel
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Agent\SampledValue[] $samples
+     * @param \DCarbone\PHPConsulAPI\Agent\SampledValue[] $Samples
      * @return MetricsInfo
      */
-    public function setSamples(array $samples): MetricsInfo
+    public function setSamples(array $Samples): MetricsInfo
     {
-        $this->Samples = $samples;
+        $this->Samples = $Samples;
         return $this;
     }
 }

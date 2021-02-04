@@ -19,6 +19,7 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
 */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class CoordinateEntry
@@ -26,24 +27,22 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  */
 class CoordinateEntry extends AbstractModel
 {
-    /** @var string */
-    public $Node = '';
-    /** @var string */
-    public $Segment = '';
-    /** @var \DCarbone\PHPConsulAPI\Coordinate\Coordinate */
-    public $Coord = null;
+    private const FIELD_COORDINATE = 'Coord';
 
-    /**
-     * CoordinateEntry constructor.
-     * @param array $data
-     */
-    public function __construct(array $data = [])
-    {
-        parent::__construct($data);
-        if (null !== $this->Coord && !($this->Coord instanceof Coordinate)) {
-            $this->Coord = new Coordinate((array)$this->Coord);
-        }
-    }
+    /** @var string */
+    public string $Node = '';
+    /** @var string */
+    public string $Segment = '';
+    /** @var \DCarbone\PHPConsulAPI\Coordinate\Coordinate|null */
+    public ?Coordinate $Coord = null;
+
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_COORDINATE => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => Coordinate::class,
+        ],
+    ];
 
     /**
      * @return string
@@ -62,9 +61,9 @@ class CoordinateEntry extends AbstractModel
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Coordinate\Coordinate
+     * @return \DCarbone\PHPConsulAPI\Coordinate\Coordinate|null
      */
-    public function getCoord(): Coordinate
+    public function getCoord(): ?Coordinate
     {
         return $this->Coord;
     }

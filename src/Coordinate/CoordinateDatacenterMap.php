@@ -19,6 +19,7 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
 */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class CoordinateDatacenterMap
@@ -26,32 +27,23 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  */
 class CoordinateDatacenterMap extends AbstractModel
 {
+    private const FIELD_COORDINATES = 'Coordinates';
+
     /** @var string */
-    public $Datacenter = '';
+    public string $Datacenter = '';
     /** @var string */
-    public $AreaID = '';
+    public string $AreaID = '';
     /** @var \DCarbone\PHPConsulAPI\Coordinate\Coordinate[] */
-    public $Coordinates = [];
+    public array $Coordinates = [];
 
-    /**
-     * CoordinateDatacenterMap constructor.
-     *
-     * @param array $data
-     */
-    public function __construct(array $data = [])
-    {
-        parent::__construct($data);
-
-        // If we have data...
-        if (0 < count($this->Coordinates)) {
-            $this->Coordinates = array_filter($this->Coordinates);
-            foreach ($this->Coordinates as &$v) {
-                if (!($v instanceof Coordinate)) {
-                    $v = new Coordinate($v);
-                }
-            }
-        }
-    }
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_COORDINATES => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => Coordinate::class,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+        ],
+    ];
 
     /**
      * @return string

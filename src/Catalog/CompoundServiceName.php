@@ -27,9 +27,9 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 class CompoundServiceName extends AbstractModel
 {
     /** @var string */
-    public $Name = '';
+    public string $Name = '';
     /** @var string */
-    public $Namespace = '';
+    public string $Namespace = '';
 
     /**
      * @return string

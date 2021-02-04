@@ -19,6 +19,7 @@ namespace DCarbone\PHPConsulAPI\Catalog;
 */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class GatewayService
@@ -26,28 +27,43 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  */
 class GatewayService extends AbstractModel
 {
+    private const FIELD_GATEWAY = 'Gateway';
+    private const FIELD_SERVICE = 'Service';
+
     /** @var \DCarbone\PHPConsulAPI\Catalog\CompoundServiceName */
-    public $Gateway;
+    public CompoundServiceName $Gateway;
     /** @var \DCarbone\PHPConsulAPI\Catalog\CompoundServiceName */
-    public $Service;
+    public CompoundServiceName $Service;
     /** @var string */
-    public $GatewayKind = '';
+    public string $GatewayKind = '';
     /** @var int */
-    public $Port = 0;
+    public int $Port = 0;
     /** @var string */
-    public $Protocol = '';
-    /** @var string[]|null */
-    public $Hosts = null;
+    public string $Protocol = '';
+    /** @var string[] */
+    public array $Hosts = [];
     /** @var string */
-    public $CAFile = '';
+    public string $CAFile = '';
     /** @var string */
-    public $CertFile = '';
+    public string $CertFile = '';
     /** @var string */
-    public $KeyFile = '';
+    public string $KeyFile = '';
     /** @var string */
-    public $SNI = '';
+    public string $SNI = '';
     /** @var string */
-    public $FromWildCard = '';
+    public string $FromWildCard = '';
+
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_GATEWAY => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => CompoundServiceName::class,
+        ],
+        self::FIELD_SERVICE => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => CompoundServiceName::class,
+        ],
+    ];
 
     /**
      * GatewayService constructor.
@@ -55,20 +71,11 @@ class GatewayService extends AbstractModel
      */
     public function __construct(?array $data = [])
     {
-        if (null === $data) {
-            $this->Gateway = new CompoundServiceName();
-            $this->Service = new CompoundServiceName();
-            return;
-        }
         parent::__construct($data);
-        if (is_array($this->Gateway)) {
-            $this->Gateway = new CompoundServiceName($this->Gateway);
-        } elseif (!($this->Gateway instanceof CompoundServiceName)) {
+        if (null === $this->Gateway) {
             $this->Gateway = new CompoundServiceName();
         }
-        if (is_array($this->Service)) {
-            $this->Service = new CompoundServiceName($this->Service);
-        } elseif (!($this->Gateway instanceof CompoundServiceName)) {
+        if (null === $this->Service) {
             $this->Service = new CompoundServiceName();
         }
     }

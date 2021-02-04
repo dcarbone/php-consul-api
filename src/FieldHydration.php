@@ -58,18 +58,30 @@ trait FieldHydration
 
         if (isset(static::$fields[$field])) {
             $this->hydrateComplex($field, $value, static::$fields[$field]);
-        } elseif (!property_exists($this, $field)) {
-            $this->{$field} = $value;
-        } elseif (null === $value) {
-            // do nothing
-        } elseif (is_scalar($this->{$field})) {
-            $this->hydrateSimple($field, $value);
-        } elseif (isset(Hydration::COMPLEX_FIELDS[$field])) {
-            $this->hydrateComplex($field, $value, Hydration::COMPLEX_FIELDS[$field]);
-        } else {
-            // todo: should this be an exception?
-            $this->{$field} = $value;
+            return;
         }
+
+        if (!property_exists($this, $field)) {
+            $this->{$field} = $value;
+            return;
+        }
+
+        if (null === $value) {
+            return;
+        }
+
+        if (is_scalar($this->{$field})) {
+            $this->hydrateSimple($field, $value);
+            return;
+        }
+
+        if (isset(Hydration::COMPLEX_FIELDS[$field])) {
+            $this->hydrateComplex($field, $value, Hydration::COMPLEX_FIELDS[$field]);
+            return;
+        }
+
+        // todo: should this be an exception?
+        $this->{$field} = $value;
     }
 
     /**
@@ -130,13 +142,13 @@ trait FieldHydration
     private function hydrateComplex(string $field, $value, array $def): void
     {
         // check if a callable has been defined
-        if (isset($def[Hydration::FIELD_HYDRATE_CALLABLE])) {
-            $err = call_user_func($def[Hydration::FIELD_HYDRATE_CALLABLE], $this, $field, $value);
+        if (isset($def[Hydration::FIELD_CALLBACK])) {
+            $err = call_user_func($def[Hydration::FIELD_CALLBACK], $this, $field, $value);
             if (false === $err) {
                 throw new \RuntimeException(
                     sprintf(
                         'Error calling hydration callback "%s" for field "%s" on class "%s"',
-                        $def[Hydration::FIELD_HYDRATE_CALLABLE],
+                        $def[Hydration::FIELD_CALLBACK],
                         $field,
                         get_class($this)
                     )

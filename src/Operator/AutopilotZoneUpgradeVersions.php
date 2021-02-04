@@ -19,7 +19,6 @@ namespace DCarbone\PHPConsulAPI\Operator;
 */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class AutopilotZoneUpgradeVersions
@@ -27,55 +26,43 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class AutopilotZoneUpgradeVersions extends AbstractModel
 {
-    private const FIELD_TARGET_VERSION_VOTERS     = 'TargetVersionVoters';
-    private const FIELD_TARGET_VERSION_NON_VOTERS = 'TargetVersionNonVoters';
-    private const FIELD_OTHER_VERSION_VOTERS      = 'OtherVersionVoters';
-    private const FIELD_OTHER_VERSION_NON_VOTERS  = 'OtherVersionNonVoters';
-
-    /** @var string[]|null */
+    /** @var string[] */
     public array $TargetVersionVoters = [];
-    /** @var string[]|null */
+    /** @var string[] */
     public array $TargetVersionNonVoters = [];
-    /** @var string[]|null */
+    /** @var string[] */
     public array $OtherVersionVoters = [];
-    /** @var string[]|null */
+    /** @var string[] */
     public array $OtherVersionNonVoters = [];
 
-    protected static array $fields = [
-        self::FIELD_TARGET_VERSION_VOTERS     => Hydration::HYDRATE_ARRAY_STRING,
-        self::FIELD_TARGET_VERSION_NON_VOTERS => Hydration::HYDRATE_ARRAY_STRING,
-        self::FIELD_OTHER_VERSION_VOTERS      => Hydration::HYDRATE_ARRAY_STRING,
-        self::FIELD_OTHER_VERSION_NON_VOTERS  => Hydration::HYDRATE_ARRAY_STRING,
-    ];
-
     /**
-     * @return string[]|null
+     * @return string[]
      */
-    public function getTargetVersionVoters(): ?array
+    public function getTargetVersionVoters(): array
     {
         return $this->TargetVersionVoters;
     }
 
     /**
-     * @return string[]|null
+     * @return string[]
      */
-    public function getTargetVersionNonVoters(): ?array
+    public function getTargetVersionNonVoters(): array
     {
         return $this->TargetVersionNonVoters;
     }
 
     /**
-     * @return string[]|null
+     * @return string[]
      */
-    public function getOtherVersionVoters(): ?array
+    public function getOtherVersionVoters(): array
     {
         return $this->OtherVersionVoters;
     }
 
     /**
-     * @return string[]|null
+     * @return string[]
      */
-    public function getOtherVersionNonVoters(): ?array
+    public function getOtherVersionNonVoters(): array
     {
         return $this->OtherVersionNonVoters;
     }

@@ -21,6 +21,7 @@ namespace DCarbone\PHPConsulAPI\Health;
 use DCarbone\Go\Time;
 use DCarbone\Go\Time\Duration;
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 use DCarbone\PHPConsulAPI\Operator\ReadableDuration;
 
 /**
@@ -29,38 +30,67 @@ use DCarbone\PHPConsulAPI\Operator\ReadableDuration;
  */
 class HealthCheckDefinition extends AbstractModel
 {
+    private const FIELD_INTERVAL_DURATION                          = 'IntervalDuration';
+    private const FIELD_TIMEOUT_DURATION                           = 'TimeoutDuration';
+    private const FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER_DURATION = 'DeregisterCriticalServiceAfterDuration';
+    private const FIELD_INTERVAL                                   = 'Interval';
+    private const FIELD_TIMEOUT                                    = 'Timeout';
+    private const FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER          = 'DeregisterCriticalServiceAfter';
+
     /** @var string */
-    public $HTTP = '';
+    public string $HTTP = '';
     /** @var array */
-    public $Header = [];
+    public array $Header = [];
     /** @var string */
-    public $Method = '';
+    public string $Method = '';
     /** @var bool */
-    public $TLSSkipVerify = false;
+    public bool $TLSSkipVerify = false;
     /** @var string */
-    public $TCP = '';
+    public string $TCP = '';
     /** @var \DCarbone\Go\Time\Duration */
-    public $IntervalDuration = null;
+    public Duration $IntervalDuration;
     /** @var \DCarbone\Go\Time\Duration */
-    public $TimeoutDuration = null;
+    public Duration $TimeoutDuration;
     /** @var \DCarbone\Go\Time\Duration */
-    public $DeregisterCriticalServiceAfterDuration = null;
+    public Duration $DeregisterCriticalServiceAfterDuration;
 
     /**
      * @var \DCarbone\PHPConsulAPI\Operator\ReadableDuration
      * @deprecated use $IntervalDuration
      */
-    public $Interval = null;
+    public ReadableDuration $Interval;
     /**
      * @var \DCarbone\PHPConsulAPI\Operator\ReadableDuration
      * @deprecated use $TimeoutDuration
      */
-    public $Timeout = null;
+    public ReadableDuration $Timeout;
     /**
      * @var \DCarbone\PHPConsulAPI\Operator\ReadableDuration
      * @deprecated use $DeregisterCriticalServiceAfterDuration
      */
-    public $DeregisterCriticalServiceAfter = null;
+    public ReadableDuration $DeregisterCriticalServiceAfter;
+
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_INTERVAL_DURATION                          => [
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
+        ],
+        self::FIELD_TIMEOUT_DURATION                           => [
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
+        ],
+        self::FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER_DURATION => [
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
+        ],
+        self::FIELD_TIMEOUT                                    => [
+            Hydration::FIELD_CALLBACK => [ReadableDuration::class, 'hydrate'],
+        ],
+        self::FIELD_INTERVAL                                   => [
+            Hydration::FIELD_CALLBACK => [ReadableDuration::class, 'hydrate'],
+        ],
+        self::FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER          => [
+            Hydration::FIELD_CALLBACK => [ReadableDuration::class, 'hydrate'],
+        ],
+    ];
 
     /**
      * HealthCheckDefinition constructor.
@@ -69,25 +99,17 @@ class HealthCheckDefinition extends AbstractModel
     public function __construct(array $data = [])
     {
         parent::__construct($data);
-        if (null === $this->Interval) {
+        if (!isset($this->Interval)) {
             $this->Interval = new ReadableDuration();
-        } elseif (is_string($this->Interval)) {
-            $this->Interval = ReadableDuration::fromDuration($this->Interval);
         }
-        if (null === $this->Timeout) {
+        if (!isset($this->Timeout)) {
             $this->Timeout = new ReadableDuration();
-        } elseif (is_string($this->Timeout)) {
-            $this->Timeout = ReadableDuration::fromDuration($this->Timeout);
         }
-        if (null === $this->DeregisterCriticalServiceAfter) {
+        if (!isset($this->DeregisterCriticalServiceAfter)) {
             $this->DeregisterCriticalServiceAfter = new ReadableDuration();
-        } elseif (is_string($this->DeregisterCriticalServiceAfter)) {
-            $this->DeregisterCriticalServiceAfter = ReadableDuration::fromDuration(
-                $this->DeregisterCriticalServiceAfter
-            );
         }
 
-        if (null === $this->IntervalDuration) {
+        if (!isset($this->IntervalDuration)) {
             $this->IntervalDuration = Time::ParseDuration((string)$this->Interval);
         } else {
             $this->Interval = ReadableDuration::fromDuration((string)$this->IntervalDuration);
@@ -149,57 +171,54 @@ class HealthCheckDefinition extends AbstractModel
     }
 
     /**
-     * @return \DCarbone\Go\Time\Duration
+     * @return \DCarbone\Go\Time\Duration|null
      */
-    public function getIntervalDuration(): Duration
+    public function getIntervalDuration(): ?Duration
     {
         return $this->IntervalDuration;
     }
 
     /**
-     * @return \DCarbone\Go\Time\Duration
+     * @return \DCarbone\Go\Time\Duration|null
      */
-    public function getTimeoutDuration(): Duration
+    public function getTimeoutDuration(): ?Duration
     {
         return $this->TimeoutDuration;
     }
 
     /**
-     * @return \DCarbone\Go\Time\Duration
+     * @return \DCarbone\Go\Time\Duration|null
      */
-    public function getDeregisterCriticalServiceAfterDuration(): Duration
+    public function getDeregisterCriticalServiceAfterDuration(): ?Duration
     {
         return $this->DeregisterCriticalServiceAfterDuration;
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Operator\ReadableDuration
-     * @deprecated
+     * @return \DCarbone\PHPConsulAPI\Operator\ReadableDuration|null
      */
-    public function getInterval(): ReadableDuration
+    public function getInterval(): ?ReadableDuration
     {
         return $this->Interval;
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Operator\ReadableDuration
-     * @deprecated
+     * @return \DCarbone\PHPConsulAPI\Operator\ReadableDuration|null
      */
-    public function getTimeout(): ReadableDuration
+    public function getTimeout(): ?ReadableDuration
     {
         return $this->Timeout;
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Operator\ReadableDuration
-     * @deprecated
+     * @return \DCarbone\PHPConsulAPI\Operator\ReadableDuration|null
      */
-    public function getDeregisterCriticalServiceAfter(): ReadableDuration
+    public function getDeregisterCriticalServiceAfter(): ?ReadableDuration
     {
         return $this->DeregisterCriticalServiceAfter;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         $out = [
             'HTTP'          => $this->HTTP,
@@ -210,19 +229,19 @@ class HealthCheckDefinition extends AbstractModel
 
         ];
         if (0 !== $this->IntervalDuration->Nanoseconds()) {
-            $out['Interval'] = (string)$this->IntervalDuration;
+            $out[self::FIELD_INTERVAL] = (string)$this->IntervalDuration;
         } elseif (0 !== $this->Interval->Nanoseconds()) {
-            $out['Interval'] = (string)$this->Interval;
+            $out[self::FIELD_INTERVAL] = (string)$this->Interval;
         }
         if (0 !== $this->TimeoutDuration->Nanoseconds()) {
-            $out['Timeout'] = (string)$this->TimeoutDuration;
+            $out[self::FIELD_TIMEOUT] = (string)$this->TimeoutDuration;
         } elseif (0 !== $this->Timeout->Nanoseconds()) {
-            $out['Timeout'] = (string)$this->Timeout;
+            $out[self::FIELD_TIMEOUT] = (string)$this->Timeout;
         }
         if (0 !== $this->DeregisterCriticalServiceAfterDuration->Nanoseconds()) {
-            $out['DeregisterCriticalServiceAfter'] = (string)$this->DeregisterCriticalServiceAfterDuration;
+            $out[self::FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER] = (string)$this->DeregisterCriticalServiceAfterDuration;
         } elseif (0 !== $this->DeregisterCriticalServiceAfter->Nanoseconds()) {
-            $out['DeregisterCriticalServiceAfter'] = (string)$this->DeregisterCriticalServiceAfter;
+            $out[self::FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER] = (string)$this->DeregisterCriticalServiceAfter;
         }
         return $out;
     }

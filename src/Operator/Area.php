@@ -19,7 +19,6 @@ namespace DCarbone\PHPConsulAPI\Operator;
 */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class Area
@@ -27,8 +26,6 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class Area extends AbstractModel
 {
-    private const FIELD_RETRY_JOIN = 'RetryJoin';
-
     /** @var string */
     public string $ID = '';
     /** @var string */
@@ -37,11 +34,6 @@ class Area extends AbstractModel
     public array $RetryJoin = [];
     /** @var bool */
     public bool $UseTLS = false;
-
-    /** @var array[] */
-    protected static array $fields = [
-        self::FIELD_RETRY_JOIN => Hydration::HYDRATE_ARRAY_STRING,
-    ];
 
     /**
      * @return string

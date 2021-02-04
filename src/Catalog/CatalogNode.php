@@ -20,6 +20,7 @@ namespace DCarbone\PHPConsulAPI\Catalog;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class CatalogNode
@@ -27,30 +28,26 @@ use DCarbone\PHPConsulAPI\Agent\AgentService;
  */
 class CatalogNode extends AbstractModel
 {
-    /** @var \DCarbone\PHPConsulAPI\Catalog\Node */
-    public $Node = null;
-    /** @var \DCarbone\PHPConsulAPI\Agent\AgentService[] */
-    public $Services = [];
+    private const FIELD_NODE     = 'Node';
+    private const FIELD_SERVICES = 'Services';
 
-    /**
-     * CatalogNode constructor.
-     * @param array $data
-     */
-    public function __construct(array $data = [])
-    {
-        parent::__construct($data);
-        if (is_array($this->Node)) {
-            $this->Node = new Node($this->Node);
-        }
-        if (0 < count($this->Services)) {
-            $this->Services = array_filter($this->Services);
-            foreach (array_keys($this->Services) as &$service) {
-                if (!($this->Services[$service] instanceof AgentService)) {
-                    $service = new AgentService($this->Services[$service]);
-                }
-            }
-        }
-    }
+    /** @var \DCarbone\PHPConsulAPI\Catalog\Node|null */
+    public ?Node $Node = null;
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentService[] */
+    public array $Services = [];
+
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_NODE     => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => Node::class,
+        ],
+        self::FIELD_SERVICES => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => AgentService::class,
+            Hydration::FIELD_ARRAY_TYPE => HYdration::OBJECT,
+        ],
+    ];
 
     /**
      * @return \DCarbone\PHPConsulAPI\Catalog\Node

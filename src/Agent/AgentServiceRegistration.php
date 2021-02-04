@@ -29,7 +29,6 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class AgentServiceRegistration extends AbstractModel
 {
-    private const FIELD_META   = 'Meta';
     private const FIELD_CHECK  = 'Check';
     private const FIELD_CHECKS = 'Checks';
 
@@ -55,10 +54,6 @@ class AgentServiceRegistration extends AbstractModel
 
     /** @var array[] */
     protected static array $fields = [
-        self::FIELD_META   => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::MIXED,
-        ],
         self::FIELD_CHECK  => [
             Hydration::FIELD_TYPE  => Hydration::OBJECT,
             Hydration::FIELD_CLASS => AgentServiceCheck::class,

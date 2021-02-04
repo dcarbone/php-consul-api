@@ -65,10 +65,10 @@ class AutopilotServer extends AbstractModel implements \JsonSerializable
     /** @var array[] */
     protected static array $fields = [
         self::FIELD_LAST_CONTACT => [
-            Hydration::FIELD_HYDRATE_CALLABLE => [ReadableDuration::class, 'hydrate'],
+            Hydration::FIELD_CALLBACK => [ReadableDuration::class, 'hydrate'],
         ],
         self::FIELD_STABLE_SINCE => [
-            Hydration::FIELD_HYDRATE_CALLABLE => Hydration::HYDRATE_TIME_CALLABLE,
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_TIME,
         ],
     ];
 

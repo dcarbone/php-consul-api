@@ -19,6 +19,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
 */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class OperatorHealthReply
@@ -26,26 +27,23 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  */
 class OperatorHealthReply extends AbstractModel
 {
-    /** @var bool */
-    public $Healthy = false;
-    /** @var int */
-    public $FailureTolerance = 0;
-    /** @var \DCarbone\PHPConsulAPI\Operator\ServerHealth[] */
-    public $Servers = [];
+    private const FIELD_SERVERS = 'Servers';
 
-    /**
-     * OperatorHealthReply constructor.
-     * @param array $data
-     */
-    public function __construct(array $data = [])
-    {
-        parent::__construct($data);
-        foreach (array_filter($this->Servers) as &$server) {
-            if (!($server instanceof ServerHealth)) {
-                $server = new ServerHealth($server);
-            }
-        }
-    }
+    /** @var bool */
+    public bool $Healthy = false;
+    /** @var int */
+    public int $FailureTolerance = 0;
+    /** @var \DCarbone\PHPConsulAPI\Operator\ServerHealth[] */
+    public array $Servers = [];
+
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_SERVERS => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => ServerHealth::class,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+        ],
+    ];
 
     /**
      * @return bool

@@ -27,15 +27,15 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 class CatalogDeregistration extends AbstractModel
 {
     /** @var string */
-    public $Node = '';
+    public string $Node = '';
     /** @var string */
-    public $Address = '';
+    public string $Address = '';
     /** @var string */
-    public $Datacenter = '';
+    public string $Datacenter = '';
     /** @var string */
-    public $ServiceID = '';
+    public string $ServiceID = '';
     /** @var string */
-    public $CheckID = '';
+    public string $CheckID = '';
 
     /**
      * @return string
@@ -46,12 +46,12 @@ class CatalogDeregistration extends AbstractModel
     }
 
     /**
-     * @param string $node
-     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogDeregistration
+     * @param string $Node
+     * @return CatalogDeregistration
      */
-    public function setNode(string $node): CatalogDeregistration
+    public function setNode(string $Node): CatalogDeregistration
     {
-        $this->Node = $node;
+        $this->Node = $Node;
         return $this;
     }
 
@@ -64,12 +64,12 @@ class CatalogDeregistration extends AbstractModel
     }
 
     /**
-     * @param string $address
-     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogDeregistration
+     * @param string $Address
+     * @return CatalogDeregistration
      */
-    public function setAddress(string $address): CatalogDeregistration
+    public function setAddress(string $Address): CatalogDeregistration
     {
-        $this->Address = $address;
+        $this->Address = $Address;
         return $this;
     }
 
@@ -82,12 +82,12 @@ class CatalogDeregistration extends AbstractModel
     }
 
     /**
-     * @param string $datacenter
-     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogDeregistration
+     * @param string $Datacenter
+     * @return CatalogDeregistration
      */
-    public function setDatacenter(string $datacenter): CatalogDeregistration
+    public function setDatacenter(string $Datacenter): CatalogDeregistration
     {
-        $this->Datacenter = $datacenter;
+        $this->Datacenter = $Datacenter;
         return $this;
     }
 
@@ -100,12 +100,12 @@ class CatalogDeregistration extends AbstractModel
     }
 
     /**
-     * @param string $serviceID
-     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogDeregistration
+     * @param string $ServiceID
+     * @return CatalogDeregistration
      */
-    public function setServiceID(string $serviceID): CatalogDeregistration
+    public function setServiceID(string $ServiceID): CatalogDeregistration
     {
-        $this->ServiceID = $serviceID;
+        $this->ServiceID = $ServiceID;
         return $this;
     }
 
@@ -118,12 +118,12 @@ class CatalogDeregistration extends AbstractModel
     }
 
     /**
-     * @param string $checkID
-     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogDeregistration
+     * @param string $CheckID
+     * @return CatalogDeregistration
      */
-    public function setCheckID(string $checkID): CatalogDeregistration
+    public function setCheckID(string $CheckID): CatalogDeregistration
     {
-        $this->CheckID = $checkID;
+        $this->CheckID = $CheckID;
         return $this;
     }
 }

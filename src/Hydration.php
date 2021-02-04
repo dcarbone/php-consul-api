@@ -38,18 +38,13 @@ final class Hydration
 
     public const SCALAR = [self::STRING, self::INTEGER, self::DOUBLE, self::BOOLEAN];
 
-    public const FIELD_TYPE             = 0;
-    public const FIELD_CLASS            = 1;
-    public const FIELD_ARRAY_TYPE       = 2;
-    public const FIELD_HYDRATE_CALLABLE = 3;
+    public const FIELD_TYPE       = 0;
+    public const FIELD_CLASS      = 1;
+    public const FIELD_ARRAY_TYPE = 2;
+    public const FIELD_CALLBACK   = 3;
 
-    public const HYDRATE_ARRAY_STRING = [
-        Hydration::FIELD_TYPE       => Hydration::ARRAY,
-        Hydration::FIELD_ARRAY_TYPE => Hydration::STRING,
-    ];
-
-    public const HYDRATE_TIME_CALLABLE     = [Hydration::class, 'hydrateTime'];
-    public const HYDRATE_DURATION_CALLABLE = [Hydration::class, 'hydrateDuration'];
+    public const CALLABLE_HYDRATE_TIME     = [Hydration::class, 'hydrateTime'];
+    public const CALLABLE_HYDRATE_DURATION = [Hydration::class, 'hydrateDuration'];
 
     public const COMPLEX_FIELDS = [
         'Tags' => [

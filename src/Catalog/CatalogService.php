@@ -27,33 +27,33 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 class CatalogService extends AbstractModel
 {
     /** @var string */
-    public $ID = '';
+    public string $ID = '';
     /** @var string */
-    public $Node = '';
+    public string $Node = '';
     /** @var string */
-    public $Address = '';
+    public string $Address = '';
     /** @var string */
-    public $Datacenter = '';
+    public string $Datacenter = '';
     /** @var array */
-    public $TaggedAddresses = [];
+    public array $TaggedAddresses = [];
     /** @var array */
-    public $NodeMeta = [];
+    public array $NodeMeta = [];
     /** @var string */
-    public $ServiceID = '';
+    public string $ServiceID = '';
     /** @var string */
-    public $ServiceName = '';
+    public string $ServiceName = '';
     /** @var string */
-    public $ServiceAddress = '';
+    public string $ServiceAddress = '';
     /** @var string[] */
-    public $ServiceTags = [];
+    public array $ServiceTags = [];
     /** @var int */
-    public $ServicePort = 0;
+    public int $ServicePort = 0;
     /** @var bool */
-    public $ServiceEnableTagOverride = false;
+    public bool $ServiceEnableTagOverride = false;
     /** @var int */
-    public $CreateIndex = 0;
+    public int $CreateIndex = 0;
     /** @var int */
-    public $ModifyIndex = 0;
+    public int $ModifyIndex = 0;
 
     /**
      * @return string
