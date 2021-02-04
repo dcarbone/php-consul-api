@@ -41,11 +41,11 @@ class AgentServiceChecksInfo extends AbstractModel
     /** @var array[] */
     protected static array $fields = [
         self::FIELD_SERVICE => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_TYPE => Hydration::OBJECT,
             Hydration::FIELD_CLASS => AgentService::class,
         ],
-        self::FIELD_CHECKS  => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+        self::FIELD_CHECKS => [
+            Hydration::FIELD_TYPE => Hydration::OBJECT,
             Hydration::FIELD_CLASS => HealthChecks::class,
         ],
     ];
@@ -71,12 +71,12 @@ class AgentServiceChecksInfo extends AbstractModel
     }
 
     /**
-     * @param string $AggregatedStatus
+     * @param string $aggregatedStatus
      * @return AgentServiceChecksInfo
      */
-    public function setAggregatedStatus(string $AggregatedStatus): AgentServiceChecksInfo
+    public function setAggregatedStatus(string $aggregatedStatus): AgentServiceChecksInfo
     {
-        $this->AggregatedStatus = $AggregatedStatus;
+        $this->AggregatedStatus = $aggregatedStatus;
         return $this;
     }
 
@@ -89,12 +89,12 @@ class AgentServiceChecksInfo extends AbstractModel
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Agent\AgentService|null $Service
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentService|null $service
      * @return AgentServiceChecksInfo
      */
-    public function setService(?AgentService $Service): AgentServiceChecksInfo
+    public function setService(?AgentService $service): AgentServiceChecksInfo
     {
-        $this->Service = $Service;
+        $this->Service = $service;
         return $this;
     }
 
@@ -107,12 +107,12 @@ class AgentServiceChecksInfo extends AbstractModel
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Health\HealthChecks|null $Checks
+     * @param \DCarbone\PHPConsulAPI\Health\HealthChecks|null $checks
      * @return AgentServiceChecksInfo
      */
-    public function setChecks(?HealthChecks $Checks): AgentServiceChecksInfo
+    public function setChecks(?HealthChecks $checks): AgentServiceChecksInfo
     {
-        $this->Checks = $Checks;
+        $this->Checks = $checks;
         return $this;
     }
 

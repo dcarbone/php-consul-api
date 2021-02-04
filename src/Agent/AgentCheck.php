@@ -52,12 +52,12 @@ class AgentCheck extends AbstractModel
     }
 
     /**
-     * @param string $Node
+     * @param string $node
      * @return AgentCheck
      */
-    public function setNode(string $Node): AgentCheck
+    public function setNode(string $node): AgentCheck
     {
-        $this->Node = $Node;
+        $this->Node = $node;
         return $this;
     }
 
@@ -70,12 +70,12 @@ class AgentCheck extends AbstractModel
     }
 
     /**
-     * @param string $CheckID
+     * @param string $checkID
      * @return AgentCheck
      */
-    public function setCheckID(string $CheckID): AgentCheck
+    public function setCheckID(string $checkID): AgentCheck
     {
-        $this->CheckID = $CheckID;
+        $this->CheckID = $checkID;
         return $this;
     }
 
@@ -88,12 +88,12 @@ class AgentCheck extends AbstractModel
     }
 
     /**
-     * @param string $Name
+     * @param string $name
      * @return AgentCheck
      */
-    public function setName(string $Name): AgentCheck
+    public function setName(string $name): AgentCheck
     {
-        $this->Name = $Name;
+        $this->Name = $name;
         return $this;
     }
 
@@ -106,12 +106,12 @@ class AgentCheck extends AbstractModel
     }
 
     /**
-     * @param string $Status
+     * @param string $status
      * @return AgentCheck
      */
-    public function setStatus(string $Status): AgentCheck
+    public function setStatus(string $status): AgentCheck
     {
-        $this->Status = $Status;
+        $this->Status = $status;
         return $this;
     }
 
@@ -124,12 +124,12 @@ class AgentCheck extends AbstractModel
     }
 
     /**
-     * @param string $Notes
+     * @param string $notes
      * @return AgentCheck
      */
-    public function setNotes(string $Notes): AgentCheck
+    public function setNotes(string $notes): AgentCheck
     {
-        $this->Notes = $Notes;
+        $this->Notes = $notes;
         return $this;
     }
 
@@ -142,12 +142,12 @@ class AgentCheck extends AbstractModel
     }
 
     /**
-     * @param string $Output
+     * @param string $output
      * @return AgentCheck
      */
-    public function setOutput(string $Output): AgentCheck
+    public function setOutput(string $output): AgentCheck
     {
-        $this->Output = $Output;
+        $this->Output = $output;
         return $this;
     }
 
@@ -160,12 +160,12 @@ class AgentCheck extends AbstractModel
     }
 
     /**
-     * @param string $ServiceID
+     * @param string $serviceID
      * @return AgentCheck
      */
-    public function setServiceID(string $ServiceID): AgentCheck
+    public function setServiceID(string $serviceID): AgentCheck
     {
-        $this->ServiceID = $ServiceID;
+        $this->ServiceID = $serviceID;
         return $this;
     }
 
@@ -178,14 +178,15 @@ class AgentCheck extends AbstractModel
     }
 
     /**
-     * @param string $ServiceName
+     * @param string $serviceName
      * @return AgentCheck
      */
-    public function setServiceName(string $ServiceName): AgentCheck
+    public function setServiceName(string $serviceName): AgentCheck
     {
-        $this->ServiceName = $ServiceName;
+        $this->ServiceName = $serviceName;
         return $this;
     }
+
     /**
      * @return string
      */

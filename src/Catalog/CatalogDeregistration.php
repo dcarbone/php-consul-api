@@ -46,12 +46,12 @@ class CatalogDeregistration extends AbstractModel
     }
 
     /**
-     * @param string $Node
+     * @param string $node
      * @return CatalogDeregistration
      */
-    public function setNode(string $Node): CatalogDeregistration
+    public function setNode(string $node): CatalogDeregistration
     {
-        $this->Node = $Node;
+        $this->Node = $node;
         return $this;
     }
 
@@ -64,12 +64,12 @@ class CatalogDeregistration extends AbstractModel
     }
 
     /**
-     * @param string $Address
+     * @param string $address
      * @return CatalogDeregistration
      */
-    public function setAddress(string $Address): CatalogDeregistration
+    public function setAddress(string $address): CatalogDeregistration
     {
-        $this->Address = $Address;
+        $this->Address = $address;
         return $this;
     }
 
@@ -82,12 +82,12 @@ class CatalogDeregistration extends AbstractModel
     }
 
     /**
-     * @param string $Datacenter
+     * @param string $datacenter
      * @return CatalogDeregistration
      */
-    public function setDatacenter(string $Datacenter): CatalogDeregistration
+    public function setDatacenter(string $datacenter): CatalogDeregistration
     {
-        $this->Datacenter = $Datacenter;
+        $this->Datacenter = $datacenter;
         return $this;
     }
 
@@ -100,12 +100,12 @@ class CatalogDeregistration extends AbstractModel
     }
 
     /**
-     * @param string $ServiceID
+     * @param string $serviceID
      * @return CatalogDeregistration
      */
-    public function setServiceID(string $ServiceID): CatalogDeregistration
+    public function setServiceID(string $serviceID): CatalogDeregistration
     {
-        $this->ServiceID = $ServiceID;
+        $this->ServiceID = $serviceID;
         return $this;
     }
 
@@ -118,12 +118,12 @@ class CatalogDeregistration extends AbstractModel
     }
 
     /**
-     * @param string $CheckID
+     * @param string $checkID
      * @return CatalogDeregistration
      */
-    public function setCheckID(string $CheckID): CatalogDeregistration
+    public function setCheckID(string $checkID): CatalogDeregistration
     {
-        $this->CheckID = $CheckID;
+        $this->CheckID = $checkID;
         return $this;
     }
 }

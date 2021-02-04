@@ -38,12 +38,12 @@ class AgentCheckRegistration extends AgentServiceCheck
     }
 
     /**
-     * @param string $ID
+     * @param string $id
      * @return AgentCheckRegistration
      */
-    public function setID(string $ID): AgentCheckRegistration
+    public function setID(string $id): AgentCheckRegistration
     {
-        $this->ID = $ID;
+        $this->ID = $id;
         return $this;
     }
 
@@ -56,14 +56,15 @@ class AgentCheckRegistration extends AgentServiceCheck
     }
 
     /**
-     * @param string $ServiceID
+     * @param string $serviceID
      * @return AgentCheckRegistration
      */
-    public function setServiceID(string $ServiceID): AgentCheckRegistration
+    public function setServiceID(string $serviceID): AgentCheckRegistration
     {
-        $this->ServiceID = $ServiceID;
+        $this->ServiceID = $serviceID;
         return $this;
     }
+
     /**
      * @return string
      */

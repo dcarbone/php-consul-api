@@ -40,12 +40,12 @@ class MemberOpts extends AbstractModel
     }
 
     /**
-     * @param bool $WAN
+     * @param bool $wan
      * @return MemberOpts
      */
-    public function setWAN(bool $WAN): MemberOpts
+    public function setWAN(bool $wan): MemberOpts
     {
-        $this->WAN = $WAN;
+        $this->WAN = $wan;
         return $this;
     }
 
@@ -58,12 +58,12 @@ class MemberOpts extends AbstractModel
     }
 
     /**
-     * @param string $Segment
+     * @param string $segment
      * @return MemberOpts
      */
-    public function setSegment(string $Segment): MemberOpts
+    public function setSegment(string $segment): MemberOpts
     {
-        $this->Segment = $Segment;
+        $this->Segment = $segment;
         return $this;
     }
 }

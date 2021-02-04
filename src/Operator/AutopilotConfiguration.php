@@ -54,12 +54,12 @@ class AutopilotConfiguration extends AbstractModel
     }
 
     /**
-     * @param bool $CleanupDeadServers
+     * @param bool $cleanupDeadServers
      * @return AutopilotConfiguration
      */
-    public function setCleanupDeadServers(bool $CleanupDeadServers): AutopilotConfiguration
+    public function setCleanupDeadServers(bool $cleanupDeadServers): AutopilotConfiguration
     {
-        $this->CleanupDeadServers = $CleanupDeadServers;
+        $this->CleanupDeadServers = $cleanupDeadServers;
         return $this;
     }
 
@@ -72,12 +72,12 @@ class AutopilotConfiguration extends AbstractModel
     }
 
     /**
-     * @param string $LastContactThreshold
+     * @param string $lastContactThreshold
      * @return AutopilotConfiguration
      */
-    public function setLastContactThreshold(string $LastContactThreshold): AutopilotConfiguration
+    public function setLastContactThreshold(string $lastContactThreshold): AutopilotConfiguration
     {
-        $this->LastContactThreshold = $LastContactThreshold;
+        $this->LastContactThreshold = $lastContactThreshold;
         return $this;
     }
 
@@ -90,12 +90,12 @@ class AutopilotConfiguration extends AbstractModel
     }
 
     /**
-     * @param int $MaxTrailingLogs
+     * @param int $maxTrailingLogs
      * @return AutopilotConfiguration
      */
-    public function setMaxTrailingLogs(int $MaxTrailingLogs): AutopilotConfiguration
+    public function setMaxTrailingLogs(int $maxTrailingLogs): AutopilotConfiguration
     {
-        $this->MaxTrailingLogs = $MaxTrailingLogs;
+        $this->MaxTrailingLogs = $maxTrailingLogs;
         return $this;
     }
 
@@ -108,12 +108,12 @@ class AutopilotConfiguration extends AbstractModel
     }
 
     /**
-     * @param string $ServerStabilizationTime
+     * @param string $serverStabilizationTime
      * @return AutopilotConfiguration
      */
-    public function setServerStabilizationTime(string $ServerStabilizationTime): AutopilotConfiguration
+    public function setServerStabilizationTime(string $serverStabilizationTime): AutopilotConfiguration
     {
-        $this->ServerStabilizationTime = $ServerStabilizationTime;
+        $this->ServerStabilizationTime = $serverStabilizationTime;
         return $this;
     }
 
@@ -126,12 +126,12 @@ class AutopilotConfiguration extends AbstractModel
     }
 
     /**
-     * @param string $RedundancyZoneTag
+     * @param string $redundancyZoneTag
      * @return AutopilotConfiguration
      */
-    public function setRedundancyZoneTag(string $RedundancyZoneTag): AutopilotConfiguration
+    public function setRedundancyZoneTag(string $redundancyZoneTag): AutopilotConfiguration
     {
-        $this->RedundancyZoneTag = $RedundancyZoneTag;
+        $this->RedundancyZoneTag = $redundancyZoneTag;
         return $this;
     }
 
@@ -144,12 +144,12 @@ class AutopilotConfiguration extends AbstractModel
     }
 
     /**
-     * @param bool $DisableUpgradeMigration
+     * @param bool $disableUpgradeMigration
      * @return AutopilotConfiguration
      */
-    public function setDisableUpgradeMigration(bool $DisableUpgradeMigration): AutopilotConfiguration
+    public function setDisableUpgradeMigration(bool $disableUpgradeMigration): AutopilotConfiguration
     {
-        $this->DisableUpgradeMigration = $DisableUpgradeMigration;
+        $this->DisableUpgradeMigration = $disableUpgradeMigration;
         return $this;
     }
 
@@ -162,12 +162,12 @@ class AutopilotConfiguration extends AbstractModel
     }
 
     /**
-     * @param string $UpgradeVersionTag
+     * @param string $upgradeVersionTag
      * @return AutopilotConfiguration
      */
-    public function setUpgradeVersionTag(string $UpgradeVersionTag): AutopilotConfiguration
+    public function setUpgradeVersionTag(string $upgradeVersionTag): AutopilotConfiguration
     {
-        $this->UpgradeVersionTag = $UpgradeVersionTag;
+        $this->UpgradeVersionTag = $upgradeVersionTag;
         return $this;
     }
 
@@ -180,12 +180,12 @@ class AutopilotConfiguration extends AbstractModel
     }
 
     /**
-     * @param int $CreateIndex
+     * @param int $createIndex
      * @return AutopilotConfiguration
      */
-    public function setCreateIndex(int $CreateIndex): AutopilotConfiguration
+    public function setCreateIndex(int $createIndex): AutopilotConfiguration
     {
-        $this->CreateIndex = $CreateIndex;
+        $this->CreateIndex = $createIndex;
         return $this;
     }
 
@@ -198,12 +198,12 @@ class AutopilotConfiguration extends AbstractModel
     }
 
     /**
-     * @param int $ModifyIndex
+     * @param int $modifyIndex
      * @return AutopilotConfiguration
      */
-    public function setModifyIndex(int $ModifyIndex): AutopilotConfiguration
+    public function setModifyIndex(int $modifyIndex): AutopilotConfiguration
     {
-        $this->ModifyIndex = $ModifyIndex;
+        $this->ModifyIndex = $modifyIndex;
         return $this;
     }
 }

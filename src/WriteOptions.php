@@ -27,15 +27,16 @@ use DCarbone\Go\Time;
 class WriteOptions extends AbstractModel implements RequestOptions
 {
     /** @var string */
-    public $Namespace = '';
+    public string $Namespace = '';
     /** @var string */
-    public $Datacenter = '';
+    public string $Datacenter = '';
     /** @var string */
-    public $Token = '';
+    public string $Token = '';
     /** @var int */
-    public $RelayFactor = 0;
+    public int $RelayFactor = 0;
+
     /** @var \DCarbone\Go\Time\Duration|null */
-    public $Timeout = null;
+    public ?Time\Duration $Timeout = null;
 
     /**
      * WriteOptions constructor.
@@ -58,11 +59,11 @@ class WriteOptions extends AbstractModel implements RequestOptions
     }
 
     /**
-     * @param string $Namespace
+     * @param string $namespace
      */
-    public function setNamespace(string $Namespace): void
+    public function setNamespace(string $namespace): void
     {
-        $this->Namespace = $Namespace;
+        $this->Namespace = $namespace;
     }
 
     /**

@@ -73,12 +73,12 @@ class KVPair extends AbstractModel
     }
 
     /**
-     * @param string $Key
+     * @param string $key
      * @return KVPair
      */
-    public function setKey(string $Key): KVPair
+    public function setKey(string $key): KVPair
     {
-        $this->Key = $Key;
+        $this->Key = $key;
         return $this;
     }
 
@@ -91,12 +91,12 @@ class KVPair extends AbstractModel
     }
 
     /**
-     * @param int $CreateIndex
+     * @param int $createIndex
      * @return KVPair
      */
-    public function setCreateIndex(int $CreateIndex): KVPair
+    public function setCreateIndex(int $createIndex): KVPair
     {
-        $this->CreateIndex = $CreateIndex;
+        $this->CreateIndex = $createIndex;
         return $this;
     }
 
@@ -109,12 +109,12 @@ class KVPair extends AbstractModel
     }
 
     /**
-     * @param int $ModifyIndex
+     * @param int $modifyIndex
      * @return KVPair
      */
-    public function setModifyIndex(int $ModifyIndex): KVPair
+    public function setModifyIndex(int $modifyIndex): KVPair
     {
-        $this->ModifyIndex = $ModifyIndex;
+        $this->ModifyIndex = $modifyIndex;
         return $this;
     }
 
@@ -127,12 +127,12 @@ class KVPair extends AbstractModel
     }
 
     /**
-     * @param int $LockIndex
+     * @param int $lockIndex
      * @return KVPair
      */
-    public function setLockIndex(int $LockIndex): KVPair
+    public function setLockIndex(int $lockIndex): KVPair
     {
-        $this->LockIndex = $LockIndex;
+        $this->LockIndex = $lockIndex;
         return $this;
     }
 
@@ -145,12 +145,12 @@ class KVPair extends AbstractModel
     }
 
     /**
-     * @param int $Flags
+     * @param int $flags
      * @return KVPair
      */
-    public function setFlags(int $Flags): KVPair
+    public function setFlags(int $flags): KVPair
     {
-        $this->Flags = $Flags;
+        $this->Flags = $flags;
         return $this;
     }
 
@@ -163,12 +163,12 @@ class KVPair extends AbstractModel
     }
 
     /**
-     * @param string $Value
+     * @param string $value
      * @return KVPair
      */
-    public function setValue(string $Value): KVPair
+    public function setValue(string $value): KVPair
     {
-        $this->Value = $Value;
+        $this->Value = $value;
         return $this;
     }
 
@@ -181,12 +181,12 @@ class KVPair extends AbstractModel
     }
 
     /**
-     * @param string $Session
+     * @param string $session
      * @return KVPair
      */
-    public function setSession(string $Session): KVPair
+    public function setSession(string $session): KVPair
     {
-        $this->Session = $Session;
+        $this->Session = $session;
         return $this;
     }
 
@@ -199,12 +199,12 @@ class KVPair extends AbstractModel
     }
 
     /**
-     * @param string $Namespace
+     * @param string $namespace
      * @return KVPair
      */
-    public function setNamespace(string $Namespace): KVPair
+    public function setNamespace(string $namespace): KVPair
     {
-        $this->Namespace = $Namespace;
+        $this->Namespace = $namespace;
         return $this;
     }
 

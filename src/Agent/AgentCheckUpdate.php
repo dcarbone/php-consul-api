@@ -40,12 +40,12 @@ class AgentCheckUpdate extends AbstractModel
     }
 
     /**
-     * @param string $Status
+     * @param string $status
      * @return AgentCheckUpdate
      */
-    public function setStatus(string $Status): AgentCheckUpdate
+    public function setStatus(string $status): AgentCheckUpdate
     {
-        $this->Status = $Status;
+        $this->Status = $status;
         return $this;
     }
 
@@ -58,14 +58,15 @@ class AgentCheckUpdate extends AbstractModel
     }
 
     /**
-     * @param string $Output
+     * @param string $output
      * @return AgentCheckUpdate
      */
-    public function setOutput(string $Output): AgentCheckUpdate
+    public function setOutput(string $output): AgentCheckUpdate
     {
-        $this->Output = $Output;
+        $this->Output = $output;
         return $this;
     }
+
     /**
      * @return string
      */

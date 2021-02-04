@@ -4,3 +4,4 @@
 /.gitattributes export-ignore
 /phpunit.xml export-ignore
 /README.md export-ignore
+/tools export-ignore

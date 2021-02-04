@@ -27,19 +27,19 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 class QueryDNSOptions extends AbstractModel
 {
     /** @var string */
-    public $TTL = '';
+    public string $TTL = '';
 
     /**
      * @return string
      */
     public function getTTL(): string
     {
-        return (string)$this->TTL;
+        return $this->TTL;
     }
 
     /**
      * @param string $ttl
-     * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions
+     * @return QueryDNSOptions
      */
     public function setTTL(string $ttl): QueryDNSOptions
     {

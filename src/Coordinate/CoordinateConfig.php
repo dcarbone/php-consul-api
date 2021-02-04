@@ -80,12 +80,12 @@ class CoordinateConfig extends AbstractModel
     }
 
     /**
-     * @param int $Dimensionality
+     * @param int $dimensionality
      * @return CoordinateConfig
      */
-    public function setDimensionality(int $Dimensionality): CoordinateConfig
+    public function setDimensionality(int $dimensionality): CoordinateConfig
     {
-        $this->Dimensionality = $Dimensionality;
+        $this->Dimensionality = $dimensionality;
         return $this;
     }
 
@@ -98,12 +98,12 @@ class CoordinateConfig extends AbstractModel
     }
 
     /**
-     * @param float $VivaldiErrorMax
+     * @param float $vivaldiErrorMax
      * @return CoordinateConfig
      */
-    public function setVivaldiErrorMax(float $VivaldiErrorMax): CoordinateConfig
+    public function setVivaldiErrorMax(float $vivaldiErrorMax): CoordinateConfig
     {
-        $this->VivaldiErrorMax = $VivaldiErrorMax;
+        $this->VivaldiErrorMax = $vivaldiErrorMax;
         return $this;
     }
 
@@ -116,12 +116,12 @@ class CoordinateConfig extends AbstractModel
     }
 
     /**
-     * @param float $VivaldiCE
+     * @param float $vivaldiCE
      * @return CoordinateConfig
      */
-    public function setVivaldiCE(float $VivaldiCE): CoordinateConfig
+    public function setVivaldiCE(float $vivaldiCE): CoordinateConfig
     {
-        $this->VivaldiCE = $VivaldiCE;
+        $this->VivaldiCE = $vivaldiCE;
         return $this;
     }
 
@@ -134,12 +134,12 @@ class CoordinateConfig extends AbstractModel
     }
 
     /**
-     * @param float $VivaldiCC
+     * @param float $vivaldiCC
      * @return CoordinateConfig
      */
-    public function setVivaldiCC(float $VivaldiCC): CoordinateConfig
+    public function setVivaldiCC(float $vivaldiCC): CoordinateConfig
     {
-        $this->VivaldiCC = $VivaldiCC;
+        $this->VivaldiCC = $vivaldiCC;
         return $this;
     }
 
@@ -152,12 +152,12 @@ class CoordinateConfig extends AbstractModel
     }
 
     /**
-     * @param int $AdjustmentWindowSize
+     * @param int $adjustmentWindowSize
      * @return CoordinateConfig
      */
-    public function setAdjustmentWindowSize(int $AdjustmentWindowSize): CoordinateConfig
+    public function setAdjustmentWindowSize(int $adjustmentWindowSize): CoordinateConfig
     {
-        $this->AdjustmentWindowSize = $AdjustmentWindowSize;
+        $this->AdjustmentWindowSize = $adjustmentWindowSize;
         return $this;
     }
 
@@ -170,12 +170,12 @@ class CoordinateConfig extends AbstractModel
     }
 
     /**
-     * @param float $HeightMin
+     * @param float $heightMin
      * @return CoordinateConfig
      */
-    public function setHeightMin(float $HeightMin): CoordinateConfig
+    public function setHeightMin(float $heightMin): CoordinateConfig
     {
-        $this->HeightMin = $HeightMin;
+        $this->HeightMin = $heightMin;
         return $this;
     }
 
@@ -188,12 +188,12 @@ class CoordinateConfig extends AbstractModel
     }
 
     /**
-     * @param int $LatencyFilterSize
+     * @param int $latencyFilterSize
      * @return CoordinateConfig
      */
-    public function setLatencyFilterSize(int $LatencyFilterSize): CoordinateConfig
+    public function setLatencyFilterSize(int $latencyFilterSize): CoordinateConfig
     {
-        $this->LatencyFilterSize = $LatencyFilterSize;
+        $this->LatencyFilterSize = $latencyFilterSize;
         return $this;
     }
 
@@ -206,12 +206,12 @@ class CoordinateConfig extends AbstractModel
     }
 
     /**
-     * @param float $GravityRho
+     * @param float $gravityRho
      * @return CoordinateConfig
      */
-    public function setGravityRho(float $GravityRho): CoordinateConfig
+    public function setGravityRho(float $gravityRho): CoordinateConfig
     {
-        $this->GravityRho = $GravityRho;
+        $this->GravityRho = $gravityRho;
         return $this;
     }
 }

@@ -48,12 +48,12 @@ class ACLEntry extends AbstractModel
     }
 
     /**
-     * @param int $CreateIndex
+     * @param int $createIndex
      * @return ACLEntry
      */
-    public function setCreateIndex(int $CreateIndex): ACLEntry
+    public function setCreateIndex(int $createIndex): ACLEntry
     {
-        $this->CreateIndex = $CreateIndex;
+        $this->CreateIndex = $createIndex;
         return $this;
     }
 
@@ -66,12 +66,12 @@ class ACLEntry extends AbstractModel
     }
 
     /**
-     * @param int $ModifyIndex
+     * @param int $modifyIndex
      * @return ACLEntry
      */
-    public function setModifyIndex(int $ModifyIndex): ACLEntry
+    public function setModifyIndex(int $modifyIndex): ACLEntry
     {
-        $this->ModifyIndex = $ModifyIndex;
+        $this->ModifyIndex = $modifyIndex;
         return $this;
     }
 
@@ -84,12 +84,12 @@ class ACLEntry extends AbstractModel
     }
 
     /**
-     * @param string $ID
+     * @param string $id
      * @return ACLEntry
      */
-    public function setID(string $ID): ACLEntry
+    public function setID(string $id): ACLEntry
     {
-        $this->ID = $ID;
+        $this->ID = $id;
         return $this;
     }
 
@@ -102,12 +102,12 @@ class ACLEntry extends AbstractModel
     }
 
     /**
-     * @param string $Name
+     * @param string $name
      * @return ACLEntry
      */
-    public function setName(string $Name): ACLEntry
+    public function setName(string $name): ACLEntry
     {
-        $this->Name = $Name;
+        $this->Name = $name;
         return $this;
     }
 
@@ -120,12 +120,12 @@ class ACLEntry extends AbstractModel
     }
 
     /**
-     * @param string $Type
+     * @param string $type
      * @return ACLEntry
      */
-    public function setType(string $Type): ACLEntry
+    public function setType(string $type): ACLEntry
     {
-        $this->Type = $Type;
+        $this->Type = $type;
         return $this;
     }
 
@@ -138,12 +138,12 @@ class ACLEntry extends AbstractModel
     }
 
     /**
-     * @param string $Rules
+     * @param string $rules
      * @return ACLEntry
      */
-    public function setRules(string $Rules): ACLEntry
+    public function setRules(string $rules): ACLEntry
     {
-        $this->Rules = $Rules;
+        $this->Rules = $rules;
         return $this;
     }
 }

@@ -42,12 +42,12 @@ class GaugeValue extends AbstractModel
     }
 
     /**
-     * @param string $Name
+     * @param string $name
      * @return GaugeValue
      */
-    public function setName(string $Name): GaugeValue
+    public function setName(string $name): GaugeValue
     {
-        $this->Name = $Name;
+        $this->Name = $name;
         return $this;
     }
 
@@ -60,12 +60,12 @@ class GaugeValue extends AbstractModel
     }
 
     /**
-     * @param float $Value
+     * @param float $value
      * @return GaugeValue
      */
-    public function setValue(float $Value): GaugeValue
+    public function setValue(float $value): GaugeValue
     {
-        $this->Value = $Value;
+        $this->Value = $value;
         return $this;
     }
 
@@ -78,12 +78,12 @@ class GaugeValue extends AbstractModel
     }
 
     /**
-     * @param array $Labels
+     * @param array $labels
      * @return GaugeValue
      */
-    public function setLabels(array $Labels): GaugeValue
+    public function setLabels(array $labels): GaugeValue
     {
-        $this->Labels = $Labels;
+        $this->Labels = $labels;
         return $this;
     }
 }

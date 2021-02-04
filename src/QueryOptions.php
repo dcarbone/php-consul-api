@@ -26,46 +26,67 @@ use DCarbone\Go\Time;
  */
 class QueryOptions extends AbstractModel implements RequestOptions
 {
+    private const FIELD_MAX_AGE        = 'MaxAge';
+    private const FIELD_STALE_IF_ERROR = 'StaleIfError';
+    private const FIELD_WAIT_TIME      = 'WaitTime';
+    private const FIELD_TIMEOUT        = 'Timeout';
+
     /** @var string */
-    public $Namespace = '';
+    public string $Namespace = '';
     /** @var string */
-    public $Datacenter = '';
+    public string $Datacenter = '';
     /** @var bool */
-    public $AllowStale = false;
+    public bool $AllowStale = false;
     /** @var bool */
-    public $RequireConsistent = false;
+    public bool $RequireConsistent = false;
     /** @var bool */
-    public $UseCache = false;
+    public bool $UseCache = false;
     /** @var \DCarbone\Go\Time\Duration|null */
-    public $MaxAge = null;
+    public ?Time\Duration $MaxAge = null;
     /** @var \DCarbone\Go\Time\Duration|null */
-    public $StaleIfError = null;
+    public ?Time\Duration $StaleIfError = null;
     /** @var int */
-    public $WaitIndex = 0;
+    public int $WaitIndex = 0;
     /** @var string */
-    public $WaitHash = '';
-    /** @var \DCarbone\Go\Time\Duration */
-    public $WaitTime = null;
+    public string $WaitHash = '';
+    /** @var \DCarbone\Go\Time\Duration|null */
+    public ?Time\Duration $WaitTime = null;
     /** @var string */
-    public $Token = '';
+    public string $Token = '';
     /** @var string */
-    public $Near = '';
+    public string $Near = '';
     /** @var string */
-    public $Filter = '';
+    public string $Filter = '';
     /** @var array */
-    public $NodeMeta = [];
+    public array $NodeMeta = [];
     /** @var int */
-    public $RelayFactor = 0;
+    public int $RelayFactor = 0;
     /** @var bool */
-    public $LocalOnly = false;
+    public bool $LocalOnly = false;
     /** @var bool */
-    public $Connect = false;
+    public bool $Connect = false;
 
     /** @var \DCarbone\Go\Time\Duration|null */
-    public $Timeout = null;
+    public ?Time\Duration $Timeout = null;
 
     /** @var bool */
-    public $Pretty = false;
+    public bool $Pretty = false;
+
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_MAX_AGE => [
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
+        ],
+        self::FIELD_STALE_IF_ERROR => [
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
+        ],
+        self::FIELD_WAIT_TIME => [
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
+        ],
+        self::FIELD_TIMEOUT => [
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
+        ],
+    ];
 
     /**
      * QueryOptions constructor.

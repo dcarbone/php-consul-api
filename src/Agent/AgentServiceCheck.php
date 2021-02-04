@@ -65,12 +65,12 @@ class AgentServiceCheck extends AbstractModel
 
     /** @var array[] */
     protected static array $fields = [
-        self::FIELD_ARGS   => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+        self::FIELD_ARGS => [
+            Hydration::FIELD_TYPE => Hydration::ARRAY,
             Hydration::FIELD_ARRAY_TYPE => Hydration::STRING,
         ],
         self::FIELD_HEADER => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_TYPE => Hydration::ARRAY,
             Hydration::FIELD_ARRAY_TYPE => Hydration::STRING,
         ],
     ];
@@ -84,12 +84,12 @@ class AgentServiceCheck extends AbstractModel
     }
 
     /**
-     * @param string $CheckID
+     * @param string $checkID
      * @return AgentServiceCheck
      */
-    public function setCheckID(string $CheckID): AgentServiceCheck
+    public function setCheckID(string $checkID): AgentServiceCheck
     {
-        $this->CheckID = $CheckID;
+        $this->CheckID = $checkID;
         return $this;
     }
 
@@ -102,12 +102,12 @@ class AgentServiceCheck extends AbstractModel
     }
 
     /**
-     * @param string $Name
+     * @param string $name
      * @return AgentServiceCheck
      */
-    public function setName(string $Name): AgentServiceCheck
+    public function setName(string $name): AgentServiceCheck
     {
-        $this->Name = $Name;
+        $this->Name = $name;
         return $this;
     }
 
@@ -120,12 +120,12 @@ class AgentServiceCheck extends AbstractModel
     }
 
     /**
-     * @param string[] $Args
+     * @param string[] $args
      * @return AgentServiceCheck
      */
-    public function setArgs(array $Args): AgentServiceCheck
+    public function setArgs(array $args): AgentServiceCheck
     {
-        $this->Args = $Args;
+        $this->Args = $args;
         return $this;
     }
 
@@ -138,12 +138,12 @@ class AgentServiceCheck extends AbstractModel
     }
 
     /**
-     * @param string $DockerContainerID
+     * @param string $dockerContainerID
      * @return AgentServiceCheck
      */
-    public function setDockerContainerID(string $DockerContainerID): AgentServiceCheck
+    public function setDockerContainerID(string $dockerContainerID): AgentServiceCheck
     {
-        $this->DockerContainerID = $DockerContainerID;
+        $this->DockerContainerID = $dockerContainerID;
         return $this;
     }
 
@@ -156,12 +156,12 @@ class AgentServiceCheck extends AbstractModel
     }
 
     /**
-     * @param string $Shell
+     * @param string $shell
      * @return AgentServiceCheck
      */
-    public function setShell(string $Shell): AgentServiceCheck
+    public function setShell(string $shell): AgentServiceCheck
     {
-        $this->Shell = $Shell;
+        $this->Shell = $shell;
         return $this;
     }
 
@@ -174,12 +174,12 @@ class AgentServiceCheck extends AbstractModel
     }
 
     /**
-     * @param string $Interval
+     * @param string $interval
      * @return AgentServiceCheck
      */
-    public function setInterval(string $Interval): AgentServiceCheck
+    public function setInterval(string $interval): AgentServiceCheck
     {
-        $this->Interval = $Interval;
+        $this->Interval = $interval;
         return $this;
     }
 
@@ -192,12 +192,12 @@ class AgentServiceCheck extends AbstractModel
     }
 
     /**
-     * @param string $Timeout
+     * @param string $timeout
      * @return AgentServiceCheck
      */
-    public function setTimeout(string $Timeout): AgentServiceCheck
+    public function setTimeout(string $timeout): AgentServiceCheck
     {
-        $this->Timeout = $Timeout;
+        $this->Timeout = $timeout;
         return $this;
     }
 
@@ -210,12 +210,12 @@ class AgentServiceCheck extends AbstractModel
     }
 
     /**
-     * @param string $TTL
+     * @param string $ttl
      * @return AgentServiceCheck
      */
-    public function setTTL(string $TTL): AgentServiceCheck
+    public function setTTL(string $ttl): AgentServiceCheck
     {
-        $this->TTL = $TTL;
+        $this->TTL = $ttl;
         return $this;
     }
 
@@ -228,12 +228,12 @@ class AgentServiceCheck extends AbstractModel
     }
 
     /**
-     * @param string $HTTP
+     * @param string $http
      * @return AgentServiceCheck
      */
-    public function setHTTP(string $HTTP): AgentServiceCheck
+    public function setHTTP(string $http): AgentServiceCheck
     {
-        $this->HTTP = $HTTP;
+        $this->HTTP = $http;
         return $this;
     }
 
@@ -246,12 +246,12 @@ class AgentServiceCheck extends AbstractModel
     }
 
     /**
-     * @param array $Header
+     * @param array $header
      * @return AgentServiceCheck
      */
-    public function setHeader(array $Header): AgentServiceCheck
+    public function setHeader(array $header): AgentServiceCheck
     {
-        $this->Header = $Header;
+        $this->Header = $header;
         return $this;
     }
 
@@ -264,12 +264,12 @@ class AgentServiceCheck extends AbstractModel
     }
 
     /**
-     * @param string $Method
+     * @param string $method
      * @return AgentServiceCheck
      */
-    public function setMethod(string $Method): AgentServiceCheck
+    public function setMethod(string $method): AgentServiceCheck
     {
-        $this->Method = $Method;
+        $this->Method = $method;
         return $this;
     }
 
@@ -282,12 +282,12 @@ class AgentServiceCheck extends AbstractModel
     }
 
     /**
-     * @param string $TCP
+     * @param string $tcp
      * @return AgentServiceCheck
      */
-    public function setTCP(string $TCP): AgentServiceCheck
+    public function setTCP(string $tcp): AgentServiceCheck
     {
-        $this->TCP = $TCP;
+        $this->TCP = $tcp;
         return $this;
     }
 
@@ -300,12 +300,12 @@ class AgentServiceCheck extends AbstractModel
     }
 
     /**
-     * @param string $Status
+     * @param string $status
      * @return AgentServiceCheck
      */
-    public function setStatus(string $Status): AgentServiceCheck
+    public function setStatus(string $status): AgentServiceCheck
     {
-        $this->Status = $Status;
+        $this->Status = $status;
         return $this;
     }
 
@@ -318,12 +318,12 @@ class AgentServiceCheck extends AbstractModel
     }
 
     /**
-     * @param string $Notes
+     * @param string $notes
      * @return AgentServiceCheck
      */
-    public function setNotes(string $Notes): AgentServiceCheck
+    public function setNotes(string $notes): AgentServiceCheck
     {
-        $this->Notes = $Notes;
+        $this->Notes = $notes;
         return $this;
     }
 
@@ -336,12 +336,12 @@ class AgentServiceCheck extends AbstractModel
     }
 
     /**
-     * @param bool $TLSSkipVerify
+     * @param bool $tlsSkipVerify
      * @return AgentServiceCheck
      */
-    public function setTLSSkipVerify(bool $TLSSkipVerify): AgentServiceCheck
+    public function setTLSSkipVerify(bool $tlsSkipVerify): AgentServiceCheck
     {
-        $this->TLSSkipVerify = $TLSSkipVerify;
+        $this->TLSSkipVerify = $tlsSkipVerify;
         return $this;
     }
 
@@ -354,12 +354,12 @@ class AgentServiceCheck extends AbstractModel
     }
 
     /**
-     * @param string $DeregisterCriticalServiceAfter
+     * @param string $deregisterCriticalServiceAfter
      * @return AgentServiceCheck
      */
-    public function setDeregisterCriticalServiceAfter(string $DeregisterCriticalServiceAfter): AgentServiceCheck
+    public function setDeregisterCriticalServiceAfter(string $deregisterCriticalServiceAfter): AgentServiceCheck
     {
-        $this->DeregisterCriticalServiceAfter = $DeregisterCriticalServiceAfter;
+        $this->DeregisterCriticalServiceAfter = $deregisterCriticalServiceAfter;
         return $this;
     }
 

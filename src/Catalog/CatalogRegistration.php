@@ -70,12 +70,12 @@ class CatalogRegistration extends AbstractModel
     }
 
     /**
-     * @param string $ID
+     * @param string $id
      * @return CatalogRegistration
      */
-    public function setID(string $ID): CatalogRegistration
+    public function setID(string $id): CatalogRegistration
     {
-        $this->ID = $ID;
+        $this->ID = $id;
         return $this;
     }
 
@@ -88,12 +88,12 @@ class CatalogRegistration extends AbstractModel
     }
 
     /**
-     * @param string $Node
+     * @param string $node
      * @return CatalogRegistration
      */
-    public function setNode(string $Node): CatalogRegistration
+    public function setNode(string $node): CatalogRegistration
     {
-        $this->Node = $Node;
+        $this->Node = $node;
         return $this;
     }
 
@@ -106,12 +106,12 @@ class CatalogRegistration extends AbstractModel
     }
 
     /**
-     * @param string $Address
+     * @param string $address
      * @return CatalogRegistration
      */
-    public function setAddress(string $Address): CatalogRegistration
+    public function setAddress(string $address): CatalogRegistration
     {
-        $this->Address = $Address;
+        $this->Address = $address;
         return $this;
     }
 
@@ -124,12 +124,12 @@ class CatalogRegistration extends AbstractModel
     }
 
     /**
-     * @param array $TaggedAddresses
+     * @param array $taggedAddresses
      * @return CatalogRegistration
      */
-    public function setTaggedAddresses(array $TaggedAddresses): CatalogRegistration
+    public function setTaggedAddresses(array $taggedAddresses): CatalogRegistration
     {
-        $this->TaggedAddresses = $TaggedAddresses;
+        $this->TaggedAddresses = $taggedAddresses;
         return $this;
     }
 
@@ -142,12 +142,12 @@ class CatalogRegistration extends AbstractModel
     }
 
     /**
-     * @param array $NodeMeta
+     * @param array $nodeMeta
      * @return CatalogRegistration
      */
-    public function setNodeMeta(array $NodeMeta): CatalogRegistration
+    public function setNodeMeta(array $nodeMeta): CatalogRegistration
     {
-        $this->NodeMeta = $NodeMeta;
+        $this->NodeMeta = $nodeMeta;
         return $this;
     }
 
@@ -160,12 +160,12 @@ class CatalogRegistration extends AbstractModel
     }
 
     /**
-     * @param string $Datacenter
+     * @param string $datacenter
      * @return CatalogRegistration
      */
-    public function setDatacenter(string $Datacenter): CatalogRegistration
+    public function setDatacenter(string $datacenter): CatalogRegistration
     {
-        $this->Datacenter = $Datacenter;
+        $this->Datacenter = $datacenter;
         return $this;
     }
 
@@ -178,12 +178,12 @@ class CatalogRegistration extends AbstractModel
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Agent\AgentService|null $Service
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentService|null $service
      * @return CatalogRegistration
      */
-    public function setService(?AgentService $Service): CatalogRegistration
+    public function setService(?AgentService $service): CatalogRegistration
     {
-        $this->Service = $Service;
+        $this->Service = $service;
         return $this;
     }
 
@@ -196,12 +196,12 @@ class CatalogRegistration extends AbstractModel
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Agent\AgentCheck|null $Check
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentCheck|null $check
      * @return CatalogRegistration
      */
-    public function setCheck(?AgentCheck $Check): CatalogRegistration
+    public function setCheck(?AgentCheck $check): CatalogRegistration
     {
-        $this->Check = $Check;
+        $this->Check = $check;
         return $this;
     }
 }

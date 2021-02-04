@@ -27,9 +27,9 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 class QueryDatacenterOptions extends AbstractModel
 {
     /** @var int */
-    public $NearestN = 0;
+    public int $NearestN = 0;
     /** @var string[] */
-    public $Datacenters = [];
+    public array $Datacenters = [];
 
     /**
      * @return int
@@ -41,7 +41,7 @@ class QueryDatacenterOptions extends AbstractModel
 
     /**
      * @param int $nearestN
-     * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions
+     * @return QueryDatacenterOptions
      */
     public function setNearestN(int $nearestN): QueryDatacenterOptions
     {
@@ -59,22 +59,19 @@ class QueryDatacenterOptions extends AbstractModel
 
     /**
      * @param string[] $datacenters
-     * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions
+     * @return QueryDatacenterOptions
      */
     public function setDatacenters(array $datacenters): QueryDatacenterOptions
     {
-        $this->Datacenters = [];
-        foreach ($datacenters as $datacenter) {
-            $this->addDatacenter($datacenter);
-        }
+        $this->Datacenters = $datacenters;
         return $this;
     }
 
     /**
      * @param string $datacenter
-     * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions
+     * @return QueryDatacenterOptions
      */
-    public function addDatacenter(string $datacenter): QueryDatacenterOptions
+    public function addDatacenter(string $Datacenter): QueryDatacenterOptions
     {
         $this->Datacenters[] = $datacenter;
         return $this;
