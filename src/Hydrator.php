@@ -3,7 +3,7 @@
 namespace DCarbone\PHPConsulAPI;
 
 /*
-   Copyright 2016-2020 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2020 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -21,9 +21,9 @@ namespace DCarbone\PHPConsulAPI;
 /**
  * Used to assist with hydrating json responses
  *
- * Trait FieldHydration
+ * Trait Hydrator
  */
-trait FieldHydration
+trait Hydrator
 {
     /**
      * Overload the definition of this array in implementing classes to define custom per-field hydration behavior
@@ -40,47 +40,51 @@ trait FieldHydration
      */
     protected function hydrateField(string $field, $value): void
     {
-        // if this field requires specific hydration logic as defined by an implementing class
-        //
-        // else if the field does not exist as a specifically defined property on the implementing class, we'll utilize
-        // late static binding to dynamically create the field on the returned type and move on.
-        //
-        // else if the input value is null, move on.
-        //
-        // else, determine the default value of the property on the implementing class and attempt hydration
-        // into that type
-        //
-        // scalar types are handled with best-effort value casting
-        //
-        // fields that require more complex hydration logic must either be defined in the $fields static array or
-        // in the Hydration::COMPLEX_FIELDS array.
-
+        // if the implementing class has some explicitly defined overrides
         if (isset(static::$fields[$field])) {
             $this->hydrateComplex($field, $value, static::$fields[$field]);
             return;
         }
 
+        // if the implementing class has an entry in the global registry, use it.
+        if (isset(Hydration::COMPLEX_TYPES[self::class], Hydration::COMPLEX_TYPES[self::class][$field])) {
+            $this->hydrateComplex($field, $value, Hydration::COMPLEX_TYPES[self::class]);
+            return;
+        }
+
+        // if the field isn't explicitly defined on the implementing class, just set it to whatever the incoming
+        // value is
         if (!\property_exists($this, $field)) {
             $this->{$field} = $value;
             return;
         }
 
+        // if the value is null at this point, ignore and move on.
+        // note: this is not checked prior to the property_exists call as if the field is not explicitly defined but
+        // is seen with a null value, we still want to define it as null on the implementing type.
         if (null === $value) {
             return;
         }
 
+        // if the property has a scalar default value, hydrate it as such.
         if (\is_scalar($this->{$field})) {
-            $this->hydrateSimple($field, $value);
+            $this->hydrateScalar($field, $value, false);
             return;
         }
 
-        if (isset(Hydration::COMPLEX_FIELDS[$field])) {
-            $this->hydrateComplex($field, $value, Hydration::COMPLEX_FIELDS[$field]);
-            return;
-        }
-
+        // if we fall down here, try to set the value as-is.  if this barfs, it indicates we have a bug to be squished.
         // todo: should this be an exception?
         $this->{$field} = $value;
+    }
+
+    /**
+     * @param string $field
+     * @param array $def
+     * @return bool
+     */
+    protected function fieldIsNullable(string $field, array $def): bool
+    {
+        return !(bool)($def[Hydration::FIELD_NOT_NULLABLE] ?? false);
     }
 
     /**
@@ -92,16 +96,16 @@ trait FieldHydration
     private function buildScalar(string $field, $value, string $type)
     {
         if (Hydration::STRING === $type) {
-            return (string) $value;
+            return (string)$value;
         }
         if (Hydration::INTEGER === $type) {
             return \intval($value, 10);
         }
         if (Hydration::DOUBLE === $type) {
-            return (float) $value;
+            return (float)$value;
         }
         if (Hydration::BOOLEAN === $type) {
-            return (bool) $value;
+            return (bool)$value;
         }
         throw new \DomainException(
             \sprintf('Unable to handle field "%s" of type "%s" on class "%s"', $field, $type, \get_class($this))
@@ -119,17 +123,28 @@ trait FieldHydration
         if ($value instanceof $class) {
             return clone $value;
         }
-        return new $class((array) $value);
+        return new $class((array)$value);
     }
 
     /**
      * Handles scalar type field hydration
      *
      * @param string $field
-     * @param \$value
+     * @param mixed $value
+     * @param bool $nullable
      */
-    private function hydrateSimple(string $field, $value): void
+    private function hydrateScalar(string $field, $value, bool $nullable): void
     {
+        // if the incoming value is null...
+        if (null === $value) {
+            if ($nullable) {
+                // and this field _is_ nullable, set to null and move on
+                $this->{$field} = null;
+            }
+            // otherwise return without disturbing current default value
+            return;
+        }
+        // else set field to casted scalar
         $this->{$field} = $this->buildScalar($field, $value, \gettype($this->{$field}));
     }
 
@@ -175,19 +190,17 @@ trait FieldHydration
 
         if (Hydration::OBJECT === $type) {
             $this->hydrateObject($field, $value, $def);
-        } elseif (Hydration::ARRAY === $type) {
-            $this->hydrateArray($field, $value, $def);
-        } else {
-            throw new \DomainException(
-                \sprintf(
-                    'Unable to handle complex field "%s" of type "%s" on class "%s": %s',
-                    $field,
-                    $type,
-                    \get_class($this),
-                    \var_export($def, true)
-                )
-            );
+            return;
         }
+
+        if (Hydration::ARRAY === $type) {
+            $this->hydrateArray($field, $value, $def);
+            return;
+        }
+
+        // at this point, assume scalar
+        // todo: handle non-scalar types here
+        $this->hydrateScalar($field, $value, self::fieldIsNullable($field, $def));
     }
 
     /**
@@ -218,21 +231,9 @@ trait FieldHydration
      */
     private function hydrateArray(string $field, $value, array $def): void
     {
-        // by the time we get here, $value must be an array
-        if (!\is_array($value)) {
-            throw new \RuntimeException(
-                \sprintf(
-                    'Field "%s" on type "%s" is an array but provided value is "%s"',
-                    $field,
-                    \get_class($this),
-                    \gettype($value)
-                )
-            );
-        }
-
         // attempt to extract the two possible keys
-        $type  = $def[Hydration::FIELD_ARRAY_TYPE] ?? null;
-        $class = $def[Hydration::FIELD_CLASS]      ?? null;
+        $type = $def[Hydration::FIELD_ARRAY_TYPE] ?? null;
+        $class = $def[Hydration::FIELD_CLASS] ?? null;
 
         // type is required
         if (null === $type) {
@@ -242,6 +243,27 @@ trait FieldHydration
                     $field,
                     \get_class($this),
                     \var_export($def, true)
+                )
+            );
+        }
+
+        // is the incoming value null?
+        if (null === $value) {
+            // if this value can be null'd, allow it.
+            if (static::fieldIsNullable($field, $def)) {
+                $this->{$field} = null;
+            }
+            return;
+        }
+
+        // by the time we get here, $value must be an array
+        if (!\is_array($value)) {
+            throw new \RuntimeException(
+                \sprintf(
+                    'Field "%s" on type "%s" is an array but provided value is "%s"',
+                    $field,
+                    \get_class($this),
+                    \gettype($value)
                 )
             );
         }

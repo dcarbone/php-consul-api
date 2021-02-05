@@ -27,27 +27,12 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class AgentServiceChecksInfo extends AbstractModel
 {
-    private const FIELD_SERVICE = 'Service';
-    private const FIELD_CHECKS  = 'Checks';
-
     /** @var string */
     public string $AggregatedStatus = '';
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentService|null */
     public ?AgentService $Service = null;
     /** @var \DCarbone\PHPConsulAPI\Health\HealthChecks|null */
     public ?HealthChecks $Checks = null;
-
-    /** @var array[] */
-    protected static array $fields = [
-        self::FIELD_SERVICE => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => AgentService::class,
-        ],
-        self::FIELD_CHECKS => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => HealthChecks::class,
-        ],
-    ];
 
     /**
      * AgentServiceChecksInfo constructor.

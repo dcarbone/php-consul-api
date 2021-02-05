@@ -19,16 +19,28 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class RaftConfiguration
  */
 class RaftConfiguration extends AbstractModel
 {
+    private const FIELD_SERVERS = 'Servers';
+
     /** @var \DCarbone\PHPConsulAPI\Operator\RaftServer[] */
-    public $Servers = [];
+    public array $Servers = [];
     /** @var int */
-    public $Index = 0;
+    public int $Index = 0;
+
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_SERVERS => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => RaftServer::class,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+        ],
+    ];
 
     /**
      * RaftConfiguration constructor.

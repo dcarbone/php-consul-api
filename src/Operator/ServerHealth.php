@@ -26,29 +26,29 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 class ServerHealth extends AbstractModel
 {
     /** @var string */
-    public $ID = '';
+    public string $ID = '';
     /** @var string */
-    public $Name = '';
+    public string $Name = '';
     /** @var string */
-    public $Address = '';
+    public string $Address = '';
     /** @var string */
-    public $SerfStatus = '';
+    public string $SerfStatus = '';
     /** @var string */
-    public $Version = '';
+    public string $Version = '';
     /** @var bool */
-    public $Leader = false;
+    public bool $Leader = false;
     /** @var string */
-    public $LastContact = '';
+    public string $LastContact = '';
     /** @var int */
-    public $LastTerm = 0;
+    public int $LastTerm = 0;
     /** @var int */
-    public $LastIndex = 0;
+    public int $LastIndex = 0;
     /** @var bool */
-    public $Healthy = false;
+    public bool $Healthy = false;
     /** @var bool */
-    public $Voter = false;
+    public bool $Voter = false;
     /** @var string */
-    public $StableSince = '';
+    public string $StableSince = '';
 
     /**
      * @return string

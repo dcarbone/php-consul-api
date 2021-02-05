@@ -21,6 +21,7 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\HasSettableStringTags;
 use DCarbone\PHPConsulAPI\HasStringTags;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class ServiceQuery
@@ -30,36 +31,34 @@ class ServiceQuery extends AbstractModel
     use HasSettableStringTags;
     use HasStringTags;
 
-    /** @var string */
-    public $Service = '';
-    /** @var string */
-    public $Namespace = '';
-    /** @var string */
-    public $Near = '';
-    /** @var string[] */
-    public $IgnoreCheckIDs = null;
-    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions */
-    public $Failover = null;
-    /** @var bool */
-    public $OnlyPassing = false;
-    /** @var array|null */
-    public $NodeMeta = null;
-    /** @var array|null */
-    public $ServiceMeta = null;
-    /** @var bool */
-    public $Connect = false;
+    private const FIELD_FAILOVER = 'Failover';
 
-    /**
-     * ServiceQuery constructor.
-     * @param array $data
-     */
-    public function __construct(array $data = [])
-    {
-        parent::__construct($data);
-        if (!($this->Failover instanceof QueryDatacenterOptions)) {
-            $this->Failover = new QueryDatacenterOptions((array) $this->Failover);
-        }
-    }
+    /** @var string */
+    public string $Service = '';
+    /** @var string */
+    public string $Namespace = '';
+    /** @var string */
+    public string $Near = '';
+    /** @var string[] */
+    public array $IgnoreCheckIDs = [];
+    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions|null */
+    public ?QueryDatacenterOptions $Failover = null;
+    /** @var bool */
+    public bool $OnlyPassing = false;
+    /** @var array */
+    public array $NodeMeta = [];
+    /** @var array */
+    public array $ServiceMeta = [];
+    /** @var bool */
+    public bool $Connect = false;
+
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_FAILOVER => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => QueryDatacenterOptions::class,
+        ],
+    ];
 
     /**
      * @return string

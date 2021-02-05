@@ -2,6 +2,24 @@
 
 namespace DCarbone\PHPConsulAPI\Tools\PHPCSFixer\Fixer\FQCN;
 
+/*
+  Based on https://github.com/adamwojs/php-cs-fixer-phpdoc-force-fqcn
+
+  Copyright 2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ */
+
 use AdamWojs\PhpCsFixerPhpdocForceFQCN\Analyzer\ImportInfo;
 use AdamWojs\PhpCsFixerPhpdocForceFQCN\Analyzer\NamespaceInfo;
 use AdamWojs\PhpCsFixerPhpdocForceFQCN\Analyzer\Range;
@@ -14,7 +32,7 @@ use PhpCsFixer\Tokenizer\TokensAnalyzer;
 class NamespaceAnalyzer
 {
     /** @var \PhpCsFixer\Tokenizer\Tokens */
-    private $tokens;
+    private Tokens $tokens;
 
     /**
      * @param \PhpCsFixer\Tokenizer\Tokens $tokens
@@ -59,7 +77,7 @@ class NamespaceAnalyzer
             }
 
             $declarationStartIndex = $index;
-            $declarationEndIndex = $this->tokens->getNextTokenOfKind($index, [';', '{']);
+            $declarationEndIndex   = $this->tokens->getNextTokenOfKind($index, [';', '{']);
 
             $namespaceName = \trim(
                 $this->tokens->generatePartialCode(
@@ -124,9 +142,9 @@ class NamespaceAnalyzer
         }
 
         // be lazy
-        $keys = \array_keys($nsTokens);
+        $keys    = \array_keys($nsTokens);
         $nsStart = $keys[0];
-        $nsEnd = $keys[\count($keys) - 1];
+        $nsEnd   = $keys[\count($keys) - 1];
 
         // get get everything between and including $start and $end of string tokens
         $localNS = $this->tokens->generatePartialCode($nsStart, $nsEnd);
@@ -155,7 +173,7 @@ class NamespaceAnalyzer
         $imports = [];
         foreach ($tokenAnalyzer->getImportUseIndexes() as $declarationStartIndex) {
             $declarationEndIndex = $this->tokens->getNextTokenOfKind($declarationStartIndex, [';', [\T_CLOSE_TAG]]);
-            $declarationContent = $this->tokens->generatePartialCode(
+            $declarationContent  = $this->tokens->generatePartialCode(
                 $declarationStartIndex + 1,
                 $declarationEndIndex - 1,
             );
@@ -175,17 +193,17 @@ class NamespaceAnalyzer
             $declarationParts = \preg_split('/\s+as\s+/i', $declarationContent);
 
             if (1 === \count($declarationParts)) {
-                $fullName = $declarationContent;
+                $fullName         = $declarationContent;
                 $declarationParts = \explode('\\', $fullName);
-                $shortName = \end($declarationParts);
-                $isAliased = false;
+                $shortName        = \end($declarationParts);
+                $isAliased        = false;
             } else {
                 [$fullName, $shortName] = $declarationParts;
-                $declarationParts = \explode('\\', $fullName);
-                $isAliased = $shortName !== \end($declarationParts);
+                $declarationParts       = \explode('\\', $fullName);
+                $isAliased              = $shortName !== \end($declarationParts);
             }
 
-            $fullName = \trim($fullName);
+            $fullName  = \trim($fullName);
             $shortName = \trim($shortName);
 
             $imports[$shortName] = new ImportInfo(

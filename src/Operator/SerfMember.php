@@ -20,42 +20,42 @@ namespace DCarbone\PHPConsulAPI\Operator;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class SerfMember
  */
 class SerfMember extends AbstractModel
 {
-    /** @var string */
-    public $ID = '';
-    /** @var string */
-    public $Name = '';
-    /** @var string */
-    public $Addr = '';
-    /** @var int */
-    public $Port = 0;
-    /** @var string */
-    public $Datacenter = '';
-    /** @var string */
-    public $Role = '';
-    /** @var string */
-    public $Build = '';
-    /** @var int */
-    public $Protocol = 0;
-    /** @var string */
-    public $Status = '';
-    /** @var \DCarbone\Go\Time\Duration */
-    public $RTT = null;
+    private const FIELD_RTT = 'RTT';
 
-    /**
-     * SerfMember constructor.
-     * @param array $data
-     */
-    public function __construct(array $data = [])
-    {
-        parent::__construct($data);
-        $this->RTT = Time::Duration($this->RTT);
-    }
+    /** @var string */
+    public string $ID = '';
+    /** @var string */
+    public string $Name = '';
+    /** @var string */
+    public string $Addr = '';
+    /** @var int */
+    public int $Port = 0;
+    /** @var string */
+    public string $Datacenter = '';
+    /** @var string */
+    public string $Role = '';
+    /** @var string */
+    public string $Build = '';
+    /** @var int */
+    public int $Protocol = 0;
+    /** @var string */
+    public string $Status = '';
+    /** @var \DCarbone\Go\Time\Duration|null */
+    public ?Time\Duration $RTT = null;
+
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_RTT => [
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
+        ],
+    ];
 
     /**
      * @return string
@@ -130,9 +130,9 @@ class SerfMember extends AbstractModel
     }
 
     /**
-     * @return \DCarbone\Go\Time\Duration
+     * @return \DCarbone\Go\Time\Duration|null
      */
-    public function getRTT(): Time\Duration
+    public function getRTT(): ?Time\Duration
     {
         return $this->RTT;
     }

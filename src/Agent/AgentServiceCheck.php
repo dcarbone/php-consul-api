@@ -19,16 +19,12 @@ namespace DCarbone\PHPConsulAPI\Agent;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class AgentServiceCheck
  */
 class AgentServiceCheck extends AbstractModel
 {
-    private const FIELD_ARGS   = 'Args';
-    private const FIELD_HEADER = 'Header';
-
     /** @var string */
     public string $CheckID = '';
     /** @var string */
@@ -61,18 +57,6 @@ class AgentServiceCheck extends AbstractModel
     public bool $TLSSkipVerify = false;
     /** @var string */
     public string $DeregisterCriticalServiceAfter = '';
-
-    /** @var array[] */
-    protected static array $fields = [
-        self::FIELD_ARGS => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::STRING,
-        ],
-        self::FIELD_HEADER => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::STRING,
-        ],
-    ];
 
     /**
      * @return string
@@ -360,21 +344,5 @@ class AgentServiceCheck extends AbstractModel
     {
         $this->DeregisterCriticalServiceAfter = $deregisterCriticalServiceAfter;
         return $this;
-    }
-
-    /**
-     * @return array[]
-     */
-    public static function getFields(): array
-    {
-        return self::$fields;
-    }
-
-    /**
-     * @param array[] $fields
-     */
-    public static function setFields(array $fields): void
-    {
-        self::$fields = $fields;
     }
 }

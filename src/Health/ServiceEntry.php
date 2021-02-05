@@ -20,33 +20,34 @@ namespace DCarbone\PHPConsulAPI\Health;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class ServiceEntry
  */
 class ServiceEntry extends AbstractModel
 {
-    /** @var string */
-    public $Node = '';
-    /** @var \DCarbone\PHPConsulAPI\Agent\AgentService */
-    public $Service = null;
-    /** @var \DCarbone\PHPConsulAPI\Health\HealthChecks */
-    public $Checks = null;
+    private const FIELD_SERVICE = 'Service';
+    private const FIELD_CHECKS  = 'Checks';
 
-    /**
-     * ServiceEntry constructor.
-     * @param array $data
-     */
-    public function __construct(array $data = [])
-    {
-        parent::__construct($data);
-        if (null !== $this->Service && !($this->Service instanceof AgentService)) {
-            $this->Service = new AgentService((array) $this->Service);
-        }
-        if (!($this->Checks instanceof HealthChecks)) {
-            $this->Checks = new HealthChecks($this->Checks);
-        }
-    }
+    /** @var string */
+    public string $Node = '';
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentService|null */
+    public ?AgentService $Service = null;
+    /** @var \DCarbone\PHPConsulAPI\Health\HealthChecks|null */
+    public ?HealthChecks $Checks = null;
+
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_SERVICE => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => AgentService::class,
+        ],
+        self::FIELD_CHECKS  => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => HealthChecks::class,
+        ],
+    ];
 
     /**
      * @return string
@@ -57,17 +58,17 @@ class ServiceEntry extends AbstractModel
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentService
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentService|null
      */
-    public function getService()
+    public function getService(): ?AgentService
     {
         return $this->Service;
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Health\HealthChecks
+     * @return \DCarbone\PHPConsulAPI\Health\HealthChecks|null
      */
-    public function getChecks(): HealthChecks
+    public function getChecks(): ?HealthChecks
     {
         return $this->Checks;
     }

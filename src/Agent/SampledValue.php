@@ -26,19 +26,19 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 class SampledValue extends AbstractModel
 {
     /** @var string */
-    public $Name = '';
+    public string $Name = '';
     /** @var int */
-    public $Count = 0;
+    public int $Count = 0;
     /** @var float */
-    public $Sum = 0.0;
+    public float $Sum = 0.0;
     /** @var float */
-    public $Min = 0.0;
+    public float $Min = 0.0;
     /** @var float */
-    public $Max = 0.0;
+    public float $Max = 0.0;
     /** @var float */
-    public $Mean = 0.0;
+    public float $Mean = 0.0;
     /** @var array */
-    public $Labels = [];
+    public array $Labels = [];
 
     /**
      * @return string

@@ -26,15 +26,15 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 class RaftServer extends AbstractModel
 {
     /** @var string */
-    public $ID = '';
+    public string $ID = '';
     /** @var string */
-    public $Node = '';
+    public string $Node = '';
     /** @var string */
-    public $Address = '';
+    public string $Address = '';
     /** @var bool */
-    public $Leader = false;
+    public bool $Leader = false;
     /** @var bool */
-    public $Voter = false;
+    public bool $Voter = false;
 
     /**
      * @return string

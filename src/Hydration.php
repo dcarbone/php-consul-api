@@ -19,6 +19,9 @@ namespace DCarbone\PHPConsulAPI;
  */
 
 use DCarbone\Go\Time;
+use DCarbone\PHPConsulAPI\Agent\AgentService;
+use DCarbone\PHPConsulAPI\Agent\AgentServiceChecksInfo;
+use DCarbone\PHPConsulAPI\Health\HealthChecks;
 
 /**
  * Class Hydration
@@ -40,18 +43,26 @@ final class Hydration
     public const TRUE  = 'true';
     public const FALSE = 'false';
 
-    public const FIELD_TYPE       = 0;
-    public const FIELD_CLASS      = 1;
-    public const FIELD_ARRAY_TYPE = 2;
-    public const FIELD_CALLBACK   = 3;
+    public const FIELD_TYPE         = 0;
+    public const FIELD_CLASS        = 1;
+    public const FIELD_ARRAY_TYPE   = 2;
+    public const FIELD_CALLBACK     = 3;
+    public const FIELD_NOT_NULLABLE = 4;
 
     public const CALLABLE_HYDRATE_TIME     = [self::class, 'hydrateTime'];
     public const CALLABLE_HYDRATE_DURATION = [self::class, 'hydrateDuration'];
 
-    public const COMPLEX_FIELDS = [
-        'Tags' => [
-            self::FIELD_TYPE       => self::ARRAY,
-            self::FIELD_ARRAY_TYPE => self::STRING,
+    public const COMPLEX_TYPES = [
+        AgentServiceChecksInfo::class => [
+            'Service' => [
+                self::FIELD_TYPE  => self::OBJECT,
+                self::FIELD_CLASS => AgentService::class,
+            ],
+            'Checks'  => [
+                self::FIELD_TYPE         => self::OBJECT,
+                self::FIELD_CLASS        => HealthChecks::class,
+                self::FIELD_NOT_NULLABLE => true,
+            ],
         ],
     ];
 

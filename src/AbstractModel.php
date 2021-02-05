@@ -23,7 +23,7 @@ namespace DCarbone\PHPConsulAPI;
  */
 abstract class AbstractModel implements \JsonSerializable
 {
-    use FieldHydration;
+    use Hydrator;
 
     /**
      * AbstractModel constructor.

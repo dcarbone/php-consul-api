@@ -1,7 +1,9 @@
 <?php declare(strict_types=1);
 
+namespace DCarbone\PHPConsulAPI\ACL;
+
 /*
-   Copyright 2016-2020 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -16,19 +18,17 @@
    limitations under the License.
  */
 
-namespace DCarbone\PHPConsulAPI\Session;
-
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
- * Class ServiceCheck
+ * Class ACLLink
  */
-class ServiceCheck extends AbstractModel
+class ACLLink extends AbstractModel
 {
     /** @var string */
     public string $ID = '';
     /** @var string */
-    public string $Namespace = '';
+    public string $Name = '';
 
     /**
      * @return string
@@ -39,30 +39,10 @@ class ServiceCheck extends AbstractModel
     }
 
     /**
-     * @param string $id
-     * @return \DCarbone\PHPConsulAPI\Session\ServiceCheck
-     */
-    public function setID(string $id): self
-    {
-        $this->ID = $id;
-        return $this;
-    }
-
-    /**
      * @return string
      */
-    public function getNamespace(): string
+    public function getName(): string
     {
-        return $this->Namespace;
-    }
-
-    /**
-     * @param string $namespace
-     * @return \DCarbone\PHPConsulAPI\Session\ServiceCheck
-     */
-    public function setNamespace(string $namespace): self
-    {
-        $this->Namespace = $namespace;
-        return $this;
+        return $this->Name;
     }
 }
