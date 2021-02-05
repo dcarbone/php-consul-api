@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
+use DCarbone\PHPConsulAPI\Tools\PHPCSFixer\Fixer\FQCN\ForceFQCNFixer;
 use PhpCsFixer\Config;
 
 $config = new Config('php-consul-api');
@@ -13,12 +14,16 @@ $config
     ->setIndent('    ')
     ->registerCustomFixers(
         [
-            new \DCarbone\PHPConsulAPI\Tools\PHPCSFixer\Fixer\FQCN\ForceFQCNFixer(),
+            new ForceFQCNFixer(),
         ]
     )
     ->setRules(
         [
+            // custom rules
+
             'PHPConsulAPI/fqcn_fixer' => true,
+
+            // builtin rules
 
             'align_multiline_comment'                       => [
                 'comment_type' => 'all_multiline',
@@ -46,7 +51,7 @@ $config
             'combine_consecutive_issets'                    => true,
             'combine_consecutive_unsets'                    => true,
             'combine_nested_dirname'                        => true,
-            'compact_nullable_typehint'                     => true, // PHP >= 7.1
+            'compact_nullable_typehint'                     => true,
             'concat_space'                                  => [
                 'spacing' => 'one',
             ],
@@ -137,7 +142,6 @@ $config
             'no_spaces_inside_parenthesis'                  => true,
             'no_superfluous_elseif'                         => true,
             'no_superfluous_phpdoc_tags'                    => false,
-            // maybe add extra description, so keep it ...
             'no_trailing_comma_in_list_call'                => true,
             'no_trailing_comma_in_singleline_array'         => true,
             'no_trailing_whitespace'                        => true,
@@ -146,7 +150,6 @@ $config
             'no_unneeded_curly_braces'                      => true,
             'no_unneeded_final_method'                      => true,
             'no_unreachable_default_argument_value'         => false,
-            // do not changes the logic of the code ...
             'no_unset_on_property'                          => true,
             'no_unused_imports'                             => true,
             'no_useless_else'                               => true,
@@ -229,7 +232,6 @@ $config
             'short_scalar_cast'                             => true,
             'silenced_deprecation_error'                    => false,
             'simplified_null_return'                        => false,
-            // maybe better for readability, so keep it ...
             'single_blank_line_at_eof'                      => true,
             'single_class_element_per_statement'            => true,
             'single_import_per_statement'                   => true,
@@ -243,7 +245,6 @@ $config
             'standardize_not_equals'                        => true,
             'static_lambda'                                 => true,
             'strict_comparison'                             => false,
-            // Array has a option where we still need "==" instead of "==="
             'strict_param'                                  => true,
             'string_line_ending'                            => true,
             'switch_case_semicolon_to_colon'                => true,
@@ -254,7 +255,7 @@ $config
             'trim_array_spaces'                             => true,
             'unary_operator_spaces'                         => true,
             'visibility_required'                           => true,
-            'void_return'                                   => true, // PHP >= 7.1
+            'void_return'                                   => true,
             'whitespace_after_comma_in_array'               => true,
             'yoda_style'                                    => [
                 'equal'            => true,
