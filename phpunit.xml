@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <phpunit
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/9.4/phpunit.xsd"
+        xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/9.5/phpunit.xsd"
         bootstrap="./vendor/autoload.php"
         colors="true"
         verbose="true"
@@ -14,9 +14,6 @@
     </php>
 
     <testsuites>
-        <testsuite name="definition">
-            <directory>./tests/Definition</directory>
-        </testsuite>
         <testsuite name="usage-config">
             <file>./tests/Usage/ConfigUsageTest.php</file>
         </testsuite>
