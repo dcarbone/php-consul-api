@@ -16,14 +16,13 @@ namespace DCarbone\PHPConsulAPI\Operator;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\ScalarType;
 
 /**
  * Class ReadableDuration
- * @package DCarbone\PHPConsulAPI\Operator
  */
 class ReadableDuration extends Time\Duration implements \JsonSerializable, ScalarType
 {
@@ -34,16 +33,16 @@ class ReadableDuration extends Time\Duration implements \JsonSerializable, Scala
      */
     public static function hydrate(object $instance, string $field, $value): void
     {
-        $instance->{$field} = new ReadableDuration(intval($value, 10));
+        $instance->{$field} = new self(\intval($value, 10));
     }
 
     /**
      * @param string $s
      * @return \DCarbone\PHPConsulAPI\Operator\ReadableDuration
      */
-    public static function fromDuration(string $s): ReadableDuration
+    public static function fromDuration(string $s): self
     {
-        return new ReadableDuration(Time::ParseDuration($s)->Nanoseconds());
+        return new self(Time::ParseDuration($s)->Nanoseconds());
     }
 
     /**
@@ -51,6 +50,6 @@ class ReadableDuration extends Time\Duration implements \JsonSerializable, Scala
      */
     public function jsonSerialize(): string
     {
-        return (string)$this;
+        return (string) $this;
     }
 }

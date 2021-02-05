@@ -16,18 +16,19 @@ namespace DCarbone\PHPConsulAPI;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 /**
  * Class HasSettableStringTags
- * @package DCarbone\PHPConsulAPI
  */
-trait HasSettableStringTags {
+trait HasSettableStringTags
+{
     /**
      * @param string[] $tags
      * @return $this
      */
-    public function setTags(array $tags) {
+    public function setTags(array $tags)
+    {
         $this->Tags = $tags;
         return $this;
     }
@@ -36,7 +37,8 @@ trait HasSettableStringTags {
      * @param string $tag
      * @return $this
      */
-    public function addTag(string $tag) {
+    public function addTag(string $tag)
+    {
         $this->Tags[] = $tag;
         return $this;
     }

@@ -16,16 +16,15 @@ namespace DCarbone\PHPConsulAPI;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 /**
  * Trait ResponseErrorTrait
- * @package DCarbone\PHPConsulAPI
  */
 trait ResponseErrorTrait
 {
-    /** @var null|\DCarbone\PHPConsulAPI\Error */
-    public $Err = null;
+    /** @var \DCarbone\PHPConsulAPI\Error|null */
+    public ?Error $Err = null;
 
     /**
      * @return \DCarbone\PHPConsulAPI\Error|null

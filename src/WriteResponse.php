@@ -16,18 +16,17 @@ namespace DCarbone\PHPConsulAPI;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 /**
  * Class WriteResponse
- * @package DCarbone\PHPConsulAPI
  */
 class WriteResponse implements \ArrayAccess
 {
     /** @var \DCarbone\PHPConsulAPI\WriteMeta|null */
-    public $WriteMeta = null;
+    public ?WriteMeta $WriteMeta = null;
     /** @var \DCarbone\PHPConsulAPI\Error|null */
-    public $Err = null;
+    public ?Error $Err = null;
 
     /**
      * AbstractValuedWriteResponse constructor.
@@ -37,7 +36,7 @@ class WriteResponse implements \ArrayAccess
     public function __construct(?WriteMeta $wm, ?Error $err)
     {
         $this->WriteMeta = $wm;
-        $this->Err = $err;
+        $this->Err       = $err;
     }
 
     /**
@@ -62,7 +61,7 @@ class WriteResponse implements \ArrayAccess
      */
     public function offsetExists($offset)
     {
-        return is_int($offset) && 0 <= $offset && $offset < 3;
+        return \is_int($offset) && 0 <= $offset && $offset < 3;
     }
 
     /**
@@ -73,11 +72,11 @@ class WriteResponse implements \ArrayAccess
     {
         if (0 === $offset) {
             return $this->WriteMeta;
-        } elseif (1 === $offset) {
-            return $this->Err;
-        } else {
-            throw new \OutOfBoundsException(sprintf('Offset %s does not exist', var_export($offset, true)));
         }
+        if (1 === $offset) {
+            return $this->Err;
+        }
+        throw new \OutOfBoundsException(\sprintf('Offset %s does not exist', \var_export($offset, true)));
     }
 
     /**
@@ -86,7 +85,7 @@ class WriteResponse implements \ArrayAccess
      */
     public function offsetSet($offset, $value)
     {
-        throw new \BadMethodCallException(sprintf('Cannot call %s on %s', __METHOD__, __CLASS__));
+        throw new \BadMethodCallException(\sprintf('Cannot call %s on %s', __METHOD__, __CLASS__));
     }
 
     /**
@@ -94,6 +93,6 @@ class WriteResponse implements \ArrayAccess
      */
     public function offsetUnset($offset)
     {
-        throw new \BadMethodCallException(sprintf('Cannot call %s on %s', __METHOD__, __CLASS__));
+        throw new \BadMethodCallException(\sprintf('Cannot call %s on %s', __METHOD__, __CLASS__));
     }
 }

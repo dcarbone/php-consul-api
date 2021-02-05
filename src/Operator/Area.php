@@ -16,13 +16,12 @@ namespace DCarbone\PHPConsulAPI\Operator;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class Area
- * @package DCarbone\PHPConsulAPI\Operator
  */
 class Area extends AbstractModel
 {
@@ -47,7 +46,7 @@ class Area extends AbstractModel
      * @param string $id
      * @return Area
      */
-    public function setID(string $id): Area
+    public function setID(string $id): self
     {
         $this->ID = $id;
         return $this;
@@ -65,7 +64,7 @@ class Area extends AbstractModel
      * @param string $peerDatacenter
      * @return Area
      */
-    public function setPeerDatacenter(string $peerDatacenter): Area
+    public function setPeerDatacenter(string $peerDatacenter): self
     {
         $this->PeerDatacenter = $peerDatacenter;
         return $this;
@@ -83,7 +82,7 @@ class Area extends AbstractModel
      * @param string[] $retryJoin
      * @return Area
      */
-    public function setRetryJoin(array $retryJoin): Area
+    public function setRetryJoin(array $retryJoin): self
     {
         $this->RetryJoin = $retryJoin;
         return $this;
@@ -101,7 +100,7 @@ class Area extends AbstractModel
      * @param bool $useTLS
      * @return Area
      */
-    public function setUseTLS(bool $useTLS): Area
+    public function setUseTLS(bool $useTLS): self
     {
         $this->UseTLS = $useTLS;
         return $this;

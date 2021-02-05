@@ -16,7 +16,7 @@ namespace DCarbone\PHPConsulAPI\Status;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\QueryOptions;
@@ -26,14 +26,13 @@ use DCarbone\PHPConsulAPI\ValuedStringsResponse;
 
 /**
  * Class StatusClient
- * @package DCarbone\PHPConsulAPI\Status
  */
 class StatusClient extends AbstractClient
 {
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\ValuedStringResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\ValuedStringResponse
      */
     public function LeaderWithQueryOptions(?QueryOptions $opts): ValuedStringResponse
     {
@@ -52,8 +51,8 @@ class StatusClient extends AbstractClient
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\ValuedStringResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\ValuedStringResponse
      */
     public function Leader(): ValuedStringResponse
     {
@@ -62,8 +61,8 @@ class StatusClient extends AbstractClient
 
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\ValuedStringsResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\ValuedStringsResponse
      */
     public function PeersWithQueryOptions(?QueryOptions $opts): ValuedStringsResponse
     {
@@ -81,8 +80,8 @@ class StatusClient extends AbstractClient
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\ValuedStringsResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\ValuedStringsResponse
      */
     public function Peers(): ValuedStringsResponse
     {

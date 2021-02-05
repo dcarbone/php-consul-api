@@ -16,13 +16,12 @@ namespace DCarbone\PHPConsulAPI;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\Go\Time;
 
 /**
  * Class WriteOptions
- * @package DCarbone\PHPConsulAPI
  */
 class WriteOptions extends AbstractModel implements RequestOptions
 {
@@ -123,7 +122,7 @@ class WriteOptions extends AbstractModel implements RequestOptions
     }
 
     /**
-     * @param \DCarbone\Go\Time\Duration|string|int|float|null $timeout
+     * @param \DCarbone\Go\Time\Duration|float|int|string|null $timeout
      */
     public function setTimeout($timeout): void
     {
@@ -145,7 +144,7 @@ class WriteOptions extends AbstractModel implements RequestOptions
             $r->header->set('X-Consul-Token', $this->Token);
         }
         if (0 !== $this->RelayFactor) {
-            $r->params->set('relay-factor', (string)$this->RelayFactor);
+            $r->params->set('relay-factor', (string) $this->RelayFactor);
         }
 
         if (null !== $this->Timeout) {

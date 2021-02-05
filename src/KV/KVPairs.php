@@ -16,14 +16,13 @@ namespace DCarbone\PHPConsulAPI\KV;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\AbstractModels;
 
 /**
  * Class KVPairs
- * @package DCarbone\PHPConsulAPI\KV
  */
 class KVPairs extends AbstractModels
 {
@@ -31,7 +30,7 @@ class KVPairs extends AbstractModels
     protected string $containedClass = KVPair::class;
 
     /**
-     * @param null|array $data
+     * @param array|null $data
      * @return \DCarbone\PHPConsulAPI\AbstractModel
      */
     protected function newChild(?array $data): AbstractModel

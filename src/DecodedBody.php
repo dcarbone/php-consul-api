@@ -16,11 +16,10 @@ namespace DCarbone\PHPConsulAPI;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 /**
  * Class DecodedBody
- * @package DCarbone\PHPConsulAPI
  */
 final class DecodedBody implements \ArrayAccess
 {
@@ -37,7 +36,7 @@ final class DecodedBody implements \ArrayAccess
     public function __construct($decoded, ?Error $err)
     {
         $this->Decoded = $decoded;
-        $this->Err = $err;
+        $this->Err     = $err;
     }
 
     /**
@@ -60,9 +59,9 @@ final class DecodedBody implements \ArrayAccess
      * @param mixed $offset
      * @return bool
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
-        return is_int($offset) && 0 <= $offset && $offset < 2;
+        return \is_int($offset) && 0 <= $offset && $offset < 2;
     }
 
     /**
@@ -73,11 +72,11 @@ final class DecodedBody implements \ArrayAccess
     {
         if (0 === $offset) {
             return $this->Decoded;
-        } elseif (1 === $offset) {
-            return $this->Err;
-        } else {
-            throw new \OutOfBoundsException(sprintf('Offset %s does not exist', var_export($offset, true)));
         }
+        if (1 === $offset) {
+            return $this->Err;
+        }
+        throw new \OutOfBoundsException(\sprintf('Offset %s does not exist', \var_export($offset, true)));
     }
 
     /**
@@ -86,7 +85,7 @@ final class DecodedBody implements \ArrayAccess
      */
     public function offsetSet($offset, $value)
     {
-        throw new \BadMethodCallException(sprintf('Cannot call method %s on class %s', __METHOD__, __CLASS__));
+        throw new \BadMethodCallException(\sprintf('Cannot call method %s on class %s', __METHOD__, __CLASS__));
     }
 
     /**
@@ -94,6 +93,6 @@ final class DecodedBody implements \ArrayAccess
      */
     public function offsetUnset($offset)
     {
-        throw new \BadMethodCallException(sprintf('Cannot call method %s on class %s', __METHOD__, __CLASS__));
+        throw new \BadMethodCallException(\sprintf('Cannot call method %s on class %s', __METHOD__, __CLASS__));
     }
 }

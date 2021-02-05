@@ -16,7 +16,7 @@ namespace DCarbone\PHPConsulAPI\Health;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\AbstractModels;
@@ -24,7 +24,6 @@ use DCarbone\PHPConsulAPI\Consul;
 
 /**
  * Class HealthChecks
- * @package DCarbone\PHPConsulAPI\Health
  */
 class HealthChecks extends AbstractModels
 {
@@ -39,7 +38,7 @@ class HealthChecks extends AbstractModels
         $passing = $warning = $critical = $maintenance = false;
         foreach ($this as $check) {
             /** @var \DCarbone\PHPConsulAPI\Health\HealthCheck $check */
-            if ($check->CheckID === Consul::NodeMaint || 0 === strpos($check->CheckID, Consul::ServiceMaintPrefix)) {
+            if (Consul::NodeMaint === $check->CheckID || 0 === \strpos($check->CheckID, Consul::ServiceMaintPrefix)) {
                 // TODO: Maybe just return maintenance right now...?
                 $maintenance = true;
                 continue;
@@ -62,19 +61,21 @@ class HealthChecks extends AbstractModels
 
         if ($maintenance) {
             return Consul::HealthMaint;
-        } elseif ($critical) {
+        }
+        if ($critical) {
             return Consul::HealthCritical;
-        } elseif ($warning) {
+        }
+        if ($warning) {
             return Consul::HealthWarning;
-        } elseif ($passing) {
-            return Consul::HealthPassing;
-        } else {
+        }
+        if ($passing) {
             return Consul::HealthPassing;
         }
+        return Consul::HealthPassing;
     }
 
     /**
-     * @param null|array $data
+     * @param array|null $data
      * @return \DCarbone\PHPConsulAPI\AbstractModel
      */
     protected function newChild(?array $data): AbstractModel

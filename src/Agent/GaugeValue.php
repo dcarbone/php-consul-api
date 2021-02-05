@@ -16,13 +16,12 @@ namespace DCarbone\PHPConsulAPI\Agent;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class GaugeValue
- * @package DCarbone\PHPConsulAPI\Agent
  */
 class GaugeValue extends AbstractModel
 {
@@ -45,7 +44,7 @@ class GaugeValue extends AbstractModel
      * @param string $name
      * @return GaugeValue
      */
-    public function setName(string $name): GaugeValue
+    public function setName(string $name): self
     {
         $this->Name = $name;
         return $this;
@@ -63,7 +62,7 @@ class GaugeValue extends AbstractModel
      * @param float $value
      * @return GaugeValue
      */
-    public function setValue(float $value): GaugeValue
+    public function setValue(float $value): self
     {
         $this->Value = $value;
         return $this;
@@ -81,7 +80,7 @@ class GaugeValue extends AbstractModel
      * @param array $labels
      * @return GaugeValue
      */
-    public function setLabels(array $labels): GaugeValue
+    public function setLabels(array $labels): self
     {
         $this->Labels = $labels;
         return $this;

@@ -16,13 +16,12 @@ namespace DCarbone\PHPConsulAPI\Agent;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class AgentCheckUpdate
- * @package DCarbone\PHPConsulAPI\Agent
  */
 class AgentCheckUpdate extends AbstractModel
 {
@@ -43,7 +42,7 @@ class AgentCheckUpdate extends AbstractModel
      * @param string $status
      * @return AgentCheckUpdate
      */
-    public function setStatus(string $status): AgentCheckUpdate
+    public function setStatus(string $status): self
     {
         $this->Status = $status;
         return $this;
@@ -61,7 +60,7 @@ class AgentCheckUpdate extends AbstractModel
      * @param string $output
      * @return AgentCheckUpdate
      */
-    public function setOutput(string $output): AgentCheckUpdate
+    public function setOutput(string $output): self
     {
         $this->Output = $output;
         return $this;
@@ -72,6 +71,6 @@ class AgentCheckUpdate extends AbstractModel
      */
     public function __toString(): string
     {
-        return sprintf('%s: %s', $this->Status, $this->Output);
+        return \sprintf('%s: %s', $this->Status, $this->Output);
     }
 }

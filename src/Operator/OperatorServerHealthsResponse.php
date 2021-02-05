@@ -16,14 +16,13 @@ namespace DCarbone\PHPConsulAPI\Operator;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractValuedResponse;
 use DCarbone\PHPConsulAPI\Error;
 
 /**
  * Class OperatorServerHealthsResponse
- * @package DCarbone\PHPConsulAPI\Operator
  */
 class OperatorServerHealthsResponse extends AbstractValuedResponse implements \ArrayAccess
 {
@@ -60,7 +59,7 @@ class OperatorServerHealthsResponse extends AbstractValuedResponse implements \A
      */
     public function offsetExists($offset)
     {
-        return is_int($offset) && 0 <= $offset && $offset <= 1;
+        return \is_int($offset) && 0 <= $offset && $offset <= 1;
     }
 
     /**
@@ -71,10 +70,10 @@ class OperatorServerHealthsResponse extends AbstractValuedResponse implements \A
     {
         if (0 === $offset) {
             return $this->ServerHealths;
-        } elseif (1 === $offset) {
-            return $this->Err;
-        } else {
-            throw new \OutOfRangeException(sprintf('Offset %s does not exist', var_export($offset, true)));
         }
+        if (1 === $offset) {
+            return $this->Err;
+        }
+        throw new \OutOfRangeException(\sprintf('Offset %s does not exist', \var_export($offset, true)));
     }
 }

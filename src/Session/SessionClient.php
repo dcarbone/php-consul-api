@@ -16,7 +16,7 @@ namespace DCarbone\PHPConsulAPI\Session;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\Go\HTTP;
 use DCarbone\PHPConsulAPI\AbstractClient;
@@ -29,15 +29,14 @@ use DCarbone\PHPConsulAPI\WriteResponse;
 
 /**
  * Class SessionClient
- * @package DCarbone\PHPConsulAPI\Session
  */
 class SessionClient extends AbstractClient
 {
     /**
      * @param \DCarbone\PHPConsulAPI\Session\SessionEntry|null $sessionEntry
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      */
     public function CreateNoChecks(?SessionEntry $sessionEntry = null, ?WriteOptions $opts = null): ValuedWriteStringResponse
     {
@@ -47,8 +46,8 @@ class SessionClient extends AbstractClient
             $body = clone $sessionEntry;
         }
 
-        $body->Checks = [];
-        $body->NodeChecks = [];
+        $body->Checks        = [];
+        $body->NodeChecks    = [];
         $body->ServiceChecks = [];
 
         return $this->_create('v1/session/create', $body, $opts);
@@ -57,8 +56,8 @@ class SessionClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\Session\SessionEntry|null $sessionEntry
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      */
     public function Create(?SessionEntry $sessionEntry = null, ?WriteOptions $opts = null): ValuedWriteStringResponse
     {
@@ -68,12 +67,12 @@ class SessionClient extends AbstractClient
     /**
      * @param string $id
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\WriteResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
      */
     public function Destroy(string $id, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = new Request(HTTP\MethodPut, sprintf('v1/session/destroy/%s', $id), $this->config, null);
+        $r = new Request(HTTP\MethodPut, \sprintf('v1/session/destroy/%s', $id), $this->config, null);
         $r->applyOptions($opts);
 
         [$duration, $_, $err] = $this->_requireOK($this->_do($r));
@@ -87,16 +86,16 @@ class SessionClient extends AbstractClient
     /**
      * @param string $id
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\Session\SessionEntriesWriteResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntriesWriteResponse
      */
     public function Renew(string $id, ?WriteOptions $opts = null): SessionEntriesWriteResponse
     {
-        $r = new Request(HTTP\MethodPut, sprintf('v1/session/renew/%s', $id), $this->config, null);
+        $r = new Request(HTTP\MethodPut, \sprintf('v1/session/renew/%s', $id), $this->config, null);
         $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
-        list ($duration, $response, $err) = $this->_do($r);
+        [$duration, $response, $err] = $this->_do($r);
         if (null !== $err) {
             return new SessionEntriesWriteResponse(null, null, $err);
         }
@@ -110,14 +109,16 @@ class SessionClient extends AbstractClient
         }
 
         if (200 !== $code) {
-            return new SessionEntriesWriteResponse(null,
+            return new SessionEntriesWriteResponse(
+                null,
                 $wm,
-                new Error(sprintf(
+                new Error(\sprintf(
                     '%s::renew - Unexpected response code %d.  Reason: %s',
-                    get_class($this),
+                    \get_class($this),
                     $code,
                     $response->getReasonPhrase()
-                )));
+                ))
+            );
         }
 
         [$data, $err] = $this->decodeBody($response->getBody());
@@ -127,29 +128,29 @@ class SessionClient extends AbstractClient
     /**
      * @param string $id
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\Session\SessionEntriesQueryResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntriesQueryResponse
      */
     public function Info(string $id, ?QueryOptions $opts = null): SessionEntriesQueryResponse
     {
-        return $this->_get(sprintf('v1/session/info/%s', $id), $opts);
+        return $this->_get(\sprintf('v1/session/info/%s', $id), $opts);
     }
 
     /**
      * @param string $node
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\Session\SessionEntriesQueryResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntriesQueryResponse
      */
     public function Node(string $node, ?QueryOptions $opts = null): SessionEntriesQueryResponse
     {
-        return $this->_get(sprintf('v1/session/node/%s', $node), $opts);
+        return $this->_get(\sprintf('v1/session/node/%s', $node), $opts);
     }
 
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\Session\SessionEntriesQueryResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntriesQueryResponse
      */
     public function List(?QueryOptions $opts = null): SessionEntriesQueryResponse
     {
@@ -159,8 +160,8 @@ class SessionClient extends AbstractClient
     /**
      * @param string $path
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\Session\SessionEntriesQueryResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntriesQueryResponse
      */
     private function _get(string $path, ?QueryOptions $opts): SessionEntriesQueryResponse
     {
@@ -183,8 +184,8 @@ class SessionClient extends AbstractClient
      * @param string $path
      * @param \DCarbone\PHPConsulAPI\Session\SessionEntry $entry
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      */
     private function _create(string $path, SessionEntry $entry, ?WriteOptions $opts): ValuedWriteStringResponse
     {

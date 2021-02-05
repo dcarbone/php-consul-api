@@ -16,7 +16,7 @@ namespace DCarbone\PHPConsulAPI;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\Go\Time;
 use GuzzleHttp\Client;
@@ -25,18 +25,17 @@ use GuzzleHttp\RequestOptions;
 
 /**
  * Class Config
- * @package DCarbone\PHPConsulAPI
  */
 class Config
 {
     private const DefaultConfig = [
-        'Address' => '127.0.0.1:8500',
-        'Scheme' => 'http',
-        'JSONEncodeOpts' => JSON_UNESCAPED_SLASHES,
+        'Address'        => '127.0.0.1:8500',
+        'Scheme'         => 'http',
+        'JSONEncodeOpts' => \JSON_UNESCAPED_SLASHES,
     ];
 
     private const DefaultRequestOptions = [
-        RequestOptions::HTTP_ERRORS => false,
+        RequestOptions::HTTP_ERRORS    => false,
         RequestOptions::DECODE_CONTENT => false,
     ];
 
@@ -157,9 +156,9 @@ class Config
         $k = $this->getKeyFile();
         if (('' !== $k && '' === $c) || ('' !== $c && '' === $k)) {
             throw new \InvalidArgumentException(
-                sprintf(
+                \sprintf(
                     '%s - CertFile and KeyFile must be both either empty or populated.  Key: %s; Cert: %s',
-                    get_class($this),
+                    \get_class($this),
                     $k,
                     $c
                 )
@@ -180,7 +179,7 @@ class Config
      * @param \DCarbone\PHPConsulAPI\Config|null $inc
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public static function merge(?Config $inc): Config
+    public static function merge(?self $inc): self
     {
         $actual = static::newDefaultConfig();
         if (null === $inc) {
@@ -236,7 +235,7 @@ class Config
      *
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public static function newDefaultConfig(): Config
+    public static function newDefaultConfig(): self
     {
         return new static(self::_getDefaultConfig());
     }
@@ -253,7 +252,7 @@ class Config
      * @param string $address
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setAddress(string $address): Config
+    public function setAddress(string $address): self
     {
         $this->Address = $address;
         return $this;
@@ -271,7 +270,7 @@ class Config
      * @param string $scheme
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setScheme(string $scheme): Config
+    public function setScheme(string $scheme): self
     {
         $this->Scheme = $scheme;
         return $this;
@@ -289,7 +288,7 @@ class Config
      * @param string $datacenter
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setDatacenter(string $datacenter): Config
+    public function setDatacenter(string $datacenter): self
     {
         $this->Datacenter = $datacenter;
         return $this;
@@ -323,7 +322,7 @@ class Config
      * @param mixed $waitTime
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setWaitTime($waitTime): Config
+    public function setWaitTime($waitTime): self
     {
         $this->WaitTime = Time::Duration($waitTime);
         return $this;
@@ -341,7 +340,7 @@ class Config
      * @param string $token
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setToken(string $token): Config
+    public function setToken(string $token): self
     {
         $this->Token = $token;
         return $this;
@@ -359,7 +358,7 @@ class Config
      * @param string $tokenFile
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setTokenFile(string $tokenFile): Config
+    public function setTokenFile(string $tokenFile): self
     {
         $this->TokenFile = $tokenFile;
         return $this;
@@ -377,7 +376,7 @@ class Config
      * @param bool $insecureSkipVerify
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setInsecureSkipVerify(bool $insecureSkipVerify): Config
+    public function setInsecureSkipVerify(bool $insecureSkipVerify): self
     {
         $this->InsecureSkipVerify = $insecureSkipVerify;
         return $this;
@@ -392,19 +391,19 @@ class Config
     }
 
     /**
-     * @param string|HttpAuth $httpAuth
+     * @param HttpAuth|string $httpAuth
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setHttpAuth($httpAuth): Config
+    public function setHttpAuth($httpAuth): self
     {
-        if (is_string($httpAuth)) {
-            $colon = strpos($httpAuth, ':');
+        if (\is_string($httpAuth)) {
+            $colon = \strpos($httpAuth, ':');
             if (false === $colon) {
                 $username = $httpAuth;
                 $password = null;
             } else {
-                $username = substr($httpAuth, 0, $colon);
-                $password = substr($httpAuth, $colon + 1);
+                $username = \substr($httpAuth, 0, $colon);
+                $password = \substr($httpAuth, $colon + 1);
             }
             $httpAuth = new HttpAuth($username, $password);
         }
@@ -415,10 +414,10 @@ class Config
         }
 
         throw new \InvalidArgumentException(
-            sprintf(
+            \sprintf(
                 '%s::setHttpAuth - Value is expected to be string of "username:password" or instance of "\\DCarbone\\PHPConsulApi\\HttpAuth", %s seen.',
-                get_class($this),
-                is_string($httpAuth) ? $httpAuth : gettype($httpAuth)
+                \get_class($this),
+                \is_string($httpAuth) ? $httpAuth : \gettype($httpAuth)
             )
         );
     }
@@ -435,7 +434,7 @@ class Config
      * @param string $caFile
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setCAFile(string $caFile): Config
+    public function setCAFile(string $caFile): self
     {
         $this->CAFile = $caFile;
         return $this;
@@ -453,7 +452,7 @@ class Config
      * @param string $certFile
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setCertFile(string $certFile): Config
+    public function setCertFile(string $certFile): self
     {
         $this->CertFile = $certFile;
         return $this;
@@ -471,7 +470,7 @@ class Config
      * @param string $keyFile
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setKeyFile(string $keyFile): Config
+    public function setKeyFile(string $keyFile): self
     {
         $this->KeyFile = $keyFile;
         return $this;
@@ -489,7 +488,7 @@ class Config
      * @param \GuzzleHttp\ClientInterface $httpClient
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setHttpClient(ClientInterface $httpClient): Config
+    public function setHttpClient(ClientInterface $httpClient): self
     {
         $this->HttpClient = $httpClient;
         return $this;
@@ -507,7 +506,7 @@ class Config
      * @param int $jsonEncodeOpts
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setJSONEncodeOpts(int $jsonEncodeOpts): Config
+    public function setJSONEncodeOpts(int $jsonEncodeOpts): self
     {
         $this->JSONEncodeOpts = $jsonEncodeOpts;
         return $this;
@@ -528,36 +527,15 @@ class Config
         }
 
         if ('' !== ($c = $this->getCertFile())) {
-            $opts[RequestOptions::CERT] = $c;
+            $opts[RequestOptions::CERT]    = $c;
             $opts[RequestOptions::SSL_KEY] = $this->getKeyFile();
         }
 
-        if (null !== $request->timeout && 0 < ($ttl = intval($request->timeout->Seconds(), 10))) {
+        if (null !== $request->timeout && 0 < ($ttl = \intval($request->timeout->Seconds(), 10))) {
             $opts[RequestOptions::TIMEOUT] = $ttl;
         }
 
         return $opts;
-    }
-
-    /**
-     * @param string $param
-     * @return string|null
-     */
-    protected static function _tryGetEnvParam(string $param): ?string
-    {
-        if (isset($_ENV[$param])) {
-            return $_ENV[$param];
-        }
-
-        if (false !== ($value = getenv($param))) {
-            return $value;
-        }
-
-        if (isset($_SERVER[$param])) {
-            return $_SERVER[$param];
-        }
-
-        return null;
     }
 
     /**
@@ -587,6 +565,27 @@ class Config
     }
 
     /**
+     * @param string $param
+     * @return string|null
+     */
+    protected static function _tryGetEnvParam(string $param): ?string
+    {
+        if (isset($_ENV[$param])) {
+            return $_ENV[$param];
+        }
+
+        if (false !== ($value = \getenv($param))) {
+            return $value;
+        }
+
+        if (isset($_SERVER[$param])) {
+            return $_SERVER[$param];
+        }
+
+        return null;
+    }
+
+    /**
      * @return array
      */
     private static function _getDefaultConfig(): array
@@ -610,11 +609,11 @@ class Config
             } elseif (Consul::HTTPClientKeyEnvName === $k) {
                 $conf['KeyFile'] = $v;
             } elseif (Consul::HTTPSSLEnvName === $k) {
-                if ((bool)$v) {
+                if ((bool) $v) {
                     $conf['Scheme'] = 'https';
                 }
             } elseif (Consul::HTTPSSLVerifyEnvName === $k) {
-                if ((bool)$v) {
+                if ((bool) $v) {
                     $conf['InsecureSkipVerify'] = true;
                 }
             }

@@ -16,7 +16,7 @@ namespace DCarbone\PHPConsulAPI\KV;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractValuedResponse;
 use DCarbone\PHPConsulAPI\Error;
@@ -25,7 +25,6 @@ use DCarbone\PHPConsulAPI\ResponseQueryMetaTrait;
 
 /**
  * Class KVTxnAPIResponse
- * @package DCarbone\PHPConsulAPI\KV
  */
 class KVTxnAPIResponse extends AbstractValuedResponse implements \ArrayAccess
 {
@@ -46,9 +45,9 @@ class KVTxnAPIResponse extends AbstractValuedResponse implements \ArrayAccess
     public function __construct(bool $ok, ?KVTxnResponse $resp, ?QueryMeta $qm, ?Error $err)
     {
         parent::__construct($err);
-        $this->OK = $ok;
+        $this->OK            = $ok;
         $this->KVTxnResponse = $resp;
-        $this->QueryMeta = $qm;
+        $this->QueryMeta     = $qm;
     }
 
     /**
@@ -65,7 +64,7 @@ class KVTxnAPIResponse extends AbstractValuedResponse implements \ArrayAccess
      */
     public function offsetExists($offset)
     {
-        return is_int($offset) && 0 <= $offset && $offset < 4;
+        return \is_int($offset) && 0 <= $offset && $offset < 4;
     }
 
     /**
@@ -76,14 +75,16 @@ class KVTxnAPIResponse extends AbstractValuedResponse implements \ArrayAccess
     {
         if (0 === $offset) {
             return $this->OK;
-        } elseif (1 === $offset) {
-            return $this->KVTxnResponse;
-        } elseif (2 === $offset) {
-            return $this->QueryMeta;
-        } elseif (3 === $this->Err) {
-            return $this->Err;
-        } else {
-            throw new \OutOfBoundsException(sprintf('Offset %s does not exist', var_export($offset, true)));
         }
+        if (1 === $offset) {
+            return $this->KVTxnResponse;
+        }
+        if (2 === $offset) {
+            return $this->QueryMeta;
+        }
+        if (3 === $this->Err) {
+            return $this->Err;
+        }
+        throw new \OutOfBoundsException(\sprintf('Offset %s does not exist', \var_export($offset, true)));
     }
 }

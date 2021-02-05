@@ -16,7 +16,7 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 const ZeroThreshold = 1.0e-6;
 
@@ -26,8 +26,8 @@ const ZeroThreshold = 1.0e-6;
  * @param array $vec1
  * @param array $vec2
  * @return array(
- * @type array
- * @type float
+ * @var array
+ * @var float
  * )
  */
 function unitVectorAt(array $vec1, array $vec2): array
@@ -35,18 +35,18 @@ function unitVectorAt(array $vec1, array $vec2): array
     $ret = diff($vec1, $vec2);
 
     if (($mag = magnitude($ret)) && $mag > ZeroThreshold) {
-        return [mul($ret, 1.0 / $mag), (float)$mag];
+        return [mul($ret, 1.0 / $mag), (float) $mag];
     }
 
     foreach ($ret as $k => &$v) {
-        $v = lcg_value() - 0.5;
+        $v = \lcg_value() - 0.5;
     }
 
     if (($mag = magnitude($ret)) && $mag > ZeroThreshold) {
         return [mul($ret, 1.0 / $mag), 0.0];
     }
 
-    $ret = array_fill(0, count($ret), 0.0);
+    $ret    = \array_fill(0, \count($ret), 0.0);
     $ret[0] = 1.0;
     return $ret;
 }
@@ -103,5 +103,5 @@ function magnitude(array $vec): float
     foreach ($vec as $k => $v) {
         $sum += ($v * $v);
     }
-    return sqrt($sum);
+    return \sqrt($sum);
 }

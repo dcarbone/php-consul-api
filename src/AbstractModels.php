@@ -16,11 +16,10 @@ namespace DCarbone\PHPConsulAPI;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 /**
  * Class AbstractModels
- * @package DCarbone\PHPConsulAPI
  */
 abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
 {
@@ -39,16 +38,16 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
         if (null === $children) {
             return;
         }
-        foreach (array_filter($children) as $child) {
-            if (is_array($child)) {
+        foreach (\array_filter($children) as $child) {
+            if (\is_array($child)) {
                 $this->_list[] = $this->newChild($child);
             } elseif ($child instanceof $this->containedClass) {
                 $this->_list[] = $child;
             } else {
                 throw new \InvalidArgumentException(
-                    sprintf(
-                        get_class($this) . ' accepts only ' . $this->containedClass . ' as a child, saw %s',
-                        is_object($child) ? get_class($child) : gettype($child)
+                    \sprintf(
+                        \get_class($this) . ' accepts only ' . $this->containedClass . ' as a child, saw %s',
+                        \is_object($child) ? \get_class($child) : \gettype($child)
                     )
                 );
             }
@@ -64,9 +63,9 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
             $this->_list[] = $value;
         } else {
             throw new \InvalidArgumentException(
-                sprintf(
+                \sprintf(
                     '%s accepts only objects of type %s or null as values',
-                    get_class($this),
+                    \get_class($this),
                     $this->containedClass,
                 )
             );
@@ -78,12 +77,12 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
      */
     public function current()
     {
-        return current($this->_list);
+        return \current($this->_list);
     }
 
     public function next()
     {
-        next($this->_list);
+        \next($this->_list);
     }
 
     /**
@@ -91,7 +90,7 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
      */
     public function key()
     {
-        return key($this->_list);
+        return \key($this->_list);
     }
 
     /**
@@ -99,12 +98,12 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
      */
     public function valid()
     {
-        return null !== key($this->_list);
+        return null !== \key($this->_list);
     }
 
     public function rewind()
     {
-        reset($this->_list);
+        \reset($this->_list);
     }
 
     /**
@@ -113,18 +112,18 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
      */
     public function offsetExists($offset)
     {
-        return is_int($offset) && isset($this->_list[$offset]);
+        return \is_int($offset) && isset($this->_list[$offset]);
     }
 
     public function offsetGet($offset)
     {
-        if (is_int($offset) && isset($this->_list[$offset])) {
+        if (\is_int($offset) && isset($this->_list[$offset])) {
             return $this->_list[$offset];
         }
         throw new \OutOfRangeException(
-            sprintf(
+            \sprintf(
                 'Offset %s does not exist in this list',
-                is_int($offset) ? (string)$offset : gettype($offset)
+                \is_int($offset) ? (string) $offset : \gettype($offset)
             )
         );
     }
@@ -135,7 +134,7 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
      */
     public function offsetSet($offset, $value)
     {
-        if (!is_int($offset)) {
+        if (!\is_int($offset)) {
             throw new \InvalidArgumentException('Offset must be int');
         }
         if (null !== $value && !($value instanceof $this->containedClass)) {
@@ -157,7 +156,7 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
      */
     public function count(): int
     {
-        return count($this->_list);
+        return \count($this->_list);
     }
 
     /**
@@ -165,7 +164,7 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
      */
     public function jsonSerialize(): array
     {
-        return array_filter((array)$this->_list);
+        return \array_filter((array) $this->_list);
     }
 
     /**

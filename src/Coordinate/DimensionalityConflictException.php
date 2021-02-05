@@ -16,11 +16,10 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 /**
  * Class DimensionalityConflictException
- * @package DCarbone\PHPConsulAPI\Coordinate
  */
 class DimensionalityConflictException extends \DomainException
 {
@@ -32,7 +31,7 @@ class DimensionalityConflictException extends \DomainException
      * @param int $code
      * @param \Throwable|null $previous
      */
-    public function __construct($message = "", $code = 0, \Throwable $previous = null)
+    public function __construct($message = '', $code = 0, \Throwable $previous = null)
     {
         parent::__construct('' === $message ? static::DefaultMessage : $message, $code, $previous);
     }

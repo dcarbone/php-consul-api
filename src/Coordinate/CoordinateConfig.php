@@ -16,13 +16,12 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class CoordinateConfig
- * @package DCarbone\PHPConsulAPI\Coordinate
  */
 class CoordinateConfig extends AbstractModel
 {
@@ -55,7 +54,7 @@ class CoordinateConfig extends AbstractModel
     /**
      * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateConfig
      */
-    public static function Default(): CoordinateConfig
+    public static function Default(): self
     {
         return new static(
             [
@@ -83,7 +82,7 @@ class CoordinateConfig extends AbstractModel
      * @param int $dimensionality
      * @return CoordinateConfig
      */
-    public function setDimensionality(int $dimensionality): CoordinateConfig
+    public function setDimensionality(int $dimensionality): self
     {
         $this->Dimensionality = $dimensionality;
         return $this;
@@ -101,7 +100,7 @@ class CoordinateConfig extends AbstractModel
      * @param float $vivaldiErrorMax
      * @return CoordinateConfig
      */
-    public function setVivaldiErrorMax(float $vivaldiErrorMax): CoordinateConfig
+    public function setVivaldiErrorMax(float $vivaldiErrorMax): self
     {
         $this->VivaldiErrorMax = $vivaldiErrorMax;
         return $this;
@@ -119,7 +118,7 @@ class CoordinateConfig extends AbstractModel
      * @param float $vivaldiCE
      * @return CoordinateConfig
      */
-    public function setVivaldiCE(float $vivaldiCE): CoordinateConfig
+    public function setVivaldiCE(float $vivaldiCE): self
     {
         $this->VivaldiCE = $vivaldiCE;
         return $this;
@@ -137,7 +136,7 @@ class CoordinateConfig extends AbstractModel
      * @param float $vivaldiCC
      * @return CoordinateConfig
      */
-    public function setVivaldiCC(float $vivaldiCC): CoordinateConfig
+    public function setVivaldiCC(float $vivaldiCC): self
     {
         $this->VivaldiCC = $vivaldiCC;
         return $this;
@@ -155,7 +154,7 @@ class CoordinateConfig extends AbstractModel
      * @param int $adjustmentWindowSize
      * @return CoordinateConfig
      */
-    public function setAdjustmentWindowSize(int $adjustmentWindowSize): CoordinateConfig
+    public function setAdjustmentWindowSize(int $adjustmentWindowSize): self
     {
         $this->AdjustmentWindowSize = $adjustmentWindowSize;
         return $this;
@@ -173,7 +172,7 @@ class CoordinateConfig extends AbstractModel
      * @param float $heightMin
      * @return CoordinateConfig
      */
-    public function setHeightMin(float $heightMin): CoordinateConfig
+    public function setHeightMin(float $heightMin): self
     {
         $this->HeightMin = $heightMin;
         return $this;
@@ -191,7 +190,7 @@ class CoordinateConfig extends AbstractModel
      * @param int $latencyFilterSize
      * @return CoordinateConfig
      */
-    public function setLatencyFilterSize(int $latencyFilterSize): CoordinateConfig
+    public function setLatencyFilterSize(int $latencyFilterSize): self
     {
         $this->LatencyFilterSize = $latencyFilterSize;
         return $this;
@@ -209,7 +208,7 @@ class CoordinateConfig extends AbstractModel
      * @param float $gravityRho
      * @return CoordinateConfig
      */
-    public function setGravityRho(float $gravityRho): CoordinateConfig
+    public function setGravityRho(float $gravityRho): self
     {
         $this->GravityRho = $gravityRho;
         return $this;

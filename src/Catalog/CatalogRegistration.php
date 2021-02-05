@@ -16,7 +16,7 @@ namespace DCarbone\PHPConsulAPI\Catalog;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Agent\AgentCheck;
@@ -25,7 +25,6 @@ use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class CatalogRegistration
- * @package DCarbone\PHPConsulAPI\Catalog
  */
 class CatalogRegistration extends AbstractModel
 {
@@ -73,7 +72,7 @@ class CatalogRegistration extends AbstractModel
      * @param string $id
      * @return CatalogRegistration
      */
-    public function setID(string $id): CatalogRegistration
+    public function setID(string $id): self
     {
         $this->ID = $id;
         return $this;
@@ -91,7 +90,7 @@ class CatalogRegistration extends AbstractModel
      * @param string $node
      * @return CatalogRegistration
      */
-    public function setNode(string $node): CatalogRegistration
+    public function setNode(string $node): self
     {
         $this->Node = $node;
         return $this;
@@ -109,7 +108,7 @@ class CatalogRegistration extends AbstractModel
      * @param string $address
      * @return CatalogRegistration
      */
-    public function setAddress(string $address): CatalogRegistration
+    public function setAddress(string $address): self
     {
         $this->Address = $address;
         return $this;
@@ -127,7 +126,7 @@ class CatalogRegistration extends AbstractModel
      * @param array $taggedAddresses
      * @return CatalogRegistration
      */
-    public function setTaggedAddresses(array $taggedAddresses): CatalogRegistration
+    public function setTaggedAddresses(array $taggedAddresses): self
     {
         $this->TaggedAddresses = $taggedAddresses;
         return $this;
@@ -145,7 +144,7 @@ class CatalogRegistration extends AbstractModel
      * @param array $nodeMeta
      * @return CatalogRegistration
      */
-    public function setNodeMeta(array $nodeMeta): CatalogRegistration
+    public function setNodeMeta(array $nodeMeta): self
     {
         $this->NodeMeta = $nodeMeta;
         return $this;
@@ -163,7 +162,7 @@ class CatalogRegistration extends AbstractModel
      * @param string $datacenter
      * @return CatalogRegistration
      */
-    public function setDatacenter(string $datacenter): CatalogRegistration
+    public function setDatacenter(string $datacenter): self
     {
         $this->Datacenter = $datacenter;
         return $this;
@@ -181,7 +180,7 @@ class CatalogRegistration extends AbstractModel
      * @param \DCarbone\PHPConsulAPI\Agent\AgentService|null $service
      * @return CatalogRegistration
      */
-    public function setService(?AgentService $service): CatalogRegistration
+    public function setService(?AgentService $service): self
     {
         $this->Service = $service;
         return $this;
@@ -199,7 +198,7 @@ class CatalogRegistration extends AbstractModel
      * @param \DCarbone\PHPConsulAPI\Agent\AgentCheck|null $check
      * @return CatalogRegistration
      */
-    public function setCheck(?AgentCheck $check): CatalogRegistration
+    public function setCheck(?AgentCheck $check): self
     {
         $this->Check = $check;
         return $this;

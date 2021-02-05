@@ -16,16 +16,15 @@ namespace DCarbone\PHPConsulAPI;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 /**
  * Trait ResponseQueryMetaTrait
- * @package DCarbone\PHPConsulAPI
  */
 trait ResponseQueryMetaTrait
 {
     /** @var \DCarbone\PHPConsulAPI\QueryMeta|null */
-    public $QueryMeta = null;
+    public ?QueryMeta $QueryMeta = null;
 
     /**
      * @return \DCarbone\PHPConsulAPI\QueryMeta|null

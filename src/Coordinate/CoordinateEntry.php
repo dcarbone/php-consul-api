@@ -16,14 +16,13 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class CoordinateEntry
- * @package DCarbone\PHPConsulAPI\Coordinate
  */
 class CoordinateEntry extends AbstractModel
 {

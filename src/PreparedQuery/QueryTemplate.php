@@ -16,13 +16,12 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class QueryTemplate
- * @package DCarbone\PHPConsulAPI\PreparedQuery
  */
 class QueryTemplate extends AbstractModel
 {
@@ -43,7 +42,7 @@ class QueryTemplate extends AbstractModel
      * @param string $type
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryTemplate
      */
-    public function setType(string $type): QueryTemplate
+    public function setType(string $type): self
     {
         $this->Type = $type;
         return $this;
@@ -61,7 +60,7 @@ class QueryTemplate extends AbstractModel
      * @param string $regexp
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryTemplate
      */
-    public function setRegexp(string $regexp): QueryTemplate
+    public function setRegexp(string $regexp): self
     {
         $this->Regexp = $regexp;
         return $this;

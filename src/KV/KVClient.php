@@ -16,7 +16,7 @@ namespace DCarbone\PHPConsulAPI\KV;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Error;
@@ -29,19 +29,18 @@ use DCarbone\PHPConsulAPI\WriteResponse;
 
 /**
  * Class KVClient
- * @package DCarbone\PHPConsulAPI\KV
  */
 class KVClient extends AbstractClient
 {
     /**
      * @param string $key
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\KV\KVPairResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\KV\KVPairResponse
      */
     public function Get(string $key, ?QueryOptions $opts = null): KVPairResponse
     {
-        $r = new Request('GET', sprintf('v1/kv/%s', $key), $this->config, null);
+        $r = new Request('GET', \sprintf('v1/kv/%s', $key), $this->config, null);
         $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -72,22 +71,22 @@ class KVClient extends AbstractClient
         return new KVPairResponse(
             null,
             $qm,
-            new Error(sprintf('%s: %s', $response->getStatusCode(), $response->getReasonPhrase()))
+            new Error(\sprintf('%s: %s', $response->getStatusCode(), $response->getReasonPhrase()))
         );
     }
 
     /**
      * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\WriteResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
      */
     public function Put(KVPair $p, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
+        $r = new Request('PUT', \sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
         $r->applyOptions($opts);
         if (0 !== $p->Flags) {
-            $r->params->set('flags', (string)$p->Flags);
+            $r->params->set('flags', (string) $p->Flags);
         }
 
         [$duration, $_, $err] = $this->_requireOK($this->_do($r));
@@ -101,12 +100,12 @@ class KVClient extends AbstractClient
     /**
      * @param string $key
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\WriteResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
      */
     public function Delete(string $key, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = new Request('DELETE', sprintf('v1/kv/%s', $key), $this->config, null);
+        $r = new Request('DELETE', \sprintf('v1/kv/%s', $key), $this->config, null);
         $r->applyOptions($opts);
 
         [$duration, $_, $err] = $this->_requireOK($this->_do($r));
@@ -120,12 +119,12 @@ class KVClient extends AbstractClient
     /**
      * @param string $prefix
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\KV\KVPairsResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\KV\KVPairsResponse
      */
     public function List(string $prefix = '', ?QueryOptions $opts = null): KVPairsResponse
     {
-        $r = new Request('GET', sprintf('v1/kv/%s', $prefix), $this->config, null);
+        $r = new Request('GET', \sprintf('v1/kv/%s', $prefix), $this->config, null);
         $r->applyOptions($opts);
         $r->params->set('recurse', '');
 
@@ -148,12 +147,12 @@ class KVClient extends AbstractClient
     /**
      * @param string $prefix
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\ValuedQueryStringsResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\ValuedQueryStringsResponse
      */
     public function Keys(string $prefix = '', ?QueryOptions $opts = null): ValuedQueryStringsResponse
     {
-        $r = new Request('GET', sprintf('v1/kv/%s', $prefix), $this->config, null);
+        $r = new Request('GET', \sprintf('v1/kv/%s', $prefix), $this->config, null);
         $r->applyOptions($opts);
         $r->params->set('keys', '');
 
@@ -174,16 +173,16 @@ class KVClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\ValuedWriteBoolResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\ValuedWriteBoolResponse
      */
     public function CAS(KVPair $p, ?WriteOptions $opts = null): ValuedWriteBoolResponse
     {
-        $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
+        $r = new Request('PUT', \sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
         $r->applyOptions($opts);
-        $r->params->set('cas', (string)$p->ModifyIndex);
+        $r->params->set('cas', (string) $p->ModifyIndex);
         if (0 !== $p->Flags) {
-            $r->params->set('flags', (string)$p->Flags);
+            $r->params->set('flags', (string) $p->Flags);
         }
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -193,7 +192,7 @@ class KVClient extends AbstractClient
         }
 
         return new ValuedWriteBoolResponse(
-            0 === strpos($response->getBody()->getContents(), 'true'),
+            0 === \strpos($response->getBody()->getContents(), 'true'),
             $this->buildWriteMeta($duration),
             null
         );
@@ -202,16 +201,16 @@ class KVClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\WriteResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
      */
     public function Acquire(KVPair $p, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
+        $r = new Request('PUT', \sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
         $r->applyOptions($opts);
         $r->params->set('acquire', $p->Session);
         if (0 !== $p->Flags) {
-            $r->params->set('flags', (string)$p->Flags);
+            $r->params->set('flags', (string) $p->Flags);
         }
 
         [$duration, $_, $err] = $this->_requireOK($this->_do($r));
@@ -225,14 +224,14 @@ class KVClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\ValuedWriteBoolResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\ValuedWriteBoolResponse
      */
     public function DeleteCAS(KVPair $p, ?WriteOptions $opts = null): ValuedWriteBoolResponse
     {
-        $r = new Request('DELETE', sprintf('v1/kv/%s', ltrim($p->Key, "/")), $this->config, null);
+        $r = new Request('DELETE', \sprintf('v1/kv/%s', \ltrim($p->Key, '/')), $this->config, null);
         $r->applyOptions($opts);
-        $r->params['cas'] = (string)$p->ModifyIndex;
+        $r->params['cas'] = (string) $p->ModifyIndex;
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));
@@ -241,7 +240,7 @@ class KVClient extends AbstractClient
         }
 
         return new ValuedWriteBoolResponse(
-            0 === strpos($response->getBody()->getContents(), 'true'),
+            0 === \strpos($response->getBody()->getContents(), 'true'),
             $this->buildWriteMeta($duration),
             null
         );
@@ -250,16 +249,16 @@ class KVClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\WriteResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
      */
     public function Release(KVPair $p, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = new Request('PUT', sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
+        $r = new Request('PUT', \sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
         $r->applyOptions($opts);
         $r->params->set('release', $p->Session);
         if (0 !== $p->Flags) {
-            $r->params->set('flags', (string)$p->Flags);
+            $r->params->set('flags', (string) $p->Flags);
         }
 
         [$duration, $_, $err] = $this->_requireOK($this->_do($r));
@@ -273,12 +272,12 @@ class KVClient extends AbstractClient
     /**
      * @param string $prefix
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\WriteResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
      */
     public function DeleteTree(string $prefix, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = new Request('DELETE', sprintf('v1/kv/%s', $prefix), $this->config, null);
+        $r                    = new Request('DELETE', \sprintf('v1/kv/%s', $prefix), $this->config, null);
         $r->params['recurse'] = '';
         $r->applyOptions($opts);
 
@@ -293,8 +292,8 @@ class KVClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\KV\KVTxnOps $txn
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\KV\KVTxnAPIResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\KV\KVTxnAPIResponse
      */
     public function Txn(KVTxnOps $txn, ?QueryOptions $opts = null): KVTxnAPIResponse
     {
@@ -336,13 +335,13 @@ class KVClient extends AbstractClient
     }
 
     /**
-     * @param null|string $prefix
+     * @param string|null $prefix
      * @param \DCarbone\PHPConsulAPI\QueryOptions $opts
-     * @return array(
-     * @type KVPair[]|KVTree[]|null array of trees, values, or null on error
-     * @type \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return array(
+     * @var KVPair[]|KVTree[]|null array of trees, values, or null on error
+     * @var \DCarbone\PHPConsulAPI\Error|null error, if any
+     * )
      */
     public function Tree(string $prefix = '', ?QueryOptions $opts = null): array
     {
@@ -354,21 +353,21 @@ class KVClient extends AbstractClient
 
         $treeHierarchy = [];
         foreach ($valueList as $path => $kvp) {
-            $slashPos = strpos($path, '/');
+            $slashPos = \strpos($path, '/');
             if (false === $slashPos) {
                 $treeHierarchy[$path] = $kvp;
                 continue;
             }
 
-            $root = substr($path, 0, $slashPos + 1);
+            $root = \substr($path, 0, $slashPos + 1);
 
             if (!isset($treeHierarchy[$root])) {
                 $treeHierarchy[$root] = new KVTree($root);
             }
 
-            if ('/' === substr($path, -1)) {
+            if ('/' === \substr($path, -1)) {
                 $_path = '';
-                foreach (explode('/', $prefix) as $part) {
+                foreach (\explode('/', $prefix) as $part) {
                     if ('' === $part) {
                         continue;
                     }
@@ -384,9 +383,9 @@ class KVClient extends AbstractClient
                     }
                 }
             } else {
-                $kvPrefix = substr($path, 0, strrpos($path, '/') + 1);
-                $_path = '';
-                foreach (explode('/', $kvPrefix) as $part) {
+                $kvPrefix = \substr($path, 0, \strrpos($path, '/') + 1);
+                $_path    = '';
+                foreach (\explode('/', $kvPrefix) as $part) {
                     if ('' === $part) {
                         continue;
                     }

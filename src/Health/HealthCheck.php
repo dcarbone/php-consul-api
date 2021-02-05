@@ -16,13 +16,12 @@ namespace DCarbone\PHPConsulAPI\Health;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class HealthCheck
- * @package DCarbone\PHPConsulAPI\Health
  */
 class HealthCheck extends AbstractModel
 {

@@ -16,7 +16,7 @@ namespace DCarbone\PHPConsulAPI\Agent;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Health\HealthChecks;
@@ -24,7 +24,6 @@ use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class AgentServiceChecksInfo
- * @package DCarbone\PHPConsulAPI\Agent
  */
 class AgentServiceChecksInfo extends AbstractModel
 {
@@ -41,11 +40,11 @@ class AgentServiceChecksInfo extends AbstractModel
     /** @var array[] */
     protected static array $fields = [
         self::FIELD_SERVICE => [
-            Hydration::FIELD_TYPE => Hydration::OBJECT,
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
             Hydration::FIELD_CLASS => AgentService::class,
         ],
         self::FIELD_CHECKS => [
-            Hydration::FIELD_TYPE => Hydration::OBJECT,
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
             Hydration::FIELD_CLASS => HealthChecks::class,
         ],
     ];
@@ -74,7 +73,7 @@ class AgentServiceChecksInfo extends AbstractModel
      * @param string $aggregatedStatus
      * @return AgentServiceChecksInfo
      */
-    public function setAggregatedStatus(string $aggregatedStatus): AgentServiceChecksInfo
+    public function setAggregatedStatus(string $aggregatedStatus): self
     {
         $this->AggregatedStatus = $aggregatedStatus;
         return $this;
@@ -92,7 +91,7 @@ class AgentServiceChecksInfo extends AbstractModel
      * @param \DCarbone\PHPConsulAPI\Agent\AgentService|null $service
      * @return AgentServiceChecksInfo
      */
-    public function setService(?AgentService $service): AgentServiceChecksInfo
+    public function setService(?AgentService $service): self
     {
         $this->Service = $service;
         return $this;
@@ -110,7 +109,7 @@ class AgentServiceChecksInfo extends AbstractModel
      * @param \DCarbone\PHPConsulAPI\Health\HealthChecks|null $checks
      * @return AgentServiceChecksInfo
      */
-    public function setChecks(?HealthChecks $checks): AgentServiceChecksInfo
+    public function setChecks(?HealthChecks $checks): self
     {
         $this->Checks = $checks;
         return $this;

@@ -16,18 +16,17 @@ namespace DCarbone\PHPConsulAPI\Operator;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class AutopilotUpgrade
- * @package DCarbone\PHPConsulAPI\Operator
  */
 class AutopilotUpgrade extends AbstractModel
 {
-    private const FIELD_REDUNDANCY_ZONES             = 'RedundancyZones';
+    private const FIELD_REDUNDANCY_ZONES = 'RedundancyZones';
 
     /** @var string */
     public string $Status = '';

@@ -16,13 +16,12 @@ namespace DCarbone\PHPConsulAPI\ACL;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class ACLEntry
- * @package DCarbone\PHPConsulAPI\ACL
  */
 class ACLEntry extends AbstractModel
 {
@@ -51,7 +50,7 @@ class ACLEntry extends AbstractModel
      * @param int $createIndex
      * @return ACLEntry
      */
-    public function setCreateIndex(int $createIndex): ACLEntry
+    public function setCreateIndex(int $createIndex): self
     {
         $this->CreateIndex = $createIndex;
         return $this;
@@ -69,7 +68,7 @@ class ACLEntry extends AbstractModel
      * @param int $modifyIndex
      * @return ACLEntry
      */
-    public function setModifyIndex(int $modifyIndex): ACLEntry
+    public function setModifyIndex(int $modifyIndex): self
     {
         $this->ModifyIndex = $modifyIndex;
         return $this;
@@ -87,7 +86,7 @@ class ACLEntry extends AbstractModel
      * @param string $id
      * @return ACLEntry
      */
-    public function setID(string $id): ACLEntry
+    public function setID(string $id): self
     {
         $this->ID = $id;
         return $this;
@@ -105,7 +104,7 @@ class ACLEntry extends AbstractModel
      * @param string $name
      * @return ACLEntry
      */
-    public function setName(string $name): ACLEntry
+    public function setName(string $name): self
     {
         $this->Name = $name;
         return $this;
@@ -123,7 +122,7 @@ class ACLEntry extends AbstractModel
      * @param string $type
      * @return ACLEntry
      */
-    public function setType(string $type): ACLEntry
+    public function setType(string $type): self
     {
         $this->Type = $type;
         return $this;
@@ -141,7 +140,7 @@ class ACLEntry extends AbstractModel
      * @param string $rules
      * @return ACLEntry
      */
-    public function setRules(string $rules): ACLEntry
+    public function setRules(string $rules): self
     {
         $this->Rules = $rules;
         return $this;

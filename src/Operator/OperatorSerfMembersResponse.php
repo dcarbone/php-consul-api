@@ -16,7 +16,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
 use DCarbone\PHPConsulAPI\Error;
@@ -24,7 +24,6 @@ use DCarbone\PHPConsulAPI\QueryMeta;
 
 /**
  * Class OperatorSerfMembersResponse
- * @package DCarbone\PHPConsulAPI\Operator
  */
 class OperatorSerfMembersResponse extends AbstractValuedQueryResponse
 {
@@ -42,7 +41,7 @@ class OperatorSerfMembersResponse extends AbstractValuedQueryResponse
         parent::__construct($qm, $err);
         if (null !== $data) {
             $this->SerfMembers = [];
-            foreach($data as $datum) {
+            foreach ($data as $datum) {
                 $this->SerfMembers[] = new SerfMember($datum);
             }
         }

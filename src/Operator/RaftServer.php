@@ -16,13 +16,12 @@ namespace DCarbone\PHPConsulAPI\Operator;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class RaftServer
- * @package DCarbone\PHPConsulAPI\Operator
  */
 class RaftServer extends AbstractModel
 {
@@ -49,7 +48,7 @@ class RaftServer extends AbstractModel
      * @param string $id
      * @return \DCarbone\PHPConsulAPI\Operator\RaftServer
      */
-    public function setID(string $id): RaftServer
+    public function setID(string $id): self
     {
         $this->ID = $id;
         return $this;
@@ -67,7 +66,7 @@ class RaftServer extends AbstractModel
      * @param string $node
      * @return \DCarbone\PHPConsulAPI\Operator\RaftServer
      */
-    public function setNode(string $node): RaftServer
+    public function setNode(string $node): self
     {
         $this->Node = $node;
         return $this;
@@ -85,7 +84,7 @@ class RaftServer extends AbstractModel
      * @param string $address
      * @return \DCarbone\PHPConsulAPI\Operator\RaftServer
      */
-    public function setAddress(string $address): RaftServer
+    public function setAddress(string $address): self
     {
         $this->Address = $address;
         return $this;
@@ -103,7 +102,7 @@ class RaftServer extends AbstractModel
      * @param bool $leader
      * @return \DCarbone\PHPConsulAPI\Operator\RaftServer
      */
-    public function setLeader(bool $leader): RaftServer
+    public function setLeader(bool $leader): self
     {
         $this->Leader = $leader;
         return $this;
@@ -121,7 +120,7 @@ class RaftServer extends AbstractModel
      * @param bool $voter
      * @return \DCarbone\PHPConsulAPI\Operator\RaftServer
      */
-    public function setVoter(bool $voter): RaftServer
+    public function setVoter(bool $voter): self
     {
         $this->Voter = $voter;
         return $this;

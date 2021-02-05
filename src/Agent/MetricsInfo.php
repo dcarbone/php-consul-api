@@ -16,14 +16,13 @@ namespace DCarbone\PHPConsulAPI\Agent;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class MetricsInfo
- * @package DCarbone\PHPConsulAPI\Agent
  */
 class MetricsInfo extends AbstractModel
 {
@@ -46,23 +45,23 @@ class MetricsInfo extends AbstractModel
     /** @var array[] */
     protected static array $fields = [
         self::FIELD_GAUGES => [
-            Hydration::FIELD_TYPE => Hydration::ARRAY,
-            Hydration::FIELD_CLASS => GaugeValue::class,
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => GaugeValue::class,
             Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
         ],
         self::FIELD_POINTS => [
-            Hydration::FIELD_TYPE => Hydration::ARRAY,
-            Hydration::FIELD_CLASS => PointValue::class,
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => PointValue::class,
             Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
         ],
         self::FIELD_COUNTERS => [
-            Hydration::FIELD_TYPE => Hydration::ARRAY,
-            Hydration::FIELD_CLASS => SampledValue::class,
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => SampledValue::class,
             Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
         ],
         self::FIELD_SAMPLES => [
-            Hydration::FIELD_TYPE => Hydration::ARRAY,
-            Hydration::FIELD_CLASS => SampledValue::class,
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => SampledValue::class,
             Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
         ],
     ];
@@ -79,7 +78,7 @@ class MetricsInfo extends AbstractModel
      * @param string $timestamp
      * @return MetricsInfo
      */
-    public function setTimestamp(string $timestamp): MetricsInfo
+    public function setTimestamp(string $timestamp): self
     {
         $this->Timestamp = $timestamp;
         return $this;
@@ -97,7 +96,7 @@ class MetricsInfo extends AbstractModel
      * @param \DCarbone\PHPConsulAPI\Agent\GaugeValue[] $gauges
      * @return MetricsInfo
      */
-    public function setGauges(array $gauges): MetricsInfo
+    public function setGauges(array $gauges): self
     {
         $this->Gauges = $gauges;
         return $this;
@@ -115,7 +114,7 @@ class MetricsInfo extends AbstractModel
      * @param \DCarbone\PHPConsulAPI\Agent\PointValue[] $points
      * @return MetricsInfo
      */
-    public function setPoints(array $points): MetricsInfo
+    public function setPoints(array $points): self
     {
         $this->Points = $points;
         return $this;
@@ -133,7 +132,7 @@ class MetricsInfo extends AbstractModel
      * @param \DCarbone\PHPConsulAPI\Agent\SampledValue[] $counters
      * @return MetricsInfo
      */
-    public function setCounters(array $counters): MetricsInfo
+    public function setCounters(array $counters): self
     {
         $this->Counters = $counters;
         return $this;
@@ -151,7 +150,7 @@ class MetricsInfo extends AbstractModel
      * @param \DCarbone\PHPConsulAPI\Agent\SampledValue[] $samples
      * @return MetricsInfo
      */
-    public function setSamples(array $samples): MetricsInfo
+    public function setSamples(array $samples): self
     {
         $this->Samples = $samples;
         return $this;

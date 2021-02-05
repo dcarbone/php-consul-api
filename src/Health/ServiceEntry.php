@@ -16,14 +16,13 @@ namespace DCarbone\PHPConsulAPI\Health;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
 
 /**
  * Class ServiceEntry
- * @package DCarbone\PHPConsulAPI\Health
  */
 class ServiceEntry extends AbstractModel
 {
@@ -42,7 +41,7 @@ class ServiceEntry extends AbstractModel
     {
         parent::__construct($data);
         if (null !== $this->Service && !($this->Service instanceof AgentService)) {
-            $this->Service = new AgentService((array)$this->Service);
+            $this->Service = new AgentService((array) $this->Service);
         }
         if (!($this->Checks instanceof HealthChecks)) {
             $this->Checks = new HealthChecks($this->Checks);

@@ -16,14 +16,13 @@ namespace DCarbone\PHPConsulAPI\Operator;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class AutopilotState
- * @package DCarbone\PHPConsulAPI\Operator
  */
 class AutopilotState extends AbstractModel
 {
@@ -53,7 +52,7 @@ class AutopilotState extends AbstractModel
     protected static array $fields = [
         self::FIELD_SERVERS         => [
             Hydration::FIELD_TYPE  => Hydration::ARRAY,
-            Hydration::FIELD_CLASS => AutopilotState::class,
+            Hydration::FIELD_CLASS => self::class,
         ],
         self::FIELD_REDUNDANCY_ZONE => [
             Hydration::FIELD_TYPE  => Hydration::ARRAY,

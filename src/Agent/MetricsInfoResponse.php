@@ -16,7 +16,7 @@ namespace DCarbone\PHPConsulAPI\Agent;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractValuedResponse;
 use DCarbone\PHPConsulAPI\Error;
@@ -24,7 +24,6 @@ use DCarbone\PHPConsulAPI\ResponseErrorTrait;
 
 /**
  * Class MetricsInfoResponse
- * @package DCarbone\PHPConsulAPI\Agent
  */
 class MetricsInfoResponse extends AbstractValuedResponse implements \ArrayAccess
 {
@@ -58,17 +57,17 @@ class MetricsInfoResponse extends AbstractValuedResponse implements \ArrayAccess
      */
     public function offsetExists($offset)
     {
-        return is_int($offset) && 0 <= $offset && $offset < 2;
+        return \is_int($offset) && 0 <= $offset && $offset < 2;
     }
 
     public function offsetGet($offset)
     {
         if (0 === $offset) {
             return $this->getValue();
-        } elseif (1 === $offset) {
-            return $this->Err;
-        } else {
-            throw new \OutOfBoundsException(sprintf('Offset %s does not exist', var_export($offset, true)));
         }
+        if (1 === $offset) {
+            return $this->Err;
+        }
+        throw new \OutOfBoundsException(\sprintf('Offset %s does not exist', \var_export($offset, true)));
     }
 }

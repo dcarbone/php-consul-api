@@ -16,13 +16,12 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class QueryDatacenterOptions
- * @package DCarbone\PHPConsulAPI\PreparedQuery
  */
 class QueryDatacenterOptions extends AbstractModel
 {
@@ -43,7 +42,7 @@ class QueryDatacenterOptions extends AbstractModel
      * @param int $nearestN
      * @return QueryDatacenterOptions
      */
-    public function setNearestN(int $nearestN): QueryDatacenterOptions
+    public function setNearestN(int $nearestN): self
     {
         $this->NearestN = $nearestN;
         return $this;
@@ -61,7 +60,7 @@ class QueryDatacenterOptions extends AbstractModel
      * @param string[] $datacenters
      * @return QueryDatacenterOptions
      */
-    public function setDatacenters(array $datacenters): QueryDatacenterOptions
+    public function setDatacenters(array $datacenters): self
     {
         $this->Datacenters = $datacenters;
         return $this;
@@ -71,7 +70,7 @@ class QueryDatacenterOptions extends AbstractModel
      * @param string $datacenter
      * @return QueryDatacenterOptions
      */
-    public function addDatacenter(string $Datacenter): QueryDatacenterOptions
+    public function addDatacenter(string $Datacenter): self
     {
         $this->Datacenters[] = $datacenter;
         return $this;

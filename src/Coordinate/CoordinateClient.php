@@ -16,7 +16,7 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\Go\HTTP;
 use DCarbone\PHPConsulAPI\AbstractClient;
@@ -27,13 +27,12 @@ use DCarbone\PHPConsulAPI\WriteResponse;
 
 /**
  * Class CoordinateClient
- * @package DCarbone\PHPConsulAPI\Coordinate
  */
 class CoordinateClient extends AbstractClient
 {
     /**
-     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateDatacentersResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateDatacentersResponse
      */
     public function Datacenters(): CoordinateDatacentersResponse
     {
@@ -53,8 +52,8 @@ class CoordinateClient extends AbstractClient
 
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntriesResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntriesResponse
      */
     public function Nodes(?QueryOptions $opts = null): CoordinateEntriesResponse
     {
@@ -76,8 +75,8 @@ class CoordinateClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry $coordinateEntry
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\WriteResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
      */
     public function Update(CoordinateEntry $coordinateEntry, ?WriteOptions $opts = null): WriteResponse
     {
@@ -93,12 +92,12 @@ class CoordinateClient extends AbstractClient
     /**
      * @param string $node
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntriesResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntriesResponse
      */
     public function Node(string $node, ?QueryOptions $opts = null): CoordinateEntriesResponse
     {
-        $r = new Request(HTTP\MethodGet, sprintf('v1/coordinate/node/%s', $node), $this->config, null);
+        $r = new Request(HTTP\MethodGet, \sprintf('v1/coordinate/node/%s', $node), $this->config, null);
         $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */

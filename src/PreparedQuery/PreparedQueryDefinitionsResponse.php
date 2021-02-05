@@ -14,7 +14,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 namespace DCarbone\PHPConsulAPI\PreparedQuery;
 
@@ -24,11 +24,10 @@ use DCarbone\PHPConsulAPI\QueryMeta;
 
 /**
  * Class PreparedQueryDefinitionsResponse
- * @package DCarbone\PHPConsulAPI\PreparedQuery
  */
 class PreparedQueryDefinitionsResponse extends AbstractValuedQueryResponse
 {
-    /** @var null|\DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition[] */
+    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition[]|null */
     public $PreparedQueryDefinitions = null;
 
     /**

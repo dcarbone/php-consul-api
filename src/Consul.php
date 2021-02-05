@@ -16,7 +16,7 @@ namespace DCarbone\PHPConsulAPI;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\ACL\ACLClient;
 use DCarbone\PHPConsulAPI\Agent\AgentClient;
@@ -32,7 +32,6 @@ use DCarbone\PHPConsulAPI\Status\StatusClient;
 
 /**
  * Class Consul
- * @package DCarbone\PHPConsulAPI
  */
 class Consul
 {
@@ -42,9 +41,9 @@ class Consul
     public const HTTPTokenEnvName      = 'CONSUL_HTTP_TOKEN';
     public const HTTPTokenFileEnvName  = 'CONSUL_HTTP_TOKEN_FILE';
     public const HTTPAuthEnvName       = 'CONSUL_HTTP_AUTH';
-    public const HTTPCAFileEnvName     = "CONSUL_CACERT";
-    public const HTTPClientCertEnvName = "CONSUL_CLIENT_CERT";
-    public const HTTPClientKeyEnvName  = "CONSUL_CLIENT_KEY";
+    public const HTTPCAFileEnvName     = 'CONSUL_CACERT';
+    public const HTTPClientCertEnvName = 'CONSUL_CLIENT_CERT';
+    public const HTTPClientKeyEnvName  = 'CONSUL_CLIENT_KEY';
     public const HTTPSSLEnvName        = 'CONSUL_HTTP_SSL';
     public const HTTPSSLVerifyEnvName  = 'CONSUL_HTTP_SSL_VERIFY';
 
@@ -116,27 +115,27 @@ class Consul
     public const headerCache                    = 'X-Cache';
 
     /** @var \DCarbone\PHPConsulAPI\ACL\ACLClient */
-    public $ACL;
+    public ACLClient $ACL;
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentClient */
-    public $Agent;
+    public AgentClient $Agent;
     /** @var \DCarbone\PHPConsulAPI\Catalog\CatalogClient */
-    public $Catalog;
+    public CatalogClient $Catalog;
     /** @var \DCarbone\PHPConsulAPI\Coordinate\CoordinateClient */
-    public $Coordinate;
+    public CoordinateClient $Coordinate;
     /** @var \DCarbone\PHPConsulAPI\Event\EventClient */
-    public $Event;
+    public EventClient $Event;
     /** @var \DCarbone\PHPConsulAPI\Health\HealthClient */
-    public $Health;
+    public HealthClient $Health;
     /** @var \DCarbone\PHPConsulAPI\KV\KVClient */
-    public $KV;
+    public KVClient $KV;
     /** @var \DCarbone\PHPConsulAPI\Operator\OperatorClient */
-    public $Operator;
+    public OperatorClient $Operator;
     /** @var \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryClient */
-    public $PreparedQuery;
+    public PreparedQueryClient $PreparedQuery;
     /** @var \DCarbone\PHPConsulAPI\Session\SessionClient */
-    public $Session;
+    public SessionClient $Session;
     /** @var \DCarbone\PHPConsulAPI\Status\StatusClient */
-    public $Status;
+    public StatusClient $Status;
 
     /**
      * Client constructor.
@@ -147,31 +146,31 @@ class Consul
         $config = Config::merge($config);
 
         if ('' !== $config->TokenFile) {
-            if (!file_exists($config->TokenFile) || !is_readable($config->TokenFile)) {
+            if (!\file_exists($config->TokenFile) || !\is_readable($config->TokenFile)) {
                 throw new \RuntimeException(
-                    sprintf(
+                    \sprintf(
                         'Provided $TokenFile "%s" either does not exist or is not readable',
                         $config->TokenFile
                     )
                 );
             }
-            $data = trim(file_get_contents($config->TokenFile));
+            $data = \trim(\file_get_contents($config->TokenFile));
             if ('' === $config->Token && '' !== $data) {
                 $config->Token = $data;
             }
         }
 
-        $this->ACL = new ACLClient($config);
-        $this->Agent = new AgentClient($config);
-        $this->Catalog = new CatalogClient($config);
-        $this->Coordinate = new CoordinateClient($config);
-        $this->Event = new EventClient($config);
-        $this->Health = new HealthClient($config);
-        $this->KV = new KVClient($config);
-        $this->Operator = new OperatorClient($config);
+        $this->ACL           = new ACLClient($config);
+        $this->Agent         = new AgentClient($config);
+        $this->Catalog       = new CatalogClient($config);
+        $this->Coordinate    = new CoordinateClient($config);
+        $this->Event         = new EventClient($config);
+        $this->Health        = new HealthClient($config);
+        $this->KV            = new KVClient($config);
+        $this->Operator      = new OperatorClient($config);
         $this->PreparedQuery = new PreparedQueryClient($config);
-        $this->Session = new SessionClient($config);
-        $this->Status = new StatusClient($config);
+        $this->Session       = new SessionClient($config);
+        $this->Status        = new StatusClient($config);
     }
 
     /**

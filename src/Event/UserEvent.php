@@ -2,7 +2,6 @@
 
 namespace DCarbone\PHPConsulAPI\Event;
 
-
 /*
    Copyright 2016-2020 Daniel Carbone (daniel.p.carbone@gmail.com)
 
@@ -17,13 +16,12 @@ namespace DCarbone\PHPConsulAPI\Event;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class UserEvent
- * @package DCarbone\PHPConsulAPI\Event
  */
 class UserEvent extends AbstractModel
 {
@@ -53,8 +51,8 @@ class UserEvent extends AbstractModel
     public function __construct(array $data = [], bool $_decodeValue = false)
     {
         parent::__construct($data);
-        if ((bool)$_decodeValue && isset($this->Payload)) {
-            $this->Payload = base64_decode($this->Payload);
+        if ((bool) $_decodeValue && isset($this->Payload)) {
+            $this->Payload = \base64_decode($this->Payload, true);
         }
     }
 

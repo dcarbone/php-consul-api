@@ -16,7 +16,7 @@ namespace DCarbone\PHPConsulAPI;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\Go\HTTP;
 use DCarbone\Go\Time;
@@ -27,7 +27,6 @@ use Psr\Http\Message\UriInterface;
 
 /**
  * Class AbstractClient
- * @package DCarbone\PHPConsulAPI
  */
 abstract class AbstractClient
 {
@@ -115,9 +114,9 @@ abstract class AbstractClient
 
                 // Otherwise, return error
                 $r->Err = new Error(
-                    sprintf(
+                    \sprintf(
                         '%s - Non-%d response seen.  Response code: %d.  Message: %s',
-                        get_class($this),
+                        \get_class($this),
                         $statusCode,
                         $actualCode,
                         $r->Response->getReasonPhrase()
@@ -125,10 +124,10 @@ abstract class AbstractClient
                 );
             } else {
                 $r->Err = new Error(
-                    sprintf(
+                    \sprintf(
                         '%s - Expected response to be instance of \\Psr\\Message\\ResponseInterface, %s seen.',
-                        get_class($this),
-                        is_object($r->Response) ? get_class($r->Response) : gettype($r->Response)
+                        \get_class($this),
+                        \is_object($r->Response) ? \get_class($r->Response) : \gettype($r->Response)
                     )
                 );
             }
@@ -139,14 +138,14 @@ abstract class AbstractClient
 
     /**
      * @param \DCarbone\PHPConsulAPI\Request $r
-     * @return \DCarbone\PHPConsulAPI\RequestResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\RequestResponse
      */
     protected function _do(Request $r): RequestResponse
     {
-        $start = microtime(true);
+        $start    = \microtime(true);
         $response = null;
-        $err = null;
+        $err      = null;
 
         try {
             // If we actually have a client defined...
@@ -162,9 +161,9 @@ abstract class AbstractClient
         } catch (\Exception $e) {
             // If there has been an exception of any kind, catch it and create Error object
             $err = new Error(
-                sprintf(
+                \sprintf(
                     '%s - Error seen while executing "%s".  Message: "%s"',
-                    get_class($this),
+                    \get_class($this),
                     $r->getUri(),
                     $e->getMessage()
                 )
@@ -172,7 +171,7 @@ abstract class AbstractClient
         }
 
         // calculate execution time
-        $dur = new Time\Duration(intval((microtime(true) - $start) * Time::Second));
+        $dur = new Time\Duration((int) ((\microtime(true) - $start) * Time::Second));
 
         return new RequestResponse($dur, $response, $err);
     }
@@ -190,8 +189,8 @@ abstract class AbstractClient
      * @param string $path
      * @param $body
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\RequestResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\RequestResponse
      */
     protected function _doPut(string $path, $body, ?WriteOptions $opts): RequestResponse
     {
@@ -201,8 +200,8 @@ abstract class AbstractClient
     /**
      * @param string $path
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\RequestResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\RequestResponse
      */
     protected function _doGet(string $path, ?QueryOptions $opts): RequestResponse
     {
@@ -220,7 +219,7 @@ abstract class AbstractClient
         $qm = new QueryMeta();
 
         $qm->RequestTime = $duration;
-        $qm->RequestUrl = (string)$uri;
+        $qm->RequestUrl  = (string)$uri;
 
         if ('' !== ($h = $response->getHeaderLine(Consul::headerConsulIndex))) {
             $qm->LastIndex = (int)$h;
@@ -242,7 +241,7 @@ abstract class AbstractClient
         }
 
         if ('' !== ($h = $response->getHeaderLine(Consul::headerCache))) {
-            $qm->CacheAge = Time::Duration(intval($h, 10) * Time::Second);
+            $qm->CacheAge = Time::Duration(\intval($h, 10) * Time::Second);
         }
 
         return $qm;
@@ -254,7 +253,7 @@ abstract class AbstractClient
      */
     protected function buildWriteMeta(Time\Duration $duration): WriteMeta
     {
-        $wm = new WriteMeta();
+        $wm              = new WriteMeta();
         $wm->RequestTime = $duration;
 
         return $wm;
@@ -266,19 +265,19 @@ abstract class AbstractClient
      */
     protected function decodeBody(StreamInterface $body): DecodedBody
     {
-        $data = @json_decode((string)$body, true);
+        $data = @\json_decode((string)$body, true);
 
-        if (JSON_ERROR_NONE === json_last_error()) {
+        if (\JSON_ERROR_NONE === \json_last_error()) {
             return new DecodedBody($data, null);
         }
 
         return new DecodedBody(
             null,
             new Error(
-                sprintf(
+                \sprintf(
                     '%s - Unable to parse response as JSON.  Message: %s',
-                    get_class($this),
-                    json_last_error_msg()
+                    \get_class($this),
+                    \json_last_error_msg()
                 )
             )
         );
@@ -288,8 +287,8 @@ abstract class AbstractClient
      * @param string $path
      * @param mixed $body
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\WriteResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
      */
     protected function _executePut(string $path, $body, ?WriteOptions $opts): WriteResponse
     {
@@ -301,12 +300,12 @@ abstract class AbstractClient
      * @param string $path
      * @param mixed $body
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      */
     protected function _doPutValuedStr(string $path, $body, ?WriteOptions $opts): ValuedWriteStringResponse
     {
-        $r = $this->_newPutRequest($path, $body, $opts);
+        $r    = $this->_newPutRequest($path, $body, $opts);
         $resp = $this->_requireOK($this->_do($r));
         if (null !== $resp->Err) {
             return new ValuedWriteStringResponse('', null, $resp->Err);
@@ -322,12 +321,12 @@ abstract class AbstractClient
     /**
      * @param string $path
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\ValuedQueryStringResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\ValuedQueryStringResponse
      */
     protected function _doGetValuedStr(string $path, ?QueryOptions $opts): ValuedQueryStringResponse
     {
-        $r = $this->_newGetRequest($path, $opts);
+        $r    = $this->_newGetRequest($path, $opts);
         $resp = $this->_requireOK($this->_do($r));
         if (null !== $resp->Err) {
             return new ValuedQueryStringResponse('', null, $resp->Err);
@@ -343,12 +342,12 @@ abstract class AbstractClient
     /**
      * @param string $path
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\ValuedQueryStringsResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\ValuedQueryStringsResponse
      */
     protected function _doGetValuedStrs(string $path, ?QueryOptions $opts): ValuedQueryStringsResponse
     {
-        $r = $this->_newGetRequest($path, $opts);
+        $r    = $this->_newGetRequest($path, $opts);
         $resp = $this->_requireOK($this->_do($r));
         if (null !== $resp->Err) {
             return new ValuedQueryStringsResponse(null, null, $resp->Err);

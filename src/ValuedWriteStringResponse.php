@@ -16,11 +16,10 @@ namespace DCarbone\PHPConsulAPI;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 /**
  * Class ValuedWriteStringResponse
- * @package DCarbone\PHPConsulAPI
  */
 class ValuedWriteStringResponse extends AbstractValuedWriteResponse
 {

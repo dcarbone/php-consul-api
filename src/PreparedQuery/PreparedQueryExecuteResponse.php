@@ -16,7 +16,7 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Health\ServiceEntry;
@@ -24,7 +24,6 @@ use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class PreparedQueryExecuteResponse
- * @package DCarbone\PHPConsulAPI\PreparedQuery
  */
 class PreparedQueryExecuteResponse extends AbstractModel
 {

@@ -16,13 +16,12 @@ namespace DCarbone\PHPConsulAPI\Agent;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class PointValue
- * @package DCarbone\PHPConsulAPI\Agent
  */
 class PointValue extends AbstractModel
 {
@@ -43,7 +42,7 @@ class PointValue extends AbstractModel
      * @param string $name
      * @return PointValue
      */
-    public function setName(string $name): PointValue
+    public function setName(string $name): self
     {
         $this->Name = $name;
         return $this;
@@ -61,7 +60,7 @@ class PointValue extends AbstractModel
      * @param array $points
      * @return PointValue
      */
-    public function setPoints(array $points): PointValue
+    public function setPoints(array $points): self
     {
         $this->Points = $points;
         return $this;

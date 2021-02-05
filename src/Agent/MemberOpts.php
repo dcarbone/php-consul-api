@@ -16,13 +16,12 @@ namespace DCarbone\PHPConsulAPI\Agent;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class MemberOpts
- * @package DCarbone\PHPConsulAPI\Agent
  */
 class MemberOpts extends AbstractModel
 {
@@ -43,7 +42,7 @@ class MemberOpts extends AbstractModel
      * @param bool $wan
      * @return MemberOpts
      */
-    public function setWAN(bool $wan): MemberOpts
+    public function setWAN(bool $wan): self
     {
         $this->WAN = $wan;
         return $this;
@@ -61,7 +60,7 @@ class MemberOpts extends AbstractModel
      * @param string $segment
      * @return MemberOpts
      */
-    public function setSegment(string $segment): MemberOpts
+    public function setSegment(string $segment): self
     {
         $this->Segment = $segment;
         return $this;

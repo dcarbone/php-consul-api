@@ -16,13 +16,12 @@ namespace DCarbone\PHPConsulAPI;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\Go\Time;
 
 /**
  * Class Hydration
- * @package DCarbone\PHPConsulAPI
  */
 final class Hydration
 {
@@ -38,13 +37,16 @@ final class Hydration
 
     public const SCALAR = [self::STRING, self::INTEGER, self::DOUBLE, self::BOOLEAN];
 
+    public const TRUE  = 'true';
+    public const FALSE = 'false';
+
     public const FIELD_TYPE       = 0;
     public const FIELD_CLASS      = 1;
     public const FIELD_ARRAY_TYPE = 2;
     public const FIELD_CALLBACK   = 3;
 
-    public const CALLABLE_HYDRATE_TIME     = [Hydration::class, 'hydrateTime'];
-    public const CALLABLE_HYDRATE_DURATION = [Hydration::class, 'hydrateDuration'];
+    public const CALLABLE_HYDRATE_TIME     = [self::class, 'hydrateTime'];
+    public const CALLABLE_HYDRATE_DURATION = [self::class, 'hydrateDuration'];
 
     public const COMPLEX_FIELDS = [
         'Tags' => [
@@ -59,7 +61,7 @@ final class Hydration
      */
     public static function isScalar(string $type): bool
     {
-        return in_array($type, self::SCALAR, true);
+        return \in_array($type, self::SCALAR, true);
     }
 
     /**

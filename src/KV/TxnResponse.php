@@ -16,13 +16,12 @@ namespace DCarbone\PHPConsulAPI\KV;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class TxnResponse
- * @package DCarbone\PHPConsulAPI\KV
  */
 class TxnResponse extends AbstractModel
 {
@@ -39,10 +38,10 @@ class TxnResponse extends AbstractModel
     {
         parent::__construct($data);
         if (!($this->Results instanceof TxnResults)) {
-            $this->Results = new TxnResults((array)$this->Results);
+            $this->Results = new TxnResults((array) $this->Results);
         }
         if (!($this->Errors instanceof TxnErrors)) {
-            $this->Errors = new TxnErrors((array)$this->Errors);
+            $this->Errors = new TxnErrors((array) $this->Errors);
         }
     }
 

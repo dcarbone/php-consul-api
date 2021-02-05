@@ -16,7 +16,7 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\QueryOptions;
@@ -27,15 +27,14 @@ use DCarbone\PHPConsulAPI\WriteResponse;
 
 /**
  * Class PreparedQueryClient
- * @package DCarbone\PHPConsulAPI\PreparedQuery
  */
 class PreparedQueryClient extends AbstractClient
 {
     /**
      * @param \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition $query
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      */
     public function Create(PreparedQueryDefinition $query, ?WriteOptions $opts = null): ValuedWriteStringResponse
     {
@@ -48,14 +47,14 @@ class PreparedQueryClient extends AbstractClient
             return new ValuedWriteStringResponse('', null, $err);
         }
 
-        return new ValuedWriteStringResponse((string)$response->getBody(), $this->buildWriteMeta($duration), null);
+        return new ValuedWriteStringResponse((string) $response->getBody(), $this->buildWriteMeta($duration), null);
     }
 
     /**
      * @param \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition $query
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\WriteResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
      */
     public function Update(PreparedQueryDefinition $query, ?WriteOptions $opts = null): WriteResponse
     {
@@ -73,8 +72,8 @@ class PreparedQueryClient extends AbstractClient
 
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinitionsResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinitionsResponse
      */
     public function List(?QueryOptions $opts = null): PreparedQueryDefinitionsResponse
     {
@@ -96,12 +95,12 @@ class PreparedQueryClient extends AbstractClient
     /**
      * @param string $queryID
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinitionsResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinitionsResponse
      */
     public function Get(string $queryID, ?QueryOptions $opts = null): PreparedQueryDefinitionsResponse
     {
-        $r = new Request('GET', sprintf('v1/query/%s', $queryID), $this->config, null);
+        $r = new Request('GET', \sprintf('v1/query/%s', $queryID), $this->config, null);
         $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -119,12 +118,12 @@ class PreparedQueryClient extends AbstractClient
     /**
      * @param string $queryID
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\WriteResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
      */
     public function Delete(string $queryID, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = new Request('DELETE', sprintf('v1/query/%s', $queryID), $this->config, null);
+        $r = new Request('DELETE', \sprintf('v1/query/%s', $queryID), $this->config, null);
         $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -141,12 +140,12 @@ class PreparedQueryClient extends AbstractClient
     /**
      * @param string $queryIDOrName
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryExecuteResponseResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryExecuteResponseResponse
      */
     public function Execute(string $queryIDOrName, ?QueryOptions $opts = null): PreparedQueryExecuteResponseResponse
     {
-        $r = new Request('GET', sprintf('v1/query/%s/execute', $queryIDOrName), $this->config, null);
+        $r = new Request('GET', \sprintf('v1/query/%s/execute', $queryIDOrName), $this->config, null);
         $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */

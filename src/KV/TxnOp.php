@@ -16,13 +16,12 @@ namespace DCarbone\PHPConsulAPI\KV;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class TxnOp
- * @package DCarbone\PHPConsulAPI\KV
  */
 class TxnOp extends AbstractModel
 {
@@ -37,7 +36,7 @@ class TxnOp extends AbstractModel
     {
         parent::__construct($data);
         if (null !== $this->KV && !($this->KV instanceof KVTxnOp)) {
-            $this->KV = new KVTxnOp((array)$this->KV);
+            $this->KV = new KVTxnOp((array) $this->KV);
         }
     }
 

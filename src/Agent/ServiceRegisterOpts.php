@@ -16,13 +16,12 @@ namespace DCarbone\PHPConsulAPI\Agent;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class ServiceRegisterOpts
- * @package DCarbone\PHPConsulAPI\Agent
  */
 class ServiceRegisterOpts extends AbstractModel
 {
@@ -41,7 +40,7 @@ class ServiceRegisterOpts extends AbstractModel
      * @param bool $replaceExistingChecks
      * @return ServiceRegisterOpts
      */
-    public function setReplaceExistingChecks(bool $replaceExistingChecks): ServiceRegisterOpts
+    public function setReplaceExistingChecks(bool $replaceExistingChecks): self
     {
         $this->ReplaceExistingChecks = $replaceExistingChecks;
         return $this;

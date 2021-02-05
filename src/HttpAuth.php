@@ -16,11 +16,10 @@ namespace DCarbone\PHPConsulAPI;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 /**
  * Class HttpAuth
- * @package DCarbone\PHPConsulAPI
  */
 class HttpAuth implements \JsonSerializable
 {
@@ -38,14 +37,6 @@ class HttpAuth implements \JsonSerializable
     {
         $this->_username = $username;
         $this->_password = $password;
-    }
-
-    /**
-     * @return array
-     */
-    public function __debugInfo()
-    {
-        return ['username' => $this->_username];
     }
 
     /**
@@ -69,7 +60,7 @@ class HttpAuth implements \JsonSerializable
      */
     public function compileAuthString(): string
     {
-        return (string)$this;
+        return (string) $this;
     }
 
     /**
@@ -81,10 +72,18 @@ class HttpAuth implements \JsonSerializable
     }
 
     /**
+     * @return array
+     */
+    public function __debugInfo()
+    {
+        return ['username' => $this->_username];
+    }
+
+    /**
      * @return string
      */
     public function __toString()
     {
-        return trim(sprintf('%s:%s', $this->_username, $this->_password), ":");
+        return \trim(\sprintf('%s:%s', $this->_username, $this->_password), ':');
     }
 }

@@ -16,13 +16,12 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class QueryDNSOptions
- * @package DCarbone\PHPConsulAPI\PreparedQuery
  */
 class QueryDNSOptions extends AbstractModel
 {
@@ -41,7 +40,7 @@ class QueryDNSOptions extends AbstractModel
      * @param string $ttl
      * @return QueryDNSOptions
      */
-    public function setTTL(string $ttl): QueryDNSOptions
+    public function setTTL(string $ttl): self
     {
         $this->TTL = $ttl;
         return $this;
@@ -52,6 +51,6 @@ class QueryDNSOptions extends AbstractModel
      */
     public function __toString(): string
     {
-        return (string)$this->TTL;
+        return (string) $this->TTL;
     }
 }

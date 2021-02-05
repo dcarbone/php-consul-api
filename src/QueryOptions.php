@@ -16,13 +16,12 @@ namespace DCarbone\PHPConsulAPI;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\Go\Time;
 
 /**
  * Class QueryOptions
- * @package DCarbone\PHPConsulAPI
  */
 class QueryOptions extends AbstractModel implements RequestOptions
 {
@@ -198,7 +197,7 @@ class QueryOptions extends AbstractModel implements RequestOptions
     }
 
     /**
-     * @param \DCarbone\Go\Time\Duration|string|int|float|null $maxAge
+     * @param \DCarbone\Go\Time\Duration|float|int|string|null $maxAge
      */
     public function setMaxAge($maxAge): void
     {
@@ -214,7 +213,7 @@ class QueryOptions extends AbstractModel implements RequestOptions
     }
 
     /**
-     * @param \DCarbone\Go\Time\Duration|string|int|float|null $staleIfError
+     * @param \DCarbone\Go\Time\Duration|float|int|string|null $staleIfError
      */
     public function setStaleIfError($staleIfError): void
     {
@@ -390,7 +389,7 @@ class QueryOptions extends AbstractModel implements RequestOptions
     }
 
     /**
-     * @param \DCarbone\Go\Time\Duration|string|int|float|null $timeout
+     * @param \DCarbone\Go\Time\Duration|float|int|string|null $timeout
      */
     public function setTimeout($timeout): void
     {
@@ -431,7 +430,7 @@ class QueryOptions extends AbstractModel implements RequestOptions
             $r->params->set('consistent', '');
         }
         if (0 !== $this->WaitIndex) {
-            $r->params->set('index', (string)$this->WaitIndex);
+            $r->params->set('index', (string) $this->WaitIndex);
         }
         if (0 !== $this->WaitTime) {
             $r->params->set('wait', dur_to_millisecond($this->WaitTime));
@@ -454,7 +453,7 @@ class QueryOptions extends AbstractModel implements RequestOptions
             }
         }
         if (0 !== $this->RelayFactor) {
-            $r->params->set('relay-factor', (string)$this->RelayFactor);
+            $r->params->set('relay-factor', (string) $this->RelayFactor);
         }
         if ($this->LocalOnly) {
             $r->params->set('local-only', 'true');
@@ -465,16 +464,16 @@ class QueryOptions extends AbstractModel implements RequestOptions
         if ($this->UseCache && !$this->RequireConsistent) {
             $r->params->set('cached', '');
             $cc = [];
-            $s = $this->MaxAge->Seconds();
+            $s  = $this->MaxAge->Seconds();
             if (0 < $s) {
-                $cc[] = sprintf('max-age=%.0f', $s);
+                $cc[] = \sprintf('max-age=%.0f', $s);
             }
             $s = $this->StaleIfError->Seconds();
             if (0 < $s) {
-                $cc[] = sprintf('stale-if-error=%.0f', $s);
+                $cc[] = \sprintf('stale-if-error=%.0f', $s);
             }
             if ([] !== $cc) {
-                $r->header->set('Cache-Control', implode(', ', $cc));
+                $r->header->set('Cache-Control', \implode(', ', $cc));
             }
         }
 

@@ -16,11 +16,10 @@ namespace DCarbone\PHPConsulAPI\Agent;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 /**
  * Class AgentCheckRegistration
- * @package DCarbone\PHPConsulAPI\Agent
  */
 class AgentCheckRegistration extends AgentServiceCheck
 {
@@ -41,7 +40,7 @@ class AgentCheckRegistration extends AgentServiceCheck
      * @param string $id
      * @return AgentCheckRegistration
      */
-    public function setID(string $id): AgentCheckRegistration
+    public function setID(string $id): self
     {
         $this->ID = $id;
         return $this;
@@ -59,7 +58,7 @@ class AgentCheckRegistration extends AgentServiceCheck
      * @param string $serviceID
      * @return AgentCheckRegistration
      */
-    public function setServiceID(string $serviceID): AgentCheckRegistration
+    public function setServiceID(string $serviceID): self
     {
         $this->ServiceID = $serviceID;
         return $this;
@@ -70,6 +69,6 @@ class AgentCheckRegistration extends AgentServiceCheck
      */
     public function __toString(): string
     {
-        return (string)$this->Name;
+        return (string) $this->Name;
     }
 }

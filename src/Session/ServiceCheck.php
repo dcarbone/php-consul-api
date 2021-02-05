@@ -14,7 +14,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 namespace DCarbone\PHPConsulAPI\Session;
 
@@ -22,7 +22,6 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class ServiceCheck
- * @package DCarbone\PHPConsulAPI\Session
  */
 class ServiceCheck extends AbstractModel
 {
@@ -43,7 +42,7 @@ class ServiceCheck extends AbstractModel
      * @param string $id
      * @return ServiceCheck
      */
-    public function setID(string $id): ServiceCheck
+    public function setID(string $id): self
     {
         $this->ID = $id;
         return $this;
@@ -61,7 +60,7 @@ class ServiceCheck extends AbstractModel
      * @param string $namespace
      * @return ServiceCheck
      */
-    public function setNamespace(string $namespace): ServiceCheck
+    public function setNamespace(string $namespace): self
     {
         $this->Namespace = $namespace;
         return $this;

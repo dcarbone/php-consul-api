@@ -16,7 +16,7 @@ namespace DCarbone\PHPConsulAPI\Health;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\Go\Time;
 use DCarbone\Go\Time\Duration;
@@ -26,7 +26,6 @@ use DCarbone\PHPConsulAPI\Operator\ReadableDuration;
 
 /**
  * Class HealthCheckDefinition
- * @package DCarbone\PHPConsulAPI\Health
  */
 class HealthCheckDefinition extends AbstractModel
 {
@@ -110,22 +109,22 @@ class HealthCheckDefinition extends AbstractModel
         }
 
         if (!isset($this->IntervalDuration)) {
-            $this->IntervalDuration = Time::ParseDuration((string)$this->Interval);
+            $this->IntervalDuration = Time::ParseDuration((string) $this->Interval);
         } else {
-            $this->Interval = ReadableDuration::fromDuration((string)$this->IntervalDuration);
+            $this->Interval = ReadableDuration::fromDuration((string) $this->IntervalDuration);
         }
         if (null === $this->TimeoutDuration) {
-            $this->TimeoutDuration = Time::ParseDuration((string)$this->Timeout);
+            $this->TimeoutDuration = Time::ParseDuration((string) $this->Timeout);
         } else {
-            $this->Timeout = ReadableDuration::fromDuration((string)$this->TimeoutDuration);
+            $this->Timeout = ReadableDuration::fromDuration((string) $this->TimeoutDuration);
         }
         if (null === $this->DeregisterCriticalServiceAfterDuration) {
             $this->DeregisterCriticalServiceAfterDuration = Time::ParseDuration(
-                (string)$this->DeregisterCriticalServiceAfter
+                (string) $this->DeregisterCriticalServiceAfter
             );
         } else {
             $this->DeregisterCriticalServiceAfter = ReadableDuration::fromDuration(
-                (string)$this->DeregisterCriticalServiceAfterDuration
+                (string) $this->DeregisterCriticalServiceAfterDuration
             );
         }
     }
@@ -229,19 +228,19 @@ class HealthCheckDefinition extends AbstractModel
 
         ];
         if (0 !== $this->IntervalDuration->Nanoseconds()) {
-            $out[self::FIELD_INTERVAL] = (string)$this->IntervalDuration;
+            $out[self::FIELD_INTERVAL] = (string) $this->IntervalDuration;
         } elseif (0 !== $this->Interval->Nanoseconds()) {
-            $out[self::FIELD_INTERVAL] = (string)$this->Interval;
+            $out[self::FIELD_INTERVAL] = (string) $this->Interval;
         }
         if (0 !== $this->TimeoutDuration->Nanoseconds()) {
-            $out[self::FIELD_TIMEOUT] = (string)$this->TimeoutDuration;
+            $out[self::FIELD_TIMEOUT] = (string) $this->TimeoutDuration;
         } elseif (0 !== $this->Timeout->Nanoseconds()) {
-            $out[self::FIELD_TIMEOUT] = (string)$this->Timeout;
+            $out[self::FIELD_TIMEOUT] = (string) $this->Timeout;
         }
         if (0 !== $this->DeregisterCriticalServiceAfterDuration->Nanoseconds()) {
-            $out[self::FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER] = (string)$this->DeregisterCriticalServiceAfterDuration;
+            $out[self::FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER] = (string) $this->DeregisterCriticalServiceAfterDuration;
         } elseif (0 !== $this->DeregisterCriticalServiceAfter->Nanoseconds()) {
-            $out[self::FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER] = (string)$this->DeregisterCriticalServiceAfter;
+            $out[self::FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER] = (string) $this->DeregisterCriticalServiceAfter;
         }
         return $out;
     }

@@ -16,23 +16,22 @@ namespace DCarbone\PHPConsulAPI;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\Go\Time;
 use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class RequestResponse
- * @package DCarbone\PHPConsulAPI
  */
 final class RequestResponse implements \ArrayAccess
 {
     /** @var \DCarbone\Go\Time\Duration|null */
-    public $Duration = null;
+    public ?Time\Duration $Duration = null;
     /** @var \Psr\Http\Message\ResponseInterface|null */
-    public $Response = null;
+    public ?ResponseInterface $Response = null;
     /** @var \DCarbone\PHPConsulAPI\Error|null */
-    public $Err = null;
+    public ?Error $Err = null;
 
     /**
      * RequestResponse constructor.
@@ -44,7 +43,7 @@ final class RequestResponse implements \ArrayAccess
     {
         $this->Duration = $durf;
         $this->Response = $resp;
-        $this->Err = $err;
+        $this->Err      = $err;
     }
 
     /**
@@ -77,7 +76,7 @@ final class RequestResponse implements \ArrayAccess
      */
     public function offsetExists($offset): bool
     {
-        return is_int($offset) && $offset >= 0 && $offset < 3;
+        return \is_int($offset) && $offset >= 0 && $offset < 3;
     }
 
     /**
@@ -88,13 +87,14 @@ final class RequestResponse implements \ArrayAccess
     {
         if (0 === $offset) {
             return $this->Duration;
-        } elseif (1 === $offset) {
-            return $this->Response;
-        } elseif (2 === $offset) {
-            return $this->Err;
-        } else {
-            throw new \OutOfBoundsException(sprintf('Offset %s does not exist', var_export($offset, true)));
         }
+        if (1 === $offset) {
+            return $this->Response;
+        }
+        if (2 === $offset) {
+            return $this->Err;
+        }
+        throw new \OutOfBoundsException(\sprintf('Offset %s does not exist', \var_export($offset, true)));
     }
 
     /**
@@ -103,7 +103,7 @@ final class RequestResponse implements \ArrayAccess
      */
     public function offsetSet($offset, $value)
     {
-        throw new \BadMethodCallException(sprintf('Cannot call method %s on class %s', __METHOD__, __CLASS__));
+        throw new \BadMethodCallException(\sprintf('Cannot call method %s on class %s', __METHOD__, __CLASS__));
     }
 
     /**
@@ -111,6 +111,6 @@ final class RequestResponse implements \ArrayAccess
      */
     public function offsetUnset($offset)
     {
-        throw new \BadMethodCallException(sprintf('Cannot call method %s on class %s', __METHOD__, __CLASS__));
+        throw new \BadMethodCallException(\sprintf('Cannot call method %s on class %s', __METHOD__, __CLASS__));
     }
 }

@@ -16,16 +16,15 @@ namespace DCarbone\PHPConsulAPI;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 /**
  * Class Values
- * @package DCarbone\PHPConsulAPI
  */
 class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
 {
     /** @var array */
-    private $values = [];
+    private array $values = [];
 
     /**
      * @param string $key
@@ -69,7 +68,7 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
     public function add(string $key, string ...$value)
     {
         if (isset($this->values[$key])) {
-            $this->values[$key] = array_merge($this->values[$key], $value);
+            $this->values[$key] = \array_merge($this->values[$key], $value);
         } else {
             $this->values[$key] = $value;
         }
@@ -88,7 +87,7 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
      */
     public function count(): int
     {
-        return count($this->values);
+        return \count($this->values);
     }
 
     /**
@@ -100,37 +99,37 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
     }
 
     /**
-     * @return string|array
+     * @return array|string
      */
     public function current()
     {
-        return current($this->values);
+        return \current($this->values);
     }
 
     public function next()
     {
-        next($this->values);
+        \next($this->values);
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function key()
+    public function key(): ?string
     {
-        return key($this->values);
+        return \key($this->values);
     }
 
     /**
      * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
-        return null !== key($this->values);
+        return null !== \key($this->values);
     }
 
     public function rewind()
     {
-        reset($this->values);
+        \reset($this->values);
     }
 
     /**
@@ -177,9 +176,18 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
     }
 
     /**
+     * @param string $v
      * @return string
      */
-    public function __toString()
+    protected function encode(string $v): string
+    {
+        return $v;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
     {
         $str = '';
         foreach ($this->values as $k => $vs) {
@@ -190,19 +198,10 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
                 if ('' === $v) {
                     $str .= $k;
                 } else {
-                    $str .= sprintf('%s=%s', $k, $this->encode($v));
+                    $str .= \sprintf('%s=%s', $k, $this->encode($v));
                 }
             }
         }
         return $str;
-    }
-
-    /**
-     * @param string $v
-     * @return string
-     */
-    protected function encode(string $v): string
-    {
-        return $v;
     }
 }

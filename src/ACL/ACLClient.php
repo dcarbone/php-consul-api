@@ -16,7 +16,7 @@ namespace DCarbone\PHPConsulAPI\ACL;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\Go\HTTP;
 use DCarbone\PHPConsulAPI\AbstractClient;
@@ -28,13 +28,12 @@ use DCarbone\PHPConsulAPI\WriteResponse;
 
 /**
  * Class ACLClient
- * @package DCarbone\PHPConsulAPI\ACL
  */
 class ACLClient extends AbstractClient
 {
     /**
-     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      */
     public function Bootstrap(): ValuedWriteStringResponse
     {
@@ -44,8 +43,8 @@ class ACLClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\ACL\ACLEntry $acl
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      */
     public function Create(ACLEntry $acl, ?WriteOptions $opts = null): ValuedWriteStringResponse
     {
@@ -55,8 +54,8 @@ class ACLClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\ACL\ACLEntry $acl
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\WriteResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
      */
     public function Update(ACLEntry $acl, ?WriteOptions $opts = null): WriteResponse
     {
@@ -66,34 +65,34 @@ class ACLClient extends AbstractClient
     /**
      * @param string $id
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\WriteResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
      */
     public function Destroy(string $id, ?WriteOptions $opts = null): WriteResponse
     {
-        return $this->_executePut(sprintf('v1/acl/destroy/%s', $id), null, $opts);
+        return $this->_executePut(\sprintf('v1/acl/destroy/%s', $id), null, $opts);
     }
 
     /**
      * @param string $id
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      */
     public function Clone(string $id, ?WriteOptions $opts = null): ValuedWriteStringResponse
     {
-        return $this->_doPutValuedStr(sprintf('v1/acl/clone/%s', $id), null, $opts);
+        return $this->_doPutValuedStr(\sprintf('v1/acl/clone/%s', $id), null, $opts);
     }
 
     /**
      * @param string $id
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\ACL\ACLEntriesResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLEntriesResponse
      */
     public function Info(string $id, ?QueryOptions $opts = null): ACLEntriesResponse
     {
-        $r = new Request(HTTP\MethodGet, sprintf('v1/acl/info/%s', $id), $this->config, null);
+        $r = new Request(HTTP\MethodGet, \sprintf('v1/acl/info/%s', $id), $this->config, null);
         $r->applyOptions($opts);
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -114,8 +113,8 @@ class ACLClient extends AbstractClient
 
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\ACL\ACLEntriesResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLEntriesResponse
      */
     public function List(?QueryOptions $opts = null): ACLEntriesResponse
     {
@@ -140,8 +139,8 @@ class ACLClient extends AbstractClient
 
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\ACL\ACLReplicationStatusResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLReplicationStatusResponse
      */
     public function Replication(?QueryOptions $opts = null): ACLReplicationStatusResponse
     {

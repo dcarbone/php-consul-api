@@ -16,7 +16,7 @@ namespace DCarbone\PHPConsulAPI;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\Go\Time;
 
@@ -24,7 +24,6 @@ use DCarbone\Go\Time;
  * TODO: Make this better...
  *
  * Class Error
- * @package DCarbone\PHPConsulAPI
  */
 class Error implements \JsonSerializable
 {
@@ -40,7 +39,7 @@ class Error implements \JsonSerializable
      */
     public function __construct(string $message)
     {
-        $this->time = Time::Now();
+        $this->time    = Time::Now();
         $this->message = $message;
     }
 
@@ -66,8 +65,8 @@ class Error implements \JsonSerializable
     public function jsonSerialize()
     {
         return [
-            'message' => $this->message,
-            'timestamp' => $this->time
+            'message'   => $this->message,
+            'timestamp' => $this->time,
         ];
     }
 

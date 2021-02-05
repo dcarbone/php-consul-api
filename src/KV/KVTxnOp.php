@@ -16,13 +16,12 @@ namespace DCarbone\PHPConsulAPI\KV;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class KVTxnOp
- * @package DCarbone\PHPConsulAPI\KV
  */
 class KVTxnOp extends AbstractModel
 {
@@ -51,11 +50,11 @@ class KVTxnOp extends AbstractModel
     {
         parent::__construct($data);
         if ($_decodeValue && !$this->_valueDecoded) {
-            $dec = base64_decode($this->Value);
+            $dec = \base64_decode($this->Value, true);
             if (false === $dec) {
-                throw new \InvalidArgumentException(sprintf('Could not base64 decode value "%s"', $this->Value));
+                throw new \InvalidArgumentException(\sprintf('Could not base64 decode value "%s"', $this->Value));
             }
-            $this->Value = $dec;
+            $this->Value         = $dec;
             $this->_valueDecoded = true;
         }
     }

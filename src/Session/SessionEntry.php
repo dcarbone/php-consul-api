@@ -16,14 +16,13 @@ namespace DCarbone\PHPConsulAPI\Session;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class SessionEntry
- * @package DCarbone\PHPConsulAPI\Session
  */
 class SessionEntry extends AbstractModel
 {
@@ -62,7 +61,7 @@ class SessionEntry extends AbstractModel
         }
         foreach ($this->ServiceChecks as &$check) {
             if (!($check instanceof ServiceCheck)) {
-                $check = new ServiceCheck((array)$check);
+                $check = new ServiceCheck((array) $check);
             }
         }
     }
@@ -79,7 +78,7 @@ class SessionEntry extends AbstractModel
      * @param int $createIndex
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function setCreateIndex(int $createIndex): SessionEntry
+    public function setCreateIndex(int $createIndex): self
     {
         $this->CreateIndex = $createIndex;
         return $this;
@@ -97,7 +96,7 @@ class SessionEntry extends AbstractModel
      * @param string $id
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function setID(string $id): SessionEntry
+    public function setID(string $id): self
     {
         $this->ID = $id;
         return $this;
@@ -115,7 +114,7 @@ class SessionEntry extends AbstractModel
      * @param string $name
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function setName(string $name): SessionEntry
+    public function setName(string $name): self
     {
         $this->Name = $name;
         return $this;
@@ -133,7 +132,7 @@ class SessionEntry extends AbstractModel
      * @param string $node
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function setNode(string $node): SessionEntry
+    public function setNode(string $node): self
     {
         $this->Node = $node;
         return $this;
@@ -151,7 +150,7 @@ class SessionEntry extends AbstractModel
      * @param string[] $checks
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function setChecks(array $checks): SessionEntry
+    public function setChecks(array $checks): self
     {
         $this->Checks = [];
         foreach ($checks as $check) {
@@ -160,7 +159,7 @@ class SessionEntry extends AbstractModel
         return $this;
     }
 
-    public function addCheck(string $check): SessionEntry
+    public function addCheck(string $check): self
     {
         $this->Checks[] = $check;
         return $this;
@@ -178,7 +177,7 @@ class SessionEntry extends AbstractModel
      * @param \DCarbone\Go\Time\Duration $lockDelay
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function setLockDelay(Time\Duration $lockDelay): SessionEntry
+    public function setLockDelay(Time\Duration $lockDelay): self
     {
         $this->LockDelay = $lockDelay;
         return $this;
@@ -196,7 +195,7 @@ class SessionEntry extends AbstractModel
      * @param string $behavior
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function setBehavior(string $behavior): SessionEntry
+    public function setBehavior(string $behavior): self
     {
         $this->Behavior = $behavior;
         return $this;
@@ -214,7 +213,7 @@ class SessionEntry extends AbstractModel
      * @param string $ttl
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function setTTL(string $ttl): SessionEntry
+    public function setTTL(string $ttl): self
     {
         $this->TTL = $ttl;
         return $this;
@@ -232,7 +231,7 @@ class SessionEntry extends AbstractModel
      * @param string $namespace
      * @return SessionEntry
      */
-    public function setNamespace(string $namespace): SessionEntry
+    public function setNamespace(string $namespace): self
     {
         $this->Namespace = $namespace;
         return $this;
@@ -250,7 +249,7 @@ class SessionEntry extends AbstractModel
      * @param string $check
      * @return $this
      */
-    public function addNodeCheck(string $check): SessionEntry
+    public function addNodeCheck(string $check): self
     {
         $this->NodeChecks[] = $check;
         return $this;
@@ -260,7 +259,7 @@ class SessionEntry extends AbstractModel
      * @param string[] $nodeChecks
      * @return SessionEntry
      */
-    public function setNodeChecks(array $nodeChecks): SessionEntry
+    public function setNodeChecks(array $nodeChecks): self
     {
         $this->NodeChecks = [];
         foreach ($nodeChecks as $check) {
@@ -281,7 +280,7 @@ class SessionEntry extends AbstractModel
      * @param \DCarbone\PHPConsulAPI\Session\ServiceCheck $check
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function addServiceCheck(ServiceCheck $check): SessionEntry
+    public function addServiceCheck(ServiceCheck $check): self
     {
         $this->ServiceChecks[] = $check;
         return $this;
@@ -291,13 +290,23 @@ class SessionEntry extends AbstractModel
      * @param \DCarbone\PHPConsulAPI\Session\ServiceCheck[] $serviceChecks
      * @return SessionEntry
      */
-    public function setServiceChecks(array $serviceChecks): SessionEntry
+    public function setServiceChecks(array $serviceChecks): self
     {
         $this->ServiceChecks = [];
         foreach ($serviceChecks as $check) {
             $this->addServiceCheck($check);
         }
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function _toAPIPayload(): array
+    {
+        $a              = self::jsonSerialize();
+        $a['LockDelay'] = self::durToMsec($this->LockDelay);
+        return $a;
     }
 
     /**
@@ -310,21 +319,10 @@ class SessionEntry extends AbstractModel
             return '0ms';
         }
         $ns = $dur->Nanoseconds();
-        $ms = intval($ns / Time::Millisecond);
+        $ms = (int) ($ns / Time::Millisecond);
         if (0 < $ns && 0 === $ms) {
             return '1ms';
         }
-        return sprintf('%dms', $ms);
-    }
-
-
-    /**
-     * @return array
-     */
-    public function _toAPIPayload(): array
-    {
-        $a = self::jsonSerialize();
-        $a['LockDelay'] = self::durToMsec($this->LockDelay);
-        return $a;
+        return \sprintf('%dms', $ms);
     }
 }

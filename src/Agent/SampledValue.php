@@ -16,13 +16,12 @@ namespace DCarbone\PHPConsulAPI\Agent;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class SampledValue
- * @package DCarbone\PHPConsulAPI\Agent
  */
 class SampledValue extends AbstractModel
 {
@@ -53,7 +52,7 @@ class SampledValue extends AbstractModel
      * @param string $name
      * @return SampledValue
      */
-    public function setName(string $name): SampledValue
+    public function setName(string $name): self
     {
         $this->Name = $name;
         return $this;
@@ -71,7 +70,7 @@ class SampledValue extends AbstractModel
      * @param int $count
      * @return SampledValue
      */
-    public function setCount(int $count): SampledValue
+    public function setCount(int $count): self
     {
         $this->Count = $count;
         return $this;
@@ -89,7 +88,7 @@ class SampledValue extends AbstractModel
      * @param float $sum
      * @return SampledValue
      */
-    public function setSum(float $sum): SampledValue
+    public function setSum(float $sum): self
     {
         $this->Sum = $sum;
         return $this;
@@ -107,7 +106,7 @@ class SampledValue extends AbstractModel
      * @param float $min
      * @return SampledValue
      */
-    public function setMin(float $min): SampledValue
+    public function setMin(float $min): self
     {
         $this->Min = $min;
         return $this;
@@ -125,7 +124,7 @@ class SampledValue extends AbstractModel
      * @param float $max
      * @return SampledValue
      */
-    public function setMax(float $max): SampledValue
+    public function setMax(float $max): self
     {
         $this->Max = $max;
         return $this;
@@ -143,7 +142,7 @@ class SampledValue extends AbstractModel
      * @param float $mean
      * @return SampledValue
      */
-    public function setMean(float $mean): SampledValue
+    public function setMean(float $mean): self
     {
         $this->Mean = $mean;
         return $this;
@@ -161,7 +160,7 @@ class SampledValue extends AbstractModel
      * @param array $labels
      * @return SampledValue
      */
-    public function setLabels(array $labels): SampledValue
+    public function setLabels(array $labels): self
     {
         $this->Labels = $labels;
         return $this;

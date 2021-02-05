@@ -16,18 +16,17 @@ namespace DCarbone\PHPConsulAPI;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\Go\Time;
 
 /**
  * Class WriteMeta
- * @package DCarbone\PHPConsulAPI
  */
 class WriteMeta
 {
-    /** @var \DCarbone\Go\Time\Duration */
-    public $RequestTime = null;
+    /** @var \DCarbone\Go\Time\Duration|null */
+    public ?Time\Duration $RequestTime = null;
 
     /**
      * @return \DCarbone\Go\Time\Duration|null

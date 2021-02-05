@@ -16,13 +16,12 @@ namespace DCarbone\PHPConsulAPI;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 /**
  * Used to assist with hydrating json responses
  *
  * Trait FieldHydration
- * @package DCarbone\PHPConsulAPI
  */
 trait FieldHydration
 {
@@ -61,7 +60,7 @@ trait FieldHydration
             return;
         }
 
-        if (!property_exists($this, $field)) {
+        if (!\property_exists($this, $field)) {
             $this->{$field} = $value;
             return;
         }
@@ -70,7 +69,7 @@ trait FieldHydration
             return;
         }
 
-        if (is_scalar($this->{$field})) {
+        if (\is_scalar($this->{$field})) {
             $this->hydrateSimple($field, $value);
             return;
         }
@@ -93,23 +92,25 @@ trait FieldHydration
     private function buildScalar(string $field, $value, string $type)
     {
         if (Hydration::STRING === $type) {
-            return strval($value);
-        } elseif (Hydration::INTEGER === $type) {
-            return intval($value, 10);
-        } elseif (Hydration::DOUBLE === $type) {
-            return floatval($value);
-        } elseif (Hydration::BOOLEAN === $type) {
-            return boolval($value);
-        } else {
-            throw new \DomainException(
-                sprintf('Unable to handle field "%s" of type "%s" on class "%s"', $field, $type, get_class($this))
-            );
+            return (string) $value;
         }
+        if (Hydration::INTEGER === $type) {
+            return \intval($value, 10);
+        }
+        if (Hydration::DOUBLE === $type) {
+            return (float) $value;
+        }
+        if (Hydration::BOOLEAN === $type) {
+            return (bool) $value;
+        }
+        throw new \DomainException(
+            \sprintf('Unable to handle field "%s" of type "%s" on class "%s"', $field, $type, \get_class($this))
+        );
     }
 
     /**
      * @param string $field
-     * @param object|array $value
+     * @param array|object $value
      * @param string $class
      * @return object
      */
@@ -118,7 +119,7 @@ trait FieldHydration
         if ($value instanceof $class) {
             return clone $value;
         }
-        return new $class((array)$value);
+        return new $class((array) $value);
     }
 
     /**
@@ -129,7 +130,7 @@ trait FieldHydration
      */
     private function hydrateSimple(string $field, $value): void
     {
-        $this->{$field} = $this->buildScalar($field, $value, gettype($this->{$field}));
+        $this->{$field} = $this->buildScalar($field, $value, \gettype($this->{$field}));
     }
 
     /**
@@ -143,14 +144,14 @@ trait FieldHydration
     {
         // check if a callable has been defined
         if (isset($def[Hydration::FIELD_CALLBACK])) {
-            $err = call_user_func($def[Hydration::FIELD_CALLBACK], $this, $field, $value);
+            $err = \call_user_func($def[Hydration::FIELD_CALLBACK], $this, $field, $value);
             if (false === $err) {
                 throw new \RuntimeException(
-                    sprintf(
+                    \sprintf(
                         'Error calling hydration callback "%s" for field "%s" on class "%s"',
                         $def[Hydration::FIELD_CALLBACK],
                         $field,
-                        get_class($this)
+                        \get_class($this)
                     )
                 );
             }
@@ -161,11 +162,11 @@ trait FieldHydration
 
         if (!isset($def[Hydration::FIELD_TYPE])) {
             throw new \LogicException(
-                sprintf(
+                \sprintf(
                     'Field "%s" on type "%s" is missing a FIELD_TYPE hydration entry: %s',
                     $field,
-                    get_class($this),
-                    var_export($def, true)
+                    \get_class($this),
+                    \var_export($def, true)
                 )
             );
         }
@@ -178,12 +179,12 @@ trait FieldHydration
             $this->hydrateArray($field, $value, $def);
         } else {
             throw new \DomainException(
-                sprintf(
+                \sprintf(
                     'Unable to handle complex field "%s" of type "%s" on class "%s": %s',
                     $field,
                     $type,
-                    get_class($this),
-                    var_export($def, true)
+                    \get_class($this),
+                    \var_export($def, true)
                 )
             );
         }
@@ -198,11 +199,11 @@ trait FieldHydration
     {
         if (!isset($def[Hydration::FIELD_CLASS])) {
             throw new \LogicException(
-                sprintf(
+                \sprintf(
                     'Field "%s" on type "%s" is missing FIELD_CLASS hydration entry: %s',
                     $field,
-                    get_class($this),
-                    var_export($def, true)
+                    \get_class($this),
+                    \var_export($def, true)
                 )
             );
         }
@@ -218,29 +219,29 @@ trait FieldHydration
     private function hydrateArray(string $field, $value, array $def): void
     {
         // by the time we get here, $value must be an array
-        if (!is_array($value)) {
+        if (!\is_array($value)) {
             throw new \RuntimeException(
-                sprintf(
+                \sprintf(
                     'Field "%s" on type "%s" is an array but provided value is "%s"',
                     $field,
-                    get_class($this),
-                    gettype($value)
+                    \get_class($this),
+                    \gettype($value)
                 )
             );
         }
 
         // attempt to extract the two possible keys
-        $type = $def[Hydration::FIELD_ARRAY_TYPE] ?? null;
-        $class = $def[Hydration::FIELD_CLASS] ?? null;
+        $type  = $def[Hydration::FIELD_ARRAY_TYPE] ?? null;
+        $class = $def[Hydration::FIELD_CLASS]      ?? null;
 
         // type is required
         if (null === $type) {
             throw new \DomainException(
-                sprintf(
+                \sprintf(
                     'Field "%s" on type "%s" definition is missing FIELD_ARRAY_TYPE value: %s',
                     $field,
-                    get_class($this),
-                    var_export($def, true)
+                    \get_class($this),
+                    \var_export($def, true)
                 )
             );
         }
@@ -251,11 +252,11 @@ trait FieldHydration
         if (Hydration::OBJECT === $type) {
             if (null === $class) {
                 throw new \DomainException(
-                    sprintf(
+                    \sprintf(
                         'Field "%s" on type "%s" definition is missing FIELD_CLASS value: %s',
                         $field,
-                        get_class($this),
-                        var_export($def, true)
+                        \get_class($this),
+                        \var_export($def, true)
                     )
                 );
             }

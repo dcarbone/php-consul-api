@@ -16,11 +16,10 @@ namespace DCarbone\PHPConsulAPI;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 /**
  * Class ValuedStringsResponse
- * @package DCarbone\PHPConsulAPI
  */
 class ValuedStringsResponse extends AbstractValuedResponse implements \ArrayAccess
 {
@@ -43,7 +42,7 @@ class ValuedStringsResponse extends AbstractValuedResponse implements \ArrayAcce
      */
     public function offsetExists($offset)
     {
-        return is_int($offset) && 0 <= $offset && $offset < 2;
+        return \is_int($offset) && 0 <= $offset && $offset < 2;
     }
 
     /**
@@ -54,10 +53,10 @@ class ValuedStringsResponse extends AbstractValuedResponse implements \ArrayAcce
     {
         if (0 === $offset) {
             return $this->getValue();
-        } elseif (1 === $offset) {
-            return $this->Err;
-        } else {
-            throw new \OutOfBoundsException(sprintf('Offset %s does not exist', var_export($offset, true)));
         }
+        if (1 === $offset) {
+            return $this->Err;
+        }
+        throw new \OutOfBoundsException(\sprintf('Offset %s does not exist', \var_export($offset, true)));
     }
 }

@@ -16,13 +16,12 @@ namespace DCarbone\PHPConsulAPI\Catalog;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class CatalogDeregistration
- * @package DCarbone\PHPConsulAPI\Catalog
  */
 class CatalogDeregistration extends AbstractModel
 {
@@ -49,7 +48,7 @@ class CatalogDeregistration extends AbstractModel
      * @param string $node
      * @return CatalogDeregistration
      */
-    public function setNode(string $node): CatalogDeregistration
+    public function setNode(string $node): self
     {
         $this->Node = $node;
         return $this;
@@ -67,7 +66,7 @@ class CatalogDeregistration extends AbstractModel
      * @param string $address
      * @return CatalogDeregistration
      */
-    public function setAddress(string $address): CatalogDeregistration
+    public function setAddress(string $address): self
     {
         $this->Address = $address;
         return $this;
@@ -85,7 +84,7 @@ class CatalogDeregistration extends AbstractModel
      * @param string $datacenter
      * @return CatalogDeregistration
      */
-    public function setDatacenter(string $datacenter): CatalogDeregistration
+    public function setDatacenter(string $datacenter): self
     {
         $this->Datacenter = $datacenter;
         return $this;
@@ -103,7 +102,7 @@ class CatalogDeregistration extends AbstractModel
      * @param string $serviceID
      * @return CatalogDeregistration
      */
-    public function setServiceID(string $serviceID): CatalogDeregistration
+    public function setServiceID(string $serviceID): self
     {
         $this->ServiceID = $serviceID;
         return $this;
@@ -121,7 +120,7 @@ class CatalogDeregistration extends AbstractModel
      * @param string $checkID
      * @return CatalogDeregistration
      */
-    public function setCheckID(string $checkID): CatalogDeregistration
+    public function setCheckID(string $checkID): self
     {
         $this->CheckID = $checkID;
         return $this;

@@ -16,21 +16,20 @@ namespace DCarbone\PHPConsulAPI;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 /**
  * Trait ResponseValueBoolTrait
- * @package DCarbone\PHPConsulAPI
  */
 trait ResponseValueBoolTrait
 {
     /** @var bool */
-    public $Value = false;
+    public bool $Value = false;
 
     /**
      * @return bool
      */
-    public function getValue()
+    public function getValue(): bool
     {
         return $this->Value;
     }
@@ -38,8 +37,8 @@ trait ResponseValueBoolTrait
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->Value ? 'true' : 'false';
+        return $this->Value ? Hydration::TRUE : Hydration::FALSE;
     }
 }

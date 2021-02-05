@@ -16,11 +16,10 @@ namespace DCarbone\PHPConsulAPI;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 /**
  * Class AbstractValuedResponse
- * @package DCarbone\PHPConsulAPI
  */
 abstract class AbstractValuedResponse
 {
@@ -46,7 +45,7 @@ abstract class AbstractValuedResponse
      */
     public function offsetSet($offset, $value)
     {
-        throw new \BadMethodCallException(sprintf('Cannot call %s on %s', __METHOD__, get_called_class()));
+        throw new \BadMethodCallException(\sprintf('Cannot call %s on %s', __METHOD__, \get_called_class()));
     }
 
     /**
@@ -54,6 +53,6 @@ abstract class AbstractValuedResponse
      */
     public function offsetUnset($offset)
     {
-        throw new \BadMethodCallException(sprintf('Cannot call %s on %s', __METHOD__, get_called_class()));
+        throw new \BadMethodCallException(\sprintf('Cannot call %s on %s', __METHOD__, \get_called_class()));
     }
 }

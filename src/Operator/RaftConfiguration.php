@@ -16,13 +16,12 @@ namespace DCarbone\PHPConsulAPI\Operator;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class RaftConfiguration
- * @package DCarbone\PHPConsulAPI\Operator
  */
 class RaftConfiguration extends AbstractModel
 {
@@ -40,13 +39,12 @@ class RaftConfiguration extends AbstractModel
     {
         parent::__construct($data);
 
-        if (0 < count($this->Servers)) {
-            $this->Servers = array_filter($this->Servers);
+        if (0 < \count($this->Servers)) {
+            $this->Servers = \array_filter($this->Servers);
             foreach ($this->Servers as &$v) {
                 if (!($v instanceof RaftServer)) {
                     $v = new RaftServer($v);
                 }
-
             }
         }
     }
@@ -63,7 +61,7 @@ class RaftConfiguration extends AbstractModel
      * @param \DCarbone\PHPConsulAPI\Operator\RaftServer[] $servers
      * @return \DCarbone\PHPConsulAPI\Operator\RaftConfiguration
      */
-    public function setServers(array $servers): RaftConfiguration
+    public function setServers(array $servers): self
     {
         $this->Servers = [];
         foreach ($servers as $Server) {
@@ -76,7 +74,7 @@ class RaftConfiguration extends AbstractModel
      * @param \DCarbone\PHPConsulAPI\Operator\RaftServer $server
      * @return \DCarbone\PHPConsulAPI\Operator\RaftConfiguration
      */
-    public function addServer(RaftServer $server): RaftConfiguration
+    public function addServer(RaftServer $server): self
     {
         $this->Servers[] = $server;
         return $this;
@@ -94,7 +92,7 @@ class RaftConfiguration extends AbstractModel
      * @param int $index
      * @return \DCarbone\PHPConsulAPI\Operator\RaftConfiguration
      */
-    public function setIndex(int $index): RaftConfiguration
+    public function setIndex(int $index): self
     {
         $this->Index = $index;
         return $this;

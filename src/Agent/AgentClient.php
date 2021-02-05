@@ -16,7 +16,7 @@ namespace DCarbone\PHPConsulAPI\Agent;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\Go\HTTP;
 use DCarbone\PHPConsulAPI\AbstractClient;
@@ -27,16 +27,15 @@ use DCarbone\PHPConsulAPI\ValuedStringResponse;
 
 /**
  * Class AgentClient
- * @package DCarbone\PHPConsulAPI\Agent
  */
 class AgentClient extends AbstractClient
 {
-    /** @var null|array */
-    private $_self = null;
+    /** @var array|null */
+    private ?array $_self = null;
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentSelfResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentSelfResponse
      */
     public function Self(): AgentSelfResponse
     {
@@ -61,8 +60,8 @@ class AgentClient extends AbstractClient
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Agent\MetricsInfoResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Agent\MetricsInfoResponse
      */
     public function Metrics(): MetricsInfoResponse
     {
@@ -84,8 +83,8 @@ class AgentClient extends AbstractClient
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Error|null
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function Reload(): ?Error
     {
@@ -95,8 +94,8 @@ class AgentClient extends AbstractClient
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\ValuedStringResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\ValuedStringResponse
      */
     public function NodeName(): ValuedStringResponse
     {
@@ -107,7 +106,7 @@ class AgentClient extends AbstractClient
             }
         }
 
-        if (isset($this->_self['Config']) && isset($this->_self['Config']['NodeName'])) {
+        if (isset($this->_self['Config'], $this->_self['Config']['NodeName'])) {
             return new ValuedStringResponse($this->_self['Config']['NodeName'], null);
         }
 
@@ -116,8 +115,8 @@ class AgentClient extends AbstractClient
 
     /**
      * @param string $filter
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentChecksResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentChecksResponse
      */
     public function ChecksWithFilter(string $filter): AgentChecksResponse
     {
@@ -137,8 +136,8 @@ class AgentClient extends AbstractClient
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentChecksResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentChecksResponse
      */
     public function Checks(): AgentChecksResponse
     {
@@ -147,8 +146,8 @@ class AgentClient extends AbstractClient
 
     /**
      * @param string $filter
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentServicesResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServicesResponse
      */
     public function ServicesWithFilter(string $filter): AgentServicesResponse
     {
@@ -168,8 +167,8 @@ class AgentClient extends AbstractClient
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentServicesResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServicesResponse
      */
     public function Services(): AgentServicesResponse
     {
@@ -178,12 +177,12 @@ class AgentClient extends AbstractClient
 
     /**
      * @param string $service
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentHealthServiceResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentHealthServiceResponse
      */
     public function AgentHealthServiceByName(string $service): AgentHealthServiceResponse
     {
-        $r = $this->_newGetRequest(sprintf('v1/agent/health/service/name/%s', urlencode($service)), null);
+        $r = $this->_newGetRequest(\sprintf('v1/agent/health/service/name/%s', \urlencode($service)), null);
         $r->params->add('format', 'json');
         $r->header->set('Accept', 'application/json');
 
@@ -221,12 +220,12 @@ class AgentClient extends AbstractClient
 
     /**
      * @param string $id
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentHealthServiceResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentHealthServiceResponse
      */
     public function AgentHealthServiceByID(string $id): AgentHealthServiceResponse
     {
-        $r = $this->_newGetRequest(sprintf('v1/agent/health/service/id/%s', $id), null);
+        $r = $this->_newGetRequest(\sprintf('v1/agent/health/service/id/%s', $id), null);
         $r->params->add('format', 'json');
         $r->header->set('Accept', 'application/json');
 
@@ -263,8 +262,8 @@ class AgentClient extends AbstractClient
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentMembersResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentMembersResponse
      */
     public function Members(): AgentMembersResponse
     {
@@ -283,8 +282,8 @@ class AgentClient extends AbstractClient
 
     /**
      * @param \DCarbone\PHPConsulAPI\Agent\MemberOpts $opts
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentMembersResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentMembersResponse
      */
     public function MemberOpts(MemberOpts $opts): AgentMembersResponse
     {
@@ -308,8 +307,8 @@ class AgentClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration $service
      * @param \DCarbone\PHPConsulAPI\Agent\ServiceRegisterOpts $opts
-     * @return \DCarbone\PHPConsulAPI\Error|null
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function ServiceRegisterOpts(AgentServiceRegistration $service, ServiceRegisterOpts $opts): ?Error
     {
@@ -324,8 +323,8 @@ class AgentClient extends AbstractClient
      * Register a service within Consul
      *
      * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration $service
-     * @return \DCarbone\PHPConsulAPI\Error|null
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function ServiceRegister(AgentServiceRegistration $service): ?Error
     {
@@ -336,12 +335,12 @@ class AgentClient extends AbstractClient
      * Remove a service from Consul
      *
      * @param string $serviceID
-     * @return \DCarbone\PHPConsulAPI\Error|null
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function ServiceDeregister(string $serviceID): ?Error
     {
-        $r = new Request(HTTP\MethodPut, sprintf('v1/agent/service/deregister/%s', $serviceID), $this->config, null);
+        $r = new Request(HTTP\MethodPut, \sprintf('v1/agent/service/deregister/%s', $serviceID), $this->config, null);
         return $this->_requireOK($this->_do($r))->Err;
     }
 
@@ -350,8 +349,8 @@ class AgentClient extends AbstractClient
      *
      * @param string $checkID
      * @param string $note
-     * @return \DCarbone\PHPConsulAPI\Error|null
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Error|null
      * @deprecated use UpdateTTL
      */
     public function PassTTL(string $checkID, string $note): ?Error
@@ -364,8 +363,8 @@ class AgentClient extends AbstractClient
      *
      * @param string $checkID
      * @param string $note
-     * @return \DCarbone\PHPConsulAPI\Error|null
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Error|null
      * @deprecated use UpdateTTL
      */
     public function WarnTTL(string $checkID, string $note): ?Error
@@ -378,8 +377,8 @@ class AgentClient extends AbstractClient
      *
      * @param string $checkID
      * @param string $note
-     * @return \DCarbone\PHPConsulAPI\Error|null
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Error|null
      * @deprecated use UpdateTTL
      */
     public function FailTTL(string $checkID, string $note): ?Error
@@ -391,8 +390,8 @@ class AgentClient extends AbstractClient
      * @param string $checkID
      * @param string $output
      * @param string $status
-     * @return \DCarbone\PHPConsulAPI\Error|null
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function UpdateTTL(string $checkID, string $output, string $status): ?Error
     {
@@ -416,7 +415,7 @@ class AgentClient extends AbstractClient
 
         $r = new Request(
             HTTP\MethodPut,
-            sprintf('v1/agent/check/update/%s', $checkID),
+            \sprintf('v1/agent/check/update/%s', $checkID),
             $this->config,
             new AgentCheckUpdate(['Output' => $output, 'Status' => $status])
         );
@@ -426,8 +425,8 @@ class AgentClient extends AbstractClient
 
     /**
      * @param \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration $agentCheckRegistration
-     * @return \DCarbone\PHPConsulAPI\Error|null
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function CheckRegister(AgentCheckRegistration $agentCheckRegistration): ?Error
     {
@@ -438,23 +437,23 @@ class AgentClient extends AbstractClient
 
     /**
      * @param string $checkID
-     * @return \DCarbone\PHPConsulAPI\Error|null
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function CheckDeregister(string $checkID): ?Error
     {
-        return $this->_executePut(sprintf('v1/agent/check/deregister/%s', $checkID), null, null)->Err;
+        return $this->_executePut(\sprintf('v1/agent/check/deregister/%s', $checkID), null, null)->Err;
     }
 
     /**
      * @param string $addr
      * @param bool $wan
-     * @return \DCarbone\PHPConsulAPI\Error|null
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function Join(string $addr, bool $wan = false): ?Error
     {
-        $r = $this->_newPutRequest(sprintf('v1/agent/join/%s', $addr), null, null);
+        $r = $this->_newPutRequest(\sprintf('v1/agent/join/%s', $addr), null, null);
         if ($wan) {
             $r->params->set('wan', '1');
         }
@@ -462,8 +461,8 @@ class AgentClient extends AbstractClient
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Error|null
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function Leave(): ?Error
     {
@@ -472,22 +471,22 @@ class AgentClient extends AbstractClient
 
     /**
      * @param string $node
-     * @return \DCarbone\PHPConsulAPI\Error|null
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function ForceLeave(string $node): ?Error
     {
-        return $this->_executePut(sprintf('v1/agent/force-leave/%s', $node), null, null)->Err;
+        return $this->_executePut(\sprintf('v1/agent/force-leave/%s', $node), null, null)->Err;
     }
 
     /**
      * @param string $node
-     * @return \DCarbone\PHPConsulAPI\Error|null
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function ForceLeavePrune(string $node): ?Error
     {
-        $r = $this->_newPutRequest(sprintf('v1/agent/force-leave/%s', $node), null, null);
+        $r = $this->_newPutRequest(\sprintf('v1/agent/force-leave/%s', $node), null, null);
         $r->params->set('prune', '1');
         return $this->_requireOK($this->_do($r))->Err;
     }
@@ -495,12 +494,12 @@ class AgentClient extends AbstractClient
     /**
      * @param string $serviceID
      * @param string $reason
-     * @return \DCarbone\PHPConsulAPI\Error|null
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function EnableServiceMaintenance(string $serviceID, string $reason = ''): ?Error
     {
-        $r = $this->_newPutRequest(sprintf('v1/agent/service/maintenance/%s', $serviceID), null, null);
+        $r = $this->_newPutRequest(\sprintf('v1/agent/service/maintenance/%s', $serviceID), null, null);
         $r->params->set('enable', 'true');
         $r->params->set('reason', $reason);
         return $this->_requireOK($this->_do($r))->Err;
@@ -508,20 +507,20 @@ class AgentClient extends AbstractClient
 
     /**
      * @param string $serviceID
-     * @return \DCarbone\PHPConsulAPI\Error|null
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function DisableServiceMaintenance(string $serviceID): ?Error
     {
-        $r = $this->_newPutRequest(sprintf('v1/agent/service/maintenance/%s', $serviceID), null, null);
+        $r = $this->_newPutRequest(\sprintf('v1/agent/service/maintenance/%s', $serviceID), null, null);
         $r->params->set('enable', 'false');
         return $this->_requireOK($this->_do($r))->Err;
     }
 
     /**
      * @param string $reason
-     * @return \DCarbone\PHPConsulAPI\Error|null
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function EnableNodeMaintenance(string $reason = ''): ?Error
     {
@@ -532,8 +531,8 @@ class AgentClient extends AbstractClient
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Error|null
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function DisableNodeMaintenance(): ?Error
     {

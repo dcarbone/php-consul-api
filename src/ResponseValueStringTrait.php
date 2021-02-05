@@ -16,21 +16,20 @@ namespace DCarbone\PHPConsulAPI;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 /**
  * Trait ResponseValueStringTrait
- * @package DCarbone\PHPConsulAPI
  */
 trait ResponseValueStringTrait
 {
     /** @var string */
-    public $Value = '';
+    public string $Value = '';
 
     /**
      * @return string
      */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->Value;
     }
@@ -38,7 +37,7 @@ trait ResponseValueStringTrait
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->Value;
     }

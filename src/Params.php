@@ -16,11 +16,10 @@ namespace DCarbone\PHPConsulAPI;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 /**
  * Class Params
- * @package DCarbone\PHPConsulAPI
  */
 class Params extends Values
 {
@@ -30,6 +29,6 @@ class Params extends Values
      */
     protected function encode(string $v): string
     {
-        return urlencode($v);
+        return \urlencode($v);
     }
 }

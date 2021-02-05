@@ -16,34 +16,33 @@ namespace DCarbone\PHPConsulAPI;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\Go\Time;
 
 /**
  * Class QueryMeta
- * @package DCarbone\PHPConsulAPI
  */
 class QueryMeta
 {
     /** @var string */
-    public $RequestUrl = '';
+    public string $RequestUrl = '';
     /** @var int */
-    public $LastIndex = 0;
+    public int $LastIndex = 0;
     /** @var string */
-    public $LastContentHash = '';
+    public string $LastContentHash = '';
     /** @var int */
-    public $LastContact = 0;
+    public int $LastContact = 0;
     /** @var bool */
-    public $KnownLeader = false;
-    /** @var \DCarbone\Go\Time\Duration */
-    public $RequestTime = null;
-    /** @var bool */
-    public $AddressTranslationEnabled = false;
-    /** @var bool */
-    public $CacheHit = false;
+    public bool $KnownLeader = false;
     /** @var \DCarbone\Go\Time\Duration|null */
-    public $CacheAge = null;
+    public ?Time\Duration $RequestTime = null;
+    /** @var bool */
+    public bool $AddressTranslationEnabled = false;
+    /** @var bool */
+    public bool $CacheHit = false;
+    /** @var \DCarbone\Go\Time\Duration|null */
+    public ?Time\Duration $CacheAge = null;
 
     /**
      * @return string

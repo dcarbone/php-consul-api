@@ -16,13 +16,12 @@ namespace DCarbone\PHPConsulAPI\Operator;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class AutopilotConfiguration
- * @package DCarbone\PHPConsulAPI\Operator
  */
 class AutopilotConfiguration extends AbstractModel
 {
@@ -57,7 +56,7 @@ class AutopilotConfiguration extends AbstractModel
      * @param bool $cleanupDeadServers
      * @return AutopilotConfiguration
      */
-    public function setCleanupDeadServers(bool $cleanupDeadServers): AutopilotConfiguration
+    public function setCleanupDeadServers(bool $cleanupDeadServers): self
     {
         $this->CleanupDeadServers = $cleanupDeadServers;
         return $this;
@@ -75,7 +74,7 @@ class AutopilotConfiguration extends AbstractModel
      * @param string $lastContactThreshold
      * @return AutopilotConfiguration
      */
-    public function setLastContactThreshold(string $lastContactThreshold): AutopilotConfiguration
+    public function setLastContactThreshold(string $lastContactThreshold): self
     {
         $this->LastContactThreshold = $lastContactThreshold;
         return $this;
@@ -93,7 +92,7 @@ class AutopilotConfiguration extends AbstractModel
      * @param int $maxTrailingLogs
      * @return AutopilotConfiguration
      */
-    public function setMaxTrailingLogs(int $maxTrailingLogs): AutopilotConfiguration
+    public function setMaxTrailingLogs(int $maxTrailingLogs): self
     {
         $this->MaxTrailingLogs = $maxTrailingLogs;
         return $this;
@@ -111,7 +110,7 @@ class AutopilotConfiguration extends AbstractModel
      * @param string $serverStabilizationTime
      * @return AutopilotConfiguration
      */
-    public function setServerStabilizationTime(string $serverStabilizationTime): AutopilotConfiguration
+    public function setServerStabilizationTime(string $serverStabilizationTime): self
     {
         $this->ServerStabilizationTime = $serverStabilizationTime;
         return $this;
@@ -129,7 +128,7 @@ class AutopilotConfiguration extends AbstractModel
      * @param string $redundancyZoneTag
      * @return AutopilotConfiguration
      */
-    public function setRedundancyZoneTag(string $redundancyZoneTag): AutopilotConfiguration
+    public function setRedundancyZoneTag(string $redundancyZoneTag): self
     {
         $this->RedundancyZoneTag = $redundancyZoneTag;
         return $this;
@@ -147,7 +146,7 @@ class AutopilotConfiguration extends AbstractModel
      * @param bool $disableUpgradeMigration
      * @return AutopilotConfiguration
      */
-    public function setDisableUpgradeMigration(bool $disableUpgradeMigration): AutopilotConfiguration
+    public function setDisableUpgradeMigration(bool $disableUpgradeMigration): self
     {
         $this->DisableUpgradeMigration = $disableUpgradeMigration;
         return $this;
@@ -165,7 +164,7 @@ class AutopilotConfiguration extends AbstractModel
      * @param string $upgradeVersionTag
      * @return AutopilotConfiguration
      */
-    public function setUpgradeVersionTag(string $upgradeVersionTag): AutopilotConfiguration
+    public function setUpgradeVersionTag(string $upgradeVersionTag): self
     {
         $this->UpgradeVersionTag = $upgradeVersionTag;
         return $this;
@@ -183,7 +182,7 @@ class AutopilotConfiguration extends AbstractModel
      * @param int $createIndex
      * @return AutopilotConfiguration
      */
-    public function setCreateIndex(int $createIndex): AutopilotConfiguration
+    public function setCreateIndex(int $createIndex): self
     {
         $this->CreateIndex = $createIndex;
         return $this;
@@ -201,7 +200,7 @@ class AutopilotConfiguration extends AbstractModel
      * @param int $modifyIndex
      * @return AutopilotConfiguration
      */
-    public function setModifyIndex(int $modifyIndex): AutopilotConfiguration
+    public function setModifyIndex(int $modifyIndex): self
     {
         $this->ModifyIndex = $modifyIndex;
         return $this;
