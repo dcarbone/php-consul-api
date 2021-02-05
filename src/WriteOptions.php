@@ -76,7 +76,7 @@ class WriteOptions extends AbstractModel implements RequestOptions
     /**
      * @param string $datacenter
      */
-    public function setDatacenter(string $datacenter)
+    public function setDatacenter(string $datacenter): void
     {
         $this->Datacenter = $datacenter;
     }
@@ -92,7 +92,7 @@ class WriteOptions extends AbstractModel implements RequestOptions
     /**
      * @param string $token
      */
-    public function setToken(string $token)
+    public function setToken(string $token): void
     {
         $this->Token = $token;
     }
@@ -108,7 +108,7 @@ class WriteOptions extends AbstractModel implements RequestOptions
     /**
      * @param int $relayFactor
      */
-    public function setRelayFactor(int $relayFactor)
+    public function setRelayFactor(int $relayFactor): void
     {
         $this->RelayFactor = $relayFactor;
     }

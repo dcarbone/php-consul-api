@@ -30,7 +30,7 @@ use Psr\Http\Message\UriInterface;
  */
 abstract class AbstractClient
 {
-    /** @var Config */
+    /** @var \DCarbone\PHPConsulAPI\Config */
     protected $config;
 
     /** @var \GuzzleHttp\ClientInterface */
@@ -38,7 +38,7 @@ abstract class AbstractClient
 
     /**
      * AbstractConsulClient constructor.
-     * @param Config $config
+     * @param \DCarbone\PHPConsulAPI\Config $config
      */
     public function __construct(Config $config)
     {
@@ -187,7 +187,7 @@ abstract class AbstractClient
 
     /**
      * @param string $path
-     * @param $body
+     * @param \DCarbone\PHPConsulAPI$body
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @return \DCarbone\PHPConsulAPI\RequestResponse

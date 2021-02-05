@@ -42,7 +42,7 @@ class GaugeValue extends AbstractModel
 
     /**
      * @param string $name
-     * @return GaugeValue
+     * @return \DCarbone\PHPConsulAPI\Agent\GaugeValue
      */
     public function setName(string $name): self
     {
@@ -60,7 +60,7 @@ class GaugeValue extends AbstractModel
 
     /**
      * @param float $value
-     * @return GaugeValue
+     * @return \DCarbone\PHPConsulAPI\Agent\GaugeValue
      */
     public function setValue(float $value): self
     {
@@ -78,7 +78,7 @@ class GaugeValue extends AbstractModel
 
     /**
      * @param array $labels
-     * @return GaugeValue
+     * @return \DCarbone\PHPConsulAPI\Agent\GaugeValue
      */
     public function setLabels(array $labels): self
     {

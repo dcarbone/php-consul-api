@@ -229,7 +229,7 @@ class SessionEntry extends AbstractModel
 
     /**
      * @param string $namespace
-     * @return SessionEntry
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
     public function setNamespace(string $namespace): self
     {
@@ -247,7 +247,7 @@ class SessionEntry extends AbstractModel
 
     /**
      * @param string $check
-     * @return $this
+     * @return \DCarbone\PHPConsulAPI\Session$this
      */
     public function addNodeCheck(string $check): self
     {
@@ -257,7 +257,7 @@ class SessionEntry extends AbstractModel
 
     /**
      * @param string[] $nodeChecks
-     * @return SessionEntry
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
     public function setNodeChecks(array $nodeChecks): self
     {
@@ -288,7 +288,7 @@ class SessionEntry extends AbstractModel
 
     /**
      * @param \DCarbone\PHPConsulAPI\Session\ServiceCheck[] $serviceChecks
-     * @return SessionEntry
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
     public function setServiceChecks(array $serviceChecks): self
     {

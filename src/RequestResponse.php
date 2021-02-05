@@ -101,7 +101,7 @@ final class RequestResponse implements \ArrayAccess
      * @param mixed $offset
      * @param mixed $value
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         throw new \BadMethodCallException(\sprintf('Cannot call method %s on class %s', __METHOD__, __CLASS__));
     }
@@ -109,7 +109,7 @@ final class RequestResponse implements \ArrayAccess
     /**
      * @param mixed $offset
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         throw new \BadMethodCallException(\sprintf('Cannot call method %s on class %s', __METHOD__, __CLASS__));
     }

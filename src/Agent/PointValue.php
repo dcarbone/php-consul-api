@@ -40,7 +40,7 @@ class PointValue extends AbstractModel
 
     /**
      * @param string $name
-     * @return PointValue
+     * @return \DCarbone\PHPConsulAPI\Agent\PointValue
      */
     public function setName(string $name): self
     {
@@ -58,7 +58,7 @@ class PointValue extends AbstractModel
 
     /**
      * @param array $points
-     * @return PointValue
+     * @return \DCarbone\PHPConsulAPI\Agent\PointValue
      */
     public function setPoints(array $points): self
     {

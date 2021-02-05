@@ -126,7 +126,7 @@ trait FieldHydration
      * Handles scalar type field hydration
      *
      * @param string $field
-     * @param $value
+     * @param \$value
      */
     private function hydrateSimple(string $field, $value): void
     {

@@ -83,7 +83,7 @@ class WriteResponse implements \ArrayAccess
      * @param mixed $offset
      * @param mixed $value
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         throw new \BadMethodCallException(\sprintf('Cannot call %s on %s', __METHOD__, __CLASS__));
     }
@@ -91,7 +91,7 @@ class WriteResponse implements \ArrayAccess
     /**
      * @param mixed $offset
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         throw new \BadMethodCallException(\sprintf('Cannot call %s on %s', __METHOD__, __CLASS__));
     }

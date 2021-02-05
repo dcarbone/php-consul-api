@@ -71,7 +71,7 @@ class AgentServiceChecksInfo extends AbstractModel
 
     /**
      * @param string $aggregatedStatus
-     * @return AgentServiceChecksInfo
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceChecksInfo
      */
     public function setAggregatedStatus(string $aggregatedStatus): self
     {
@@ -89,7 +89,7 @@ class AgentServiceChecksInfo extends AbstractModel
 
     /**
      * @param \DCarbone\PHPConsulAPI\Agent\AgentService|null $service
-     * @return AgentServiceChecksInfo
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceChecksInfo
      */
     public function setService(?AgentService $service): self
     {
@@ -107,7 +107,7 @@ class AgentServiceChecksInfo extends AbstractModel
 
     /**
      * @param \DCarbone\PHPConsulAPI\Health\HealthChecks|null $checks
-     * @return AgentServiceChecksInfo
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceChecksInfo
      */
     public function setChecks(?HealthChecks $checks): self
     {

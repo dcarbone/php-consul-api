@@ -54,7 +54,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
         return \current($this->_children);
     }
 
-    public function next()
+    public function next(): void
     {
         \next($this->_children);
     }
@@ -76,7 +76,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
         return null !== \key($this->_children);
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         \reset($this->_children);
     }
@@ -163,7 +163,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
      * @param mixed $offset the offset to assign the value to
      * @param mixed $value the value to set
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         if ('string' === \gettype($offset)) {
             $subPath = \str_replace($this->_prefix, '', $offset);
@@ -185,7 +185,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     /**
      * @param mixed $offset the offset to unset
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         // do nothing, yo...
     }

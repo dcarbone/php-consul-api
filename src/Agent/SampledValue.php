@@ -50,7 +50,7 @@ class SampledValue extends AbstractModel
 
     /**
      * @param string $name
-     * @return SampledValue
+     * @return \DCarbone\PHPConsulAPI\Agent\SampledValue
      */
     public function setName(string $name): self
     {
@@ -68,7 +68,7 @@ class SampledValue extends AbstractModel
 
     /**
      * @param int $count
-     * @return SampledValue
+     * @return \DCarbone\PHPConsulAPI\Agent\SampledValue
      */
     public function setCount(int $count): self
     {
@@ -86,7 +86,7 @@ class SampledValue extends AbstractModel
 
     /**
      * @param float $sum
-     * @return SampledValue
+     * @return \DCarbone\PHPConsulAPI\Agent\SampledValue
      */
     public function setSum(float $sum): self
     {
@@ -104,7 +104,7 @@ class SampledValue extends AbstractModel
 
     /**
      * @param float $min
-     * @return SampledValue
+     * @return \DCarbone\PHPConsulAPI\Agent\SampledValue
      */
     public function setMin(float $min): self
     {
@@ -122,7 +122,7 @@ class SampledValue extends AbstractModel
 
     /**
      * @param float $max
-     * @return SampledValue
+     * @return \DCarbone\PHPConsulAPI\Agent\SampledValue
      */
     public function setMax(float $max): self
     {
@@ -140,7 +140,7 @@ class SampledValue extends AbstractModel
 
     /**
      * @param float $mean
-     * @return SampledValue
+     * @return \DCarbone\PHPConsulAPI\Agent\SampledValue
      */
     public function setMean(float $mean): self
     {
@@ -158,7 +158,7 @@ class SampledValue extends AbstractModel
 
     /**
      * @param array $labels
-     * @return SampledValue
+     * @return \DCarbone\PHPConsulAPI\Agent\SampledValue
      */
     public function setLabels(array $labels): self
     {

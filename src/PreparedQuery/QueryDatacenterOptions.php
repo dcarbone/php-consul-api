@@ -40,7 +40,7 @@ class QueryDatacenterOptions extends AbstractModel
 
     /**
      * @param int $nearestN
-     * @return QueryDatacenterOptions
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions
      */
     public function setNearestN(int $nearestN): self
     {
@@ -58,7 +58,7 @@ class QueryDatacenterOptions extends AbstractModel
 
     /**
      * @param string[] $datacenters
-     * @return QueryDatacenterOptions
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions
      */
     public function setDatacenters(array $datacenters): self
     {
@@ -68,7 +68,7 @@ class QueryDatacenterOptions extends AbstractModel
 
     /**
      * @param string $datacenter
-     * @return QueryDatacenterOptions
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions
      */
     public function addDatacenter(string $Datacenter): self
     {

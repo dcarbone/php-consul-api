@@ -89,7 +89,7 @@ class ServiceQuery extends AbstractModel
 
     /**
      * @param string $namespace
-     * @return ServiceQuery
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
     public function setNamespace(string $namespace): self
     {
@@ -161,7 +161,7 @@ class ServiceQuery extends AbstractModel
 
     /**
      * @param string[] $ignoreCheckIDs
-     * @return ServiceQuery
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
     public function setIgnoreCheckIDs(?array $ignoreCheckIDs): self
     {
@@ -179,7 +179,7 @@ class ServiceQuery extends AbstractModel
 
     /**
      * @param array|null $nodeMeta
-     * @return ServiceQuery
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
     public function setNodeMeta(?array $nodeMeta): self
     {
@@ -197,7 +197,7 @@ class ServiceQuery extends AbstractModel
 
     /**
      * @param array|null $serviceMeta
-     * @return ServiceQuery
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
     public function setServiceMeta(?array $serviceMeta): self
     {
@@ -215,7 +215,7 @@ class ServiceQuery extends AbstractModel
 
     /**
      * @param bool $connect
-     * @return ServiceQuery
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
     public function setConnect(bool $connect): self
     {

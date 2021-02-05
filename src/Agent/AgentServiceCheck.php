@@ -84,7 +84,7 @@ class AgentServiceCheck extends AbstractModel
 
     /**
      * @param string $checkID
-     * @return AgentServiceCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
     public function setCheckID(string $checkID): self
     {
@@ -102,7 +102,7 @@ class AgentServiceCheck extends AbstractModel
 
     /**
      * @param string $name
-     * @return AgentServiceCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
     public function setName(string $name): self
     {
@@ -120,7 +120,7 @@ class AgentServiceCheck extends AbstractModel
 
     /**
      * @param string[] $args
-     * @return AgentServiceCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
     public function setArgs(array $args): self
     {
@@ -138,7 +138,7 @@ class AgentServiceCheck extends AbstractModel
 
     /**
      * @param string $dockerContainerID
-     * @return AgentServiceCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
     public function setDockerContainerID(string $dockerContainerID): self
     {
@@ -156,7 +156,7 @@ class AgentServiceCheck extends AbstractModel
 
     /**
      * @param string $shell
-     * @return AgentServiceCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
     public function setShell(string $shell): self
     {
@@ -174,7 +174,7 @@ class AgentServiceCheck extends AbstractModel
 
     /**
      * @param string $interval
-     * @return AgentServiceCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
     public function setInterval(string $interval): self
     {
@@ -192,7 +192,7 @@ class AgentServiceCheck extends AbstractModel
 
     /**
      * @param string $timeout
-     * @return AgentServiceCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
     public function setTimeout(string $timeout): self
     {
@@ -210,7 +210,7 @@ class AgentServiceCheck extends AbstractModel
 
     /**
      * @param string $ttl
-     * @return AgentServiceCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
     public function setTTL(string $ttl): self
     {
@@ -228,7 +228,7 @@ class AgentServiceCheck extends AbstractModel
 
     /**
      * @param string $http
-     * @return AgentServiceCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
     public function setHTTP(string $http): self
     {
@@ -246,7 +246,7 @@ class AgentServiceCheck extends AbstractModel
 
     /**
      * @param array $header
-     * @return AgentServiceCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
     public function setHeader(array $header): self
     {
@@ -264,7 +264,7 @@ class AgentServiceCheck extends AbstractModel
 
     /**
      * @param string $method
-     * @return AgentServiceCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
     public function setMethod(string $method): self
     {
@@ -282,7 +282,7 @@ class AgentServiceCheck extends AbstractModel
 
     /**
      * @param string $tcp
-     * @return AgentServiceCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
     public function setTCP(string $tcp): self
     {
@@ -300,7 +300,7 @@ class AgentServiceCheck extends AbstractModel
 
     /**
      * @param string $status
-     * @return AgentServiceCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
     public function setStatus(string $status): self
     {
@@ -318,7 +318,7 @@ class AgentServiceCheck extends AbstractModel
 
     /**
      * @param string $notes
-     * @return AgentServiceCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
     public function setNotes(string $notes): self
     {
@@ -336,7 +336,7 @@ class AgentServiceCheck extends AbstractModel
 
     /**
      * @param bool $tlsSkipVerify
-     * @return AgentServiceCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
     public function setTLSSkipVerify(bool $tlsSkipVerify): self
     {
@@ -354,7 +354,7 @@ class AgentServiceCheck extends AbstractModel
 
     /**
      * @param string $deregisterCriticalServiceAfter
-     * @return AgentServiceCheck
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
     public function setDeregisterCriticalServiceAfter(string $deregisterCriticalServiceAfter): self
     {

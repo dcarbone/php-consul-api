@@ -2,20 +2,24 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-return (new \PhpCsFixer\Config('php-consul-api'))
+use PhpCsFixer\Config;
+
+$config = new Config('php-consul-api');
+
+$config
     ->setUsingCache(false)
     ->setRiskyAllowed(true)
     ->setLineEnding("\n")
     ->setIndent('    ')
-//    ->setFinder(
-//        PhpCsFixer\Finder::create()
-//            ->in([__DIR__ . '/../../src/', __DIR__ . '/../../tests/'])
-//            ->name('*.php')
-//            ->ignoreDotFiles(true)
-//            ->ignoreVCS(true)
-//    )
+    ->registerCustomFixers(
+        [
+            new \DCarbone\PHPConsulAPI\Tools\PHPCSFixer\Fixer\FQCN\ForceFQCNFixer(),
+        ]
+    )
     ->setRules(
         [
+            'PHPConsulAPI/fqcn_fixer' => true,
+
             'align_multiline_comment'                       => [
                 'comment_type' => 'all_multiline',
             ],
@@ -42,7 +46,7 @@ return (new \PhpCsFixer\Config('php-consul-api'))
             'combine_consecutive_issets'                    => true,
             'combine_consecutive_unsets'                    => true,
             'combine_nested_dirname'                        => true,
-            // 'compact_nullable_typehint'                  => true, // PHP >= 7.1
+            'compact_nullable_typehint'                     => true, // PHP >= 7.1
             'concat_space'                                  => [
                 'spacing' => 'one',
             ],
@@ -239,7 +243,7 @@ return (new \PhpCsFixer\Config('php-consul-api'))
             'standardize_not_equals'                        => true,
             'static_lambda'                                 => true,
             'strict_comparison'                             => false,
-            // Arrayy has a option where we still need "==" instead of "==="
+            // Array has a option where we still need "==" instead of "==="
             'strict_param'                                  => true,
             'string_line_ending'                            => true,
             'switch_case_semicolon_to_colon'                => true,
@@ -250,7 +254,7 @@ return (new \PhpCsFixer\Config('php-consul-api'))
             'trim_array_spaces'                             => true,
             'unary_operator_spaces'                         => true,
             'visibility_required'                           => true,
-            // 'void_return'                                   => true, // PHP >= 7.1
+            'void_return'                                   => true, // PHP >= 7.1
             'whitespace_after_comma_in_array'               => true,
             'yoda_style'                                    => [
                 'equal'            => true,
@@ -259,3 +263,5 @@ return (new \PhpCsFixer\Config('php-consul-api'))
             ],
         ]
     );
+
+return $config;

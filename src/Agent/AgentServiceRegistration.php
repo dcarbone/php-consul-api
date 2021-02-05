@@ -73,7 +73,7 @@ class AgentServiceRegistration extends AbstractModel
 
     /**
      * @param string $id
-     * @return AgentServiceRegistration
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
     public function setID(string $id): self
     {
@@ -91,7 +91,7 @@ class AgentServiceRegistration extends AbstractModel
 
     /**
      * @param string $name
-     * @return AgentServiceRegistration
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
     public function setName(string $name): self
     {
@@ -109,7 +109,7 @@ class AgentServiceRegistration extends AbstractModel
 
     /**
      * @param int $port
-     * @return AgentServiceRegistration
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
     public function setPort(int $port): self
     {
@@ -127,7 +127,7 @@ class AgentServiceRegistration extends AbstractModel
 
     /**
      * @param string $address
-     * @return AgentServiceRegistration
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
     public function setAddress(string $address): self
     {
@@ -145,7 +145,7 @@ class AgentServiceRegistration extends AbstractModel
 
     /**
      * @param bool $enableTagOverride
-     * @return AgentServiceRegistration
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
     public function setEnableTagOverride(bool $enableTagOverride): self
     {
@@ -163,7 +163,7 @@ class AgentServiceRegistration extends AbstractModel
 
     /**
      * @param array $meta
-     * @return AgentServiceRegistration
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
     public function setMeta(array $meta): self
     {
@@ -181,7 +181,7 @@ class AgentServiceRegistration extends AbstractModel
 
     /**
      * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck|null $check
-     * @return AgentServiceRegistration
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
     public function setCheck(?AgentServiceCheck $check): self
     {
@@ -199,7 +199,7 @@ class AgentServiceRegistration extends AbstractModel
 
     /**
      * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck[] $checks
-     * @return AgentServiceRegistration
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
     public function setChecks(array $checks): self
     {
@@ -209,7 +209,7 @@ class AgentServiceRegistration extends AbstractModel
 
     /**
      * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck $check
-     * @return AgentServiceRegistration
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
     public function addCheck(AgentServiceCheck $check): self
     {

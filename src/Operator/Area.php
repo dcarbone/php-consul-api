@@ -44,7 +44,7 @@ class Area extends AbstractModel
 
     /**
      * @param string $id
-     * @return Area
+     * @return \DCarbone\PHPConsulAPI\Operator\Area
      */
     public function setID(string $id): self
     {
@@ -62,7 +62,7 @@ class Area extends AbstractModel
 
     /**
      * @param string $peerDatacenter
-     * @return Area
+     * @return \DCarbone\PHPConsulAPI\Operator\Area
      */
     public function setPeerDatacenter(string $peerDatacenter): self
     {
@@ -80,7 +80,7 @@ class Area extends AbstractModel
 
     /**
      * @param string[] $retryJoin
-     * @return Area
+     * @return \DCarbone\PHPConsulAPI\Operator\Area
      */
     public function setRetryJoin(array $retryJoin): self
     {
@@ -98,7 +98,7 @@ class Area extends AbstractModel
 
     /**
      * @param bool $useTLS
-     * @return Area
+     * @return \DCarbone\PHPConsulAPI\Operator\Area
      */
     public function setUseTLS(bool $useTLS): self
     {

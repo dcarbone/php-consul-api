@@ -40,7 +40,7 @@ class ServiceCheck extends AbstractModel
 
     /**
      * @param string $id
-     * @return ServiceCheck
+     * @return \DCarbone\PHPConsulAPI\Session\ServiceCheck
      */
     public function setID(string $id): self
     {
@@ -58,7 +58,7 @@ class ServiceCheck extends AbstractModel
 
     /**
      * @param string $namespace
-     * @return ServiceCheck
+     * @return \DCarbone\PHPConsulAPI\Session\ServiceCheck
      */
     public function setNamespace(string $namespace): self
     {

@@ -38,7 +38,7 @@ class AgentCheckRegistration extends AgentServiceCheck
 
     /**
      * @param string $id
-     * @return AgentCheckRegistration
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration
      */
     public function setID(string $id): self
     {
@@ -56,7 +56,7 @@ class AgentCheckRegistration extends AgentServiceCheck
 
     /**
      * @param string $serviceID
-     * @return AgentCheckRegistration
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration
      */
     public function setServiceID(string $serviceID): self
     {

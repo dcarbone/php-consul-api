@@ -54,7 +54,7 @@ class AutopilotConfiguration extends AbstractModel
 
     /**
      * @param bool $cleanupDeadServers
-     * @return AutopilotConfiguration
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration
      */
     public function setCleanupDeadServers(bool $cleanupDeadServers): self
     {
@@ -72,7 +72,7 @@ class AutopilotConfiguration extends AbstractModel
 
     /**
      * @param string $lastContactThreshold
-     * @return AutopilotConfiguration
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration
      */
     public function setLastContactThreshold(string $lastContactThreshold): self
     {
@@ -90,7 +90,7 @@ class AutopilotConfiguration extends AbstractModel
 
     /**
      * @param int $maxTrailingLogs
-     * @return AutopilotConfiguration
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration
      */
     public function setMaxTrailingLogs(int $maxTrailingLogs): self
     {
@@ -108,7 +108,7 @@ class AutopilotConfiguration extends AbstractModel
 
     /**
      * @param string $serverStabilizationTime
-     * @return AutopilotConfiguration
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration
      */
     public function setServerStabilizationTime(string $serverStabilizationTime): self
     {
@@ -126,7 +126,7 @@ class AutopilotConfiguration extends AbstractModel
 
     /**
      * @param string $redundancyZoneTag
-     * @return AutopilotConfiguration
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration
      */
     public function setRedundancyZoneTag(string $redundancyZoneTag): self
     {
@@ -144,7 +144,7 @@ class AutopilotConfiguration extends AbstractModel
 
     /**
      * @param bool $disableUpgradeMigration
-     * @return AutopilotConfiguration
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration
      */
     public function setDisableUpgradeMigration(bool $disableUpgradeMigration): self
     {
@@ -162,7 +162,7 @@ class AutopilotConfiguration extends AbstractModel
 
     /**
      * @param string $upgradeVersionTag
-     * @return AutopilotConfiguration
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration
      */
     public function setUpgradeVersionTag(string $upgradeVersionTag): self
     {
@@ -180,7 +180,7 @@ class AutopilotConfiguration extends AbstractModel
 
     /**
      * @param int $createIndex
-     * @return AutopilotConfiguration
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration
      */
     public function setCreateIndex(int $createIndex): self
     {
@@ -198,7 +198,7 @@ class AutopilotConfiguration extends AbstractModel
 
     /**
      * @param int $modifyIndex
-     * @return AutopilotConfiguration
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration
      */
     public function setModifyIndex(int $modifyIndex): self
     {

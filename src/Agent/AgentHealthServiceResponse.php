@@ -29,9 +29,9 @@ class AgentHealthServiceResponse implements \ArrayAccess
     use ResponseErrorTrait;
 
     /** @var string */
-    public $AggregatedStatus = '';
+    public string $AggregatedStatus = '';
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentServiceChecksInfo[]|null */
-    public $AgentServiceChecksInfos = null;
+    public ?array $AgentServiceChecksInfos = null;
 
     /**
      * AgentHealthServiceResponse constructor.
@@ -95,18 +95,18 @@ class AgentHealthServiceResponse implements \ArrayAccess
     }
 
     /**
-     * @param $offset
-     * @param $value
+     * @param \DCarbone\PHPConsulAPI\Agent$offset
+     * @param \DCarbone\PHPConsulAPI\Agent$value
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         throw new \BadMethodCallException(\sprintf('Cannot call %s on %s', __METHOD__, \get_called_class()));
     }
 
     /**
-     * @param $offset
+     * @param \DCarbone\PHPConsulAPI\Agent$offset
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         throw new \BadMethodCallException(\sprintf('Cannot call %s on %s', __METHOD__, \get_called_class()));
     }

@@ -38,7 +38,7 @@ class ServiceRegisterOpts extends AbstractModel
 
     /**
      * @param bool $replaceExistingChecks
-     * @return ServiceRegisterOpts
+     * @return \DCarbone\PHPConsulAPI\Agent\ServiceRegisterOpts
      */
     public function setReplaceExistingChecks(bool $replaceExistingChecks): self
     {

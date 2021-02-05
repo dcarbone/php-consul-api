@@ -30,7 +30,7 @@ class KVTxnOps extends AbstractModels
     protected $containedClass = KVTxnOp::class;
 
     /**
-     * @param $data
+     * @param \DCarbone\PHPConsulAPI\KV$data
      * @return \DCarbone\PHPConsulAPI\AbstractModel
      */
     protected function newChild($data): AbstractModel

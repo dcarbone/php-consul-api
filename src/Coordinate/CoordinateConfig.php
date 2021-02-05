@@ -80,7 +80,7 @@ class CoordinateConfig extends AbstractModel
 
     /**
      * @param int $dimensionality
-     * @return CoordinateConfig
+     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateConfig
      */
     public function setDimensionality(int $dimensionality): self
     {
@@ -98,7 +98,7 @@ class CoordinateConfig extends AbstractModel
 
     /**
      * @param float $vivaldiErrorMax
-     * @return CoordinateConfig
+     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateConfig
      */
     public function setVivaldiErrorMax(float $vivaldiErrorMax): self
     {
@@ -116,7 +116,7 @@ class CoordinateConfig extends AbstractModel
 
     /**
      * @param float $vivaldiCE
-     * @return CoordinateConfig
+     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateConfig
      */
     public function setVivaldiCE(float $vivaldiCE): self
     {
@@ -134,7 +134,7 @@ class CoordinateConfig extends AbstractModel
 
     /**
      * @param float $vivaldiCC
-     * @return CoordinateConfig
+     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateConfig
      */
     public function setVivaldiCC(float $vivaldiCC): self
     {
@@ -152,7 +152,7 @@ class CoordinateConfig extends AbstractModel
 
     /**
      * @param int $adjustmentWindowSize
-     * @return CoordinateConfig
+     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateConfig
      */
     public function setAdjustmentWindowSize(int $adjustmentWindowSize): self
     {
@@ -170,7 +170,7 @@ class CoordinateConfig extends AbstractModel
 
     /**
      * @param float $heightMin
-     * @return CoordinateConfig
+     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateConfig
      */
     public function setHeightMin(float $heightMin): self
     {
@@ -188,7 +188,7 @@ class CoordinateConfig extends AbstractModel
 
     /**
      * @param int $latencyFilterSize
-     * @return CoordinateConfig
+     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateConfig
      */
     public function setLatencyFilterSize(int $latencyFilterSize): self
     {
@@ -206,7 +206,7 @@ class CoordinateConfig extends AbstractModel
 
     /**
      * @param float $gravityRho
-     * @return CoordinateConfig
+     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateConfig
      */
     public function setGravityRho(float $gravityRho): self
     {

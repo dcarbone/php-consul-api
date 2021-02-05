@@ -1,5 +1,12 @@
 {
-    "require": {
-        "friendsofphp/php-cs-fixer": "^2.18"
+  "autoload": {
+    "psr-4": {
+      "DCarbone\\PHPConsulAPI\\Tools\\PHPCSFixer\\": "src/"
     }
+  },
+  "require":  {
+    "php":                       "^7.4",
+    "friendsofphp/php-cs-fixer": "^2.18",
+    "adamwojs/php-cs-fixer-phpdoc-force-fqcn": "^v1.0"
+  }
 }

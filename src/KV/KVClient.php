@@ -339,7 +339,7 @@ class KVClient extends AbstractClient
      * @param \DCarbone\PHPConsulAPI\QueryOptions $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @return array(
-     * @var KVPair[]|KVTree[]|null array of trees, values, or null on error
+     * @var \DCarbone\PHPConsulAPI\KV\KVPair[]|\DCarbone\PHPConsulAPI\KV\KVTree[]|null array of trees, values, or null on error
      * @var \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */

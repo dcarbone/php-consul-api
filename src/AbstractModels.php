@@ -57,7 +57,7 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
     /**
      * @param \DCarbone\PHPConsulAPI\AbstractModel|null $value
      */
-    public function append(AbstractModel $value = null)
+    public function append(AbstractModel $value = null): void
     {
         if (null === $value || $value instanceof $this->containedClass) {
             $this->_list[] = $value;
@@ -80,7 +80,7 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
         return \current($this->_list);
     }
 
-    public function next()
+    public function next(): void
     {
         \next($this->_list);
     }
@@ -101,7 +101,7 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
         return null !== \key($this->_list);
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         \reset($this->_list);
     }
@@ -132,7 +132,7 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
      * @param mixed $offset
      * @param mixed $value
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         if (!\is_int($offset)) {
             throw new \InvalidArgumentException('Offset must be int');
@@ -146,7 +146,7 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
     /**
      * @param mixed $offset
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->_list[$offset]);
     }
@@ -169,7 +169,7 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
 
     /**
      * @param array $data
-     * @return static
+     * @return \static
      */
     abstract protected function newChild(array $data): AbstractModel;
 }

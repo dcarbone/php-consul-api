@@ -56,7 +56,7 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
      * @param string $key
      * @param string ...$value
      */
-    public function set(string $key, string ...$value)
+    public function set(string $key, string ...$value): void
     {
         $this->values[$key] = $value;
     }
@@ -65,7 +65,7 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
      * @param string $key
      * @param string ...$value
      */
-    public function add(string $key, string ...$value)
+    public function add(string $key, string ...$value): void
     {
         if (isset($this->values[$key])) {
             $this->values[$key] = \array_merge($this->values[$key], $value);
@@ -77,7 +77,7 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
     /**
      * @param string $key
      */
-    public function delete(string $key)
+    public function delete(string $key): void
     {
         unset($this->values[$key]);
     }
@@ -106,7 +106,7 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
         return \current($this->values);
     }
 
-    public function next()
+    public function next(): void
     {
         \next($this->values);
     }
@@ -127,7 +127,7 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
         return null !== \key($this->values);
     }
 
-    public function rewind()
+    public function rewind(): void
     {
         \reset($this->values);
     }
@@ -154,7 +154,7 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
      * @param string $offset
      * @param string $value
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->set($offset, $value);
     }
@@ -162,7 +162,7 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
     /**
      * @param string $offset
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         $this->delete($offset);
     }

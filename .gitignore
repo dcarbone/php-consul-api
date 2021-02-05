@@ -4,3 +4,4 @@
 /*.iml
 /consul.log
 /.phpunit.result.cache
+.php_cs.cache

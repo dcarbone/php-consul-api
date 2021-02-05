@@ -391,7 +391,7 @@ class Config
     }
 
     /**
-     * @param HttpAuth|string $httpAuth
+     * @param \DCarbone\PHPConsulAPI\HttpAuth|string $httpAuth
      * @return \DCarbone\PHPConsulAPI\Config
      */
     public function setHttpAuth($httpAuth): self

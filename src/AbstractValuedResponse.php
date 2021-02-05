@@ -40,18 +40,18 @@ abstract class AbstractValuedResponse
     abstract public function getValue();
 
     /**
-     * @param $offset
-     * @param $value
+     * @param \$offset
+     * @param \$value
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         throw new \BadMethodCallException(\sprintf('Cannot call %s on %s', __METHOD__, \get_called_class()));
     }
 
     /**
-     * @param $offset
+     * @param \$offset
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         throw new \BadMethodCallException(\sprintf('Cannot call %s on %s', __METHOD__, \get_called_class()));
     }

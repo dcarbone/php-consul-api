@@ -70,7 +70,7 @@ class CatalogRegistration extends AbstractModel
 
     /**
      * @param string $id
-     * @return CatalogRegistration
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
     public function setID(string $id): self
     {
@@ -88,7 +88,7 @@ class CatalogRegistration extends AbstractModel
 
     /**
      * @param string $node
-     * @return CatalogRegistration
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
     public function setNode(string $node): self
     {
@@ -106,7 +106,7 @@ class CatalogRegistration extends AbstractModel
 
     /**
      * @param string $address
-     * @return CatalogRegistration
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
     public function setAddress(string $address): self
     {
@@ -124,7 +124,7 @@ class CatalogRegistration extends AbstractModel
 
     /**
      * @param array $taggedAddresses
-     * @return CatalogRegistration
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
     public function setTaggedAddresses(array $taggedAddresses): self
     {
@@ -142,7 +142,7 @@ class CatalogRegistration extends AbstractModel
 
     /**
      * @param array $nodeMeta
-     * @return CatalogRegistration
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
     public function setNodeMeta(array $nodeMeta): self
     {
@@ -160,7 +160,7 @@ class CatalogRegistration extends AbstractModel
 
     /**
      * @param string $datacenter
-     * @return CatalogRegistration
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
     public function setDatacenter(string $datacenter): self
     {
@@ -178,7 +178,7 @@ class CatalogRegistration extends AbstractModel
 
     /**
      * @param \DCarbone\PHPConsulAPI\Agent\AgentService|null $service
-     * @return CatalogRegistration
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
     public function setService(?AgentService $service): self
     {
@@ -196,7 +196,7 @@ class CatalogRegistration extends AbstractModel
 
     /**
      * @param \DCarbone\PHPConsulAPI\Agent\AgentCheck|null $check
-     * @return CatalogRegistration
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
     public function setCheck(?AgentCheck $check): self
     {

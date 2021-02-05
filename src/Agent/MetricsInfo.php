@@ -76,7 +76,7 @@ class MetricsInfo extends AbstractModel
 
     /**
      * @param string $timestamp
-     * @return MetricsInfo
+     * @return \DCarbone\PHPConsulAPI\Agent\MetricsInfo
      */
     public function setTimestamp(string $timestamp): self
     {
@@ -94,7 +94,7 @@ class MetricsInfo extends AbstractModel
 
     /**
      * @param \DCarbone\PHPConsulAPI\Agent\GaugeValue[] $gauges
-     * @return MetricsInfo
+     * @return \DCarbone\PHPConsulAPI\Agent\MetricsInfo
      */
     public function setGauges(array $gauges): self
     {
@@ -112,7 +112,7 @@ class MetricsInfo extends AbstractModel
 
     /**
      * @param \DCarbone\PHPConsulAPI\Agent\PointValue[] $points
-     * @return MetricsInfo
+     * @return \DCarbone\PHPConsulAPI\Agent\MetricsInfo
      */
     public function setPoints(array $points): self
     {
@@ -130,7 +130,7 @@ class MetricsInfo extends AbstractModel
 
     /**
      * @param \DCarbone\PHPConsulAPI\Agent\SampledValue[] $counters
-     * @return MetricsInfo
+     * @return \DCarbone\PHPConsulAPI\Agent\MetricsInfo
      */
     public function setCounters(array $counters): self
     {
@@ -148,7 +148,7 @@ class MetricsInfo extends AbstractModel
 
     /**
      * @param \DCarbone\PHPConsulAPI\Agent\SampledValue[] $samples
-     * @return MetricsInfo
+     * @return \DCarbone\PHPConsulAPI\Agent\MetricsInfo
      */
     public function setSamples(array $samples): self
     {

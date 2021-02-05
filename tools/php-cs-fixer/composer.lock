@@ -4,8 +4,48 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f2e42b9a6e381e9aa8be6280c22d5968",
+    "content-hash": "8385f064442b840b2a83520f8b3ffd50",
     "packages": [
+        {
+            "name": "adamwojs/php-cs-fixer-phpdoc-force-fqcn",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/adamwojs/php-cs-fixer-phpdoc-force-fqcn.git",
+                "reference": "feede2a54be8eb32f2e4739a0b052f6ea9518acf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/adamwojs/php-cs-fixer-phpdoc-force-fqcn/zipball/feede2a54be8eb32f2e4739a0b052f6ea9518acf",
+                "reference": "feede2a54be8eb32f2e4739a0b052f6ea9518acf",
+                "shasum": ""
+            },
+            "require": {
+                "friendsofphp/php-cs-fixer": "^2.7",
+                "php": "^7.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "AdamWojs\\PhpCsFixerPhpdocForceFQCN\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Adam Wójs",
+                    "email": "adam@wojs.pl"
+                }
+            ],
+            "support": {
+                "issues": "https://github.com/adamwojs/php-cs-fixer-phpdoc-force-fqcn/issues",
+                "source": "https://github.com/adamwojs/php-cs-fixer-phpdoc-force-fqcn/tree/v1.0"
+            },
+            "time": "2019-07-09T21:08:02+00:00"
+        },
         {
             "name": "composer/semver",
             "version": "3.2.4",
@@ -2059,7 +2099,9 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": "^7.4"
+    },
     "platform-dev": [],
     "plugin-api-version": "2.0.0"
 }

@@ -48,7 +48,7 @@ class ACLEntry extends AbstractModel
 
     /**
      * @param int $createIndex
-     * @return ACLEntry
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLEntry
      */
     public function setCreateIndex(int $createIndex): self
     {
@@ -66,7 +66,7 @@ class ACLEntry extends AbstractModel
 
     /**
      * @param int $modifyIndex
-     * @return ACLEntry
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLEntry
      */
     public function setModifyIndex(int $modifyIndex): self
     {
@@ -84,7 +84,7 @@ class ACLEntry extends AbstractModel
 
     /**
      * @param string $id
-     * @return ACLEntry
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLEntry
      */
     public function setID(string $id): self
     {
@@ -102,7 +102,7 @@ class ACLEntry extends AbstractModel
 
     /**
      * @param string $name
-     * @return ACLEntry
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLEntry
      */
     public function setName(string $name): self
     {
@@ -120,7 +120,7 @@ class ACLEntry extends AbstractModel
 
     /**
      * @param string $type
-     * @return ACLEntry
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLEntry
      */
     public function setType(string $type): self
     {
@@ -138,7 +138,7 @@ class ACLEntry extends AbstractModel
 
     /**
      * @param string $rules
-     * @return ACLEntry
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLEntry
      */
     public function setRules(string $rules): self
     {
