@@ -27,6 +27,7 @@ use DCarbone\PHPConsulAPI\ACL\ACLTokenRoleLink;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
 use DCarbone\PHPConsulAPI\Agent\AgentServiceChecksInfo;
 use DCarbone\PHPConsulAPI\Health\HealthChecks;
+use DCarbone\PHPConsulAPI\KV\KVPair;
 
 /**
  * Class Hydration
@@ -112,6 +113,12 @@ final class Hydration
             'Checks'  => [
                 self::FIELD_TYPE  => self::OBJECT,
                 self::FIELD_CLASS => HealthChecks::class,
+            ],
+        ],
+        KVPair::class                 => [
+            'Namespace' => [
+                self::FIELD_TYPE     => self::STRING,
+                self::FIELD_NULLABLE => true,
             ],
         ],
     ];

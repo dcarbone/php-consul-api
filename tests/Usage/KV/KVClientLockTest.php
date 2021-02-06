@@ -12,35 +12,38 @@ use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 
 /**
  * Class KVClientLockTest
- * @package DCarbone\PHPConsulAPITests\Usage\KV
+ *
+ * @internal
  */
-class KVClientLockTest extends AbstractUsageTests {
+final class KVClientLockTest extends AbstractUsageTests
+{
     /** @var bool */
     protected static $singlePerClass = true;
 
-    public function testAcquireAndRelease() {
+    public function testAcquireAndRelease(): void
+    {
         static $name = 'lockme';
-        static $key = 'lockable';
+        static $key  = 'lockable';
 
-        $conf = new Config();
-        $kvClient = new KVClient($conf);
+        $conf          = new Config();
+        $kvClient      = new KVClient($conf);
         $sessionClient = new SessionClient($conf);
 
-        list($id, $_, $err) = $sessionClient->CreateNoChecks(new SessionEntry(['Name'      => $name,
-                                                                               'TTL'       => '10s',
-                                                                               'LockDelay' => new Time\Duration(0),
-                                                                               'Behavior'  => Consul::SessionBehaviorDelete]));
-        $this->assertNull($err, sprintf('Error creating session: %s', $err));
+        [$id, $_, $err] = $sessionClient->CreateNoChecks(new SessionEntry(['Name'      => $name,
+            'TTL'                                                                      => '10s',
+            'LockDelay'                                                                => new Time\Duration(0),
+            'Behavior'                                                                 => Consul::SessionBehaviorDelete, ]));
+        static::assertNull($err, \sprintf('Error creating session: %s', $err));
 
-        $kv = new KVPair(['Key' => $key, 'Value' => 'whatever', 'Session' => $id]);
-        list($wm, $err) = $kvClient->Acquire($kv);
-        $this->assertNull($err, sprintf('Error acquiring lock: %s', $err));
-        $this->assertInstanceOf(WriteMeta::class, $wm);
+        $kv         = new KVPair(['Key' => $key, 'Value' => 'whatever', 'Session' => $id]);
+        [$wm, $err] = $kvClient->Acquire($kv);
+        static::assertNull($err, \sprintf('Error acquiring lock: %s', $err));
+        static::assertInstanceOf(WriteMeta::class, $wm);
 
-        list($kv, $_, $err) = $kvClient->Get($key);
-        $this->assertNull($err, sprintf('Error retrieving key: %s', $err));
-        $this->assertInstanceOf(KVPair::class, $kv);
-        $this->assertEquals($id, $kv->Session);
-        $this->assertEquals('whatever', $kv->Value);
+        [$kv, $_, $err] = $kvClient->Get($key);
+        static::assertNull($err, \sprintf('Error retrieving key: %s', $err));
+        static::assertInstanceOf(KVPair::class, $kv);
+        static::assertSame($id, $kv->Session);
+        static::assertSame('whatever', $kv->Value);
     }
 }

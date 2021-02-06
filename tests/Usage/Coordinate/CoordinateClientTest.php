@@ -14,7 +14,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\Coordinate\CoordinateClient;
@@ -23,38 +23,43 @@ use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 
 /**
  * Class CoordinateClientTest
- * @package DCarbone\PHPConsulAPITests\Usage\Coordinate
+ *
+ * @internal
  */
-class CoordinateClientTest extends AbstractUsageTests {
+final class CoordinateClientTest extends AbstractUsageTests
+{
     /** @var bool */
     protected static $singlePerClass = true;
 
-    public function testCanConstructClient() {
+    public function testCanConstructClient(): void
+    {
         $client = new CoordinateClient(new Config());
-        $this->assertInstanceOf(CoordinateClient::class, $client);
+        static::assertInstanceOf(CoordinateClient::class, $client);
     }
 
     /**
      * @depends testCanConstructClient
      */
-    public function testDatacenters() {
+    public function testDatacenters(): void
+    {
         $client = new CoordinateClient(new Config());
 
-        list($dcs, $err) = $client->Datacenters();
-        $this->assertNull($err, sprintf('CoordinateClient::datacenters() - %s', $err));
-        $this->assertIsArray($dcs);
-        $this->assertGreaterThan(0, count($dcs), 'Expected at least 1 datacenter');
+        [$dcs, $err] = $client->Datacenters();
+        static::assertNull($err, \sprintf('CoordinateClient::datacenters() - %s', $err));
+        static::assertIsArray($dcs);
+        static::assertGreaterThan(0, \count($dcs), 'Expected at least 1 datacenter');
     }
 
     /**
      * @depends testCanConstructClient
      */
-    public function testNodes() {
+    public function testNodes(): void
+    {
         $client = new CoordinateClient(new Config());
 
-        list($nodes, $qm, $err) = $client->Nodes();
-        $this->assertNull($err, sprintf('CoordinateClient::nodes() - %s', $err));
-        $this->assertInstanceOf(QueryMeta::class, $qm);
-        $this->assertIsArray($nodes);
+        [$nodes, $qm, $err] = $client->Nodes();
+        static::assertNull($err, \sprintf('CoordinateClient::nodes() - %s', $err));
+        static::assertInstanceOf(QueryMeta::class, $qm);
+        static::assertIsArray($nodes);
     }
 }

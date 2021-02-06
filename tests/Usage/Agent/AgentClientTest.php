@@ -14,7 +14,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\Agent\AgentClient;
 use DCarbone\PHPConsulAPI\Agent\AgentMember;
@@ -27,31 +27,35 @@ use PHPUnit\Framework\AssertionFailedError;
 
 /**
  * Class AgentClientTest
- * @package DCarbone\PHPConsulAPITests\Usage\Agent
+ *
+ * @internal
  */
-class AgentClientTest extends AbstractUsageTests {
+final class AgentClientTest extends AbstractUsageTests
+{
+    public const Service1Name = 'test_1_service';
+    public const Service2Name = 'test_2_service';
     /** @var bool */
     protected static $singlePerClass = true;
 
-    public const Service1Name = 'test_1_service';
-    public const Service2Name = 'test_2_service';
-
-    public function testCanConstructAgentClient() {
+    public function testCanConstructAgentClient(): void
+    {
         $client = new AgentClient(new Config());
-        $this->assertInstanceOf(AgentClient::class, $client);
+        static::assertInstanceOf(AgentClient::class, $client);
     }
 
     /**
      * @depends testCanConstructAgentClient
      */
-    public function testCanGetSelf() {
+    public function testCanGetSelf(): void
+    {
         $client = new AgentClient(new Config());
 
         $self = $client->Self();
-        $this->assertIsArray($self,
-            sprintf(
+        static::assertIsArray(
+            $self,
+            \sprintf(
                 'Expected AgentClient::self to return array, saw "%s"',
-                gettype($self)
+                \gettype($self)
             )
         );
     }
@@ -59,42 +63,48 @@ class AgentClientTest extends AbstractUsageTests {
     /**
      * @depends testCanGetSelf
      */
-    public function testCanReloadSelf() {
+    public function testCanReloadSelf(): void
+    {
         $client = new AgentClient(new Config());
-        $err = $client->Reload();
-        $this->assertNull($err, sprintf('AgentClient::reload returned error: %s', $err));
+        $err    = $client->Reload();
+        static::assertNull($err, \sprintf('AgentClient::reload returned error: %s', $err));
     }
 
     /**
      * @depends testCanGetSelf
      */
-    public function testCanGetNodeName() {
+    public function testCanGetNodeName(): void
+    {
         $client = new AgentClient(new Config());
 
-        list($nodeName, $err) = $client->NodeName();
-        $this->assertNull($err, sprintf('Unable to get agent node name: %s', $err));
-        $this->assertIsString($nodeName,
-            sprintf('node name expected to be string, %s seen', gettype($nodeName)));
-        $this->assertNotEmpty($nodeName, 'NodeName was empty!');
+        [$nodeName, $err] = $client->NodeName();
+        static::assertNull($err, \sprintf('Unable to get agent node name: %s', $err));
+        static::assertIsString(
+            $nodeName,
+            \sprintf('node name expected to be string, %s seen', \gettype($nodeName))
+        );
+        static::assertNotEmpty($nodeName, 'NodeName was empty!');
     }
 
     /**
      * @depends testCanConstructAgentClient
      */
-    public function testCanGeMembers() {
+    public function testCanGeMembers(): void
+    {
         $client = new AgentClient(new Config());
 
-        list($members, $err) = $client->Members();
-        $this->assertNull($err, sprintf('AgentClient::members returned error: %s', $err));
-        $this->assertIsArray($members);
-        $this->assertContainsOnlyInstancesOf(AgentMember::class, $members);
-        $this->assertCount(1, $members);
+        [$members, $err] = $client->Members();
+        static::assertNull($err, \sprintf('AgentClient::members returned error: %s', $err));
+        static::assertIsArray($members);
+        static::assertContainsOnlyInstancesOf(AgentMember::class, $members);
+        static::assertCount(1, $members);
     }
 
     /**
      * @depends testCanConstructAgentClient
      */
-    public function testCanRegisterServiceNoChecks() {
+    public function testCanRegisterServiceNoChecks(): void
+    {
         $client = new AgentClient(new Config());
 
         $svc = new AgentServiceRegistration();
@@ -104,13 +114,14 @@ class AgentClientTest extends AbstractUsageTests {
             ->setPort(1234);
 
         $err = $client->ServiceRegister($svc);
-        $this->assertNull($err, sprintf('AgentClient::serviceRegister returned error: %s', $err));
+        static::assertNull($err, \sprintf('AgentClient::serviceRegister returned error: %s', $err));
     }
 
     /**
      * @depends testCanConstructAgentClient
      */
-    public function testCanRegisterServiceWithOneCheck() {
+    public function testCanRegisterServiceWithOneCheck(): void
+    {
         $client = new AgentClient(new Config());
 
         $svc = new AgentServiceRegistration();
@@ -123,7 +134,7 @@ class AgentClientTest extends AbstractUsageTests {
             ]));
 
         $err = $client->ServiceRegister($svc);
-        $this->assertNull($err, sprintf('AgentClient::serviceRegister returned error: %s', $err));
+        static::assertNull($err, \sprintf('AgentClient::serviceRegister returned error: %s', $err));
     }
 
     /**
@@ -131,22 +142,22 @@ class AgentClientTest extends AbstractUsageTests {
      *
      * @depends testCanRegisterServiceNoChecks
      */
-    public function testCanGetServiceList() {
+    public function testCanGetServiceList(): void
+    {
         $client = new AgentClient(new Config());
 
-        list($svcs, $err) = $client->Services();
+        [$svcs, $err] = $client->Services();
 
         try {
-            $this->assertNull($err, sprintf('AgentClient::services return error: %s', $err));
-            $this->assertIsArray($svcs);
-            $this->assertContainsOnlyInstancesOf(AgentService::class, $svcs);
+            static::assertNull($err, \sprintf('AgentClient::services return error: %s', $err));
+            static::assertIsArray($svcs);
+            static::assertContainsOnlyInstancesOf(AgentService::class, $svcs);
 
             // NOTE: will always contain "consul" service
-            $this->assertCount(2, $svcs);
-
+            static::assertCount(2, $svcs);
         } catch (AssertionFailedError $e) {
             echo "\nservices list:\n";
-            var_dump($svcs);
+            \var_dump($svcs);
             echo "\n";
 
             throw $e;
@@ -156,22 +167,23 @@ class AgentClientTest extends AbstractUsageTests {
     /**
      * @depends testCanRegisterServiceNoChecks
      */
-    public function testCanDeregisterService() {
+    public function testCanDeregisterService(): void
+    {
         $client = new AgentClient(new Config());
 
         $err = $client->ServiceDeregister(self::Service1Name);
-        $this->assertNull($err, sprintf('AgentClient::serviceDeregister returned error: %s', $err));
+        static::assertNull($err, \sprintf('AgentClient::serviceDeregister returned error: %s', $err));
 
-        list($svcs, $err) = $client->Services();
+        [$svcs, $err] = $client->Services();
 
         try {
-            $this->assertNull($err, sprintf('AgentClient::services returned error: %s', $err));
-            $this->assertIsArray($svcs);
-            $this->assertContainsOnlyInstancesOf(AgentService::class, $svcs);
-            $this->assertCount(1, $svcs);
+            static::assertNull($err, \sprintf('AgentClient::services returned error: %s', $err));
+            static::assertIsArray($svcs);
+            static::assertContainsOnlyInstancesOf(AgentService::class, $svcs);
+            static::assertCount(1, $svcs);
         } catch (AssertionFailedError $e) {
             echo "\nservices list:\n";
-            var_dump($svcs);
+            \var_dump($svcs);
             echo "\n";
 
             throw $e;
@@ -181,7 +193,8 @@ class AgentClientTest extends AbstractUsageTests {
     /**
      * @depends testCanDeregisterService
      */
-    public function testCanRegisterServiceWithCheck() {
+    public function testCanRegisterServiceWithCheck(): void
+    {
         $client = new AgentClient(new Config());
 
         $svc = new AgentServiceRegistration();
@@ -195,26 +208,26 @@ class AgentClientTest extends AbstractUsageTests {
             ]));
 
         $err = $client->ServiceRegister($svc);
-        $this->assertNull($err, sprintf('Error registering service with check: %s', $err));
+        static::assertNull($err, \sprintf('Error registering service with check: %s', $err));
 
-        sleep(2);
+        \sleep(2);
 
-        list($svcs, $err) = $client->Services();
+        [$svcs, $err] = $client->Services();
 
         try {
-            $this->assertNull($err, sprintf('AgentClient::services returned error: %s', $err));
-            $this->assertIsArray($svcs);
-            $this->assertContainsOnlyInstancesOf(AgentService::class, $svcs);
-            $this->assertCount(2, $svcs);
+            static::assertNull($err, \sprintf('AgentClient::services returned error: %s', $err));
+            static::assertIsArray($svcs);
+            static::assertContainsOnlyInstancesOf(AgentService::class, $svcs);
+            static::assertCount(2, $svcs);
         } catch (AssertionFailedError $e) {
             echo "\nservices list:\n";
-            var_dump($svcs);
+            \var_dump($svcs);
             echo "\n";
 
             throw $e;
         }
 
         $err = $client->ServiceDeregister(self::Service1Name);
-        $this->assertNull($err, sprintf('Error deregistering service: %s', $err));
+        static::assertNull($err, \sprintf('Error deregistering service: %s', $err));
     }
 }

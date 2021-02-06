@@ -14,19 +14,18 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 /**
  * Class ConsulManager
- * @package DCarbone\PHPConsulAPITests
  */
-abstract class ConsulManager
+final class ConsulManager
 {
-    public const TMP_DIR = __DIR__ . '/../tmp';
+    public const TMP_DIR  = __DIR__ . '/../tmp';
     public const DATA_DIR = self::TMP_DIR . '/consul-data';
 
     public const START_SINGLE_CMD = __DIR__ . '/run_consul.sh';
-    public const STOP_SINGLE_CMD = __DIR__ . '/stop_consul.sh';
+    public const STOP_SINGLE_CMD  = __DIR__ . '/stop_consul.sh';
 
     public const PID_FILE = self::TMP_DIR . '/consul.pid';
 
@@ -35,22 +34,22 @@ abstract class ConsulManager
      *
      * @param string $flags
      */
-    public static function startSingle(string $flags)
+    public static function startSingle(string $flags): void
     {
-        if (file_exists(self::PID_FILE)) {
+        if (\file_exists(self::PID_FILE)) {
             self::stopSingle();
         }
 
-        shell_exec(self::START_SINGLE_CMD . " {$flags}");
+        \shell_exec(self::START_SINGLE_CMD . " {$flags}");
 
         // sleep to allow consul to setup
-        sleep(3);
+        \sleep(3);
     }
 
     /**
      * Start a single instance of a consul agent in "-dev" mode
      */
-    public static function startSingleDev()
+    public static function startSingleDev(): void
     {
         self::startSingle('-dev');
     }
@@ -58,14 +57,14 @@ abstract class ConsulManager
     /**
      * Stop running instance
      */
-    public static function stopSingle()
+    public static function stopSingle(): void
     {
-        if (file_exists(self::PID_FILE)) {
-            shell_exec(self::STOP_SINGLE_CMD);
-            if (file_exists(self::PID_FILE)) {
-                unlink(self::PID_FILE);
+        if (\file_exists(self::PID_FILE)) {
+            \shell_exec(self::STOP_SINGLE_CMD);
+            if (\file_exists(self::PID_FILE)) {
+                \unlink(self::PID_FILE);
             }
-            sleep(1);
+            \sleep(1);
         }
     }
 }

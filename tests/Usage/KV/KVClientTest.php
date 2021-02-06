@@ -14,7 +14,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\KV\KVClient;
@@ -22,11 +22,14 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class KVClientTest
- * @package DCarbone\PHPConsulAPITests\Usage\KV
+ *
+ * @internal
  */
-class KVClientTest extends TestCase {
-    public function testCanConstructClient() {
+final class KVClientTest extends TestCase
+{
+    public function testCanConstructClient(): void
+    {
         $kv = new KVClient(new Config());
-        $this->assertInstanceOf(KVClient::class, $kv);
+        static::assertInstanceOf(KVClient::class, $kv);
     }
 }

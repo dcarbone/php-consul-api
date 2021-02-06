@@ -7,58 +7,58 @@ use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 
 /**
  * Class KVClientCASTest
- * @package DCarbone\PHPConsulAPITests\Usage\KV
+ *
+ * @internal
  */
-class KVClientCASTest extends AbstractUsageTests {
-    /** @var bool */
-    protected static $singlePerClass = true;
-
+final class KVClientCASTest extends AbstractUsageTests
+{
     public const KVKey1          = 'testcaskey';
     public const KVOriginalValue = 'originalvalue';
     public const KVUpdatedValue  = 'updatedvalue';
     public const KVUpdatedValue2 = 'updatedvalue2';
+    /** @var bool */
+    protected static $singlePerClass = true;
 
-    public function testKVWithCAS() {
+    public function testKVWithCAS(): void
+    {
         /** @var \DCarbone\PHPConsulAPI\KV\KVPair $kv */
         /** @var \DCarbone\PHPConsulAPI\Error $err */
-
         $client = new KVClient(new Config());
 
-        list($_, $err) = $client->Put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVOriginalValue]));
-        $this->assertNull($err, sprintf('Unable to put KV: %s', $err));
+        [$_, $err] = $client->Put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVOriginalValue]));
+        static::assertNull($err, \sprintf('Unable to put KV: %s', $err));
 
-        list($kv, $_, $err) = $client->Get(self::KVKey1);
-        $this->assertNull($err, sprintf('Unable to get KV: %s', $err));
-        $this->assertInstanceOf(KVPair::class, $kv);
-        $this->assertEquals(self::KVOriginalValue, $kv->Value);
+        [$kv, $_, $err] = $client->Get(self::KVKey1);
+        static::assertNull($err, \sprintf('Unable to get KV: %s', $err));
+        static::assertInstanceOf(KVPair::class, $kv);
+        static::assertSame(self::KVOriginalValue, $kv->Value);
 
         $omi = $kv->ModifyIndex;
 
         $kv->Value = self::KVUpdatedValue;
 
-        list($ok, $_, $err) = $client->CAS($kv);
-        $this->assertNull($err, sprintf('Unable to update kv value: %s', $err));
-        $this->assertTrue($ok);
+        [$ok, $_, $err] = $client->CAS($kv);
+        static::assertNull($err, \sprintf('Unable to update kv value: %s', $err));
+        static::assertTrue($ok);
 
         $kv->Value = self::KVUpdatedValue2;
 
-        list($ok, $_, $err) = $client->CAS($kv);
-        $this->assertNull($err, sprintf('Error updating kv with old cas: %s', $err));
-        $this->assertFalse($ok, 'Expected false when trying to update key with old cas');
+        [$ok, $_, $err] = $client->CAS($kv);
+        static::assertNull($err, \sprintf('Error updating kv with old cas: %s', $err));
+        static::assertFalse($ok, 'Expected false when trying to update key with old cas');
 
-        list($ok, $_, $err) = $client->DeleteCAS($kv);
-        $this->assertNull($err, sprintf('Error deleting kv with old cas: %s', $err));
-        $this->assertFalse($ok, 'Expected false when trying to delete key with old cas');
+        [$ok, $_, $err] = $client->DeleteCAS($kv);
+        static::assertNull($err, \sprintf('Error deleting kv with old cas: %s', $err));
+        static::assertFalse($ok, 'Expected false when trying to delete key with old cas');
 
-        list($kv, $_, $err) = $client->Get(self::KVKey1);
-        $this->assertNull($err, sprintf('Error retrieving updated key: %s', $err));
-        $this->assertInstanceOf(KVPair::class, $kv);
-        $this->assertNotEquals($omi, $kv->ModifyIndex, 'Expected ModifyIndex to be different');
-        $this->assertEquals(self::KVUpdatedValue, $kv->Value, 'KV Value was not actually updated');
+        [$kv, $_, $err] = $client->Get(self::KVKey1);
+        static::assertNull($err, \sprintf('Error retrieving updated key: %s', $err));
+        static::assertInstanceOf(KVPair::class, $kv);
+        static::assertNotSame($omi, $kv->ModifyIndex, 'Expected ModifyIndex to be different');
+        static::assertSame(self::KVUpdatedValue, $kv->Value, 'KV Value was not actually updated');
 
-
-        list($ok, $_, $err) = $client->DeleteCAS($kv);
-        $this->assertNull($err, sprintf('Error deleting key: %s', $err));
-        $this->assertTrue($ok, 'Expected true when deleting key with updated cas');
+        [$ok, $_, $err] = $client->DeleteCAS($kv);
+        static::assertNull($err, \sprintf('Error deleting key: %s', $err));
+        static::assertTrue($ok, 'Expected true when deleting key with updated cas');
     }
 }

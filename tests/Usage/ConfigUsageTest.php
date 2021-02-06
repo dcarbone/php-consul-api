@@ -1,8 +1,8 @@
 <?php namespace DCarbone\PHPConsulAPITests\Usage;
 
-use DCarbone\PHPConsulAPITests\ConsulManager;
 use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\Consul;
+use DCarbone\PHPConsulAPITests\ConsulManager;
 use PHPUnit\Framework\TestCase;
 
 /*
@@ -19,49 +19,59 @@ use PHPUnit\Framework\TestCase;
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 /**
  * Class ConfigUsageTest
- * @package DCarbone\PHPConsulAPITests\Usage
+ *
+ * @internal
  */
-class ConfigUsageTest extends TestCase {
+final class ConfigUsageTest extends TestCase
+{
     public const DEFAULT_ADDRESS = '127.0.0.1:8500';
     public const DEFAULT_SCHEME  = 'http';
 
-    protected function setUp(): void {
-        ConsulManager::startSingleDev();
-    }
-
-    protected function tearDown(): void {
-        ConsulManager::stopSingle();
-    }
-
     /**
-     * @return Config
+     * @return \DCarbone\PHPConsulAPITests\Usage\Config
      */
-    public function testCanConstructConfig() {
+    public function testCanConstructConfig()
+    {
         $config = new Config();
-        $this->assertInstanceOf(Config::class, $config);
+        static::assertInstanceOf(Config::class, $config);
         return $config;
     }
 
     /**
      * @depends testCanConstructConfig
      */
-    public function testConfigDefaults() {
+    public function testConfigDefaults(): void
+    {
         $config = new Config();
 
         $expectedAddress = $_ENV[Consul::HTTPAddrEnvName] ?: self::DEFAULT_ADDRESS;
-        $expectedScheme = $_ENV[Consul::HTTPSSLEnvName] ? 'https' : self::DEFAULT_SCHEME;
+        $expectedScheme  = $_ENV[Consul::HTTPSSLEnvName] ? 'https' : self::DEFAULT_SCHEME;
 
-        $this->assertEquals($expectedAddress,
+        static::assertSame(
+            $expectedAddress,
             $config->getAddress(),
-            sprintf('Default address is not "%s"', $expectedAddress));
-        $this->assertEquals($expectedScheme,
+            \sprintf('Default address is not "%s"', $expectedAddress)
+        );
+        static::assertSame(
+            $expectedScheme,
             $config->getScheme(),
-            sprintf('Default scheme is not "%s"', $expectedScheme));
-        $this->assertNotNull($config->getHttpClient(), 'HttpClient is null');
-        $this->assertFalse($config->isInsecureSkipVerify(), 'InsecureSkipVerify is not false');
+            \sprintf('Default scheme is not "%s"', $expectedScheme)
+        );
+        static::assertNotNull($config->getHttpClient(), 'HttpClient is null');
+        static::assertFalse($config->isInsecureSkipVerify(), 'InsecureSkipVerify is not false');
+    }
+
+    protected function setUp(): void
+    {
+        ConsulManager::startSingleDev();
+    }
+
+    protected function tearDown(): void
+    {
+        ConsulManager::stopSingle();
     }
 }

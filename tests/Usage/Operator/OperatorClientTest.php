@@ -14,7 +14,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\Operator\OperatorClient;
@@ -22,11 +22,14 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class OperatorClientTest
- * @package DCarbone\PHPConsulAPITests\Usage\Operator
+ *
+ * @internal
  */
-class OperatorClientTest extends TestCase {
-    public function testCanConstructOperatorClient() {
+final class OperatorClientTest extends TestCase
+{
+    public function testCanConstructOperatorClient(): void
+    {
         $client = new OperatorClient(new Config());
-        $this->assertInstanceOf(OperatorClient::class, $client);
+        self::assertInstanceOf(OperatorClient::class, $client);
     }
 }

@@ -14,7 +14,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\Event\EventClient;
@@ -22,14 +22,17 @@ use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 
 /**
  * Class EventClientUsageTest
- * @package DCarbone\PHPConsulAPITests\Usage\Event
+ *
+ * @internal
  */
-class EventClientUsageTest extends AbstractUsageTests {
+final class EventClientUsageTest extends AbstractUsageTests
+{
     /** @var bool */
     protected static $singlePerClass = true;
 
-    public function testCanConstructClient() {
+    public function testCanConstructClient(): void
+    {
         $client = new EventClient(new Config());
-        $this->assertInstanceOf(EventClient::class, $client);
+        static::assertInstanceOf(EventClient::class, $client);
     }
 }

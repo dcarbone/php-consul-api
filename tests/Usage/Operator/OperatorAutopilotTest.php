@@ -14,7 +14,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration;
@@ -24,75 +24,83 @@ use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 
 /**
  * Class OperatorAutopilotTest
- * @package DCarbone\PHPConsulAPITests\Usage\Operator
+ *
+ * @internal
  */
-class OperatorAutopilotTest extends AbstractUsageTests {
+final class OperatorAutopilotTest extends AbstractUsageTests
+{
     /** @var bool */
     protected static $singlePerClass = true;
 
-    public function testCanGetAutopilotConfiguration() {
+    public function testCanGetAutopilotConfiguration(): void
+    {
         $client = new OperatorClient(new Config());
 
-        list($conf, $err) = $client->AutopilotGetConfiguration();
-        $this->assertNull($err, sprintf('Unable to list autopilot configuration: %s', $err));
-        $this->assertInstanceOf(AutopilotConfiguration::class,
+        [$conf, $err] = $client->AutopilotGetConfiguration();
+        static::assertNull($err, \sprintf('Unable to list autopilot configuration: %s', $err));
+        static::assertInstanceOf(
+            AutopilotConfiguration::class,
             $conf,
-            sprintf('Expected instance of %s, saw: %s', AutopilotConfiguration::class, json_encode($conf)));
+            \sprintf('Expected instance of %s, saw: %s', AutopilotConfiguration::class, \json_encode($conf))
+        );
     }
 
     /**
      * @depends testCanGetAutopilotConfiguration
      */
-    public function testCanSetAutopilotConfiguration() {
+    public function testCanSetAutopilotConfiguration(): void
+    {
         $client = new OperatorClient(new Config());
 
         /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration $current */
         /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration $updated */
-        list($current) = $client->AutopilotGetConfiguration();
-        $new = clone $current;
+        [$current]               = $client->AutopilotGetConfiguration();
+        $new                     = clone $current;
         $new->CleanupDeadServers = !$current->CleanupDeadServers;
-        $err = $client->AutopilotSetConfiguration($new);
-        $this->assertNull($err, 'Unable to update Autopilot configuration: '.$err);
-        list($updated, $err) = $client->AutopilotGetConfiguration();
-        $this->assertNull($err, 'Unable to get updated Autopilot configuration: '.$err);
-        $this->assertInstanceOf(AutopilotConfiguration::class, $updated);
+        $err                     = $client->AutopilotSetConfiguration($new);
+        static::assertNull($err, 'Unable to update Autopilot configuration: ' . $err);
+        [$updated, $err] = $client->AutopilotGetConfiguration();
+        static::assertNull($err, 'Unable to get updated Autopilot configuration: ' . $err);
+        static::assertInstanceOf(AutopilotConfiguration::class, $updated);
         if ($current->CleanupDeadServers) {
-            $this->assertFalse($updated->CleanupDeadServers, 'Autopilot conf did not change');
+            static::assertFalse($updated->CleanupDeadServers, 'Autopilot conf did not change');
         } else {
-            $this->assertTrue($updated->CleanupDeadServers, 'Autopilot conf did not change');
+            static::assertTrue($updated->CleanupDeadServers, 'Autopilot conf did not change');
         }
     }
 
     /**
      * @depends testCanSetAutopilotConfiguration
      */
-    public function testCanCASAutopilotConfiguration() {
+    public function testCanCASAutopilotConfiguration(): void
+    {
         $client = new OperatorClient(new Config());
         /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration $current */
         /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration $updated */
-        list($current) = $client->AutopilotGetConfiguration();
-        $new = clone $current;
+        [$current]               = $client->AutopilotGetConfiguration();
+        $new                     = clone $current;
         $new->CleanupDeadServers = !$current->CleanupDeadServers;
-        list($ok, $err) = $client->AutopilotCASConfiguration($new);
-        $this->assertNull($err, 'Unable to update Autopilot configuration: '.$err);
-        $this->assertTrue($ok);
-        list($updated, $err) = $client->AutopilotGetConfiguration();
-        $this->assertNull($err, 'Unable to get updated Autopilot configuration: '.$err);
-        $this->assertInstanceOf(AutopilotConfiguration::class, $updated);
+        [$ok, $err]              = $client->AutopilotCASConfiguration($new);
+        static::assertNull($err, 'Unable to update Autopilot configuration: ' . $err);
+        static::assertTrue($ok);
+        [$updated, $err] = $client->AutopilotGetConfiguration();
+        static::assertNull($err, 'Unable to get updated Autopilot configuration: ' . $err);
+        static::assertInstanceOf(AutopilotConfiguration::class, $updated);
         if ($current->CleanupDeadServers) {
-            $this->assertFalse($updated->CleanupDeadServers, 'Autopilot conf did not change');
+            static::assertFalse($updated->CleanupDeadServers, 'Autopilot conf did not change');
         } else {
-            $this->assertTrue($updated->CleanupDeadServers, 'Autopilot conf did not change');
+            static::assertTrue($updated->CleanupDeadServers, 'Autopilot conf did not change');
         }
     }
 
-    public function testCanGetAutopilotServerHealth() {
+    public function testCanGetAutopilotServerHealth(): void
+    {
         $client = new OperatorClient(new Config());
 
         /** @var \DCarbone\PHPConsulAPI\Operator\OperatorHealthReply $healths */
-        list($healths, $err) = $client->AutopilotServerHealth();
-        $this->assertNull($err, 'Unable to get Autopilot server health: %s'.$err);
-        $this->assertInstanceOf(OperatorHealthReply::class, $healths);
-        $this->assertCount(1, $healths->Servers);
+        [$healths, $err] = $client->AutopilotServerHealth();
+        static::assertNull($err, 'Unable to get Autopilot server health: %s' . $err);
+        static::assertInstanceOf(OperatorHealthReply::class, $healths);
+        static::assertCount(1, $healths->Servers);
     }
 }

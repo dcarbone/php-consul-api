@@ -14,7 +14,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\Agent\AgentService;
 use DCarbone\PHPConsulAPI\Catalog\CatalogClient;
@@ -30,28 +30,32 @@ use PHPUnit\Framework\AssertionFailedError;
 
 /**
  * Class CatalogClientTest
- * @package DCarbone\PHPConsulAPITests\Usage\Catalog
+ *
+ * @internal
  */
-class CatalogClientTest extends AbstractUsageTests {
+final class CatalogClientTest extends AbstractUsageTests
+{
     public const ServiceID1 = 'test1';
     public const ServiceID2 = 'test2';
 
-    public const ServiceName = 'testservice';
-    public const ServicePort = 1234;
+    public const ServiceName    = 'testservice';
+    public const ServicePort    = 1234;
     public const ServiceAddress = '127.0.0.1';
 
     /** @var bool */
     protected static $singlePerClass = true;
 
-    public function testCanConstructClient() {
+    public function testCanConstructClient(): void
+    {
         $client = new CatalogClient(new Config());
-        $this->assertInstanceOf(CatalogClient::class, $client);
+        static::assertInstanceOf(CatalogClient::class, $client);
     }
 
     /**
      * @depends testCanConstructClient
      */
-    public function testCanRegisterService() {
+    public function testCanRegisterService(): void
+    {
         $client = new CatalogClient(new Config());
 
         $registration = new CatalogRegistration([
@@ -65,32 +69,34 @@ class CatalogClientTest extends AbstractUsageTests {
             ]),
         ]);
 
-        list($wm, $err) = $client->Register($registration);
-        $this->assertNull($err, 'CatalogClient::register returned error: '.$err);
-        $this->assertInstanceOf(WriteMeta::class, $wm);
+        [$wm, $err] = $client->Register($registration);
+        static::assertNull($err, 'CatalogClient::register returned error: ' . $err);
+        static::assertInstanceOf(WriteMeta::class, $wm);
     }
 
     /**
      * @depends testCanRegisterService
      */
-    public function testCanGetService() {
+    public function testCanGetService(): void
+    {
         $client = new CatalogClient(new Config());
 
-        list($service, $qm, $err) = $client->Service(self::ServiceName);
-        $this->assertNull($err, 'CatalogClient::service returned error: '.$err);
-        $this->assertInstanceOf(QueryMeta::class, $qm);
-        $this->assertIsArray($service);
-        $this->assertCount(1, $service);
-        $this->assertInstanceOf(CatalogService::class, reset($service));
+        [$service, $qm, $err] = $client->Service(self::ServiceName);
+        static::assertNull($err, 'CatalogClient::service returned error: ' . $err);
+        static::assertInstanceOf(QueryMeta::class, $qm);
+        static::assertIsArray($service);
+        static::assertCount(1, $service);
+        static::assertInstanceOf(CatalogService::class, \reset($service));
     }
 
     /**
      * @depends testCanGetService
      */
-    public function testCanRegisterSecondServiceWithSameName() {
+    public function testCanRegisterSecondServiceWithSameName(): void
+    {
         $client = new CatalogClient(new Config());
 
-        list($wm, $err) = $client->Register(new CatalogRegistration([
+        [$wm, $err] = $client->Register(new CatalogRegistration([
             'Node'    => 'dc1',
             'Address' => self::ServiceAddress,
             'Service' => new AgentService([
@@ -101,28 +107,29 @@ class CatalogClientTest extends AbstractUsageTests {
             ]),
         ]));
 
-        $this->assertNull($err, 'CatalogClient::register failed to register second service: '.$err);
-        $this->assertInstanceOf(WriteMeta::class, $wm);
+        static::assertNull($err, 'CatalogClient::register failed to register second service: ' . $err);
+        static::assertInstanceOf(WriteMeta::class, $wm);
     }
 
     /**
      * @depends testCanRegisterSecondServiceWithSameName
      */
-    public function testCanGetListOfService() {
+    public function testCanGetListOfService(): void
+    {
         $client = new CatalogClient(new Config());
 
-        list($service, $qm, $err) = $client->Service(self::ServiceName);
-        $this->assertNull($err, 'CatalogClient::service returned error: '.$err);
-        $this->assertInstanceOf(QueryMeta::class, $qm);
-        $this->assertIsArray($service);
+        [$service, $qm, $err] = $client->Service(self::ServiceName);
+        static::assertNull($err, 'CatalogClient::service returned error: ' . $err);
+        static::assertInstanceOf(QueryMeta::class, $qm);
+        static::assertIsArray($service);
 
         try {
-            $this->assertCount(2, $service);
+            static::assertCount(2, $service);
             foreach ($service as $s) {
-                $this->assertInstanceOf(CatalogService::class, $s);
+                static::assertInstanceOf(CatalogService::class, $s);
             }
         } catch (AssertionFailedError $e) {
-            var_dump($service);
+            \var_dump($service);
             throw $e;
         }
     }
@@ -130,19 +137,20 @@ class CatalogClientTest extends AbstractUsageTests {
     /**
      * @depends testCanRegisterSecondServiceWithSameName
      */
-    public function testCanGetListOfServices() {
+    public function testCanGetListOfServices(): void
+    {
         $client = new CatalogClient(new Config());
 
-        list($services, $qm, $err) = $client->Services();
+        [$services, $qm, $err] = $client->Services();
 
         try {
-            $this->assertNull($err, 'CatalogClient::services returned error: '.$err);
-            $this->assertInstanceOf(QueryMeta::class, $qm);
-            $this->assertIsArray($services);
-            $this->assertCount(2, $services);
-            $this->assertContainsOnly('array', $services);
+            static::assertNull($err, 'CatalogClient::services returned error: ' . $err);
+            static::assertInstanceOf(QueryMeta::class, $qm);
+            static::assertIsArray($services);
+            static::assertCount(2, $services);
+            static::assertContainsOnly('array', $services);
         } catch (AssertionFailedError $e) {
-            var_dump($services);
+            \var_dump($services);
             throw $e;
         }
     }
@@ -150,22 +158,22 @@ class CatalogClientTest extends AbstractUsageTests {
     /**
      * testCanGetListOfService
      */
-    public function testCanDeregisterService() {
+    public function testCanDeregisterService(): void
+    {
         $client = new CatalogClient(new Config());
 
-
-        list($wm, $err) = $client->Deregister(new CatalogDeregistration([
+        [$wm, $err] = $client->Deregister(new CatalogDeregistration([
             'Node'      => 'dc1',
             'ServiceID' => self::ServiceID1,
         ]));
-        $this->assertNull($err, 'CatalogClient::deregister returned error: '.$err);
-        $this->assertInstanceOf(WriteMeta::class, $wm);
+        static::assertNull($err, 'CatalogClient::deregister returned error: ' . $err);
+        static::assertInstanceOf(WriteMeta::class, $wm);
 
-        list($service, $qm, $err) = $client->Service(self::ServiceName);
-        $this->assertNull($err, 'CatalogClient::service returned error: '.$err);
-        $this->assertInstanceOf(QueryMeta::class, $qm);
-        $this->assertCount(1, $service);
-        $this->assertInstanceOf(CatalogService::class, reset($service));
+        [$service, $qm, $err] = $client->Service(self::ServiceName);
+        static::assertNull($err, 'CatalogClient::service returned error: ' . $err);
+        static::assertInstanceOf(QueryMeta::class, $qm);
+        static::assertCount(1, $service);
+        static::assertInstanceOf(CatalogService::class, \reset($service));
     }
 
     /**
@@ -173,18 +181,19 @@ class CatalogClientTest extends AbstractUsageTests {
      *
      * @depends testCanConstructClient
      */
-    public function testCanGetDatacenters() {
+    public function testCanGetDatacenters(): void
+    {
         $client = new CatalogClient(new Config());
 
-        list($dcs, $err) = $client->Datacenters();
+        [$dcs, $err] = $client->Datacenters();
 
         try {
-            $this->assertNull($err, 'CatalogClient::datacenters returned error: '.$err);
-            $this->assertIsArray($dcs);
-            $this->assertCount(1, $dcs);
-            $this->assertEquals('dc1', $dcs[0]);
+            static::assertNull($err, 'CatalogClient::datacenters returned error: ' . $err);
+            static::assertIsArray($dcs);
+            static::assertCount(1, $dcs);
+            static::assertSame('dc1', $dcs[0]);
         } catch (AssertionFailedError $e) {
-            var_dump($dcs);
+            \var_dump($dcs);
             throw $e;
         }
     }
@@ -192,19 +201,20 @@ class CatalogClientTest extends AbstractUsageTests {
     /**
      * @depends testCanConstructClient
      */
-    public function testCanGetListOfNodes() {
+    public function testCanGetListOfNodes(): void
+    {
         $client = new CatalogClient(new Config());
 
-        list($nodes, $qm, $err) = $client->Nodes();
+        [$nodes, $qm, $err] = $client->Nodes();
         try {
-            $this->assertNull($err, 'CatalogClient::nodes returned error: '.$err);
-            $this->assertInstanceOf(QueryMeta::class, $qm);
-            $this->assertIsArray($nodes);
+            static::assertNull($err, 'CatalogClient::nodes returned error: ' . $err);
+            static::assertInstanceOf(QueryMeta::class, $qm);
+            static::assertIsArray($nodes);
             // TODO: figure out why there are 2 nodes returned by this call...
-            $this->assertCount(2, $nodes);
-            $this->assertContainsOnlyInstancesOf(CatalogNode::class, $nodes);
+            static::assertCount(2, $nodes);
+            static::assertContainsOnlyInstancesOf(CatalogNode::class, $nodes);
         } catch (AssertionFailedError $e) {
-            var_dump($nodes);
+            \var_dump($nodes);
             throw $e;
         }
     }
@@ -212,14 +222,15 @@ class CatalogClientTest extends AbstractUsageTests {
     /**
      * @depends testCanGetListOfNodes
      */
-    public function testCanGetNode() {
+    public function testCanGetNode(): void
+    {
         $client = new CatalogClient(new Config());
 
-        list($nodes) = $client->Nodes();
+        [$nodes] = $client->Nodes();
         try {
-            $this->assertIsArray($nodes);
-            $this->assertCount(2, $nodes);
-            $this->assertContainsOnlyInstancesOf(CatalogNode::class, $nodes);
+            static::assertIsArray($nodes);
+            static::assertCount(2, $nodes);
+            static::assertContainsOnlyInstancesOf(CatalogNode::class, $nodes);
 
             $id = null;
             foreach ($nodes as $node) {
@@ -229,19 +240,19 @@ class CatalogClientTest extends AbstractUsageTests {
                 }
             }
 
-            $this->assertNotNull($id, 'Unable to get node with ID');
+            static::assertNotNull($id, 'Unable to get node with ID');
         } catch (AssertionFailedError $e) {
-            var_dump($nodes);
+            \var_dump($nodes);
             throw $e;
         }
 
-        list($node, $qm, $err) = $client->Node($id);
+        [$node, $qm, $err] = $client->Node($id);
         try {
-            $this->assertNull($err, 'CatalogClient::node returned error: '.$err);
-            $this->assertInstanceOf(QueryMeta::class, $qm);
-            $this->assertInstanceOf(CatalogNode::class, $node);
+            static::assertNull($err, 'CatalogClient::node returned error: ' . $err);
+            static::assertInstanceOf(QueryMeta::class, $qm);
+            static::assertInstanceOf(CatalogNode::class, $node);
         } catch (AssertionFailedError $e) {
-            var_dump($node);
+            \var_dump($node);
             throw $e;
         }
     }

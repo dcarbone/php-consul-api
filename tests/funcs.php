@@ -14,7 +14,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 namespace DCarbone\PHPConsulAPITests;
 
@@ -48,7 +48,7 @@ function determine_param_hint(Compound $compoundHint): array
             $others[] = $hint;
         }
     }
-    if (1 === count($others)) {
+    if (1 === \count($others)) {
         $out[1] = $others[0];
     }
     return $out;

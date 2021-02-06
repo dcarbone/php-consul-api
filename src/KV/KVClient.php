@@ -18,6 +18,7 @@ namespace DCarbone\PHPConsulAPI\KV;
    limitations under the License.
  */
 
+use DCarbone\Go\HTTP;
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\QueryOptions;
@@ -40,29 +41,25 @@ class KVClient extends AbstractClient
      */
     public function Get(string $key, ?QueryOptions $opts = null): KVPairResponse
     {
-        $r = new Request('GET', \sprintf('v1/kv/%s', $key), $this->config, null);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_do($r);
-        if (null !== $err) {
-            return new KVPairResponse(null, null, $err);
+        $res = $this->_doGet(\sprintf('v1/kv/%s', $key), $opts);
+        if (null !== $res->Err) {
+            return new KVPairResponse(null, null, $res->Err);
         }
 
-        $code = $response->getStatusCode();
+        $code = $res->Response->getStatusCode();
 
         if (200 === $code) {
-            [$data, $err] = $this->decodeBody($response->getBody());
+            [$data, $err] = $this->decodeBody($res->Response->getBody());
 
             if (null !== $err) {
                 return new KVPairResponse(null, null, $err);
             }
 
-            $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
+            $qm = $this->buildQueryMeta($duration, $res, $r->getUri());
             return new KVPairResponse($data[0], $qm, null);
         }
 
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
+        $qm = $this->buildQueryMeta($duration, $res, $r->getUri());
 
         if (404 === $code) {
             return new KVPairResponse(null, $qm, null);
@@ -71,7 +68,7 @@ class KVClient extends AbstractClient
         return new KVPairResponse(
             null,
             $qm,
-            new Error(\sprintf('%s: %s', $response->getStatusCode(), $response->getReasonPhrase()))
+            new Error(\sprintf('%s: %s', $res->getStatusCode(), $res->getReasonPhrase()))
         );
     }
 
@@ -83,10 +80,10 @@ class KVClient extends AbstractClient
      */
     public function Put(KVPair $p, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = new Request('PUT', \sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
+        $r = new Request(HTTP\MethodPut, \sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
         $r->applyOptions($opts);
         if (0 !== $p->Flags) {
-            $r->params->set('flags', (string) $p->Flags);
+            $r->params->set('flags', (string)$p->Flags);
         }
 
         [$duration, $_, $err] = $this->_requireOK($this->_do($r));
@@ -105,7 +102,7 @@ class KVClient extends AbstractClient
      */
     public function Delete(string $key, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = new Request('DELETE', \sprintf('v1/kv/%s', $key), $this->config, null);
+        $r = new Request(HTTP\MethodDelete, \sprintf('v1/kv/%s', $key), $this->config, null);
         $r->applyOptions($opts);
 
         [$duration, $_, $err] = $this->_requireOK($this->_do($r));
@@ -180,9 +177,9 @@ class KVClient extends AbstractClient
     {
         $r = new Request('PUT', \sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
         $r->applyOptions($opts);
-        $r->params->set('cas', (string) $p->ModifyIndex);
+        $r->params->set('cas', (string)$p->ModifyIndex);
         if (0 !== $p->Flags) {
-            $r->params->set('flags', (string) $p->Flags);
+            $r->params->set('flags', (string)$p->Flags);
         }
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
@@ -210,7 +207,7 @@ class KVClient extends AbstractClient
         $r->applyOptions($opts);
         $r->params->set('acquire', $p->Session);
         if (0 !== $p->Flags) {
-            $r->params->set('flags', (string) $p->Flags);
+            $r->params->set('flags', (string)$p->Flags);
         }
 
         [$duration, $_, $err] = $this->_requireOK($this->_do($r));
@@ -231,7 +228,7 @@ class KVClient extends AbstractClient
     {
         $r = new Request('DELETE', \sprintf('v1/kv/%s', \ltrim($p->Key, '/')), $this->config, null);
         $r->applyOptions($opts);
-        $r->params['cas'] = (string) $p->ModifyIndex;
+        $r->params['cas'] = (string)$p->ModifyIndex;
 
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $response, $err] = $this->_requireOK($this->_do($r));
@@ -258,7 +255,7 @@ class KVClient extends AbstractClient
         $r->applyOptions($opts);
         $r->params->set('release', $p->Session);
         if (0 !== $p->Flags) {
-            $r->params->set('flags', (string) $p->Flags);
+            $r->params->set('flags', (string)$p->Flags);
         }
 
         [$duration, $_, $err] = $this->_requireOK($this->_do($r));
@@ -277,7 +274,7 @@ class KVClient extends AbstractClient
      */
     public function DeleteTree(string $prefix, ?WriteOptions $opts = null): WriteResponse
     {
-        $r                    = new Request('DELETE', \sprintf('v1/kv/%s', $prefix), $this->config, null);
+        $r = new Request('DELETE', \sprintf('v1/kv/%s', $prefix), $this->config, null);
         $r->params['recurse'] = '';
         $r->applyOptions($opts);
 
@@ -384,7 +381,7 @@ class KVClient extends AbstractClient
                 }
             } else {
                 $kvPrefix = \substr($path, 0, \strrpos($path, '/') + 1);
-                $_path    = '';
+                $_path = '';
                 foreach (\explode('/', $kvPrefix) as $part) {
                     if ('' === $part) {
                         continue;

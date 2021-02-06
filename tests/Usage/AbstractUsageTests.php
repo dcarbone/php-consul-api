@@ -14,38 +14,42 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPITests\ConsulManager;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Class AbstractUsageTests
- * @package DCarbone\PHPConsulAPITests\Usage
  */
-abstract class AbstractUsageTests extends TestCase {
+abstract class AbstractUsageTests extends TestCase
+{
     /** @var bool */
     protected static $singlePerClass = false;
     /** @var bool */
     protected $singlePerTest = false;
 
-    public static function setUpBeforeClass(): void {
+    public static function setUpBeforeClass(): void
+    {
         if (static::$singlePerClass) {
             ConsulManager::startSingleDev();
         }
     }
 
-    public static function tearDownAfterClass(): void {
+    public static function tearDownAfterClass(): void
+    {
         ConsulManager::stopSingle();
     }
 
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         if ($this->singlePerTest) {
             ConsulManager::startSingleDev();
         }
     }
 
-    protected function tearDown(): void {
+    protected function tearDown(): void
+    {
         if ($this->singlePerTest) {
             ConsulManager::stopSingle();
         }

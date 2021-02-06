@@ -40,10 +40,10 @@ class KVPair extends AbstractModel
     /** @var string */
     public string $Session = '';
     /** @var string */
-    public string $Namespace = '';
+    public ?string $Namespace = null;
 
     /** @var bool */
-    private bool $_valueDecoded = false;
+    private bool $_valueDecoded;
 
     /**
      * KVPair constructor.
@@ -53,7 +53,8 @@ class KVPair extends AbstractModel
     public function __construct(array $data = [], bool $_decodeValue = false)
     {
         parent::__construct($data);
-        if ($_decodeValue && !$this->_valueDecoded) {
+        $this->_valueDecoded = !$_decodeValue;
+        if (!$this->_valueDecoded) {
             $dec = \base64_decode($this->Value, true);
             if (false === $dec) {
                 throw new \InvalidArgumentException(\sprintf('Could not base64 decode value "%s"', $this->Value));

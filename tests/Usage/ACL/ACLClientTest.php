@@ -14,7 +14,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\ACL\ACLClient;
 use DCarbone\PHPConsulAPI\Config;
@@ -25,9 +25,11 @@ use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 
 /**
  * Class ACLClientTest
- * @package DCarbone\PHPConsulAPITests\Usage\ACL
+ *
+ * @internal
  */
-class ACLClientTest extends AbstractUsageTests {
+final class ACLClientTest extends AbstractUsageTests
+{
 
     /** @var string */
     protected $bootstrappedACL;
@@ -35,15 +37,16 @@ class ACLClientTest extends AbstractUsageTests {
     /**
      * @return string
      */
-    public function testCanBootstrapACL() {
+    public function testCanBootstrapACL()
+    {
         ConsulManager::startSingleDev('-bind="127.0.0.1"');
 
         $client = new ACLClient(new Config());
 
-        list($aclID, $wm, $err) = $client->Bootstrap();
-        $this->assertNull($err, 'ACL::bootstrap() returned error: '.$err);
-        $this->assertInstanceOf(WriteMeta::class, $wm);
-        $this->assertIsString($aclID);
+        [$aclID, $wm, $err] = $client->Bootstrap();
+        static::assertNull($err, 'ACL::bootstrap() returned error: ' . $err);
+        static::assertInstanceOf(WriteMeta::class, $wm);
+        static::assertIsString($aclID);
 
         return $aclID;
     }
@@ -52,13 +55,14 @@ class ACLClientTest extends AbstractUsageTests {
      * @depends testCanBootstrapACL
      * @param string $aclID
      */
-    public function testCanGetBootstrappedACL(string $aclID) {
+    public function testCanGetBootstrappedACL(string $aclID): void
+    {
         $client = new ACLClient(new Config());
 
-        list($acls, $qm, $err) = $client->Info($aclID);
-        $this->assertNull($err, 'ACL::info() return error: '.$err);
-        $this->assertInstanceOf(QueryMeta::class, $qm);
-        $this->assertIsArray($acls);
-        var_dump($acls);
+        [$acls, $qm, $err] = $client->Info($aclID);
+        static::assertNull($err, 'ACL::info() return error: ' . $err);
+        static::assertInstanceOf(QueryMeta::class, $qm);
+        static::assertIsArray($acls);
+        \var_dump($acls);
     }
 }

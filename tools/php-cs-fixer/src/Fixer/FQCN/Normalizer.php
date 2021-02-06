@@ -39,10 +39,19 @@ final class Normalizer extends FQCNTypeNormalizer
             return $this->normalizeType($namespaceInfo, \substr($type, 0, -2)) . '[]';
         }
 
-        if (\in_array($type, self::BUILD_IN_TYPES, true) || 0 === \strpos($type, '\\')) {
+        // if this is a built-in type, already has a namespace prefix, or is merely empty, move on.
+        if (\in_array($type, self::BUILD_IN_TYPES, true) ||
+            0 === \strpos($type, '\\') ||
+            '' === \trim($type)) {
             return $type;
         }
 
+        // if this is a variable, set to 'mixed' and assume i'll fix it later
+        if (0 === \strpos($type, '$')) {
+            return "mixed {$type}";
+        }
+
+        // in all other cases, try to find an ns prefix
         return (new Resolver($namespaceInfo))->resolveFQCN($type);
     }
 }

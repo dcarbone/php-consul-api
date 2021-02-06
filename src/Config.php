@@ -28,10 +28,18 @@ use GuzzleHttp\RequestOptions;
  */
 class Config
 {
+    use Hydratable;
+
+    private const FIELD_HTTP_AUTH        = 'HttpAuth';
+    private const FIELD_WAIT_TIME        = 'WaitTime';
+    private const FIELD_ADDRESS          = 'Address';
+    private const FIELD_SCHEME           = 'Scheme';
+    private const FIELD_JSON_ENCODE_OPTS = 'JSONEncodeOpts';
+
     private const DefaultConfig = [
-        'Address'        => '127.0.0.1:8500',
-        'Scheme'         => 'http',
-        'JSONEncodeOpts' => \JSON_UNESCAPED_SLASHES,
+        self::FIELD_ADDRESS          => '127.0.0.1:8500',
+        self::FIELD_SCHEME           => 'http',
+        self::FIELD_JSON_ENCODE_OPTS => \JSON_UNESCAPED_SLASHES,
     ];
 
     private const DefaultRequestOptions = [
@@ -44,47 +52,47 @@ class Config
      *
      * @var string
      */
-    public $Address = '';
+    public string $Address = '';
 
     /**
      * The scheme to use.  Currently only HTTP and HTTPS are supported.
      *
      * @var string
      */
-    public $Scheme = '';
+    public string $Scheme = '';
 
     /**
      * The name of the datacenter you wish all queries to be made against by default
      *
      * @var string
      */
-    public $Datacenter = '';
+    public string $Datacenter = '';
 
     /**
      * @var string
      */
-    public $Namespace = '';
+    public string $Namespace = '';
 
     /**
      * HTTP authentication, if used
      *
-     * @var \DCarbone\PHPConsulAPI\HttpAuth
+     * @var \DCarbone\PHPConsulAPI\HttpAuth|null
      */
-    public $HttpAuth = null;
+    public ?HttpAuth $HttpAuth = null;
 
     /**
      * Time to wait on certain blockable endpoints
      *
-     * @var \DCarbone\Go\Time\Duration
+     * @var \DCarbone\Go\Time\Duration|null
      */
-    public $WaitTime = null;
+    public ?Time\Duration $WaitTime = null;
 
     /**
      * ACL token to use by default
      *
      * @var string
      */
-    public $Token = '';
+    public string $Token = '';
 
     /**
      * File containing the current token to use for this client.
@@ -93,49 +101,59 @@ class Config
      *
      * @var string
      */
-    public $TokenFile = '';
+    public string $TokenFile = '';
 
     /**
      * Optional path to CA certificate
      *
      * @var string
      */
-    public $CAFile = '';
+    public string $CAFile = '';
 
     /**
      * Optional path to certificate.  If set, KeyFile must also be set
      *
      * @var string
      */
-    public $CertFile = '';
+    public string $CertFile = '';
 
     /**
      * Optional path to private key.  If set, CertFile must also be set
      *
      * @var string
      */
-    public $KeyFile = '';
+    public string $KeyFile = '';
 
     /**
      * Whether to skip SSL validation.  This does nothing unless you use it within your HttpClient of choice.
      *
      * @var bool
      */
-    public $InsecureSkipVerify = false;
+    public bool $InsecureSkipVerify = false;
 
     /**
      * Your HttpClient of choice.
      *
      * @var \GuzzleHttp\ClientInterface
      */
-    public $HttpClient = null;
+    public ClientInterface $HttpClient;
 
     /**
      * Bitwise options to provide to JSON encoder when encoding request bodies
      *
      * @var int
      */
-    public $JSONEncodeOpts = 0;
+    public int $JSONEncodeOpts = 0;
+
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_HTTP_AUTH => [
+            Hydration::FIELD_CALLBACK => 'setHttpAuth',
+        ],
+        self::FIELD_WAIT_TIME => [
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_NULLABLE_DURATION,
+        ],
+    ];
 
     /**
      * Config constructor.
@@ -144,16 +162,12 @@ class Config
     public function __construct(array $config = [])
     {
         foreach ($config + self::_getDefaultConfig() as $k => $v) {
-            $this->{"set{$k}"}($v);
-        }
-
-        if (null !== $this->HttpAuth && !isset($this->HttpAuth)) {
-            $this->HttpAuth = new HttpAuth();
+            $this->hydrateField($k, $v);
         }
 
         // quick validation on key/cert combo
-        $c = $this->getCertFile();
-        $k = $this->getKeyFile();
+        $c = $this->CertFile;
+        $k = $this->KeyFile;
         if (('' !== $k && '' === $c) || ('' !== $c && '' === $k)) {
             throw new \InvalidArgumentException(
                 \sprintf(
@@ -163,10 +177,6 @@ class Config
                     $c
                 )
             );
-        }
-
-        if (!($this->WaitTime instanceof Time\Duration)) {
-            $this->WaitTime = Time::Duration($this->WaitTime);
         }
 
         // if client hasn't been constructed, construct.
@@ -197,10 +207,10 @@ class Config
         if ('' !== $inc->Namespace) {
             $actual->Namespace = $inc->Namespace;
         }
-        if (null !== $inc->HttpAuth) {
+        if (isset($inc->HttpAuth)) {
             $actual->HttpAuth = clone $inc->HttpAuth;
         }
-        if (null !== $inc->WaitTime) {
+        if (isset($inc->WaitTime)) {
             $actual->WaitTime = Time::Duration($inc->WaitTime);
         }
         if ('' !== $inc->Token) {
@@ -527,7 +537,7 @@ class Config
         }
 
         if ('' !== ($c = $this->getCertFile())) {
-            $opts[RequestOptions::CERT]    = $c;
+            $opts[RequestOptions::CERT] = $c;
             $opts[RequestOptions::SSL_KEY] = $this->getKeyFile();
         }
 
@@ -546,15 +556,15 @@ class Config
         $ret = [];
         foreach (
             [
-                Consul::HTTPAddrEnvName => static::_tryGetEnvParam(Consul::HTTPAddrEnvName),
-                Consul::HTTPTokenEnvName => static::_tryGetEnvParam(Consul::HTTPTokenEnvName),
-                Consul::HTTPTokenFileEnvName => static::_tryGetEnvParam(Consul::HTTPTokenFileEnvName),
-                Consul::HTTPAuthEnvName => static::_tryGetEnvParam(Consul::HTTPAuthEnvName),
-                Consul::HTTPCAFileEnvName => static::_tryGetEnvParam(Consul::HTTPCAFileEnvName),
+                Consul::HTTPAddrEnvName       => static::_tryGetEnvParam(Consul::HTTPAddrEnvName),
+                Consul::HTTPTokenEnvName      => static::_tryGetEnvParam(Consul::HTTPTokenEnvName),
+                Consul::HTTPTokenFileEnvName  => static::_tryGetEnvParam(Consul::HTTPTokenFileEnvName),
+                Consul::HTTPAuthEnvName       => static::_tryGetEnvParam(Consul::HTTPAuthEnvName),
+                Consul::HTTPCAFileEnvName     => static::_tryGetEnvParam(Consul::HTTPCAFileEnvName),
                 Consul::HTTPClientCertEnvName => static::_tryGetEnvParam(Consul::HTTPClientCertEnvName),
-                Consul::HTTPClientKeyEnvName => static::_tryGetEnvParam(Consul::HTTPClientKeyEnvName),
-                Consul::HTTPSSLEnvName => static::_tryGetEnvParam(Consul::HTTPSSLEnvName),
-                Consul::HTTPSSLVerifyEnvName => static::_tryGetEnvParam(Consul::HTTPSSLVerifyEnvName),
+                Consul::HTTPClientKeyEnvName  => static::_tryGetEnvParam(Consul::HTTPClientKeyEnvName),
+                Consul::HTTPSSLEnvName        => static::_tryGetEnvParam(Consul::HTTPSSLEnvName),
+                Consul::HTTPSSLVerifyEnvName  => static::_tryGetEnvParam(Consul::HTTPSSLVerifyEnvName),
             ] as $k => $v
         ) {
             if (null !== $v) {
@@ -609,11 +619,11 @@ class Config
             } elseif (Consul::HTTPClientKeyEnvName === $k) {
                 $conf['KeyFile'] = $v;
             } elseif (Consul::HTTPSSLEnvName === $k) {
-                if ((bool) $v) {
+                if ((bool)$v) {
                     $conf['Scheme'] = 'https';
                 }
             } elseif (Consul::HTTPSSLVerifyEnvName === $k) {
-                if ((bool) $v) {
+                if ((bool)$v) {
                     $conf['InsecureSkipVerify'] = true;
                 }
             }

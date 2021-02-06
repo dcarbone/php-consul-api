@@ -14,25 +14,29 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\PHPConsulAPI\Values;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Class ValuesUsageTest
- * @package DCarbone\PHPConsulAPITests\Usage
+ *
+ * @internal
  */
-class ValuesUsageTest extends TestCase {
-    public function testCanConstruct() {
+final class ValuesUsageTest extends TestCase
+{
+    public function testCanConstruct(): void
+    {
         $values = new Values();
-        $this->assertInstanceOf(Values::class, $values);
+        static::assertInstanceOf(Values::class, $values);
     }
 
     /**
      * @depends testCanConstruct
      */
-    public function testCanAddValue() {
+    public function testCanAddValue(): void
+    {
         $v = new Values();
         $v->add('test', 'value');
     }
@@ -40,7 +44,8 @@ class ValuesUsageTest extends TestCase {
     /**
      * @depends testCanConstruct
      */
-    public function testExceptionThrownWhenAddingInvalidKey() {
+    public function testExceptionThrownWhenAddingInvalidKey(): void
+    {
         $this->expectException(\InvalidArgumentException::class);
         $v = new Values();
         $v->add(1234, 'whatever');
@@ -49,7 +54,8 @@ class ValuesUsageTest extends TestCase {
     /**
      * @depends testCanConstruct
      */
-    public function testExceptionThrownWhenAddingInvalidValue() {
+    public function testExceptionThrownWhenAddingInvalidValue(): void
+    {
         $this->expectException(\InvalidArgumentException::class);
         $v = new Values();
         $v->add('test', new \stdClass());
@@ -58,14 +64,15 @@ class ValuesUsageTest extends TestCase {
     /**
      * @depends testCanAddValue
      */
-    public function testCanGetAll() {
+    public function testCanGetAll(): void
+    {
         $values = new Values();
         $values->add('test', 'value1');
         $values->add('test', 'value2');
         $values->add('test', 'value3');
 
         $all = $values->getAll('test');
-        $this->assertIsArray($all);
-        $this->assertCount(3, $all);
+        static::assertIsArray($all);
+        static::assertCount(3, $all);
     }
 }

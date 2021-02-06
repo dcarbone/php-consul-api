@@ -14,7 +14,7 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-*/
+ */
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\Operator\ReadableDuration;
@@ -22,11 +22,14 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class ReadableDurationTest
- * @package DCarbone\PHPConsulAPITests\Usage\Operator
+ *
+ * @internal
  */
-class ReadableDurationTest extends TestCase {
-    public function testReadableJsonEncoding() {
-        $rd = new ReadableDuration(time() * Time::Second);
-        $this->assertEquals('"'.(string)$rd.'"', json_encode($rd));
+final class ReadableDurationTest extends TestCase
+{
+    public function testReadableJsonEncoding(): void
+    {
+        $rd = new ReadableDuration(\time() * Time::Second);
+        static::assertSame('"' . (string)$rd . '"', \json_encode($rd));
     }
 }

@@ -67,7 +67,7 @@ trait Hydratable
         }
 
         // if the property has a scalar default value, hydrate it as such.
-        if (\is_scalar($this->{$field})) {
+        if (isset($this->{$field}) && \is_scalar($this->{$field})) {
             $this->hydrateScalar($field, $value, false);
             return;
         }
@@ -141,9 +141,8 @@ trait Hydratable
             return (bool)$value;
         }
 
-        throw new \DomainException(
-            \sprintf('Unable to handle field "%s" of type "%s" on class "%s"', $field, $type, \get_class($this))
-        );
+        // if we fall down to here, default to try to set the value to whatever it happens to be.
+        return $value;
     }
 
     /**
@@ -181,7 +180,12 @@ trait Hydratable
      */
     private function hydrateScalar(string $field, $value, bool $nullable): void
     {
-        $this->{$field} = $this->buildScalarValue($field, $value, \gettype($this->{$field}), $nullable);
+        $this->{$field} = $this->buildScalarValue(
+            $field,
+            $value,
+            isset($this->{$field}) ? \gettype($this->{$field}) : Hydration::MIXED,
+            $nullable
+        );
     }
 
     /**
@@ -195,6 +199,13 @@ trait Hydratable
     {
         // check if a callable has been defined
         if (isset($def[Hydration::FIELD_CALLBACK])) {
+            $cb = $def[Hydration::FIELD_CALLBACK];
+            // allow for using a "setter" method
+            if (\is_string($cb) && \method_exists($this, $cb)) {
+                $this->{$cb}($value);
+                return;
+            }
+            // handle all other callable input
             $err = \call_user_func($def[Hydration::FIELD_CALLBACK], $this, $field, $value);
             if (false === $err) {
                 throw new \RuntimeException(
