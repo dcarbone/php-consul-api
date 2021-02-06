@@ -18,9 +18,31 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
+use DCarbone\PHPConsulAPI\AbstractModel;
+
 /**
- * Class ACLTokenPolicyLink
+ * Class ACLServiceIdentity
  */
-class ACLTokenPolicyLink extends ACLLink
+class ACLServiceIdentity extends AbstractModel
 {
+    /** @var string */
+    public string $ServiceName = '';
+    /** @var array */
+    public array $Datacenters = [];
+
+    /**
+     * @return string
+     */
+    public function getServiceName(): string
+    {
+        return $this->ServiceName;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDatacenters(): array
+    {
+        return $this->Datacenters;
+    }
 }

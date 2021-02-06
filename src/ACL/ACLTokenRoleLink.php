@@ -19,8 +19,8 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 /**
- * Class ACLTokenPolicyLink
+ * Class ACLTokenRoleLink
  */
-class ACLTokenPolicyLink extends ACLLink
+class ACLTokenRoleLink extends ACLLink
 {
 }

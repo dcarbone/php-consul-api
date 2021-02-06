@@ -21,9 +21,9 @@ namespace DCarbone\PHPConsulAPI;
 /**
  * Used to assist with hydrating json responses
  *
- * Trait Hydrator
+ * Trait Hydratable
  */
-trait Hydrator
+trait Hydratable
 {
     /**
      * Overload the definition of this array in implementing classes to define custom per-field hydration behavior
@@ -46,9 +46,9 @@ trait Hydrator
             return;
         }
 
-        // if the implementing class has an entry in the global registry, use it.
-        if (isset(Hydration::COMPLEX_TYPES[self::class], Hydration::COMPLEX_TYPES[self::class][$field])) {
-            $this->hydrateComplex($field, $value, Hydration::COMPLEX_TYPES[self::class]);
+        // if the implementing class has an entry for this field in the global registry, use it.
+        if (isset(Hydration::COMPLEX_TYPES[static::class], Hydration::COMPLEX_TYPES[static::class][$field])) {
+            $this->hydrateComplex($field, $value, Hydration::COMPLEX_TYPES[static::class][$field]);
             return;
         }
 
@@ -78,23 +78,56 @@ trait Hydrator
     }
 
     /**
-     * @param string $field
-     * @param array $def
+     * @param array $fieldDef
      * @return bool
      */
-    protected function fieldIsNullable(string $field, array $def): bool
+    protected function fieldIsNullable(array $fieldDef): bool
     {
-        return !(bool)($def[Hydration::FIELD_NOT_NULLABLE] ?? false);
+        // todo: make sure this key is always a bool...
+        return $fieldDef[Hydration::FIELD_NULLABLE] ?? false;
+    }
+
+    /**
+     * @param string $type
+     * @return false|float|int|string|null
+     */
+    protected static function scalarZeroVal(string $type)
+    {
+        if (Hydration::STRING === $type) {
+            return '';
+        }
+        if (Hydration::INTEGER === $type) {
+            return 0;
+        }
+        if (Hydration::DOUBLE === $type) {
+            return 0.0;
+        }
+        if (Hydration::BOOLEAN === $type) {
+            return false;
+        }
+
+        return null;
     }
 
     /**
      * @param string $field
      * @param mixed $value
      * @param string $type
+     * @param bool $nullable
      * @return bool|float|int|string
      */
-    private function buildScalar(string $field, $value, string $type)
+    private function buildScalarValue(string $field, $value, string $type, bool $nullable)
     {
+        // if the incoming value is null...
+        if (null === $value) {
+            // ...and this field is nullable, just return null
+            if ($nullable) {
+                return null;
+            }
+            // otherwise return zero val for this type
+            return self::scalarZeroVal($type);
+        }
+
         if (Hydration::STRING === $type) {
             return (string)$value;
         }
@@ -107,6 +140,7 @@ trait Hydrator
         if (Hydration::BOOLEAN === $type) {
             return (bool)$value;
         }
+
         throw new \DomainException(
             \sprintf('Unable to handle field "%s" of type "%s" on class "%s"', $field, $type, \get_class($this))
         );
@@ -116,13 +150,25 @@ trait Hydrator
      * @param string $field
      * @param array|object $value
      * @param string $class
-     * @return object
+     * @param bool $nullable
+     * @return object|null
      */
-    private function buildObject(string $field, $value, string $class): object
+    private function buildObjectValue(string $field, $value, string $class, bool $nullable): ?object
     {
+        // if the incoming value is null...
+        if (null === $value) {
+            // ...and this field is nullable, return null
+            if ($nullable) {
+                return null;
+            }
+            // .. and this field must be an instance of the provided class, return empty new empty instance
+            return new $class();
+        }
+        // if the incoming value is already an instance of the class, clone it and return
         if ($value instanceof $class) {
             return clone $value;
         }
+        // otherwise, attempt to cast whatever was provided as an array and construct a new instance of $class
         return new $class((array)$value);
     }
 
@@ -135,17 +181,7 @@ trait Hydrator
      */
     private function hydrateScalar(string $field, $value, bool $nullable): void
     {
-        // if the incoming value is null...
-        if (null === $value) {
-            if ($nullable) {
-                // and this field _is_ nullable, set to null and move on
-                $this->{$field} = null;
-            }
-            // otherwise return without disturbing current default value
-            return;
-        }
-        // else set field to casted scalar
-        $this->{$field} = $this->buildScalar($field, $value, \gettype($this->{$field}));
+        $this->{$field} = $this->buildScalarValue($field, $value, \gettype($this->{$field}), $nullable);
     }
 
     /**
@@ -200,7 +236,7 @@ trait Hydrator
 
         // at this point, assume scalar
         // todo: handle non-scalar types here
-        $this->hydrateScalar($field, $value, self::fieldIsNullable($field, $def));
+        $this->hydrateScalar($field, $value, self::fieldIsNullable($def));
     }
 
     /**
@@ -221,7 +257,12 @@ trait Hydrator
             );
         }
 
-        $this->{$field} = $this->buildObject($field, $value, $def[Hydration::FIELD_CLASS]);
+        $this->{$field} = $this->buildObjectValue(
+            $field,
+            $value,
+            $def[Hydration::FIELD_CLASS],
+            self::fieldIsNullable($def)
+        );
     }
 
     /**
@@ -232,8 +273,8 @@ trait Hydrator
     private function hydrateArray(string $field, $value, array $def): void
     {
         // attempt to extract the two possible keys
-        $type = $def[Hydration::FIELD_ARRAY_TYPE] ?? null;
-        $class = $def[Hydration::FIELD_CLASS] ?? null;
+        $type  = $def[Hydration::FIELD_ARRAY_TYPE] ?? null;
+        $class = $def[Hydration::FIELD_CLASS]      ?? null;
 
         // type is required
         if (null === $type) {
@@ -250,7 +291,7 @@ trait Hydrator
         // is the incoming value null?
         if (null === $value) {
             // if this value can be null'd, allow it.
-            if (static::fieldIsNullable($field, $def)) {
+            if (static::fieldIsNullable($def)) {
                 $this->{$field} = null;
             }
             return;
@@ -284,11 +325,20 @@ trait Hydrator
             }
 
             foreach ($value as $v) {
-                $this->{$field}[] = $this->buildObject($field, $v, $class);
+                // todo: causes double-checking for null if value isn't null, not great...
+                if (null === $v) {
+                    continue;
+                }
+                $this->{$field}[] = $this->buildObjectValue($field, $v, $class, false);
             }
         } else {
             // in all other cases, just set as-is
-            $this->{$field} = $value;
+            foreach ($value as $v) {
+                if (null === $v) {
+                    continue;
+                }
+                $this->{$field}[] = $this->buildScalarValue($field, $v, $type, false);
+            }
         }
     }
 }

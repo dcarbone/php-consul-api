@@ -18,9 +18,31 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
+use DCarbone\PHPConsulAPI\AbstractModel;
+
 /**
- * Class ACLTokenPolicyLink
+ * Class ACLNodeIdentity
  */
-class ACLTokenPolicyLink extends ACLLink
+class ACLNodeIdentity extends AbstractModel
 {
+    /** @var string */
+    public string $NodeName = '';
+    /** @var string */
+    public string $Datacenter = '';
+
+    /**
+     * @return string
+     */
+    public function getNodeName(): string
+    {
+        return $this->NodeName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDatacenter(): string
+    {
+        return $this->Datacenter;
+    }
 }
