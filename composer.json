@@ -21,7 +21,8 @@
     "dcarbone/gotime": "0.4.*",
     "dcarbone/gohttp": "v0.3.*",
     "guzzlehttp/guzzle": "~7",
-    "guzzlehttp/psr7": "~1"
+    "guzzlehttp/psr7": "~1",
+    "ocramius/generated-hydrator": "^4.1"
   },
   "autoload": {
     "files": [

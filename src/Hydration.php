@@ -3,7 +3,7 @@
 namespace DCarbone\PHPConsulAPI;
 
 /*
-   Copyright 2016-2020 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -59,69 +59,6 @@ final class Hydration
     public const CALLABLE_HYDRATE_NULLABLE_TIME     = [self::class, 'hydrateNullableTime'];
     public const CALLABLE_HYDRATE_DURATION          = [self::class, 'hydrateDuration'];
     public const CALLABLE_HYDRATE_NULLABLE_DURATION = [self::class, 'hydrateNullableDuration'];
-
-    public const COMPLEX_TYPES = [
-        ACLToken::class               => [
-            'Policies'          => [
-                self::FIELD_TYPE       => self::ARRAY,
-                self::FIELD_CLASS      => ACLTokenPolicyLink::class,
-                self::FIELD_ARRAY_TYPE => self::OBJECT,
-            ],
-            'Roles'             => [
-                self::FIELD_TYPE       => self::ARRAY,
-                self::FIELD_CLASS      => ACLTokenRoleLink::class,
-                self::FIELD_ARRAY_TYPE => self::OBJECT,
-            ],
-            'ServiceIdentities' => [
-                self::FIELD_TYPE       => self::ARRAY,
-                self::FIELD_CLASS      => ACLServiceIdentity::class,
-                self::FIELD_ARRAY_TYPE => self::OBJECT,
-            ],
-            'NodeIdentities'    => [
-                self::FIELD_TYPE       => self::ARRAY,
-                self::FIELD_CLASS      => ACLNodeIdentity::class,
-                self::FIELD_ARRAY_TYPE => self::OBJECT,
-            ],
-            'AuthMethod'        => [
-                self::FIELD_TYPE     => self::STRING,
-                self::FIELD_NULLABLE => true,
-            ],
-            'ExpirationTTL'     => [
-                self::FIELD_CALLBACK => self::CALLABLE_HYDRATE_DURATION,
-            ],
-            'ExpirationTime'    => [
-                self::FIELD_CALLBACK => self::CALLABLE_HYDRATE_NULLABLE_TIME,
-                self::FIELD_NULLABLE => true,
-            ],
-            'CreateTime'        => [
-                self::FIELD_CALLBACK => self::CALLABLE_HYDRATE_TIME,
-            ],
-            'Rules'             => [
-                self::FIELD_TYPE     => self::STRING,
-                self::FIELD_NULLABLE => true,
-            ],
-            'Namespace'         => [
-                self::FIELD_TYPE     => self::STRING,
-                self::FIELD_NULLABLE => true,
-            ],
-        ],
-        AgentServiceChecksInfo::class => [
-            'Service' => [
-                self::FIELD_TYPE  => self::OBJECT,
-                self::FIELD_CLASS => AgentService::class,
-            ],
-            'Checks'  => [
-                self::FIELD_TYPE  => self::OBJECT,
-                self::FIELD_CLASS => HealthChecks::class,
-            ],
-        ],
-        KVPair::class                 => [
-            'Namespace' => [
-                self::FIELD_TYPE     => self::STRING,
-                self::FIELD_NULLABLE => true,
-            ],
-        ],
-    ];
 
     /**
      * @param string $type

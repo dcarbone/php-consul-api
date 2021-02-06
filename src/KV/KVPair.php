@@ -3,7 +3,7 @@
 namespace DCarbone\PHPConsulAPI\KV;
 
 /*
-   Copyright 2016-2020 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -19,12 +19,15 @@ namespace DCarbone\PHPConsulAPI\KV;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class KVPair
  */
 class KVPair extends AbstractModel
 {
+    private const FIELD_NAMESPACE = 'Namespace';
+
     /** @var string */
     public string $Key = '';
     /** @var int */
@@ -39,8 +42,16 @@ class KVPair extends AbstractModel
     public string $Value = '';
     /** @var string */
     public string $Session = '';
-    /** @var string */
+    /** @var string|null */
     public ?string $Namespace = null;
+
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_NAMESPACE => [
+            Hydration::FIELD_TYPE     => Hydration::STRING,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+    ];
 
     /** @var bool */
     private bool $_valueDecoded;

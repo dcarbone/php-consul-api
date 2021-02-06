@@ -3,7 +3,7 @@
 namespace DCarbone\PHPConsulAPI;
 
 /*
-   Copyright 2016-2020 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -74,16 +74,16 @@ class QueryOptions extends AbstractModel implements RequestOptions
     /** @var array[] */
     protected static array $fields = [
         self::FIELD_MAX_AGE => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_NULLABLE_DURATION,
         ],
         self::FIELD_STALE_IF_ERROR => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_NULLABLE_DURATION,
         ],
         self::FIELD_WAIT_TIME => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_NULLABLE_DURATION,
         ],
         self::FIELD_TIMEOUT => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_NULLABLE_DURATION,
         ],
     ];
 

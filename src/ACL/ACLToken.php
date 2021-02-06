@@ -20,12 +20,24 @@ namespace DCarbone\PHPConsulAPI\ACL;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class ACLToken
  */
 class ACLToken extends AbstractModel
 {
+    private const FIELD_POLICIES           = 'Policies';
+    private const FIELD_ROLES              = 'Roles';
+    private const FIELD_SERVICE_IDENTITIES = 'ServiceIdentities';
+    private const FIELD_NODE_IDENTITIES    = 'NodeIdentities';
+    private const FIELD_AUTH_METHOD        = 'AuthMethod';
+    private const FIELD_EXPIRATION_TTL     = 'ExpirationTTL';
+    private const FIELD_EXPIRATION_TIME    = 'ExpirationTime';
+    private const FIELD_CREATE_TIME        = 'CreateTime';
+    private const FIELD_RULES              = 'Rules';
+    private const FIELD_NAMESPACE          = 'Namespace';
+
     /** @var int */
     public int $CreateIndex = 0;
     /** @var int */
@@ -48,10 +60,12 @@ class ACLToken extends AbstractModel
     public bool $Local = false;
     /** @var string|null */
     public ?string $AuthMethod = null;
-    /** @var \DCarbone\Go\Time\Duration|null */
-    public ?Time\Duration $ExpirationTTL = null;
+    /** @var \DCarbone\Go\Time\Duration */
+    public Time\Duration $ExpirationTTL;
     /** @var \DCarbone\Go\Time\Time|null */
     public ?Time\Time $ExpirationTime = null;
+    /** @var \DCarbone\Go\Time\Time */
+    public Time\Time $CreateTime;
     /** @var string */
     public string $Hash = '';
     /** @var string|null */
@@ -63,6 +77,67 @@ class ACLToken extends AbstractModel
      */
     public ?string $Rules = null;
 
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_POLICIES           => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => ACLTokenPolicyLink::class,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+        ],
+        self::FIELD_ROLES              => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => ACLTokenRoleLink::class,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+        ],
+        self::FIELD_SERVICE_IDENTITIES => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => ACLServiceIdentity::class,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+        ],
+        self::FIELD_NODE_IDENTITIES    => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => ACLNodeIdentity::class,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+        ],
+        self::FIELD_AUTH_METHOD        => [
+            Hydration::FIELD_TYPE     => Hydration::STRING,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+        self::FIELD_EXPIRATION_TTL     => [
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
+        ],
+        self::FIELD_EXPIRATION_TIME    => [
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_NULLABLE_TIME,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+        self::FIELD_CREATE_TIME        => [
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_TIME,
+        ],
+        self::FIELD_RULES              => [
+            Hydration::FIELD_TYPE     => Hydration::STRING,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+        self::FIELD_NAMESPACE          => [
+            Hydration::FIELD_TYPE     => Hydration::STRING,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+    ];
+
+    /**
+     * ACLToken constructor.
+     * @param array $data
+     */
+    public function __construct(array $data = [])
+    {
+        parent::__construct($data);
+        if (!isset($this->ExpirationTTL)) {
+            $this->ExpirationTTL = new Time\Duration();
+        }
+        if (!isset($this->CreateTime)) {
+            $this->CreateTime = Time::New();
+        }
+    }
+
     /**
      * @return int
      */
@@ -73,10 +148,12 @@ class ACLToken extends AbstractModel
 
     /**
      * @param int $CreateIndex
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLToken
      */
-    public function setCreateIndex(int $CreateIndex): void
+    public function setCreateIndex(int $CreateIndex): self
     {
         $this->CreateIndex = $CreateIndex;
+        return $this;
     }
 
     /**
@@ -89,10 +166,12 @@ class ACLToken extends AbstractModel
 
     /**
      * @param int $ModifyIndex
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLToken
      */
-    public function setModifyIndex(int $ModifyIndex): void
+    public function setModifyIndex(int $ModifyIndex): self
     {
         $this->ModifyIndex = $ModifyIndex;
+        return $this;
     }
 
     /**
@@ -105,10 +184,12 @@ class ACLToken extends AbstractModel
 
     /**
      * @param string $AccessorID
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLToken
      */
-    public function setAccessorID(string $AccessorID): void
+    public function setAccessorID(string $AccessorID): self
     {
         $this->AccessorID = $AccessorID;
+        return $this;
     }
 
     /**
@@ -121,10 +202,12 @@ class ACLToken extends AbstractModel
 
     /**
      * @param string $SecretID
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLToken
      */
-    public function setSecretID(string $SecretID): void
+    public function setSecretID(string $SecretID): self
     {
         $this->SecretID = $SecretID;
+        return $this;
     }
 
     /**
@@ -137,10 +220,12 @@ class ACLToken extends AbstractModel
 
     /**
      * @param string $Description
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLToken
      */
-    public function setDescription(string $Description): void
+    public function setDescription(string $Description): self
     {
         $this->Description = $Description;
+        return $this;
     }
 
     /**
@@ -153,10 +238,12 @@ class ACLToken extends AbstractModel
 
     /**
      * @param \DCarbone\PHPConsulAPI\ACL\ACLTokenPolicyLink[] $Policies
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLToken
      */
-    public function setPolicies(array $Policies): void
+    public function setPolicies(array $Policies): self
     {
         $this->Policies = $Policies;
+        return $this;
     }
 
     /**
@@ -169,10 +256,12 @@ class ACLToken extends AbstractModel
 
     /**
      * @param \DCarbone\PHPConsulAPI\ACL\ACLTokenRoleLink[] $Roles
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLToken
      */
-    public function setRoles(array $Roles): void
+    public function setRoles(array $Roles): self
     {
         $this->Roles = $Roles;
+        return $this;
     }
 
     /**
@@ -185,10 +274,12 @@ class ACLToken extends AbstractModel
 
     /**
      * @param \DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity[] $ServiceIdentities
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLToken
      */
-    public function setServiceIdentities(array $ServiceIdentities): void
+    public function setServiceIdentities(array $ServiceIdentities): self
     {
         $this->ServiceIdentities = $ServiceIdentities;
+        return $this;
     }
 
     /**
@@ -201,10 +292,12 @@ class ACLToken extends AbstractModel
 
     /**
      * @param \DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity[] $NodeIdentities
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLToken
      */
-    public function setNodeIdentities(array $NodeIdentities): void
+    public function setNodeIdentities(array $NodeIdentities): self
     {
         $this->NodeIdentities = $NodeIdentities;
+        return $this;
     }
 
     /**
@@ -217,10 +310,12 @@ class ACLToken extends AbstractModel
 
     /**
      * @param bool $Local
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLToken
      */
-    public function setLocal(bool $Local): void
+    public function setLocal(bool $Local): self
     {
         $this->Local = $Local;
+        return $this;
     }
 
     /**
@@ -233,26 +328,30 @@ class ACLToken extends AbstractModel
 
     /**
      * @param string|null $AuthMethod
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLToken
      */
-    public function setAuthMethod(?string $AuthMethod): void
+    public function setAuthMethod(?string $AuthMethod): self
     {
         $this->AuthMethod = $AuthMethod;
+        return $this;
     }
 
     /**
-     * @return \DCarbone\Go\Time\Duration|null
+     * @return \DCarbone\Go\Time\Duration
      */
-    public function getExpirationTTL(): ?Time\Duration
+    public function getExpirationTTL(): Time\Duration
     {
         return $this->ExpirationTTL;
     }
 
     /**
-     * @param \DCarbone\Go\Time\Duration|null $ExpirationTTL
+     * @param \DCarbone\Go\Time\Duration $ExpirationTTL
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLToken
      */
-    public function setExpirationTTL(?Time\Duration $ExpirationTTL): void
+    public function setExpirationTTL(Time\Duration $ExpirationTTL): self
     {
         $this->ExpirationTTL = $ExpirationTTL;
+        return $this;
     }
 
     /**
@@ -265,10 +364,30 @@ class ACLToken extends AbstractModel
 
     /**
      * @param \DCarbone\Go\Time\Time|null $ExpirationTime
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLToken
      */
-    public function setExpirationTime(?Time\Time $ExpirationTime): void
+    public function setExpirationTime(?Time\Time $ExpirationTime): self
     {
         $this->ExpirationTime = $ExpirationTime;
+        return $this;
+    }
+
+    /**
+     * @return \DCarbone\Go\Time\Time
+     */
+    public function getCreateTime(): Time\Time
+    {
+        return $this->CreateTime;
+    }
+
+    /**
+     * @param \DCarbone\Go\Time\Time $CreateTime
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLToken
+     */
+    public function setCreateTime(Time\Time $CreateTime): self
+    {
+        $this->CreateTime = $CreateTime;
+        return $this;
     }
 
     /**
@@ -281,10 +400,12 @@ class ACLToken extends AbstractModel
 
     /**
      * @param string $Hash
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLToken
      */
-    public function setHash(string $Hash): void
+    public function setHash(string $Hash): self
     {
         $this->Hash = $Hash;
+        return $this;
     }
 
     /**
@@ -297,10 +418,12 @@ class ACLToken extends AbstractModel
 
     /**
      * @param string|null $Namespace
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLToken
      */
-    public function setNamespace(?string $Namespace): void
+    public function setNamespace(?string $Namespace): self
     {
         $this->Namespace = $Namespace;
+        return $this;
     }
 
     /**
@@ -313,9 +436,11 @@ class ACLToken extends AbstractModel
 
     /**
      * @param string|null $Rules
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLToken
      */
-    public function setRules(?string $Rules): void
+    public function setRules(?string $Rules): self
     {
         $this->Rules = $Rules;
+        return $this;
     }
 }

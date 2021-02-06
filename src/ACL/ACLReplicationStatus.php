@@ -3,7 +3,7 @@
 namespace DCarbone\PHPConsulAPI\ACL;
 
 /*
-   Copyright 2016-2020 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -18,13 +18,18 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
+use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class ACLReplicationStatus
  */
 class ACLReplicationStatus extends AbstractModel
 {
+    private const FIELD_LAST_SUCCESS = 'LastSuccess';
+    private const FIELD_LAST_ERROR   = 'LastError';
+
     /** @var bool */
     public bool $Enabled = false;
     /** @var bool */
@@ -33,10 +38,39 @@ class ACLReplicationStatus extends AbstractModel
     public string $SourceDatacenter = '';
     /** @var int */
     public int $ReplicatedIndex = 0;
-    /** @var string */
-    public string $LastSuccess = '';
-    /** @var string */
-    public string $LastError = '';
+    /** @var int */
+    public int $ReplicatedRoleIndex = 0;
+    /** @var int */
+    public int $ReplicatedTokenIndex = 0;
+    /** @var \DCarbone\Go\Time\Time */
+    public Time\Time $LastSuccess;
+    /** @var \DCarbone\Go\Time\Time */
+    public Time\Time $LastError;
+
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_LAST_SUCCESS => [
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_TIME,
+        ],
+        self::FIELD_LAST_ERROR   => [
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_TIME,
+        ],
+    ];
+
+    /**
+     * ACLReplicationStatus constructor.
+     * @param array $data
+     */
+    public function __construct(array $data = [])
+    {
+        parent::__construct($data);
+        if (!isset($this->LastSuccess)) {
+            $this->LastSuccess = Time::New();
+        }
+        if (!isset($this->LastError)) {
+            $this->LastError = Time::New();
+        }
+    }
 
     /**
      * @return bool
@@ -71,17 +105,33 @@ class ACLReplicationStatus extends AbstractModel
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getLastSuccess(): string
+    public function getReplicatedRoleIndex(): int
+    {
+        return $this->ReplicatedRoleIndex;
+    }
+
+    /**
+     * @return int
+     */
+    public function getReplicatedTokenIndex(): int
+    {
+        return $this->ReplicatedTokenIndex;
+    }
+
+    /**
+     * @return \DCarbone\Go\Time\Time
+     */
+    public function getLastSuccess(): Time\Time
     {
         return $this->LastSuccess;
     }
 
     /**
-     * @return string
+     * @return \DCarbone\Go\Time\Time
      */
-    public function getLastError(): string
+    public function getLastError(): Time\Time
     {
         return $this->LastError;
     }

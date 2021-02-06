@@ -3,7 +3,7 @@
 namespace DCarbone\PHPConsulAPI;
 
 /*
-   Copyright 2016-2020 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -104,6 +104,9 @@ class Consul
     public const AutopilotUpgradeAwaitServerRemoval = 'await-server-removal';
     public const AutopilotUpgradeDisabled           = 'disabled';
 
+    public const BindingRuleBindTypeService = 'service';
+    public const BindingRuleBindTypeRole    = 'role';
+
     // "private" consts
 
     public const headerConsulPrefix             = 'X-Consul-';
@@ -160,17 +163,17 @@ class Consul
             }
         }
 
-        $this->ACL           = new ACLClient($config);
-        $this->Agent         = new AgentClient($config);
-        $this->Catalog       = new CatalogClient($config);
-        $this->Coordinate    = new CoordinateClient($config);
-        $this->Event         = new EventClient($config);
-        $this->Health        = new HealthClient($config);
-        $this->KV            = new KVClient($config);
-        $this->Operator      = new OperatorClient($config);
+        $this->ACL = new ACLClient($config);
+        $this->Agent = new AgentClient($config);
+        $this->Catalog = new CatalogClient($config);
+        $this->Coordinate = new CoordinateClient($config);
+        $this->Event = new EventClient($config);
+        $this->Health = new HealthClient($config);
+        $this->KV = new KVClient($config);
+        $this->Operator = new OperatorClient($config);
         $this->PreparedQuery = new PreparedQueryClient($config);
-        $this->Session       = new SessionClient($config);
-        $this->Status        = new StatusClient($config);
+        $this->Session = new SessionClient($config);
+        $this->Status = new StatusClient($config);
     }
 
     /**

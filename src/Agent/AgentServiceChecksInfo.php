@@ -3,7 +3,7 @@
 namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
-   Copyright 2016-2020 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,18 +20,34 @@ namespace DCarbone\PHPConsulAPI\Agent;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Health\HealthChecks;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class AgentServiceChecksInfo
  */
 class AgentServiceChecksInfo extends AbstractModel
 {
+    private const FIELD_SERVICE = 'Service';
+    private const FIELD_CHECKS  = 'Checks';
+
     /** @var string */
     public string $AggregatedStatus = '';
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentService|null */
     public ?AgentService $Service = null;
-    /** @var \DCarbone\PHPConsulAPI\Health\HealthChecks|null */
-    public ?HealthChecks $Checks = null;
+    /** @var \DCarbone\PHPConsulAPI\Health\HealthChecks */
+    public HealthChecks $Checks;
+
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_SERVICE => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => AgentService::class,
+        ],
+        self::FIELD_CHECKS  => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => HealthChecks::class,
+        ],
+    ];
 
     /**
      * AgentServiceChecksInfo constructor.

@@ -40,41 +40,25 @@ trait Hydratable
      */
     protected function hydrateField(string $field, $value): void
     {
-        // if the implementing class has some explicitly defined overrides
         if (isset(static::$fields[$field])) {
+            // if the implementing class has some explicitly defined overrides
             $this->hydrateComplex($field, $value, static::$fields[$field]);
-            return;
-        }
-
-        // if the implementing class has an entry for this field in the global registry, use it.
-        if (isset(Hydration::COMPLEX_TYPES[static::class], Hydration::COMPLEX_TYPES[static::class][$field])) {
-            $this->hydrateComplex($field, $value, Hydration::COMPLEX_TYPES[static::class][$field]);
-            return;
-        }
-
-        // if the field isn't explicitly defined on the implementing class, just set it to whatever the incoming
-        // value is
-        if (!\property_exists($this, $field)) {
+        } elseif (!\property_exists($this, $field)) {
+            // if the field isn't explicitly defined on the implementing class, just set it to whatever the incoming
+            // value is
             $this->{$field} = $value;
-            return;
-        }
-
-        // if the value is null at this point, ignore and move on.
-        // note: this is not checked prior to the property_exists call as if the field is not explicitly defined but
-        // is seen with a null value, we still want to define it as null on the implementing type.
-        if (null === $value) {
-            return;
-        }
-
-        // if the property has a scalar default value, hydrate it as such.
-        if (isset($this->{$field}) && \is_scalar($this->{$field})) {
+        } /** @noinspection PhpStatementHasEmptyBodyInspection */ elseif (null === $value) {
+            // if the value is null at this point, ignore and move on.
+            // note: this is not checked prior to the property_exists call as if the field is not explicitly defined but
+            // is seen with a null value, we still want to define it as null on the implementing type.
+        } elseif (isset($this->{$field}) && \is_scalar($this->{$field})) {
+            // if the property has a scalar default value, hydrate it as such.
             $this->hydrateScalar($field, $value, false);
-            return;
+        } else {
+            // if we fall down here, try to set the value as-is.  if this barfs, it indicates we have a bug to be squished.
+            // todo: should this be an exception?
+            $this->{$field} = $value;
         }
-
-        // if we fall down here, try to set the value as-is.  if this barfs, it indicates we have a bug to be squished.
-        // todo: should this be an exception?
-        $this->{$field} = $value;
     }
 
     /**
@@ -284,8 +268,8 @@ trait Hydratable
     private function hydrateArray(string $field, $value, array $def): void
     {
         // attempt to extract the two possible keys
-        $type  = $def[Hydration::FIELD_ARRAY_TYPE] ?? null;
-        $class = $def[Hydration::FIELD_CLASS]      ?? null;
+        $type = $def[Hydration::FIELD_ARRAY_TYPE] ?? null;
+        $class = $def[Hydration::FIELD_CLASS] ?? null;
 
         // type is required
         if (null === $type) {

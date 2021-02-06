@@ -3,7 +3,7 @@
 namespace DCarbone\PHPConsulAPI\ACL;
 
 /*
-   Copyright 2016-2020 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ use DCarbone\PHPConsulAPI\QueryMeta;
 class ACLReplicationStatusResponse extends AbstractValuedQueryResponse
 {
     /** @var \DCarbone\PHPConsulAPI\ACL\ACLReplicationStatus|null */
-    public $ACLReplicationStatus = null;
+    public ?ACLReplicationStatus $ACLReplicationStatus = null;
 
     /**
      * ACLReplicationStatusResponse constructor.

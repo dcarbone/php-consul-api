@@ -3,7 +3,7 @@
 namespace DCarbone\PHPConsulAPI;
 
 /*
-   Copyright 2016-2020 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,10 +23,13 @@ namespace DCarbone\PHPConsulAPI;
  */
 class HttpAuth implements \JsonSerializable
 {
+    private const FIELD_USERNAME = 'username';
+    private const FIELD_PASSWORD = 'password';
+
     /** @var string */
-    private $_username = '';
+    public string $username = '';
     /** @var string */
-    private $_password = '';
+    public string $password = '';
 
     /**
      * ConsulHttpAuth constructor.
@@ -35,8 +38,8 @@ class HttpAuth implements \JsonSerializable
      */
     public function __construct(string $username = '', string $password = '')
     {
-        $this->_username = $username;
-        $this->_password = $password;
+        $this->username = $username;
+        $this->password = $password;
     }
 
     /**
@@ -44,7 +47,7 @@ class HttpAuth implements \JsonSerializable
      */
     public function getUsername(): string
     {
-        return $this->_username;
+        return $this->username;
     }
 
     /**
@@ -52,7 +55,7 @@ class HttpAuth implements \JsonSerializable
      */
     public function getPassword(): string
     {
-        return $this->_password;
+        return $this->password;
     }
 
     /**
@@ -60,30 +63,30 @@ class HttpAuth implements \JsonSerializable
      */
     public function compileAuthString(): string
     {
-        return (string) $this;
+        return (string)$this;
     }
 
     /**
      * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
-        return ['username' => $this->_username, 'password' => $this->_password];
+        return [self::FIELD_USERNAME => $this->username, self::FIELD_PASSWORD => $this->password];
     }
 
     /**
      * @return array
      */
-    public function __debugInfo()
+    public function __debugInfo(): array
     {
-        return ['username' => $this->_username];
+        return [self::FIELD_USERNAME => $this->username];
     }
 
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
-        return \trim(\sprintf('%s:%s', $this->_username, $this->_password), ':');
+        return \trim(\sprintf('%s:%s', $this->username, $this->password), ':');
     }
 }
