@@ -21,16 +21,16 @@ namespace DCarbone\PHPConsulAPI;
 /**
  * Class DecodedBody
  */
-final class DecodedBody implements \ArrayAccess
+final class DecodedBody
 {
+    use ErrorContainer;
+
     /** @var mixed */
     public $Decoded = null;
-    /** @var \DCarbone\PHPConsulAPI\Error|null */
-    public ?Error $Err = null;
 
     /**
      * DecodedBody constructor.
-     * @param \$decoded
+     * @param mixed $decoded
      * @param \DCarbone\PHPConsulAPI\Error|null $err
      */
     public function __construct($decoded, ?Error $err)
@@ -45,54 +45,5 @@ final class DecodedBody implements \ArrayAccess
     public function getDecoded()
     {
         return $this->Decoded;
-    }
-
-    /**
-     * @return \DCarbone\PHPConsulAPI\Error
-     */
-    public function getErr(): Error
-    {
-        return $this->Err;
-    }
-
-    /**
-     * @param mixed $offset
-     * @return bool
-     */
-    public function offsetExists($offset): bool
-    {
-        return \is_int($offset) && 0 <= $offset && $offset < 2;
-    }
-
-    /**
-     * @param mixed $offset
-     * @return \DCarbone\PHPConsulAPI\Error|mixed|null
-     */
-    public function offsetGet($offset)
-    {
-        if (0 === $offset) {
-            return $this->Decoded;
-        }
-        if (1 === $offset) {
-            return $this->Err;
-        }
-        throw new \OutOfBoundsException(\sprintf('Offset %s does not exist', \var_export($offset, true)));
-    }
-
-    /**
-     * @param mixed $offset
-     * @param mixed $value
-     */
-    public function offsetSet($offset, $value): void
-    {
-        throw new \BadMethodCallException(\sprintf('Cannot call method %s on class %s', __METHOD__, __CLASS__));
-    }
-
-    /**
-     * @param mixed $offset
-     */
-    public function offsetUnset($offset): void
-    {
-        throw new \BadMethodCallException(\sprintf('Cannot call method %s on class %s', __METHOD__, __CLASS__));
     }
 }

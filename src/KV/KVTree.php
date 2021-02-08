@@ -24,16 +24,16 @@ namespace DCarbone\PHPConsulAPI\KV;
 class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \ArrayAccess
 {
     /** @var string */
-    private $_prefix;
+    private string $_prefix;
 
     /** @var \DCarbone\PHPConsulAPI\KV\KVPair[]|\DCarbone\PHPConsulAPI\KV\KVTree[] */
-    private $_children = [];
+    private array $_children = [];
 
     /**
      * KVTree constructor.
      * @param string $prefix
      */
-    public function __construct($prefix)
+    public function __construct(string $prefix)
     {
         $this->_prefix = $prefix;
     }

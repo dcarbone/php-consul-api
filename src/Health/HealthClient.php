@@ -49,12 +49,12 @@ class HealthClient extends AbstractClient
             return new HealthChecksResponse(null, null, $err);
         }
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
         if (null !== $err) {
             return new HealthChecksResponse(null, null, $err);
         }
 
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
+        $qm = $this->_buildQueryMeta($duration, $response, $r->getUri());
 
         return new HealthChecksResponse($data, $qm, null);
     }
@@ -76,12 +76,12 @@ class HealthClient extends AbstractClient
             return new HealthChecksResponse(null, null, $err);
         }
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
         if (null !== $err) {
             return new HealthChecksResponse(null, null, $err);
         }
 
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
+        $qm = $this->_buildQueryMeta($duration, $response, $r->getUri());
 
         return new HealthChecksResponse($data, $qm, null);
     }
@@ -222,9 +222,9 @@ class HealthClient extends AbstractClient
             return new HealthChecksResponse(null, null, $err);
         }
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
 
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
+        $qm = $this->_buildQueryMeta($duration, $response, $r->getUri());
 
         return new HealthChecksResponse($data, $qm, $err);
     }
@@ -271,9 +271,9 @@ class HealthClient extends AbstractClient
             return new ServiceEntriesResponse(null, null, $err);
         }
 
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
+        $qm = $this->_buildQueryMeta($duration, $response, $r->getUri());
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
 
         return new ServiceEntriesResponse($data, $qm, $err);
     }

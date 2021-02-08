@@ -18,34 +18,21 @@ namespace DCarbone\PHPConsulAPI\Catalog;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\QueryMeta;
+use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\QueryMetaContainer;
+use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class CatalogServicesResponse
  */
-class CatalogServicesResponse extends AbstractValuedQueryResponse
+class CatalogServicesResponse extends AbstractResponse implements HydratedResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\Catalog\CatalogService[]|null */
-    public $Services = null;
+    use QueryMetaContainer;
+    use ErrorContainer;
 
-    /**
-     * CatalogNodesResponse constructor.
-     * @param array|null $services
-     * @param \DCarbone\PHPConsulAPI\QueryMeta|null $qm
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(?array $services, ?QueryMeta $qm, ?Error $err)
-    {
-        if (null !== $services) {
-            $this->Services = [];
-            foreach ($services as $node) {
-                $this->Services[] = new CatalogService($node);
-            }
-        }
-        parent::__construct($qm, $err);
-    }
+    /** @var \DCarbone\PHPConsulAPI\Catalog\CatalogService[]|null */
+    public ?array $Services = null;
 
     /**
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogService[]|null
@@ -53,5 +40,17 @@ class CatalogServicesResponse extends AbstractValuedQueryResponse
     public function getValue()
     {
         return $this->Services;
+    }
+
+    /**
+     * @param mixed $decodedData
+     * @return void
+     */
+    public function hydrateValue($decodedData): void
+    {
+        $this->Services = [];
+        foreach ($decodedData as $node) {
+            $this->Services[] = new CatalogService($node);
+        }
     }
 }

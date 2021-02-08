@@ -47,7 +47,7 @@ class PreparedQueryClient extends AbstractClient
             return new ValuedWriteStringResponse('', null, $err);
         }
 
-        return new ValuedWriteStringResponse((string) $response->getBody(), $this->buildWriteMeta($duration), null);
+        return new ValuedWriteStringResponse((string) $response->getBody(), $this->_buildWriteMeta($duration), null);
     }
 
     /**
@@ -67,7 +67,7 @@ class PreparedQueryClient extends AbstractClient
             return new WriteResponse(null, $err);
         }
 
-        return new WriteResponse($this->buildWriteMeta($duration), null);
+        return new WriteResponse($this->_buildWriteMeta($duration), null);
     }
 
     /**
@@ -86,9 +86,9 @@ class PreparedQueryClient extends AbstractClient
             return new PreparedQueryDefinitionsResponse(null, null, $err);
         }
 
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
+        $qm = $this->_buildQueryMeta($duration, $response, $r->getUri());
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
         return new PreparedQueryDefinitionsResponse($data, $qm, $err);
     }
 
@@ -109,9 +109,9 @@ class PreparedQueryClient extends AbstractClient
             return new PreparedQueryDefinitionsResponse(null, null, $err);
         }
 
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
+        $qm = $this->_buildQueryMeta($duration, $response, $r->getUri());
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
         return new PreparedQueryDefinitionsResponse($data, $qm, $err);
     }
 
@@ -132,9 +132,9 @@ class PreparedQueryClient extends AbstractClient
             return new WriteResponse(null, $err);
         }
 
-        [$_, $err] = $this->decodeBody($response->getBody());
+        [$_, $err] = $this->_decodeBody($response->getBody());
 
-        return new WriteResponse($this->buildWriteMeta($duration), $err);
+        return new WriteResponse($this->_buildWriteMeta($duration), $err);
     }
 
     /**
@@ -154,9 +154,9 @@ class PreparedQueryClient extends AbstractClient
             return new PreparedQueryExecuteResponseResponse(null, null, $err);
         }
 
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
+        $qm = $this->_buildQueryMeta($duration, $response, $r->getUri());
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
         return new PreparedQueryExecuteResponseResponse($data, $qm, $err);
     }
 }

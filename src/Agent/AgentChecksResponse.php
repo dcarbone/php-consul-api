@@ -18,32 +18,19 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedResponse;
-use DCarbone\PHPConsulAPI\Error;
+use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class AgentChecksResponse
  */
-class AgentChecksResponse extends AbstractValuedResponse
+class AgentChecksResponse extends AbstractResponse implements HydratedResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\Agent\AgentCheck[]|null */
-    public $Checks = null;
+    use ErrorContainer;
 
-    /**
-     * AgentChecksResponse constructor.
-     * @param array|null $checks
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(?array $checks, ?Error $err)
-    {
-        if (null !== $checks) {
-            $this->Checks = [];
-            foreach ($checks as $k => $v) {
-                $this->Checks[$k] = new AgentCheck($v);
-            }
-        }
-        parent::__construct($err);
-    }
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentCheck[]|null */
+    public ?array $Checks = null;
 
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentCheck[]|null
@@ -51,5 +38,17 @@ class AgentChecksResponse extends AbstractValuedResponse
     public function getValue(): ?array
     {
         return $this->Checks;
+    }
+
+    /**
+     * @param mixed $decodedData
+     * @return void
+     */
+    public function hydrateValue($decodedData): void
+    {
+        $this->Checks = [];
+        foreach ($decodedData as $k => $v) {
+            $this->Checks[$k] = new AgentCheck($v);
+        }
     }
 }

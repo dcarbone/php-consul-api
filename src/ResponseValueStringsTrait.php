@@ -33,4 +33,12 @@ trait ResponseValueStringsTrait
     {
         return $this->Value;
     }
+
+    /**
+     * @param mixed $decodedData
+     */
+    public function hydrateValue($decodedData): void
+    {
+        $this->Value = (array)$decodedData;
+    }
 }

@@ -18,15 +18,16 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
+use DCarbone\PHPConsulAPI\AbstractResponse;
 use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\ResponseErrorTrait;
+use DCarbone\PHPConsulAPI\ErrorContainer;
 
 /**
  * Class AgentHealthServiceResponse
  */
-class AgentHealthServiceResponse implements \ArrayAccess
+class AgentHealthServiceResponse extends AbstractResponse
 {
-    use ResponseErrorTrait;
+    use ErrorContainer;
 
     /** @var string */
     public string $AggregatedStatus = '';
@@ -65,49 +66,5 @@ class AgentHealthServiceResponse implements \ArrayAccess
     public function getAgentServiceChecksInfos(): ?array
     {
         return $this->AgentServiceChecksInfos;
-    }
-
-    /**
-     * @param mixed $offset
-     * @return bool
-     */
-    public function offsetExists($offset)
-    {
-        return \is_int($offset) && 0 <= $offset && $offset < 3;
-    }
-
-    /**
-     * @param mixed $offset
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceChecksInfo[]|\DCarbone\PHPConsulAPI\Error|string|null
-     */
-    public function offsetGet($offset)
-    {
-        if (0 === $offset) {
-            return $this->AggregatedStatus;
-        }
-        if (1 === $offset) {
-            return $this->AgentServiceChecksInfos;
-        }
-        if (2 === $offset) {
-            return $this->Err;
-        }
-        throw new \OutOfBoundsException(\sprintf('Offset %s does not exist', \var_export($offset, true)));
-    }
-
-    /**
-     * @param \DCarbone\PHPConsulAPI\Agent$offset
-     * @param \DCarbone\PHPConsulAPI\Agent$value
-     */
-    public function offsetSet($offset, $value): void
-    {
-        throw new \BadMethodCallException(\sprintf('Cannot call %s on %s', __METHOD__, \get_called_class()));
-    }
-
-    /**
-     * @param \DCarbone\PHPConsulAPI\Agent$offset
-     */
-    public function offsetUnset($offset): void
-    {
-        throw new \BadMethodCallException(\sprintf('Cannot call %s on %s', __METHOD__, \get_called_class()));
     }
 }

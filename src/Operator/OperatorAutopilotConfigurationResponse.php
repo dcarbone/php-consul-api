@@ -18,29 +18,19 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedResponse;
-use DCarbone\PHPConsulAPI\Error;
+use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class OperatorAutopilotConfigurationResponse
  */
-class OperatorAutopilotConfigurationResponse extends AbstractValuedResponse implements \ArrayAccess
+class OperatorAutopilotConfigurationResponse extends AbstractResponse implements HydratedResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration|null */
-    public $AutopilotConfiguration = null;
+    use ErrorContainer;
 
-    /**
-     * OperatorAutopilotConfigurationResponse constructor.
-     * @param array|null $data
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(?array $data, ?Error $err)
-    {
-        parent::__construct($err);
-        if (null !== $data) {
-            $this->AutopilotConfiguration = new AutopilotConfiguration($data);
-        }
-    }
+    /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration|null */
+    public ?AutopilotConfiguration $AutopilotConfiguration = null;
 
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration|null
@@ -51,26 +41,10 @@ class OperatorAutopilotConfigurationResponse extends AbstractValuedResponse impl
     }
 
     /**
-     * @param mixed $offset
-     * @return bool
+     * @param mixed $decodedData
      */
-    public function offsetExists($offset)
+    public function hydrateValue($decodedData): void
     {
-        return \is_int($offset) && 0 <= $offset && $offset <= 1;
-    }
-
-    /**
-     * @param mixed $offset
-     * @return \DCarbone\PHPConsulAPI\Error|\DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration|null
-     */
-    public function offsetGet($offset)
-    {
-        if (0 === $offset) {
-            return $this->AutopilotConfiguration;
-        }
-        if (1 === $offset) {
-            return $this->Err;
-        }
-        throw new \OutOfRangeException(\sprintf('Offset %v does not exist', \var_export($offset, true)));
+        $this->AutopilotConfiguration = new AutopilotConfiguration((array)$decodedData);
     }
 }

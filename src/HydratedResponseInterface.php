@@ -19,18 +19,18 @@ namespace DCarbone\PHPConsulAPI;
  */
 
 /**
- * Trait ResponseErrorTrait
+ * Interface HydratedResponseInterface
  */
-trait ResponseErrorTrait
+interface HydratedResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\Error|null */
-    public ?Error $Err = null;
+    /**
+     * @return mixed
+     */
+    public function getValue();
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Error|null
+     * @param mixed $decodedData
+     * @return void
      */
-    public function getErr(): ?Error
-    {
-        return $this->Err;
-    }
+    public function hydrateValue($decodedData): void;
 }

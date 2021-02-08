@@ -18,33 +18,21 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\QueryMeta;
+use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\QueryMetaContainer;
+use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class ACLEntriesResponse
  */
-class ACLEntriesResponse extends AbstractValuedQueryResponse
+class ACLEntriesResponse extends AbstractResponse implements HydratedResponseInterface
 {
+    use QueryMetaContainer;
+    use ErrorContainer;
+
     /** @var \DCarbone\PHPConsulAPI\ACL\ACLEntry[]|null */
     public array $ACLEntries = [];
-
-    /**
-     * ACLEntriesResponse constructor.
-     * @param array|null $entries
-     * @param \DCarbone\PHPConsulAPI\QueryMeta|null $qm
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(?array $entries, ?QueryMeta $qm, ?Error $err)
-    {
-        if (null !== $entries) {
-            foreach ($entries as $entry) {
-                $this->ACLEntries[] = new ACLEntry($entry);
-            }
-        }
-        parent::__construct($qm, $err);
-    }
 
     /**
      * @return \DCarbone\PHPConsulAPI\ACL\ACLEntry[]|null
@@ -52,5 +40,16 @@ class ACLEntriesResponse extends AbstractValuedQueryResponse
     public function getValue(): ?array
     {
         return $this->ACLEntries;
+    }
+
+    /**
+     * @param mixed $decodedData
+     * @return void
+     */
+    public function hydrateValue($decodedData): void
+    {
+        foreach ($decodedData as $entry) {
+            $this->ACLEntries[] = new ACLEntry($entry);
+        }
     }
 }

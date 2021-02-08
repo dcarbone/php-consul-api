@@ -30,8 +30,8 @@ use Psr\Http\Message\UriInterface;
  */
 abstract class AbstractClient
 {
-    /** @var \GuzzleHttp\ClientInterface */
-    protected ClientInterface $httpClient;
+    /** @var \DCarbone\PHPConsulAPI\Config */
+    protected Config $config;
 
     /**
      * AbstractConsulClient constructor.
@@ -39,7 +39,7 @@ abstract class AbstractClient
      */
     public function __construct(Config $config)
     {
-        $this->httpClient = clone $config->HttpClient;
+        $this->config = $config;
     }
 
     /**
@@ -48,6 +48,60 @@ abstract class AbstractClient
     public function getConfig(): Config
     {
         return $this->config;
+    }
+
+    /**
+     * @param \DCarbone\Go\Time\Duration $duration
+     * @param \Psr\Http\Message\ResponseInterface $response
+     * @param \Psr\Http\Message\UriInterface $uri
+     * @return \DCarbone\PHPConsulAPI\QueryMeta
+     */
+    protected function _buildQueryMeta(
+        Time\Duration $duration,
+        ResponseInterface $response,
+        UriInterface $uri
+    ): QueryMeta {
+        $qm = new QueryMeta();
+
+        $qm->RequestTime = $duration;
+        $qm->RequestUrl  = (string)$uri;
+
+        if ('' !== ($h = $response->getHeaderLine(Consul::headerConsulIndex))) {
+            $qm->LastIndex = (int)$h;
+        }
+
+        $qm->LastContentHash = $response->getHeaderLine(Consul::headerConsulContentHash);
+
+        // note: do not need to check both as guzzle response compares headers insensitively
+        if ('' !== ($h = $response->getHeaderLine(Consul::headerConsulKnownLeader))) {
+            $qm->KnownLeader = (bool)$h;
+        }
+        // note: do not need to check both as guzzle response compares headers insensitively
+        if ('' !== ($h = $response->getHeaderLine(Consul::headerConsulLastContact))) {
+            $qm->LastContact = (int)$h;
+        }
+
+        if ('' !== ($h = $response->getHeaderLine(Consul::headerConsulTranslateAddresses))) {
+            $qm->AddressTranslationEnabled = (bool)$h;
+        }
+
+        if ('' !== ($h = $response->getHeaderLine(Consul::headerCache))) {
+            $qm->CacheAge = Time::Duration(\intval($h, 10) * Time::Second);
+        }
+
+        return $qm;
+    }
+
+    /**
+     * @param \DCarbone\Go\Time\Duration $duration
+     * @return \DCarbone\PHPConsulAPI\WriteMeta
+     */
+    protected function _buildWriteMeta(Time\Duration $duration): WriteMeta
+    {
+        $wm              = new WriteMeta();
+        $wm->RequestTime = $duration;
+
+        return $wm;
     }
 
     /**
@@ -67,10 +121,10 @@ abstract class AbstractClient
     /**
      * @param string $path
      * @param mixed $body
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @param \DCarbone\PHPConsulAPI\RequestOptions|null $opts
      * @return \DCarbone\PHPConsulAPI\Request
      */
-    protected function _newPutRequest(string $path, $body, ?WriteOptions $opts): Request
+    protected function _newPutRequest(string $path, $body, ?RequestOptions $opts): Request
     {
         return $this->_newRequest(HTTP\MethodPut, $path, $body, $opts);
     }
@@ -83,6 +137,56 @@ abstract class AbstractClient
     protected function _newGetRequest(string $path, ?QueryOptions $opts): Request
     {
         return $this->_newRequest(HTTP\MethodGet, $path, null, $opts);
+    }
+
+    /**
+     * @param string $path
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\Request
+     */
+    protected function _newDeleteRequest(string $path, ?WriteOptions $opts): Request
+    {
+        return $this->_newRequest(HTTP\MethodDelete, $path, null, $opts);
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Request $r
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\RequestResponse
+     */
+    protected function _do(Request $r): RequestResponse
+    {
+        $start    = \microtime(true);
+        $response = null;
+        $err      = null;
+
+        try {
+            // If we actually have a client defined...
+            if (isset($this->config->HttpClient) && $this->config->HttpClient instanceof ClientInterface) {
+                $response = $this->config->HttpClient->send(
+                    $r->toPsrRequest(),
+                    $this->config->getGuzzleRequestOptions($r)
+                );
+            } // Otherwise, throw error to be caught below
+            else {
+                throw new \RuntimeException('Unable to execute query as no HttpClient has been defined.');
+            }
+        } catch (\Exception $e) {
+            // If there has been an exception of any kind, catch it and create Error object
+            $err = new Error(
+                \sprintf(
+                    '%s - Error seen while executing "%s".  Message: "%s"',
+                    \get_class($this),
+                    $r->getUri(),
+                    $e->getMessage()
+                )
+            );
+        }
+
+        // calculate execution time
+        $dur = new Time\Duration(\intval((\microtime(true) - $start) * Time::Second, 10));
+
+        return new RequestResponse($r->meta(), $dur, $response, $err);
     }
 
     /**
@@ -134,64 +238,12 @@ abstract class AbstractClient
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Request $r
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @return \DCarbone\PHPConsulAPI\RequestResponse
-     */
-    protected function _do(Request $r): RequestResponse
-    {
-        $start    = \microtime(true);
-        $response = null;
-        $err      = null;
-
-        try {
-            // If we actually have a client defined...
-            if (isset($this->config->HttpClient) && $this->config->HttpClient instanceof ClientInterface) {
-                $response = $this->config->HttpClient->send(
-                    $r->toPsrRequest(),
-                    $this->config->getGuzzleRequestOptions($r)
-                );
-            } // Otherwise, throw error to be caught below
-            else {
-                throw new \RuntimeException('Unable to execute query as no HttpClient has been defined.');
-            }
-        } catch (\Exception $e) {
-            // If there has been an exception of any kind, catch it and create Error object
-            $err = new Error(
-                \sprintf(
-                    '%s - Error seen while executing "%s".  Message: "%s"',
-                    \get_class($this),
-                    $r->getUri(),
-                    $e->getMessage()
-                )
-            );
-        }
-
-        // calculate execution time
-        $dur = new Time\Duration((int) ((\microtime(true) - $start) * Time::Second));
-
-        return new RequestResponse($dur, $response, $err);
-    }
-
-    /**
      * @param \DCarbone\PHPConsulAPI\RequestResponse $r
      * @return \DCarbone\PHPConsulAPI\RequestResponse
      */
     protected function _requireOK(RequestResponse $r): RequestResponse
     {
         return $this->_requireStatus($r, HTTP\StatusOK);
-    }
-
-    /**
-     * @param string $path
-     * @param mixed $body
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @return \DCarbone\PHPConsulAPI\RequestResponse
-     */
-    protected function _doPut(string $path, $body, ?WriteOptions $opts): RequestResponse
-    {
-        return $this->_do($this->_newPutRequest($path, $body, $opts));
     }
 
     /**
@@ -206,61 +258,33 @@ abstract class AbstractClient
     }
 
     /**
-     * @param \DCarbone\Go\Time\Duration $duration
-     * @param \Psr\Http\Message\ResponseInterface $response
-     * @param \Psr\Http\Message\UriInterface $uri
-     * @return \DCarbone\PHPConsulAPI\QueryMeta
+     * @param string $path
+     * @param mixed $body
+     * @param \DCarbone\PHPConsulAPI\RequestOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\RequestResponse
      */
-    protected function buildQueryMeta(Time\Duration $duration, ResponseInterface $response, UriInterface $uri): QueryMeta
+    protected function _doPut(string $path, $body, ?RequestOptions $opts): RequestResponse
     {
-        $qm = new QueryMeta();
-
-        $qm->RequestTime = $duration;
-        $qm->RequestUrl  = (string)$uri;
-
-        if ('' !== ($h = $response->getHeaderLine(Consul::headerConsulIndex))) {
-            $qm->LastIndex = (int)$h;
-        }
-
-        $qm->LastContentHash = $response->getHeaderLine(Consul::headerConsulContentHash);
-
-        // note: do not need to check both as guzzle response compares headers insensitively
-        if ('' !== ($h = $response->getHeaderLine(Consul::headerConsulKnownLeader))) {
-            $qm->KnownLeader = (bool)$h;
-        }
-        // note: do not need to check both as guzzle response compares headers insensitively
-        if ('' !== ($h = $response->getHeaderLine(Consul::headerConsulLastContact))) {
-            $qm->LastContact = (int)$h;
-        }
-
-        if ('' !== ($h = $response->getHeaderLine(Consul::headerConsulTranslateAddresses))) {
-            $qm->AddressTranslationEnabled = (bool)$h;
-        }
-
-        if ('' !== ($h = $response->getHeaderLine(Consul::headerCache))) {
-            $qm->CacheAge = Time::Duration(\intval($h, 10) * Time::Second);
-        }
-
-        return $qm;
+        return $this->_do($this->_newPutRequest($path, $body, $opts));
     }
 
     /**
-     * @param \DCarbone\Go\Time\Duration $duration
-     * @return \DCarbone\PHPConsulAPI\WriteMeta
+     * @param string $path
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\RequestResponse
      */
-    protected function buildWriteMeta(Time\Duration $duration): WriteMeta
+    protected function _doDelete(string $path, ?WriteOptions $opts): RequestResponse
     {
-        $wm              = new WriteMeta();
-        $wm->RequestTime = $duration;
-
-        return $wm;
+        return $this->_do($this->_newDeleteRequest($path, $opts));
     }
 
     /**
      * @param \Psr\Http\Message\StreamInterface $body
      * @return \DCarbone\PHPConsulAPI\DecodedBody
      */
-    protected function decodeBody(StreamInterface $body): DecodedBody
+    protected function _decodeBody(StreamInterface $body): DecodedBody
     {
         $data = @\json_decode((string)$body, true);
 
@@ -290,7 +314,19 @@ abstract class AbstractClient
     protected function _executePut(string $path, $body, ?WriteOptions $opts): WriteResponse
     {
         $resp = $this->_requireOK($this->_doPut($path, $body, $opts));
-        return new WriteResponse($this->buildWriteMeta($resp->Duration), $resp->Err);
+        return new WriteResponse($this->_buildWriteMeta($resp->Duration), $resp->Err);
+    }
+
+    /**
+     * @param string $path
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
+     */
+    protected function _executeDelete(string $path, ?WriteOptions $opts): WriteResponse
+    {
+        $resp = $this->_requireOK($this->_doDelete($path, $opts));
+        return new WriteResponse($this->_buildWriteMeta($resp->Duration), $resp->Err);
     }
 
     /**
@@ -304,15 +340,9 @@ abstract class AbstractClient
     {
         $r    = $this->_newPutRequest($path, $body, $opts);
         $resp = $this->_requireOK($this->_do($r));
-        if (null !== $resp->Err) {
-            return new ValuedWriteStringResponse('', null, $resp->Err);
-        }
-        $decoded = $this->decodeBody($resp->Response->getBody());
-        if (null !== $decoded->Err) {
-            return new ValuedWriteStringResponse('', null, $decoded->Err);
-        }
-        $wm = $this->buildWriteMeta($resp->Duration);
-        return new ValuedWriteStringResponse($decoded->Decoded, $wm, null);
+        $ret  = new ValuedWriteStringResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -325,15 +355,9 @@ abstract class AbstractClient
     {
         $r    = $this->_newGetRequest($path, $opts);
         $resp = $this->_requireOK($this->_do($r));
-        if (null !== $resp->Err) {
-            return new ValuedQueryStringResponse('', null, $resp->Err);
-        }
-        $decoded = $this->decodeBody($resp->Response->getBody());
-        if (null !== $decoded->Err) {
-            return new ValuedQueryStringResponse('', null, $decoded->Err);
-        }
-        $qm = $this->buildQueryMeta($resp->Duration, $resp->Response, $r->getUri());
-        return new ValuedQueryStringResponse($decoded->Decoded, $qm, null);
+        $ret  = new ValuedQueryStringResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -346,14 +370,52 @@ abstract class AbstractClient
     {
         $r    = $this->_newGetRequest($path, $opts);
         $resp = $this->_requireOK($this->_do($r));
+        $ret  = new ValuedQueryStringsResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
+    }
+
+    /**
+     * todo: move into Hydrator?
+     *
+     * @param \DCarbone\PHPConsulAPI\RequestResponse $resp
+     * @param \DCarbone\PHPConsulAPI\AbstractResponse $ret
+     */
+    protected function _hydrateResponse(RequestResponse $resp, AbstractResponse $ret): void
+    {
+        // determine if this response contains a *Meta field
+        if (\property_exists($ret, Hydration::FIELD_QUERY_META)) {
+            $ret->QueryMeta = $this->_buildQueryMeta($resp->Duration, $resp->Response, $resp->RequestMeta->uri);
+        } elseif (\property_exists($ret, Hydration::FIELD_WRITE_META)) {
+            $ret->WriteMeta = $this->_buildWriteMeta($resp->Duration);
+        }
+
+        // todo: this can probably go away...
+        $hasErrField = \property_exists($ret, Hydration::FIELD_ERR);
+
+        // if there was an error in the response, set and return
         if (null !== $resp->Err) {
-            return new ValuedQueryStringsResponse(null, null, $resp->Err);
+            if ($hasErrField) {
+                $ret->Err = $resp->Err;
+            }
+            return;
         }
-        $decoded = $this->decodeBody($resp->Response->getBody());
-        if (null !== $decoded->Err) {
-            return new ValuedQueryStringsResponse(null, null, $decoded->Err);
+
+        // if this response type is non-valued, return
+        if (!($ret instanceof HydratedResponseInterface)) {
+            return;
         }
-        $qm = $this->buildQueryMeta($resp->Duration, $resp->Response, $r->getUri());
-        return new ValuedQueryStringsResponse($decoded->Decoded, $qm, null);
+
+        // attempt response decoded
+        $dec = $this->_decodeBody($resp->Response->getBody());
+        if (null !== $dec->Err) {
+            if ($hasErrField) {
+                $ret->Err = $dec->Err;
+            }
+            return;
+        }
+
+        // finally, have response create its value
+        $ret->hydrateValue($dec->Decoded);
     }
 }

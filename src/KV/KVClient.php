@@ -22,7 +22,6 @@ use DCarbone\Go\HTTP;
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\QueryOptions;
-use DCarbone\PHPConsulAPI\Request;
 use DCarbone\PHPConsulAPI\ValuedQueryStringsResponse;
 use DCarbone\PHPConsulAPI\ValuedWriteBoolResponse;
 use DCarbone\PHPConsulAPI\WriteOptions;
@@ -41,35 +40,30 @@ class KVClient extends AbstractClient
      */
     public function Get(string $key, ?QueryOptions $opts = null): KVPairResponse
     {
-        $res = $this->_doGet(\sprintf('v1/kv/%s', $key), $opts);
+        $res      = $this->_doGet(\sprintf('v1/kv/%s', $key), $opts);
+        $ret      = new KVPairResponse();
+        $ret->Err = $res->Err;
         if (null !== $res->Err) {
-            return new KVPairResponse(null, null, $res->Err);
+            return $ret;
         }
+
+        $ret->QueryMeta = $this->_buildQueryMeta($res->Duration, $res->Response, $res->RequestMeta->getUri());
 
         $code = $res->Response->getStatusCode();
 
         if (200 === $code) {
-            [$data, $err] = $this->decodeBody($res->Response->getBody());
-
-            if (null !== $err) {
-                return new KVPairResponse(null, null, $err);
+            // success response
+            $dec = $this->_decodeBody($res->Response->getBody());
+            if (null !== $dec->Err) {
+                $ret->Err = $dec->Err;
+            } else {
+                $ret->hydrateValue($dec->Decoded[0]);
             }
-
-            $qm = $this->buildQueryMeta($duration, $res, $r->getUri());
-            return new KVPairResponse($data[0], $qm, null);
+        } elseif (404 !== $code) {
+            $ret->Err = new Error(\sprintf('%s: %s', $code, $res->Response->getReasonPhrase()));
         }
 
-        $qm = $this->buildQueryMeta($duration, $res, $r->getUri());
-
-        if (404 === $code) {
-            return new KVPairResponse(null, $qm, null);
-        }
-
-        return new KVPairResponse(
-            null,
-            $qm,
-            new Error(\sprintf('%s: %s', $res->getStatusCode(), $res->getReasonPhrase()))
-        );
+        return $ret;
     }
 
     /**
@@ -80,18 +74,7 @@ class KVClient extends AbstractClient
      */
     public function Put(KVPair $p, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = new Request(HTTP\MethodPut, \sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
-        $r->applyOptions($opts);
-        if (0 !== $p->Flags) {
-            $r->params->set('flags', (string)$p->Flags);
-        }
-
-        [$duration, $_, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new WriteResponse(null, $err);
-        }
-
-        return new WriteResponse($this->buildWriteMeta($duration), null);
+        return $this->_executePut(\sprintf('v1/kv/%s', $p->Key), null, $opts);
     }
 
     /**
@@ -102,15 +85,7 @@ class KVClient extends AbstractClient
      */
     public function Delete(string $key, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = new Request(HTTP\MethodDelete, \sprintf('v1/kv/%s', $key), $this->config, null);
-        $r->applyOptions($opts);
-
-        [$duration, $_, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new WriteResponse(null, $err);
-        }
-
-        return new WriteResponse($this->buildWriteMeta($duration), null);
+        return $this->_executeDelete(\sprintf('v1/kv/%s', $key), $opts);
     }
 
     /**
@@ -121,24 +96,12 @@ class KVClient extends AbstractClient
      */
     public function List(string $prefix = '', ?QueryOptions $opts = null): KVPairsResponse
     {
-        $r = new Request('GET', \sprintf('v1/kv/%s', $prefix), $this->config, null);
-        $r->applyOptions($opts);
+        $r = $this->_newGetRequest(\sprintf('v1/kv/%s', $prefix), $opts);
         $r->params->set('recurse', '');
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new KVPairsResponse(null, null, $err);
-        }
-
-        [$data, $err] = $this->decodeBody($response->getBody());
-        if (null !== $err) {
-            return new KVPairsResponse(null, null, $err);
-        }
-
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
-        return new KVPairsResponse($data, $qm, null);
+        $ret  = new KVPairsResponse();
+        $resp = $this->_requireOK($this->_do($r));
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -149,22 +112,12 @@ class KVClient extends AbstractClient
      */
     public function Keys(string $prefix = '', ?QueryOptions $opts = null): ValuedQueryStringsResponse
     {
-        $r = new Request('GET', \sprintf('v1/kv/%s', $prefix), $this->config, null);
-        $r->applyOptions($opts);
+        $r = $this->_newGetRequest(\sprintf('v1/kv/%s', $prefix), $opts);
         $r->params->set('keys', '');
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new ValuedQueryStringsResponse(null, null, $err);
-        }
-
-        [$data, $err] = $this->decodeBody($response->getBody());
-        if (null !== $err) {
-            return new ValuedQueryStringsResponse(null, null, $err);
-        }
-
-        return new ValuedQueryStringsResponse($data, $this->buildQueryMeta($duration, $response, $r->getUri()), $err);
+        $ret  = new ValuedQueryStringsResponse();
+        $resp = $this->_requireOK($this->_do($r));
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -175,24 +128,15 @@ class KVClient extends AbstractClient
      */
     public function CAS(KVPair $p, ?WriteOptions $opts = null): ValuedWriteBoolResponse
     {
-        $r = new Request('PUT', \sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
-        $r->applyOptions($opts);
+        $r = $this->_newPutRequest(\sprintf('v1/kv/%s', $p->Key), $p->Value, $opts);
         $r->params->set('cas', (string)$p->ModifyIndex);
         if (0 !== $p->Flags) {
             $r->params->set('flags', (string)$p->Flags);
         }
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new ValuedWriteBoolResponse(false, null, $err);
-        }
-
-        return new ValuedWriteBoolResponse(
-            0 === \strpos($response->getBody()->getContents(), 'true'),
-            $this->buildWriteMeta($duration),
-            null
-        );
+        $resp = $this->_requireOK($this->_do($r));
+        $ret  = new ValuedWriteBoolResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -203,19 +147,15 @@ class KVClient extends AbstractClient
      */
     public function Acquire(KVPair $p, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = new Request('PUT', \sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
-        $r->applyOptions($opts);
+        $r = $this->_newPutRequest(\sprintf('v1/kv/%s', $p->Key), $p->Value, $opts);
         $r->params->set('acquire', $p->Session);
         if (0 !== $p->Flags) {
             $r->params->set('flags', (string)$p->Flags);
         }
-
-        [$duration, $_, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new WriteResponse(null, $err);
-        }
-
-        return new WriteResponse($this->buildWriteMeta($duration), null);
+        $resp = $this->_requireOK($this->_do($r));
+        $ret  = new WriteResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -226,21 +166,12 @@ class KVClient extends AbstractClient
      */
     public function DeleteCAS(KVPair $p, ?WriteOptions $opts = null): ValuedWriteBoolResponse
     {
-        $r = new Request('DELETE', \sprintf('v1/kv/%s', \ltrim($p->Key, '/')), $this->config, null);
-        $r->applyOptions($opts);
+        $r                = $this->_newDeleteRequest(\sprintf('v1/kv/%s', \ltrim($p->Key, '/')), $opts);
         $r->params['cas'] = (string)$p->ModifyIndex;
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new ValuedWriteBoolResponse(false, null, $err);
-        }
-
-        return new ValuedWriteBoolResponse(
-            0 === \strpos($response->getBody()->getContents(), 'true'),
-            $this->buildWriteMeta($duration),
-            null
-        );
+        $resp             = $this->_requireOK($this->_do($r));
+        $ret              = new ValuedWriteBoolResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -251,19 +182,15 @@ class KVClient extends AbstractClient
      */
     public function Release(KVPair $p, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = new Request('PUT', \sprintf('v1/kv/%s', $p->Key), $this->config, $p->Value);
-        $r->applyOptions($opts);
+        $r = $this->_newPutRequest(\sprintf('v1/kv/%s', $p->Key), $p->Value, $opts);
         $r->params->set('release', $p->Session);
         if (0 !== $p->Flags) {
             $r->params->set('flags', (string)$p->Flags);
         }
-
-        [$duration, $_, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new WriteResponse(null, $err);
-        }
-
-        return new WriteResponse($this->buildWriteMeta($duration), null);
+        $resp = $this->_requireOK($this->_do($r));
+        $ret  = new WriteResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -274,16 +201,12 @@ class KVClient extends AbstractClient
      */
     public function DeleteTree(string $prefix, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = new Request('DELETE', \sprintf('v1/kv/%s', $prefix), $this->config, null);
+        $r                    = $this->_newDeleteRequest(\sprintf('v1/kv/%s', $prefix), $opts);
         $r->params['recurse'] = '';
-        $r->applyOptions($opts);
-
-        [$duration, $_, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new WriteResponse(null, $err);
-        }
-
-        return new WriteResponse($this->buildWriteMeta($duration), null);
+        $resp                 = $this->_requireOK($this->_do($r));
+        $ret                  = new WriteResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -294,41 +217,44 @@ class KVClient extends AbstractClient
      */
     public function Txn(KVTxnOps $txn, ?QueryOptions $opts = null): KVTxnAPIResponse
     {
-        $ops = new KVTxnOps();
+        $txnOps = new KVTxnOps();
         foreach ($txn as $op) {
-            $ops->append(clone $op);
+            $txnOps->append(clone $op);
         }
 
-        $r = new Request('PUT', 'v1/txn', $this->config, $ops);
-        $r->applyOptions($opts);
+        $ret = new KVTxnAPIResponse();
 
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_do($r);
-        if (null !== $err) {
-            return new KVTxnAPIResponse(false, null, null, $err);
+        $resp = $this->_doPut('v1/txn', $txnOps, $opts);
+        if (null !== $resp->Err) {
+            $ret->Err = $resp->Err;
+            return $ret;
         }
 
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
+        $ret->QueryMeta = $this->_buildQueryMeta($resp->Duration, $resp->Response, $resp->RequestMeta->uri);
+        $code           = $resp->Response->getStatusCode();
+        $ret->OK        = HTTP\StatusOK === $code;
 
-        $code = $response->getStatusCode();
         if (200 === $code || 409 === $code) {
-            [$data, $err] = $this->decodeBody($response->getBody());
-            if (null !== $err) {
-                return new KVTxnAPIResponse(false, null, null, $err);
+            $dec = $this->_decodeBody($resp->Response->getBody());
+            if (null !== $dec->Err) {
+                $ret->OK  = false;
+                $ret->Err = $dec->Err;
+                return $ret;
             }
-
+            $ret->OK = true;
             // TODO: Maybe go straight to actual response?  What is the benefit of this...
-            $internal = new TxnResponse($data);
-
-            $resp = new KVTxnResponse(['Errors' => $internal->Errors, 'Results' => $internal->Results]);
-            return new KVTxnAPIResponse(200 === $code, $resp, $qm, null);
+            $internal           = new TxnResponse($dec->Decoded);
+            $ret->KVTxnResponse = new KVTxnResponse(['Errors' => $internal->Errors, 'Results' => $internal->Results]);
+            return $ret;
         }
 
-        if ('' === ($body = $response->getBody()->getContents())) {
-            return new KVTxnAPIResponse(false, null, null, new Error('Unable to read response'));
+        if ('' === ($body = $resp->Response->getBody()->getContents())) {
+            $ret->Err = new Error('Unable to read response');
+            return $ret;
         }
 
-        return new KVTxnAPIResponse(false, null, null, new Error('Failed request: ' . $body));
+        $ret->Err = new Error('Failed request: ' . $body);
+        return $ret;
     }
 
     /**
@@ -381,7 +307,7 @@ class KVClient extends AbstractClient
                 }
             } else {
                 $kvPrefix = \substr($path, 0, \strrpos($path, '/') + 1);
-                $_path = '';
+                $_path    = '';
                 foreach (\explode('/', $kvPrefix) as $part) {
                     if ('' === $part) {
                         continue;

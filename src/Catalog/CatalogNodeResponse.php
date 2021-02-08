@@ -18,31 +18,21 @@ namespace DCarbone\PHPConsulAPI\Catalog;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\QueryMeta;
+use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\QueryMetaContainer;
+use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class CatalogNodeResponse
  */
-class CatalogNodeResponse extends AbstractValuedQueryResponse
+class CatalogNodeResponse extends AbstractResponse implements HydratedResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\Catalog\CatalogNode|null */
-    public $Node = null;
+    use QueryMetaContainer;
+    use ErrorContainer;
 
-    /**
-     * CatalogNodeResponse constructor.
-     * @param array|null $node
-     * @param \DCarbone\PHPConsulAPI\QueryMeta|null $qm
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(?array $node, ?QueryMeta $qm, ?Error $err)
-    {
-        if (null !== $node) {
-            $this->Node = new CatalogNode($node);
-        }
-        parent::__construct($qm, $err);
-    }
+    /** @var \DCarbone\PHPConsulAPI\Catalog\CatalogNode|null */
+    public ?CatalogNode $Node = null;
 
     /**
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogNode|null
@@ -50,5 +40,14 @@ class CatalogNodeResponse extends AbstractValuedQueryResponse
     public function getValue()
     {
         return $this->Node;
+    }
+
+    /**
+     * @param mixed $decodedData
+     * @return void
+     */
+    public function hydrateValue($decodedData): void
+    {
+        $this->Node = new CatalogNode((array)$decodedData);
     }
 }

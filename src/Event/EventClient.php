@@ -61,9 +61,9 @@ class EventClient extends AbstractClient
             return new UserEventResponse(null, null, $err);
         }
 
-        $wm = $this->buildWriteMeta($duration);
+        $wm = $this->_buildWriteMeta($duration);
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
         return new UserEventResponse($data, $wm, $err);
     }
 
@@ -87,9 +87,9 @@ class EventClient extends AbstractClient
             return new UserEventsResponse(null, null, $err);
         }
 
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
+        $qm = $this->_buildQueryMeta($duration, $response, $r->getUri());
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
 
         return new UserEventsResponse($data, $qm, $err);
     }

@@ -18,31 +18,21 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\QueryMeta;
+use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\QueryMetaContainer;
+use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class ACLReplicationStatusResponse
  */
-class ACLReplicationStatusResponse extends AbstractValuedQueryResponse
+class ACLReplicationStatusResponse extends AbstractResponse implements HydratedResponseInterface
 {
+    use QueryMetaContainer;
+    use ErrorContainer;
+
     /** @var \DCarbone\PHPConsulAPI\ACL\ACLReplicationStatus|null */
     public ?ACLReplicationStatus $ACLReplicationStatus = null;
-
-    /**
-     * ACLReplicationStatusResponse constructor.
-     * @param array|null $status
-     * @param \DCarbone\PHPConsulAPI\QueryMeta|null $qm
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(?array $status, ?QueryMeta $qm, ?Error $err)
-    {
-        if (null !== $status) {
-            $this->ACLReplicationStatus = new ACLReplicationStatus($status);
-        }
-        parent::__construct($qm, $err);
-    }
 
     /**
      * @return \DCarbone\PHPConsulAPI\ACL\ACLReplicationStatus|null
@@ -50,5 +40,14 @@ class ACLReplicationStatusResponse extends AbstractValuedQueryResponse
     public function getValue(): ?ACLReplicationStatus
     {
         return $this->ACLReplicationStatus;
+    }
+
+    /**
+     * @param mixed $decodedData
+     * @return void
+     */
+    public function hydrateValue($decodedData): void
+    {
+        $this->ACLReplicationStatus = new ACLReplicationStatus((array)$decodedData);
     }
 }

@@ -268,8 +268,8 @@ trait Hydratable
     private function hydrateArray(string $field, $value, array $def): void
     {
         // attempt to extract the two possible keys
-        $type = $def[Hydration::FIELD_ARRAY_TYPE] ?? null;
-        $class = $def[Hydration::FIELD_CLASS] ?? null;
+        $type  = $def[Hydration::FIELD_ARRAY_TYPE] ?? null;
+        $class = $def[Hydration::FIELD_CLASS]      ?? null;
 
         // type is required
         if (null === $type) {

@@ -51,6 +51,11 @@ final class Normalizer extends FQCNTypeNormalizer
             return "mixed {$type}";
         }
 
+        // if this is a dumb thing, clean it up
+        if (0 === \strpos($type, '\\$')) {
+            return \sprintf('mixed %s', \ltrim($type, '\\'));
+        }
+
         // in all other cases, try to find an ns prefix
         return (new Resolver($namespaceInfo))->resolveFQCN($type);
     }

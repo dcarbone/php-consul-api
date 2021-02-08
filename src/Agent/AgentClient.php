@@ -30,33 +30,26 @@ use DCarbone\PHPConsulAPI\ValuedStringResponse;
  */
 class AgentClient extends AbstractClient
 {
-    /** @var array|null */
-    private ?array $_self = null;
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentSelfResponse|null */
+    private ?AgentSelfResponse $_self = null;
 
     /**
+     * @param bool $refresh
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @return \DCarbone\PHPConsulAPI\Agent\AgentSelfResponse
      */
-    public function Self(): AgentSelfResponse
+    public function Self(bool $refresh = false): AgentSelfResponse
     {
-        $r = $this->_newGetRequest('v1/agent/self', null);
-
-        $resp = $this->_requireOK($this->_do($r));
-        if (null !== $resp->Err) {
-            return new AgentSelfResponse(null, null, $resp->Err);
+        if (!$refresh && isset($this->_self)) {
+            return $this->_self;
         }
-
-        $qm = $this->buildQueryMeta($resp->Duration, $resp->Response, $r->getUri());
-
-        $decoded = $this->decodeBody($resp->Response->getBody());
-
-        if (null !== $decoded->Err) {
-            return new AgentSelfResponse(null, $qm, $decoded->Err);
+        $resp = $this->_doGet('v1/agent/self', null);
+        $ret  = new AgentSelfResponse();
+        $this->_hydrateResponse($resp, $ret);
+        if (null === $ret->Err) {
+            $this->_self = $ret;
         }
-
-        $this->_self = $decoded->Decoded;
-
-        return new AgentSelfResponse($decoded->Decoded, $qm, null);
+        return $ret;
     }
 
     /**
@@ -65,21 +58,10 @@ class AgentClient extends AbstractClient
      */
     public function Metrics(): MetricsInfoResponse
     {
-        $r = $this->_newGetRequest('v1/agent/metrics', null);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$_, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new MetricsInfoResponse(null, $err);
-        }
-
-        [$data, $err] = $this->decodeBody($response->getBody());
-
-        if (null !== $err) {
-            return new MetricsInfoResponse(null, $err);
-        }
-
-        return new MetricsInfoResponse(new MetricsInfo($data), null);
+        $resp = $this->_doGet('v1/agent/metrics', null);
+        $ret  = new MetricsInfoResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -88,29 +70,26 @@ class AgentClient extends AbstractClient
      */
     public function Reload(): ?Error
     {
-        $r = new Request(HTTP\MethodPut, 'v1/agent/reload', $this->config, null);
-
-        return $this->_requireOK($this->_do($r))->Err;
+        return $this->_executePut('v1/agent/reload', null, null)->Err;
     }
 
     /**
+     * @param bool $refresh
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @return \DCarbone\PHPConsulAPI\ValuedStringResponse
      */
-    public function NodeName(): ValuedStringResponse
+    public function NodeName(bool $refresh = false): ValuedStringResponse
     {
-        if (null === $this->_self) {
-            [$_, $_, $err] = $this->Self();
-            if (null !== $err) {
-                return new ValuedStringResponse('', $err);
-            }
+        $self     = $this->Self($refresh);
+        $ret      = new ValuedStringResponse();
+        $ret->Err = $self->Err;
+        if (null !== $self->Err) {
+            return $ret;
         }
-
-        if (isset($this->_self['Config'], $this->_self['Config']['NodeName'])) {
-            return new ValuedStringResponse($this->_self['Config']['NodeName'], null);
+        if (isset($self->AgentConfig['Config'], $self->AgentConfig['Config']['NodeName'])) {
+            $ret->Value = $self->AgentConfig['Config']['NodeName'];
         }
-
-        return new ValuedStringResponse('', null);
+        return $ret;
     }
 
     /**
@@ -120,19 +99,12 @@ class AgentClient extends AbstractClient
      */
     public function ChecksWithFilter(string $filter): AgentChecksResponse
     {
-        $r = new Request(HTTP\MethodGet, 'v1/agent/checks', $this->config, null);
+        $r = $this->_newGetRequest('v1/agent/checks', null);
         $r->filterQuery($filter);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$_, $response, $err] = $this->_requireOK($this->_do($r));
-
-        if (null !== $err) {
-            return new AgentChecksResponse(null, $err);
-        }
-
-        [$data, $err] = $this->decodeBody($response->getBody());
-
-        return new AgentChecksResponse($data, $err);
+        $resp = $this->_requireOK($this->_do($r));
+        $ret  = new AgentChecksResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -151,19 +123,12 @@ class AgentClient extends AbstractClient
      */
     public function ServicesWithFilter(string $filter): AgentServicesResponse
     {
-        $r = new Request(HTTP\MethodGet, 'v1/agent/services', $this->config, null);
+        $r = $this->_newGetRequest('v1/agent/services', null);
         $r->filterQuery($filter);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$_, $response, $err] = $this->_requireOK($this->_do($r));
-
-        if (null !== $err) {
-            return new AgentServicesResponse(null, $err);
-        }
-
-        [$data, $err] = $this->decodeBody($response->getBody());
-
-        return new AgentServicesResponse($data, $err);
+        $resp = $this->_requireOK($this->_do($r));
+        $ret  = new AgentServicesResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -182,40 +147,7 @@ class AgentClient extends AbstractClient
      */
     public function AgentHealthServiceByName(string $service): AgentHealthServiceResponse
     {
-        $r = $this->_newGetRequest(\sprintf('v1/agent/health/service/name/%s', \urlencode($service)), null);
-        $r->params->add('format', 'json');
-        $r->header->set('Accept', 'application/json');
-
-        $res = $this->_do($r);
-        if (null !== $res->Err) {
-            return new AgentHealthServiceResponse(Consul::HealthCritical, null, $res->Err);
-        }
-
-        if (HTTP\StatusNotFound === $res->Response->getStatusCode()) {
-            return new AgentHealthServiceResponse(Consul::HealthCritical, null, null);
-        }
-
-        [$data, $err] = $this->decodeBody($res->Response->getBody());
-        if (null !== $err) {
-            return new AgentHealthServiceResponse(Consul::HealthCritical, null, $res->Err);
-        }
-
-        switch ($res->Response->getStatusCode()) {
-            case HTTP\StatusOK:
-                $status = Consul::HealthPassing;
-                break;
-            case HTTP\StatusTooManyRequests:
-                $status = Consul::HealthWarning;
-                break;
-            case HTTP\StatusServiceUnavailable:
-                $status = Consul::HealthCritical;
-                break;
-
-            default:
-                $status = Consul::HealthCritical;
-        }
-
-        return new AgentHealthServiceResponse($status, $data, null);
+        return $this->_agentHealthService(\sprintf('v1/agent/health/service/name/%s', \urlencode($service)));
     }
 
     /**
@@ -225,40 +157,7 @@ class AgentClient extends AbstractClient
      */
     public function AgentHealthServiceByID(string $id): AgentHealthServiceResponse
     {
-        $r = $this->_newGetRequest(\sprintf('v1/agent/health/service/id/%s', $id), null);
-        $r->params->add('format', 'json');
-        $r->header->set('Accept', 'application/json');
-
-        $res = $this->_do($r);
-        if (null !== $res->Err) {
-            return new AgentHealthServiceResponse(Consul::HealthCritical, null, $res->Err);
-        }
-
-        if (HTTP\StatusNotFound === $res->Response->getStatusCode()) {
-            return new AgentHealthServiceResponse(Consul::HealthCritical, null, null);
-        }
-
-        [$data, $err] = $this->decodeBody($res->Response->getBody());
-        if (null !== $err) {
-            return new AgentHealthServiceResponse(Consul::HealthCritical, null, $res->Err);
-        }
-
-        switch ($res->Response->getStatusCode()) {
-            case HTTP\StatusOK:
-                $status = Consul::HealthPassing;
-                break;
-            case HTTP\StatusTooManyRequests:
-                $status = Consul::HealthWarning;
-                break;
-            case HTTP\StatusServiceUnavailable:
-                $status = Consul::HealthCritical;
-                break;
-
-            default:
-                $status = Consul::HealthCritical;
-        }
-
-        return new AgentHealthServiceResponse($status, $data, null);
+        return $this->_agentHealthService(\sprintf('v1/agent/health/service/id/%s', $id));
     }
 
     /**
@@ -267,53 +166,40 @@ class AgentClient extends AbstractClient
      */
     public function Members(): AgentMembersResponse
     {
-        $r = new Request(HTTP\MethodGet, 'v1/agent/members', $this->config, null);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$_, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new AgentMembersResponse(null, $err);
-        }
-
-        [$data, $err] = $this->decodeBody($response->getBody());
-
-        return new AgentMembersResponse($data, $err);
+        $resp = $this->_doGet('v1/agent/members', null);
+        $ret  = new AgentMembersResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Agent\MemberOpts $opts
+     * @param \DCarbone\PHPConsulAPI\Agent\MemberOpts $memberOpts
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @return \DCarbone\PHPConsulAPI\Agent\AgentMembersResponse
      */
-    public function MemberOpts(MemberOpts $opts): AgentMembersResponse
+    public function MemberOpts(MemberOpts $memberOpts): AgentMembersResponse
     {
-        $r = new Request(HTTP\MethodGet, 'v1/agent/members', $this->config, null);
-        $r->params->set('segment', $opts->Segment);
-        if ($opts->WAN) {
+        $r = $this->_newGetRequest('v1/agent/members', null);
+        $r->params->set('segment', $memberOpts->Segment);
+        if ($memberOpts->WAN) {
             $r->params->set('wan', '1');
         }
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$_, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new AgentMembersResponse(null, $err);
-        }
-
-        [$data, $err] = $this->decodeBody($response->getBody());
-
-        return new AgentMembersResponse($data, $err);
+        $resp = $this->_requireOK($this->_do($r));
+        $ret  = new AgentMembersResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
      * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration $service
-     * @param \DCarbone\PHPConsulAPI\Agent\ServiceRegisterOpts $opts
+     * @param \DCarbone\PHPConsulAPI\Agent\ServiceRegisterOpts $registerOpts
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function ServiceRegisterOpts(AgentServiceRegistration $service, ServiceRegisterOpts $opts): ?Error
+    public function ServiceRegisterOpts(AgentServiceRegistration $service, ServiceRegisterOpts $registerOpts): ?Error
     {
-        $r = new Request(HTTP\MethodPut, 'v1/agent/service/register', $this->config, $service);
-        if ($opts->ReplaceExistingChecks) {
+        $r = $this->_newPutRequest('v1/agent/service/register', $service, null);
+        if ($registerOpts->ReplaceExistingChecks) {
             $r->params->set('replace-existing-checks', 'true');
         }
         return $this->_requireOK($this->_do($r))->Err;
@@ -430,9 +316,7 @@ class AgentClient extends AbstractClient
      */
     public function CheckRegister(AgentCheckRegistration $agentCheckRegistration): ?Error
     {
-        $r = new Request(HTTP\MethodPut, 'v1/agent/check/register', $this->config, $agentCheckRegistration);
-
-        return $this->_requireOK($this->_do($r))->Err;
+        return $this->_executePut('v1/agent/check/register', $agentCheckRegistration, null)->Err;
     }
 
     /**
@@ -539,5 +423,48 @@ class AgentClient extends AbstractClient
         $r = $this->_newPutRequest('v1/agent/maintenance', null, null);
         $r->params->set('enable', 'false');
         return $this->_requireOK($this->_do($r))->Err;
+    }
+
+    /**
+     * @param string $path
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentHealthServiceResponse
+     */
+    protected function _agentHealthService(string $path): AgentHealthServiceResponse
+    {
+        $r = $this->_newGetRequest($path, null);
+        $r->params->add('format', 'json');
+        $r->header->set('Accept', 'application/json');
+
+        $res = $this->_do($r);
+        if (null !== $res->Err) {
+            return new AgentHealthServiceResponse(Consul::HealthCritical, null, $res->Err);
+        }
+
+        if (HTTP\StatusNotFound === $res->Response->getStatusCode()) {
+            return new AgentHealthServiceResponse(Consul::HealthCritical, null, null);
+        }
+
+        [$data, $err] = $this->_decodeBody($res->Response->getBody());
+        if (null !== $err) {
+            return new AgentHealthServiceResponse(Consul::HealthCritical, null, $res->Err);
+        }
+
+        switch ($res->Response->getStatusCode()) {
+            case HTTP\StatusOK:
+                $status = Consul::HealthPassing;
+                break;
+            case HTTP\StatusTooManyRequests:
+                $status = Consul::HealthWarning;
+                break;
+            case HTTP\StatusServiceUnavailable:
+                $status = Consul::HealthCritical;
+                break;
+
+            default:
+                $status = Consul::HealthCritical;
+        }
+
+        return new AgentHealthServiceResponse($status, $data, null);
     }
 }

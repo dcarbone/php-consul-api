@@ -18,41 +18,50 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
+use Psr\Http\Message\UriInterface;
+
 /**
- * Class AbstractValuedResponse
+ * Class RequestMeta
  */
-abstract class AbstractValuedResponse
+class RequestMeta
 {
-    use ResponseErrorTrait;
+    /** @var string */
+    public string $method;
+    /** @var \Psr\Http\Message\UriInterface */
+    public UriInterface $uri;
 
     /**
-     * AbstractValuedResponse constructor.
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
+     * RequestMeta constructor.
+     * @param string $method
+     * @param \Psr\Http\Message\UriInterface $uri
      */
-    public function __construct(?Error $err)
+    public function __construct(string $method, UriInterface $uri)
     {
-        $this->Err = $err;
+        $this->method = $method;
+        $this->uri    = $uri;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    abstract public function getValue();
-
-    /**
-     * @param \$offset
-     * @param \$value
-     */
-    public function offsetSet($offset, $value): void
+    public function getMethod(): string
     {
-        throw new \BadMethodCallException(\sprintf('Cannot call %s on %s', __METHOD__, \get_called_class()));
+        return $this->method;
     }
 
     /**
-     * @param \$offset
+     * @return \Psr\Http\Message\UriInterface
      */
-    public function offsetUnset($offset): void
+    public function getUri(): UriInterface
     {
-        throw new \BadMethodCallException(\sprintf('Cannot call %s on %s', __METHOD__, \get_called_class()));
+        return $this->uri;
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return \sprintf('%s %s', $this->method, $this->uri);
     }
 }

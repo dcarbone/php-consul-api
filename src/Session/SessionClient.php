@@ -80,7 +80,7 @@ class SessionClient extends AbstractClient
             return new WriteResponse(null, $err);
         }
 
-        return new WriteResponse($this->buildWriteMeta($duration), null);
+        return new WriteResponse($this->_buildWriteMeta($duration), null);
     }
 
     /**
@@ -100,7 +100,7 @@ class SessionClient extends AbstractClient
             return new SessionEntriesWriteResponse(null, null, $err);
         }
 
-        $wm = $this->buildWriteMeta($duration);
+        $wm = $this->_buildWriteMeta($duration);
 
         $code = $response->getStatusCode();
 
@@ -121,7 +121,7 @@ class SessionClient extends AbstractClient
             );
         }
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
         return new SessionEntriesWriteResponse($data, $wm, $err);
     }
 
@@ -174,9 +174,9 @@ class SessionClient extends AbstractClient
             return new SessionEntriesQueryResponse(null, null, $err);
         }
 
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
+        $qm = $this->_buildQueryMeta($duration, $response, $r->getUri());
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
         return new SessionEntriesQueryResponse($data, $qm, $err);
     }
 
@@ -198,9 +198,9 @@ class SessionClient extends AbstractClient
             return new ValuedWriteStringResponse('', null, $err);
         }
 
-        $wm = $this->buildWriteMeta($duration);
+        $wm = $this->_buildWriteMeta($duration);
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
         if (null !== $err) {
             return new ValuedWriteStringResponse('', $wm, $err);
         }

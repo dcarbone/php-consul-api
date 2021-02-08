@@ -35,6 +35,14 @@ trait ResponseValueStringTrait
     }
 
     /**
+     * @param mixed $decodedData
+     */
+    public function hydrateValue($decodedData): void
+    {
+        $this->Value = (string)$decodedData;
+    }
+
+    /**
      * @return string
      */
     public function __toString(): string

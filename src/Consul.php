@@ -163,17 +163,17 @@ class Consul
             }
         }
 
-        $this->ACL = new ACLClient($config);
-        $this->Agent = new AgentClient($config);
-        $this->Catalog = new CatalogClient($config);
-        $this->Coordinate = new CoordinateClient($config);
-        $this->Event = new EventClient($config);
-        $this->Health = new HealthClient($config);
-        $this->KV = new KVClient($config);
-        $this->Operator = new OperatorClient($config);
+        $this->ACL           = new ACLClient($config);
+        $this->Agent         = new AgentClient($config);
+        $this->Catalog       = new CatalogClient($config);
+        $this->Coordinate    = new CoordinateClient($config);
+        $this->Event         = new EventClient($config);
+        $this->Health        = new HealthClient($config);
+        $this->KV            = new KVClient($config);
+        $this->Operator      = new OperatorClient($config);
         $this->PreparedQuery = new PreparedQueryClient($config);
-        $this->Session = new SessionClient($config);
-        $this->Status = new StatusClient($config);
+        $this->Session       = new SessionClient($config);
+        $this->Status        = new StatusClient($config);
     }
 
     /**

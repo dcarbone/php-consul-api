@@ -19,15 +19,6 @@ namespace DCarbone\PHPConsulAPI;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity;
-use DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity;
-use DCarbone\PHPConsulAPI\ACL\ACLToken;
-use DCarbone\PHPConsulAPI\ACL\ACLTokenPolicyLink;
-use DCarbone\PHPConsulAPI\ACL\ACLTokenRoleLink;
-use DCarbone\PHPConsulAPI\Agent\AgentService;
-use DCarbone\PHPConsulAPI\Agent\AgentServiceChecksInfo;
-use DCarbone\PHPConsulAPI\Health\HealthChecks;
-use DCarbone\PHPConsulAPI\KV\KVPair;
 
 /**
  * Class Hydration
@@ -54,6 +45,10 @@ final class Hydration
     public const FIELD_ARRAY_TYPE = 2;
     public const FIELD_CALLBACK   = 3;
     public const FIELD_NULLABLE   = 4;
+
+    public const FIELD_QUERY_META = 'QueryMeta';
+    public const FIELD_WRITE_META = 'WriteMeta';
+    public const FIELD_ERR        = 'Err';
 
     public const CALLABLE_HYDRATE_TIME              = [self::class, 'hydrateTime'];
     public const CALLABLE_HYDRATE_NULLABLE_TIME     = [self::class, 'hydrateNullableTime'];

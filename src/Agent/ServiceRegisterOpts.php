@@ -26,7 +26,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 class ServiceRegisterOpts extends AbstractModel
 {
     /** @var bool */
-    public $ReplaceExistingChecks = false;
+    public bool $ReplaceExistingChecks = false;
 
     /**
      * @return bool

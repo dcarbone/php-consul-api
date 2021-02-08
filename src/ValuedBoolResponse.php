@@ -21,42 +21,8 @@ namespace DCarbone\PHPConsulAPI;
 /**
  * Class ValuedBoolResponse
  */
-class ValuedBoolResponse extends AbstractValuedResponse implements \ArrayAccess
+class ValuedBoolResponse extends AbstractResponse implements HydratedResponseInterface
 {
     use ResponseValueBoolTrait;
-
-    /**
-     * ValuedBoolResponse constructor.
-     * @param bool $value
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(bool $value, ?Error $err)
-    {
-        $this->Value = $value;
-        parent::__construct($err);
-    }
-
-    /**
-     * @param mixed $offset
-     * @return bool
-     */
-    public function offsetExists($offset)
-    {
-        return \is_int($offset) && 0 <= $offset && $offset < 2;
-    }
-
-    /**
-     * @param mixed $offset
-     * @return bool|\DCarbone\PHPConsulAPI\Error|null
-     */
-    public function offsetGet($offset)
-    {
-        if (0 === $offset) {
-            return $this->getValue();
-        }
-        if (1 === $offset) {
-            return $this->Err;
-        }
-        throw new \OutOfBoundsException(\sprintf('Offset %s does not exist', \var_export($offset, true)));
-    }
+    use ErrorContainer;
 }

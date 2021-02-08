@@ -18,31 +18,21 @@ namespace DCarbone\PHPConsulAPI\Event;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedWriteResponse;
-use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\WriteMeta;
+use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\HydratedResponseInterface;
+use DCarbone\PHPConsulAPI\WriteMetaContainer;
 
 /**
  * Class UserEventResponse
  */
-class UserEventResponse extends AbstractValuedWriteResponse
+class UserEventResponse extends AbstractResponse implements HydratedResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\Event\UserEvent|null */
-    public $UserEvent = null;
+    use WriteMetaContainer;
+    use ErrorContainer;
 
-    /**
-     * UserEventResponse constructor.
-     * @param array|null $data
-     * @param \DCarbone\PHPConsulAPI\WriteMeta|null $wm
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(?array $data, ?WriteMeta $wm, ?Error $err)
-    {
-        parent::__construct($wm, $err);
-        if (null !== $data) {
-            $this->UserEvent = new UserEvent($data);
-        }
-    }
+    /** @var \DCarbone\PHPConsulAPI\Event\UserEvent|null */
+    public ?UserEvent $UserEvent = null;
 
     /**
      * @return \DCarbone\PHPConsulAPI\Event\UserEvent|null
@@ -50,5 +40,13 @@ class UserEventResponse extends AbstractValuedWriteResponse
     public function getValue()
     {
         return $this->UserEvent;
+    }
+
+    /**
+     * @param mixed $decodedData
+     */
+    public function hydrateValue($decodedData): void
+    {
+        $this->UserEvent = new UserEvent((array)$decodedData);
     }
 }

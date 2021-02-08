@@ -21,42 +21,8 @@ namespace DCarbone\PHPConsulAPI;
 /**
  * Class ValuedStringResponse
  */
-class ValuedStringResponse extends AbstractValuedResponse implements \ArrayAccess
+class ValuedStringResponse extends AbstractResponse implements HydratedResponseInterface
 {
     use ResponseValueStringTrait;
-
-    /**
-     * ValuedStringResponse constructor.
-     * @param string $value
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(string $value, ?Error $err)
-    {
-        $this->Value = $value;
-        parent::__construct($err);
-    }
-
-    /**
-     * @param mixed $offset
-     * @return bool
-     */
-    public function offsetExists($offset)
-    {
-        return \is_int($offset) && 0 <= $offset && $offset < 2;
-    }
-
-    /**
-     * @param mixed $offset
-     * @return \DCarbone\PHPConsulAPI\Error|mixed|string|null
-     */
-    public function offsetGet($offset)
-    {
-        if (0 === $offset) {
-            return $this->getValue();
-        }
-        if (1 === $offset) {
-            return $this->Err;
-        }
-        throw new \OutOfBoundsException(\sprintf('Offset %s does not exist', \var_export($offset, true)));
-    }
+    use ErrorContainer;
 }

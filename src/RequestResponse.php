@@ -24,32 +24,44 @@ use Psr\Http\Message\ResponseInterface;
 /**
  * Class RequestResponse
  */
-final class RequestResponse implements \ArrayAccess
+final class RequestResponse
 {
-    /** @var \DCarbone\Go\Time\Duration|null */
-    public ?Time\Duration $Duration = null;
+    /** @var \DCarbone\PHPConsulAPI\RequestMeta */
+    public RequestMeta $RequestMeta;
+    /** @var \DCarbone\Go\Time\Duration */
+    public Time\Duration $Duration;
     /** @var \Psr\Http\Message\ResponseInterface|null */
-    public ?ResponseInterface $Response = null;
+    public ?ResponseInterface $Response;
     /** @var \DCarbone\PHPConsulAPI\Error|null */
-    public ?Error $Err = null;
+    public ?Error $Err;
 
     /**
      * RequestResponse constructor.
-     * @param \DCarbone\Go\Time\Duration $durf
+     * @param \DCarbone\PHPConsulAPI\RequestMeta $meta
+     * @param \DCarbone\Go\Time\Duration $dur
      * @param \Psr\Http\Message\ResponseInterface|null $resp
      * @param \DCarbone\PHPConsulAPI\Error|null $err
      */
-    public function __construct(Time\Duration $durf, ?ResponseInterface $resp, ?Error $err)
+    public function __construct(RequestMeta $meta, Time\Duration $dur, ?ResponseInterface $resp, ?Error $err)
     {
-        $this->Duration = $durf;
-        $this->Response = $resp;
-        $this->Err      = $err;
+        $this->RequestMeta = $meta;
+        $this->Duration    = $dur;
+        $this->Response    = $resp;
+        $this->Err         = $err;
     }
 
     /**
-     * @return \DCarbone\Go\Time\Duration|null
+     * @return \DCarbone\PHPConsulAPI\RequestMeta
      */
-    public function getDuration(): ?Time\Duration
+    public function getRequestMeta(): RequestMeta
+    {
+        return $this->RequestMeta;
+    }
+
+    /**
+     * @return \DCarbone\Go\Time\Duration
+     */
+    public function getDuration(): Time\Duration
     {
         return $this->Duration;
     }
@@ -68,49 +80,5 @@ final class RequestResponse implements \ArrayAccess
     public function getErr(): ?Error
     {
         return $this->Err;
-    }
-
-    /**
-     * @param mixed $offset
-     * @return bool
-     */
-    public function offsetExists($offset): bool
-    {
-        return \is_int($offset) && $offset >= 0 && $offset < 3;
-    }
-
-    /**
-     * @param mixed $offset
-     * @return \DCarbone\Go\Time\Duration|\DCarbone\PHPConsulAPI\Error|mixed|\Psr\Http\Message\ResponseInterface|null
-     */
-    public function offsetGet($offset)
-    {
-        if (0 === $offset) {
-            return $this->Duration;
-        }
-        if (1 === $offset) {
-            return $this->Response;
-        }
-        if (2 === $offset) {
-            return $this->Err;
-        }
-        throw new \OutOfBoundsException(\sprintf('Offset %s does not exist', \var_export($offset, true)));
-    }
-
-    /**
-     * @param mixed $offset
-     * @param mixed $value
-     */
-    public function offsetSet($offset, $value): void
-    {
-        throw new \BadMethodCallException(\sprintf('Cannot call method %s on class %s', __METHOD__, __CLASS__));
-    }
-
-    /**
-     * @param mixed $offset
-     */
-    public function offsetUnset($offset): void
-    {
-        throw new \BadMethodCallException(\sprintf('Cannot call method %s on class %s', __METHOD__, __CLASS__));
     }
 }

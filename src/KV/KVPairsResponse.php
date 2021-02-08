@@ -18,31 +18,21 @@ namespace DCarbone\PHPConsulAPI\KV;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\QueryMeta;
+use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\QueryMetaContainer;
+use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class KVPairsResponse
  */
-class KVPairsResponse extends AbstractValuedQueryResponse
+class KVPairsResponse extends AbstractResponse implements HydratedResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\KV\KVPairs|null */
-    public $KVPairs = null;
+    use QueryMetaContainer;
+    use ErrorContainer;
 
-    /**
-     * KVPairsResponse constructor.
-     * @param array|null $kvps
-     * @param \DCarbone\PHPConsulAPI\QueryMeta|null $qm
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(?array $kvps, ?QueryMeta $qm, ?Error $err)
-    {
-        parent::__construct($qm, $err);
-        if (null !== $kvps) {
-            $this->KVPairs = new KVPairs($kvps);
-        }
-    }
+    /** @var \DCarbone\PHPConsulAPI\KV\KVPairs|null */
+    public ?KVPairs $KVPairs = null;
 
     /**
      * @return \DCarbone\PHPConsulAPI\KV\KVPairs|null
@@ -50,5 +40,13 @@ class KVPairsResponse extends AbstractValuedQueryResponse
     public function getValue()
     {
         return $this->KVPairs;
+    }
+
+    /**
+     * @param mixed $decodedData
+     */
+    public function hydrateValue($decodedData): void
+    {
+        $this->KVPairs = new KVPairs((array)$decodedData);
     }
 }

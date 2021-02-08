@@ -19,10 +19,18 @@ namespace DCarbone\PHPConsulAPI;
  */
 
 /**
- * Class ValuedStringsResponse
+ * Trait ErrorContainer
  */
-class ValuedStringsResponse extends AbstractResponse implements HydratedResponseInterface
+trait ErrorContainer
 {
-    use ResponseValueStringsTrait;
-    use ErrorContainer;
+    /** @var \DCarbone\PHPConsulAPI\Error|null */
+    public ?Error $Err = null;
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Error|null
+     */
+    public function getErr(): ?Error
+    {
+        return $this->Err;
+    }
 }

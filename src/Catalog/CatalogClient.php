@@ -67,7 +67,7 @@ class CatalogClient extends AbstractClient
         if (null !== $err) {
             return new ValuedStringsResponse(null, $err);
         }
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
         return new ValuedStringsResponse($data, $err);
     }
 
@@ -87,12 +87,12 @@ class CatalogClient extends AbstractClient
             return new CatalogNodesResponse(null, null, $err);
         }
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
         if (null !== $err) {
             return new CatalogNodesResponse(null, null, $err);
         }
 
-        return new CatalogNodesResponse($data, $this->buildQueryMeta($duration, $response, $r->getUri()), null);
+        return new CatalogNodesResponse($data, $this->_buildQueryMeta($duration, $response, $r->getUri()), null);
     }
 
     /**
@@ -111,12 +111,12 @@ class CatalogClient extends AbstractClient
             return new ValuedQueryStringsResponse(null, null, $err);
         }
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
         if (null !== $err) {
             return new ValuedQueryStringsResponse(null, null, $err);
         }
 
-        return new ValuedQueryStringsResponse($data, $this->buildQueryMeta($duration, $response, $r->getUri()), $err);
+        return new ValuedQueryStringsResponse($data, $this->_buildQueryMeta($duration, $response, $r->getUri()), $err);
     }
 
     /**
@@ -136,14 +136,14 @@ class CatalogClient extends AbstractClient
             return new CatalogNodeServicesListResponse(null, null, $err);
         }
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
         if (null !== $err) {
             return new CatalogNodeServicesListResponse(null, null, $err);
         }
 
         return new CatalogNodeServicesListResponse(
             $data,
-            $this->buildQueryMeta($duration, $response, $r->getUri()),
+            $this->_buildQueryMeta($duration, $response, $r->getUri()),
             $err
         );
     }
@@ -172,12 +172,12 @@ class CatalogClient extends AbstractClient
             return new CatalogServicesResponse(null, null, $err);
         }
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
         if (null !== $err) {
             return new CatalogServicesResponse(null, null, $err);
         }
 
-        return new CatalogServicesResponse($data, $this->buildQueryMeta($duration, $response, $r->getUri()), null);
+        return new CatalogServicesResponse($data, $this->_buildQueryMeta($duration, $response, $r->getUri()), null);
     }
 
     /**
@@ -209,12 +209,12 @@ class CatalogClient extends AbstractClient
             return new CatalogNodeResponse(null, null, $err);
         }
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
         if (null !== $err) {
             return new CatalogNodeResponse(null, null, $err);
         }
 
-        return new CatalogNodeResponse($data, $this->buildQueryMeta($duration, $response, $r->getUri()), null);
+        return new CatalogNodeResponse($data, $this->_buildQueryMeta($duration, $response, $r->getUri()), null);
     }
 
     /**
@@ -239,11 +239,11 @@ class CatalogClient extends AbstractClient
             return new GatewayServicesResponse(null, null, $err);
         }
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
         if (null !== $err) {
             return new GatewayServicesResponse(null, null, $err);
         }
 
-        return new GatewayServicesResponse($data, $this->buildQueryMeta($duration, $response, $r->getUri()), null);
+        return new GatewayServicesResponse($data, $this->_buildQueryMeta($duration, $response, $r->getUri()), null);
     }
 }

@@ -18,34 +18,21 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\QueryMeta;
+use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\QueryMetaContainer;
+use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class CoordinateEntriesResponse
  */
-class CoordinateEntriesResponse extends AbstractValuedQueryResponse
+class CoordinateEntriesResponse extends AbstractResponse implements HydratedResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry[]|null */
-    public $Nodes = null;
+    use QueryMetaContainer;
+    use ErrorContainer;
 
-    /**
-     * CoordinateEntriesResponse constructor.
-     * @param array|null $nodes
-     * @param \DCarbone\PHPConsulAPI\QueryMeta|null $qm
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(?array $nodes, ?QueryMeta $qm, ?Error $err)
-    {
-        parent::__construct($qm, $err);
-        if (null !== $nodes) {
-            $this->Nodes = [];
-            foreach ($nodes as $node) {
-                $this->Nodes[] = new CoordinateEntry($node);
-            }
-        }
-    }
+    /** @var \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry[]|null */
+    public ?array $Nodes = null;
 
     /**
      * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry[]|null
@@ -53,5 +40,17 @@ class CoordinateEntriesResponse extends AbstractValuedQueryResponse
     public function getValue()
     {
         return $this->Nodes;
+    }
+
+    /**
+     * @param mixed $decodedData
+     * @return void
+     */
+    public function hydrateValue($decodedData): void
+    {
+        $this->Nodes = [];
+        foreach ($decodedData as $node) {
+            $this->Nodes[] = new CoordinateEntry($node);
+        }
     }
 }

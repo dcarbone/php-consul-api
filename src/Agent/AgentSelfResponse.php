@@ -18,29 +18,21 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\QueryMeta;
+use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\QueryMetaContainer;
+use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class AgentSelfResponse
  */
-class AgentSelfResponse extends AbstractValuedQueryResponse
+class AgentSelfResponse extends AbstractResponse implements HydratedResponseInterface
 {
-    /** @var array|null */
-    public $AgentConfig = null;
+    use QueryMetaContainer;
+    use ErrorContainer;
 
-    /**
-     * AgentSelfResponse constructor.
-     * @param array|null $config
-     * @param \DCarbone\PHPConsulAPI\QueryMeta|null $qm
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(?array $config, ?QueryMeta $qm, ?Error $err)
-    {
-        $this->AgentConfig = $config;
-        parent::__construct($qm, $err);
-    }
+    /** @var array|null */
+    public ?array $AgentConfig = null;
 
     /**
      * @return array|null
@@ -48,5 +40,14 @@ class AgentSelfResponse extends AbstractValuedQueryResponse
     public function getValue()
     {
         return $this->AgentConfig;
+    }
+
+    /**
+     * @param mixed $decodedData
+     * @return void
+     */
+    public function hydrateValue($decodedData): void
+    {
+        $this->AgentConfig = $decodedData;
     }
 }

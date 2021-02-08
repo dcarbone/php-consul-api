@@ -18,32 +18,21 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedResponse;
-use DCarbone\PHPConsulAPI\Error;
+use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\QueryMetaContainer;
+use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class AgentServicesResponse
  */
-class AgentServicesResponse extends AbstractValuedResponse
+class AgentServicesResponse extends AbstractResponse implements HydratedResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\Agent\AgentService[]|null */
-    public $Services = null;
+    use QueryMetaContainer;
+    use ErrorContainer;
 
-    /**
-     * AgentServicesResponse constructor.
-     * @param array|null $services
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(?array $services, ?Error $err)
-    {
-        if (null !== $services) {
-            $this->Services = [];
-            foreach ($services as $k => $service) {
-                $this->Services[$k] = new AgentService($service);
-            }
-        }
-        parent::__construct($err);
-    }
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentService[]|null */
+    public ?array $Services = null;
 
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentService[]|null
@@ -51,5 +40,17 @@ class AgentServicesResponse extends AbstractValuedResponse
     public function getValue()
     {
         return $this->Services;
+    }
+
+    /**
+     * @param mixed $decodedData
+     * @return void
+     */
+    public function hydrateValue($decodedData): void
+    {
+        $this->Services = [];
+        foreach ($decodedData as $k => $service) {
+            $this->Services[$k] = new AgentService($service);
+        }
     }
 }

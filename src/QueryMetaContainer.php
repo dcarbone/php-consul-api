@@ -19,9 +19,9 @@ namespace DCarbone\PHPConsulAPI;
  */
 
 /**
- * Trait ResponseQueryMetaTrait
+ * Trait QueryMetaContainer
  */
-trait ResponseQueryMetaTrait
+trait QueryMetaContainer
 {
     /** @var \DCarbone\PHPConsulAPI\QueryMeta|null */
     public ?QueryMeta $QueryMeta = null;

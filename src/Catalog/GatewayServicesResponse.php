@@ -18,40 +18,39 @@ namespace DCarbone\PHPConsulAPI\Catalog;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\QueryMeta;
+use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\QueryMetaContainer;
+use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class GatewayServicesResponse
  */
-class GatewayServicesResponse extends AbstractValuedQueryResponse
+class GatewayServicesResponse extends AbstractResponse implements HydratedResponseInterface
 {
+    use QueryMetaContainer;
+    use ErrorContainer;
+
     /** @var \DCarbone\PHPConsulAPI\Catalog\GatewayService[]|null */
-    public $GatewayServices = null;
+    public ?array $GatewayServices = null;
 
     /**
-     * CatalogNodesResponse constructor.
-     * @param array|null $services
-     * @param \DCarbone\PHPConsulAPI\QueryMeta|null $qm
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(?array $services, ?QueryMeta $qm, ?Error $err)
-    {
-        if (null !== $services) {
-            $this->GatewayServices = [];
-            foreach ($services as $service) {
-                $this->GatewayServices[] = new GatewayService($service);
-            }
-        }
-        parent::__construct($qm, $err);
-    }
-
-    /**
-     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogNode[]|null
+     * @return \DCarbone\PHPConsulAPI\Catalog\GatewayService[]|mixed|null
      */
     public function getValue()
     {
         return $this->GatewayServices;
+    }
+
+    /**
+     * @param mixed $decodedData
+     * @return void
+     */
+    public function hydrateValue($decodedData): void
+    {
+        $this->GatewayServices = [];
+        foreach ($decodedData as $service) {
+            $this->GatewayServices[] = new GatewayService($service);
+        }
     }
 }

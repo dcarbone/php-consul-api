@@ -18,32 +18,19 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedResponse;
-use DCarbone\PHPConsulAPI\Error;
+use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class CoordinateDatacentersResponse
  */
-class CoordinateDatacentersResponse extends AbstractValuedResponse
+class CoordinateDatacentersResponse extends AbstractResponse implements HydratedResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\Coordinate\CoordinateDatacenterMap[]|null */
-    public $DatacenterMap = null;
+    use ErrorContainer;
 
-    /**
-     * CoordinateDatacentersResponse constructor.
-     * @param array|null $datacenterMap
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(?array $datacenterMap, ?Error $err)
-    {
-        parent::__construct($err);
-        if (null !== $datacenterMap) {
-            $this->DatacenterMap = [];
-            foreach ($datacenterMap as $item) {
-                $this->DatacenterMap[] = new CoordinateDatacenterMap($item);
-            }
-        }
-    }
+    /** @var \DCarbone\PHPConsulAPI\Coordinate\CoordinateDatacenterMap[]|null */
+    public ?array $DatacenterMap = null;
 
     /**
      * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateDatacenterMap[]|null
@@ -51,5 +38,17 @@ class CoordinateDatacentersResponse extends AbstractValuedResponse
     public function getValue()
     {
         return $this->DatacenterMap;
+    }
+
+    /**
+     * @param mixed $decodedData
+     * @return void
+     */
+    public function hydrateValue($decodedData): void
+    {
+        $this->DatacenterMap = [];
+        foreach ($decodedData as $item) {
+            $this->DatacenterMap[] = new CoordinateDatacenterMap($item);
+        }
     }
 }

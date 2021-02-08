@@ -50,12 +50,12 @@ class OperatorClient extends AbstractClient
             return new ValuedWriteStringResponse('', null, $err);
         }
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
         if (null !== $err) {
             return new ValuedWriteStringResponse('', null, $err);
         }
 
-        return new ValuedWriteStringResponse($data['ID'] ?? '', $this->buildWriteMeta($duration), null);
+        return new ValuedWriteStringResponse($data['ID'] ?? '', $this->_buildWriteMeta($duration), null);
     }
 
     /**
@@ -76,12 +76,12 @@ class OperatorClient extends AbstractClient
             return new ValuedWriteStringResponse('', null, $err);
         }
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
         if (null !== $err) {
             return new ValuedWriteStringResponse('', null, $err);
         }
 
-        return new ValuedWriteStringResponse($data['ID'] ?? '', $this->buildWriteMeta($duration), null);
+        return new ValuedWriteStringResponse($data['ID'] ?? '', $this->_buildWriteMeta($duration), null);
     }
 
     /**
@@ -101,8 +101,8 @@ class OperatorClient extends AbstractClient
             return new OperatorAreasResponse(null, null, $err);
         }
 
-        [$data, $err] = $this->decodeBody($response->getBody());
-        return new OperatorAreasResponse($data, $this->buildQueryMeta($duration, $response, $r->getUri()), $err);
+        [$data, $err] = $this->_decodeBody($response->getBody());
+        return new OperatorAreasResponse($data, $this->_buildQueryMeta($duration, $response, $r->getUri()), $err);
     }
 
     /**
@@ -121,8 +121,8 @@ class OperatorClient extends AbstractClient
             return new OperatorAreasResponse(null, null, $err);
         }
 
-        [$data, $err] = $this->decodeBody($response->getBody());
-        return new OperatorAreasResponse($data, $this->buildQueryMeta($duration, $response, $r->getUri()), $err);
+        [$data, $err] = $this->_decodeBody($response->getBody());
+        return new OperatorAreasResponse($data, $this->_buildQueryMeta($duration, $response, $r->getUri()), $err);
     }
 
     /**
@@ -141,7 +141,7 @@ class OperatorClient extends AbstractClient
             return new WriteResponse(null, $err);
         }
 
-        return new WriteResponse($this->buildWriteMeta($duration), null);
+        return new WriteResponse($this->_buildWriteMeta($duration), null);
     }
 
     /**
@@ -162,12 +162,12 @@ class OperatorClient extends AbstractClient
             return new OperatorAreaJoinResponse(null, null, $err);
         }
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
         if (null !== $err) {
             return new OperatorAreaJoinResponse(null, null, $err);
         }
 
-        return new OperatorAreaJoinResponse($data, $this->buildWriteMeta($duration), null);
+        return new OperatorAreaJoinResponse($data, $this->_buildWriteMeta($duration), null);
     }
 
     /**
@@ -187,12 +187,12 @@ class OperatorClient extends AbstractClient
             return new OperatorSerfMembersResponse(null, null, $err);
         }
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
         if (null !== $err) {
             return new OperatorSerfMembersResponse(null, null, $err);
         }
 
-        return new OperatorSerfMembersResponse($data, $this->buildQueryMeta($duration, $response, $r->getUri()), null);
+        return new OperatorSerfMembersResponse($data, $this->_buildQueryMeta($duration, $response, $r->getUri()), null);
     }
 
     /**
@@ -211,7 +211,7 @@ class OperatorClient extends AbstractClient
             return new OperatorAutopilotConfigurationResponse(null, $err);
         }
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
         if (null !== $err) {
             return new OperatorAutopilotConfigurationResponse(null, $err);
         }
@@ -272,7 +272,7 @@ class OperatorClient extends AbstractClient
             return new OperatorServerHealthsResponse(null, $err);
         }
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
         if (null !== $err) {
             return new OperatorServerHealthsResponse(null, $err);
         }
@@ -296,14 +296,14 @@ class OperatorClient extends AbstractClient
             return new OperatorAutopilotStateResponse(null, null, $err);
         }
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
         if (null !== $err) {
             return new OperatorAutopilotStateResponse(null, null, $err);
         }
 
         return new OperatorAutopilotStateResponse(
             $data,
-            $this->buildQueryMeta($duration, $response, $r->getUri()),
+            $this->_buildQueryMeta($duration, $response, $r->getUri()),
             null
         );
     }
@@ -324,13 +324,13 @@ class OperatorClient extends AbstractClient
             return new OperatorRaftConfigurationResponse(null, null, $err);
         }
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
 
         if (null !== $err) {
             return new OperatorRaftConfigurationResponse(null, null, $err);
         }
 
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
+        $qm = $this->_buildQueryMeta($duration, $response, $r->getUri());
 
         return new OperatorRaftConfigurationResponse($data, $qm, null);
     }

@@ -46,7 +46,7 @@ class StatusClient extends AbstractClient
             return new ValuedStringResponse('', $err);
         }
 
-        $d = $this->decodeBody($response->getBody());
+        $d = $this->_decodeBody($response->getBody());
         return new ValuedStringResponse($d->Decoded, $d->Err);
     }
 
@@ -75,7 +75,7 @@ class StatusClient extends AbstractClient
         if (null !== $err) {
             return new ValuedStringsResponse(null, $err);
         }
-        $d = $this->decodeBody($response->getBody());
+        $d = $this->_decodeBody($response->getBody());
         return new ValuedStringsResponse($d->Decoded, $d->Err);
     }
 

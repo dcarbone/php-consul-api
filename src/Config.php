@@ -30,11 +30,17 @@ class Config
 {
     use Hydratable;
 
-    private const FIELD_HTTP_AUTH        = 'HttpAuth';
-    private const FIELD_WAIT_TIME        = 'WaitTime';
-    private const FIELD_ADDRESS          = 'Address';
-    private const FIELD_SCHEME           = 'Scheme';
-    private const FIELD_JSON_ENCODE_OPTS = 'JSONEncodeOpts';
+    private const   FIELD_HTTP_AUTH            = 'HttpAuth';
+    private const   FIELD_WAIT_TIME            = 'WaitTime';
+    private const   FIELD_ADDRESS              = 'Address';
+    private const   FIELD_SCHEME               = 'Scheme';
+    private const   FIELD_JSON_ENCODE_OPTS     = 'JSONEncodeOpts';
+    private const   FIELD_TOKEN                = 'Token';
+    private const   FIELD_TOKEN_FILE           = 'TokenFile';
+    private const   FIELD_CA_FILE              = 'CAFile';
+    private const   FIELD_CERT_FILE            = 'CertFile';
+    private const   FIELD_KEY_FILE             = 'KeyFile';
+    private const   FIELD_INSECURE_SKIP_VERIFY = 'InsecureSkipVerify';
 
     private const DefaultConfig = [
         self::FIELD_ADDRESS          => '127.0.0.1:8500',
@@ -532,13 +538,13 @@ class Config
 
         if (!$this->isInsecureSkipVerify()) {
             $opts[RequestOptions::VERIFY] = false;
-        } elseif ('' !== ($b = $this->getCAFile())) {
+        } elseif ('' !== ($b = $this->CAFile)) {
             $opts[RequestOptions::VERIFY] = $b;
         }
 
-        if ('' !== ($c = $this->getCertFile())) {
-            $opts[RequestOptions::CERT] = $c;
-            $opts[RequestOptions::SSL_KEY] = $this->getKeyFile();
+        if ('' !== ($c = $this->CertFile)) {
+            $opts[RequestOptions::CERT]    = $c;
+            $opts[RequestOptions::SSL_KEY] = $this->KeyFile;
         }
 
         if (null !== $request->timeout && 0 < ($ttl = \intval($request->timeout->Seconds(), 10))) {
@@ -605,26 +611,26 @@ class Config
         // parse env vars
         foreach (static::getEnvironmentConfig() as $k => $v) {
             if (Consul::HTTPAddrEnvName === $k) {
-                $conf['Address'] = $v;
+                $conf[self::FIELD_ADDRESS] = $v;
             } elseif (Consul::HTTPTokenEnvName === $k) {
-                $conf['Token'] = $v;
+                $conf[self::FIELD_TOKEN] = $v;
             } elseif (Consul::HTTPTokenFileEnvName === $k) {
-                $conf['TokenFile'] = $v;
+                $conf[self::FIELD_TOKEN_FILE] = $v;
             } elseif (Consul::HTTPAuthEnvName === $k) {
-                $conf['HttpAuth'] = $v;
+                $conf[self::FIELD_HTTP_AUTH] = $v;
             } elseif (Consul::HTTPCAFileEnvName === $k) {
-                $conf['CAFile'] = $v;
+                $conf[self::FIELD_CA_FILE] = $v;
             } elseif (Consul::HTTPClientCertEnvName === $k) {
-                $conf['CertFile'] = $v;
+                $conf[self::FIELD_CERT_FILE] = $v;
             } elseif (Consul::HTTPClientKeyEnvName === $k) {
-                $conf['KeyFile'] = $v;
+                $conf[self::FIELD_KEY_FILE] = $v;
             } elseif (Consul::HTTPSSLEnvName === $k) {
                 if ((bool)$v) {
-                    $conf['Scheme'] = 'https';
+                    $conf[self::FIELD_SCHEME] = 'https';
                 }
             } elseif (Consul::HTTPSSLVerifyEnvName === $k) {
                 if ((bool)$v) {
-                    $conf['InsecureSkipVerify'] = true;
+                    $conf[self::FIELD_INSECURE_SKIP_VERIFY] = true;
                 }
             }
         }

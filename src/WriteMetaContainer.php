@@ -19,9 +19,9 @@ namespace DCarbone\PHPConsulAPI;
  */
 
 /**
- * Trait ResponseWriteMetaTrait
+ * Trait WriteMetaContainer
  */
-trait ResponseWriteMetaTrait
+trait WriteMetaContainer
 {
     /** @var \DCarbone\PHPConsulAPI\WriteMeta|null */
     public ?WriteMeta $WriteMeta = null;

@@ -18,10 +18,8 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\Go\HTTP;
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\QueryOptions;
-use DCarbone\PHPConsulAPI\Request;
 use DCarbone\PHPConsulAPI\ValuedWriteStringResponse;
 use DCarbone\PHPConsulAPI\WriteOptions;
 use DCarbone\PHPConsulAPI\WriteResponse;
@@ -92,23 +90,10 @@ class ACLClient extends AbstractClient
      */
     public function Info(string $id, ?QueryOptions $opts = null): ACLEntriesResponse
     {
-        $r = new Request(HTTP\MethodGet, \sprintf('v1/acl/info/%s', $id), $this->config, null);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new ACLEntriesResponse(null, null, $err);
-        }
-
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
-        [$data, $err] = $this->decodeBody($response->getBody());
-        if (null !== $err) {
-            return new ACLEntriesResponse(null, $qm, $err);
-        }
-
-        return new ACLEntriesResponse($data, $qm, null);
+        $resp = $this->_doGet(\sprintf('v1/acl/info/%s', $id), $opts);
+        $ret  = new ACLEntriesResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -118,23 +103,10 @@ class ACLClient extends AbstractClient
      */
     public function List(?QueryOptions $opts = null): ACLEntriesResponse
     {
-        $r = new Request(HTTP\MethodGet, 'v1/acl/list', $this->config, null);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new ACLEntriesResponse(null, null, $err);
-        }
-
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
-        [$data, $err] = $this->decodeBody($response->getBody());
-        if (null !== $err) {
-            return new ACLEntriesResponse(null, $qm, $err);
-        }
-
-        return new ACLEntriesResponse($data, $qm, null);
+        $resp = $this->_doGet('v1/acl/list', $opts);
+        $ret  = new ACLEntriesResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -144,22 +116,9 @@ class ACLClient extends AbstractClient
      */
     public function Replication(?QueryOptions $opts = null): ACLReplicationStatusResponse
     {
-        $r = new Request(HTTP\MethodGet, '/v1/acl/replication', $this->config, null);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new ACLReplicationStatusResponse(null, null, $err);
-        }
-
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
-
-        [$data, $err] = $this->decodeBody($response->getBody());
-        if (null !== $err) {
-            return new ACLReplicationStatusResponse(null, $qm, $err);
-        }
-
-        return new ACLReplicationStatusResponse($data, $qm, null);
+        $resp = $this->_doGet('/v1/acl/replication', $opts);
+        $ret  = new ACLReplicationStatusResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 }

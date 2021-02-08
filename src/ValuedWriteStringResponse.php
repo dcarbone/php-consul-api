@@ -21,19 +21,9 @@ namespace DCarbone\PHPConsulAPI;
 /**
  * Class ValuedWriteStringResponse
  */
-class ValuedWriteStringResponse extends AbstractValuedWriteResponse
+class ValuedWriteStringResponse extends AbstractResponse implements HydratedResponseInterface
 {
     use ResponseValueStringTrait;
-
-    /**
-     * ValuedWriteStringResponse constructor.
-     * @param string $value
-     * @param \DCarbone\PHPConsulAPI\WriteMeta|null $wm
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(string $value, ?WriteMeta $wm, ?Error $err)
-    {
-        $this->Value = $value;
-        parent::__construct($wm, $err);
-    }
+    use WriteMetaContainer;
+    use ErrorContainer;
 }

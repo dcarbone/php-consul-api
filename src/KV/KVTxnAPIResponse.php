@@ -18,73 +18,37 @@ namespace DCarbone\PHPConsulAPI\KV;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedResponse;
 use DCarbone\PHPConsulAPI\Error;
+use DCarbone\PHPConsulAPI\ErrorContainer;
 use DCarbone\PHPConsulAPI\QueryMeta;
-use DCarbone\PHPConsulAPI\ResponseQueryMetaTrait;
+use DCarbone\PHPConsulAPI\QueryMetaContainer;
 
 /**
  * Class KVTxnAPIResponse
  */
-class KVTxnAPIResponse extends AbstractValuedResponse implements \ArrayAccess
+class KVTxnAPIResponse
 {
-    use ResponseQueryMetaTrait;
+    use QueryMetaContainer;
+    use ErrorContainer;
 
     /** @var bool */
-    public $OK = false;
+    public bool $OK = false;
     /** @var \DCarbone\PHPConsulAPI\KV\KVTxnResponse|null */
-    public $KVTxnResponse = null;
+    public ?KVTxnResponse $KVTxnResponse = null;
 
     /**
-     * KVTxnAPIResponse constructor.
-     * @param bool $ok
-     * @param \DCarbone\PHPConsulAPI\KV\KVTxnResponse|null $resp
-     * @param \DCarbone\PHPConsulAPI\QueryMeta|null $qm
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(bool $ok, ?KVTxnResponse $resp, ?QueryMeta $qm, ?Error $err)
-    {
-        parent::__construct($err);
-        $this->OK            = $ok;
-        $this->KVTxnResponse = $resp;
-        $this->QueryMeta     = $qm;
-    }
-
-    /**
-     * @return \DCarbone\PHPConsulAPI\KV\KVTxnResponse|mixed|null
-     */
-    public function getValue()
-    {
-        return $this->KVTxnResponse;
-    }
-
-    /**
-     * @param mixed $offset
      * @return bool
      */
-    public function offsetExists($offset)
+    public function isOK(): bool
     {
-        return \is_int($offset) && 0 <= $offset && $offset < 4;
+        return $this->OK;
     }
 
     /**
-     * @param mixed $offset
-     * @return bool|\DCarbone\PHPConsulAPI\Error|\DCarbone\PHPConsulAPI\KV\KVTxnResponse|\DCarbone\PHPConsulAPI\QueryMeta|null
+     * @return \DCarbone\PHPConsulAPI\KV\KVTxnResponse|null
      */
-    public function offsetGet($offset)
+    public function getKVTxnResponse(): ?KVTxnResponse
     {
-        if (0 === $offset) {
-            return $this->OK;
-        }
-        if (1 === $offset) {
-            return $this->KVTxnResponse;
-        }
-        if (2 === $offset) {
-            return $this->QueryMeta;
-        }
-        if (3 === $this->Err) {
-            return $this->Err;
-        }
-        throw new \OutOfBoundsException(\sprintf('Offset %s does not exist', \var_export($offset, true)));
+        return $this->KVTxnResponse;
     }
 }

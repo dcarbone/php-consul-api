@@ -45,7 +45,7 @@ class CoordinateClient extends AbstractClient
             return new CoordinateDatacentersResponse(null, $err);
         }
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
 
         return new CoordinateDatacentersResponse($data, $err);
     }
@@ -66,9 +66,9 @@ class CoordinateClient extends AbstractClient
             return new CoordinateEntriesResponse(null, null, $err);
         }
 
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
+        $qm = $this->_buildQueryMeta($duration, $response, $r->getUri());
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
         return new CoordinateEntriesResponse($data, $qm, $err);
     }
 
@@ -86,7 +86,7 @@ class CoordinateClient extends AbstractClient
         /** @var \Psr\Http\Message\ResponseInterface $response */
         [$duration, $_, $err] = $this->_requireOK($this->_do($r));
 
-        return new WriteResponse($this->buildWriteMeta($duration), $err);
+        return new WriteResponse($this->_buildWriteMeta($duration), $err);
     }
 
     /**
@@ -106,9 +106,9 @@ class CoordinateClient extends AbstractClient
             return new CoordinateEntriesResponse(null, null, $err);
         }
 
-        $qm = $this->buildQueryMeta($duration, $response, $r->getUri());
+        $qm = $this->_buildQueryMeta($duration, $response, $r->getUri());
 
-        [$data, $err] = $this->decodeBody($response->getBody());
+        [$data, $err] = $this->_decodeBody($response->getBody());
         return new CoordinateEntriesResponse($data, $qm, $err);
     }
 }

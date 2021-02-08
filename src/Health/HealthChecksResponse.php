@@ -18,31 +18,21 @@ namespace DCarbone\PHPConsulAPI\Health;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\QueryMeta;
+use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\QueryMetaContainer;
+use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class HealthChecksResponse
  */
-class HealthChecksResponse extends AbstractValuedQueryResponse
+class HealthChecksResponse extends AbstractResponse implements HydratedResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\Health\HealthChecks|null */
-    public $HealthChecks = null;
+    use QueryMetaContainer;
+    use ErrorContainer;
 
-    /**
-     * HealthChecksResponse constructor.
-     * @param array|null $checks
-     * @param \DCarbone\PHPConsulAPI\QueryMeta|null $qm
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(?array $checks, ?QueryMeta $qm, ?Error $err)
-    {
-        parent::__construct($qm, $err);
-        if (null !== $checks) {
-            $this->HealthChecks = new HealthChecks($checks);
-        }
-    }
+    /** @var \DCarbone\PHPConsulAPI\Health\HealthChecks|null */
+    public ?HealthChecks $HealthChecks = null;
 
     /**
      * @return \DCarbone\PHPConsulAPI\Health\HealthChecks|null
@@ -50,5 +40,14 @@ class HealthChecksResponse extends AbstractValuedQueryResponse
     public function getValue()
     {
         return $this->HealthChecks;
+    }
+
+    /**
+     * @param mixed $decodedData
+     * @return void
+     */
+    public function hydrateValue($decodedData): void
+    {
+        $this->HealthChecks = new HealthChecks((array)$decodedData);
     }
 }

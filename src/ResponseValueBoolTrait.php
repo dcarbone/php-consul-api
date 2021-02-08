@@ -35,6 +35,22 @@ trait ResponseValueBoolTrait
     }
 
     /**
+     * @param mixed $decodedData
+     */
+    public function hydrateValue($decodedData): void
+    {
+        if (\is_bool($decodedData)) {
+            $this->Value = $decodedData;
+            return;
+        }
+        if (\is_string($decodedData)) {
+            $this->Value = Hydration::TRUE === \strtolower(\trim($decodedData));
+            return;
+        }
+        $this->Value = (bool)$decodedData;
+    }
+
+    /**
      * @return string
      */
     public function __toString(): string

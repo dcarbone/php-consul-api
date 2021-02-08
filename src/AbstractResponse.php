@@ -19,10 +19,8 @@ namespace DCarbone\PHPConsulAPI;
  */
 
 /**
- * Class ValuedStringsResponse
+ * Class AbstractResponse
  */
-class ValuedStringsResponse extends AbstractResponse implements HydratedResponseInterface
+abstract class AbstractResponse
 {
-    use ResponseValueStringsTrait;
-    use ErrorContainer;
 }

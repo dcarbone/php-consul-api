@@ -18,30 +18,19 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedResponse;
-use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\ResponseErrorTrait;
+use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class MetricsInfoResponse
  */
-class MetricsInfoResponse extends AbstractValuedResponse implements \ArrayAccess
+class MetricsInfoResponse extends AbstractResponse implements HydratedResponseInterface
 {
-    use ResponseErrorTrait;
+    use ErrorContainer;
 
     /** @var \DCarbone\PHPConsulAPI\Agent\MetricsInfo|null */
-    public $MetricsInfo = null;
-
-    /**
-     * MetricsInfoResponse constructor.
-     * @param \DCarbone\PHPConsulAPI\Agent\MetricsInfo|null $metricsInfo
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(?MetricsInfo $metricsInfo, ?Error $err)
-    {
-        $this->MetricsInfo = $metricsInfo;
-        parent::__construct($err);
-    }
+    public ?MetricsInfo $MetricsInfo = null;
 
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\MetricsInfo|null
@@ -52,22 +41,10 @@ class MetricsInfoResponse extends AbstractValuedResponse implements \ArrayAccess
     }
 
     /**
-     * @param mixed $offset
-     * @return bool
+     * @param mixed $decodedData
      */
-    public function offsetExists($offset)
+    public function hydrateValue($decodedData): void
     {
-        return \is_int($offset) && 0 <= $offset && $offset < 2;
-    }
-
-    public function offsetGet($offset)
-    {
-        if (0 === $offset) {
-            return $this->getValue();
-        }
-        if (1 === $offset) {
-            return $this->Err;
-        }
-        throw new \OutOfBoundsException(\sprintf('Offset %s does not exist', \var_export($offset, true)));
+        $this->MetricsInfo = new MetricsInfo((array)$decodedData);
     }
 }
