@@ -226,7 +226,7 @@ class AgentClient extends AbstractClient
      */
     public function ServiceDeregister(string $serviceID): ?Error
     {
-        $r = new Request(HTTP\MethodPut, \sprintf('v1/agent/service/deregister/%s', $serviceID), $this->config, null);
+        $r = new Request(HTTP\MethodPut, \sprintf('v1/agent/service/deregister/%s', $serviceID), $this->_config, null);
         return $this->_requireOK($this->_do($r))->Err;
     }
 
@@ -302,7 +302,7 @@ class AgentClient extends AbstractClient
         $r = new Request(
             HTTP\MethodPut,
             \sprintf('v1/agent/check/update/%s', $checkID),
-            $this->config,
+            $this->_config,
             new AgentCheckUpdate(['Output' => $output, 'Status' => $status])
         );
 

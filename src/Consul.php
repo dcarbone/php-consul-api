@@ -35,7 +35,7 @@ use DCarbone\PHPConsulAPI\Status\StatusClient;
  */
 class Consul
 {
-    // "public" consts
+    // "public" constants
 
     public const HTTPAddrEnvName       = 'CONSUL_HTTP_ADDR';
     public const HTTPTokenEnvName      = 'CONSUL_HTTP_TOKEN';
@@ -107,7 +107,7 @@ class Consul
     public const BindingRuleBindTypeService = 'service';
     public const BindingRuleBindTypeRole    = 'role';
 
-    // "private" consts
+    // "private" constants
 
     public const headerConsulPrefix             = 'X-Consul-';
     public const headerConsulIndex              = self::headerConsulPrefix . 'Index';

@@ -19,16 +19,32 @@ namespace DCarbone\PHPConsulAPI\KV;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class TxnResponse
  */
 class TxnResponse extends AbstractModel
 {
+    private const FIELD_RESULTS = 'Results';
+    private const FIELD_ERRORS  = 'Errors';
+
     /** @var \DCarbone\PHPConsulAPI\KV\TxnResults */
-    public $Results = null;
+    public TxnResults $Results;
     /** @var \DCarbone\PHPConsulAPI\KV\TxnErrors */
-    public $Errors = null;
+    public TxnErrors $Errors;
+
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_RESULTS => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => TxnResults::class,
+        ],
+        self::FIELD_ERRORS  => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => TxnErrors::class,
+        ],
+    ];
 
     /**
      * TxnResponse constructor.
@@ -37,11 +53,11 @@ class TxnResponse extends AbstractModel
     public function __construct(array $data = [])
     {
         parent::__construct($data);
-        if (!($this->Results instanceof TxnResults)) {
-            $this->Results = new TxnResults((array) $this->Results);
+        if (!isset($this->Results)) {
+            $this->Results = new TxnResults();
         }
-        if (!($this->Errors instanceof TxnErrors)) {
-            $this->Errors = new TxnErrors((array) $this->Errors);
+        if (!isset($this->Errors)) {
+            $this->Errors = new TxnErrors();
         }
     }
 

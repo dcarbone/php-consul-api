@@ -23,11 +23,14 @@ namespace DCarbone\PHPConsulAPI;
  */
 abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
 {
-    /** @var \DCarbone\PHPConsulAPI\AbstractModel[] */
-    protected array $_list = [];
-
     /** @var string */
     protected string $containedClass;
+
+    /** @var \DCarbone\PHPConsulAPI\AbstractModel[] */
+    private array $_list = [];
+
+    /** @var int */
+    private int $_size = 0;
 
     /**
      * AbstractModels constructor.
@@ -35,45 +38,39 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
      */
     public function __construct(?array $children = [])
     {
+        if (!isset($this->containedClass)) {
+            throw new \DomainException(
+                \sprintf(
+                    'Class "%s" must define $containedClass',
+                    \get_called_class()
+                )
+            );
+        }
         if (null === $children) {
             return;
         }
-        foreach (\array_filter($children) as $child) {
-            if (\is_array($child)) {
-                $this->_list[] = $this->newChild($child);
-            } elseif ($child instanceof $this->containedClass) {
-                $this->_list[] = $child;
-            } else {
-                throw new \InvalidArgumentException(
-                    \sprintf(
-                        \get_class($this) . ' accepts only ' . $this->containedClass . ' as a child, saw %s',
-                        \is_object($child) ? \get_class($child) : \gettype($child)
-                    )
-                );
-            }
+        foreach ($children as $child) {
+            $this->append($child);
         }
     }
 
     /**
      * @param \DCarbone\PHPConsulAPI\AbstractModel|null $value
      */
-    public function append(AbstractModel $value = null): void
+    public function append(?AbstractModel $value): void
     {
-        if (null === $value || $value instanceof $this->containedClass) {
-            $this->_list[] = $value;
-        } else {
-            throw new \InvalidArgumentException(
-                \sprintf(
-                    '%s accepts only objects of type %s or null as values',
-                    \get_class($this),
-                    $this->containedClass,
-                )
-            );
-        }
+        // validate provided value is either null or instance of allowed child class
+        $value = $this->_validateValue($value);
+
+        // set offset to current value of _size, and iterate size by 1
+        $offset = $this->_size++;
+
+        // if value is passed, clone then set.
+        $this->_list[$offset] = $value;
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\AbstractModel|mixed
+     * @return \DCarbone\PHPConsulAPI\AbstractModel|false
      */
     public function current()
     {
@@ -96,7 +93,7 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
     /**
      * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
         return null !== \key($this->_list);
     }
@@ -115,17 +112,18 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
         return \is_int($offset) && isset($this->_list[$offset]);
     }
 
+    /**
+     * @param mixed $offset
+     * @return \DCarbone\PHPConsulAPI\AbstractModel|null
+     */
     public function offsetGet($offset)
     {
-        if (\is_int($offset) && isset($this->_list[$offset])) {
+        $this->_validateOffset($offset);
+        if (isset($this->_list[$offset])) {
             return $this->_list[$offset];
         }
-        throw new \OutOfRangeException(
-            \sprintf(
-                'Offset %s does not exist in this list',
-                \is_int($offset) ? (string) $offset : \gettype($offset)
-            )
-        );
+
+        return $this->_list[$offset];
     }
 
     /**
@@ -134,13 +132,17 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
      */
     public function offsetSet($offset, $value): void
     {
-        if (!\is_int($offset)) {
-            throw new \InvalidArgumentException('Offset must be int');
+        // if incoming offset is null, assume [] (append) operation.
+        if (null === $offset) {
+            $this->append($value);
+            return;
         }
-        if (null !== $value && !($value instanceof $this->containedClass)) {
-            throw new \InvalidArgumentException('Value must be instance of ' . $this->containedClass);
-        }
-        $this->_list[$offset] = $value;
+
+        // validate provided offset value
+        $this->_validateOffset($offset);
+
+        // validate value input and set
+        $this->_list[$offset] = $this->_validateValue($value);
     }
 
     /**
@@ -148,7 +150,11 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
      */
     public function offsetUnset($offset): void
     {
-        unset($this->_list[$offset]);
+        // validate provided offset value
+        $this->_validateOffset($offset);
+
+        // null out value in list
+        $this->_list[$offset] = null;
     }
 
     /**
@@ -156,7 +162,7 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
      */
     public function count(): int
     {
-        return \count($this->_list);
+        return $this->_size;
     }
 
     /**
@@ -164,12 +170,70 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
      */
     public function jsonSerialize(): array
     {
-        return \array_filter((array) $this->_list);
+        $out = [];
+        foreach ($this->_list as $i => $item) {
+            if (null === $item) {
+                $out[$i] = null;
+            } else {
+                $out[$i] = clone $item;
+            }
+        }
+        return $out;
     }
 
     /**
      * @param array $data
-     * @return \static
+     * @return \DCarbone\PHPConsulAPI\AbstractModel
      */
     abstract protected function newChild(array $data): AbstractModel;
+
+    /**
+     * @param mixed $offset
+     */
+    private function _validateOffset($offset): void
+    {
+        if (!\is_int($offset)) {
+            throw new \InvalidArgumentException(
+                \sprintf(
+                    'Cannot use offset of type "%s" with "%s"',
+                    \gettype($offset),
+                    \get_class($this)
+                )
+            );
+        }
+        if (0 > $offset || $offset >= $this->_size) {
+            throw new \OutOfRangeException(\sprintf('Offset %d does not exist in this list', $offset));
+        }
+    }
+
+    /**
+     * @param mixed $value
+     * @return \DCarbone\PHPConsulAPI\AbstractModel|null
+     */
+    private function _validateValue($value): ?AbstractModel
+    {
+        // fast path for null values
+        if (null === $value) {
+            return null;
+        }
+
+        // if instance of contained class, clone and move on
+        if ($value instanceof $this->containedClass) {
+            return clone $value;
+        }
+
+        // if array, construct new child
+        if (\is_array($value)) {
+            return $this->newChild($value);
+        }
+
+        // if we make it down here, fail.
+        throw new \InvalidArgumentException(
+            \sprintf(
+                '%s accepts only objects of type %s, null, or associative array definition as values',
+                \get_class($this),
+                $this->containedClass,
+            )
+        );
+    }
 }

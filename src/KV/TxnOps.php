@@ -27,14 +27,14 @@ use DCarbone\PHPConsulAPI\AbstractModels;
 class TxnOps extends AbstractModels
 {
     /** @var string */
-    protected $containedClass = TxnOp::class;
+    protected string $containedClass = TxnOp::class;
 
     /**
-     * @param array|null $data
+     * @param mixed $data
      * @return \DCarbone\PHPConsulAPI\AbstractModel
      */
     protected function newChild($data): AbstractModel
     {
-        return new TxnOp($data);
+        return new TxnOp((array)$data);
     }
 }

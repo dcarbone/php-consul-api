@@ -18,6 +18,8 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
+use DCarbone\PHPConsulAPI\KV\KVPair;
+
 /**
  * Used to assist with hydrating json responses
  *
@@ -145,13 +147,18 @@ trait Hydratable
                 return null;
             }
             // .. and this field must be an instance of the provided class, return empty new empty instance
-            return new $class();
+            return new $class([]);
         }
         // if the incoming value is already an instance of the class, clone it and return
         if ($value instanceof $class) {
             return clone $value;
         }
         // otherwise, attempt to cast whatever was provided as an array and construct a new instance of $class
+        if (KVPair::class === $class) {
+            // special case for KVPair
+            // todo: find cleaner way to do this...
+            return new $class((array)$value, true);
+        }
         return new $class((array)$value);
     }
 

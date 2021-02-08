@@ -81,4 +81,64 @@ final class RequestResponse
     {
         return $this->Err;
     }
+
+    /**
+     * Construct a new QueryMeta instance based on this response.
+     *
+     * @return \DCarbone\PHPConsulAPI\QueryMeta
+     */
+    public function buildQueryMeta(): QueryMeta
+    {
+        // init class
+        $qm = new QueryMeta();
+
+        // set some always-defined values
+        $qm->RequestTime = $this->Duration;
+        $qm->RequestUrl  = (string)$this->RequestMeta->uri;
+
+        // if there was no response, return as-is
+        // note: should never see this in the wild.
+        if (null === $this->Response) {
+            return $qm;
+        }
+
+        // populate query meta fields based on response
+
+        if ('' !== ($h = $this->Response->getHeaderLine(Consul::headerConsulIndex))) {
+            $qm->LastIndex = (int)$h;
+        }
+
+        $qm->LastContentHash = $this->Response->getHeaderLine(Consul::headerConsulContentHash);
+
+        // note: do not need to check both as guzzle response compares headers insensitively
+        if ('' !== ($h = $this->Response->getHeaderLine(Consul::headerConsulKnownLeader))) {
+            $qm->KnownLeader = (bool)$h;
+        }
+        // note: do not need to check both as guzzle response compares headers insensitively
+        if ('' !== ($h = $this->Response->getHeaderLine(Consul::headerConsulLastContact))) {
+            $qm->LastContact = (int)$h;
+        }
+
+        if ('' !== ($h = $this->Response->getHeaderLine(Consul::headerConsulTranslateAddresses))) {
+            $qm->AddressTranslationEnabled = (bool)$h;
+        }
+
+        if ('' !== ($h = $this->Response->getHeaderLine(Consul::headerCache))) {
+            $qm->CacheAge = Time::Duration(\intval($h, 10) * Time::Second);
+        }
+
+        return $qm;
+    }
+
+    /**
+     * Construct a new WriteMeta instance based on this response.
+     *
+     * @return \DCarbone\PHPConsulAPI\WriteMeta
+     */
+    public function buildWriteMeta(): WriteMeta
+    {
+        $wm              = new WriteMeta();
+        $wm->RequestTime = $this->Duration;
+        return $wm;
+    }
 }

@@ -40,27 +40,27 @@ class KVClient extends AbstractClient
      */
     public function Get(string $key, ?QueryOptions $opts = null): KVPairResponse
     {
-        $res      = $this->_doGet(\sprintf('v1/kv/%s', $key), $opts);
+        $resp     = $this->_doGet(\sprintf('v1/kv/%s', $key), $opts);
         $ret      = new KVPairResponse();
-        $ret->Err = $res->Err;
-        if (null !== $res->Err) {
+        $ret->Err = $resp->Err;
+        if (null !== $resp->Err) {
             return $ret;
         }
 
-        $ret->QueryMeta = $this->_buildQueryMeta($res->Duration, $res->Response, $res->RequestMeta->getUri());
+        $ret->QueryMeta = $resp->buildQueryMeta();
 
-        $code = $res->Response->getStatusCode();
+        $code = $resp->Response->getStatusCode();
 
         if (200 === $code) {
             // success response
-            $dec = $this->_decodeBody($res->Response->getBody());
+            $dec = $this->_decodeBody($resp->Response->getBody());
             if (null !== $dec->Err) {
                 $ret->Err = $dec->Err;
             } else {
                 $ret->hydrateValue($dec->Decoded[0]);
             }
         } elseif (404 !== $code) {
-            $ret->Err = new Error(\sprintf('%s: %s', $code, $res->Response->getReasonPhrase()));
+            $ret->Err = new Error(\sprintf('%s: %s', $code, $resp->Response->getReasonPhrase()));
         }
 
         return $ret;
@@ -230,7 +230,7 @@ class KVClient extends AbstractClient
             return $ret;
         }
 
-        $ret->QueryMeta = $this->_buildQueryMeta($resp->Duration, $resp->Response, $resp->RequestMeta->uri);
+        $ret->QueryMeta = $resp->buildQueryMeta();
         $code           = $resp->Response->getStatusCode();
         $ret->OK        = HTTP\StatusOK === $code;
 
@@ -259,7 +259,7 @@ class KVClient extends AbstractClient
 
     /**
      * @param string|null $prefix
-     * @param \DCarbone\PHPConsulAPI\QueryOptions $opts
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @return array(
      * @var \DCarbone\PHPConsulAPI\KV\KVPair[]|\DCarbone\PHPConsulAPI\KV\KVTree[]|null array of trees, values, or null on error

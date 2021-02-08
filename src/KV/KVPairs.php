@@ -30,11 +30,11 @@ class KVPairs extends AbstractModels
     protected string $containedClass = KVPair::class;
 
     /**
-     * @param array|null $data
+     * @param mixed $data
      * @return \DCarbone\PHPConsulAPI\AbstractModel
      */
-    protected function newChild(?array $data): AbstractModel
+    protected function newChild($data): AbstractModel
     {
-        return new KVPair($data, true);
+        return new KVPair((array)$data, true);
     }
 }

@@ -27,14 +27,14 @@ use DCarbone\PHPConsulAPI\AbstractModels;
 class TxnErrors extends AbstractModels
 {
     /** @var string */
-    protected $containedClass = TxnError::class;
+    protected string $containedClass = TxnError::class;
 
     /**
-     * @param array|null $data
+     * @param mixed $data
      * @return \DCarbone\PHPConsulAPI\AbstractModel
      */
     protected function newChild($data): AbstractModel
     {
-        return new TxnError($data);
+        return new TxnError((array)$data);
     }
 }

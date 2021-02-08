@@ -26,9 +26,9 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 class TxnError extends AbstractModel
 {
     /** @var int */
-    public $OpIndex = 0;
+    public int $OpIndex = 0;
     /** @var string */
-    public $What = '';
+    public string $What = '';
 
     /**
      * @return int

@@ -75,11 +75,11 @@ class HealthChecks extends AbstractModels
     }
 
     /**
-     * @param array|null $data
+     * @param mixed $data
      * @return \DCarbone\PHPConsulAPI\AbstractModel
      */
-    protected function newChild(?array $data): AbstractModel
+    protected function newChild($data): AbstractModel
     {
-        return new HealthCheck($data);
+        return new HealthCheck((array)$data);
     }
 }

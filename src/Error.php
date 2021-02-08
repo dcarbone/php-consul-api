@@ -28,14 +28,15 @@ use DCarbone\Go\Time;
 class Error implements \JsonSerializable
 {
     /** @var \DCarbone\Go\Time\Time */
-    private $time;
+    private Time\Time $time;
 
     /** @var string */
-    private $message;
+    private string $message;
 
     /**
      * Error constructor.
      * @param string $message
+     * @throws \Exception
      */
     public function __construct(string $message)
     {
@@ -62,7 +63,7 @@ class Error implements \JsonSerializable
     /**
      * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'message'   => $this->message,
@@ -73,7 +74,7 @@ class Error implements \JsonSerializable
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->message;
     }

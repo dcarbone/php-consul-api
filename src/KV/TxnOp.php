@@ -19,26 +19,26 @@ namespace DCarbone\PHPConsulAPI\KV;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class TxnOp
  */
 class TxnOp extends AbstractModel
 {
-    /** @var \DCarbone\PHPConsulAPI\KV\KVTxnOp|null */
-    public $KV = null;
+    private const FIELD_KV = 'KV';
 
-    /**
-     * TxnOp constructor.
-     * @param array $data
-     */
-    public function __construct(array $data = [])
-    {
-        parent::__construct($data);
-        if (null !== $this->KV && !($this->KV instanceof KVTxnOp)) {
-            $this->KV = new KVTxnOp((array) $this->KV);
-        }
-    }
+    /** @var \DCarbone\PHPConsulAPI\KV\KVTxnOp|null */
+    public ?KVTxnOp $KV = null;
+
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_KV => [
+            Hydration::FIELD_TYPE     => Hydration::OBJECT,
+            Hydration::FIELD_CLASS    => KVTxnOp::class,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+    ];
 
     /**
      * @return \DCarbone\PHPConsulAPI\KV\KVTxnOp|null

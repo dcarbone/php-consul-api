@@ -19,32 +19,83 @@ namespace DCarbone\PHPConsulAPI\KV;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Catalog\CatalogService;
+use DCarbone\PHPConsulAPI\Catalog\Node;
+use DCarbone\PHPConsulAPI\Health\HealthCheck;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class TxnResult
  */
 class TxnResult extends AbstractModel
 {
-    /** @var \DCarbone\PHPConsulAPI\KV\KVPair|null */
-    public $KV = null;
+    private const FIELD_KV      = 'KV';
+    private const FIELD_NODE    = 'Node';
+    private const FIELD_SERVICE = 'Service';
+    private const FIELD_CHECK   = 'Check';
 
-    /**
-     * TxnResult constructor.
-     * @param array $data
-     */
-    public function __construct(array $data = [])
-    {
-        parent::__construct($data);
-        if (null !== $this->KV && !($this->KV instanceof KVPair)) {
-            $this->KV = new KVPair((array) $this->KV, true);
-        }
-    }
+    /** @var \DCarbone\PHPConsulAPI\KV\KVPair|null */
+    public ?KVPair $KV = null;
+    /** @var \DCarbone\PHPConsulAPI\Catalog\Node|null */
+    public ?Node $Node = null;
+    /** @var \DCarbone\PHPConsulAPI\Catalog\CatalogService|null */
+    public ?CatalogService $Service = null;
+    /** @var \DCarbone\PHPConsulAPI\Health\HealthCheck|null */
+    public ?HealthCheck $Check = null;
+
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_KV => [
+            Hydration::FIELD_TYPE     => Hydration::OBJECT,
+            Hydration::FIELD_CLASS    => KVPair::class,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+        self::FIELD_NODE=> [
+            Hydration::FIELD_TYPE    => Hydration::OBJECT,
+            Hydration::FIELD_CLASS   => Node::class,
+            Hydration::FIELD_NULLABLE=> true,
+        ],
+        self::FIELD_SERVICE=> [
+            Hydration::FIELD_TYPE    => Hydration::OBJECT,
+            Hydration::FIELD_CLASS   => CatalogService::class,
+            Hydration::FIELD_NULLABLE=> true,
+        ],
+        self::FIELD_CHECK=> [
+            Hydration::FIELD_TYPE    => Hydration::OBJECT,
+            Hydration::FIELD_CLASS   => HealthCheck::class,
+            Hydration::FIELD_NULLABLE=> true,
+        ],
+    ];
 
     /**
      * @return \DCarbone\PHPConsulAPI\KV\KVPair|null
      */
-    public function getKV()
+    public function getKV(): ?KVPair
     {
         return $this->KV;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Catalog\Node|null
+     */
+    public function getNode(): ?Node
+    {
+        return $this->Node;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogService|null
+     */
+    public function getService(): ?CatalogService
+    {
+        return $this->Service;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Health\HealthCheck|null
+     */
+    public function getCheck(): ?HealthCheck
+    {
+        return $this->Check;
     }
 }

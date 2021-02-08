@@ -70,7 +70,7 @@ class QueryDatacenterOptions extends AbstractModel
      * @param string $datacenter
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions
      */
-    public function addDatacenter(string $Datacenter): self
+    public function addDatacenter(string $datacenter): self
     {
         $this->Datacenters[] = $datacenter;
         return $this;

@@ -21,19 +21,7 @@ namespace DCarbone\PHPConsulAPI;
 /**
  * Class ValuedQueryBoolResponse
  */
-class ValuedQueryBoolResponse extends AbstractValuedQueryResponse
+class ValuedQueryBoolResponse extends ValuedBoolResponse implements HydratedResponseInterface
 {
-    use ResponseValueBoolTrait;
-
-    /**
-     * ValuedQueryBoolResponse constructor.
-     * @param bool $value
-     * @param \DCarbone\PHPConsulAPI\QueryMeta|null $qm
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(bool $value, ?QueryMeta $qm, ?Error $err)
-    {
-        $this->Value = $value;
-        parent::__construct($qm, $err);
-    }
+    use QueryMetaContainer;
 }

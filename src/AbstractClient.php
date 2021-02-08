@@ -23,7 +23,6 @@ use DCarbone\Go\Time;
 use GuzzleHttp\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
-use Psr\Http\Message\UriInterface;
 
 /**
  * Class AbstractClient
@@ -31,7 +30,7 @@ use Psr\Http\Message\UriInterface;
 abstract class AbstractClient
 {
     /** @var \DCarbone\PHPConsulAPI\Config */
-    protected Config $config;
+    protected Config $_config;
 
     /**
      * AbstractConsulClient constructor.
@@ -39,7 +38,7 @@ abstract class AbstractClient
      */
     public function __construct(Config $config)
     {
-        $this->config = $config;
+        $this->_config = $config;
     }
 
     /**
@@ -47,61 +46,7 @@ abstract class AbstractClient
      */
     public function getConfig(): Config
     {
-        return $this->config;
-    }
-
-    /**
-     * @param \DCarbone\Go\Time\Duration $duration
-     * @param \Psr\Http\Message\ResponseInterface $response
-     * @param \Psr\Http\Message\UriInterface $uri
-     * @return \DCarbone\PHPConsulAPI\QueryMeta
-     */
-    protected function _buildQueryMeta(
-        Time\Duration $duration,
-        ResponseInterface $response,
-        UriInterface $uri
-    ): QueryMeta {
-        $qm = new QueryMeta();
-
-        $qm->RequestTime = $duration;
-        $qm->RequestUrl  = (string)$uri;
-
-        if ('' !== ($h = $response->getHeaderLine(Consul::headerConsulIndex))) {
-            $qm->LastIndex = (int)$h;
-        }
-
-        $qm->LastContentHash = $response->getHeaderLine(Consul::headerConsulContentHash);
-
-        // note: do not need to check both as guzzle response compares headers insensitively
-        if ('' !== ($h = $response->getHeaderLine(Consul::headerConsulKnownLeader))) {
-            $qm->KnownLeader = (bool)$h;
-        }
-        // note: do not need to check both as guzzle response compares headers insensitively
-        if ('' !== ($h = $response->getHeaderLine(Consul::headerConsulLastContact))) {
-            $qm->LastContact = (int)$h;
-        }
-
-        if ('' !== ($h = $response->getHeaderLine(Consul::headerConsulTranslateAddresses))) {
-            $qm->AddressTranslationEnabled = (bool)$h;
-        }
-
-        if ('' !== ($h = $response->getHeaderLine(Consul::headerCache))) {
-            $qm->CacheAge = Time::Duration(\intval($h, 10) * Time::Second);
-        }
-
-        return $qm;
-    }
-
-    /**
-     * @param \DCarbone\Go\Time\Duration $duration
-     * @return \DCarbone\PHPConsulAPI\WriteMeta
-     */
-    protected function _buildWriteMeta(Time\Duration $duration): WriteMeta
-    {
-        $wm              = new WriteMeta();
-        $wm->RequestTime = $duration;
-
-        return $wm;
+        return $this->_config;
     }
 
     /**
@@ -113,7 +58,7 @@ abstract class AbstractClient
      */
     protected function _newRequest(string $method, string $path, $body, ?RequestOptions $opts): Request
     {
-        $r = new Request($method, $path, $this->config, $body);
+        $r = new Request($method, $path, $this->_config, $body);
         $r->applyOptions($opts);
         return $r;
     }
@@ -173,10 +118,10 @@ abstract class AbstractClient
 
         try {
             // If we actually have a client defined...
-            if (isset($this->config->HttpClient) && $this->config->HttpClient instanceof ClientInterface) {
-                $response = $this->config->HttpClient->send(
+            if (isset($this->_config->HttpClient) && $this->_config->HttpClient instanceof ClientInterface) {
+                $response = $this->_config->HttpClient->send(
                     $r->toPsrRequest(),
-                    $this->config->getGuzzleRequestOptions($r)
+                    $this->_config->getGuzzleRequestOptions($r)
                 );
             } // Otherwise, throw error to be caught below
             else {
@@ -337,7 +282,9 @@ abstract class AbstractClient
     protected function _executePut(string $path, $body, ?WriteOptions $opts): WriteResponse
     {
         $resp = $this->_requireOK($this->_doPut($path, $body, $opts));
-        return new WriteResponse($this->_buildWriteMeta($resp->Duration), $resp->Err);
+        $ret  = new WriteResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -349,7 +296,9 @@ abstract class AbstractClient
     protected function _executeDelete(string $path, ?WriteOptions $opts): WriteResponse
     {
         $resp = $this->_requireOK($this->_doDelete($path, $opts));
-        return new WriteResponse($this->_buildWriteMeta($resp->Duration), $resp->Err);
+        $ret  = new WriteResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -408,12 +357,12 @@ abstract class AbstractClient
     {
         // determine if this response contains a *Meta field
         if (\property_exists($ret, Hydration::FIELD_QUERY_META)) {
-            $ret->QueryMeta = $this->_buildQueryMeta($resp->Duration, $resp->Response, $resp->RequestMeta->uri);
+            $ret->QueryMeta = $resp->buildQueryMeta();
         } elseif (\property_exists($ret, Hydration::FIELD_WRITE_META)) {
-            $ret->WriteMeta = $this->_buildWriteMeta($resp->Duration);
+            $ret->WriteMeta = $resp->buildWriteMeta();
         }
 
-        // todo: this can probably go away...
+        // todo: can probably assume that all responses have an Err field...
         $hasErrField = \property_exists($ret, Hydration::FIELD_ERR);
 
         // if there was an error in the response, set and return
