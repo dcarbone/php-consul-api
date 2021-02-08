@@ -19,13 +19,18 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\ErrorContainer;
 use DCarbone\PHPConsulAPI\HydratedResponseInterface;
+use DCarbone\PHPConsulAPI\WriteMetaContainer;
 
 /**
  * Class OperatorAreaJoinResponse
  */
 class OperatorAreaJoinResponse extends AbstractResponse implements HydratedResponseInterface
 {
+    use WriteMetaContainer;
+    use ErrorContainer;
+
     /** @var \DCarbone\PHPConsulAPI\Operator\AreaJoinResponse[]|null */
     public ?array $AreaJoinResponses = null;
 

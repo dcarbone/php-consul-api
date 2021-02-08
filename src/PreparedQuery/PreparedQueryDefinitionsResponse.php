@@ -18,34 +18,21 @@
 
 namespace DCarbone\PHPConsulAPI\PreparedQuery;
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\QueryMeta;
+use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\HydratedResponseInterface;
+use DCarbone\PHPConsulAPI\QueryMetaContainer;
 
 /**
  * Class PreparedQueryDefinitionsResponse
  */
-class PreparedQueryDefinitionsResponse extends AbstractValuedQueryResponse
+class PreparedQueryDefinitionsResponse extends AbstractResponse implements HydratedResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition[]|null */
-    public $PreparedQueryDefinitions = null;
+    use QueryMetaContainer;
+    use ErrorContainer;
 
-    /**
-     * PreparedQueryDefinitionsResponse constructor.
-     * @param array|null $data
-     * @param \DCarbone\PHPConsulAPI\QueryMeta|null $qm
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(?array $data, ?QueryMeta $qm, ?Error $err)
-    {
-        parent::__construct($qm, $err);
-        if (null !== $data) {
-            $this->PreparedQueryDefinitions = [];
-            foreach ($data as $datum) {
-                $this->PreparedQueryDefinitions[] = new PreparedQueryDefinition($datum);
-            }
-        }
-    }
+    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition[]|null */
+    public ?array $PreparedQueryDefinitions = null;
 
     /**
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition[]|null
@@ -53,5 +40,16 @@ class PreparedQueryDefinitionsResponse extends AbstractValuedQueryResponse
     public function getValue(): ?array
     {
         return $this->PreparedQueryDefinitions;
+    }
+
+    /**
+     * @param mixed $decodedData
+     */
+    public function hydrateValue($decodedData): void
+    {
+        $this->PreparedQueryDefinitions = [];
+        foreach ($decodedData as $datum) {
+            $this->PreparedQueryDefinitions[] = new PreparedQueryDefinition($datum);
+        }
     }
 }

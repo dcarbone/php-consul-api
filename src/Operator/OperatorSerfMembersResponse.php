@@ -19,13 +19,18 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\ErrorContainer;
 use DCarbone\PHPConsulAPI\HydratedResponseInterface;
+use DCarbone\PHPConsulAPI\QueryMetaContainer;
 
 /**
  * Class OperatorSerfMembersResponse
  */
 class OperatorSerfMembersResponse extends AbstractResponse implements HydratedResponseInterface
 {
+    use QueryMetaContainer;
+    use ErrorContainer;
+
     /** @var \DCarbone\PHPConsulAPI\Operator\SerfMember[]|null */
     public ?array $SerfMembers = null;
 

@@ -19,6 +19,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\ErrorContainer;
 use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
@@ -26,6 +27,8 @@ use DCarbone\PHPConsulAPI\HydratedResponseInterface;
  */
 class OperatorRaftConfigurationResponse extends AbstractResponse implements HydratedResponseInterface
 {
+    use ErrorContainer;
+
     /** @var \DCarbone\PHPConsulAPI\Operator\RaftConfiguration|null */
     public ?RaftConfiguration $RaftConfiguration = null;
 

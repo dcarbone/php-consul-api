@@ -212,7 +212,6 @@ class OperatorClient extends AbstractClient
         $r = $this->_newDeleteRequest('v1/operator/raft/peer', $opts);
         $r->applyOptions($opts);
         $r->params->set('address', (string)$address);
-
         return $this->_requireOK($this->_do($r))->Err;
     }
 

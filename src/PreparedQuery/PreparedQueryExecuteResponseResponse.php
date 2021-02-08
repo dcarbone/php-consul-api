@@ -18,31 +18,21 @@
 
 namespace DCarbone\PHPConsulAPI\PreparedQuery;
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\QueryMeta;
+use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\HydratedResponseInterface;
+use DCarbone\PHPConsulAPI\QueryMetaContainer;
 
 /**
  * Class PreparedQueryExecuteResponseResponse
  */
-class PreparedQueryExecuteResponseResponse extends AbstractValuedQueryResponse
+class PreparedQueryExecuteResponseResponse extends AbstractResponse implements HydratedResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryExecuteResponse|null */
-    public $PreparedQueryExecuteResponse = null;
+    use QueryMetaContainer;
+    use ErrorContainer;
 
-    /**
-     * PreparedQueryExecuteResponseResponse constructor.
-     * @param array|null $data
-     * @param \DCarbone\PHPConsulAPI\QueryMeta|null $qm
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(?array $data, ?QueryMeta $qm, ?Error $err)
-    {
-        parent::__construct($qm, $err);
-        if (null !== $data) {
-            $this->PreparedQueryExecuteResponse = new PreparedQueryExecuteResponse($data);
-        }
-    }
+    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryExecuteResponse|null */
+    public ?PreparedQueryExecuteResponse $PreparedQueryExecuteResponse = null;
 
     /**
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryExecuteResponse|null
@@ -50,5 +40,13 @@ class PreparedQueryExecuteResponseResponse extends AbstractValuedQueryResponse
     public function getValue(): ?PreparedQueryExecuteResponse
     {
         return $this->PreparedQueryExecuteResponse;
+    }
+
+    /**
+     * @param mixed $decodedData
+     */
+    public function hydrateValue($decodedData): void
+    {
+        $this->PreparedQueryExecuteResponse = new PreparedQueryExecuteResponse((array)$decodedData);
     }
 }
