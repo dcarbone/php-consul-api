@@ -21,7 +21,6 @@ namespace DCarbone\PHPConsulAPI\Health;
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\QueryOptions;
-use DCarbone\PHPConsulAPI\Request;
 
 /**
  * Class HealthClient
@@ -40,23 +39,7 @@ class HealthClient extends AbstractClient
      */
     public function Node(string $node, ?QueryOptions $opts = null): HealthChecksResponse
     {
-        $r = new Request('GET', \sprintf('v1/health/node/%s', $node), $this->config, null);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new HealthChecksResponse(null, null, $err);
-        }
-
-        [$data, $err] = $this->_decodeBody($response->getBody());
-        if (null !== $err) {
-            return new HealthChecksResponse(null, null, $err);
-        }
-
-        $qm = $this->_buildQueryMeta($duration, $response, $r->getUri());
-
-        return new HealthChecksResponse($data, $qm, null);
+        return $this->_getHealthChecks(\sprintf('v1/health/node/%s', $node), $opts);
     }
 
     /**
@@ -67,23 +50,7 @@ class HealthClient extends AbstractClient
      */
     public function Checks(string $service, ?QueryOptions $opts = null): HealthChecksResponse
     {
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        $r = new Request('GET', \sprintf('v1/health/checks/%s', $service), $this->config, null);
-        $r->applyOptions($opts);
-
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new HealthChecksResponse(null, null, $err);
-        }
-
-        [$data, $err] = $this->_decodeBody($response->getBody());
-        if (null !== $err) {
-            return new HealthChecksResponse(null, null, $err);
-        }
-
-        $qm = $this->_buildQueryMeta($duration, $response, $r->getUri());
-
-        return new HealthChecksResponse($data, $qm, null);
+        return $this->_getHealthChecks(\sprintf('v1/health/checks/%s', $service), $opts);
     }
 
     /**
@@ -100,7 +67,7 @@ class HealthClient extends AbstractClient
         bool $passingOnly = false,
         ?QueryOptions $opts = null
     ): ServiceEntriesResponse {
-        return $this->_service($service, $tags, $passingOnly, $opts, self::serviceHealth);
+        return $this->_getServiceEntries($service, $tags, $passingOnly, $opts, self::serviceHealth);
     }
 
     /**
@@ -134,7 +101,7 @@ class HealthClient extends AbstractClient
         bool $passingOnly = false,
         ?QueryOptions $opts = null
     ): ServiceEntriesResponse {
-        return $this->_service($service, $tags, $passingOnly, $opts, self::ingressHealth);
+        return $this->_getServiceEntries($service, $tags, $passingOnly, $opts, self::ingressHealth);
     }
 
     /**
@@ -168,7 +135,7 @@ class HealthClient extends AbstractClient
         bool $passingOnly = false,
         ?QueryOptions $opts = null
     ): ServiceEntriesResponse {
-        return $this->_service($service, $tags, $passingOnly, $opts, self::connectHealth);
+        return $this->_getServiceEntries($service, $tags, $passingOnly, $opts, self::connectHealth);
     }
 
     /**
@@ -199,34 +166,33 @@ class HealthClient extends AbstractClient
         static $validStates = ['any', 'warning', 'critical', 'passing', 'unknown'];
 
         if (!\in_array($state, $validStates, true)) {
-            return new HealthChecksResponse(
-                null,
-                null,
-                new Error(
-                    \sprintf(
-                        '%s::state - "$state" must be string with value of ["%s"].  %s seen.',
-                        \get_class($this),
-                        \implode('", "', $validStates),
-                        $state
-                    )
+            $ret      = new HealthChecksResponse();
+            $ret->Err = new Error(
+                \sprintf(
+                    '%s::state - "$state" must be string with value of ["%s"].  %s seen.',
+                    \get_class($this),
+                    \implode('", "', $validStates),
+                    $state
                 )
             );
+            return $ret;
         }
 
-        $r = new Request('GET', \sprintf('v1/health/state/%s', $state), $this->config, null);
-        $r->applyOptions($opts);
+        return $this->_getHealthChecks(\sprintf('v1/health/state/%s', $state), $opts);
+    }
 
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new HealthChecksResponse(null, null, $err);
-        }
-
-        [$data, $err] = $this->_decodeBody($response->getBody());
-
-        $qm = $this->_buildQueryMeta($duration, $response, $r->getUri());
-
-        return new HealthChecksResponse($data, $qm, $err);
+    /**
+     * @param string $path
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\Health\HealthChecksResponse
+     */
+    protected function _getHealthChecks(string $path, ?QueryOptions $opts): HealthChecksResponse
+    {
+        $resp = $this->_doGet($path, $opts);
+        $ret  = new HealthChecksResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -238,7 +204,7 @@ class HealthClient extends AbstractClient
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @return \DCarbone\PHPConsulAPI\Health\ServiceEntriesResponse
      */
-    private function _service(
+    private function _getServiceEntries(
         string $service,
         array $tags,
         bool $passingOnly,
@@ -256,25 +222,16 @@ class HealthClient extends AbstractClient
                 $uri = 'v1/health/service/%s';
         }
 
-        $r = new Request('GET', \sprintf($uri, $service), $this->config, null);
-        $r->applyOptions($opts);
+        $r = $this->_newGetRequest(\sprintf($uri, $service), $opts);
         if ([] !== $tags) {
             $r->params->set('tag', ...$tags);
         }
         if ($passingOnly) {
             $r->params->set('passing', '1');
         }
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new ServiceEntriesResponse(null, null, $err);
-        }
-
-        $qm = $this->_buildQueryMeta($duration, $response, $r->getUri());
-
-        [$data, $err] = $this->_decodeBody($response->getBody());
-
-        return new ServiceEntriesResponse($data, $qm, $err);
+        $resp = $this->_requireOK($this->_do($r));
+        $ret  = new ServiceEntriesResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 }

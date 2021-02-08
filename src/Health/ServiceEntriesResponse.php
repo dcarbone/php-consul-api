@@ -18,34 +18,16 @@ namespace DCarbone\PHPConsulAPI\Health;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\QueryMeta;
+use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class ServiceEntriesResponse
  */
-class ServiceEntriesResponse extends AbstractValuedQueryResponse
+class ServiceEntriesResponse extends AbstractResponse implements HydratedResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Health\ServiceEntry[]|null */
-    public $ServiceEntries = null;
-
-    /**
-     * ServiceEntriesResponse constructor.
-     * @param array|null $entries
-     * @param \DCarbone\PHPConsulAPI\QueryMeta|null $qm
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(?array $entries, ?QueryMeta $qm, ?Error $err)
-    {
-        parent::__construct($qm, $err);
-        if (null !== $entries) {
-            $this->ServiceEntries = [];
-            foreach ($entries as $entry) {
-                $this->ServiceEntries[] = new ServiceEntry($entry);
-            }
-        }
-    }
+    public ?array $ServiceEntries = null;
 
     /**
      * @return \DCarbone\PHPConsulAPI\Health\ServiceEntry[]|null
@@ -53,5 +35,16 @@ class ServiceEntriesResponse extends AbstractValuedQueryResponse
     public function getValue()
     {
         return $this->ServiceEntries;
+    }
+
+    /**
+     * @param mixed $decodedData
+     */
+    public function hydrateValue($decodedData): void
+    {
+        $this->ServiceEntries = [];
+        foreach ($decodedData as $entry) {
+            $this->ServiceEntries[] = new ServiceEntry($entry);
+        }
     }
 }

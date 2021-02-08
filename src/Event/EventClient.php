@@ -20,7 +20,6 @@ namespace DCarbone\PHPConsulAPI\Event;
 
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\QueryOptions;
-use DCarbone\PHPConsulAPI\Request;
 use DCarbone\PHPConsulAPI\WriteOptions;
 
 /**
@@ -36,15 +35,7 @@ class EventClient extends AbstractClient
      */
     public function Fire(UserEvent $event, ?WriteOptions $opts = null): UserEventResponse
     {
-        $r = new Request(
-            'PUT',
-            \sprintf('v1/event/fire/%s', $event->Name),
-            $this->config,
-            '' !== $event->Payload ? $event->Payload : null
-        );
-
-        $r->applyOptions($opts);
-
+        $r = $this->_newPutRequest(\sprintf('v1/event/fire/%s', $event->Name), '' !== $event->Payload ? $event->Payload : null, $opts);
         if ('' !== ($nf = $event->NodeFilter)) {
             $r->params->set('node', $nf);
         }
@@ -54,17 +45,10 @@ class EventClient extends AbstractClient
         if ('' !== ($tf = $event->TagFilter)) {
             $r->params->set('tag', $tf);
         }
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new UserEventResponse(null, null, $err);
-        }
-
-        $wm = $this->_buildWriteMeta($duration);
-
-        [$data, $err] = $this->_decodeBody($response->getBody());
-        return new UserEventResponse($data, $wm, $err);
+        $resp = $this->_requireOK($this->_do($r));
+        $ret  = new UserEventResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -75,23 +59,14 @@ class EventClient extends AbstractClient
      */
     public function List(string $name = '', ?QueryOptions $opts = null): UserEventsResponse
     {
-        $r = new Request('GET', 'v1/event/list', $this->config, null);
+        $r = $this->_newGetRequest('v1/event/list', $opts);
         if ('' !== (string) $name) {
             $r->params->set('name', $name);
         }
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new UserEventsResponse(null, null, $err);
-        }
-
-        $qm = $this->_buildQueryMeta($duration, $response, $r->getUri());
-
-        [$data, $err] = $this->_decodeBody($response->getBody());
-
-        return new UserEventsResponse($data, $qm, $err);
+        $resp = $this->_requireOK($this->_do($r));
+        $ret  = new UserEventsResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**

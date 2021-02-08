@@ -26,21 +26,21 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 class UserEvent extends AbstractModel
 {
     /** @var string */
-    public $ID = '';
+    public string $ID = '';
     /** @var string */
-    public $Name = '';
+    public string $Name = '';
     /** @var string */
-    public $Payload = '';
+    public string $Payload = '';
     /** @var string */
-    public $NodeFilter = '';
+    public string $NodeFilter = '';
     /** @var string */
-    public $ServiceFilter = '';
+    public string $ServiceFilter = '';
     /** @var string */
-    public $TagFilter = '';
+    public string $TagFilter = '';
     /** @var int */
-    public $Version = 0;
+    public int $Version = 0;
     /** @var int */
-    public $LTime = 0;
+    public int $LTime = 0;
 
     /**
      * UserEvent constructor.

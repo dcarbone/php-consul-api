@@ -18,34 +18,16 @@ namespace DCarbone\PHPConsulAPI\Event;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\QueryMeta;
+use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class UserEventsResponse
  */
-class UserEventsResponse extends AbstractValuedQueryResponse
+class UserEventsResponse extends AbstractResponse implements HydratedResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Event\UserEvent[]|null */
-    public $UserEvents = null;
-
-    /**
-     * UserEventsResponse constructor.
-     * @param array|null $data
-     * @param \DCarbone\PHPConsulAPI\QueryMeta|null $qm
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(?array $data, ?QueryMeta $qm, ?Error $err)
-    {
-        parent::__construct($qm, $err);
-        if (null !== $data) {
-            $this->UserEvents = [];
-            foreach ($data as $datum) {
-                $this->UserEvents[] = new UserEvent($datum);
-            }
-        }
-    }
+    public ?array $UserEvents = null;
 
     /**
      * @return \DCarbone\PHPConsulAPI\Event\UserEvent[]|null
@@ -53,5 +35,16 @@ class UserEventsResponse extends AbstractValuedQueryResponse
     public function getValue()
     {
         return $this->UserEvents;
+    }
+
+    /**
+     * @param mixed $decodedData
+     */
+    public function hydrateValue($decodedData): void
+    {
+        $this->UserEvents = [];
+        foreach ($decodedData as $datum) {
+            $this->UserEvents[] = new UserEvent($datum);
+        }
     }
 }

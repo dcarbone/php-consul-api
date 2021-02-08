@@ -21,7 +21,6 @@ namespace DCarbone\PHPConsulAPI\Catalog;
 use DCarbone\Go\HTTP;
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\QueryOptions;
-use DCarbone\PHPConsulAPI\Request;
 use DCarbone\PHPConsulAPI\ValuedQueryStringsResponse;
 use DCarbone\PHPConsulAPI\ValuedStringsResponse;
 use DCarbone\PHPConsulAPI\WriteOptions;
@@ -60,15 +59,10 @@ class CatalogClient extends AbstractClient
      */
     public function Datacenters(): ValuedStringsResponse
     {
-        $r = new Request('GET', 'v1/catalog/datacenters', $this->config, null);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$_, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new ValuedStringsResponse(null, $err);
-        }
-        [$data, $err] = $this->_decodeBody($response->getBody());
-        return new ValuedStringsResponse($data, $err);
+        $resp = $this->_doGet('v1/catalog/datacenters', null);
+        $ret  = new ValuedStringsResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -78,21 +72,10 @@ class CatalogClient extends AbstractClient
      */
     public function Nodes(?QueryOptions $opts = null): CatalogNodesResponse
     {
-        $r = new Request('GET', 'v1/catalog/nodes', $this->config, null);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new CatalogNodesResponse(null, null, $err);
-        }
-
-        [$data, $err] = $this->_decodeBody($response->getBody());
-        if (null !== $err) {
-            return new CatalogNodesResponse(null, null, $err);
-        }
-
-        return new CatalogNodesResponse($data, $this->_buildQueryMeta($duration, $response, $r->getUri()), null);
+        $resp = $this->_doGet('v1/catalog/nodes', $opts);
+        $ret  = new CatalogNodesResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -102,21 +85,10 @@ class CatalogClient extends AbstractClient
      */
     public function Services(?QueryOptions $opts = null): ValuedQueryStringsResponse
     {
-        $r = new Request('GET', 'v1/catalog/services', $this->config, null);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new ValuedQueryStringsResponse(null, null, $err);
-        }
-
-        [$data, $err] = $this->_decodeBody($response->getBody());
-        if (null !== $err) {
-            return new ValuedQueryStringsResponse(null, null, $err);
-        }
-
-        return new ValuedQueryStringsResponse($data, $this->_buildQueryMeta($duration, $response, $r->getUri()), $err);
+        $resp = $this->_doGet('v1/catalog/services', $opts);
+        $ret  = new ValuedQueryStringsResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -127,25 +99,10 @@ class CatalogClient extends AbstractClient
      */
     public function NodeServicesList(string $node, ?QueryOptions $opts = null): CatalogNodeServicesListResponse
     {
-        $r = new Request(HTTP\MethodGet, \sprintf('v1/catalog/node-services/%s', \urlencode($node)), $this->config, null);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new CatalogNodeServicesListResponse(null, null, $err);
-        }
-
-        [$data, $err] = $this->_decodeBody($response->getBody());
-        if (null !== $err) {
-            return new CatalogNodeServicesListResponse(null, null, $err);
-        }
-
-        return new CatalogNodeServicesListResponse(
-            $data,
-            $this->_buildQueryMeta($duration, $response, $r->getUri()),
-            $err
-        );
+        $resp = $this->_doGet(\sprintf('v1/catalog/node-services/%s', \urlencode($node)), $opts);
+        $ret  = new CatalogNodeServicesListResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -160,24 +117,14 @@ class CatalogClient extends AbstractClient
         array $tags,
         ?QueryOptions $opts = null
     ): CatalogServicesResponse {
-        $r = new Request('GET', \sprintf('v1/catalog/service/%s', $service), $this->config, null);
-        $r->applyOptions($opts);
+        $r = $this->_newGetRequest(\sprintf('v1/catalog/service/%s', $service), $opts);
         if ([] !== $tags) {
             $r->params->set('tag', ...$tags);
         }
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new CatalogServicesResponse(null, null, $err);
-        }
-
-        [$data, $err] = $this->_decodeBody($response->getBody());
-        if (null !== $err) {
-            return new CatalogServicesResponse(null, null, $err);
-        }
-
-        return new CatalogServicesResponse($data, $this->_buildQueryMeta($duration, $response, $r->getUri()), null);
+        $resp = $this->_requireOK($this->_do($r));
+        $ret  = new CatalogServicesResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -200,21 +147,10 @@ class CatalogClient extends AbstractClient
      */
     public function Node(string $node, ?QueryOptions $opts = null): CatalogNodeResponse
     {
-        $r = new Request('GET', \sprintf('v1/catalog/node/%s', $node), $this->config, null);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new CatalogNodeResponse(null, null, $err);
-        }
-
-        [$data, $err] = $this->_decodeBody($response->getBody());
-        if (null !== $err) {
-            return new CatalogNodeResponse(null, null, $err);
-        }
-
-        return new CatalogNodeResponse($data, $this->_buildQueryMeta($duration, $response, $r->getUri()), null);
+        $resp = $this->_doGet(\sprintf('v1/catalog/node/%s', $node), $opts);
+        $ret  = new CatalogNodeResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -225,25 +161,9 @@ class CatalogClient extends AbstractClient
      */
     public function GatewayServices(string $gateway, ?QueryOptions $opts = null): GatewayServicesResponse
     {
-        $r = new Request(
-            HTTP\MethodGet,
-            \sprintf('v1/catalog/gateway-services/%s', \urlencode($gateway)),
-            $this->config,
-            null
-        );
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new GatewayServicesResponse(null, null, $err);
-        }
-
-        [$data, $err] = $this->_decodeBody($response->getBody());
-        if (null !== $err) {
-            return new GatewayServicesResponse(null, null, $err);
-        }
-
-        return new GatewayServicesResponse($data, $this->_buildQueryMeta($duration, $response, $r->getUri()), null);
+        $resp = $this->_doGet(\sprintf('v1/catalog/gateway-services/%s', \urlencode($gateway)), $opts);
+        $ret  = new GatewayServicesResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 }
