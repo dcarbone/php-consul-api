@@ -315,8 +315,10 @@ class SessionEntry extends AbstractModel
      */
     public function _toAPIPayload(): array
     {
-        $a              = self::jsonSerialize();
+        $a = self::jsonSerialize();
+
         $a[self::FIELD_LOCK_DELAY] = self::durToMsec($this->LockDelay);
+
         return $a;
     }
 

@@ -20,7 +20,6 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
 
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\QueryOptions;
-use DCarbone\PHPConsulAPI\Request;
 use DCarbone\PHPConsulAPI\ValuedWriteStringResponse;
 use DCarbone\PHPConsulAPI\WriteOptions;
 use DCarbone\PHPConsulAPI\WriteResponse;
@@ -38,16 +37,10 @@ class PreparedQueryClient extends AbstractClient
      */
     public function Create(PreparedQueryDefinition $query, ?WriteOptions $opts = null): ValuedWriteStringResponse
     {
-        $r = new Request('POST', 'v1/query', $this->config, $query);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new ValuedWriteStringResponse('', null, $err);
-        }
-
-        return new ValuedWriteStringResponse((string) $response->getBody(), $this->_buildWriteMeta($duration), null);
+        $resp = $this->_doPost('v1/query', $query, $opts);
+        $ret  = new ValuedWriteStringResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -58,16 +51,7 @@ class PreparedQueryClient extends AbstractClient
      */
     public function Update(PreparedQueryDefinition $query, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = new Request('PUT', 'v1/query', $this->config, $query);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $_, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new WriteResponse(null, $err);
-        }
-
-        return new WriteResponse($this->_buildWriteMeta($duration), null);
+        return $this->_executePut('v1/query', $query, $opts);
     }
 
     /**
@@ -77,19 +61,10 @@ class PreparedQueryClient extends AbstractClient
      */
     public function List(?QueryOptions $opts = null): PreparedQueryDefinitionsResponse
     {
-        $r = new Request('GET', 'v1/query', $this->config, null);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new PreparedQueryDefinitionsResponse(null, null, $err);
-        }
-
-        $qm = $this->_buildQueryMeta($duration, $response, $r->getUri());
-
-        [$data, $err] = $this->_decodeBody($response->getBody());
-        return new PreparedQueryDefinitionsResponse($data, $qm, $err);
+        $resp = $this->_doGet('v1/query', $opts);
+        $ret  = new PreparedQueryDefinitionsResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -100,19 +75,10 @@ class PreparedQueryClient extends AbstractClient
      */
     public function Get(string $queryID, ?QueryOptions $opts = null): PreparedQueryDefinitionsResponse
     {
-        $r = new Request('GET', \sprintf('v1/query/%s', $queryID), $this->config, null);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new PreparedQueryDefinitionsResponse(null, null, $err);
-        }
-
-        $qm = $this->_buildQueryMeta($duration, $response, $r->getUri());
-
-        [$data, $err] = $this->_decodeBody($response->getBody());
-        return new PreparedQueryDefinitionsResponse($data, $qm, $err);
+        $resp = $this->_doGet(\sprintf('v1/query/%s', $queryID), $opts);
+        $ret  = new PreparedQueryDefinitionsResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -123,18 +89,7 @@ class PreparedQueryClient extends AbstractClient
      */
     public function Delete(string $queryID, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = new Request('DELETE', \sprintf('v1/query/%s', $queryID), $this->config, null);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new WriteResponse(null, $err);
-        }
-
-        [$_, $err] = $this->_decodeBody($response->getBody());
-
-        return new WriteResponse($this->_buildWriteMeta($duration), $err);
+        return $this->_executeDelete(\sprintf('v1/query/%s', $queryID), $opts);
     }
 
     /**
@@ -145,18 +100,9 @@ class PreparedQueryClient extends AbstractClient
      */
     public function Execute(string $queryIDOrName, ?QueryOptions $opts = null): PreparedQueryExecuteResponseResponse
     {
-        $r = new Request('GET', \sprintf('v1/query/%s/execute', $queryIDOrName), $this->config, null);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new PreparedQueryExecuteResponseResponse(null, null, $err);
-        }
-
-        $qm = $this->_buildQueryMeta($duration, $response, $r->getUri());
-
-        [$data, $err] = $this->_decodeBody($response->getBody());
-        return new PreparedQueryExecuteResponseResponse($data, $qm, $err);
+        $resp = $this->_doGet(\sprintf('v1/query/%s/execute', $queryIDOrName), $opts);
+        $ret  = new PreparedQueryExecuteResponseResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 }

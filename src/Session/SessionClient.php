@@ -22,7 +22,6 @@ use DCarbone\Go\HTTP;
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\QueryOptions;
-use DCarbone\PHPConsulAPI\Request;
 use DCarbone\PHPConsulAPI\ValuedWriteStringResponse;
 use DCarbone\PHPConsulAPI\WriteOptions;
 use DCarbone\PHPConsulAPI\WriteResponse;
@@ -72,15 +71,7 @@ class SessionClient extends AbstractClient
      */
     public function Destroy(string $id, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = new Request(HTTP\MethodPut, \sprintf('v1/session/destroy/%s', $id), $this->config, null);
-        $r->applyOptions($opts);
-
-        [$duration, $_, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new WriteResponse(null, $err);
-        }
-
-        return new WriteResponse($this->_buildWriteMeta($duration), null);
+        return $this->_executePut(\sprintf('v1/session/destroy/%s', $id), null, $opts);
     }
 
     /**
@@ -91,38 +82,32 @@ class SessionClient extends AbstractClient
      */
     public function Renew(string $id, ?WriteOptions $opts = null): SessionEntriesWriteResponse
     {
-        $r = new Request(HTTP\MethodPut, \sprintf('v1/session/renew/%s', $id), $this->config, null);
-        $r->applyOptions($opts);
+        $ret = new SessionEntriesWriteResponse();
 
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_do($r);
-        if (null !== $err) {
-            return new SessionEntriesWriteResponse(null, null, $err);
+        $resp = $this->_doPut(\sprintf('v1/session/renew/%s', $id), null, $opts);
+        if (null !== $resp->Err) {
+            $ret->Err = $resp->Err;
+            return $ret;
         }
 
-        $wm = $this->_buildWriteMeta($duration);
+        $ret->WriteMeta = $this->_buildWriteMeta($resp->Duration);
 
-        $code = $response->getStatusCode();
-
-        if (404 === $code) {
-            return new SessionEntriesWriteResponse(null, $wm, null);
-        }
-
-        if (200 !== $code) {
-            return new SessionEntriesWriteResponse(
-                null,
-                $wm,
-                new Error(\sprintf(
+        switch ($code = $resp->Response->getStatusCode()) {
+            case HTTP\StatusNotFound:
+                break;
+            case HTTP\StatusOK:
+                $this->_hydrateResponse($resp, $ret);
+                break;
+            default:
+                $ret->Err = new Error(\sprintf(
                     '%s::renew - Unexpected response code %d.  Reason: %s',
                     \get_class($this),
                     $code,
-                    $response->getReasonPhrase()
-                ))
-            );
+                    $resp->Response->getReasonPhrase()
+                ));
         }
 
-        [$data, $err] = $this->_decodeBody($response->getBody());
-        return new SessionEntriesWriteResponse($data, $wm, $err);
+        return $ret;
     }
 
     /**
@@ -165,19 +150,10 @@ class SessionClient extends AbstractClient
      */
     private function _get(string $path, ?QueryOptions $opts): SessionEntriesQueryResponse
     {
-        $r = new Request(HTTP\MethodGet, $path, $this->config, null);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new SessionEntriesQueryResponse(null, null, $err);
-        }
-
-        $qm = $this->_buildQueryMeta($duration, $response, $r->getUri());
-
-        [$data, $err] = $this->_decodeBody($response->getBody());
-        return new SessionEntriesQueryResponse($data, $qm, $err);
+        $resp = $this->_doGet($path, $opts);
+        $ret  = new SessionEntriesQueryResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -189,22 +165,23 @@ class SessionClient extends AbstractClient
      */
     private function _create(string $path, SessionEntry $entry, ?WriteOptions $opts): ValuedWriteStringResponse
     {
-        $r = new Request(HTTP\MethodPut, $path, $this->config, $entry->_toAPIPayload());
-        $r->applyOptions($opts);
+        $resp = $this->_doPut($path, $entry->_toAPIPayload(), $opts);
+        $ret  = new ValuedWriteStringResponse();
 
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new ValuedWriteStringResponse('', null, $err);
+        if (null !== $resp->Err) {
+            $ret->Err = $resp->Err;
+            return $ret;
         }
 
-        $wm = $this->_buildWriteMeta($duration);
+        $ret->WriteMeta = $this->_buildWriteMeta($resp->Duration);
 
-        [$data, $err] = $this->_decodeBody($response->getBody());
-        if (null !== $err) {
-            return new ValuedWriteStringResponse('', $wm, $err);
+        $dec = $this->_decodeBody($resp->Response->getBody());
+        if (null !== $dec->Err) {
+            $ret->Err = $dec->Err;
+            return $ret;
         }
 
-        return new ValuedWriteStringResponse($data['ID'] ?? '', $wm, null);
+        $ret->Value = $dec->Decoded['ID'] ?? '';
+        return $ret;
     }
 }

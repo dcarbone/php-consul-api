@@ -20,7 +20,6 @@ namespace DCarbone\PHPConsulAPI\Status;
 
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\QueryOptions;
-use DCarbone\PHPConsulAPI\Request;
 use DCarbone\PHPConsulAPI\ValuedStringResponse;
 use DCarbone\PHPConsulAPI\ValuedStringsResponse;
 
@@ -36,18 +35,10 @@ class StatusClient extends AbstractClient
      */
     public function LeaderWithQueryOptions(?QueryOptions $opts): ValuedStringResponse
     {
-        $r = new Request('GET', 'v1/status/leader', $this->config, null);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$_, $response, $err] = $this->_requireOK($this->_do($r));
-
-        if (null !== $err) {
-            return new ValuedStringResponse('', $err);
-        }
-
-        $d = $this->_decodeBody($response->getBody());
-        return new ValuedStringResponse($d->Decoded, $d->Err);
+        $resp = $this->_doGet('v1/status/leader', $opts);
+        $ret  = new ValuedStringResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -66,17 +57,10 @@ class StatusClient extends AbstractClient
      */
     public function PeersWithQueryOptions(?QueryOptions $opts): ValuedStringsResponse
     {
-        $r = new Request('GET', 'v1/status/peers', $this->config, null);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$_, $response, $err] = $this->_requireOK($this->_do($r));
-
-        if (null !== $err) {
-            return new ValuedStringsResponse(null, $err);
-        }
-        $d = $this->_decodeBody($response->getBody());
-        return new ValuedStringsResponse($d->Decoded, $d->Err);
+        $resp = $this->_doGet('v1/status/peers', $opts);
+        $ret  = new ValuedStringsResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
