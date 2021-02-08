@@ -108,6 +108,7 @@ abstract class AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\Request $r
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\RequestResponse
      */
     protected function _do(Request $r): RequestResponse
@@ -148,6 +149,7 @@ abstract class AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\RequestResponse $r
      * @param int $statusCode
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\RequestResponse
      */
     protected function _requireStatus(RequestResponse $r, int $statusCode): RequestResponse
@@ -195,6 +197,7 @@ abstract class AbstractClient
 
     /**
      * @param \DCarbone\PHPConsulAPI\RequestResponse $r
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\RequestResponse
      */
     protected function _requireOK(RequestResponse $r): RequestResponse
@@ -250,6 +253,7 @@ abstract class AbstractClient
 
     /**
      * @param \Psr\Http\Message\StreamInterface $body
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\DecodedBody
      */
     protected function _decodeBody(StreamInterface $body): DecodedBody
@@ -277,6 +281,7 @@ abstract class AbstractClient
      * @param mixed $body
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\WriteResponse
      */
     protected function _executePut(string $path, $body, ?WriteOptions $opts): WriteResponse
@@ -291,6 +296,7 @@ abstract class AbstractClient
      * @param string $path
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\WriteResponse
      */
     protected function _executeDelete(string $path, ?WriteOptions $opts): WriteResponse
@@ -306,6 +312,7 @@ abstract class AbstractClient
      * @param mixed $body
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      */
     protected function _doPutValuedStr(string $path, $body, ?WriteOptions $opts): ValuedWriteStringResponse
@@ -321,6 +328,7 @@ abstract class AbstractClient
      * @param string $path
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\ValuedQueryStringResponse
      */
     protected function _doGetValuedStr(string $path, ?QueryOptions $opts): ValuedQueryStringResponse
@@ -336,6 +344,7 @@ abstract class AbstractClient
      * @param string $path
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\ValuedQueryStringsResponse
      */
     protected function _doGetValuedStrs(string $path, ?QueryOptions $opts): ValuedQueryStringsResponse
@@ -352,6 +361,7 @@ abstract class AbstractClient
      *
      * @param \DCarbone\PHPConsulAPI\RequestResponse $resp
      * @param \DCarbone\PHPConsulAPI\AbstractResponse $ret
+     * @throws \Exception
      */
     protected function _hydrateResponse(RequestResponse $resp, AbstractResponse $ret): void
     {
