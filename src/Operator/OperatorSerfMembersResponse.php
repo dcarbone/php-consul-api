@@ -18,34 +18,16 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\QueryMeta;
+use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class OperatorSerfMembersResponse
  */
-class OperatorSerfMembersResponse extends AbstractValuedQueryResponse
+class OperatorSerfMembersResponse extends AbstractResponse implements HydratedResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Operator\SerfMember[]|null */
-    public $SerfMembers = null;
-
-    /**
-     * OperatorSerfMembersResponse constructor.
-     * @param array|null $data
-     * @param \DCarbone\PHPConsulAPI\QueryMeta|null $qm
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(?array $data, ?QueryMeta $qm, ?Error $err)
-    {
-        parent::__construct($qm, $err);
-        if (null !== $data) {
-            $this->SerfMembers = [];
-            foreach ($data as $datum) {
-                $this->SerfMembers[] = new SerfMember($datum);
-            }
-        }
-    }
+    public ?array $SerfMembers = null;
 
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\SerfMember[]|null
@@ -53,5 +35,16 @@ class OperatorSerfMembersResponse extends AbstractValuedQueryResponse
     public function getValue()
     {
         return $this->SerfMembers;
+    }
+
+    /**
+     * @param mixed $decodedData
+     */
+    public function hydrateValue($decodedData): void
+    {
+        $this->SerfMembers = [];
+        foreach ($decodedData as $datum) {
+            $this->SerfMembers[] = new SerfMember($datum);
+        }
     }
 }

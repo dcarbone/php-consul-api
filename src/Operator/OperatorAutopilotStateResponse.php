@@ -18,31 +18,16 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\QueryMeta;
+use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class OperatorAutopilotStateResponse
  */
-class OperatorAutopilotStateResponse extends AbstractValuedQueryResponse
+class OperatorAutopilotStateResponse extends AbstractResponse implements HydratedResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotState|null */
-    public $AutopilotState = null;
-
-    /**
-     * OperatorAutopilotStateResponse constructor.
-     * @param array|null $data
-     * @param \DCarbone\PHPConsulAPI\QueryMeta|null $qm
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(?array $data, ?QueryMeta $qm, ?Error $err)
-    {
-        parent::__construct($qm, $err);
-        if (null !== $data) {
-            $this->AutopilotState = new AutopilotState($data);
-        }
-    }
+    public ?AutopilotState $AutopilotState = null;
 
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\AutopilotState|null
@@ -50,5 +35,13 @@ class OperatorAutopilotStateResponse extends AbstractValuedQueryResponse
     public function getValue()
     {
         return $this->AutopilotState;
+    }
+
+    /**
+     * @param mixed $decodedData
+     */
+    public function hydrateValue($decodedData): void
+    {
+        $this->AutopilotState = new AutopilotState($decodedData);
     }
 }

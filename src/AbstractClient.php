@@ -124,6 +124,17 @@ abstract class AbstractClient
      * @param \DCarbone\PHPConsulAPI\RequestOptions|null $opts
      * @return \DCarbone\PHPConsulAPI\Request
      */
+    protected function _newPostRequest(string $path, $body, ?RequestOptions $opts): Request
+    {
+        return $this->_newRequest(HTTP\MethodPost, $path, $body, $opts);
+    }
+
+    /**
+     * @param string $path
+     * @param mixed $body
+     * @param \DCarbone\PHPConsulAPI\RequestOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\Request
+     */
     protected function _newPutRequest(string $path, $body, ?RequestOptions $opts): Request
     {
         return $this->_newRequest(HTTP\MethodPut, $path, $body, $opts);
@@ -255,6 +266,18 @@ abstract class AbstractClient
     protected function _doGet(string $path, ?QueryOptions $opts): RequestResponse
     {
         return $this->_do($this->_newGetRequest($path, $opts));
+    }
+
+    /**
+     * @param string $path
+     * @param mixed $body
+     * @param \DCarbone\PHPConsulAPI\RequestOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\RequestResponse
+     */
+    protected function _doPost(string $path, $body, ?RequestOptions $opts): RequestResponse
+    {
+        return $this->_do($this->_newPostRequest($path, $body, $opts));
     }
 
     /**

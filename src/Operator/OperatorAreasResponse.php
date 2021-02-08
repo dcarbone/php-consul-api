@@ -18,34 +18,16 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\QueryMeta;
+use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class OperatorAreasResponse
  */
-class OperatorAreasResponse extends AbstractValuedQueryResponse
+class OperatorAreasResponse extends AbstractResponse implements HydratedResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Operator\Area[]|null */
-    public $Areas = null;
-
-    /**
-     * OperatorAreasResponse constructor.
-     * @param array|null $areas
-     * @param \DCarbone\PHPConsulAPI\QueryMeta|null $qm
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(?array $areas, ?QueryMeta $qm, ?Error $err)
-    {
-        parent::__construct($qm, $err);
-        if (null !== $areas) {
-            $this->Areas = [];
-            foreach ($areas as $area) {
-                $this->Areas[] = new Area($area);
-            }
-        }
-    }
+    public ?array $Areas = null;
 
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\Area[]|null
@@ -53,5 +35,16 @@ class OperatorAreasResponse extends AbstractValuedQueryResponse
     public function getValue()
     {
         return $this->Areas;
+    }
+
+    /**
+     * @param mixed $decodedData
+     */
+    public function hydrateValue($decodedData): void
+    {
+        $this->Areas = [];
+        foreach ($decodedData as $area) {
+            $this->Areas[] = new Area($area);
+        }
     }
 }

@@ -18,31 +18,16 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\QueryMeta;
+use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class OperatorRaftConfigurationResponse
  */
-class OperatorRaftConfigurationResponse extends AbstractValuedQueryResponse
+class OperatorRaftConfigurationResponse extends AbstractResponse implements HydratedResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Operator\RaftConfiguration|null */
-    public $RaftConfiguration = null;
-
-    /**
-     * OperatorRaftConfigurationResponse constructor.
-     * @param array|null $data
-     * @param \DCarbone\PHPConsulAPI\QueryMeta|null $qm
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(?array $data, ?QueryMeta $qm, ?Error $err)
-    {
-        parent::__construct($qm, $err);
-        if (null !== $data) {
-            $this->RaftConfiguration = new RaftConfiguration($data);
-        }
-    }
+    public ?RaftConfiguration $RaftConfiguration = null;
 
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\RaftConfiguration|null
@@ -50,5 +35,13 @@ class OperatorRaftConfigurationResponse extends AbstractValuedQueryResponse
     public function getValue()
     {
         return $this->RaftConfiguration;
+    }
+
+    /**
+     * @param mixed $decodedData
+     */
+    public function hydrateValue($decodedData): void
+    {
+        $this->RaftConfiguration = new RaftConfiguration($decodedData);
     }
 }

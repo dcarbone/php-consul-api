@@ -18,34 +18,16 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedWriteResponse;
-use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\WriteMeta;
+use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class OperatorAreaJoinResponse
  */
-class OperatorAreaJoinResponse extends AbstractValuedWriteResponse
+class OperatorAreaJoinResponse extends AbstractResponse implements HydratedResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Operator\AreaJoinResponse[]|null */
-    public $AreaJoinResponses = null;
-
-    /**
-     * OperatorAreasResponse constructor.
-     * @param array|null $areas
-     * @param \DCarbone\PHPConsulAPI\WriteMeta|null $wm
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(?array $areas, ?WriteMeta $wm, ?Error $err)
-    {
-        parent::__construct($wm, $err);
-        if (null !== $areas) {
-            $this->AreaJoinResponses = [];
-            foreach ($areas as $area) {
-                $this->AreaJoinResponses[] = new AreaJoinResponse($area);
-            }
-        }
-    }
+    public ?array $AreaJoinResponses = null;
 
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\AreaJoinResponse[]|null
@@ -53,5 +35,16 @@ class OperatorAreaJoinResponse extends AbstractValuedWriteResponse
     public function getValue()
     {
         return $this->AreaJoinResponses;
+    }
+
+    /**
+     * @param mixed $decodedData
+     */
+    public function hydrateValue($decodedData): void
+    {
+        $this->AreaJoinResponses = [];
+        foreach ($decodedData as $area) {
+            $this->AreaJoinResponses[] = new AreaJoinResponse($area);
+        }
     }
 }

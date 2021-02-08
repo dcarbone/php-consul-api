@@ -18,11 +18,10 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\Go\HTTP;
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\QueryOptions;
-use DCarbone\PHPConsulAPI\Request;
+use DCarbone\PHPConsulAPI\RequestResponse;
 use DCarbone\PHPConsulAPI\ValuedBoolResponse;
 use DCarbone\PHPConsulAPI\ValuedWriteStringResponse;
 use DCarbone\PHPConsulAPI\WriteOptions;
@@ -41,21 +40,7 @@ class OperatorClient extends AbstractClient
      */
     public function AreaCreate(Area $area, ?WriteOptions $opts = null): ValuedWriteStringResponse
     {
-        $r = new Request('POST', 'v1/operator/area', $this->config, $area);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new ValuedWriteStringResponse('', null, $err);
-        }
-
-        [$data, $err] = $this->_decodeBody($response->getBody());
-        if (null !== $err) {
-            return new ValuedWriteStringResponse('', null, $err);
-        }
-
-        return new ValuedWriteStringResponse($data['ID'] ?? '', $this->_buildWriteMeta($duration), null);
+        return $this->_writeIDResponse($this->_doPost('v1/operator/area', $area, $opts));
     }
 
     /**
@@ -67,21 +52,7 @@ class OperatorClient extends AbstractClient
      */
     public function AreaUpdate(string $areaID, Area $area, ?WriteOptions $opts = null): ValuedWriteStringResponse
     {
-        $r = new Request('PUT', 'v1/operator/area/' . $areaID, $this->config, $area);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new ValuedWriteStringResponse('', null, $err);
-        }
-
-        [$data, $err] = $this->_decodeBody($response->getBody());
-        if (null !== $err) {
-            return new ValuedWriteStringResponse('', null, $err);
-        }
-
-        return new ValuedWriteStringResponse($data['ID'] ?? '', $this->_buildWriteMeta($duration), null);
+        return $this->_writeIDResponse($this->_doPut(\sprintf('v1/operator/area/%s', $areaID), $area, $opts));
     }
 
     /**
@@ -92,17 +63,10 @@ class OperatorClient extends AbstractClient
      */
     public function AreaGet(string $areaID, ?QueryOptions $opts = null): OperatorAreasResponse
     {
-        $r = new Request('GET', \sprintf('v1/operator/area/%s', \urlencode($areaID)), $this->config, null);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new OperatorAreasResponse(null, null, $err);
-        }
-
-        [$data, $err] = $this->_decodeBody($response->getBody());
-        return new OperatorAreasResponse($data, $this->_buildQueryMeta($duration, $response, $r->getUri()), $err);
+        $resp = $this->_doGet(\sprintf('v1/operator/area/%s', \urlencode($areaID)), $opts);
+        $ret  = new OperatorAreasResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -112,17 +76,10 @@ class OperatorClient extends AbstractClient
      */
     public function AreaList(?QueryOptions $opts = null): OperatorAreasResponse
     {
-        $r = new Request('GET', 'v1/operator/area', $this->config, null);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new OperatorAreasResponse(null, null, $err);
-        }
-
-        [$data, $err] = $this->_decodeBody($response->getBody());
-        return new OperatorAreasResponse($data, $this->_buildQueryMeta($duration, $response, $r->getUri()), $err);
+        $resp = $this->_doGet('v1/operator/area', $opts);
+        $ret  = new OperatorAreasResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -133,15 +90,7 @@ class OperatorClient extends AbstractClient
      */
     public function AreaDelete(string $areaID, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = new Request('DELETE', 'v1/operator/area/' . $areaID, $this->config, null);
-        $r->applyOptions($opts);
-
-        [$duration, $_, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new WriteResponse(null, $err);
-        }
-
-        return new WriteResponse($this->_buildWriteMeta($duration), null);
+        return $this->_executeDelete(\sprintf('v1/operator/area/%s', $areaID), $opts);
     }
 
     /**
@@ -153,21 +102,10 @@ class OperatorClient extends AbstractClient
      */
     public function AreaJoin(string $areaID, array $addresses, ?WriteOptions $opts = null): OperatorAreaJoinResponse
     {
-        $r = new Request('PUT', 'v1/operator/area/' . $areaID . '/join', $this->config, $addresses);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new OperatorAreaJoinResponse(null, null, $err);
-        }
-
-        [$data, $err] = $this->_decodeBody($response->getBody());
-        if (null !== $err) {
-            return new OperatorAreaJoinResponse(null, null, $err);
-        }
-
-        return new OperatorAreaJoinResponse($data, $this->_buildWriteMeta($duration), null);
+        $resp = $this->_doPut(\sprintf('v1/operator/area/%s/join', $areaID), $addresses, $opts);
+        $ret  = new OperatorAreaJoinResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -178,21 +116,10 @@ class OperatorClient extends AbstractClient
      */
     public function AreaMembers(string $areaID, ?QueryOptions $opts = null): OperatorSerfMembersResponse
     {
-        $r = new Request('GET', 'v1/operator/area/' . $areaID . '/members', $this->config, null);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new OperatorSerfMembersResponse(null, null, $err);
-        }
-
-        [$data, $err] = $this->_decodeBody($response->getBody());
-        if (null !== $err) {
-            return new OperatorSerfMembersResponse(null, null, $err);
-        }
-
-        return new OperatorSerfMembersResponse($data, $this->_buildQueryMeta($duration, $response, $r->getUri()), null);
+        $resp = $this->_doGet(\sprintf('v1/operator/area/%s/members', $areaID), $opts);
+        $ret  = new OperatorSerfMembersResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -202,21 +129,10 @@ class OperatorClient extends AbstractClient
      */
     public function AutopilotGetConfiguration(?QueryOptions $opts = null): OperatorAutopilotConfigurationResponse
     {
-        $r = new Request('GET', 'v1/operator/autopilot/configuration', $this->config, null);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$_, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new OperatorAutopilotConfigurationResponse(null, $err);
-        }
-
-        [$data, $err] = $this->_decodeBody($response->getBody());
-        if (null !== $err) {
-            return new OperatorAutopilotConfigurationResponse(null, $err);
-        }
-
-        return new OperatorAutopilotConfigurationResponse($data, null);
+        $resp = $this->_doGet('v1/operator/autopilot/configuration', $opts);
+        $ret  = new OperatorAutopilotConfigurationResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -227,10 +143,7 @@ class OperatorClient extends AbstractClient
      */
     public function AutopilotSetConfiguration(AutopilotConfiguration $conf, ?WriteOptions $opts = null): ?Error
     {
-        $r = new Request('PUT', 'v1/operator/autopilot/configuration', $this->config, $conf);
-        $r->applyOptions($opts);
-
-        return $this->_requireOK($this->_do($r))->Err;
+        return $this->_doPut('v1/operator/autopilot/configuration', $conf, $opts)->Err;
     }
 
     /**
@@ -243,17 +156,10 @@ class OperatorClient extends AbstractClient
         AutopilotConfiguration $conf,
         ?WriteOptions $opts = null
     ): ValuedBoolResponse {
-        $r = new Request('PUT', 'v1/operator/autopilot/configuration', $this->config, $conf);
-        $r->applyOptions($opts);
-        $r->params->set('cas', (string) ($conf->ModifyIndex));
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$_, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new ValuedBoolResponse(false, $err);
-        }
-
-        return new ValuedBoolResponse(false !== \strpos($response->getBody()->getContents(), 'true'), null);
+        $resp = $this->_doPut('v1/operator/autopilot/configuration', $conf, $opts);
+        $ret  = new ValuedBoolResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -263,21 +169,10 @@ class OperatorClient extends AbstractClient
      */
     public function AutopilotServerHealth(?QueryOptions $opts = null): OperatorServerHealthsResponse
     {
-        $r = new Request('GET', 'v1/operator/autopilot/health', $this->config, null);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$_, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new OperatorServerHealthsResponse(null, $err);
-        }
-
-        [$data, $err] = $this->_decodeBody($response->getBody());
-        if (null !== $err) {
-            return new OperatorServerHealthsResponse(null, $err);
-        }
-
-        return new OperatorServerHealthsResponse($data, null);
+        $resp = $this->_doGet('v1/operator/autopilot/health', $opts);
+        $ret  = new OperatorServerHealthsResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -287,25 +182,10 @@ class OperatorClient extends AbstractClient
      */
     public function AutopilotState(?QueryOptions $opts = null): OperatorAutopilotStateResponse
     {
-        $r = new Request(HTTP\MethodGet, 'v1/operator/autopilot/state', $this->config, null);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new OperatorAutopilotStateResponse(null, null, $err);
-        }
-
-        [$data, $err] = $this->_decodeBody($response->getBody());
-        if (null !== $err) {
-            return new OperatorAutopilotStateResponse(null, null, $err);
-        }
-
-        return new OperatorAutopilotStateResponse(
-            $data,
-            $this->_buildQueryMeta($duration, $response, $r->getUri()),
-            null
-        );
+        $resp = $this->_doGet('v1/operator/autopilot/state', $opts);
+        $ret  = new OperatorAutopilotStateResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -315,24 +195,10 @@ class OperatorClient extends AbstractClient
      */
     public function RaftGetConfiguration(?QueryOptions $opts = null): OperatorRaftConfigurationResponse
     {
-        $r = new Request('GET', 'v1/operator/raft/configuration', $this->config, null);
-        $r->applyOptions($opts);
-
-        /** @var \Psr\Http\Message\ResponseInterface $response */
-        [$duration, $response, $err] = $this->_requireOK($this->_do($r));
-        if (null !== $err) {
-            return new OperatorRaftConfigurationResponse(null, null, $err);
-        }
-
-        [$data, $err] = $this->_decodeBody($response->getBody());
-
-        if (null !== $err) {
-            return new OperatorRaftConfigurationResponse(null, null, $err);
-        }
-
-        $qm = $this->_buildQueryMeta($duration, $response, $r->getUri());
-
-        return new OperatorRaftConfigurationResponse($data, $qm, null);
+        $resp = $this->_doGet('v1/operator/raft/configuration', $opts);
+        $ret  = new OperatorRaftConfigurationResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -343,10 +209,35 @@ class OperatorClient extends AbstractClient
      */
     public function RaftRemovePeerByAddress(string $address, ?WriteOptions $opts = null): ?Error
     {
-        $r = new Request('DELETE', 'v1/operator/raft/peer', $this->config, null);
+        $r = $this->_newDeleteRequest('v1/operator/raft/peer', $opts);
         $r->applyOptions($opts);
-        $r->params->set('address', (string) $address);
+        $r->params->set('address', (string)$address);
 
         return $this->_requireOK($this->_do($r))->Err;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\RequestResponse $resp
+     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
+     */
+    protected function _writeIDResponse(RequestResponse $resp): ValuedWriteStringResponse
+    {
+        $ret = new ValuedWriteStringResponse();
+
+        if (null !== $resp->Err) {
+            $ret->Err = $resp->Err;
+            return $ret;
+        }
+
+        $ret->WriteMeta = $this->_buildWriteMeta($resp->Duration);
+
+        $dec = $this->_decodeBody($resp->Response->getBody());
+        if (null !== $dec->Err) {
+            $ret->Err = $dec->Err;
+            return $ret;
+        }
+
+        $ret->Value = $dec->Decoded['ID'] ?? '';
+        return $ret;
     }
 }
