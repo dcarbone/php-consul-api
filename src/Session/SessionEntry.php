@@ -20,34 +20,50 @@ namespace DCarbone\PHPConsulAPI\Session;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class SessionEntry
  */
 class SessionEntry extends AbstractModel
 {
+    private const FIELD_LOCK_DELAY     = 'LockDelay';
+    private const FIELD_SERVICE_CHECKS = 'ServiceChecks';
+
     /** @var int */
-    public $CreateIndex = 0;
+    public int $CreateIndex = 0;
     /** @var string */
-    public $ID = '';
+    public string $ID = '';
     /** @var string */
-    public $Name = '';
+    public string $Name = '';
     /** @var string */
-    public $Node = '';
+    public string $Node = '';
     /** @var \DCarbone\Go\Time\Duration */
-    public $LockDelay = null;
+    public Time\Duration $LockDelay;
     /** @var string */
-    public $Behavior = '';
+    public string $Behavior = '';
     /** @var string */
-    public $TTL = '';
+    public string $TTL = '';
     /** @var string */
-    public $Namespace = '';
+    public string $Namespace = '';
     /** @var string[] */
-    public $Checks = [];
+    public array $Checks = [];
     /** @var string[] */
-    public $NodeChecks = [];
+    public array $NodeChecks = [];
     /** @var \DCarbone\PHPConsulAPI\Session\ServiceCheck[] */
-    public $ServiceChecks = [];
+    public array $ServiceChecks = [];
+
+    /** @var array[] */
+    protected static array $fields = [
+        self::FIELD_LOCK_DELAY     => [
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
+        ],
+        self::FIELD_SERVICE_CHECKS => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => ServiceCheck::class,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+        ],
+    ];
 
     /**
      * SessionEntry constructor.
@@ -58,11 +74,6 @@ class SessionEntry extends AbstractModel
         parent::__construct($data);
         if (!($this->LockDelay instanceof Time\Duration)) {
             $this->LockDelay = Time::Duration($this->LockDelay);
-        }
-        foreach ($this->ServiceChecks as &$check) {
-            if (!($check instanceof ServiceCheck)) {
-                $check = new ServiceCheck((array) $check);
-            }
         }
     }
 
@@ -247,7 +258,7 @@ class SessionEntry extends AbstractModel
 
     /**
      * @param string $check
-     * @return \DCarbone\PHPConsulAPI\Session$this
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
     public function addNodeCheck(string $check): self
     {
@@ -305,7 +316,7 @@ class SessionEntry extends AbstractModel
     public function _toAPIPayload(): array
     {
         $a              = self::jsonSerialize();
-        $a['LockDelay'] = self::durToMsec($this->LockDelay);
+        $a[self::FIELD_LOCK_DELAY] = self::durToMsec($this->LockDelay);
         return $a;
     }
 
@@ -319,7 +330,7 @@ class SessionEntry extends AbstractModel
             return '0ms';
         }
         $ns = $dur->Nanoseconds();
-        $ms = (int) ($ns / Time::Millisecond);
+        $ms = (int)($ns / Time::Millisecond);
         if (0 < $ns && 0 === $ms) {
             return '1ms';
         }

@@ -18,34 +18,21 @@ namespace DCarbone\PHPConsulAPI\Session;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\QueryMeta;
+use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\HydratedResponseInterface;
+use DCarbone\PHPConsulAPI\QueryMetaContainer;
 
 /**
  * Class SessionEntriesQueryResponse
  */
-class SessionEntriesQueryResponse extends AbstractValuedQueryResponse
+class SessionEntriesQueryResponse extends AbstractResponse implements HydratedResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\Session\SessionEntry[]|null */
-    public $SessionEntries = [];
+    use QueryMetaContainer;
+    use ErrorContainer;
 
-    /**
-     * SessionEntriesQueryResponse constructor.
-     * @param array|null $data
-     * @param \DCarbone\PHPConsulAPI\QueryMeta|null $qm
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(?array $data, ?QueryMeta $qm, ?Error $err)
-    {
-        parent::__construct($qm, $err);
-        if (null !== $data) {
-            $this->SessionEntries = [];
-            foreach ($data as $datum) {
-                $this->SessionEntries[] = new SessionEntry($datum);
-            }
-        }
-    }
+    /** @var \DCarbone\PHPConsulAPI\Session\SessionEntry[]|null */
+    public ?array $SessionEntries = [];
 
     /**
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry[]|null
@@ -53,5 +40,16 @@ class SessionEntriesQueryResponse extends AbstractValuedQueryResponse
     public function getValue(): ?array
     {
         return $this->SessionEntries;
+    }
+
+    /**
+     * @param mixed $decodedData
+     */
+    public function hydrateValue($decodedData): void
+    {
+        $this->SessionEntries = [];
+        foreach ($decodedData as $datum) {
+            $this->SessionEntries[] = new SessionEntry($datum);
+        }
     }
 }

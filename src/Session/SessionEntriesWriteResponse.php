@@ -18,34 +18,16 @@ namespace DCarbone\PHPConsulAPI\Session;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedWriteResponse;
-use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\WriteMeta;
+use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class SessionEntriesWriteResponse
  */
-class SessionEntriesWriteResponse extends AbstractValuedWriteResponse
+class SessionEntriesWriteResponse extends AbstractResponse implements HydratedResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Session\SessionEntry[]|null */
-    public $SessionEntries = [];
-
-    /**
-     * SessionEntriesWriteResponse constructor.
-     * @param array|null $data
-     * @param \DCarbone\PHPConsulAPI\WriteMeta|null $wm
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
-     */
-    public function __construct(?array $data, ?WriteMeta $wm, ?Error $err)
-    {
-        parent::__construct($wm, $err);
-        if (null !== $data) {
-            $this->SessionEntries = [];
-            foreach ($data as $datum) {
-                $this->SessionEntries[] = new SessionEntry($datum);
-            }
-        }
-    }
+    public ?array $SessionEntries = null;
 
     /**
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry[]|null
@@ -53,5 +35,16 @@ class SessionEntriesWriteResponse extends AbstractValuedWriteResponse
     public function getValue(): ?array
     {
         return $this->SessionEntries;
+    }
+
+    /**
+     * @param mixed $decodedData
+     */
+    public function hydrateValue($decodedData): void
+    {
+        $this->SessionEntries = [];
+        foreach ($decodedData as $datum) {
+            $this->SessionEntries[] = new SessionEntry($datum);
+        }
     }
 }
