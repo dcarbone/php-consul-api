@@ -55,9 +55,9 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\AbstractModel|null $value
+     * @param array|\DCarbone\PHPConsulAPI\AbstractModel|null $value
      */
-    public function append(?AbstractModel $value): void
+    public function append($value): void
     {
         // validate provided value is either null or instance of allowed child class
         $value = $this->_validateValue($value);
