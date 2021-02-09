@@ -51,7 +51,8 @@ trait Hydratable
             // if the property has a scalar default value, hydrate it as such.
             $this->hydrateScalar($field, $value, false);
         } else {
-            // if we fall down here, try to set the value as-is.  if this barfs, it indicates we have a bug to be squished.
+            // if we fall down here, try to set the value as-is.  if this barfs, it indicates we have a bug to be
+            // squished.
             // todo: should this be an exception?
             $this->{$field} = $value;
         }
