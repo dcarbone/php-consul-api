@@ -24,8 +24,8 @@ namespace DCarbone\PHPConsulAPI;
 trait HasSettableStringTags
 {
     /**
-     * @param string[] $tags
-     * @return \$this
+     * @param array $tags
+     * @return $this
      */
     public function setTags(array $tags)
     {
@@ -35,7 +35,7 @@ trait HasSettableStringTags
 
     /**
      * @param string $tag
-     * @return \$this
+     * @return $this
      */
     public function addTag(string $tag)
     {

@@ -28,6 +28,14 @@ use AdamWojs\PhpCsFixerPhpdocForceFQCN\FQCN\FQCNTypeNormalizer;
  */
 final class Normalizer extends FQCNTypeNormalizer
 {
+    public const BUILD_IN_TYPES = FQCNTypeNormalizer::BUILD_IN_TYPES + [17 => 'static', 18 => '$this'];
+
+    private const DOLLAR       = '$';
+    private const SLASH        = '\\';
+    private const DUMB_DOLLAR  = self::SLASH . self::DOLLAR;
+    private const MIXED_FORMAT = 'mixed %s';
+    private const ARR          = '[]';
+
     /**
      * @param \AdamWojs\PhpCsFixerPhpdocForceFQCN\Analyzer\NamespaceInfo $namespaceInfo
      * @param string $type
@@ -35,25 +43,26 @@ final class Normalizer extends FQCNTypeNormalizer
      */
     public function normalizeType(NamespaceInfo $namespaceInfo, string $type): string
     {
-        if ('[]' === \substr($type, -2)) {
-            return $this->normalizeType($namespaceInfo, \substr($type, 0, -2)) . '[]';
+        if (self::ARR === \substr($type, -2)) {
+            return $this->normalizeType($namespaceInfo, \substr($type, 0, -2)) . self::ARR;
         }
 
         // if this is a built-in type, already has a namespace prefix, or is merely empty, move on.
         if (\in_array($type, self::BUILD_IN_TYPES, true) ||
-            0 === \strpos($type, '\\') ||
+            0 === \strpos($type, self::SLASH) ||
             '' === \trim($type)) {
             return $type;
         }
 
-        // if this is a variable, set to 'mixed' and assume i'll fix it later
-        if (0 === \strpos($type, '$')) {
-            return "mixed {$type}";
+        // if this is a variable...
+        if (0 === \strpos($type, self::DOLLAR)) {
+            // ...otherwise set to 'mixed' and assume i'll fix it later
+            return \sprintf(self::MIXED_FORMAT, $type);
         }
 
         // if this is a dumb thing, clean it up
-        if (0 === \strpos($type, '\\$')) {
-            return \sprintf('mixed %s', \ltrim($type, '\\'));
+        if (0 === \strpos($type, self::DUMB_DOLLAR)) {
+            return \sprintf(self::MIXED_FORMAT, \ltrim($type, self::SLASH));
         }
 
         // in all other cases, try to find an ns prefix
