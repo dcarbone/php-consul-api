@@ -50,7 +50,8 @@ final class AgentClientTest extends AbstractUsageTests
     {
         $client = new AgentClient(new Config());
 
-        $self = $client->Self();
+        [$self, $err] = $client->Self();
+        static::assertNull($err);
         static::assertIsArray(
             $self,
             \sprintf(

@@ -18,13 +18,13 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
+use DCarbone\PHPConsulAPI\AbstractValuedResponse;
 use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class AgentSelfResponse
  */
-class AgentSelfResponse extends AbstractValuedQueryResponse implements HydratedResponseInterface
+class AgentSelfResponse extends AbstractValuedResponse implements HydratedResponseInterface
 {
     /** @var array|null */
     public ?array $AgentConfig = null;

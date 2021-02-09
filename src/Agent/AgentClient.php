@@ -36,6 +36,7 @@ class AgentClient extends AbstractClient
     /**
      * @param bool $refresh
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Agent\AgentSelfResponse
      */
     public function Self(bool $refresh = false): AgentSelfResponse
@@ -54,6 +55,7 @@ class AgentClient extends AbstractClient
 
     /**
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Agent\MetricsInfoResponse
      */
     public function Metrics(): MetricsInfoResponse
@@ -95,6 +97,7 @@ class AgentClient extends AbstractClient
     /**
      * @param string $filter
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Agent\AgentChecksResponse
      */
     public function ChecksWithFilter(string $filter): AgentChecksResponse
@@ -119,6 +122,7 @@ class AgentClient extends AbstractClient
     /**
      * @param string $filter
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServicesResponse
      */
     public function ServicesWithFilter(string $filter): AgentServicesResponse
@@ -162,6 +166,7 @@ class AgentClient extends AbstractClient
 
     /**
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Agent\AgentMembersResponse
      */
     public function Members(): AgentMembersResponse
@@ -175,6 +180,7 @@ class AgentClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\Agent\MemberOpts $memberOpts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Agent\AgentMembersResponse
      */
     public function MemberOpts(MemberOpts $memberOpts): AgentMembersResponse
@@ -194,6 +200,7 @@ class AgentClient extends AbstractClient
      * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration $service
      * @param \DCarbone\PHPConsulAPI\Agent\ServiceRegisterOpts $registerOpts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function ServiceRegisterOpts(AgentServiceRegistration $service, ServiceRegisterOpts $registerOpts): ?Error
@@ -222,6 +229,7 @@ class AgentClient extends AbstractClient
      *
      * @param string $serviceID
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function ServiceDeregister(string $serviceID): ?Error
@@ -277,6 +285,7 @@ class AgentClient extends AbstractClient
      * @param string $output
      * @param string $status
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function UpdateTTL(string $checkID, string $output, string $status): ?Error
@@ -333,6 +342,7 @@ class AgentClient extends AbstractClient
      * @param string $addr
      * @param bool $wan
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function Join(string $addr, bool $wan = false): ?Error
@@ -366,6 +376,7 @@ class AgentClient extends AbstractClient
     /**
      * @param string $node
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function ForceLeavePrune(string $node): ?Error
@@ -379,6 +390,7 @@ class AgentClient extends AbstractClient
      * @param string $serviceID
      * @param string $reason
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function EnableServiceMaintenance(string $serviceID, string $reason = ''): ?Error
@@ -392,6 +404,7 @@ class AgentClient extends AbstractClient
     /**
      * @param string $serviceID
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function DisableServiceMaintenance(string $serviceID): ?Error
@@ -404,6 +417,7 @@ class AgentClient extends AbstractClient
     /**
      * @param string $reason
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function EnableNodeMaintenance(string $reason = ''): ?Error
@@ -416,6 +430,7 @@ class AgentClient extends AbstractClient
 
     /**
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function DisableNodeMaintenance(): ?Error
@@ -428,6 +443,7 @@ class AgentClient extends AbstractClient
     /**
      * @param string $path
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Agent\AgentHealthServiceResponse
      */
     protected function _agentHealthService(string $path): AgentHealthServiceResponse
