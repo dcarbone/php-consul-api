@@ -41,25 +41,6 @@ class RaftConfiguration extends AbstractModel
     public int $Index = 0;
 
     /**
-     * RaftConfiguration constructor.
-     *
-     * @param array $data
-     */
-    public function __construct(array $data = [])
-    {
-        parent::__construct($data);
-
-        if (0 < \count($this->Servers)) {
-            $this->Servers = \array_filter($this->Servers);
-            foreach ($this->Servers as &$v) {
-                if (!($v instanceof RaftServer)) {
-                    $v = new RaftServer($v);
-                }
-            }
-        }
-    }
-
-    /**
      * @return \DCarbone\PHPConsulAPI\Operator\RaftServer[]
      */
     public function getServers(): array

@@ -107,6 +107,28 @@ class Consul
     public const BindingRuleBindTypeService = 'service';
     public const BindingRuleBindTypeRole    = 'role';
 
+    public const MeshGatewayModeDefault = '';
+    public const MeshGatewayModeNone    = 'none';
+    public const MeshGatewayModeLocal   = 'local';
+    public const MeshGatewayModeRemote  = 'remote';
+
+    public const MemberTagKeyACLMode         = 'acls';
+    public const MemberTagKeyRole            = 'role';
+    public const MemberTagValueRoleServer    = 'consul';
+    public const MemberTagKeySegment         = 'segment';
+    public const MemberTagKeyBootstrap       = 'bootstrap';
+    public const MemberTagValueBootstrap     = '1';
+    public const MemberTagKeyBootstrapExpect = 'expect';
+    public const MemberTagKeyUseTLS          = 'use_tls';
+    public const MemberTagValueUseTLS        = '1';
+    public const MemberTagKeyReadReplica     = 'read_replica';
+    public const MemberTagValueReadReplica   = '1';
+
+    public const ACLModeDisabled = '0';
+    public const ACLModeEnabled  = '1';
+    public const ACLModeLegacy   = '2';
+    public const ACLModeUnknown  = '3';
+
     // "private" constants
 
     public const headerConsulPrefix             = 'X-Consul-';
@@ -163,17 +185,17 @@ class Consul
             }
         }
 
-        $this->ACL           = new ACLClient($config);
-        $this->Agent         = new AgentClient($config);
-        $this->Catalog       = new CatalogClient($config);
-        $this->Coordinate    = new CoordinateClient($config);
-        $this->Event         = new EventClient($config);
-        $this->Health        = new HealthClient($config);
-        $this->KV            = new KVClient($config);
-        $this->Operator      = new OperatorClient($config);
+        $this->ACL = new ACLClient($config);
+        $this->Agent = new AgentClient($config);
+        $this->Catalog = new CatalogClient($config);
+        $this->Coordinate = new CoordinateClient($config);
+        $this->Event = new EventClient($config);
+        $this->Health = new HealthClient($config);
+        $this->KV = new KVClient($config);
+        $this->Operator = new OperatorClient($config);
         $this->PreparedQuery = new PreparedQueryClient($config);
-        $this->Session       = new SessionClient($config);
-        $this->Status        = new StatusClient($config);
+        $this->Session = new SessionClient($config);
+        $this->Status = new StatusClient($config);
     }
 
     /**

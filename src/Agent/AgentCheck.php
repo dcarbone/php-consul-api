@@ -19,12 +19,29 @@ namespace DCarbone\PHPConsulAPI\Agent;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Health\HealthCheckDefinition;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class AgentCheck
  */
 class AgentCheck extends AbstractModel
 {
+    protected const FIELDS = [
+        self::FIELD_HEALTH_CHECK_DEFINITION => [
+            Hydration::FIELD_TYPE     => Hydration::OBJECT,
+            Hydration::FIELD_CLASS    => HealthCheckDefinition::class,
+            Hydration::FIELD_NULLABLE => false,
+        ],
+        self::FIELD_NAMESPACE               => [
+            Hydration::FIELD_TYPE     => Hydration::STRING,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+    ];
+
+    private const FIELD_HEALTH_CHECK_DEFINITION = 'HealthCheckDefinition';
+    private const FIELD_NAMESPACE               = 'Namespace';
+
     /** @var string */
     public string $Node = '';
     /** @var string */
@@ -41,6 +58,24 @@ class AgentCheck extends AbstractModel
     public string $ServiceID = '';
     /** @var string */
     public string $ServiceName = '';
+    /** @var string */
+    public string $Type = '';
+    /** @var \DCarbone\PHPConsulAPI\Health\HealthCheckDefinition */
+    public HealthCheckDefinition $HealthCheckDefinition;
+    /** @var string|null */
+    public ?string $Namespace = null;
+
+    /**
+     * AgentCheck constructor.
+     * @param array $data
+     */
+    public function __construct(?array $data = null)
+    {
+        parent::__construct($data);
+        if (!isset($this->HealthCheckDefinition)) {
+            $this->HealthCheckDefinition = new HealthCheckDefinition([]);
+        }
+    }
 
     /**
      * @return string
@@ -187,10 +222,46 @@ class AgentCheck extends AbstractModel
     }
 
     /**
+     * @return \DCarbone\PHPConsulAPI\Health\HealthCheckDefinition
+     */
+    public function getHealthCheckDefinition(): HealthCheckDefinition
+    {
+        return $this->HealthCheckDefinition;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Health\HealthCheckDefinition $healthCheckDefinition
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheck
+     */
+    public function setHealthCheckDefinition(HealthCheckDefinition $healthCheckDefinition): self
+    {
+        $this->HealthCheckDefinition = $healthCheckDefinition;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getNamespace(): ?string
+    {
+        return $this->Namespace;
+    }
+
+    /**
+     * @param string|null $namespace
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheck
+     */
+    public function setNamespace(?string $namespace): self
+    {
+        $this->Namespace = $namespace;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function __toString(): string
     {
-        return (string) $this->CheckID;
+        return (string)$this->CheckID;
     }
 }

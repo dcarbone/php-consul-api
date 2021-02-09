@@ -18,49 +18,90 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
+use DCarbone\PHPConsulAPI\Hydration;
+
 /**
  * Class AgentCheckRegistration
  */
 class AgentCheckRegistration extends AgentServiceCheck
 {
-    /** @var string */
-    public string $ID = '';
-    /** @var string */
-    public string $ServiceID = '';
+    protected const FIELDS = [
+        self::FIELD_ID         => [
+            Hydration::FIELD_TYPE     => Hydration::STRING,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+        self::FIELD_SERVICE_ID => [
+            Hydration::FIELD_TYPE     => Hydration::STRING,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+        self::FIELD_NAMESPACE  => [
+            Hydration::FIELD_TYPE     => Hydration::STRING,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+    ];
+
+    private const FIELD_ID         = 'ID';
+    private const FIELD_SERVICE_ID = 'ServiceID';
+    private const FIELD_NAMESPACE  = 'Namespace';
+
+    /** @var string|null */
+    public ?string $ID = null;
+    /** @var string|null */
+    public ?string $ServiceID = null;
+    /** @var string|null */
+    public ?string $Namespace = null;
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getID(): string
+    public function getID(): ?string
     {
         return $this->ID;
     }
 
     /**
-     * @param string $id
+     * @param string|null $ID
      * @return \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration
      */
-    public function setID(string $id): self
+    public function setID(?string $ID): self
     {
-        $this->ID = $id;
+        $this->ID = $ID;
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getServiceID(): string
+    public function getServiceID(): ?string
     {
         return $this->ServiceID;
     }
 
     /**
-     * @param string $serviceID
+     * @param string|null $ServiceID
      * @return \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration
      */
-    public function setServiceID(string $serviceID): self
+    public function setServiceID(?string $ServiceID): self
     {
-        $this->ServiceID = $serviceID;
+        $this->ServiceID = $ServiceID;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getNamespace(): ?string
+    {
+        return $this->Namespace;
+    }
+
+    /**
+     * @param string|null $Namespace
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration
+     */
+    public function setNamespace(?string $Namespace): self
+    {
+        $this->Namespace = $Namespace;
         return $this;
     }
 
@@ -69,6 +110,6 @@ class AgentCheckRegistration extends AgentServiceCheck
      */
     public function __toString(): string
     {
-        return (string) $this->Name;
+        return (string)$this->Name;
     }
 }

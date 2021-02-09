@@ -30,11 +30,11 @@ class TxnOps extends AbstractModels
     protected string $containedClass = TxnOp::class;
 
     /**
-     * @param mixed $data
+     * @param array $data
      * @return \DCarbone\PHPConsulAPI\AbstractModel
      */
-    protected function newChild($data): AbstractModel
+    protected function newChild(array $data): AbstractModel
     {
-        return new TxnOp((array)$data);
+        return new TxnOp($data);
     }
 }

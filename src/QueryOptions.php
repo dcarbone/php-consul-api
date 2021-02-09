@@ -89,7 +89,7 @@ class QueryOptions extends AbstractModel implements RequestOptions
      * QueryOptions constructor.
      * @param array $data
      */
-    public function __construct(array $data = [])
+    public function __construct(?array $data = null)
     {
         parent::__construct($data);
         if (!($this->MaxAge instanceof Time\Duration)) {

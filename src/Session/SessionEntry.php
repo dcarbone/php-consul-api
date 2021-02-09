@@ -67,7 +67,7 @@ class SessionEntry extends AbstractModel
      * SessionEntry constructor.
      * @param array $data
      */
-    public function __construct(array $data = [])
+    public function __construct(?array $data = null)
     {
         parent::__construct($data);
         if (!($this->LockDelay instanceof Time\Duration)) {

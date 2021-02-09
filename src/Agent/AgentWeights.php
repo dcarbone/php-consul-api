@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI\KV;
+namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
    Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -19,22 +19,30 @@ namespace DCarbone\PHPConsulAPI\KV;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\AbstractModels;
 
 /**
- * Class TxnErrors
+ * Class AgentWeights
  */
-class TxnErrors extends AbstractModels
+class AgentWeights extends AbstractModel
 {
-    /** @var string */
-    protected string $containedClass = TxnError::class;
+    /** @var int */
+    public int $Passing = 0;
+    /** @var int */
+    public int $Warning = 0;
 
     /**
-     * @param array $data
-     * @return \DCarbone\PHPConsulAPI\AbstractModel
+     * @return int
      */
-    protected function newChild(array $data): AbstractModel
+    public function getPassing(): int
     {
-        return new TxnError($data);
+        return $this->Passing;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWarning(): int
+    {
+        return $this->Warning;
     }
 }

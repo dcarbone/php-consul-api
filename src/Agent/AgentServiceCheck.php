@@ -30,7 +30,7 @@ class AgentServiceCheck extends AbstractModel
     /** @var string */
     public string $Name = '';
     /** @var string[] */
-    public array $Args = [];
+    public array $ScriptArgs = [];
     /** @var string */
     public string $DockerContainerID = '';
     /** @var string */
@@ -97,18 +97,18 @@ class AgentServiceCheck extends AbstractModel
     /**
      * @return string[]
      */
-    public function getArgs(): array
+    public function getScriptArgs(): array
     {
-        return $this->Args;
+        return $this->ScriptArgs;
     }
 
     /**
      * @param string[] $args
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
-    public function setArgs(array $args): self
+    public function setScriptArgs(array $args): self
     {
-        $this->Args = $args;
+        $this->ScriptArgs = $args;
         return $this;
     }
 

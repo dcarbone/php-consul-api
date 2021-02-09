@@ -46,7 +46,8 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
                 )
             );
         }
-        if (null === $children) {
+        // fastpath for "empty"
+        if (null === $children || [] === $children) {
             return;
         }
         foreach ($children as $child) {

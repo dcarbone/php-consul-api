@@ -48,7 +48,7 @@ class TxnResponse extends AbstractModel
      * TxnResponse constructor.
      * @param array $data
      */
-    public function __construct(array $data = [])
+    public function __construct(?array $data = null)
     {
         parent::__construct($data);
         if (!isset($this->Results)) {

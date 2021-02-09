@@ -29,14 +29,16 @@ class AgentServiceChecksInfo extends AbstractModel
 {
     protected const FIELDS = [
         self::FIELD_SERVICE => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => AgentService::class,
+            Hydration::FIELD_TYPE     => Hydration::OBJECT,
+            Hydration::FIELD_CLASS    => AgentService::class,
+            Hydration::FIELD_NULLABLE => true,
         ],
         self::FIELD_CHECKS  => [
             Hydration::FIELD_TYPE  => Hydration::OBJECT,
             Hydration::FIELD_CLASS => HealthChecks::class,
         ],
     ];
+
     private const FIELD_SERVICE = 'Service';
     private const FIELD_CHECKS  = 'Checks';
 
@@ -49,9 +51,9 @@ class AgentServiceChecksInfo extends AbstractModel
 
     /**
      * AgentServiceChecksInfo constructor.
-     * @param array $data
+     * @param array|null $data
      */
-    public function __construct(array $data = [])
+    public function __construct(?array $data = null)
     {
         parent::__construct($data);
         if (!isset($this->Checks)) {
@@ -68,12 +70,12 @@ class AgentServiceChecksInfo extends AbstractModel
     }
 
     /**
-     * @param string $aggregatedStatus
+     * @param string $AggregatedStatus
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceChecksInfo
      */
-    public function setAggregatedStatus(string $aggregatedStatus): self
+    public function setAggregatedStatus(string $AggregatedStatus): self
     {
-        $this->AggregatedStatus = $aggregatedStatus;
+        $this->AggregatedStatus = $AggregatedStatus;
         return $this;
     }
 
@@ -86,33 +88,32 @@ class AgentServiceChecksInfo extends AbstractModel
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Agent\AgentService|null $service
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentService|null $Service
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceChecksInfo
      */
-    public function setService(?AgentService $service): self
+    public function setService(?AgentService $Service): self
     {
-        $this->Service = $service;
+        $this->Service = $Service;
         return $this;
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Health\HealthChecks|null
+     * @return \DCarbone\PHPConsulAPI\Health\HealthChecks
      */
-    public function getChecks(): ?HealthChecks
+    public function getChecks(): HealthChecks
     {
         return $this->Checks;
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Health\HealthChecks|null $checks
+     * @param \DCarbone\PHPConsulAPI\Health\HealthChecks $Checks
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceChecksInfo
      */
-    public function setChecks(?HealthChecks $checks): self
+    public function setChecks(HealthChecks $Checks): self
     {
-        $this->Checks = $checks;
+        $this->Checks = $Checks;
         return $this;
     }
-
     /**
      * @return string
      */

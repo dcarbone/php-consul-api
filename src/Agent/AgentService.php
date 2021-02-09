@@ -19,7 +19,9 @@ namespace DCarbone\PHPConsulAPI\Agent;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Catalog\ServiceAddress;
 use DCarbone\PHPConsulAPI\HasStringTags;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class AgentService
@@ -28,20 +30,127 @@ class AgentService extends AbstractModel
 {
     use HasStringTags;
 
+    protected const FIELDS = [
+        self::FIELD_KIND             => [
+            Hydration::FIELD_TYPE     => Hydration::STRING,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+        self::FIELD_TAGGED_ADDRESSES => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => ServiceAddress::class,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+            Hydration::FIELD_NULLABLE   => true,
+        ],
+        self::FIELD_WEIGHTS          => [
+            Hydration::FIELD_TYPE     => Hydration::OBJECT,
+            Hydration::FIELD_CLASS    => AgentWeights::class,
+            Hydration::FIELD_NULLABLE => false,
+        ],
+        self::FIELD_CREATE_INDEX     => [
+            Hydration::FIELD_TYPE     => Hydration::INTEGER,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+        self::FIELD_MODIFY_INDEX     => [
+            Hydration::FIELD_TYPE     => Hydration::INTEGER,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+        self::FIELD_CONTENT_HASH     => [
+            Hydration::FIELD_TYPE     => Hydration::STRING,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+        self::FIELD_PROXY            => [
+            Hydration::FIELD_TYPE     => Hydration::OBJECT,
+            Hydration::FIELD_CLASS    => AgentServiceConnectProxyConfig::class,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+        self::FIELD_CONNECT          => [
+            Hydration::FIELD_TYPE     => Hydration::OBJECT,
+            Hydration::FIELD_CLASS    => AgentServiceConnect::class,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+        self::FIELD_NAMESPACE        => [
+            Hydration::FIELD_TYPE     => Hydration::STRING,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+        self::FIELD_DATACENTER       => [
+            Hydration::FIELD_TYPE     => Hydration::STRING,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+    ];
+
+    private const FIELD_KIND             = 'Kind';
+    private const FIELD_TAGGED_ADDRESSES = 'TaggedAddresses';
+    private const FIELD_WEIGHTS          = 'Weights';
+    private const FIELD_CREATE_INDEX     = 'CreateIndex';
+    private const FIELD_MODIFY_INDEX     = 'ModifyIndex';
+    private const FIELD_CONTENT_HASH     = 'ContentHash';
+    private const FIELD_PROXY            = 'Proxy';
+    private const FIELD_CONNECT          = 'Connect';
+    private const FIELD_NAMESPACE        = 'Namespace';
+    private const FIELD_DATACENTER       = 'Datacenter';
+
+    /** @var string|null */
+    public ?string $Kind = null;
     /** @var string */
     public string $ID = '';
     /** @var string */
     public string $Service = '';
-    /** @var string */
-    public string $Address = '';
+    /** @var string[] */
+    public array $Meta = [];
     /** @var int */
     public int $Port = 0;
+    /** @var string */
+    public string $Address = '';
+    /** @var \DCarbone\PHPConsulAPI\Catalog\ServiceAddress[]|null */
+    public ?array $TaggedAddresses = null;
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentWeights */
+    public AgentWeights $Weights;
     /** @var bool */
     public bool $EnableTagOverride = false;
-    /** @var int */
-    public int $CreateIndex = 0;
-    /** @var int */
-    public int $ModifyIndex = 0;
+    /** @var int|null */
+    public ?int $CreateIndex = null;
+    /** @var int|null */
+    public ?int $ModifyIndex = null;
+    /** @var string|null */
+    public ?string $ContentHash = null;
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentServiceConnectProxyConfig|null */
+    public ?AgentServiceConnectProxyConfig $Proxy = null;
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentServiceConnect|null */
+    public ?AgentServiceConnect $Connect = null;
+    /** @var string|null */
+    public ?string $Namespace = null;
+    /** @var string|null */
+    public ?string $Datacenter = null;
+
+    /**
+     * AgentService constructor.
+     * @param array|null $data
+     */
+    public function __construct(?array $data = [])
+    {
+        parent::__construct($data);
+        if (!isset($this->Weights)) {
+            $this->Weights = new AgentWeights(null);
+        }
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getKind(): ?string
+    {
+        return $this->Kind;
+    }
+
+    /**
+     * @param string|null $Kind
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentService
+     */
+    public function setKind(?string $Kind): self
+    {
+        $this->Kind = $Kind;
+        return $this;
+    }
 
     /**
      * @return string
@@ -49,6 +158,16 @@ class AgentService extends AbstractModel
     public function getID(): string
     {
         return $this->ID;
+    }
+
+    /**
+     * @param string $ID
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentService
+     */
+    public function setID(string $ID): self
+    {
+        $this->ID = $ID;
+        return $this;
     }
 
     /**
@@ -60,11 +179,31 @@ class AgentService extends AbstractModel
     }
 
     /**
-     * @return string
+     * @param string $Service
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentService
      */
-    public function getAddress(): string
+    public function setService(string $Service): self
     {
-        return $this->Address;
+        $this->Service = $Service;
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getMeta(): array
+    {
+        return $this->Meta;
+    }
+
+    /**
+     * @param string[] $Meta
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentService
+     */
+    public function setMeta(array $Meta): self
+    {
+        $this->Meta = $Meta;
+        return $this;
     }
 
     /**
@@ -76,6 +215,70 @@ class AgentService extends AbstractModel
     }
 
     /**
+     * @param int $Port
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentService
+     */
+    public function setPort(int $Port): self
+    {
+        $this->Port = $Port;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress(): string
+    {
+        return $this->Address;
+    }
+
+    /**
+     * @param string $Address
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentService
+     */
+    public function setAddress(string $Address): self
+    {
+        $this->Address = $Address;
+        return $this;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Catalog\ServiceAddress[]|null
+     */
+    public function getTaggedAddresses(): ?array
+    {
+        return $this->TaggedAddresses;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Catalog\ServiceAddress[]|null $TaggedAddresses
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentService
+     */
+    public function setTaggedAddresses(?array $TaggedAddresses): self
+    {
+        $this->TaggedAddresses = $TaggedAddresses;
+        return $this;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentWeights
+     */
+    public function getWeights(): AgentWeights
+    {
+        return $this->Weights;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentWeights $Weights
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentService
+     */
+    public function setWeights(AgentWeights $Weights): self
+    {
+        $this->Weights = $Weights;
+        return $this;
+    }
+
+    /**
      * @return bool
      */
     public function isEnableTagOverride(): bool
@@ -84,21 +287,140 @@ class AgentService extends AbstractModel
     }
 
     /**
-     * @return int
+     * @param bool $EnableTagOverride
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentService
      */
-    public function getCreateIndex(): int
+    public function setEnableTagOverride(bool $EnableTagOverride): self
+    {
+        $this->EnableTagOverride = $EnableTagOverride;
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getCreateIndex(): ?int
     {
         return $this->CreateIndex;
     }
 
     /**
-     * @return int
+     * @param int|null $CreateIndex
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentService
      */
-    public function getModifyIndex(): int
+    public function setCreateIndex(?int $CreateIndex): self
+    {
+        $this->CreateIndex = $CreateIndex;
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getModifyIndex(): ?int
     {
         return $this->ModifyIndex;
     }
 
+    /**
+     * @param int|null $ModifyIndex
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentService
+     */
+    public function setModifyIndex(?int $ModifyIndex): self
+    {
+        $this->ModifyIndex = $ModifyIndex;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getContentHash(): ?string
+    {
+        return $this->ContentHash;
+    }
+
+    /**
+     * @param string|null $ContentHash
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentService
+     */
+    public function setContentHash(?string $ContentHash): self
+    {
+        $this->ContentHash = $ContentHash;
+        return $this;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceConnectProxyConfig|null
+     */
+    public function getProxy(): ?AgentServiceConnectProxyConfig
+    {
+        return $this->Proxy;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceConnectProxyConfig|null $Proxy
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentService
+     */
+    public function setProxy(?AgentServiceConnectProxyConfig $Proxy): self
+    {
+        $this->Proxy = $Proxy;
+        return $this;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceConnect|null
+     */
+    public function getConnect(): ?AgentServiceConnect
+    {
+        return $this->Connect;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceConnect|null $Connect
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentService
+     */
+    public function setConnect(?AgentServiceConnect $Connect): self
+    {
+        $this->Connect = $Connect;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getNamespace(): ?string
+    {
+        return $this->Namespace;
+    }
+
+    /**
+     * @param string|null $Namespace
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentService
+     */
+    public function setNamespace(?string $Namespace): self
+    {
+        $this->Namespace = $Namespace;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDatacenter(): ?string
+    {
+        return $this->Datacenter;
+    }
+
+    /**
+     * @param string|null $Datacenter
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentService
+     */
+    public function setDatacenter(?string $Datacenter): self
+    {
+        $this->Datacenter = $Datacenter;
+        return $this;
+    }
     /**
      * @return string
      */

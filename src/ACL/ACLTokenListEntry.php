@@ -108,7 +108,7 @@ class ACLTokenListEntry extends AbstractModel
      * ACLToken constructor.
      * @param array $data
      */
-    public function __construct(array $data = [])
+    public function __construct(?array $data = null)
     {
         parent::__construct($data);
         if (!isset($this->CreateTime)) {

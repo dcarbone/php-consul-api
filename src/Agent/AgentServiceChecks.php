@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI\KV;
+namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
    Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -22,12 +22,12 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\AbstractModels;
 
 /**
- * Class TxnErrors
+ * Class AgentServiceChecks
  */
-class TxnErrors extends AbstractModels
+class AgentServiceChecks extends AbstractModels
 {
     /** @var string */
-    protected string $containedClass = TxnError::class;
+    protected string $containedClass = AgentServiceCheck::class;
 
     /**
      * @param array $data
@@ -35,6 +35,6 @@ class TxnErrors extends AbstractModels
      */
     protected function newChild(array $data): AbstractModel
     {
-        return new TxnError($data);
+        return new AgentServiceCheck($data);
     }
 }

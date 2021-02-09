@@ -19,6 +19,7 @@ namespace DCarbone\PHPConsulAPI\Agent;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Consul;
 use DCarbone\PHPConsulAPI\HasStringTags;
 
 /**
@@ -127,6 +128,32 @@ class AgentMember extends AbstractModel
     public function getDelegateCur(): int
     {
         return $this->DelegateCur;
+    }
+
+    /**
+     * @return string
+     */
+    public function ACLMode(): string
+    {
+        switch ($this->Tags[Consul::MemberTagKeyACLMode] ?? null) {
+            case Consul::ACLModeDisabled:
+                return Consul::ACLModeDisabled;
+            case Consul::ACLModeEnabled:
+                return Consul::ACLModeEnabled;
+            case Consul::ACLModeLegacy:
+                return Consul::ACLModeLegacy;
+            default:
+                return Consul::ACLModeUnknown;
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function IsConsulServer(): bool
+    {
+        return isset($this->Tags[Consul::MemberTagKeyACLMode]) &&
+            Consul::MemberTagValueRoleServer === $this->Tags[Consul::MemberTagKeyACLMode];
     }
 
     /**

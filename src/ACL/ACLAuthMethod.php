@@ -85,9 +85,9 @@ class ACLAuthMethod extends AbstractModel
 
     /**
      * ACLAuthMethod constructor.
-     * @param array $data
+     * @param array|null $data
      */
-    public function __construct(array $data = [])
+    public function __construct(?array $data = null)
     {
         parent::__construct($data);
         if (!isset($this->MaxTokenTTL)) {

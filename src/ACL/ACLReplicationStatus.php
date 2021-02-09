@@ -57,9 +57,9 @@ class ACLReplicationStatus extends AbstractModel
 
     /**
      * ACLReplicationStatus constructor.
-     * @param array $data
+     * @param array|null $data
      */
-    public function __construct(array $data = [])
+    public function __construct(?array $data = null)
     {
         parent::__construct($data);
         if (!isset($this->LastSuccess)) {

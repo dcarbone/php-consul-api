@@ -33,10 +33,14 @@ abstract class AbstractModel implements \JsonSerializable
      * Convenience method to help set scalar types.  Any extending class must have a constructor that builds any
      * array / object properties it may have.
      *
-     * @param array $data
+     * @param array|null $data
      */
-    public function __construct(array $data = [])
+    public function __construct(?array $data = [])
     {
+        // fast path for "empty"
+        if (null === $data || [] === $data) {
+            return;
+        }
         foreach ($data as $k => $v) {
             $this->hydrateField($k, $v);
         }
