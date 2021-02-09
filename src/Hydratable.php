@@ -197,7 +197,7 @@ trait Hydratable
                 throw new \RuntimeException(
                     \sprintf(
                         'Error calling hydration callback "%s" for field "%s" on class "%s"',
-                        $def[Hydration::FIELD_CALLBACK],
+                        \var_export($def[Hydration::FIELD_CALLBACK], true),
                         $field,
                         \get_class($this)
                     )
