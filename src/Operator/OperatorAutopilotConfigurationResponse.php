@@ -18,17 +18,14 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractResponse;
-use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\AbstractValuedResponse;
 use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class OperatorAutopilotConfigurationResponse
  */
-class OperatorAutopilotConfigurationResponse extends AbstractResponse implements HydratedResponseInterface
+class OperatorAutopilotConfigurationResponse extends AbstractValuedResponse implements HydratedResponseInterface
 {
-    use ErrorContainer;
-
     /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration|null */
     public ?AutopilotConfiguration $AutopilotConfiguration = null;
 

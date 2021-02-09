@@ -18,13 +18,13 @@ namespace DCarbone\PHPConsulAPI\Health;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
 use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class ServiceEntriesResponse
  */
-class ServiceEntriesResponse extends AbstractResponse implements HydratedResponseInterface
+class ServiceEntriesResponse extends AbstractValuedQueryResponse implements HydratedResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Health\ServiceEntry[]|null */
     public ?array $ServiceEntries = null;

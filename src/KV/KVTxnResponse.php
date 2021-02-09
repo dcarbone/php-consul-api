@@ -35,7 +35,7 @@ class KVTxnResponse extends AbstractModel
     public ?TxnErrors $Errors = null;
 
     /** @var array[] */
-    protected static array $fields = [
+    protected const FIELDS = [
         self::FIELD_RESULTS => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_CLASS      => KVPair::class,

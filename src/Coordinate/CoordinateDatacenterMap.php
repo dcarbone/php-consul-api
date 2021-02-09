@@ -36,7 +36,7 @@ class CoordinateDatacenterMap extends AbstractModel
     public array $Coordinates = [];
 
     /** @var array[] */
-    protected static array $fields = [
+    protected const FIELDS = [
         self::FIELD_COORDINATES => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_CLASS      => Coordinate::class,

@@ -49,7 +49,7 @@ class CatalogRegistration extends AbstractModel
     public ?AgentCheck $Check = null;
 
     /** @var array[] */
-    protected static array $fields = [
+    protected const FIELDS = [
         self::FIELD_SERVICE => [
             Hydration::FIELD_TYPE  => Hydration::OBJECT,
             Hydration::FIELD_CLASS => AgentService::class,

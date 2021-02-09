@@ -18,19 +18,14 @@ namespace DCarbone\PHPConsulAPI\Event;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractResponse;
-use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\AbstractValuedWriteResponse;
 use DCarbone\PHPConsulAPI\HydratedResponseInterface;
-use DCarbone\PHPConsulAPI\WriteMetaContainer;
 
 /**
  * Class UserEventResponse
  */
-class UserEventResponse extends AbstractResponse implements HydratedResponseInterface
+class UserEventResponse extends AbstractValuedWriteResponse implements HydratedResponseInterface
 {
-    use WriteMetaContainer;
-    use ErrorContainer;
-
     /** @var \DCarbone\PHPConsulAPI\Event\UserEvent|null */
     public ?UserEvent $UserEvent = null;
 

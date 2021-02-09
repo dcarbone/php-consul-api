@@ -43,7 +43,7 @@ class MetricsInfo extends AbstractModel
     public array $Samples = [];
 
     /** @var array[] */
-    protected static array $fields = [
+    protected const FIELDS = [
         self::FIELD_GAUGES => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_CLASS      => GaugeValue::class,

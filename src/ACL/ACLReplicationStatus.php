@@ -48,7 +48,7 @@ class ACLReplicationStatus extends AbstractModel
     public Time\Time $LastError;
 
     /** @var array[] */
-    protected static array $fields = [
+    protected const FIELDS = [
         self::FIELD_LAST_SUCCESS => [
             Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_TIME,
         ],

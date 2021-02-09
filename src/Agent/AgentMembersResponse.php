@@ -18,17 +18,14 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractResponse;
-use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\AbstractValuedResponse;
 use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class AgentMembersResponse
  */
-class AgentMembersResponse extends AbstractResponse implements HydratedResponseInterface
+class AgentMembersResponse extends AbstractValuedResponse implements HydratedResponseInterface
 {
-    use ErrorContainer;
-
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentMember[]|null */
     public ?array $Members = null;
 

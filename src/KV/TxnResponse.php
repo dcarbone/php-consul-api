@@ -35,7 +35,7 @@ class TxnResponse extends AbstractModel
     public TxnErrors $Errors;
 
     /** @var array[] */
-    protected static array $fields = [
+    protected const FIELDS = [
         self::FIELD_RESULTS => [
             Hydration::FIELD_TYPE  => Hydration::OBJECT,
             Hydration::FIELD_CLASS => TxnResults::class,

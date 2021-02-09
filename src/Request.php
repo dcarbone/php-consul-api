@@ -74,7 +74,7 @@ class Request
         if ('' !== $config->Namespace) {
             $this->params->set('ns', $config->Namespace);
         }
-        if (0 !== $config->WaitTime) {
+        if (null !== $config->WaitTime && $config->WaitTime->Nanoseconds() > 0) {
             $this->params->set('wait', dur_to_millisecond($config->WaitTime));
         }
         if ('' !== $config->Token) {

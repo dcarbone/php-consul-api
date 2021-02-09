@@ -18,19 +18,14 @@ namespace DCarbone\PHPConsulAPI\KV;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractResponse;
-use DCarbone\PHPConsulAPI\ErrorContainer;
-use DCarbone\PHPConsulAPI\QueryMetaContainer;
+use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
 use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class KVPairResponse
  */
-class KVPairResponse extends AbstractResponse implements HydratedResponseInterface
+class KVPairResponse extends AbstractValuedQueryResponse implements HydratedResponseInterface
 {
-    use QueryMetaContainer;
-    use ErrorContainer;
-
     /** @var \DCarbone\PHPConsulAPI\KV\KVPair|null */
     public ?KVPair $KVPair = null;
 

@@ -48,7 +48,7 @@ class AutopilotUpgrade extends AbstractModel
     public array $RedundancyZones = [];
 
     /** @var array[] */
-    protected static array $fields = [
+    protected const FIELDS = [
         self::FIELD_REDUNDANCY_ZONES             => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_CLASS      => AutopilotZoneUpgradeVersions::class,

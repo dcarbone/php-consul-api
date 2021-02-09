@@ -19,12 +19,13 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\AbstractValuedResponse;
 use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class OperatorAutopilotStateResponse
  */
-class OperatorAutopilotStateResponse extends AbstractResponse implements HydratedResponseInterface
+class OperatorAutopilotStateResponse extends AbstractValuedResponse implements HydratedResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotState|null */
     public ?AutopilotState $AutopilotState = null;

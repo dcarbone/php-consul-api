@@ -34,7 +34,7 @@ class RaftConfiguration extends AbstractModel
     public int $Index = 0;
 
     /** @var array[] */
-    protected static array $fields = [
+    protected const FIELDS = [
         self::FIELD_SERVERS => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_CLASS      => RaftServer::class,

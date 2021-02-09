@@ -18,19 +18,14 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractResponse;
-use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\AbstractValuedWriteResponse;
 use DCarbone\PHPConsulAPI\HydratedResponseInterface;
-use DCarbone\PHPConsulAPI\WriteMetaContainer;
 
 /**
  * Class OperatorAreaJoinResponse
  */
-class OperatorAreaJoinResponse extends AbstractResponse implements HydratedResponseInterface
+class OperatorAreaJoinResponse extends AbstractValuedWriteResponse implements HydratedResponseInterface
 {
-    use WriteMetaContainer;
-    use ErrorContainer;
-
     /** @var \DCarbone\PHPConsulAPI\Operator\AreaJoinResponse[]|null */
     public ?array $AreaJoinResponses = null;
 

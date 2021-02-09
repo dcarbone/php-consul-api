@@ -53,6 +53,16 @@ class Config
         RequestOptions::DECODE_CONTENT => false,
     ];
 
+    /** @var array[] */
+    protected const FIELDS = [
+        self::FIELD_HTTP_AUTH => [
+            Hydration::FIELD_CALLBACK => 'setHttpAuth',
+        ],
+        self::FIELD_WAIT_TIME => [
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_NULLABLE_DURATION,
+        ],
+    ];
+
     /**
      * The address, including port, of your Consul Agent
      *
@@ -151,16 +161,6 @@ class Config
      */
     public int $JSONEncodeOpts = 0;
 
-    /** @var array[] */
-    protected static array $fields = [
-        self::FIELD_HTTP_AUTH => [
-            Hydration::FIELD_CALLBACK => 'setHttpAuth',
-        ],
-        self::FIELD_WAIT_TIME => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_NULLABLE_DURATION,
-        ],
-    ];
-
     /**
      * Config constructor.
      * @param array $config
@@ -186,7 +186,7 @@ class Config
         }
 
         // if client hasn't been constructed, construct.
-        if (null === $this->HttpClient) {
+        if (!isset($this->HttpClient)) {
             $this->HttpClient = new Client();
         }
     }

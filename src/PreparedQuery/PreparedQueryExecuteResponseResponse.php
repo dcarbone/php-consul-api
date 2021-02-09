@@ -18,19 +18,14 @@
 
 namespace DCarbone\PHPConsulAPI\PreparedQuery;
 
-use DCarbone\PHPConsulAPI\AbstractResponse;
-use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
 use DCarbone\PHPConsulAPI\HydratedResponseInterface;
-use DCarbone\PHPConsulAPI\QueryMetaContainer;
 
 /**
  * Class PreparedQueryExecuteResponseResponse
  */
-class PreparedQueryExecuteResponseResponse extends AbstractResponse implements HydratedResponseInterface
+class PreparedQueryExecuteResponseResponse extends AbstractValuedQueryResponse implements HydratedResponseInterface
 {
-    use QueryMetaContainer;
-    use ErrorContainer;
-
     /** @var \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryExecuteResponse|null */
     public ?PreparedQueryExecuteResponse $PreparedQueryExecuteResponse = null;
 

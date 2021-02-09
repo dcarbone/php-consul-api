@@ -19,33 +19,37 @@ namespace DCarbone\PHPConsulAPI;
  */
 
 /**
- * Class AbstractResponse
+ * Class AbstractValuedWriteResponse
  */
-abstract class AbstractResponse implements \ArrayAccess
+abstract class AbstractValuedWriteResponse extends AbstractResponse implements ValuedResponseInterface
 {
+    use WriteMetaContainer;
+    use ErrorContainer;
+
     /**
      * @param mixed $offset
+     * @return bool
      */
-    public function offsetUnset($offset): void
+    public function offsetExists($offset): bool
     {
-        throw new \BadMethodCallException(\sprintf('Calling %s on class %s is forbidden', __METHOD__, \get_class($this)));
+        return \is_int($offset) && 0 <= $offset && $offset < 3;
     }
 
     /**
      * @param mixed $offset
-     * @param mixed $value
+     * @return \DCarbone\PHPConsulAPI\Error|\DCarbone\PHPConsulAPI\WriteMeta|mixed|null
      */
-    public function offsetSet($offset, $value): void
+    public function offsetGet($offset)
     {
-        throw new \BadMethodCallException(\sprintf('Calling %s on class %s is forbidden', __METHOD__, \get_class($this)));
-    }
-
-    /**
-     * @param mixed $offset
-     * @return \OutOfRangeException
-     */
-    protected function _newOutOfRangeException($offset): \OutOfRangeException
-    {
-        return new \OutOfRangeException(\sprintf('Offset %s does not exist', $offset));
+        if (0 === $offset) {
+            return $this->getValue();
+        }
+        if (1 === $offset) {
+            return $this->WriteMeta;
+        }
+        if (2 === $offset) {
+            return $this->Err;
+        }
+        throw $this->_newOutOfRangeException($offset);
     }
 }

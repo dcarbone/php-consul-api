@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI\Health;
+namespace DCarbone\PHPConsulAPI;
 
 /*
    Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -18,31 +18,35 @@ namespace DCarbone\PHPConsulAPI\Health;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\HydratedResponseInterface;
-
 /**
- * Class HealthChecksResponse
+ * Class AbstractValuedResponse
+ * @package DCarbone\PHPConsulAPI
  */
-class HealthChecksResponse extends AbstractValuedQueryResponse implements HydratedResponseInterface
+abstract class AbstractValuedResponse extends AbstractResponse implements ValuedResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\Health\HealthChecks|null */
-    public ?HealthChecks $HealthChecks = null;
+    use ErrorContainer;
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Health\HealthChecks|null
+     * @param mixed $offset
+     * @return bool
      */
-    public function getValue()
+    public function offsetExists($offset): bool
     {
-        return $this->HealthChecks;
+        return \is_int($offset) && 0 <= $offset && $offset < 2;
     }
 
     /**
-     * @param mixed $decodedData
-     * @return void
+     * @param mixed $offset
+     * @return \DCarbone\PHPConsulAPI\Error|mixed|null
      */
-    public function hydrateValue($decodedData): void
+    public function offsetGet($offset)
     {
-        $this->HealthChecks = new HealthChecks((array)$decodedData);
+        if (0 === $offset) {
+            return $this->getValue();
+        }
+        if (1 === $offset) {
+            return $this->Err;
+        }
+        throw $this->_newOutOfRangeException($offset);
     }
 }

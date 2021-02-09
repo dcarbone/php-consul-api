@@ -21,9 +21,7 @@ namespace DCarbone\PHPConsulAPI;
 /**
  * Class ValuedQueryStringsResponse
  */
-class ValuedQueryStringsResponse extends AbstractResponse implements HydratedResponseInterface
+class ValuedQueryStringsResponse extends AbstractValuedQueryResponse implements HydratedResponseInterface
 {
     use ResponseValueStringsTrait;
-    use QueryMetaContainer;
-    use ErrorContainer;
 }

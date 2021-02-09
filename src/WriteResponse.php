@@ -25,4 +25,28 @@ class WriteResponse extends AbstractResponse
 {
     use WriteMetaContainer;
     use ErrorContainer;
+
+    /**
+     * @param mixed $offset
+     * @return bool
+     */
+    public function offsetExists($offset): bool
+    {
+        return \is_int($offset) && 0 <= $offset && $offset < 2;
+    }
+
+    /**
+     * @param mixed $offset
+     * @return \DCarbone\PHPConsulAPI\Error|\DCarbone\PHPConsulAPI\WriteMeta|mixed|null
+     */
+    public function offsetGet($offset)
+    {
+        if (0 === $offset) {
+            return $this->WriteMeta;
+        }
+        if (1 === $offset) {
+            return $this->Err;
+        }
+        throw $this->_newOutOfRangeException($offset);
+    }
 }

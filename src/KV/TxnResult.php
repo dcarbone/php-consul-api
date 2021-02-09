@@ -44,7 +44,7 @@ class TxnResult extends AbstractModel
     public ?HealthCheck $Check = null;
 
     /** @var array[] */
-    protected static array $fields = [
+    protected const FIELDS = [
         self::FIELD_KV => [
             Hydration::FIELD_TYPE     => Hydration::OBJECT,
             Hydration::FIELD_CLASS    => KVPair::class,

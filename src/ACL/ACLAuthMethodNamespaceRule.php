@@ -35,7 +35,7 @@ class ACLAuthMethodNamespaceRule extends AbstractModel
     public ?string $BindNamespace = null;
 
     /** @var array[] */
-    protected static array $fields = [
+    protected const FIELDS = [
         self::FIELD_SELECTOR=> [
             Hydration::FIELD_TYPE    => Hydration::STRING,
             Hydration::FIELD_NULLABLE=> true,

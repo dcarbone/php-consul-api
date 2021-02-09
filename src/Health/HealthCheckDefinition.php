@@ -70,7 +70,7 @@ class HealthCheckDefinition extends AbstractModel
     public ReadableDuration $DeregisterCriticalServiceAfter;
 
     /** @var array[] */
-    protected static array $fields = [
+    protected const FIELDS = [
         self::FIELD_INTERVAL_DURATION                          => [
             Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
         ],

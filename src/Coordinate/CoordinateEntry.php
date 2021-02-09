@@ -36,7 +36,7 @@ class CoordinateEntry extends AbstractModel
     public ?Coordinate $Coord = null;
 
     /** @var array[] */
-    protected static array $fields = [
+    protected const FIELDS = [
         self::FIELD_COORDINATE => [
             Hydration::FIELD_TYPE  => Hydration::OBJECT,
             Hydration::FIELD_CLASS => Coordinate::class,

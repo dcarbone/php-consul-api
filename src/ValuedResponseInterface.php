@@ -19,9 +19,13 @@ namespace DCarbone\PHPConsulAPI;
  */
 
 /**
- * Class ValuedStringsResponse
+ * Interface ValuedResponseInterface
+ * @package DCarbone\PHPConsulAPI
  */
-class ValuedStringsResponse extends AbstractValuedResponse implements HydratedResponseInterface
+interface ValuedResponseInterface
 {
-    use ResponseValueStringsTrait;
+    /**
+     * @return mixed
+     */
+    public function getValue();
 }

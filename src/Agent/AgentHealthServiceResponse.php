@@ -67,4 +67,31 @@ class AgentHealthServiceResponse extends AbstractResponse
     {
         return $this->AgentServiceChecksInfos;
     }
+
+    /**
+     * @param mixed $offset
+     * @return bool
+     */
+    public function offsetExists($offset): bool
+    {
+        return \is_int($offset) && 0 <= $offset && $offset < 3;
+    }
+
+    /**
+     * @param mixed $offset
+     * @return array|\DCarbone\PHPConsulAPI\Agent\AgentServiceChecksInfo[]|\DCarbone\PHPConsulAPI\Error|mixed|string|null
+     */
+    public function offsetGet($offset)
+    {
+        if (0 === $offset) {
+            return $this->AggregatedStatus;
+        }
+        if (1 === $offset) {
+            return $this->AgentServiceChecksInfos;
+        }
+        if (2 === $offset) {
+            return $this->Err;
+        }
+        throw $this->_newOutOfRangeException($offset);
+    }
 }

@@ -54,7 +54,7 @@ class SessionEntry extends AbstractModel
     public array $ServiceChecks = [];
 
     /** @var array[] */
-    protected static array $fields = [
+    protected const FIELDS = [
         self::FIELD_LOCK_DELAY     => [
             Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
         ],

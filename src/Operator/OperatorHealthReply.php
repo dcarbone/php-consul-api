@@ -36,7 +36,7 @@ class OperatorHealthReply extends AbstractModel
     public array $Servers = [];
 
     /** @var array[] */
-    protected static array $fields = [
+    protected const FIELDS = [
         self::FIELD_SERVERS => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_CLASS      => ServerHealth::class,

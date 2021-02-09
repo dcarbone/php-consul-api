@@ -32,7 +32,7 @@ class TxnOp extends AbstractModel
     public ?KVTxnOp $KV = null;
 
     /** @var array[] */
-    protected static array $fields = [
+    protected const FIELDS = [
         self::FIELD_KV => [
             Hydration::FIELD_TYPE     => Hydration::OBJECT,
             Hydration::FIELD_CLASS    => KVTxnOp::class,

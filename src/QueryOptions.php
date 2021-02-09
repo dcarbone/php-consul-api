@@ -72,7 +72,7 @@ class QueryOptions extends AbstractModel implements RequestOptions
     public bool $Pretty = false;
 
     /** @var array[] */
-    protected static array $fields = [
+    protected const FIELDS = [
         self::FIELD_MAX_AGE => [
             Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_NULLABLE_DURATION,
         ],

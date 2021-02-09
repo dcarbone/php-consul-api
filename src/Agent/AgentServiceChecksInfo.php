@@ -38,7 +38,7 @@ class AgentServiceChecksInfo extends AbstractModel
     public HealthChecks $Checks;
 
     /** @var array[] */
-    protected static array $fields = [
+    protected const FIELDS = [
         self::FIELD_SERVICE => [
             Hydration::FIELD_TYPE  => Hydration::OBJECT,
             Hydration::FIELD_CLASS => AgentService::class,

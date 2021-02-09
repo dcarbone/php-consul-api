@@ -18,17 +18,14 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractResponse;
-use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\AbstractValuedResponse;
 use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class CoordinateDatacentersResponse
  */
-class CoordinateDatacentersResponse extends AbstractResponse implements HydratedResponseInterface
+class CoordinateDatacentersResponse extends AbstractValuedResponse implements HydratedResponseInterface
 {
-    use ErrorContainer;
-
     /** @var \DCarbone\PHPConsulAPI\Coordinate\CoordinateDatacenterMap[]|null */
     public ?array $DatacenterMap = null;
 

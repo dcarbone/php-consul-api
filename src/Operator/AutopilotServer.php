@@ -62,7 +62,7 @@ class AutopilotServer extends AbstractModel implements \JsonSerializable
     public string $NodeType = '';
 
     /** @var array[] */
-    protected static array $fields = [
+    protected const FIELDS = [
         self::FIELD_LAST_CONTACT => [
             Hydration::FIELD_CALLBACK => [ReadableDuration::class, 'hydrate'],
         ],

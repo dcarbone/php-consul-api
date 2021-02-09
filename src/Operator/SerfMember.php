@@ -51,7 +51,7 @@ class SerfMember extends AbstractModel
     public ?Time\Duration $RTT = null;
 
     /** @var array[] */
-    protected static array $fields = [
+    protected const FIELDS = [
         self::FIELD_RTT => [
             Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
         ],

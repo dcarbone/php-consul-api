@@ -68,7 +68,7 @@ class ACLTokenListEntry extends AbstractModel
     public ?string $Namespace = null;
 
     /** @var array[] */
-    protected static array $fields = [
+    protected const FIELDS = [
         self::FIELD_POLICIES           => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_CLASS      => ACLTokenPolicyLink::class,

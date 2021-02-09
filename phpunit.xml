@@ -14,8 +14,6 @@
     </php>
 
     <testsuites>
-        <testsuite name=""></testsuite>
-        
         <testsuite name="usage-config">
             <file>./tests/Usage/ConfigUsageTest.php</file>
         </testsuite>

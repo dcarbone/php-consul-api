@@ -18,19 +18,14 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractResponse;
-use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
 use DCarbone\PHPConsulAPI\HydratedResponseInterface;
-use DCarbone\PHPConsulAPI\QueryMetaContainer;
 
 /**
  * Class OperatorAreasResponse
  */
-class OperatorAreasResponse extends AbstractResponse implements HydratedResponseInterface
+class OperatorAreasResponse extends AbstractValuedQueryResponse implements HydratedResponseInterface
 {
-    use QueryMetaContainer;
-    use ErrorContainer;
-
     /** @var \DCarbone\PHPConsulAPI\Operator\Area[]|null */
     public ?array $Areas = null;
 

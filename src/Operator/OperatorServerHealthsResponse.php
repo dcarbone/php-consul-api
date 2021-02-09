@@ -18,17 +18,14 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractResponse;
-use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\AbstractValuedResponse;
 use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class OperatorServerHealthsResponse
  */
-class OperatorServerHealthsResponse extends AbstractResponse implements HydratedResponseInterface
+class OperatorServerHealthsResponse extends AbstractValuedResponse implements HydratedResponseInterface
 {
-    use ErrorContainer;
-
     /** @var \DCarbone\PHPConsulAPI\Operator\ServerHealth[]|null */
     public ?array $ServerHealths = null;
 

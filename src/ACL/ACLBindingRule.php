@@ -48,7 +48,7 @@ class ACLBindingRule extends AbstractModel
     public ?string $Namespace = null;
 
     /** @var array[] */
-    protected static array $fields = [
+    protected const FIELDS = [
         self::FIELD_NAMESPACE          => [
             Hydration::FIELD_TYPE     => Hydration::STRING,
             Hydration::FIELD_NULLABLE => true,

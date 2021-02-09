@@ -36,7 +36,7 @@ class CatalogNode extends AbstractModel
     public array $Services = [];
 
     /** @var array[] */
-    protected static array $fields = [
+    protected const FIELDS = [
         self::FIELD_NODE     => [
             Hydration::FIELD_TYPE  => Hydration::OBJECT,
             Hydration::FIELD_CLASS => Node::class,

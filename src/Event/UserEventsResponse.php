@@ -18,13 +18,13 @@ namespace DCarbone\PHPConsulAPI\Event;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractResponse;
+use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
 use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
  * Class UserEventsResponse
  */
-class UserEventsResponse extends AbstractResponse implements HydratedResponseInterface
+class UserEventsResponse extends AbstractValuedQueryResponse implements HydratedResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Event\UserEvent[]|null */
     public ?array $UserEvents = null;

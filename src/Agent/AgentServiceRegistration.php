@@ -51,7 +51,7 @@ class AgentServiceRegistration extends AbstractModel
     public array $Checks = [];
 
     /** @var array[] */
-    protected static array $fields = [
+    protected const FIELDS = [
         self::FIELD_CHECK => [
             Hydration::FIELD_TYPE  => Hydration::OBJECT,
             Hydration::FIELD_CLASS => AgentServiceCheck::class,

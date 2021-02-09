@@ -49,7 +49,7 @@ class AutopilotState extends AbstractModel
     /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotUpgrade|null */
     public ?AutopilotUpgrade $Upgrade = null;
 
-    protected static array $fields = [
+    protected const FIELDS = [
         self::FIELD_SERVERS         => [
             Hydration::FIELD_TYPE  => Hydration::ARRAY,
             Hydration::FIELD_CLASS => self::class,

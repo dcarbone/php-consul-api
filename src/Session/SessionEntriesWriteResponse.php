@@ -18,19 +18,14 @@ namespace DCarbone\PHPConsulAPI\Session;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractResponse;
-use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\AbstractValuedWriteResponse;
 use DCarbone\PHPConsulAPI\HydratedResponseInterface;
-use DCarbone\PHPConsulAPI\WriteMetaContainer;
 
 /**
  * Class SessionEntriesWriteResponse
  */
-class SessionEntriesWriteResponse extends AbstractResponse implements HydratedResponseInterface
+class SessionEntriesWriteResponse extends AbstractValuedWriteResponse implements HydratedResponseInterface
 {
-    use WriteMetaContainer;
-    use ErrorContainer;
-
     /** @var \DCarbone\PHPConsulAPI\Session\SessionEntry[]|null */
     public ?array $SessionEntries = null;
 

@@ -28,13 +28,6 @@ use DCarbone\PHPConsulAPI\KV\KVPair;
 trait Hydratable
 {
     /**
-     * Overload the definition of this array in implementing classes to define custom per-field hydration behavior
-     *
-     * @var array[]
-     */
-    protected static array $fields = [];
-
-    /**
      * Attempts to hydrate the provided value into the provided field on the implementing class
      *
      * @param string $field
@@ -42,9 +35,9 @@ trait Hydratable
      */
     protected function hydrateField(string $field, $value): void
     {
-        if (isset(static::$fields[$field])) {
+        if (isset(static::FIELDS[$field])) {
             // if the implementing class has some explicitly defined overrides
-            $this->hydrateComplex($field, $value, static::$fields[$field]);
+            $this->hydrateComplex($field, $value, static::FIELDS[$field]);
         } elseif (!\property_exists($this, $field)) {
             // if the field isn't explicitly defined on the implementing class, just set it to whatever the incoming
             // value is

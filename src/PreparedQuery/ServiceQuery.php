@@ -53,7 +53,7 @@ class ServiceQuery extends AbstractModel
     public bool $Connect = false;
 
     /** @var array[] */
-    protected static array $fields = [
+    protected const FIELDS = [
         self::FIELD_FAILOVER => [
             Hydration::FIELD_TYPE  => Hydration::OBJECT,
             Hydration::FIELD_CLASS => QueryDatacenterOptions::class,
