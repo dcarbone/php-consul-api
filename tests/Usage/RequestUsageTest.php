@@ -34,7 +34,7 @@ final class RequestUsageTest extends TestCase
 {
     public function testCanConstructWithoutBody(): void
     {
-        $r = new Request('', '', new Config());
+        $r = new Request('', '', new Config(), null);
         static::assertInstanceOf(Request::class, $r);
     }
 
@@ -52,7 +52,7 @@ final class RequestUsageTest extends TestCase
      */
     public function testCanCreatePsr7Uri(): void
     {
-        $r   = new Request('GET', 'kv', new Config());
+        $r   = new Request('GET', 'kv', new Config(), null);
         $uri = $r->getUri();
         static::assertInstanceOf(UriInterface::class, $uri);
         static::assertSame('/kv', $uri->getPath());
@@ -63,7 +63,7 @@ final class RequestUsageTest extends TestCase
      */
     public function testCanCreatePsr7Request(): void
     {
-        $r = new Request('GET', '/kv', new Config());
+        $r = new Request('GET', '/kv', new Config(), null);
 
         $psr7Request = $r->toPsrRequest();
         static::assertInstanceOf(RequestInterface::class, $psr7Request);
@@ -76,8 +76,8 @@ final class RequestUsageTest extends TestCase
      */
     public function testCanSetQueryOptions(): void
     {
-        $r = new Request('GET', 'kv', new Config());
-        $r->setQueryOptions(new QueryOptions(['Pretty' => true]));
+        $r = new Request('GET', 'kv', new Config(), null);
+        $r->applyOptions(new QueryOptions(['Pretty' => true]));
 
         $psr7 = $r->toPsrRequest();
         $uri  = $psr7->getUri();
@@ -89,8 +89,8 @@ final class RequestUsageTest extends TestCase
      */
     public function testCanSetWriteOptions(): void
     {
-        $r = new Request('GET', 'kv', new Config());
-        $r->setWriteOptions(new WriteOptions(['Datacenter' => 'dc1']));
+        $r = new Request('GET', 'kv', new Config(), null);
+        $r->applyOptions(new WriteOptions(['Datacenter' => 'dc1']));
 
         $psr7 = $r->toPsrRequest();
         $uri  = $psr7->getUri();

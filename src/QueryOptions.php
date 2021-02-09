@@ -430,7 +430,7 @@ class QueryOptions extends AbstractModel implements RequestOptions
         if (0 !== $this->WaitIndex) {
             $r->params->set('index', (string) $this->WaitIndex);
         }
-        if (0 !== $this->WaitTime) {
+        if (isset($this->WaitTime) && 0 < $this->WaitTime->Microseconds()) {
             $r->params->set('wait', dur_to_millisecond($this->WaitTime));
         }
         if ('' !== $this->WaitHash) {
