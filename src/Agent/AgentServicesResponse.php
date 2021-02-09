@@ -39,7 +39,6 @@ class AgentServicesResponse extends AbstractValuedQueryResponse implements Hydra
 
     /**
      * @param mixed $decodedData
-     * @return void
      */
     public function hydrateValue($decodedData): void
     {

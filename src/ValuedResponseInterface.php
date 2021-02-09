@@ -20,7 +20,6 @@ namespace DCarbone\PHPConsulAPI;
 
 /**
  * Interface ValuedResponseInterface
- * @package DCarbone\PHPConsulAPI
  */
 interface ValuedResponseInterface
 {

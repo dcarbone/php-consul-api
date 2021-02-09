@@ -30,6 +30,18 @@ class AgentServiceRegistration extends AbstractModel
 {
     use HasSettableStringTags;
     use HasStringTags;
+
+    protected const FIELDS = [
+        self::FIELD_CHECK => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => AgentServiceCheck::class,
+        ],
+        self::FIELD_CHECKS => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => AgentServiceCheck::class,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+        ],
+    ];
     private const FIELD_CHECK  = 'Check';
     private const FIELD_CHECKS = 'Checks';
 
@@ -49,18 +61,6 @@ class AgentServiceRegistration extends AbstractModel
     public ?AgentServiceCheck $Check = null;
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck[] */
     public array $Checks = [];
-
-    protected const FIELDS = [
-        self::FIELD_CHECK => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => AgentServiceCheck::class,
-        ],
-        self::FIELD_CHECKS => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => AgentServiceCheck::class,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
-        ],
-    ];
 
     /**
      * @return string

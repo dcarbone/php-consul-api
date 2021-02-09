@@ -39,7 +39,6 @@ class AgentMembersResponse extends AbstractValuedResponse implements HydratedRes
 
     /**
      * @param mixed $decodedData
-     * @return void
      */
     public function hydrateValue($decodedData): void
     {

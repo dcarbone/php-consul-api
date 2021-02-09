@@ -27,6 +27,14 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class AutopilotServer extends AbstractModel implements \JsonSerializable
 {
+    protected const FIELDS = [
+        self::FIELD_LAST_CONTACT => [
+            Hydration::FIELD_CALLBACK => [ReadableDuration::class, 'hydrate'],
+        ],
+        self::FIELD_STABLE_SINCE => [
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_TIME,
+        ],
+    ];
     private const FIELD_LAST_CONTACT = 'LastContact';
     private const FIELD_STABLE_SINCE = 'StableSince';
 
@@ -60,15 +68,6 @@ class AutopilotServer extends AbstractModel implements \JsonSerializable
     public array $Meta = [];
     /** @var string */
     public string $NodeType = '';
-
-    protected const FIELDS = [
-        self::FIELD_LAST_CONTACT => [
-            Hydration::FIELD_CALLBACK => [ReadableDuration::class, 'hydrate'],
-        ],
-        self::FIELD_STABLE_SINCE => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_TIME,
-        ],
-    ];
 
     /**
      * @return string

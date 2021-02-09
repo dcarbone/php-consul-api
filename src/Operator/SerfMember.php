@@ -27,6 +27,11 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class SerfMember extends AbstractModel
 {
+    protected const FIELDS = [
+        self::FIELD_RTT => [
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
+        ],
+    ];
     private const FIELD_RTT = 'RTT';
 
     /** @var string */
@@ -49,12 +54,6 @@ class SerfMember extends AbstractModel
     public string $Status = '';
     /** @var \DCarbone\Go\Time\Duration|null */
     public ?Time\Duration $RTT = null;
-
-    protected const FIELDS = [
-        self::FIELD_RTT => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
-        ],
-    ];
 
     /**
      * @return string

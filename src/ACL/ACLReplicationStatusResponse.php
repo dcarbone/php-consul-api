@@ -39,7 +39,6 @@ class ACLReplicationStatusResponse extends AbstractValuedQueryResponse implement
 
     /**
      * @param mixed $decodedData
-     * @return void
      */
     public function hydrateValue($decodedData): void
     {

@@ -29,6 +29,26 @@ use DCarbone\PHPConsulAPI\Operator\ReadableDuration;
  */
 class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
 {
+    protected const FIELDS = [
+        self::FIELD_INTERVAL_DURATION                          => [
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
+        ],
+        self::FIELD_TIMEOUT_DURATION                           => [
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
+        ],
+        self::FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER_DURATION => [
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
+        ],
+        self::FIELD_TIMEOUT                                    => [
+            Hydration::FIELD_CALLBACK => [ReadableDuration::class, 'hydrate'],
+        ],
+        self::FIELD_INTERVAL                                   => [
+            Hydration::FIELD_CALLBACK => [ReadableDuration::class, 'hydrate'],
+        ],
+        self::FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER          => [
+            Hydration::FIELD_CALLBACK => [ReadableDuration::class, 'hydrate'],
+        ],
+    ];
     private const FIELD_INTERVAL_DURATION                          = 'IntervalDuration';
     private const FIELD_TIMEOUT_DURATION                           = 'TimeoutDuration';
     private const FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER_DURATION = 'DeregisterCriticalServiceAfterDuration';
@@ -68,27 +88,6 @@ class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
      * @deprecated use $DeregisterCriticalServiceAfterDuration
      */
     public ReadableDuration $DeregisterCriticalServiceAfter;
-
-    protected const FIELDS = [
-        self::FIELD_INTERVAL_DURATION                          => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
-        ],
-        self::FIELD_TIMEOUT_DURATION                           => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
-        ],
-        self::FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER_DURATION => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
-        ],
-        self::FIELD_TIMEOUT                                    => [
-            Hydration::FIELD_CALLBACK => [ReadableDuration::class, 'hydrate'],
-        ],
-        self::FIELD_INTERVAL                                   => [
-            Hydration::FIELD_CALLBACK => [ReadableDuration::class, 'hydrate'],
-        ],
-        self::FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER          => [
-            Hydration::FIELD_CALLBACK => [ReadableDuration::class, 'hydrate'],
-        ],
-    ];
 
     /**
      * HealthCheckDefinition constructor.

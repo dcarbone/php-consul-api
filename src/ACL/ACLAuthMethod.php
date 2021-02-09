@@ -27,6 +27,32 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class ACLAuthMethod extends AbstractModel
 {
+    protected const FIELDS = [
+        self::FIELD_DISPLAY_NAME    => [
+            Hydration::FIELD_TYPE     => Hydration::STRING,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+        self::FIELD_DESCRIPTION     => [
+            Hydration::FIELD_TYPE     => Hydration::STRING,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+        self::FIELD_MAX_TOKEN_TTL   => [
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
+        ],
+        self::FIELD_TOKEN_LOCALITY  => [
+            Hydration::FIELD_TYPE     => Hydration::STRING,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+        self::FIELD_NAMESPACE_RULES => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => ACLAuthMethodNamespaceRule::class,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::class,
+        ],
+        self::FIELD_NAMESPACE       => [
+            Hydration::FIELD_TYPE     => Hydration::STRING,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+    ];
     private const  FIELD_DISPLAY_NAME    = 'DisplayName';
     private const  FIELD_DESCRIPTION     = 'Description';
     private const  FIELD_MAX_TOKEN_TTL   = 'MaxTokenTTL';
@@ -56,33 +82,6 @@ class ACLAuthMethod extends AbstractModel
     public array $NamespaceRules = [];
     /** @var string|null */
     public ?string $Namespace = null;
-
-    protected const FIELDS = [
-        self::FIELD_DISPLAY_NAME    => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_DESCRIPTION     => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_MAX_TOKEN_TTL   => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
-        ],
-        self::FIELD_TOKEN_LOCALITY  => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_NAMESPACE_RULES => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => ACLAuthMethodNamespaceRule::class,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::class,
-        ],
-        self::FIELD_NAMESPACE       => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-    ];
 
     /**
      * ACLAuthMethod constructor.

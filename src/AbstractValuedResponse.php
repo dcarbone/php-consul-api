@@ -20,7 +20,6 @@ namespace DCarbone\PHPConsulAPI;
 
 /**
  * Class AbstractValuedResponse
- * @package DCarbone\PHPConsulAPI
  */
 abstract class AbstractValuedResponse extends AbstractResponse implements ValuedResponseInterface
 {

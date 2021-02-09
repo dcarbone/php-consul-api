@@ -39,7 +39,6 @@ class HealthChecksResponse extends AbstractValuedQueryResponse implements Hydrat
 
     /**
      * @param mixed $decodedData
-     * @return void
      */
     public function hydrateValue($decodedData): void
     {

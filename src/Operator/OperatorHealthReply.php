@@ -26,6 +26,13 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class OperatorHealthReply extends AbstractModel
 {
+    protected const FIELDS = [
+        self::FIELD_SERVERS => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => ServerHealth::class,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+        ],
+    ];
     private const FIELD_SERVERS = 'Servers';
 
     /** @var bool */
@@ -34,14 +41,6 @@ class OperatorHealthReply extends AbstractModel
     public int $FailureTolerance = 0;
     /** @var \DCarbone\PHPConsulAPI\Operator\ServerHealth[] */
     public array $Servers = [];
-
-    protected const FIELDS = [
-        self::FIELD_SERVERS => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => ServerHealth::class,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
-        ],
-    ];
 
     /**
      * @return bool

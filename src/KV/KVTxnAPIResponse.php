@@ -18,9 +18,7 @@ namespace DCarbone\PHPConsulAPI\KV;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\ErrorContainer;
-use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPI\QueryMetaContainer;
 
 /**

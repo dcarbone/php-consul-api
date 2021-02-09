@@ -26,33 +26,6 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class ACLRole extends AbstractModel
 {
-    private const FIELD_POLICIES           = 'Policies';
-    private const FIELD_ROLES              = 'Roles';
-    private const FIELD_SERVICE_IDENTITIES = 'ServiceIdentities';
-    private const FIELD_NODE_IDENTITIES    = 'NodeIdentities';
-    private const FIELD_NAMESPACE          = 'Namespace';
-
-    /** @var string */
-    public string $ID = '';
-    /** @var string */
-    public string $Name = '';
-    /** @var string */
-    public string $Description = '';
-    /** @var \DCarbone\PHPConsulAPI\ACL\ACLRolePolicyLink[] */
-    public array $Policies = [];
-    /** @var \DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity[] */
-    public array $ServiceIdentities = [];
-    /** @var \DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity[] */
-    public array $NodeIdentities = [];
-    /** @var string */
-    public string $Hash = '';
-    /** @var int */
-    public int $CreateIndex = 0;
-    /** @var int */
-    public int $ModifyIndex = 0;
-    /** @var string|null */
-    public ?string $Namespace = null;
-
     protected const FIELDS = [
         self::FIELD_POLICIES           => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
@@ -79,6 +52,32 @@ class ACLRole extends AbstractModel
             Hydration::FIELD_NULLABLE => true,
         ],
     ];
+    private const FIELD_POLICIES           = 'Policies';
+    private const FIELD_ROLES              = 'Roles';
+    private const FIELD_SERVICE_IDENTITIES = 'ServiceIdentities';
+    private const FIELD_NODE_IDENTITIES    = 'NodeIdentities';
+    private const FIELD_NAMESPACE          = 'Namespace';
+
+    /** @var string */
+    public string $ID = '';
+    /** @var string */
+    public string $Name = '';
+    /** @var string */
+    public string $Description = '';
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLRolePolicyLink[] */
+    public array $Policies = [];
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity[] */
+    public array $ServiceIdentities = [];
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity[] */
+    public array $NodeIdentities = [];
+    /** @var string */
+    public string $Hash = '';
+    /** @var int */
+    public int $CreateIndex = 0;
+    /** @var int */
+    public int $ModifyIndex = 0;
+    /** @var string|null */
+    public ?string $Namespace = null;
 
     /**
      * @return string

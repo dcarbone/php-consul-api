@@ -26,6 +26,20 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class AutopilotState extends AbstractModel
 {
+    protected const FIELDS = [
+        self::FIELD_SERVERS         => [
+            Hydration::FIELD_TYPE  => Hydration::ARRAY,
+            Hydration::FIELD_CLASS => self::class,
+        ],
+        self::FIELD_REDUNDANCY_ZONE => [
+            Hydration::FIELD_TYPE  => Hydration::ARRAY,
+            Hydration::FIELD_CLASS => AutopilotZone::class,
+        ],
+        self::FIELD_UPGRADE         => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => AutopilotUpgrade::class,
+        ],
+    ];
     private const FIELD_SERVERS         = 'Servers';
     private const FIELD_REDUNDANCY_ZONE = 'RedundancyZone';
     private const FIELD_UPGRADE         = 'Upgrade';
@@ -48,21 +62,6 @@ class AutopilotState extends AbstractModel
     public array $RedundancyZone = [];
     /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotUpgrade|null */
     public ?AutopilotUpgrade $Upgrade = null;
-
-    protected const FIELDS = [
-        self::FIELD_SERVERS         => [
-            Hydration::FIELD_TYPE  => Hydration::ARRAY,
-            Hydration::FIELD_CLASS => self::class,
-        ],
-        self::FIELD_REDUNDANCY_ZONE => [
-            Hydration::FIELD_TYPE  => Hydration::ARRAY,
-            Hydration::FIELD_CLASS => AutopilotZone::class,
-        ],
-        self::FIELD_UPGRADE         => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => AutopilotUpgrade::class,
-        ],
-    ];
 
     /**
      * @return bool

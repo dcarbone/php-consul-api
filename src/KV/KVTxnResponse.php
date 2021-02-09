@@ -26,14 +26,6 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class KVTxnResponse extends AbstractModel
 {
-    private const FIELD_RESULTS = 'Results';
-    private const FIELD_ERRORS  = 'Errors';
-
-    /** @var \DCarbone\PHPConsulAPI\KV\KVPair[] */
-    public array $Results = [];
-    /** @var \DCarbone\PHPConsulAPI\KV\TxnErrors|null */
-    public ?TxnErrors $Errors = null;
-
     protected const FIELDS = [
         self::FIELD_RESULTS => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
@@ -45,6 +37,13 @@ class KVTxnResponse extends AbstractModel
             Hydration::FIELD_CLASS => TxnErrors::class,
         ],
     ];
+    private const FIELD_RESULTS = 'Results';
+    private const FIELD_ERRORS  = 'Errors';
+
+    /** @var \DCarbone\PHPConsulAPI\KV\KVPair[] */
+    public array $Results = [];
+    /** @var \DCarbone\PHPConsulAPI\KV\TxnErrors|null */
+    public ?TxnErrors $Errors = null;
 
     /**
      * @return \DCarbone\PHPConsulAPI\KV\KVPair[]

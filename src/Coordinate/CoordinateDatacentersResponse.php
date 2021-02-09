@@ -39,7 +39,6 @@ class CoordinateDatacentersResponse extends AbstractValuedResponse implements Hy
 
     /**
      * @param mixed $decodedData
-     * @return void
      */
     public function hydrateValue($decodedData): void
     {

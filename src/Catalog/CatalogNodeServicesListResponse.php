@@ -39,7 +39,6 @@ class CatalogNodeServicesListResponse extends AbstractValuedQueryResponse implem
 
     /**
      * @param mixed $decodedData
-     * @return void
      */
     public function hydrateValue($decodedData): void
     {

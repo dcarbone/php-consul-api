@@ -39,7 +39,6 @@ class CoordinateEntriesResponse extends AbstractValuedQueryResponse implements H
 
     /**
      * @param mixed $decodedData
-     * @return void
      */
     public function hydrateValue($decodedData): void
     {

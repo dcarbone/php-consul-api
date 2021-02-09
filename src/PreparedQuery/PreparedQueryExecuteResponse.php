@@ -27,6 +27,17 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class PreparedQueryExecuteResponse extends AbstractModel
 {
+    protected const FIELDS = [
+        self::FIELD_NODES => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => ServiceEntry::class,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+        ],
+        self::FIELD_DNS   => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => QueryDNSOptions::class,
+        ],
+    ];
     private const FIELD_NODES = 'Nodes';
     private const FIELD_DNS   = 'DNS';
 
@@ -42,18 +53,6 @@ class PreparedQueryExecuteResponse extends AbstractModel
     public string $Datacenter = '';
     /** @var int */
     public int $Failovers = 0;
-
-    protected const FIELDS = [
-        self::FIELD_NODES => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => ServiceEntry::class,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
-        ],
-        self::FIELD_DNS   => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => QueryDNSOptions::class,
-        ],
-    ];
 
     /**
      * @return string

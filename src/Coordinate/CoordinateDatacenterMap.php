@@ -26,6 +26,13 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class CoordinateDatacenterMap extends AbstractModel
 {
+    protected const FIELDS = [
+        self::FIELD_COORDINATES => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => Coordinate::class,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+        ],
+    ];
     private const FIELD_COORDINATES = 'Coordinates';
 
     /** @var string */
@@ -34,14 +41,6 @@ class CoordinateDatacenterMap extends AbstractModel
     public string $AreaID = '';
     /** @var \DCarbone\PHPConsulAPI\Coordinate\Coordinate[] */
     public array $Coordinates = [];
-
-    protected const FIELDS = [
-        self::FIELD_COORDINATES => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => Coordinate::class,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
-        ],
-    ];
 
     /**
      * @return string

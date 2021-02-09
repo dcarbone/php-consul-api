@@ -27,14 +27,6 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class CatalogNode extends AbstractModel
 {
-    private const FIELD_NODE     = 'Node';
-    private const FIELD_SERVICES = 'Services';
-
-    /** @var \DCarbone\PHPConsulAPI\Catalog\Node|null */
-    public ?Node $Node = null;
-    /** @var \DCarbone\PHPConsulAPI\Agent\AgentService[] */
-    public array $Services = [];
-
     protected const FIELDS = [
         self::FIELD_NODE     => [
             Hydration::FIELD_TYPE  => Hydration::OBJECT,
@@ -46,6 +38,13 @@ class CatalogNode extends AbstractModel
             Hydration::FIELD_ARRAY_TYPE => HYdration::OBJECT,
         ],
     ];
+    private const FIELD_NODE     = 'Node';
+    private const FIELD_SERVICES = 'Services';
+
+    /** @var \DCarbone\PHPConsulAPI\Catalog\Node|null */
+    public ?Node $Node = null;
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentService[] */
+    public array $Services = [];
 
     /**
      * @return \DCarbone\PHPConsulAPI\Catalog\Node

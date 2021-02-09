@@ -26,6 +26,12 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class CoordinateEntry extends AbstractModel
 {
+    protected const FIELDS = [
+        self::FIELD_COORDINATE => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => Coordinate::class,
+        ],
+    ];
     private const FIELD_COORDINATE = 'Coord';
 
     /** @var string */
@@ -34,13 +40,6 @@ class CoordinateEntry extends AbstractModel
     public string $Segment = '';
     /** @var \DCarbone\PHPConsulAPI\Coordinate\Coordinate|null */
     public ?Coordinate $Coord = null;
-
-    protected const FIELDS = [
-        self::FIELD_COORDINATE => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => Coordinate::class,
-        ],
-    ];
 
     /**
      * @return string

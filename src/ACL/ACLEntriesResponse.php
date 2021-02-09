@@ -39,7 +39,6 @@ class ACLEntriesResponse extends AbstractValuedQueryResponse implements Hydrated
 
     /**
      * @param mixed $decodedData
-     * @return void
      */
     public function hydrateValue($decodedData): void
     {

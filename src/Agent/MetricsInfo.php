@@ -26,22 +26,6 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class MetricsInfo extends AbstractModel
 {
-    private const FIELD_GAUGES   = 'Gauges';
-    private const FIELD_POINTS   = 'Points';
-    private const FIELD_COUNTERS = 'Counters';
-    private const FIELD_SAMPLES  = 'Samples';
-
-    /** @var string */
-    public string $Timestamp = '';
-    /** @var \DCarbone\PHPConsulAPI\Agent\GaugeValue[] */
-    public array $Gauges = [];
-    /** @var \DCarbone\PHPConsulAPI\Agent\PointValue[] */
-    public array $Points = [];
-    /** @var \DCarbone\PHPConsulAPI\Agent\SampledValue[] */
-    public array $Counters = [];
-    /** @var \DCarbone\PHPConsulAPI\Agent\SampledValue[] */
-    public array $Samples = [];
-
     protected const FIELDS = [
         self::FIELD_GAUGES => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
@@ -64,6 +48,21 @@ class MetricsInfo extends AbstractModel
             Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
         ],
     ];
+    private const FIELD_GAUGES   = 'Gauges';
+    private const FIELD_POINTS   = 'Points';
+    private const FIELD_COUNTERS = 'Counters';
+    private const FIELD_SAMPLES  = 'Samples';
+
+    /** @var string */
+    public string $Timestamp = '';
+    /** @var \DCarbone\PHPConsulAPI\Agent\GaugeValue[] */
+    public array $Gauges = [];
+    /** @var \DCarbone\PHPConsulAPI\Agent\PointValue[] */
+    public array $Points = [];
+    /** @var \DCarbone\PHPConsulAPI\Agent\SampledValue[] */
+    public array $Counters = [];
+    /** @var \DCarbone\PHPConsulAPI\Agent\SampledValue[] */
+    public array $Samples = [];
 
     /**
      * @return string

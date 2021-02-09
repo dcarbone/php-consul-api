@@ -27,6 +27,43 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class ACLTokenListEntry extends AbstractModel
 {
+    protected const FIELDS = [
+        self::FIELD_POLICIES           => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => ACLTokenPolicyLink::class,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+        ],
+        self::FIELD_ROLES              => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => ACLTokenRoleLink::class,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+        ],
+        self::FIELD_SERVICE_IDENTITIES => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => ACLServiceIdentity::class,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+        ],
+        self::FIELD_NODE_IDENTITIES    => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => ACLNodeIdentity::class,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+        ],
+        self::FIELD_AUTH_METHOD        => [
+            Hydration::FIELD_TYPE     => Hydration::STRING,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+        self::FIELD_EXPIRATION_TIME    => [
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_NULLABLE_TIME,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+        self::FIELD_CREATE_TIME        => [
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_TIME,
+        ],
+        self::FIELD_NAMESPACE          => [
+            Hydration::FIELD_TYPE     => Hydration::STRING,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+    ];
     private const FIELD_POLICIES           = 'Policies';
     private const FIELD_ROLES              = 'Roles';
     private const FIELD_SERVICE_IDENTITIES = 'ServiceIdentities';
@@ -66,44 +103,6 @@ class ACLTokenListEntry extends AbstractModel
     public bool $Legacy = false;
     /** @var string|null */
     public ?string $Namespace = null;
-
-    protected const FIELDS = [
-        self::FIELD_POLICIES           => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => ACLTokenPolicyLink::class,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
-        ],
-        self::FIELD_ROLES              => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => ACLTokenRoleLink::class,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
-        ],
-        self::FIELD_SERVICE_IDENTITIES => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => ACLServiceIdentity::class,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
-        ],
-        self::FIELD_NODE_IDENTITIES    => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => ACLNodeIdentity::class,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
-        ],
-        self::FIELD_AUTH_METHOD        => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_EXPIRATION_TIME    => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_NULLABLE_TIME,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_CREATE_TIME        => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_TIME,
-        ],
-        self::FIELD_NAMESPACE          => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-    ];
 
     /**
      * ACLToken constructor.

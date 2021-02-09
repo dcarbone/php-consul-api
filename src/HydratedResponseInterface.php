@@ -30,7 +30,6 @@ interface HydratedResponseInterface
 
     /**
      * @param mixed $decodedData
-     * @return void
      */
     public function hydrateValue($decodedData): void;
 }

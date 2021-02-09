@@ -228,7 +228,7 @@ class OperatorClient extends AbstractClient
             return $ret;
         }
 
-        $ret->WriteMeta =$resp->buildWriteMeta();
+        $ret->WriteMeta = $resp->buildWriteMeta();
 
         $dec = $this->_decodeBody($resp->Response->getBody());
         if (null !== $dec->Err) {

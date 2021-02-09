@@ -26,6 +26,16 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class GatewayService extends AbstractModel
 {
+    protected const FIELDS = [
+        self::FIELD_GATEWAY => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => CompoundServiceName::class,
+        ],
+        self::FIELD_SERVICE => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => CompoundServiceName::class,
+        ],
+    ];
     private const FIELD_GATEWAY = 'Gateway';
     private const FIELD_SERVICE = 'Service';
 
@@ -51,17 +61,6 @@ class GatewayService extends AbstractModel
     public string $SNI = '';
     /** @var string */
     public string $FromWildCard = '';
-
-    protected const FIELDS = [
-        self::FIELD_GATEWAY => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => CompoundServiceName::class,
-        ],
-        self::FIELD_SERVICE => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => CompoundServiceName::class,
-        ],
-    ];
 
     /**
      * GatewayService constructor.

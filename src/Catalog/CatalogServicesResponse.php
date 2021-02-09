@@ -39,7 +39,6 @@ class CatalogServicesResponse extends AbstractValuedQueryResponse implements Hyd
 
     /**
      * @param mixed $decodedData
-     * @return void
      */
     public function hydrateValue($decodedData): void
     {

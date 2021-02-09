@@ -31,6 +31,13 @@ class ServiceQuery extends AbstractModel
     use HasSettableStringTags;
     use HasStringTags;
 
+    protected const FIELDS = [
+        self::FIELD_FAILOVER => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => QueryDatacenterOptions::class,
+        ],
+    ];
+
     private const FIELD_FAILOVER = 'Failover';
 
     /** @var string */
@@ -51,13 +58,6 @@ class ServiceQuery extends AbstractModel
     public array $ServiceMeta = [];
     /** @var bool */
     public bool $Connect = false;
-
-    protected const FIELDS = [
-        self::FIELD_FAILOVER => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => QueryDatacenterOptions::class,
-        ],
-    ];
 
     /**
      * @return string

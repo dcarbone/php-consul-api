@@ -30,6 +30,15 @@ class Config
 {
     use Hydratable;
 
+    protected const FIELDS = [
+        self::FIELD_HTTP_AUTH => [
+            Hydration::FIELD_CALLBACK => 'setHttpAuth',
+        ],
+        self::FIELD_WAIT_TIME => [
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_NULLABLE_DURATION,
+        ],
+    ];
+
     private const   FIELD_HTTP_AUTH            = 'HttpAuth';
     private const   FIELD_WAIT_TIME            = 'WaitTime';
     private const   FIELD_ADDRESS              = 'Address';
@@ -51,15 +60,6 @@ class Config
     private const DefaultRequestOptions = [
         RequestOptions::HTTP_ERRORS    => false,
         RequestOptions::DECODE_CONTENT => false,
-    ];
-
-    protected const FIELDS = [
-        self::FIELD_HTTP_AUTH => [
-            Hydration::FIELD_CALLBACK => 'setHttpAuth',
-        ],
-        self::FIELD_WAIT_TIME => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_NULLABLE_DURATION,
-        ],
     ];
 
     /**

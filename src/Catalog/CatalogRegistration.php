@@ -28,6 +28,16 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class CatalogRegistration extends AbstractModel
 {
+    protected const FIELDS = [
+        self::FIELD_SERVICE => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => AgentService::class,
+        ],
+        self::FIELD_CHECK   => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => AgentCheck::class,
+        ],
+    ];
     private const FIELD_SERVICE = 'Service';
     private const FIELD_CHECK   = 'Check';
 
@@ -47,17 +57,6 @@ class CatalogRegistration extends AbstractModel
     public ?AgentService $Service = null;
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentCheck|null */
     public ?AgentCheck $Check = null;
-
-    protected const FIELDS = [
-        self::FIELD_SERVICE => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => AgentService::class,
-        ],
-        self::FIELD_CHECK   => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => AgentCheck::class,
-        ],
-    ];
 
     /**
      * @return string

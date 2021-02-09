@@ -26,6 +26,13 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class AutopilotUpgrade extends AbstractModel
 {
+    protected const FIELDS = [
+        self::FIELD_REDUNDANCY_ZONES             => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => AutopilotZoneUpgradeVersions::class,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+        ],
+    ];
     private const FIELD_REDUNDANCY_ZONES = 'RedundancyZones';
 
     /** @var string */
@@ -46,14 +53,6 @@ class AutopilotUpgrade extends AbstractModel
     public array $OtherVersionReadReplicas = [];
     /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotZoneUpgradeVersions[] */
     public array $RedundancyZones = [];
-
-    protected const FIELDS = [
-        self::FIELD_REDUNDANCY_ZONES             => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => AutopilotZoneUpgradeVersions::class,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
-        ],
-    ];
 
     /**
      * @return string

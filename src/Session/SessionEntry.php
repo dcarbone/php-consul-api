@@ -27,6 +27,16 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class SessionEntry extends AbstractModel
 {
+    protected const FIELDS = [
+        self::FIELD_LOCK_DELAY     => [
+            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
+        ],
+        self::FIELD_SERVICE_CHECKS => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_CLASS      => ServiceCheck::class,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+        ],
+    ];
     private const FIELD_LOCK_DELAY     = 'LockDelay';
     private const FIELD_SERVICE_CHECKS = 'ServiceChecks';
 
@@ -52,17 +62,6 @@ class SessionEntry extends AbstractModel
     public array $NodeChecks = [];
     /** @var \DCarbone\PHPConsulAPI\Session\ServiceCheck[] */
     public array $ServiceChecks = [];
-
-    protected const FIELDS = [
-        self::FIELD_LOCK_DELAY     => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
-        ],
-        self::FIELD_SERVICE_CHECKS => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => ServiceCheck::class,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
-        ],
-    ];
 
     /**
      * SessionEntry constructor.

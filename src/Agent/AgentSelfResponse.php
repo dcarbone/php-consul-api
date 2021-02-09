@@ -39,7 +39,6 @@ class AgentSelfResponse extends AbstractValuedQueryResponse implements HydratedR
 
     /**
      * @param mixed $decodedData
-     * @return void
      */
     public function hydrateValue($decodedData): void
     {

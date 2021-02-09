@@ -26,6 +26,20 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class PreparedQueryDefinition extends AbstractModel
 {
+    protected const FIELDS = [
+        self::FIELD_SERVICE  => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => ServiceQuery::class,
+        ],
+        self::FIELD_DNS      => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => QueryDNSOptions::class,
+        ],
+        self::FIELD_Template => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => QueryTemplate::class,
+        ],
+    ];
     private const FIELD_SERVICE  = 'Service';
     private const FIELD_DNS      = 'DNS';
     private const FIELD_Template = 'Template';
@@ -44,21 +58,6 @@ class PreparedQueryDefinition extends AbstractModel
     public ?QueryDNSOptions $DNS = null;
     /** @var \DCarbone\PHPConsulAPI\PreparedQuery\QueryTemplate|null */
     public ?QueryTemplate $Template = null;
-
-    protected const FIELDS = [
-        self::FIELD_SERVICE  => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => ServiceQuery::class,
-        ],
-        self::FIELD_DNS      => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => QueryDNSOptions::class,
-        ],
-        self::FIELD_Template => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => QueryTemplate::class,
-        ],
-    ];
 
     /**
      * @return string

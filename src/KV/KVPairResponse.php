@@ -39,7 +39,6 @@ class KVPairResponse extends AbstractValuedQueryResponse implements HydratedResp
 
     /**
      * @param mixed $decodedData
-     * @return void
      */
     public function hydrateValue($decodedData): void
     {
