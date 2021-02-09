@@ -19,6 +19,7 @@ namespace DCarbone\PHPConsulAPI;
  */
 
 use DCarbone\PHPConsulAPI\KV\KVPair;
+use DCarbone\PHPConsulAPI\KV\KVTxnOp;
 
 /**
  * Used to assist with hydrating json responses
@@ -147,8 +148,8 @@ trait Hydratable
             return clone $value;
         }
         // otherwise, attempt to cast whatever was provided as an array and construct a new instance of $class
-        if (KVPair::class === $class) {
-            // special case for KVPair
+        if (KVPair::class === $class || KVTxnOp::class) {
+            // special case for KVPair and KVTxnOp
             // todo: find cleaner way to do this...
             return new $class((array)$value, true);
         }
