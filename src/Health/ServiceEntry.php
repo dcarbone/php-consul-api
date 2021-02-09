@@ -27,17 +27,6 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class ServiceEntry extends AbstractModel
 {
-    private const FIELD_SERVICE = 'Service';
-    private const FIELD_CHECKS  = 'Checks';
-
-    /** @var string */
-    public string $Node = '';
-    /** @var \DCarbone\PHPConsulAPI\Agent\AgentService|null */
-    public ?AgentService $Service = null;
-    /** @var \DCarbone\PHPConsulAPI\Health\HealthChecks|null */
-    public ?HealthChecks $Checks = null;
-
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_SERVICE => [
             Hydration::FIELD_TYPE  => Hydration::OBJECT,
@@ -48,6 +37,15 @@ class ServiceEntry extends AbstractModel
             Hydration::FIELD_CLASS => HealthChecks::class,
         ],
     ];
+    private const FIELD_SERVICE = 'Service';
+    private const FIELD_CHECKS  = 'Checks';
+
+    /** @var string */
+    public string $Node = '';
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentService|null */
+    public ?AgentService $Service = null;
+    /** @var \DCarbone\PHPConsulAPI\Health\HealthChecks|null */
+    public ?HealthChecks $Checks = null;
 
     /**
      * @return string

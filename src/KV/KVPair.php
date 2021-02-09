@@ -26,6 +26,13 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class KVPair extends AbstractModel
 {
+    protected const FIELDS = [
+        self::FIELD_NAMESPACE => [
+            Hydration::FIELD_TYPE     => Hydration::STRING,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+    ];
+
     private const FIELD_NAMESPACE = 'Namespace';
 
     /** @var string */
@@ -45,17 +52,6 @@ class KVPair extends AbstractModel
     /** @var string|null */
     public ?string $Namespace = null;
 
-    /** @var array[] */
-    protected const FIELDS = [
-        self::FIELD_NAMESPACE => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-    ];
-
-    /** @var bool */
-    private bool $_valueDecoded;
-
     /**
      * KVPair constructor.
      * @param array $data
@@ -64,14 +60,12 @@ class KVPair extends AbstractModel
     public function __construct(array $data = [], bool $_decodeValue = false)
     {
         parent::__construct($data);
-        $this->_valueDecoded = !$_decodeValue;
-        if (!$this->_valueDecoded) {
+        if ($_decodeValue) {
             $dec = \base64_decode($this->Value, true);
             if (false === $dec) {
                 throw new \InvalidArgumentException(\sprintf('Could not base64 decode value "%s"', $this->Value));
             }
-            $this->Value         = $dec;
-            $this->_valueDecoded = true;
+            $this->Value = $dec;
         }
     }
 

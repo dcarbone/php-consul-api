@@ -38,9 +38,6 @@ class KVTxnOp extends AbstractModel
     /** @var string */
     public string $Session = '';
 
-    /** @var bool */
-    private bool $_valueDecoded = false;
-
     /**
      * KVTxnOp constructor.
      * @param array $data
@@ -49,13 +46,12 @@ class KVTxnOp extends AbstractModel
     public function __construct(array $data = [], bool $_decodeValue = false)
     {
         parent::__construct($data);
-        if ($_decodeValue && !$this->_valueDecoded) {
+        if ($_decodeValue) {
             $dec = \base64_decode($this->Value, true);
             if (false === $dec) {
                 throw new \InvalidArgumentException(\sprintf('Could not base64 decode value "%s"', $this->Value));
             }
-            $this->Value         = $dec;
-            $this->_valueDecoded = true;
+            $this->Value = $dec;
         }
     }
 

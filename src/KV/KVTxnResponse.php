@@ -34,7 +34,6 @@ class KVTxnResponse extends AbstractModel
     /** @var \DCarbone\PHPConsulAPI\KV\TxnErrors|null */
     public ?TxnErrors $Errors = null;
 
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_RESULTS => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,

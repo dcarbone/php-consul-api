@@ -29,21 +29,6 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class TxnResult extends AbstractModel
 {
-    private const FIELD_KV      = 'KV';
-    private const FIELD_NODE    = 'Node';
-    private const FIELD_SERVICE = 'Service';
-    private const FIELD_CHECK   = 'Check';
-
-    /** @var \DCarbone\PHPConsulAPI\KV\KVPair|null */
-    public ?KVPair $KV = null;
-    /** @var \DCarbone\PHPConsulAPI\Catalog\Node|null */
-    public ?Node $Node = null;
-    /** @var \DCarbone\PHPConsulAPI\Catalog\CatalogService|null */
-    public ?CatalogService $Service = null;
-    /** @var \DCarbone\PHPConsulAPI\Health\HealthCheck|null */
-    public ?HealthCheck $Check = null;
-
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_KV => [
             Hydration::FIELD_TYPE     => Hydration::OBJECT,
@@ -66,6 +51,19 @@ class TxnResult extends AbstractModel
             Hydration::FIELD_NULLABLE=> true,
         ],
     ];
+    private const FIELD_KV      = 'KV';
+    private const FIELD_NODE    = 'Node';
+    private const FIELD_SERVICE = 'Service';
+    private const FIELD_CHECK   = 'Check';
+
+    /** @var \DCarbone\PHPConsulAPI\KV\KVPair|null */
+    public ?KVPair $KV = null;
+    /** @var \DCarbone\PHPConsulAPI\Catalog\Node|null */
+    public ?Node $Node = null;
+    /** @var \DCarbone\PHPConsulAPI\Catalog\CatalogService|null */
+    public ?CatalogService $Service = null;
+    /** @var \DCarbone\PHPConsulAPI\Health\HealthCheck|null */
+    public ?HealthCheck $Check = null;
 
     /**
      * @return \DCarbone\PHPConsulAPI\KV\KVPair|null

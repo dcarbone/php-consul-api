@@ -35,7 +35,6 @@ class CoordinateEntry extends AbstractModel
     /** @var \DCarbone\PHPConsulAPI\Coordinate\Coordinate|null */
     public ?Coordinate $Coord = null;
 
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_COORDINATE => [
             Hydration::FIELD_TYPE  => Hydration::OBJECT,

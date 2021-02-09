@@ -35,7 +35,6 @@ class OperatorHealthReply extends AbstractModel
     /** @var \DCarbone\PHPConsulAPI\Operator\ServerHealth[] */
     public array $Servers = [];
 
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_SERVERS => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,

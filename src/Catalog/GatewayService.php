@@ -52,7 +52,6 @@ class GatewayService extends AbstractModel
     /** @var string */
     public string $FromWildCard = '';
 
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_GATEWAY => [
             Hydration::FIELD_TYPE  => Hydration::OBJECT,

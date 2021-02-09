@@ -50,7 +50,6 @@ class AgentServiceRegistration extends AbstractModel
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck[] */
     public array $Checks = [];
 
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_CHECK => [
             Hydration::FIELD_TYPE  => Hydration::OBJECT,

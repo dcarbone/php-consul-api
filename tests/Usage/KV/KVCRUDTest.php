@@ -1,4 +1,5 @@
-<?php namespace DCarbone\PHPConsulAPITests\Usage\KV;
+<?php /** @noinspection PhpMissingFieldTypeInspection */
+namespace DCarbone\PHPConsulAPITests\Usage\KV;
 
 /*
    Copyright 2016-2018 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -67,6 +68,8 @@ final class KVCRUDTest extends AbstractUsageTests
         static::assertNull($err, \sprintf('KV::get returned error: %s', (string)$err));
         static::assertInstanceOf(QueryMeta::class, $qm);
         static::assertInstanceOf(KVPair::class, $kv);
+        static::assertEquals(self::KVKey1, $kv->Key);
+        static::assertEquals(self::KVValue1, $kv->Value);
     }
 
     /**
@@ -118,6 +121,7 @@ final class KVCRUDTest extends AbstractUsageTests
         $client->Put(new KVPair(['Key' => self::KVKey2, 'Value' => self::KVValue2]));
         $client->Put(new KVPair(['Key' => self::KVKey3, 'Value' => self::KVValue3]));
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         [$list, $qm, $err] = $client->List();
         static::assertNull($err, \sprintf('KV::valueList returned error: %s', $err));
 

@@ -53,7 +53,6 @@ class Config
         RequestOptions::DECODE_CONTENT => false,
     ];
 
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_HTTP_AUTH => [
             Hydration::FIELD_CALLBACK => 'setHttpAuth',

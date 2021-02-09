@@ -37,7 +37,6 @@ class AgentServiceChecksInfo extends AbstractModel
     /** @var \DCarbone\PHPConsulAPI\Health\HealthChecks */
     public HealthChecks $Checks;
 
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_SERVICE => [
             Hydration::FIELD_TYPE  => Hydration::OBJECT,

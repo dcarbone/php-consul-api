@@ -50,7 +50,6 @@ class SerfMember extends AbstractModel
     /** @var \DCarbone\Go\Time\Duration|null */
     public ?Time\Duration $RTT = null;
 
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_RTT => [
             Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,

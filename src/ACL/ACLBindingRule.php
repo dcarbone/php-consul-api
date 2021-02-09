@@ -47,7 +47,6 @@ class ACLBindingRule extends AbstractModel
     /** @var string|null */
     public ?string $Namespace = null;
 
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_NAMESPACE          => [
             Hydration::FIELD_TYPE     => Hydration::STRING,

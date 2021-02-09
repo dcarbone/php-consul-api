@@ -36,6 +36,7 @@ class KVClient extends AbstractClient
      * @param string $key
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\KV\KVPairResponse
      */
     public function Get(string $key, ?QueryOptions $opts = null): KVPairResponse
@@ -70,11 +71,19 @@ class KVClient extends AbstractClient
      * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\WriteResponse
      */
     public function Put(KVPair $p, ?WriteOptions $opts = null): WriteResponse
     {
-        return $this->_executePut(\sprintf('v1/kv/%s', $p->Key), null, $opts);
+        $r = $this->_newPutRequest(\sprintf('v1/kv/%s', $p->Key), $p->Value, $opts);
+        if (0 !== $p->Flags) {
+            $r->params->set('flags', (string)$p->Flags);
+        }
+        $resp = $this->_requireOK($this->_do($r));
+        $ret  = new WriteResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -92,6 +101,7 @@ class KVClient extends AbstractClient
      * @param string $prefix
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\KV\KVPairsResponse
      */
     public function List(string $prefix = '', ?QueryOptions $opts = null): KVPairsResponse
@@ -108,6 +118,7 @@ class KVClient extends AbstractClient
      * @param string $prefix
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\ValuedQueryStringsResponse
      */
     public function Keys(string $prefix = '', ?QueryOptions $opts = null): ValuedQueryStringsResponse
@@ -124,6 +135,7 @@ class KVClient extends AbstractClient
      * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\ValuedWriteBoolResponse
      */
     public function CAS(KVPair $p, ?WriteOptions $opts = null): ValuedWriteBoolResponse
@@ -143,6 +155,7 @@ class KVClient extends AbstractClient
      * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\WriteResponse
      */
     public function Acquire(KVPair $p, ?WriteOptions $opts = null): WriteResponse
@@ -162,6 +175,7 @@ class KVClient extends AbstractClient
      * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\ValuedWriteBoolResponse
      */
     public function DeleteCAS(KVPair $p, ?WriteOptions $opts = null): ValuedWriteBoolResponse
@@ -178,6 +192,7 @@ class KVClient extends AbstractClient
      * @param \DCarbone\PHPConsulAPI\KV\KVPair $p
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\WriteResponse
      */
     public function Release(KVPair $p, ?WriteOptions $opts = null): WriteResponse
@@ -197,6 +212,7 @@ class KVClient extends AbstractClient
      * @param string $prefix
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\WriteResponse
      */
     public function DeleteTree(string $prefix, ?WriteOptions $opts = null): WriteResponse
@@ -213,6 +229,7 @@ class KVClient extends AbstractClient
      * @param \DCarbone\PHPConsulAPI\KV\KVTxnOps $txn
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\KV\KVTxnAPIResponse
      */
     public function Txn(KVTxnOps $txn, ?QueryOptions $opts = null): KVTxnAPIResponse

@@ -53,7 +53,6 @@ class SessionEntry extends AbstractModel
     /** @var \DCarbone\PHPConsulAPI\Session\ServiceCheck[] */
     public array $ServiceChecks = [];
 
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_LOCK_DELAY     => [
             Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,

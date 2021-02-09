@@ -47,7 +47,6 @@ class AutopilotUpgrade extends AbstractModel
     /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotZoneUpgradeVersions[] */
     public array $RedundancyZones = [];
 
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_REDUNDANCY_ZONES             => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,

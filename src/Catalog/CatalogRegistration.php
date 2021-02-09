@@ -48,7 +48,6 @@ class CatalogRegistration extends AbstractModel
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentCheck|null */
     public ?AgentCheck $Check = null;
 
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_SERVICE => [
             Hydration::FIELD_TYPE  => Hydration::OBJECT,

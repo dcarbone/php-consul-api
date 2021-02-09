@@ -27,7 +27,7 @@ use DCarbone\PHPConsulAPI\Operator\ReadableDuration;
 /**
  * Class HealthCheckDefinition
  */
-class HealthCheckDefinition extends AbstractModel
+class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
 {
     private const FIELD_INTERVAL_DURATION                          = 'IntervalDuration';
     private const FIELD_TIMEOUT_DURATION                           = 'TimeoutDuration';
@@ -69,7 +69,6 @@ class HealthCheckDefinition extends AbstractModel
      */
     public ReadableDuration $DeregisterCriticalServiceAfter;
 
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_INTERVAL_DURATION                          => [
             Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,

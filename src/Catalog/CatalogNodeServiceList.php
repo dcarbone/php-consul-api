@@ -35,7 +35,6 @@ class CatalogNodeServiceList extends AbstractModel
     /** @var \DCarbone\PHPConsulAPI\Catalog\CatalogService[] */
     public array $Services = [];
 
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_NODE     => [
             Hydration::FIELD_TYPE  => Hydration::OBJECT,

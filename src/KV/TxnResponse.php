@@ -26,15 +26,6 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class TxnResponse extends AbstractModel
 {
-    private const FIELD_RESULTS = 'Results';
-    private const FIELD_ERRORS  = 'Errors';
-
-    /** @var \DCarbone\PHPConsulAPI\KV\TxnResults */
-    public TxnResults $Results;
-    /** @var \DCarbone\PHPConsulAPI\KV\TxnErrors */
-    public TxnErrors $Errors;
-
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_RESULTS => [
             Hydration::FIELD_TYPE  => Hydration::OBJECT,
@@ -45,6 +36,13 @@ class TxnResponse extends AbstractModel
             Hydration::FIELD_CLASS => TxnErrors::class,
         ],
     ];
+    private const FIELD_RESULTS = 'Results';
+    private const FIELD_ERRORS  = 'Errors';
+
+    /** @var \DCarbone\PHPConsulAPI\KV\TxnResults */
+    public TxnResults $Results;
+    /** @var \DCarbone\PHPConsulAPI\KV\TxnErrors */
+    public TxnErrors $Errors;
 
     /**
      * TxnResponse constructor.

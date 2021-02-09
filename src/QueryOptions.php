@@ -71,7 +71,6 @@ class QueryOptions extends AbstractModel implements RequestOptions
     /** @var bool */
     public bool $Pretty = false;
 
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_MAX_AGE => [
             Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_NULLABLE_DURATION,

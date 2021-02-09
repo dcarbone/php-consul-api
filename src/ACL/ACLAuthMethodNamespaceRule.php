@@ -26,15 +26,6 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class ACLAuthMethodNamespaceRule extends AbstractModel
 {
-    private const FIELD_SELECTOR       = 'Selector';
-    private const FIELD_BIND_NAMESPACE = 'BindNamespace';
-
-    /** @var string|null */
-    public ?string $Selector = null;
-    /** @var string|null */
-    public ?string $BindNamespace = null;
-
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_SELECTOR=> [
             Hydration::FIELD_TYPE    => Hydration::STRING,
@@ -45,6 +36,13 @@ class ACLAuthMethodNamespaceRule extends AbstractModel
             Hydration::FIELD_NULLABLE=> true,
         ],
     ];
+    private const FIELD_SELECTOR       = 'Selector';
+    private const FIELD_BIND_NAMESPACE = 'BindNamespace';
+
+    /** @var string|null */
+    public ?string $Selector = null;
+    /** @var string|null */
+    public ?string $BindNamespace = null;
 
     /**
      * @return string|null

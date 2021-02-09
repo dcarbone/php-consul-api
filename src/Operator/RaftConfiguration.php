@@ -26,14 +26,6 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class RaftConfiguration extends AbstractModel
 {
-    private const FIELD_SERVERS = 'Servers';
-
-    /** @var \DCarbone\PHPConsulAPI\Operator\RaftServer[] */
-    public array $Servers = [];
-    /** @var int */
-    public int $Index = 0;
-
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_SERVERS => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
@@ -41,6 +33,12 @@ class RaftConfiguration extends AbstractModel
             Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
         ],
     ];
+    private const FIELD_SERVERS = 'Servers';
+
+    /** @var \DCarbone\PHPConsulAPI\Operator\RaftServer[] */
+    public array $Servers = [];
+    /** @var int */
+    public int $Index = 0;
 
     /**
      * RaftConfiguration constructor.

@@ -42,7 +42,6 @@ class MetricsInfo extends AbstractModel
     /** @var \DCarbone\PHPConsulAPI\Agent\SampledValue[] */
     public array $Samples = [];
 
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_GAUGES => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,

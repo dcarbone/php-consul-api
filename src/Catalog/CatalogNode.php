@@ -35,7 +35,6 @@ class CatalogNode extends AbstractModel
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentService[] */
     public array $Services = [];
 
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_NODE     => [
             Hydration::FIELD_TYPE  => Hydration::OBJECT,

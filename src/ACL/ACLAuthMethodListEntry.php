@@ -45,7 +45,6 @@ class ACLAuthMethodListEntry extends AbstractModel
     /** @var string|null */
     public ?string $Namespace = null;
 
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_DISPLAY_NAME    => [
             Hydration::FIELD_TYPE     => Hydration::STRING,

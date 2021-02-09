@@ -43,7 +43,6 @@ class PreparedQueryExecuteResponse extends AbstractModel
     /** @var int */
     public int $Failovers = 0;
 
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_NODES => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,

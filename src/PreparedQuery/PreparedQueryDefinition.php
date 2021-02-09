@@ -45,7 +45,6 @@ class PreparedQueryDefinition extends AbstractModel
     /** @var \DCarbone\PHPConsulAPI\PreparedQuery\QueryTemplate|null */
     public ?QueryTemplate $Template = null;
 
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_SERVICE  => [
             Hydration::FIELD_TYPE  => Hydration::OBJECT,

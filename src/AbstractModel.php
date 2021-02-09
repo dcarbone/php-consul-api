@@ -25,6 +25,8 @@ abstract class AbstractModel implements \JsonSerializable
 {
     use Hydratable;
 
+    protected const FIELDS = [];
+
     /**
      * AbstractModel constructor.
      *

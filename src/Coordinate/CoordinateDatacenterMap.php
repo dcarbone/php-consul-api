@@ -35,7 +35,6 @@ class CoordinateDatacenterMap extends AbstractModel
     /** @var \DCarbone\PHPConsulAPI\Coordinate\Coordinate[] */
     public array $Coordinates = [];
 
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_COORDINATES => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,

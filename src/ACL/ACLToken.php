@@ -77,7 +77,6 @@ class ACLToken extends AbstractModel
      */
     public ?string $Rules = null;
 
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_POLICIES           => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,

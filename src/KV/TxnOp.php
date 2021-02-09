@@ -26,12 +26,6 @@ use DCarbone\PHPConsulAPI\Hydration;
  */
 class TxnOp extends AbstractModel
 {
-    private const FIELD_KV = 'KV';
-
-    /** @var \DCarbone\PHPConsulAPI\KV\KVTxnOp|null */
-    public ?KVTxnOp $KV = null;
-
-    /** @var array[] */
     protected const FIELDS = [
         self::FIELD_KV => [
             Hydration::FIELD_TYPE     => Hydration::OBJECT,
@@ -39,6 +33,10 @@ class TxnOp extends AbstractModel
             Hydration::FIELD_NULLABLE => true,
         ],
     ];
+    private const FIELD_KV = 'KV';
+
+    /** @var \DCarbone\PHPConsulAPI\KV\KVTxnOp|null */
+    public ?KVTxnOp $KV = null;
 
     /**
      * @return \DCarbone\PHPConsulAPI\KV\KVTxnOp|null
