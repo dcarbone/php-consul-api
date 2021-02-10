@@ -30,6 +30,11 @@ class Config
 {
     use Hydratable;
 
+    public const DEFAULT_REQUEST_OPTIONS = [
+        RequestOptions::HTTP_ERRORS    => false,
+        RequestOptions::DECODE_CONTENT => false,
+    ];
+
     protected const FIELDS = [
         self::FIELD_HTTP_AUTH => [
             Hydration::FIELD_CALLBACK => 'setHttpAuth',
@@ -51,15 +56,10 @@ class Config
     private const FIELD_KEY_FILE             = 'KeyFile';
     private const FIELD_INSECURE_SKIP_VERIFY = 'InsecureSkipVerify';
 
-    private const DefaultConfig = [
+    private const DEFAULT_CONFIG = [
         self::FIELD_ADDRESS          => '127.0.0.1:8500',
         self::FIELD_SCHEME           => 'http',
         self::FIELD_JSON_ENCODE_OPTS => \JSON_UNESCAPED_SLASHES,
-    ];
-
-    private const DefaultRequestOptions = [
-        RequestOptions::HTTP_ERRORS    => false,
-        RequestOptions::DECODE_CONTENT => false,
     ];
 
     /**
@@ -528,32 +528,6 @@ class Config
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Request $request
-     * @return array
-     */
-    public function getGuzzleRequestOptions(Request $request): array
-    {
-        $opts = self::DefaultRequestOptions;
-
-        if (!$this->isInsecureSkipVerify()) {
-            $opts[RequestOptions::VERIFY] = false;
-        } elseif ('' !== ($b = $this->CAFile)) {
-            $opts[RequestOptions::VERIFY] = $b;
-        }
-
-        if ('' !== ($c = $this->CertFile)) {
-            $opts[RequestOptions::CERT]    = $c;
-            $opts[RequestOptions::SSL_KEY] = $this->KeyFile;
-        }
-
-        if (null !== $request->timeout && 0 < ($ttl = \intval($request->timeout->Seconds(), 10))) {
-            $opts[RequestOptions::TIMEOUT] = $ttl;
-        }
-
-        return $opts;
-    }
-
-    /**
      * @return array
      */
     public static function getEnvironmentConfig(): array
@@ -605,7 +579,7 @@ class Config
      */
     private static function _getDefaultConfig(): array
     {
-        $conf = self::DefaultConfig;
+        $conf = self::DEFAULT_CONFIG;
 
         // parse env vars
         foreach (static::getEnvironmentConfig() as $k => $v) {

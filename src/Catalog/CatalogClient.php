@@ -70,12 +70,12 @@ class CatalogClient extends AbstractClient
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogNodesResponse
+     * @return \DCarbone\PHPConsulAPI\Catalog\NodesResponse
      */
-    public function Nodes(?QueryOptions $opts = null): CatalogNodesResponse
+    public function Nodes(?QueryOptions $opts = null): NodesResponse
     {
         $resp = $this->_requireOK($this->_doGet('v1/catalog/nodes', $opts));
-        $ret  = new CatalogNodesResponse();
+        $ret  = new NodesResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;
     }

@@ -22,6 +22,7 @@ use DCarbone\PHPConsulAPI\Catalog\CatalogDeregistration;
 use DCarbone\PHPConsulAPI\Catalog\CatalogNode;
 use DCarbone\PHPConsulAPI\Catalog\CatalogRegistration;
 use DCarbone\PHPConsulAPI\Catalog\CatalogService;
+use DCarbone\PHPConsulAPI\Catalog\Node;
 use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPI\WriteMeta;
@@ -40,7 +41,7 @@ final class CatalogClientTest extends AbstractUsageTests
 
     public const ServiceName    = 'testservice';
     public const ServicePort    = 1234;
-    public const ServiceAddress = '127.0.0.1';
+    public const ServiceAddress = '10.2.3.4';
 
     /** @var bool */
     protected static $singlePerClass = true;
@@ -62,10 +63,10 @@ final class CatalogClientTest extends AbstractUsageTests
             'Node'    => 'dc1',
             'Address' => self::ServiceAddress,
             'Service' => new AgentService([
-                'ID'      => self::ServiceID1,
-                'Service' => self::ServiceName,
-                'Port'    => self::ServicePort,
-                'Adress'  => self::ServiceAddress,
+                'ID'       => self::ServiceID1,
+                'Service'  => self::ServiceName,
+                'Port'     => self::ServicePort,
+                'Address'  => self::ServiceAddress,
             ]),
         ]);
 
@@ -212,7 +213,7 @@ final class CatalogClientTest extends AbstractUsageTests
             static::assertIsArray($nodes);
             // TODO: figure out why there are 2 nodes returned by this call...
             static::assertCount(2, $nodes);
-            static::assertContainsOnlyInstancesOf(CatalogNode::class, $nodes);
+            static::assertContainsOnlyInstancesOf(Node::class, $nodes);
         } catch (AssertionFailedError $e) {
             \var_dump($nodes);
             throw $e;
@@ -230,7 +231,7 @@ final class CatalogClientTest extends AbstractUsageTests
         try {
             static::assertIsArray($nodes);
             static::assertCount(2, $nodes);
-            static::assertContainsOnlyInstancesOf(CatalogNode::class, $nodes);
+            static::assertContainsOnlyInstancesOf(Node::class, $nodes);
 
             $id = null;
             foreach ($nodes as $node) {

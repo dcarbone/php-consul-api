@@ -98,7 +98,7 @@ trait Hydratable
         // object "non-zero" calculations require a bit more finesse...
         if (Hydration::OBJECT === $type) {
             // AbstractModels are collections, and are non-zero if they contain at least 1 entry
-            if ($value instanceof AbstractModels) {
+            if ($value instanceof FakeSlice || $value instanceof FakeMap) {
                 if (0 < \count($value)) {
                     $output[$field] = $value;
                 }
@@ -265,7 +265,7 @@ trait Hydratable
             return clone $value;
         }
         // otherwise, attempt to cast whatever was provided as an array and construct a new instance of $class
-        if (KVPair::class === $class || KVTxnOp::class || UserEvent::class) {
+        if (KVPair::class === $class || KVTxnOp::class === $class || UserEvent::class === $class) {
             // special case for KVPair and KVTxnOp
             // todo: find cleaner way to do this...
             return new $class((array)$value, true);

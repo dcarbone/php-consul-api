@@ -20,6 +20,7 @@ namespace DCarbone\PHPConsulAPI\Agent;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Catalog\ServiceAddress;
+use DCarbone\PHPConsulAPI\FakeMap;
 use DCarbone\PHPConsulAPI\HasStringTags;
 use DCarbone\PHPConsulAPI\Hydration;
 
@@ -32,6 +33,7 @@ class AgentService extends AbstractModel
 
     protected const FIELDS = [
         self::FIELD_KIND             => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_META             => Hydration::MAP_FIELD,
         self::FIELD_TAGGED_ADDRESSES => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_CLASS      => ServiceAddress::class,
@@ -39,27 +41,30 @@ class AgentService extends AbstractModel
             Hydration::FIELD_OMITEMPTY  => true,
         ],
         self::FIELD_WEIGHTS          => [
-            Hydration::FIELD_TYPE     => Hydration::OBJECT,
-            Hydration::FIELD_CLASS    => AgentWeights::class,
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => AgentWeights::class,
         ],
         self::FIELD_CREATE_INDEX     => Hydration::OMITEMPTY_INTEGER_FIELD,
         self::FIELD_MODIFY_INDEX     => Hydration::OMITEMPTY_INTEGER_FIELD,
         self::FIELD_CONTENT_HASH     => Hydration::OMITEMPTY_STRING_FIELD,
         self::FIELD_PROXY            => [
-            Hydration::FIELD_TYPE     => Hydration::OBJECT,
-            Hydration::FIELD_CLASS    => AgentServiceConnectProxyConfig::class,
-            Hydration::FIELD_NULLABLE => true,
+            Hydration::FIELD_TYPE      => Hydration::OBJECT,
+            Hydration::FIELD_CLASS     => AgentServiceConnectProxyConfig::class,
+            Hydration::FIELD_NULLABLE  => true,
+            Hydration::FIELD_OMITEMPTY => true,
         ],
         self::FIELD_CONNECT          => [
-            Hydration::FIELD_TYPE     => Hydration::OBJECT,
-            Hydration::FIELD_CLASS    => AgentServiceConnect::class,
-            Hydration::FIELD_NULLABLE => true,
+            Hydration::FIELD_TYPE      => Hydration::OBJECT,
+            Hydration::FIELD_CLASS     => AgentServiceConnect::class,
+            Hydration::FIELD_NULLABLE  => true,
+            Hydration::FIELD_OMITEMPTY => true,
         ],
         self::FIELD_NAMESPACE        => Hydration::OMITEMPTY_STRING_FIELD,
         self::FIELD_DATACENTER       => Hydration::OMITEMPTY_STRING_FIELD,
     ];
 
     private const FIELD_KIND             = 'Kind';
+    private const FIELD_META             = 'Meta';
     private const FIELD_TAGGED_ADDRESSES = 'TaggedAddresses';
     private const FIELD_WEIGHTS          = 'Weights';
     private const FIELD_CREATE_INDEX     = 'CreateIndex';
@@ -76,8 +81,8 @@ class AgentService extends AbstractModel
     public string $ID = '';
     /** @var string */
     public string $Service = '';
-    /** @var string[] */
-    public array $Meta = [];
+    /** @var \DCarbone\PHPConsulAPI\FakeMap */
+    public FakeMap $Meta;
     /** @var int */
     public int $Port = 0;
     /** @var string */
@@ -112,6 +117,9 @@ class AgentService extends AbstractModel
         parent::__construct($data);
         if (!isset($this->Weights)) {
             $this->Weights = new AgentWeights(null);
+        }
+        if (!isset($this->Meta)) {
+            $this->Meta = new FakeMap(null);
         }
     }
 
@@ -170,18 +178,18 @@ class AgentService extends AbstractModel
     }
 
     /**
-     * @return string[]
+     * @return \DCarbone\PHPConsulAPI\FakeMap
      */
-    public function getMeta(): array
+    public function getMeta(): FakeMap
     {
         return $this->Meta;
     }
 
     /**
-     * @param string[] $Meta
+     * @param \DCarbone\PHPConsulAPI\FakeMap $Meta
      * @return \DCarbone\PHPConsulAPI\Agent\AgentService
      */
-    public function setMeta(array $Meta): self
+    public function setMeta(FakeMap $Meta): self
     {
         $this->Meta = $Meta;
         return $this;

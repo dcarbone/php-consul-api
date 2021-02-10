@@ -19,12 +19,22 @@ namespace DCarbone\PHPConsulAPI\Catalog;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\FakeMap;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class Node
  */
 class Node extends AbstractModel
 {
+    protected const FIELDS = [
+        self::FIELD_TAGGED_ADDRESSES => Hydration::MAP_FIELD,
+        self::FIELD_META             => Hydration::MAP_FIELD,
+    ];
+
+    private const FIELD_TAGGED_ADDRESSES = 'TaggedAddresses';
+    private const FIELD_META             = 'Meta';
+
     /** @var string */
     public string $ID = '';
     /** @var string */
@@ -33,14 +43,26 @@ class Node extends AbstractModel
     public string $Address = '';
     /** @var string */
     public string $Datacenter = '';
-    /** @var array */
-    public array $TaggedAddresses = [];
-    /** @var array */
-    public array $Meta = [];
+    /** @var \DCarbone\PHPConsulAPI\FakeMap */
+    public FakeMap $TaggedAddresses;
+    /** @var \DCarbone\PHPConsulAPI\FakeMap */
+    public FakeMap $Meta;
     /** @var int */
     public int $CreateIndex = 0;
     /** @var int */
     public int $ModifyIndex = 0;
+
+    /**
+     * Node constructor.
+     * @param array|null $data
+     */
+    public function __construct(?array $data = [])
+    {
+        parent::__construct($data);
+        if (!isset($this->Meta)) {
+            $this->Meta = new FakeMap(null);
+        }
+    }
 
     /**
      * @return string
@@ -115,36 +137,36 @@ class Node extends AbstractModel
     }
 
     /**
-     * @return array
+     * @return \DCarbone\PHPConsulAPI\FakeMap
      */
-    public function getTaggedAddresses(): array
+    public function getTaggedAddresses(): FakeMap
     {
         return $this->TaggedAddresses;
     }
 
     /**
-     * @param array $TaggedAddresses
+     * @param \DCarbone\PHPConsulAPI\FakeMap $TaggedAddresses
      * @return \DCarbone\PHPConsulAPI\Catalog\Node
      */
-    public function setTaggedAddresses(array $TaggedAddresses): self
+    public function setTaggedAddresses(FakeMap $TaggedAddresses): self
     {
         $this->TaggedAddresses = $TaggedAddresses;
         return $this;
     }
 
     /**
-     * @return array
+     * @return \DCarbone\PHPConsulAPI\FakeMap
      */
-    public function getMeta(): array
+    public function getMeta(): FakeMap
     {
         return $this->Meta;
     }
 
     /**
-     * @param array $Meta
+     * @param \DCarbone\PHPConsulAPI\FakeMap $Meta
      * @return \DCarbone\PHPConsulAPI\Catalog\Node
      */
-    public function setMeta(array $Meta): self
+    public function setMeta(FakeMap $Meta): self
     {
         $this->Meta = $Meta;
         return $this;

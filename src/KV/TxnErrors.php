@@ -19,12 +19,12 @@ namespace DCarbone\PHPConsulAPI\KV;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\AbstractModels;
+use DCarbone\PHPConsulAPI\FakeSlice;
 
 /**
  * Class TxnErrors
  */
-class TxnErrors extends AbstractModels
+class TxnErrors extends FakeSlice
 {
     /** @var string */
     protected string $containedClass = TxnError::class;

@@ -21,6 +21,7 @@ namespace DCarbone\PHPConsulAPI;
 use DCarbone\Go\HTTP;
 use DCarbone\Go\Time;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\RequestOptions as GuzzleRequestOptions;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
@@ -47,6 +48,40 @@ abstract class AbstractClient
     public function getConfig(): Config
     {
         return $this->_config;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Request $r
+     * @return array
+     */
+    protected function _buildGuzzleRequestOptions(Request $r): array
+    {
+        // todo: figure out better guzzle integration
+
+        $opts = Config::DEFAULT_REQUEST_OPTIONS;
+
+        if (!$this->_config->InsecureSkipVerify) {
+            $opts[GuzzleRequestOptions::VERIFY] = false;
+        } elseif ('' !== ($b = $this->_config->CAFile)) {
+            $opts[GuzzleRequestOptions::VERIFY] = $b;
+        }
+
+        if ('' !== ($c = $this->_config->CertFile)) {
+            $opts[GuzzleRequestOptions::CERT]    = $c;
+            $opts[GuzzleRequestOptions::SSL_KEY] = $this->_config->KeyFile;
+        }
+
+        if (null !== $r->timeout && 0 < ($ttl = \intval($r->timeout->Seconds(), 10))) {
+            $opts[GuzzleRequestOptions::TIMEOUT] = $ttl;
+        }
+
+        // todo: per-request content and accept value setting.
+        $body = $r->getBody();
+        if (null !== $body) {
+            $opts[GuzzleRequestOptions::JSON] = $body;
+        }
+
+        return $opts;
     }
 
     /**
@@ -122,7 +157,7 @@ abstract class AbstractClient
             if (isset($this->_config->HttpClient) && $this->_config->HttpClient instanceof ClientInterface) {
                 $response = $this->_config->HttpClient->send(
                     $r->toPsrRequest(),
-                    $this->_config->getGuzzleRequestOptions($r)
+                    $this->_buildGuzzleRequestOptions($r)
                 );
             } // Otherwise, throw error to be caught below
             else {
@@ -174,11 +209,11 @@ abstract class AbstractClient
                 // Otherwise, return error
                 $r->Err = new Error(
                     \sprintf(
-                        '%s - Non-%d response seen.  Response code: %d.  Message: %s',
+                        '%s - Non-%d response seen.  Response code: %d.  Response: %s',
                         \get_class($this),
                         $statusCode,
                         $actualCode,
-                        $r->Response->getReasonPhrase()
+                        $r->Response->getBody()->getContents()
                     )
                 );
             } else {

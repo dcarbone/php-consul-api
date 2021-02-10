@@ -19,12 +19,12 @@ namespace DCarbone\PHPConsulAPI\KV;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\AbstractModels;
+use DCarbone\PHPConsulAPI\FakeSlice;
 
 /**
  * Class KVPairs
  */
-class KVPairs extends AbstractModels
+class KVPairs extends FakeSlice
 {
     /** @var string */
     protected string $containedClass = KVPair::class;

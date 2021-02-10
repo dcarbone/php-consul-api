@@ -41,8 +41,8 @@ abstract class AbstractModel implements \JsonSerializable
         if (null === $data || [] === $data) {
             return;
         }
-        foreach ($data as $k => $v) {
-            $this->hydrateField($k, $v);
+        foreach ($data as $field => $value) {
+            $this->hydrateField($field, $value);
         }
     }
 

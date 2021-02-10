@@ -49,7 +49,10 @@ class AgentServiceConnectProxyConfig extends AbstractModel
             Hydration::FIELD_CLASS     => MeshGatewayConfig::class,
             Hydration::FIELD_OMITEMPTY => true,
         ],
-        self::FIELD_EXPOSE                   => Hydration::OMITEMPTY_BOOLEAN_FIELD,
+        self::FIELD_EXPOSE                   => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => ExposeConfig::class,
+        ],
     ];
 
     private const FIELD_DESTINATION_SERVICE_NAME = 'DestinationServiceName';

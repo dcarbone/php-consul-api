@@ -19,9 +19,9 @@ namespace DCarbone\PHPConsulAPI;
  */
 
 /**
- * Class AbstractModels
+ * Class FakeSlice
  */
-abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
+abstract class FakeSlice implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
 {
     /** @var string */
     protected string $containedClass;

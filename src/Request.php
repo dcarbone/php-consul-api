@@ -47,8 +47,8 @@ class Request
     /** @var string */
     private string $method;
 
-    /** @var string */
-    private string $body;
+    /** @var mixed */
+    private $body;
 
     /**
      * Request constructor.
@@ -81,27 +81,77 @@ class Request
             $this->header->set('X-Consul-Token', $config->Token);
         }
 
-        if (null !== $body) {
-            switch (\gettype($body)) {
-                case Hydration::OBJECT:
-                case Hydration::ARRAY:
-                    $this->body = \json_encode($body, $config->JSONEncodeOpts);
-                    break;
+        $this->body = $body;
 
-                case Hydration::INTEGER:
-                case Hydration::DOUBLE:
-                $this->body = (string)$body;
-                    break;
+//        if (null !== $body) {
+//            switch (\gettype($body)) {
+//                case Hydration::OBJECT:
+//                case Hydration::ARRAY:
+//                    $this->body = \json_encode($body, $config->JSONEncodeOpts);
+//                    if (\JSON_ERROR_NONE !== \json_last_error()) {
+//                        throw new \RuntimeException(
+//                            \sprintf(
+//                                'Error encoding request body as json: %s',
+//                                \json_last_error_msg()
+//                            )
+//                        );
+//                    }
+//                    break;
+//
+//                case Hydration::INTEGER:
+//                case Hydration::DOUBLE:
+//                    $this->body = (string)$body;
+//                    break;
+//
+//                case Hydration::STRING:
+//                    $this->body = $body;
+//                    break;
+//
+//                case Hydration::BOOLEAN:
+//                    $this->body = $body ? Hydration::TRUE : Hydration::FALSE;
+//                    break;
+//            }
+//        }
+    }
 
-                case Hydration::STRING:
-                    $this->body = $body;
-                    break;
+    /**
+     * @return string
+     */
+    public function getScheme(): string
+    {
+        return $this->scheme;
+    }
 
-                case Hydration::BOOLEAN:
-                    $this->body = $body ? Hydration::TRUE : Hydration::FALSE;
-                    break;
-            }
-        }
+    /**
+     * @return string
+     */
+    public function getAddress(): string
+    {
+        return $this->address;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPath(): string
+    {
+        return $this->path;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMethod(): string
+    {
+        return $this->method;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBody()
+    {
+        return $this->body;
     }
 
     /**
@@ -149,7 +199,7 @@ class Request
             $this->method,
             $this->getUri(),
             $this->header->toPsr7Array(),
-            $this->body ?? null
+            null
         );
     }
 

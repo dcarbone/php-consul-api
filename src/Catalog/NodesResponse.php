@@ -22,15 +22,15 @@ use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
 use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
- * Class CatalogNodesResponse
+ * Class NodesResponse
  */
-class CatalogNodesResponse extends AbstractValuedQueryResponse implements HydratedResponseInterface
+class NodesResponse extends AbstractValuedQueryResponse implements HydratedResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\Catalog\CatalogNode[]|null */
+    /** @var \DCarbone\PHPConsulAPI\Catalog\Node[]|null */
     public ?array $Nodes = null;
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogNode[]|null
+     * @return \DCarbone\PHPConsulAPI\Catalog\Node[]|mixed|null
      */
     public function getValue()
     {

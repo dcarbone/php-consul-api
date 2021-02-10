@@ -19,13 +19,13 @@ namespace DCarbone\PHPConsulAPI\Health;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\AbstractModels;
+use DCarbone\PHPConsulAPI\FakeSlice;
 use DCarbone\PHPConsulAPI\Consul;
 
 /**
  * Class HealthChecks
  */
-class HealthChecks extends AbstractModels
+class HealthChecks extends FakeSlice
 {
     /** @var string */
     protected string $containedClass = HealthCheck::class;

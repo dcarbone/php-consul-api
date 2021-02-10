@@ -57,6 +57,8 @@ final class Hydration
     public const HYDRATE_DURATION          = [self::class, 'hydrateDuration'];
     public const HYDRATE_NULLABLE_DURATION = [self::class, 'hydrateNullableDuration'];
 
+    public const MAP_FIELD = [self::FIELD_TYPE => self::OBJECT, self::FIELD_CLASS => FakeMap::class];
+
     public const OMITEMPTY_FIELD = [self::FIELD_OMITEMPTY => true];
 
     public const OMITEMPTY_STRING_FIELD       = [self::FIELD_TYPE => self::STRING]  + self::OMITEMPTY_FIELD;

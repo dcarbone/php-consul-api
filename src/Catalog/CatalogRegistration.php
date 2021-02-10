@@ -21,6 +21,7 @@ namespace DCarbone\PHPConsulAPI\Catalog;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Agent\AgentCheck;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
+use DCarbone\PHPConsulAPI\FakeMap;
 use DCarbone\PHPConsulAPI\Health\HealthChecks;
 use DCarbone\PHPConsulAPI\Hydration;
 
@@ -30,9 +31,11 @@ use DCarbone\PHPConsulAPI\Hydration;
 class CatalogRegistration extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_SERVICE => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => AgentService::class,
+        self::FIELD_TAGGED_ADDRESSES => Hydration::MAP_FIELD,
+        self::FIELD_NODE_META        => Hydration::MAP_FIELD,
+        self::FIELD_SERVICE          => [
+            Hydration::FIELD_TYPE        => Hydration::OBJECT,
+            Hydration::FIELD_CLASS       => AgentService::class,
         ],
         self::FIELD_CHECK   => [
             Hydration::FIELD_TYPE  => Hydration::OBJECT,
@@ -44,9 +47,11 @@ class CatalogRegistration extends AbstractModel
         ],
     ];
 
-    private const FIELD_SERVICE = 'Service';
-    private const FIELD_CHECK   = 'Check';
-    private const FIELD_CHECKS  = 'Checks';
+    private const FIELD_TAGGED_ADDRESSES = 'TaggedAddresses';
+    private const FIELD_NODE_META        = 'NodeMeta';
+    private const FIELD_SERVICE          = 'Service';
+    private const FIELD_CHECK            = 'Check';
+    private const FIELD_CHECKS           = 'Checks';
 
     /** @var string */
     public string $ID = '';
@@ -54,10 +59,10 @@ class CatalogRegistration extends AbstractModel
     public string $Node = '';
     /** @var string */
     public string $Address = '';
-    /** @var array */
-    public array $TaggedAddresses = [];
-    /** @var array */
-    public array $NodeMeta = [];
+    /** @var \DCarbone\PHPConsulAPI\FakeMap */
+    public FakeMap $TaggedAddresses;
+    /** @var \DCarbone\PHPConsulAPI\FakeMap */
+    public FakeMap $NodeMeta;
     /** @var string */
     public string $Datacenter = '';
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentService|null */
@@ -78,6 +83,12 @@ class CatalogRegistration extends AbstractModel
         parent::__construct($data);
         if (!isset($this->Checks)) {
             $this->Checks = new HealthChecks(null);
+        }
+        if (!isset($this->TaggedAddresses)) {
+            $this->TaggedAddresses = new FakeMap(null);
+        }
+        if (!isset($this->NodeMeta)) {
+            $this->NodeMeta = new FakeMap(null);
         }
     }
 
@@ -136,36 +147,36 @@ class CatalogRegistration extends AbstractModel
     }
 
     /**
-     * @return array
+     * @return \DCarbone\PHPConsulAPI\FakeMap
      */
-    public function getTaggedAddresses(): array
+    public function getTaggedAddresses(): FakeMap
     {
         return $this->TaggedAddresses;
     }
 
     /**
-     * @param array $TaggedAddresses
+     * @param \DCarbone\PHPConsulAPI\FakeMap $TaggedAddresses
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
-    public function setTaggedAddresses(array $TaggedAddresses): self
+    public function setTaggedAddresses(FakeMap $TaggedAddresses): self
     {
         $this->TaggedAddresses = $TaggedAddresses;
         return $this;
     }
 
     /**
-     * @return array
+     * @return \DCarbone\PHPConsulAPI\FakeMap
      */
-    public function getNodeMeta(): array
+    public function getNodeMeta(): FakeMap
     {
         return $this->NodeMeta;
     }
 
     /**
-     * @param array $NodeMeta
+     * @param \DCarbone\PHPConsulAPI\FakeMap $NodeMeta
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
-    public function setNodeMeta(array $NodeMeta): self
+    public function setNodeMeta(FakeMap $NodeMeta): self
     {
         $this->NodeMeta = $NodeMeta;
         return $this;

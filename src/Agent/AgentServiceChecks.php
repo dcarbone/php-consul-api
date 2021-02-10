@@ -19,12 +19,12 @@ namespace DCarbone\PHPConsulAPI\Agent;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\AbstractModels;
+use DCarbone\PHPConsulAPI\FakeSlice;
 
 /**
  * Class AgentServiceChecks
  */
-class AgentServiceChecks extends AbstractModels
+class AgentServiceChecks extends FakeSlice
 {
     /** @var string */
     protected string $containedClass = AgentServiceCheck::class;
