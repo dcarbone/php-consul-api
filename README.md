@@ -34,8 +34,8 @@ Require Entry:
 ## Configuration
 
 First, construct a [Config](./src/Config.php). This class is modeled quite closely after the
-[Config Struct](https://github.com/hashicorp/consul/blob/v1.0.0/api/api.go#L202) present in the
-[Consul API Subpackage](https://github.com/hashicorp/consul/blob/v1.0.0/api).
+[Config Struct](https://github.com/hashicorp/consul/blob/v1.9.3/api/api.go#L280) present in the
+[Consul API Subpackage](https://github.com/hashicorp/consul/blob/v1.9.3/api).
 
 ### Default Configuration
 
@@ -58,19 +58,21 @@ $config = new \DCarbone\PHPConsulAPI\Config([
     'Scheme' => 'http or https',            // [optional] defaults to "http"
     'Datacenter' => 'name of datacenter',   // [optional]
     'HttpAuth' => 'user:pass',              // [optional]
+    'WaitTime' => '0s',                     // [optional] amount of time to wait on certain blockable endpoints.  go time duration string format. 
     'Token' => 'auth token',                // [optional] default auth token to use
     'TokenFile' => 'file with auth token',  // [optional] file containing auth token string
     'InsecureSkipVerify' => false,          // [optional] if set to true, ignores all SSL validation
     'CAFile' => '',                         // [optional] path to ca cert file, see http://docs.guzzlephp.org/en/latest/request-options.html#verify
     'CertFile' => '',                       // [optional] path to client public key.  if set, requires KeyFile also be set
     'KeyFile' => '',                        // [optional] path to client private key.  if set, requires CertFile also be set
+    'JSONEncodeOpts'=> 0,                   // [optional] php json encode opt value to use when serializing requests
 ]);
 ```
 
 #### Configuration Note:
 
 By default, this client will attempt to locate a series of environment variables to describe much of the above
-configuration properties.  See [here](./src/Config.php#L450) for that list, and see [here](./src/Consul.php#L96) for
+configuration properties.  See [here](./src/Config.php#L559) for that list, and see [here](./src/Consul.php#L40) for
 a list of the env var names.
 
 For more advanced client configuration, such as proxy configuration, you must construct your own GuzzleHttp client
@@ -97,17 +99,17 @@ Next, construct a [Consul](./src/Consul.php) object:
 $consul = new \DCarbone\PHPConsulAPI\Consul($config);
 ```
 
-*NOTE*: If you do not create your own config object, [Consul](./src/Consul.php#L78) will create it's own
-using [Config::newDefaultConfig()](./src/Config.php#L147) and attempt to locate a suitable HTTP Client.
+*NOTE*: If you do not create your own config object, [Consul](./src/Consul.php#L171) will create it's own
+using [Config::newDefaultConfig()](./src/Config.php#L253) and attempt to locate a suitable HTTP Client.
 
 Once constructed, you interact with each Consul API via it's corresponding Client class:
 
 ```php
-list($kv_list, $qm, $err) = $consul->KV->keys();
-if (null !== $err)
-    die($err);
+$kvResp = $consul->KV->Keys();
+if (null !== $kvResp->Err)
+    die($kvResp->Err);
 
-var_dump($kv_list);
+var_dump($kvResp->Value);
 ```
 
 ...as an example.
