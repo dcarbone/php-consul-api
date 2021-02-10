@@ -59,10 +59,10 @@ final class Hydration
 
     public const OMITEMPTY_FIELD = [self::FIELD_OMITEMPTY => true];
 
-    public const OMITEMPTY_STRING_FIELD       = [self::FIELD_TYPE => self::STRING]                                        + self::OMITEMPTY_FIELD;
-    public const OMITEMPTY_INTEGER_FIELD      = [self::FIELD_TYPE => self::INTEGER]                                       + self::OMITEMPTY_FIELD;
-    public const OMITEMPTY_DOUBLE_FIELD       = [self::FIELD_TYPE => self::DOUBLE]                                        + self::OMITEMPTY_FIELD;
-    public const OMITEMPTY_BOOLEAN_FIELD      = [self::FIELD_TYPE => self::BOOLEAN]                                       + self::OMITEMPTY_FIELD;
+    public const OMITEMPTY_STRING_FIELD       = [self::FIELD_TYPE => self::STRING]  + self::OMITEMPTY_FIELD;
+    public const OMITEMPTY_INTEGER_FIELD      = [self::FIELD_TYPE => self::INTEGER] + self::OMITEMPTY_FIELD;
+    public const OMITEMPTY_DOUBLE_FIELD       = [self::FIELD_TYPE => self::DOUBLE]  + self::OMITEMPTY_FIELD;
+    public const OMITEMPTY_BOOLEAN_FIELD      = [self::FIELD_TYPE => self::BOOLEAN] + self::OMITEMPTY_FIELD;
     public const OMITEMPTY_STRING_ARRAY_FIELD = [
         self::FIELD_TYPE       => self::ARRAY,
         self::FIELD_ARRAY_TYPE => self::STRING,
@@ -89,7 +89,7 @@ final class Hydration
             $instance->{$field} = clone $value;
             return;
         }
-        $instance->{$field} = Time\Time::createFromFormat(Time\Time::DefaultFormat, $value);
+        $instance->{$field} = Time\Time::createFromFormat(\DATE_RFC3339, $value);
     }
 
     /**

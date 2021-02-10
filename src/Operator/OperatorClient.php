@@ -176,12 +176,12 @@ class OperatorClient extends AbstractClient
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\Operator\OperatorServerHealthsResponse
+     * @return \DCarbone\PHPConsulAPI\Operator\OperatorHealthReplyResponse
      */
-    public function AutopilotServerHealth(?QueryOptions $opts = null): OperatorServerHealthsResponse
+    public function AutopilotServerHealth(?QueryOptions $opts = null): OperatorHealthReplyResponse
     {
         $resp = $this->_requireOK($this->_doGet('v1/operator/autopilot/health', $opts));
-        $ret  = new OperatorServerHealthsResponse();
+        $ret  = new OperatorHealthReplyResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;
     }
@@ -190,12 +190,12 @@ class OperatorClient extends AbstractClient
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\Operator\OperatorAutopilotStateResponse
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotStateResponse
      */
-    public function AutopilotState(?QueryOptions $opts = null): OperatorAutopilotStateResponse
+    public function AutopilotState(?QueryOptions $opts = null): AutopilotStateResponse
     {
         $resp = $this->_requireOK($this->_doGet('v1/operator/autopilot/state', $opts));
-        $ret  = new OperatorAutopilotStateResponse();
+        $ret  = new AutopilotStateResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;
     }

@@ -165,7 +165,7 @@ class Coordinate extends AbstractModel
         if ($adjustedDist > 0.0) {
             $dist = $adjustedDist;
         }
-        return new Time\Duration($dist * $secondsToNanoseconds);
+        return Time::Duration($dist * $secondsToNanoseconds);
     }
 
     /**

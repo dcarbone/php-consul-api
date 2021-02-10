@@ -53,7 +53,7 @@ final class SessionClientUsageTest extends AbstractUsageTests
         $session = $sessions[0];
 
         static::assertInstanceOf(Time\Duration::class, $session->LockDelay);
-        static::assertSame(0, $session->LockDelay->Nanoseconds());
+        static::assertSame(15 * Time::Second, $session->LockDelay->Nanoseconds());
 
         [$sessions, $wm, $err] = $client->Renew($id);
         static::assertNull($err, \sprintf('Error renewing session: %s', $err));
@@ -67,6 +67,7 @@ final class SessionClientUsageTest extends AbstractUsageTests
 
         [$sessions, $_, $err] = $client->Info($id);
         static::assertNull($err, \sprintf('Error getting list after expected expiration: %s', $err));
-        static::assertNull($sessions, 'Expected $sessions to be null');
+        static::assertIsArray($sessions, 'Expected $sessions to be an array');
+        static::assertCount(0, $sessions, 'Expected $sessions to be empty');
     }
 }

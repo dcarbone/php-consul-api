@@ -4,6 +4,8 @@ use function DCarbone\PHPConsulAPI\Coordinate\add;
 use DCarbone\PHPConsulAPI\Coordinate\Coordinate;
 use DCarbone\PHPConsulAPI\Coordinate\CoordinateConfig;
 use function DCarbone\PHPConsulAPI\Coordinate\diff;
+use DCarbone\PHPConsulAPI\Coordinate\DimensionalityConflictException;
+
 use function DCarbone\PHPConsulAPI\Coordinate\magnitude;
 use function DCarbone\PHPConsulAPI\Coordinate\unitVectorAt;
 use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
@@ -73,9 +75,11 @@ final class CoordinateUsageTest extends AbstractUsageTests
 
     public function testCanConstructCoordinateWithArrayOfValues(): void
     {
-        $coord = new Coordinate([
-            'Vec' => [0.1, 0.2],
-        ]);
+        $coord = new Coordinate(
+            [
+                'Vec' => [0.1, 0.2],
+            ]
+        );
         static::assertInstanceOf(Coordinate::class, $coord);
         static::assertIsArray($coord->Vec);
         static::assertCount(2, $coord->Vec);
@@ -140,7 +144,7 @@ final class CoordinateUsageTest extends AbstractUsageTests
 
     public function testApplyForce(): void
     {
-        $this->expectException(\DCarbone\PHPConsulAPI\Coordinate\DimensionalityConflictException::class);
+        $this->expectException(DimensionalityConflictException::class);
 
         $config                 = CoordinateConfig::Default();
         $config->Dimensionality = 3;
@@ -178,7 +182,7 @@ final class CoordinateUsageTest extends AbstractUsageTests
 
     public function testDistanceTo(): void
     {
-        $this->expectException(\DCarbone\PHPConsulAPI\Coordinate\DimensionalityConflictException::class);
+        $this->expectException(DimensionalityConflictException::class);
 
         $config                 = CoordinateConfig::Default();
         $config->Dimensionality = 3;

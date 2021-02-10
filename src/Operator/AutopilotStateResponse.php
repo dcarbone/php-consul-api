@@ -22,9 +22,9 @@ use DCarbone\PHPConsulAPI\AbstractValuedResponse;
 use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
- * Class OperatorAutopilotStateResponse
+ * Class AutopilotStateResponse
  */
-class OperatorAutopilotStateResponse extends AbstractValuedResponse implements HydratedResponseInterface
+class AutopilotStateResponse extends AbstractValuedResponse implements HydratedResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotState|null */
     public ?AutopilotState $AutopilotState = null;
