@@ -68,8 +68,8 @@ final class KVCRUDTest extends AbstractUsageTests
         static::assertNull($err, \sprintf('KV::get returned error: %s', (string)$err));
         static::assertInstanceOf(QueryMeta::class, $qm);
         static::assertInstanceOf(KVPair::class, $kv);
-        static::assertEquals(self::KVKey1, $kv->Key);
-        static::assertEquals(self::KVValue1, $kv->Value);
+        static::assertSame(self::KVKey1, $kv->Key);
+        static::assertSame(self::KVValue1, $kv->Value);
     }
 
     /**
