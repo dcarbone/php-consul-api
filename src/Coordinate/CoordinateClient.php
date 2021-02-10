@@ -36,7 +36,7 @@ class CoordinateClient extends AbstractClient
      */
     public function Datacenters(): CoordinateDatacentersResponse
     {
-        $resp = $this->_doGet('v1/coordinate/datacenters', null);
+        $resp = $this->_requireOK($this->_doGet('v1/coordinate/datacenters', null));
         $ret  = new CoordinateDatacentersResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;
@@ -50,7 +50,7 @@ class CoordinateClient extends AbstractClient
      */
     public function Nodes(?QueryOptions $opts = null): CoordinateEntriesResponse
     {
-        $resp = $this->_doGet('v1/coordinate/nodes', $opts);
+        $resp = $this->_requireOK($this->_doGet('v1/coordinate/nodes', $opts));
         $ret  = new CoordinateEntriesResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;
@@ -76,7 +76,7 @@ class CoordinateClient extends AbstractClient
      */
     public function Node(string $node, ?QueryOptions $opts = null): CoordinateEntriesResponse
     {
-        $resp = $this->_doGet(\sprintf('v1/coordinate/node/%s', $node), $opts);
+        $resp = $this->_requireOK($this->_doGet(\sprintf('v1/coordinate/node/%s', $node), $opts));
         $ret  = new CoordinateEntriesResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;

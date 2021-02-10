@@ -36,11 +36,12 @@ class OperatorClient extends AbstractClient
      * @param \DCarbone\PHPConsulAPI\Operator\Area $area
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      */
     public function AreaCreate(Area $area, ?WriteOptions $opts = null): ValuedWriteStringResponse
     {
-        return $this->_writeIDResponse($this->_doPost('v1/operator/area', $area, $opts));
+        return $this->_writeIDResponse($this->_requireOK($this->_doPost('v1/operator/area', $area, $opts)));
     }
 
     /**
@@ -48,11 +49,14 @@ class OperatorClient extends AbstractClient
      * @param \DCarbone\PHPConsulAPI\Operator\Area $area
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      */
     public function AreaUpdate(string $areaID, Area $area, ?WriteOptions $opts = null): ValuedWriteStringResponse
     {
-        return $this->_writeIDResponse($this->_doPut(\sprintf('v1/operator/area/%s', $areaID), $area, $opts));
+        return $this->_writeIDResponse(
+            $this->_requireOK($this->_doPut(\sprintf('v1/operator/area/%s', $areaID), $area, $opts))
+        );
     }
 
     /**
@@ -64,7 +68,7 @@ class OperatorClient extends AbstractClient
      */
     public function AreaGet(string $areaID, ?QueryOptions $opts = null): OperatorAreasResponse
     {
-        $resp = $this->_doGet(\sprintf('v1/operator/area/%s', \urlencode($areaID)), $opts);
+        $resp = $this->_requireOK($this->_doGet(\sprintf('v1/operator/area/%s', \urlencode($areaID)), $opts));
         $ret  = new OperatorAreasResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;
@@ -78,7 +82,7 @@ class OperatorClient extends AbstractClient
      */
     public function AreaList(?QueryOptions $opts = null): OperatorAreasResponse
     {
-        $resp = $this->_doGet('v1/operator/area', $opts);
+        $resp = $this->_requireOK($this->_doGet('v1/operator/area', $opts));
         $ret  = new OperatorAreasResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;
@@ -105,7 +109,7 @@ class OperatorClient extends AbstractClient
      */
     public function AreaJoin(string $areaID, array $addresses, ?WriteOptions $opts = null): OperatorAreaJoinResponse
     {
-        $resp = $this->_doPut(\sprintf('v1/operator/area/%s/join', $areaID), $addresses, $opts);
+        $resp = $this->_requireOK($this->_doPut(\sprintf('v1/operator/area/%s/join', $areaID), $addresses, $opts));
         $ret  = new OperatorAreaJoinResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;
@@ -120,7 +124,7 @@ class OperatorClient extends AbstractClient
      */
     public function AreaMembers(string $areaID, ?QueryOptions $opts = null): OperatorSerfMembersResponse
     {
-        $resp = $this->_doGet(\sprintf('v1/operator/area/%s/members', $areaID), $opts);
+        $resp = $this->_requireOK($this->_doGet(\sprintf('v1/operator/area/%s/members', $areaID), $opts));
         $ret  = new OperatorSerfMembersResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;
@@ -134,7 +138,7 @@ class OperatorClient extends AbstractClient
      */
     public function AutopilotGetConfiguration(?QueryOptions $opts = null): OperatorAutopilotConfigurationResponse
     {
-        $resp = $this->_doGet('v1/operator/autopilot/configuration', $opts);
+        $resp = $this->_requireOK($this->_doGet('v1/operator/autopilot/configuration', $opts));
         $ret  = new OperatorAutopilotConfigurationResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;
@@ -148,7 +152,7 @@ class OperatorClient extends AbstractClient
      */
     public function AutopilotSetConfiguration(AutopilotConfiguration $conf, ?WriteOptions $opts = null): ?Error
     {
-        return $this->_doPut('v1/operator/autopilot/configuration', $conf, $opts)->Err;
+        return $this->_requireOK($this->_doPut('v1/operator/autopilot/configuration', $conf, $opts))->Err;
     }
 
     /**
@@ -162,7 +166,7 @@ class OperatorClient extends AbstractClient
         AutopilotConfiguration $conf,
         ?WriteOptions $opts = null
     ): ValuedBoolResponse {
-        $resp = $this->_doPut('v1/operator/autopilot/configuration', $conf, $opts);
+        $resp = $this->_requireOK($this->_doPut('v1/operator/autopilot/configuration', $conf, $opts));
         $ret  = new ValuedBoolResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;
@@ -176,7 +180,7 @@ class OperatorClient extends AbstractClient
      */
     public function AutopilotServerHealth(?QueryOptions $opts = null): OperatorServerHealthsResponse
     {
-        $resp = $this->_doGet('v1/operator/autopilot/health', $opts);
+        $resp = $this->_requireOK($this->_doGet('v1/operator/autopilot/health', $opts));
         $ret  = new OperatorServerHealthsResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;
@@ -190,7 +194,7 @@ class OperatorClient extends AbstractClient
      */
     public function AutopilotState(?QueryOptions $opts = null): OperatorAutopilotStateResponse
     {
-        $resp = $this->_doGet('v1/operator/autopilot/state', $opts);
+        $resp = $this->_requireOK($this->_doGet('v1/operator/autopilot/state', $opts));
         $ret  = new OperatorAutopilotStateResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;
@@ -204,7 +208,7 @@ class OperatorClient extends AbstractClient
      */
     public function RaftGetConfiguration(?QueryOptions $opts = null): OperatorRaftConfigurationResponse
     {
-        $resp = $this->_doGet('v1/operator/raft/configuration', $opts);
+        $resp = $this->_requireOK($this->_doGet('v1/operator/raft/configuration', $opts));
         $ret  = new OperatorRaftConfigurationResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;
@@ -227,8 +231,8 @@ class OperatorClient extends AbstractClient
 
     /**
      * @param \DCarbone\PHPConsulAPI\RequestResponse $resp
-     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      */
     protected function _writeIDResponse(RequestResponse $resp): ValuedWriteStringResponse
     {

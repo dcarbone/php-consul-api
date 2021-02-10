@@ -46,7 +46,7 @@ class AgentClient extends AbstractClient
         if (!$refresh && isset($this->_self)) {
             return $this->_self;
         }
-        $resp = $this->_doGet('v1/agent/self', null);
+        $resp = $this->_requireOK($this->_doGet('v1/agent/self', null));
         $ret  = new MapResponse();
         $this->_hydrateResponse($resp, $ret);
         if (null === $ret->Err) {
@@ -75,7 +75,7 @@ class AgentClient extends AbstractClient
      */
     public function Metrics(): MetricsInfoResponse
     {
-        $resp = $this->_doGet('v1/agent/metrics', null);
+        $resp = $this->_requireOK($this->_doGet('v1/agent/metrics', null));
         $ret  = new MetricsInfoResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;
@@ -265,7 +265,7 @@ class AgentClient extends AbstractClient
      */
     public function Members(): AgentMembersResponse
     {
-        $resp = $this->_doGet('v1/agent/members', null);
+        $resp = $this->_requireOK($this->_doGet('v1/agent/members', null));
         $ret  = new AgentMembersResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;

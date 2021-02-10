@@ -52,7 +52,7 @@ class KVClient extends AbstractClient
 
         $code = $resp->Response->getStatusCode();
 
-        if (200 === $code) {
+        if (HTTP\StatusOK === $code) {
             // success response
             $dec = $this->_decodeBody($resp->Response->getBody());
             if (null !== $dec->Err) {
@@ -60,7 +60,7 @@ class KVClient extends AbstractClient
             } else {
                 $ret->hydrateValue($dec->Decoded[0]);
             }
-        } elseif (404 !== $code) {
+        } elseif (HTTP\StatusNotFound !== $code) {
             $ret->Err = new Error(\sprintf('%s: %s', $code, $resp->Response->getReasonPhrase()));
         }
 

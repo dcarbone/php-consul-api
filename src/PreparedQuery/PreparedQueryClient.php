@@ -38,7 +38,7 @@ class PreparedQueryClient extends AbstractClient
      */
     public function Create(PreparedQueryDefinition $query, ?WriteOptions $opts = null): ValuedWriteStringResponse
     {
-        $resp = $this->_doPost('v1/query', $query, $opts);
+        $resp = $this->_requireOK($this->_doPost('v1/query', $query, $opts));
         $ret  = new ValuedWriteStringResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;

@@ -22,6 +22,8 @@ use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Hydration;
 
+use function DCarbone\PHPConsulAPI\dur_to_millisecond;
+
 /**
  * Class SessionEntry
  */
@@ -39,8 +41,14 @@ class SessionEntry extends AbstractModel
         self::FIELD_NAMESPACE      => Hydration::OMITEMPTY_STRING_FIELD,
     ];
 
+    private const FIELD_NAME           = 'Name';
+    private const FIELD_NODE           = 'Node';
     private const FIELD_LOCK_DELAY     = 'LockDelay';
+    private const FIELD_CHECKS         = 'Checks';
+    private const FIELD_NODE_CHECKS    = 'NodeChecks';
     private const FIELD_SERVICE_CHECKS = 'ServiceChecks';
+    private const FIELD_BEHAVIOR       = 'Behavior';
+    private const FIELD_TTL            = 'TTL';
     private const FIELD_NAMESPACE      = 'Namespace';
 
     /** @var int */
@@ -281,27 +289,33 @@ class SessionEntry extends AbstractModel
      */
     public function _toAPIPayload(): array
     {
-        $a = self::jsonSerialize();
+        $out = [];
 
-        $a[self::FIELD_LOCK_DELAY] = self::durToMsec($this->LockDelay);
-
-        return $a;
-    }
-
-    /**
-     * @param \DCarbone\Go\Time\Duration|null $dur
-     * @return string
-     */
-    private static function durToMsec(?Time\Duration $dur): string
-    {
-        if (null === $dur) {
-            return '0ms';
+        if ('' !== $this->Name) {
+            $out[self::FIELD_NAME] = $this->Name;
         }
-        $ns = $dur->Nanoseconds();
-        $ms = (int)($ns / Time::Millisecond);
-        if (0 < $ns && 0 === $ms) {
-            return '1ms';
+        if ('' !== $this->Node) {
+            $out[self::FIELD_NODE] = $this->Node;
         }
-        return \sprintf('%dms', $ms);
+        if (0 < $this->LockDelay->Nanoseconds()) {
+            $out[self::FIELD_LOCK_DELAY] = dur_to_millisecond($this->LockDelay);
+        }
+        if ([] !== $this->Checks) {
+            $out[self::FIELD_CHECKS] = $this->Checks;
+        }
+        if ([] !== $this->NodeChecks) {
+            $out[self::FIELD_NODE_CHECKS] = $this->NodeChecks;
+        }
+        if ([] !== $this->ServiceChecks) {
+            $out[self::FIELD_SERVICE_CHECKS] = $this->ServiceChecks;
+        }
+        if ('' !== $this->Behavior) {
+            $out[self::FIELD_BEHAVIOR] = $this->Behavior;
+        }
+        if ('' !== $this->TTL) {
+            $out[self::FIELD_TTL] = $this->TTL;
+        }
+
+        return $out;
     }
 }

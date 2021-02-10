@@ -185,11 +185,12 @@ class HealthClient extends AbstractClient
      * @param string $path
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Health\HealthChecksResponse
      */
     protected function _getHealthChecks(string $path, ?QueryOptions $opts): HealthChecksResponse
     {
-        $resp = $this->_doGet($path, $opts);
+        $resp = $this->_requireOK($this->_doGet($path, $opts));
         $ret  = new HealthChecksResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;
@@ -202,6 +203,7 @@ class HealthClient extends AbstractClient
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @param string $healthType
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Health\ServiceEntriesResponse
      */
     private function _getServiceEntries(

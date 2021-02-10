@@ -60,7 +60,7 @@ class CatalogClient extends AbstractClient
      */
     public function Datacenters(): ValuedStringsResponse
     {
-        $resp = $this->_doGet('v1/catalog/datacenters', null);
+        $resp = $this->_requireOK($this->_doGet('v1/catalog/datacenters', null));
         $ret  = new ValuedStringsResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;
@@ -74,7 +74,7 @@ class CatalogClient extends AbstractClient
      */
     public function Nodes(?QueryOptions $opts = null): CatalogNodesResponse
     {
-        $resp = $this->_doGet('v1/catalog/nodes', $opts);
+        $resp = $this->_requireOK($this->_doGet('v1/catalog/nodes', $opts));
         $ret  = new CatalogNodesResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;
@@ -88,7 +88,7 @@ class CatalogClient extends AbstractClient
      */
     public function Services(?QueryOptions $opts = null): ValuedQueryStringsResponse
     {
-        $resp = $this->_doGet('v1/catalog/services', $opts);
+        $resp = $this->_requireOK($this->_doGet('v1/catalog/services', $opts));
         $ret  = new ValuedQueryStringsResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;
@@ -103,7 +103,7 @@ class CatalogClient extends AbstractClient
      */
     public function NodeServicesList(string $node, ?QueryOptions $opts = null): CatalogNodeServicesListResponse
     {
-        $resp = $this->_doGet(\sprintf('v1/catalog/node-services/%s', \urlencode($node)), $opts);
+        $resp = $this->_requireOK($this->_doGet(\sprintf('v1/catalog/node-services/%s', \urlencode($node)), $opts));
         $ret  = new CatalogNodeServicesListResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;
@@ -153,7 +153,7 @@ class CatalogClient extends AbstractClient
      */
     public function Node(string $node, ?QueryOptions $opts = null): CatalogNodeResponse
     {
-        $resp = $this->_doGet(\sprintf('v1/catalog/node/%s', $node), $opts);
+        $resp = $this->_requireOK($this->_doGet(\sprintf('v1/catalog/node/%s', $node), $opts));
         $ret  = new CatalogNodeResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;
@@ -168,7 +168,7 @@ class CatalogClient extends AbstractClient
      */
     public function GatewayServices(string $gateway, ?QueryOptions $opts = null): GatewayServicesResponse
     {
-        $resp = $this->_doGet(\sprintf('v1/catalog/gateway-services/%s', \urlencode($gateway)), $opts);
+        $resp = $this->_requireOK($this->_doGet(\sprintf('v1/catalog/gateway-services/%s', \urlencode($gateway)), $opts));
         $ret  = new GatewayServicesResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;

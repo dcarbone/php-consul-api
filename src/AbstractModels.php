@@ -171,6 +171,10 @@ abstract class AbstractModels implements \Iterator, \ArrayAccess, \Countable, \J
      */
     public function jsonSerialize(): array
     {
+        if (0 === $this->_size) {
+            return [];
+        }
+
         $out = [];
         foreach ($this->_list as $i => $item) {
             if (null === $item) {

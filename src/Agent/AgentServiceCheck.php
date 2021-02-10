@@ -75,7 +75,7 @@ class AgentServiceCheck extends AbstractModel
     private const FIELD_TCP                               = 'TCP';
     private const FIELD_STATUS                            = 'Status';
     private const FIELD_NOTES                             = 'Notes';
-    private const FIELD_TLS_SKIP_VERIFY                   = 'TLSSKipVerify';
+    private const FIELD_TLS_SKIP_VERIFY                   = 'TLSSkipVerify';
     private const FIELD_GRPC                              = 'GRPC';
     private const FIELD_GRPC_USE_TLS                      = 'GRPCUseTLS';
     private const FIELD_ALIAS_NODE                        = 'AliasNode';
@@ -117,7 +117,7 @@ class AgentServiceCheck extends AbstractModel
     /** @var string */
     public string $GRPC = '';
     /** @var bool */
-    public bool $GRPCUseTL = false;
+    public bool $GRPCUseTLS = false;
     /** @var string */
     public string $AliasNode = '';
     /** @var string */
@@ -421,18 +421,18 @@ class AgentServiceCheck extends AbstractModel
     /**
      * @return bool
      */
-    public function isGRPCUseTL(): bool
+    public function isGRPCUseTLS(): bool
     {
-        return $this->GRPCUseTL;
+        return $this->GRPCUseTLS;
     }
 
     /**
-     * @param bool $GRPCUseTL
+     * @param bool $GRPCUseTLS
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck
      */
-    public function setGRPCUseTL(bool $GRPCUseTL): self
+    public function setGRPCUseTLS(bool $GRPCUseTLS): self
     {
-        $this->GRPCUseTL = $GRPCUseTL;
+        $this->GRPCUseTLS = $GRPCUseTLS;
         return $this;
     }
 

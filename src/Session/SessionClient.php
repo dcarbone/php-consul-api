@@ -99,12 +99,14 @@ class SessionClient extends AbstractClient
                 $this->_hydrateResponse($resp, $ret);
                 break;
             default:
-                $ret->Err = new Error(\sprintf(
-                    '%s::renew - Unexpected response code %d.  Reason: %s',
-                    \get_class($this),
-                    $code,
-                    $resp->Response->getReasonPhrase()
-                ));
+                $ret->Err = new Error(
+                    \sprintf(
+                        '%s::renew - Unexpected response code %d.  Reason: %s',
+                        \get_class($this),
+                        $code,
+                        $resp->Response->getReasonPhrase()
+                    )
+                );
         }
 
         return $ret;
@@ -146,12 +148,13 @@ class SessionClient extends AbstractClient
      * @param string $path
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntriesQueryResponse
      */
     private function _get(string $path, ?QueryOptions $opts): SessionEntriesQueryResponse
     {
-        $resp = $this->_doGet($path, $opts);
-        $ret  = new SessionEntriesQueryResponse();
+        $resp = $this->_requireOK($this->_doGet($path, $opts));
+        $ret = new SessionEntriesQueryResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;
     }
@@ -161,12 +164,13 @@ class SessionClient extends AbstractClient
      * @param \DCarbone\PHPConsulAPI\Session\SessionEntry $entry
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      */
     private function _create(string $path, SessionEntry $entry, ?WriteOptions $opts): ValuedWriteStringResponse
     {
-        $resp = $this->_doPut($path, $entry->_toAPIPayload(), $opts);
-        $ret  = new ValuedWriteStringResponse();
+        $resp = $this->_requireOK($this->_doPut($path, $entry->_toAPIPayload(), $opts));
+        $ret = new ValuedWriteStringResponse();
 
         if (null !== $resp->Err) {
             $ret->Err = $resp->Err;

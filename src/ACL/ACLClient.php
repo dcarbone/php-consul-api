@@ -91,7 +91,7 @@ class ACLClient extends AbstractClient
      */
     public function Info(string $id, ?QueryOptions $opts = null): ACLEntriesResponse
     {
-        $resp = $this->_doGet(\sprintf('v1/acl/info/%s', $id), $opts);
+        $resp = $this->_requireOK($this->_doGet(\sprintf('v1/acl/info/%s', $id), $opts));
         $ret  = new ACLEntriesResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;
@@ -105,7 +105,7 @@ class ACLClient extends AbstractClient
      */
     public function List(?QueryOptions $opts = null): ACLEntriesResponse
     {
-        $resp = $this->_doGet('v1/acl/list', $opts);
+        $resp = $this->_requireOK($this->_doGet('v1/acl/list', $opts));
         $ret  = new ACLEntriesResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;
@@ -119,7 +119,7 @@ class ACLClient extends AbstractClient
      */
     public function Replication(?QueryOptions $opts = null): ACLReplicationStatusResponse
     {
-        $resp = $this->_doGet('/v1/acl/replication', $opts);
+        $resp = $this->_requireOK($this->_doGet('/v1/acl/replication', $opts));
         $ret  = new ACLReplicationStatusResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;

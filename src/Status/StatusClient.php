@@ -36,7 +36,7 @@ class StatusClient extends AbstractClient
      */
     public function LeaderWithQueryOptions(?QueryOptions $opts): ValuedStringResponse
     {
-        $resp = $this->_doGet('v1/status/leader', $opts);
+        $resp = $this->_requireOK($this->_doGet('v1/status/leader', $opts));
         $ret  = new ValuedStringResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;
@@ -59,7 +59,7 @@ class StatusClient extends AbstractClient
      */
     public function PeersWithQueryOptions(?QueryOptions $opts): ValuedStringsResponse
     {
-        $resp = $this->_doGet('v1/status/peers', $opts);
+        $resp = $this->_requireOK($this->_doGet('v1/status/peers', $opts));
         $ret  = new ValuedStringsResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;

@@ -63,7 +63,7 @@ class AgentServiceRegistration extends AbstractModel
         ],
         self::FIELD_CHECKS              => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => AgentServiceCheck::class,
+            Hydration::FIELD_CLASS      => AgentServiceChecks::class,
             Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
         ],
         self::FIELD_PROXY               => [
@@ -113,7 +113,7 @@ class AgentServiceRegistration extends AbstractModel
     /** @var array */
     public array $Meta = [];
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentWeights|null */
-    public ?AgentWeights $AgentWeights = null;
+    public ?AgentWeights $Weights = null;
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck|null */
     public ?AgentServiceCheck $Check = null;
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentServiceChecks */
@@ -284,18 +284,18 @@ class AgentServiceRegistration extends AbstractModel
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentWeights|null
      */
-    public function getAgentWeights(): ?AgentWeights
+    public function getWeights(): ?AgentWeights
     {
-        return $this->AgentWeights;
+        return $this->Weights;
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Agent\AgentWeights|null $AgentWeights
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentWeights|null $Weights
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
-    public function setAgentWeights(?AgentWeights $AgentWeights): self
+    public function setWeights(?AgentWeights $Weights): self
     {
-        $this->AgentWeights = $AgentWeights;
+        $this->Weights = $Weights;
         return $this;
     }
 
