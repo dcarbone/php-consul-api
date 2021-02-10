@@ -27,11 +27,9 @@ use DCarbone\PHPConsulAPI\Hydration;
 class ACLBindingRule extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_NAMESPACE          => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
+        self::FIELD_NAMESPACE => Hydration::OMITEMPTY_STRING_FIELD,
     ];
+
     private const FIELD_NAMESPACE = 'Namespace';
 
     /** @var string */
@@ -50,8 +48,8 @@ class ACLBindingRule extends AbstractModel
     public int $CreateIndex = 0;
     /** @var int */
     public int $ModifyIndex = 0;
-    /** @var string|null */
-    public ?string $Namespace = null;
+    /** @var string */
+    public string $Namespace = '';
 
     /**
      * @return string
@@ -198,18 +196,18 @@ class ACLBindingRule extends AbstractModel
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getNamespace(): ?string
+    public function getNamespace(): string
     {
         return $this->Namespace;
     }
 
     /**
-     * @param string|null $Namespace
+     * @param string $Namespace
      * @return \DCarbone\PHPConsulAPI\ACL\ACLBindingRule
      */
-    public function setNamespace(?string $Namespace): self
+    public function setNamespace(string $Namespace): self
     {
         $this->Namespace = $Namespace;
         return $this;

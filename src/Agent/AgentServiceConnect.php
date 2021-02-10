@@ -27,56 +27,53 @@ use DCarbone\PHPConsulAPI\Hydration;
 class AgentServiceConnect extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_NATIVE          => [
-            Hydration::FIELD_TYPE     => Hydration::BOOLEAN,
-            Hydration::FIELD_NULLABLE => true,
-        ],
+        self::FIELD_NATIVE          => Hydration::OMITEMPTY_BOOLEAN_FIELD,
         self::FIELD_SIDECAR_SERVICE => [
-            Hydration::FIELD_TYPE     => Hydration::ARRAY,
-            Hydration::FIELD_CLASS    => AgentServiceRegistration::class,
-            Hydration::FIELD_NULLABLE => true,
+            Hydration::FIELD_TYPE      => Hydration::ARRAY,
+            Hydration::FIELD_CLASS     => AgentServiceRegistration::class,
+            Hydration::FIELD_OMITEMPTY => true,
         ],
     ];
 
     private const FIELD_NATIVE          = 'Native';
     private const FIELD_SIDECAR_SERVICE = 'SidecarService';
 
-    /** @var bool|null */
-    public ?bool $Native = null;
-    /** @var \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration[]|null */
-    public ?array $SidecarService = null;
+    /** @var bool */
+    public bool $Native = false;
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration[] */
+    public array $SidecarService = [];
 
     /**
-     * @return bool|null
+     * @return bool
      */
-    public function getNative(): ?bool
+    public function isNative(): bool
     {
         return $this->Native;
     }
 
     /**
-     * @param bool|null $Native
+     * @param bool $Native
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceConnect
      */
-    public function setNative(?bool $Native): self
+    public function setNative(bool $Native): self
     {
         $this->Native = $Native;
         return $this;
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration[]|null
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration[]
      */
-    public function getSidecarService(): ?array
+    public function getSidecarService(): array
     {
         return $this->SidecarService;
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration[]|null $SidecarService
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration[] $SidecarService
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceConnect
      */
-    public function setSidecarService(?array $SidecarService): self
+    public function setSidecarService(array $SidecarService): self
     {
         $this->SidecarService = $SidecarService;
         return $this;

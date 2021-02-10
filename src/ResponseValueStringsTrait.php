@@ -24,7 +24,7 @@ namespace DCarbone\PHPConsulAPI;
 trait ResponseValueStringsTrait
 {
     /** @var string[]|null */
-    public ?array $Value = null;
+    public array $Value = [];
 
     /**
      * @return string[]|null

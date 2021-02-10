@@ -33,6 +33,7 @@ class CoordinateDatacenterMap extends AbstractModel
             Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
         ],
     ];
+
     private const FIELD_COORDINATES = 'Coordinates';
 
     /** @var string */

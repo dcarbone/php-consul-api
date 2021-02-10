@@ -19,12 +19,21 @@ namespace DCarbone\PHPConsulAPI\Catalog;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class CatalogDeregistration
  */
 class CatalogDeregistration extends AbstractModel
 {
+    protected const FIELDS = [
+        self::FIELD_ADDRESS   => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_NAMESPACE => Hydration::OMITEMPTY_STRING_FIELD,
+    ];
+
+    private const FIELD_ADDRESS   = 'Address';
+    private const FIELD_NAMESPACE = 'Namespace';
+
     /** @var string */
     public string $Node = '';
     /** @var string */

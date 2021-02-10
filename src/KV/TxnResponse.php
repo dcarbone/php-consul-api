@@ -36,6 +36,7 @@ class TxnResponse extends AbstractModel
             Hydration::FIELD_CLASS => TxnErrors::class,
         ],
     ];
+
     private const FIELD_RESULTS = 'Results';
     private const FIELD_ERRORS  = 'Errors';
 
@@ -46,7 +47,7 @@ class TxnResponse extends AbstractModel
 
     /**
      * TxnResponse constructor.
-     * @param array $data
+     * @param array|null $data
      */
     public function __construct(?array $data = null)
     {
@@ -68,10 +69,30 @@ class TxnResponse extends AbstractModel
     }
 
     /**
+     * @param \DCarbone\PHPConsulAPI\KV\TxnResults $Results
+     * @return \DCarbone\PHPConsulAPI\KV\TxnResponse
+     */
+    public function setResults(TxnResults $Results): self
+    {
+        $this->Results = $Results;
+        return $this;
+    }
+
+    /**
      * @return \DCarbone\PHPConsulAPI\KV\TxnErrors
      */
     public function getErrors(): TxnErrors
     {
         return $this->Errors;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\KV\TxnErrors $Errors
+     * @return \DCarbone\PHPConsulAPI\KV\TxnResponse
+     */
+    public function setErrors(TxnErrors $Errors): self
+    {
+        $this->Errors = $Errors;
+        return $this;
     }
 }

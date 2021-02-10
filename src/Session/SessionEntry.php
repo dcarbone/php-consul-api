@@ -29,16 +29,19 @@ class SessionEntry extends AbstractModel
 {
     protected const FIELDS = [
         self::FIELD_LOCK_DELAY     => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
+            Hydration::FIELD_CALLBACK => Hydration::HYDRATE_DURATION,
         ],
         self::FIELD_SERVICE_CHECKS => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_CLASS      => ServiceCheck::class,
             Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
         ],
+        self::FIELD_NAMESPACE      => Hydration::OMITEMPTY_STRING_FIELD,
     ];
+
     private const FIELD_LOCK_DELAY     = 'LockDelay';
     private const FIELD_SERVICE_CHECKS = 'ServiceChecks';
+    private const FIELD_NAMESPACE      = 'Namespace';
 
     /** @var int */
     public int $CreateIndex = 0;
@@ -65,13 +68,13 @@ class SessionEntry extends AbstractModel
 
     /**
      * SessionEntry constructor.
-     * @param array $data
+     * @param array|null $data
      */
     public function __construct(?array $data = null)
     {
         parent::__construct($data);
-        if (!($this->LockDelay instanceof Time\Duration)) {
-            $this->LockDelay = Time::Duration($this->LockDelay);
+        if (!isset($this->LockDelay)) {
+            $this->LockDelay = new Time\Duration(0);
         }
     }
 
@@ -84,12 +87,12 @@ class SessionEntry extends AbstractModel
     }
 
     /**
-     * @param int $createIndex
+     * @param int $CreateIndex
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function setCreateIndex(int $createIndex): self
+    public function setCreateIndex(int $CreateIndex): self
     {
-        $this->CreateIndex = $createIndex;
+        $this->CreateIndex = $CreateIndex;
         return $this;
     }
 
@@ -102,12 +105,12 @@ class SessionEntry extends AbstractModel
     }
 
     /**
-     * @param string $id
+     * @param string $ID
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function setID(string $id): self
+    public function setID(string $ID): self
     {
-        $this->ID = $id;
+        $this->ID = $ID;
         return $this;
     }
 
@@ -120,12 +123,12 @@ class SessionEntry extends AbstractModel
     }
 
     /**
-     * @param string $name
+     * @param string $Name
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function setName(string $name): self
+    public function setName(string $Name): self
     {
-        $this->Name = $name;
+        $this->Name = $Name;
         return $this;
     }
 
@@ -138,39 +141,12 @@ class SessionEntry extends AbstractModel
     }
 
     /**
-     * @param string $node
+     * @param string $Node
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function setNode(string $node): self
+    public function setNode(string $Node): self
     {
-        $this->Node = $node;
-        return $this;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function getChecks(): array
-    {
-        return $this->Checks;
-    }
-
-    /**
-     * @param string[] $checks
-     * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
-     */
-    public function setChecks(array $checks): self
-    {
-        $this->Checks = [];
-        foreach ($checks as $check) {
-            $this->addCheck($check);
-        }
-        return $this;
-    }
-
-    public function addCheck(string $check): self
-    {
-        $this->Checks[] = $check;
+        $this->Node = $Node;
         return $this;
     }
 
@@ -183,12 +159,12 @@ class SessionEntry extends AbstractModel
     }
 
     /**
-     * @param \DCarbone\Go\Time\Duration $lockDelay
+     * @param \DCarbone\Go\Time\Duration $LockDelay
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function setLockDelay(Time\Duration $lockDelay): self
+    public function setLockDelay(Time\Duration $LockDelay): self
     {
-        $this->LockDelay = $lockDelay;
+        $this->LockDelay = $LockDelay;
         return $this;
     }
 
@@ -201,12 +177,12 @@ class SessionEntry extends AbstractModel
     }
 
     /**
-     * @param string $behavior
+     * @param string $Behavior
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function setBehavior(string $behavior): self
+    public function setBehavior(string $Behavior): self
     {
-        $this->Behavior = $behavior;
+        $this->Behavior = $Behavior;
         return $this;
     }
 
@@ -219,12 +195,12 @@ class SessionEntry extends AbstractModel
     }
 
     /**
-     * @param string $ttl
+     * @param string $TTL
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function setTTL(string $ttl): self
+    public function setTTL(string $TTL): self
     {
-        $this->TTL = $ttl;
+        $this->TTL = $TTL;
         return $this;
     }
 
@@ -237,12 +213,30 @@ class SessionEntry extends AbstractModel
     }
 
     /**
-     * @param string $namespace
+     * @param string $Namespace
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function setNamespace(string $namespace): self
+    public function setNamespace(string $Namespace): self
     {
-        $this->Namespace = $namespace;
+        $this->Namespace = $Namespace;
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getChecks(): array
+    {
+        return $this->Checks;
+    }
+
+    /**
+     * @param string[] $Checks
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
+     */
+    public function setChecks(array $Checks): self
+    {
+        $this->Checks = $Checks;
         return $this;
     }
 
@@ -255,25 +249,12 @@ class SessionEntry extends AbstractModel
     }
 
     /**
-     * @param string $check
+     * @param string[] $NodeChecks
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function addNodeCheck(string $check): self
+    public function setNodeChecks(array $NodeChecks): self
     {
-        $this->NodeChecks[] = $check;
-        return $this;
-    }
-
-    /**
-     * @param string[] $nodeChecks
-     * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
-     */
-    public function setNodeChecks(array $nodeChecks): self
-    {
-        $this->NodeChecks = [];
-        foreach ($nodeChecks as $check) {
-            $this->addNodeCheck($check);
-        }
+        $this->NodeChecks = $NodeChecks;
         return $this;
     }
 
@@ -286,25 +267,12 @@ class SessionEntry extends AbstractModel
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Session\ServiceCheck $check
+     * @param \DCarbone\PHPConsulAPI\Session\ServiceCheck[] $ServiceChecks
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
      */
-    public function addServiceCheck(ServiceCheck $check): self
+    public function setServiceChecks(array $ServiceChecks): self
     {
-        $this->ServiceChecks[] = $check;
-        return $this;
-    }
-
-    /**
-     * @param \DCarbone\PHPConsulAPI\Session\ServiceCheck[] $serviceChecks
-     * @return \DCarbone\PHPConsulAPI\Session\SessionEntry
-     */
-    public function setServiceChecks(array $serviceChecks): self
-    {
-        $this->ServiceChecks = [];
-        foreach ($serviceChecks as $check) {
-            $this->addServiceCheck($check);
-        }
+        $this->ServiceChecks = $ServiceChecks;
         return $this;
     }
 

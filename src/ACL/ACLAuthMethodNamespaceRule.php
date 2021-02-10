@@ -27,54 +27,49 @@ use DCarbone\PHPConsulAPI\Hydration;
 class ACLAuthMethodNamespaceRule extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_SELECTOR=> [
-            Hydration::FIELD_TYPE    => Hydration::STRING,
-            Hydration::FIELD_NULLABLE=> true,
-        ],
-        self::FIELD_BIND_NAMESPACE=> [
-            Hydration::FIELD_TYPE    => Hydration::STRING,
-            Hydration::FIELD_NULLABLE=> true,
-        ],
+        self::FIELD_SELECTOR       => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_BIND_NAMESPACE => Hydration::OMITEMPTY_STRING_FIELD,
     ];
+
     private const FIELD_SELECTOR       = 'Selector';
     private const FIELD_BIND_NAMESPACE = 'BindNamespace';
 
-    /** @var string|null */
-    public ?string $Selector = null;
-    /** @var string|null */
-    public ?string $BindNamespace = null;
+    /** @var string */
+    public string $Selector = '';
+    /** @var string */
+    public string $BindNamespace = '';
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getSelector(): ?string
+    public function getSelector(): string
     {
         return $this->Selector;
     }
 
     /**
-     * @param string|null $Selector
+     * @param string $Selector
      * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodNamespaceRule
      */
-    public function setSelector(?string $Selector): self
+    public function setSelector(string $Selector): self
     {
         $this->Selector = $Selector;
         return $this;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getBindNamespace(): ?string
+    public function getBindNamespace(): string
     {
         return $this->BindNamespace;
     }
 
     /**
-     * @param string|null $BindNamespace
+     * @param string $BindNamespace
      * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodNamespaceRule
      */
-    public function setBindNamespace(?string $BindNamespace): self
+    public function setBindNamespace(string $BindNamespace): self
     {
         $this->BindNamespace = $BindNamespace;
         return $this;

@@ -31,6 +31,7 @@ class CoordinateClient extends AbstractClient
 {
     /**
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateDatacentersResponse
      */
     public function Datacenters(): CoordinateDatacentersResponse
@@ -44,6 +45,7 @@ class CoordinateClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntriesResponse
      */
     public function Nodes(?QueryOptions $opts = null): CoordinateEntriesResponse
@@ -69,6 +71,7 @@ class CoordinateClient extends AbstractClient
      * @param string $node
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntriesResponse
      */
     public function Node(string $node, ?QueryOptions $opts = null): CoordinateEntriesResponse

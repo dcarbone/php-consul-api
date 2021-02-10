@@ -55,6 +55,7 @@ class CatalogClient extends AbstractClient
 
     /**
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\ValuedStringsResponse
      */
     public function Datacenters(): ValuedStringsResponse
@@ -68,6 +69,7 @@ class CatalogClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogNodesResponse
      */
     public function Nodes(?QueryOptions $opts = null): CatalogNodesResponse
@@ -81,6 +83,7 @@ class CatalogClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\ValuedQueryStringsResponse
      */
     public function Services(?QueryOptions $opts = null): ValuedQueryStringsResponse
@@ -95,6 +98,7 @@ class CatalogClient extends AbstractClient
      * @param string $node
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogNodeServicesListResponse
      */
     public function NodeServicesList(string $node, ?QueryOptions $opts = null): CatalogNodeServicesListResponse
@@ -110,6 +114,7 @@ class CatalogClient extends AbstractClient
      * @param array $tags
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogServicesResponse
      */
     public function ServiceMultipleTags(
@@ -143,6 +148,7 @@ class CatalogClient extends AbstractClient
      * @param string $node
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogNodeResponse
      */
     public function Node(string $node, ?QueryOptions $opts = null): CatalogNodeResponse
@@ -157,6 +163,7 @@ class CatalogClient extends AbstractClient
      * @param string $gateway
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Catalog\GatewayServicesResponse
      */
     public function GatewayServices(string $gateway, ?QueryOptions $opts = null): GatewayServicesResponse

@@ -32,13 +32,15 @@ class ServiceQuery extends AbstractModel
     use HasStringTags;
 
     protected const FIELDS = [
-        self::FIELD_FAILOVER => [
+        self::FIELD_NAMESPACE => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_FAILOVER  => [
             Hydration::FIELD_TYPE  => Hydration::OBJECT,
             Hydration::FIELD_CLASS => QueryDatacenterOptions::class,
         ],
     ];
 
-    private const FIELD_FAILOVER = 'Failover';
+    private const FIELD_NAMESPACE = 'Namespace';
+    private const FIELD_FAILOVER  = 'Failover';
 
     /** @var string */
     public string $Service = '';
@@ -48,8 +50,8 @@ class ServiceQuery extends AbstractModel
     public string $Near = '';
     /** @var string[] */
     public array $IgnoreCheckIDs = [];
-    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions|null */
-    public ?QueryDatacenterOptions $Failover = null;
+    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions */
+    public QueryDatacenterOptions $Failover;
     /** @var bool */
     public bool $OnlyPassing = false;
     /** @var array */
@@ -60,6 +62,18 @@ class ServiceQuery extends AbstractModel
     public bool $Connect = false;
 
     /**
+     * ServiceQuery constructor.
+     * @param array|null $data
+     */
+    public function __construct(?array $data = [])
+    {
+        parent::__construct($data);
+        if (!isset($this->Failover)) {
+            $this->Failover = new QueryDatacenterOptions(null);
+        }
+    }
+
+    /**
      * @return string
      */
     public function getService(): string
@@ -68,12 +82,12 @@ class ServiceQuery extends AbstractModel
     }
 
     /**
-     * @param string $service
+     * @param string $Service
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
-    public function setService(string $service): self
+    public function setService(string $Service): self
     {
-        $this->Service = $service;
+        $this->Service = $Service;
         return $this;
     }
 
@@ -86,12 +100,12 @@ class ServiceQuery extends AbstractModel
     }
 
     /**
-     * @param string $namespace
+     * @param string $Namespace
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
-    public function setNamespace(string $namespace): self
+    public function setNamespace(string $Namespace): self
     {
-        $this->Namespace = $namespace;
+        $this->Namespace = $Namespace;
         return $this;
     }
 
@@ -104,12 +118,30 @@ class ServiceQuery extends AbstractModel
     }
 
     /**
-     * @param string $near
+     * @param string $Near
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
-    public function setNear(string $near): self
+    public function setNear(string $Near): self
     {
-        $this->Near = $near;
+        $this->Near = $Near;
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getIgnoreCheckIDs(): array
+    {
+        return $this->IgnoreCheckIDs;
+    }
+
+    /**
+     * @param string[] $IgnoreCheckIDs
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
+     */
+    public function setIgnoreCheckIDs(array $IgnoreCheckIDs): self
+    {
+        $this->IgnoreCheckIDs = $IgnoreCheckIDs;
         return $this;
     }
 
@@ -122,12 +154,12 @@ class ServiceQuery extends AbstractModel
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions $failover
+     * @param \DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions $Failover
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
-    public function setFailover(QueryDatacenterOptions $failover): self
+    public function setFailover(QueryDatacenterOptions $Failover): self
     {
-        $this->Failover = $failover;
+        $this->Failover = $Failover;
         return $this;
     }
 
@@ -140,66 +172,48 @@ class ServiceQuery extends AbstractModel
     }
 
     /**
-     * @param bool $onlyPassing
+     * @param bool $OnlyPassing
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
-    public function setOnlyPassing(bool $onlyPassing): self
+    public function setOnlyPassing(bool $OnlyPassing): self
     {
-        $this->OnlyPassing = $onlyPassing;
+        $this->OnlyPassing = $OnlyPassing;
         return $this;
     }
 
     /**
-     * @return string[]
+     * @return array
      */
-    public function getIgnoreCheckIDs(): ?array
-    {
-        return $this->IgnoreCheckIDs;
-    }
-
-    /**
-     * @param string[] $ignoreCheckIDs
-     * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
-     */
-    public function setIgnoreCheckIDs(?array $ignoreCheckIDs): self
-    {
-        $this->IgnoreCheckIDs = $ignoreCheckIDs;
-        return $this;
-    }
-
-    /**
-     * @return array|null
-     */
-    public function getNodeMeta(): ?array
+    public function getNodeMeta(): array
     {
         return $this->NodeMeta;
     }
 
     /**
-     * @param array|null $nodeMeta
+     * @param array $NodeMeta
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
-    public function setNodeMeta(?array $nodeMeta): self
+    public function setNodeMeta(array $NodeMeta): self
     {
-        $this->NodeMeta = $nodeMeta;
+        $this->NodeMeta = $NodeMeta;
         return $this;
     }
 
     /**
-     * @return array|null
+     * @return array
      */
-    public function getServiceMeta(): ?array
+    public function getServiceMeta(): array
     {
         return $this->ServiceMeta;
     }
 
     /**
-     * @param array|null $serviceMeta
+     * @param array $ServiceMeta
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
-    public function setServiceMeta(?array $serviceMeta): self
+    public function setServiceMeta(array $ServiceMeta): self
     {
-        $this->ServiceMeta = $serviceMeta;
+        $this->ServiceMeta = $ServiceMeta;
         return $this;
     }
 
@@ -212,12 +226,12 @@ class ServiceQuery extends AbstractModel
     }
 
     /**
-     * @param bool $connect
+     * @param bool $Connect
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\ServiceQuery
      */
-    public function setConnect(bool $connect): self
+    public function setConnect(bool $Connect): self
     {
-        $this->Connect = $connect;
+        $this->Connect = $Connect;
         return $this;
     }
 }

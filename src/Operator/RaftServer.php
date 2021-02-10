@@ -33,6 +33,8 @@ class RaftServer extends AbstractModel
     public string $Address = '';
     /** @var bool */
     public bool $Leader = false;
+    /** @var string */
+    public string $ProtocolVersion = '';
     /** @var bool */
     public bool $Voter = false;
 
@@ -45,12 +47,12 @@ class RaftServer extends AbstractModel
     }
 
     /**
-     * @param string $id
+     * @param string $ID
      * @return \DCarbone\PHPConsulAPI\Operator\RaftServer
      */
-    public function setID(string $id): self
+    public function setID(string $ID): self
     {
-        $this->ID = $id;
+        $this->ID = $ID;
         return $this;
     }
 
@@ -63,12 +65,12 @@ class RaftServer extends AbstractModel
     }
 
     /**
-     * @param string $node
+     * @param string $Node
      * @return \DCarbone\PHPConsulAPI\Operator\RaftServer
      */
-    public function setNode(string $node): self
+    public function setNode(string $Node): self
     {
-        $this->Node = $node;
+        $this->Node = $Node;
         return $this;
     }
 
@@ -81,12 +83,12 @@ class RaftServer extends AbstractModel
     }
 
     /**
-     * @param string $address
+     * @param string $Address
      * @return \DCarbone\PHPConsulAPI\Operator\RaftServer
      */
-    public function setAddress(string $address): self
+    public function setAddress(string $Address): self
     {
-        $this->Address = $address;
+        $this->Address = $Address;
         return $this;
     }
 
@@ -99,12 +101,30 @@ class RaftServer extends AbstractModel
     }
 
     /**
-     * @param bool $leader
+     * @param bool $Leader
      * @return \DCarbone\PHPConsulAPI\Operator\RaftServer
      */
-    public function setLeader(bool $leader): self
+    public function setLeader(bool $Leader): self
     {
-        $this->Leader = $leader;
+        $this->Leader = $Leader;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProtocolVersion(): string
+    {
+        return $this->ProtocolVersion;
+    }
+
+    /**
+     * @param string $ProtocolVersion
+     * @return \DCarbone\PHPConsulAPI\Operator\RaftServer
+     */
+    public function setProtocolVersion(string $ProtocolVersion): self
+    {
+        $this->ProtocolVersion = $ProtocolVersion;
         return $this;
     }
 
@@ -117,12 +137,12 @@ class RaftServer extends AbstractModel
     }
 
     /**
-     * @param bool $voter
+     * @param bool $Voter
      * @return \DCarbone\PHPConsulAPI\Operator\RaftServer
      */
-    public function setVoter(bool $voter): self
+    public function setVoter(bool $Voter): self
     {
-        $this->Voter = $voter;
+        $this->Voter = $Voter;
         return $this;
     }
 }

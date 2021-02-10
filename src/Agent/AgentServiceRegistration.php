@@ -33,40 +33,28 @@ class AgentServiceRegistration extends AbstractModel
     use HasStringTags;
 
     protected const FIELDS = [
-        self::FIELD_KIND                => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_ID                  => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_NAME                => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_PORT                => [
-            Hydration::FIELD_TYPE     => Hydration::INTEGER,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_ADDRESS             => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
+        self::FIELD_KIND                => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_ID                  => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_NAME                => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_PORT                => Hydration::OMITEMPTY_INTEGER_FIELD,
+        self::FIELD_ADDRESS             => Hydration::OMITEMPTY_STRING_FIELD,
         self::FIELD_TAGGED_ADDRESSES    => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_CLASS      => ServiceAddress::class,
             Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
-            Hydration::FIELD_NULLABLE   => true,
+            Hydration::FIELD_OMITEMPTY  => true,
         ],
-        self::FIELD_ENABLE_TAG_OVERRIDE => [
-            Hydration::FIELD_TYPE     => Hydration::BOOLEAN,
-            Hydration::FIELD_NULLABLE => true,
-        ],
+        self::FIELD_ENABLE_TAG_OVERRIDE => Hydration::OMITEMPTY_BOOLEAN_FIELD,
         self::FIELD_META                => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_ARRAY_TYPE => Hydration::MIXED,
-            Hydration::FIELD_NULLABLE   => true,
+            Hydration::FIELD_OMITEMPTY  => true,
+        ],
+        self::FIELD_WEIGHTS             => [
+            Hydration::FIELD_TYPE      => Hydration::OBJECT,
+            Hydration::FIELD_CLASS     => AgentWeights::class,
+            Hydration::FIELD_NULLABLE  => true,
+            Hydration::FIELD_OMITEMPTY => true,
         ],
         self::FIELD_CHECK               => [
             Hydration::FIELD_TYPE     => Hydration::OBJECT,
@@ -79,19 +67,18 @@ class AgentServiceRegistration extends AbstractModel
             Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
         ],
         self::FIELD_PROXY               => [
-            Hydration::FIELD_TYPE     => Hydration::OBJECT,
-            Hydration::FIELD_CLASS    => AgentServiceConnectProxyConfig::class,
-            Hydration::FIELD_NULLABLE => true,
+            Hydration::FIELD_TYPE      => Hydration::OBJECT,
+            Hydration::FIELD_CLASS     => AgentServiceConnectProxyConfig::class,
+            Hydration::FIELD_NULLABLE  => true,
+            Hydration::FIELD_OMITEMPTY => true,
         ],
         self::FIELD_CONNECT             => [
-            Hydration::FIELD_TYPE     => Hydration::OBJECT,
-            Hydration::FIELD_CLASS    => AgentServiceConnect::class,
-            Hydration::FIELD_NULLABLE => true,
+            Hydration::FIELD_TYPE      => Hydration::OBJECT,
+            Hydration::FIELD_CLASS     => AgentServiceConnect::class,
+            Hydration::FIELD_NULLABLE  => true,
+            Hydration::FIELD_OMITEMPTY => true,
         ],
-        self::FIELD_NAMESPACE           => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
+        self::FIELD_NAMESPACE           => Hydration::OMITEMPTY_STRING_FIELD,
     ];
 
     private const FIELD_KIND                = 'Kind';
@@ -102,29 +89,29 @@ class AgentServiceRegistration extends AbstractModel
     private const FIELD_TAGGED_ADDRESSES    = 'TaggedAddresses';
     private const FIELD_ENABLE_TAG_OVERRIDE = 'EnableTagOverride';
     private const FIELD_META                = 'Meta';
-    private const FIELD_AGENT_WEIGHTS       = 'AgentWeights';
+    private const FIELD_WEIGHTS             = 'Weights';
     private const FIELD_CHECK               = 'Check';
     private const FIELD_CHECKS              = 'Checks';
     private const FIELD_PROXY               = 'Proxy';
     private const FIELD_CONNECT             = 'Connect';
     private const FIELD_NAMESPACE           = 'Namespace';
 
-    /** @var string|null */
-    public ?string $Kind = null;
-    /** @var string|null */
-    public ?string $ID = null;
-    /** @var string|null */
-    public ?string $Name = null;
-    /** @var int|null */
-    public ?int $Port = null;
-    /** @var string|null */
-    public ?string $Address = null;
-    /** @var \DCarbone\PHPConsulAPI\Catalog\ServiceAddress[]|null */
-    public ?array $TaggedAddresses = null;
-    /** @var bool|null */
-    public ?bool $EnableTagOverride = null;
-    /** @var array|null */
-    public ?array $Meta = null;
+    /** @var string */
+    public string $Kind = '';
+    /** @var string */
+    public string $ID = '';
+    /** @var string */
+    public string $Name = '';
+    /** @var int */
+    public int $Port = 0;
+    /** @var string */
+    public string $Address = '';
+    /** @var \DCarbone\PHPConsulAPI\Catalog\ServiceAddress[] */
+    public array $TaggedAddresses = [];
+    /** @var bool */
+    public bool $EnableTagOverride = false;
+    /** @var array */
+    public array $Meta = [];
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentWeights|null */
     public ?AgentWeights $AgentWeights = null;
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck|null */
@@ -135,8 +122,8 @@ class AgentServiceRegistration extends AbstractModel
     public ?AgentServiceConnectProxyConfig $Proxy = null;
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentServiceConnect|null */
     public ?AgentServiceConnect $Connect = null;
-    /** @var string|null */
-    public ?string $Namespace = null;
+    /** @var string */
+    public string $Namespace = '';
 
     /**
      * AgentServiceRegistration constructor.
@@ -151,90 +138,90 @@ class AgentServiceRegistration extends AbstractModel
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getKind(): ?string
+    public function getKind(): string
     {
         return $this->Kind;
     }
 
     /**
-     * @param string|null $Kind
+     * @param string $Kind
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
-    public function setKind(?string $Kind): self
+    public function setKind(string $Kind): self
     {
         $this->Kind = $Kind;
         return $this;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getID(): ?string
+    public function getID(): string
     {
         return $this->ID;
     }
 
     /**
-     * @param string|null $ID
+     * @param string $ID
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
-    public function setID(?string $ID): self
+    public function setID(string $ID): self
     {
         $this->ID = $ID;
         return $this;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->Name;
     }
 
     /**
-     * @param string|null $Name
+     * @param string $Name
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
-    public function setName(?string $Name): self
+    public function setName(string $Name): self
     {
         $this->Name = $Name;
         return $this;
     }
 
     /**
-     * @return int|null
+     * @return int
      */
-    public function getPort(): ?int
+    public function getPort(): int
     {
         return $this->Port;
     }
 
     /**
-     * @param int|null $Port
+     * @param int $Port
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
-    public function setPort(?int $Port): self
+    public function setPort(int $Port): self
     {
         $this->Port = $Port;
         return $this;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getAddress(): ?string
+    public function getAddress(): string
     {
         return $this->Address;
     }
 
     /**
-     * @param string|null $Address
+     * @param string $Address
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
-    public function setAddress(?string $Address): self
+    public function setAddress(string $Address): self
     {
         $this->Address = $Address;
         return $this;
@@ -249,28 +236,28 @@ class AgentServiceRegistration extends AbstractModel
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Catalog\ServiceAddress[]|null $TaggedAddresses
+     * @param \DCarbone\PHPConsulAPI\Catalog\ServiceAddress[] $TaggedAddresses
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
-    public function setTaggedAddresses(?array $TaggedAddresses): self
+    public function setTaggedAddresses(array $TaggedAddresses): self
     {
         $this->TaggedAddresses = $TaggedAddresses;
         return $this;
     }
 
     /**
-     * @return bool|null
+     * @return bool
      */
-    public function getEnableTagOverride(): ?bool
+    public function isEnableTagOverride(): bool
     {
         return $this->EnableTagOverride;
     }
 
     /**
-     * @param bool|null $EnableTagOverride
+     * @param bool $EnableTagOverride
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
-    public function setEnableTagOverride(?bool $EnableTagOverride): self
+    public function setEnableTagOverride(bool $EnableTagOverride): self
     {
         $this->EnableTagOverride = $EnableTagOverride;
         return $this;
@@ -285,10 +272,10 @@ class AgentServiceRegistration extends AbstractModel
     }
 
     /**
-     * @param array|null $Meta
+     * @param array $Meta
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
-    public function setMeta(?array $Meta): self
+    public function setMeta(array $Meta): self
     {
         $this->Meta = $Meta;
         return $this;
@@ -385,23 +372,22 @@ class AgentServiceRegistration extends AbstractModel
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getNamespace(): ?string
+    public function getNamespace(): string
     {
         return $this->Namespace;
     }
 
     /**
-     * @param string|null $Namespace
+     * @param string $Namespace
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration
      */
-    public function setNamespace(?string $Namespace): self
+    public function setNamespace(string $Namespace): self
     {
         $this->Namespace = $Namespace;
         return $this;
     }
-
     /**
      * @return string
      */

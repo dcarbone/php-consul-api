@@ -45,15 +45,28 @@ final class Hydration
     public const FIELD_ARRAY_TYPE = 2;
     public const FIELD_CALLBACK   = 3;
     public const FIELD_NULLABLE   = 4;
+    public const FIELD_OMITEMPTY  = 5;
+    public const FIELD_SKIP       = 6;
 
     public const FIELD_QUERY_META = 'QueryMeta';
     public const FIELD_WRITE_META = 'WriteMeta';
     public const FIELD_ERR        = 'Err';
 
-    public const CALLABLE_HYDRATE_TIME              = [self::class, 'hydrateTime'];
-    public const CALLABLE_HYDRATE_NULLABLE_TIME     = [self::class, 'hydrateNullableTime'];
-    public const CALLABLE_HYDRATE_DURATION          = [self::class, 'hydrateDuration'];
-    public const CALLABLE_HYDRATE_NULLABLE_DURATION = [self::class, 'hydrateNullableDuration'];
+    public const HYDRATE_TIME              = [self::class, 'hydrateTime'];
+    public const HYDRATE_NULLABLE_TIME     = [self::class, 'hydrateNullableTime'];
+    public const HYDRATE_DURATION          = [self::class, 'hydrateDuration'];
+    public const HYDRATE_NULLABLE_DURATION = [self::class, 'hydrateNullableDuration'];
+
+    public const OMITEMPTY_FIELD = [self::FIELD_OMITEMPTY => true];
+
+    public const OMITEMPTY_STRING_FIELD       = [self::FIELD_TYPE => self::STRING]                                        + self::OMITEMPTY_FIELD;
+    public const OMITEMPTY_INTEGER_FIELD      = [self::FIELD_TYPE => self::INTEGER]                                       + self::OMITEMPTY_FIELD;
+    public const OMITEMPTY_DOUBLE_FIELD       = [self::FIELD_TYPE => self::DOUBLE]                                        + self::OMITEMPTY_FIELD;
+    public const OMITEMPTY_BOOLEAN_FIELD      = [self::FIELD_TYPE => self::BOOLEAN]                                       + self::OMITEMPTY_FIELD;
+    public const OMITEMPTY_STRING_ARRAY_FIELD = [
+        self::FIELD_TYPE       => self::ARRAY,
+        self::FIELD_ARRAY_TYPE => self::STRING,
+    ] + self::OMITEMPTY_FIELD;
 
     /**
      * @param string $type

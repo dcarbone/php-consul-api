@@ -20,6 +20,7 @@ namespace DCarbone\PHPConsulAPI\Health;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
+use DCarbone\PHPConsulAPI\Catalog\Node;
 use DCarbone\PHPConsulAPI\Hydration;
 
 /**
@@ -28,31 +29,61 @@ use DCarbone\PHPConsulAPI\Hydration;
 class ServiceEntry extends AbstractModel
 {
     protected const FIELDS = [
+        self::FIELD_NODE    => [
+            Hydration::FIELD_TYPE     => Hydration::OBJECT,
+            Hydration::FIELD_CLASS    => Node::class,
+            Hydration::FIELD_NULLABLE => true,
+        ],
         self::FIELD_SERVICE => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => AgentService::class,
+            Hydration::FIELD_TYPE     => Hydration::OBJECT,
+            Hydration::FIELD_CLASS    => AgentService::class,
+            Hydration::FIELD_NULLABLE => true,
         ],
         self::FIELD_CHECKS  => [
             Hydration::FIELD_TYPE  => Hydration::OBJECT,
             Hydration::FIELD_CLASS => HealthChecks::class,
         ],
     ];
+
+    private const FIELD_NODE    = 'Node';
     private const FIELD_SERVICE = 'Service';
     private const FIELD_CHECKS  = 'Checks';
 
-    /** @var string */
-    public string $Node = '';
+    /** @var \DCarbone\PHPConsulAPI\Catalog\Node|null */
+    public ?Node $Node = null;
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentService|null */
     public ?AgentService $Service = null;
-    /** @var \DCarbone\PHPConsulAPI\Health\HealthChecks|null */
-    public ?HealthChecks $Checks = null;
+    /** @var \DCarbone\PHPConsulAPI\Health\HealthChecks */
+    public HealthChecks $Checks;
 
     /**
-     * @return string
+     * ServiceEntry constructor.
+     * @param array|null $data
      */
-    public function getNode(): string
+    public function __construct(?array $data = [])
+    {
+        parent::__construct($data);
+        if (!isset($this->Checks)) {
+            $this->Checks = new HealthChecks(null);
+        }
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Catalog\Node|null
+     */
+    public function getNode(): ?Node
     {
         return $this->Node;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Catalog\Node|null $Node
+     * @return \DCarbone\PHPConsulAPI\Health\ServiceEntry
+     */
+    public function setNode(?Node $Node): self
+    {
+        $this->Node = $Node;
+        return $this;
     }
 
     /**
@@ -64,10 +95,30 @@ class ServiceEntry extends AbstractModel
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Health\HealthChecks|null
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentService|null $Service
+     * @return \DCarbone\PHPConsulAPI\Health\ServiceEntry
      */
-    public function getChecks(): ?HealthChecks
+    public function setService(?AgentService $Service): self
+    {
+        $this->Service = $Service;
+        return $this;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Health\HealthChecks
+     */
+    public function getChecks(): HealthChecks
     {
         return $this->Checks;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Health\HealthChecks $Checks
+     * @return \DCarbone\PHPConsulAPI\Health\ServiceEntry
+     */
+    public function setChecks(HealthChecks $Checks): self
+    {
+        $this->Checks = $Checks;
+        return $this;
     }
 }

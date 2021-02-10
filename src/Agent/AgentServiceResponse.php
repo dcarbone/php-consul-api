@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI\ConfigEntry;
+namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
    Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -18,38 +18,30 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\AbstractValuedResponse;
+use DCarbone\PHPConsulAPI\HydratedResponseInterface;
 
 /**
- * Class MeshGatewayConfig
+ * Class AgentServicesResponse
  */
-class MeshGatewayConfig extends AbstractModel
+class AgentServiceResponse extends AbstractValuedResponse implements HydratedResponseInterface
 {
-    protected const FIELDS = [
-        self::FIELD_MODE => Hydration::OMITEMPTY_STRING_FIELD,
-    ];
-
-    private const FIELD_MODE = 'Mode';
-
-    /** @var string */
-    public string $Mode = '';
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentService|null */
+    public ?AgentService $Service = null;
 
     /**
-     * @return string
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentService|null
      */
-    public function getMode(): string
+    public function getValue()
     {
-        return $this->Mode;
+        return $this->Service;
     }
 
     /**
-     * @param string $mode
-     * @return \DCarbone\PHPConsulAPI\ConfigEntry\MeshGatewayConfig
+     * @param mixed $decodedData
      */
-    public function setMode(string $mode): self
+    public function hydrateValue($decodedData): void
     {
-        $this->Mode = $mode;
-        return $this;
+        $this->Service = new AgentService((array)$decodedData);
     }
 }

@@ -18,13 +18,28 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
+use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class ServerHealth
  */
 class ServerHealth extends AbstractModel
 {
+    protected const FIELDS = [
+        self::FIELD_LAST_CONTACT => [
+            Hydration::FIELD_CALLBACK => [ReadableDuration::class, 'hydrate'],
+            Hydration::FIELD_NULLABLE => true,
+        ],
+        self::FIELD_STABLE_SINCE => [
+            Hydration::FIELD_CALLBACK => Hydration::HYDRATE_TIME,
+        ],
+    ];
+
+    private const FIELD_LAST_CONTACT = 'LastContact';
+    private const FIELD_STABLE_SINCE = 'StableSince';
+
     /** @var string */
     public string $ID = '';
     /** @var string */
@@ -37,8 +52,8 @@ class ServerHealth extends AbstractModel
     public string $Version = '';
     /** @var bool */
     public bool $Leader = false;
-    /** @var string */
-    public string $LastContact = '';
+    /** @var \DCarbone\PHPConsulAPI\Operator\ReadableDuration|null */
+    public ?ReadableDuration $LastContact = null;
     /** @var int */
     public int $LastTerm = 0;
     /** @var int */
@@ -47,8 +62,20 @@ class ServerHealth extends AbstractModel
     public bool $Healthy = false;
     /** @var bool */
     public bool $Voter = false;
-    /** @var string */
-    public string $StableSince = '';
+    /** @var \DCarbone\Go\Time\Time */
+    public Time\Time $StableSince;
+
+    /**
+     * ServerHealth constructor.
+     * @param array|null $data
+     */
+    public function __construct(?array $data = [])
+    {
+        parent::__construct($data);
+        if (!isset($this->StableSince)) {
+            $this->StableSince = Time::New();
+        }
+    }
 
     /**
      * @return string
@@ -56,6 +83,16 @@ class ServerHealth extends AbstractModel
     public function getID(): string
     {
         return $this->ID;
+    }
+
+    /**
+     * @param string $ID
+     * @return \DCarbone\PHPConsulAPI\Operator\ServerHealth
+     */
+    public function setID(string $ID): self
+    {
+        $this->ID = $ID;
+        return $this;
     }
 
     /**
@@ -67,11 +104,31 @@ class ServerHealth extends AbstractModel
     }
 
     /**
+     * @param string $Name
+     * @return \DCarbone\PHPConsulAPI\Operator\ServerHealth
+     */
+    public function setName(string $Name): self
+    {
+        $this->Name = $Name;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getAddress(): string
     {
         return $this->Address;
+    }
+
+    /**
+     * @param string $Address
+     * @return \DCarbone\PHPConsulAPI\Operator\ServerHealth
+     */
+    public function setAddress(string $Address): self
+    {
+        $this->Address = $Address;
+        return $this;
     }
 
     /**
@@ -83,11 +140,31 @@ class ServerHealth extends AbstractModel
     }
 
     /**
+     * @param string $SerfStatus
+     * @return \DCarbone\PHPConsulAPI\Operator\ServerHealth
+     */
+    public function setSerfStatus(string $SerfStatus): self
+    {
+        $this->SerfStatus = $SerfStatus;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getVersion(): string
     {
         return $this->Version;
+    }
+
+    /**
+     * @param string $Version
+     * @return \DCarbone\PHPConsulAPI\Operator\ServerHealth
+     */
+    public function setVersion(string $Version): self
+    {
+        $this->Version = $Version;
+        return $this;
     }
 
     /**
@@ -99,11 +176,31 @@ class ServerHealth extends AbstractModel
     }
 
     /**
-     * @return string
+     * @param bool $Leader
+     * @return \DCarbone\PHPConsulAPI\Operator\ServerHealth
      */
-    public function getLastContact(): string
+    public function setLeader(bool $Leader): self
+    {
+        $this->Leader = $Leader;
+        return $this;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Operator\ReadableDuration|null
+     */
+    public function getLastContact(): ?ReadableDuration
     {
         return $this->LastContact;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Operator\ReadableDuration|null $LastContact
+     * @return \DCarbone\PHPConsulAPI\Operator\ServerHealth
+     */
+    public function setLastContact(?ReadableDuration $LastContact): self
+    {
+        $this->LastContact = $LastContact;
+        return $this;
     }
 
     /**
@@ -115,11 +212,31 @@ class ServerHealth extends AbstractModel
     }
 
     /**
+     * @param int $LastTerm
+     * @return \DCarbone\PHPConsulAPI\Operator\ServerHealth
+     */
+    public function setLastTerm(int $LastTerm): self
+    {
+        $this->LastTerm = $LastTerm;
+        return $this;
+    }
+
+    /**
      * @return int
      */
     public function getLastIndex(): int
     {
         return $this->LastIndex;
+    }
+
+    /**
+     * @param int $LastIndex
+     * @return \DCarbone\PHPConsulAPI\Operator\ServerHealth
+     */
+    public function setLastIndex(int $LastIndex): self
+    {
+        $this->LastIndex = $LastIndex;
+        return $this;
     }
 
     /**
@@ -131,6 +248,16 @@ class ServerHealth extends AbstractModel
     }
 
     /**
+     * @param bool $Healthy
+     * @return \DCarbone\PHPConsulAPI\Operator\ServerHealth
+     */
+    public function setHealthy(bool $Healthy): self
+    {
+        $this->Healthy = $Healthy;
+        return $this;
+    }
+
+    /**
      * @return bool
      */
     public function isVoter(): bool
@@ -139,10 +266,30 @@ class ServerHealth extends AbstractModel
     }
 
     /**
-     * @return string
+     * @param bool $Voter
+     * @return \DCarbone\PHPConsulAPI\Operator\ServerHealth
      */
-    public function getStableSince(): string
+    public function setVoter(bool $Voter): self
+    {
+        $this->Voter = $Voter;
+        return $this;
+    }
+
+    /**
+     * @return \DCarbone\Go\Time\Time
+     */
+    public function getStableSince(): Time\Time
     {
         return $this->StableSince;
+    }
+
+    /**
+     * @param \DCarbone\Go\Time\Time $StableSince
+     * @return \DCarbone\PHPConsulAPI\Operator\ServerHealth
+     */
+    public function setStableSince(Time\Time $StableSince): self
+    {
+        $this->StableSince = $StableSince;
+        return $this;
     }
 }

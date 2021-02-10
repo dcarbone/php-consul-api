@@ -48,6 +48,7 @@ class MetricsInfo extends AbstractModel
             Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
         ],
     ];
+
     private const FIELD_GAUGES   = 'Gauges';
     private const FIELD_POINTS   = 'Points';
     private const FIELD_COUNTERS = 'Counters';

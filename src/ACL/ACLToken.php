@@ -32,45 +32,44 @@ class ACLToken extends AbstractModel
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_CLASS      => ACLTokenPolicyLink::class,
             Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+            Hydration::FIELD_OMITEMPTY  => true,
         ],
         self::FIELD_ROLES              => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_CLASS      => ACLTokenRoleLink::class,
             Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+            Hydration::FIELD_OMITEMPTY  => true,
         ],
         self::FIELD_SERVICE_IDENTITIES => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_CLASS      => ACLServiceIdentity::class,
             Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+            Hydration::FIELD_OMITEMPTY  => true,
         ],
         self::FIELD_NODE_IDENTITIES    => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_CLASS      => ACLNodeIdentity::class,
             Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+            Hydration::FIELD_OMITEMPTY  => true,
         ],
-        self::FIELD_AUTH_METHOD        => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
+        self::FIELD_AUTH_METHOD        => Hydration::OMITEMPTY_STRING_FIELD,
         self::FIELD_EXPIRATION_TTL     => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
+            Hydration::FIELD_CALLBACK  => Hydration::HYDRATE_DURATION,
+            Hydration::FIELD_OMITEMPTY => true,
         ],
         self::FIELD_EXPIRATION_TIME    => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_NULLABLE_TIME,
-            Hydration::FIELD_NULLABLE => true,
+            Hydration::FIELD_CALLBACK  => Hydration::HYDRATE_NULLABLE_TIME,
+            Hydration::FIELD_NULLABLE  => true,
+            Hydration::FIELD_OMITEMPTY => true,
         ],
         self::FIELD_CREATE_TIME        => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_TIME,
+            Hydration::FIELD_CALLBACK  => Hydration::HYDRATE_TIME,
+            Hydration::FIELD_OMITEMPTY => true,
         ],
-        self::FIELD_RULES              => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_NAMESPACE          => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
+        self::FIELD_RULES              => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_NAMESPACE          => Hydration::OMITEMPTY_STRING_FIELD,
     ];
+
     private const FIELD_POLICIES           = 'Policies';
     private const FIELD_ROLES              = 'Roles';
     private const FIELD_SERVICE_IDENTITIES = 'ServiceIdentities';
@@ -102,8 +101,8 @@ class ACLToken extends AbstractModel
     public array $NodeIdentities = [];
     /** @var bool */
     public bool $Local = false;
-    /** @var string|null */
-    public ?string $AuthMethod = null;
+    /** @var string */
+    public string $AuthMethod = '';
     /** @var \DCarbone\Go\Time\Duration */
     public Time\Duration $ExpirationTTL;
     /** @var \DCarbone\Go\Time\Time|null */
@@ -112,14 +111,14 @@ class ACLToken extends AbstractModel
     public Time\Time $CreateTime;
     /** @var string */
     public string $Hash = '';
-    /** @var string|null */
-    public ?string $Namespace = null;
+    /** @var string */
+    public string $Namespace = '';
 
     /**
      * @deprecated
-     * @var string|null
+     * @var string
      */
-    public ?string $Rules = null;
+    public string $Rules = '';
 
     /**
      * ACLToken constructor.
@@ -317,18 +316,18 @@ class ACLToken extends AbstractModel
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getAuthMethod(): ?string
+    public function getAuthMethod(): string
     {
         return $this->AuthMethod;
     }
 
     /**
-     * @param string|null $AuthMethod
+     * @param string $AuthMethod
      * @return \DCarbone\PHPConsulAPI\ACL\ACLToken
      */
-    public function setAuthMethod(?string $AuthMethod): self
+    public function setAuthMethod(string $AuthMethod): self
     {
         $this->AuthMethod = $AuthMethod;
         return $this;
@@ -407,36 +406,36 @@ class ACLToken extends AbstractModel
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getNamespace(): ?string
+    public function getNamespace(): string
     {
         return $this->Namespace;
     }
 
     /**
-     * @param string|null $Namespace
+     * @param string $Namespace
      * @return \DCarbone\PHPConsulAPI\ACL\ACLToken
      */
-    public function setNamespace(?string $Namespace): self
+    public function setNamespace(string $Namespace): self
     {
         $this->Namespace = $Namespace;
         return $this;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getRules(): ?string
+    public function getRules(): string
     {
         return $this->Rules;
     }
 
     /**
-     * @param string|null $Rules
+     * @param string $Rules
      * @return \DCarbone\PHPConsulAPI\ACL\ACLToken
      */
-    public function setRules(?string $Rules): self
+    public function setRules(string $Rules): self
     {
         $this->Rules = $Rules;
         return $this;

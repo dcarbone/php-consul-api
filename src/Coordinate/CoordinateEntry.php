@@ -28,10 +28,12 @@ class CoordinateEntry extends AbstractModel
 {
     protected const FIELDS = [
         self::FIELD_COORDINATE => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => Coordinate::class,
+            Hydration::FIELD_TYPE     => Hydration::OBJECT,
+            Hydration::FIELD_CLASS    => Coordinate::class,
+            Hydration::FIELD_NULLABLE => true,
         ],
     ];
+
     private const FIELD_COORDINATE = 'Coord';
 
     /** @var string */
@@ -50,6 +52,16 @@ class CoordinateEntry extends AbstractModel
     }
 
     /**
+     * @param string $Node
+     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry
+     */
+    public function setNode(string $Node): self
+    {
+        $this->Node = $Node;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getSegment(): string
@@ -58,10 +70,30 @@ class CoordinateEntry extends AbstractModel
     }
 
     /**
+     * @param string $Segment
+     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry
+     */
+    public function setSegment(string $Segment): self
+    {
+        $this->Segment = $Segment;
+        return $this;
+    }
+
+    /**
      * @return \DCarbone\PHPConsulAPI\Coordinate\Coordinate|null
      */
     public function getCoord(): ?Coordinate
     {
         return $this->Coord;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Coordinate\Coordinate|null $Coord
+     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry
+     */
+    public function setCoord(?Coordinate $Coord): self
+    {
+        $this->Coord = $Coord;
+        return $this;
     }
 }

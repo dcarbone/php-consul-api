@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI\KV;
+namespace DCarbone\PHPConsulAPI\Catalog;
 
 /*
    Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -21,48 +21,48 @@ namespace DCarbone\PHPConsulAPI\KV;
 use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
- * Class TxnError
+ * Class Weights
  */
-class TxnError extends AbstractModel
+class Weights extends AbstractModel
 {
     /** @var int */
-    public int $OpIndex = 0;
-    /** @var string */
-    public string $What = '';
+    public int $Passing = 0;
+    /** @var int */
+    public int $Warning = 0;
 
     /**
      * @return int
      */
-    public function getOpIndex(): int
+    public function getPassing(): int
     {
-        return $this->OpIndex;
+        return $this->Passing;
     }
 
     /**
-     * @param int $OpIndex
-     * @return \DCarbone\PHPConsulAPI\KV\TxnError
+     * @param int $Passing
+     * @return \DCarbone\PHPConsulAPI\Catalog\Weights
      */
-    public function setOpIndex(int $OpIndex): self
+    public function setPassing(int $Passing): self
     {
-        $this->OpIndex = $OpIndex;
+        $this->Passing = $Passing;
         return $this;
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getWhat(): string
+    public function getWarning(): int
     {
-        return $this->What;
+        return $this->Warning;
     }
 
     /**
-     * @param string $What
-     * @return \DCarbone\PHPConsulAPI\KV\TxnError
+     * @param int $Warning
+     * @return \DCarbone\PHPConsulAPI\Catalog\Weights
      */
-    public function setWhat(string $What): self
+    public function setWarning(int $Warning): self
     {
-        $this->What = $What;
+        $this->Warning = $Warning;
         return $this;
     }
 }

@@ -51,11 +51,31 @@ class Node extends AbstractModel
     }
 
     /**
+     * @param string $ID
+     * @return \DCarbone\PHPConsulAPI\Catalog\Node
+     */
+    public function setID(string $ID): self
+    {
+        $this->ID = $ID;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getNode(): string
     {
         return $this->Node;
+    }
+
+    /**
+     * @param string $Node
+     * @return \DCarbone\PHPConsulAPI\Catalog\Node
+     */
+    public function setNode(string $Node): self
+    {
+        $this->Node = $Node;
+        return $this;
     }
 
     /**
@@ -67,11 +87,31 @@ class Node extends AbstractModel
     }
 
     /**
+     * @param string $Address
+     * @return \DCarbone\PHPConsulAPI\Catalog\Node
+     */
+    public function setAddress(string $Address): self
+    {
+        $this->Address = $Address;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getDatacenter(): string
     {
         return $this->Datacenter;
+    }
+
+    /**
+     * @param string $Datacenter
+     * @return \DCarbone\PHPConsulAPI\Catalog\Node
+     */
+    public function setDatacenter(string $Datacenter): self
+    {
+        $this->Datacenter = $Datacenter;
+        return $this;
     }
 
     /**
@@ -83,11 +123,31 @@ class Node extends AbstractModel
     }
 
     /**
+     * @param array $TaggedAddresses
+     * @return \DCarbone\PHPConsulAPI\Catalog\Node
+     */
+    public function setTaggedAddresses(array $TaggedAddresses): self
+    {
+        $this->TaggedAddresses = $TaggedAddresses;
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getMeta(): array
     {
         return $this->Meta;
+    }
+
+    /**
+     * @param array $Meta
+     * @return \DCarbone\PHPConsulAPI\Catalog\Node
+     */
+    public function setMeta(array $Meta): self
+    {
+        $this->Meta = $Meta;
+        return $this;
     }
 
     /**
@@ -99,10 +159,30 @@ class Node extends AbstractModel
     }
 
     /**
+     * @param int $CreateIndex
+     * @return \DCarbone\PHPConsulAPI\Catalog\Node
+     */
+    public function setCreateIndex(int $CreateIndex): self
+    {
+        $this->CreateIndex = $CreateIndex;
+        return $this;
+    }
+
+    /**
      * @return int
      */
     public function getModifyIndex(): int
     {
         return $this->ModifyIndex;
+    }
+
+    /**
+     * @param int $ModifyIndex
+     * @return \DCarbone\PHPConsulAPI\Catalog\Node
+     */
+    public function setModifyIndex(int $ModifyIndex): self
+    {
+        $this->ModifyIndex = $ModifyIndex;
+        return $this;
     }
 }

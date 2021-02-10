@@ -24,11 +24,6 @@ namespace DCarbone\PHPConsulAPI;
 interface HydratedResponseInterface
 {
     /**
-     * @return mixed
-     */
-    public function getValue();
-
-    /**
      * @param mixed $decodedData
      */
     public function hydrateValue($decodedData): void;

@@ -30,27 +30,28 @@ use DCarbone\PHPConsulAPI\Hydration;
 class TxnResult extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_KV => [
+        self::FIELD_KV      => [
             Hydration::FIELD_TYPE     => Hydration::OBJECT,
             Hydration::FIELD_CLASS    => KVPair::class,
             Hydration::FIELD_NULLABLE => true,
         ],
-        self::FIELD_NODE=> [
-            Hydration::FIELD_TYPE    => Hydration::OBJECT,
-            Hydration::FIELD_CLASS   => Node::class,
-            Hydration::FIELD_NULLABLE=> true,
+        self::FIELD_NODE    => [
+            Hydration::FIELD_TYPE     => Hydration::OBJECT,
+            Hydration::FIELD_CLASS    => Node::class,
+            Hydration::FIELD_NULLABLE => true,
         ],
-        self::FIELD_SERVICE=> [
-            Hydration::FIELD_TYPE    => Hydration::OBJECT,
-            Hydration::FIELD_CLASS   => CatalogService::class,
-            Hydration::FIELD_NULLABLE=> true,
+        self::FIELD_SERVICE => [
+            Hydration::FIELD_TYPE     => Hydration::OBJECT,
+            Hydration::FIELD_CLASS    => CatalogService::class,
+            Hydration::FIELD_NULLABLE => true,
         ],
-        self::FIELD_CHECK=> [
-            Hydration::FIELD_TYPE    => Hydration::OBJECT,
-            Hydration::FIELD_CLASS   => HealthCheck::class,
-            Hydration::FIELD_NULLABLE=> true,
+        self::FIELD_CHECK   => [
+            Hydration::FIELD_TYPE     => Hydration::OBJECT,
+            Hydration::FIELD_CLASS    => HealthCheck::class,
+            Hydration::FIELD_NULLABLE => true,
         ],
     ];
+
     private const FIELD_KV      = 'KV';
     private const FIELD_NODE    = 'Node';
     private const FIELD_SERVICE = 'Service';
@@ -74,11 +75,31 @@ class TxnResult extends AbstractModel
     }
 
     /**
+     * @param \DCarbone\PHPConsulAPI\KV\KVPair|null $KV
+     * @return \DCarbone\PHPConsulAPI\KV\TxnResult
+     */
+    public function setKV(?KVPair $KV): self
+    {
+        $this->KV = $KV;
+        return $this;
+    }
+
+    /**
      * @return \DCarbone\PHPConsulAPI\Catalog\Node|null
      */
     public function getNode(): ?Node
     {
         return $this->Node;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Catalog\Node|null $Node
+     * @return \DCarbone\PHPConsulAPI\KV\TxnResult
+     */
+    public function setNode(?Node $Node): self
+    {
+        $this->Node = $Node;
+        return $this;
     }
 
     /**
@@ -90,10 +111,30 @@ class TxnResult extends AbstractModel
     }
 
     /**
+     * @param \DCarbone\PHPConsulAPI\Catalog\CatalogService|null $Service
+     * @return \DCarbone\PHPConsulAPI\KV\TxnResult
+     */
+    public function setService(?CatalogService $Service): self
+    {
+        $this->Service = $Service;
+        return $this;
+    }
+
+    /**
      * @return \DCarbone\PHPConsulAPI\Health\HealthCheck|null
      */
     public function getCheck(): ?HealthCheck
     {
         return $this->Check;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Health\HealthCheck|null $Check
+     * @return \DCarbone\PHPConsulAPI\KV\TxnResult
+     */
+    public function setCheck(?HealthCheck $Check): self
+    {
+        $this->Check = $Check;
+        return $this;
     }
 }

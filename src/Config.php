@@ -35,21 +35,21 @@ class Config
             Hydration::FIELD_CALLBACK => 'setHttpAuth',
         ],
         self::FIELD_WAIT_TIME => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_NULLABLE_DURATION,
+            Hydration::FIELD_CALLBACK => Hydration::HYDRATE_NULLABLE_DURATION,
         ],
     ];
 
-    private const   FIELD_HTTP_AUTH            = 'HttpAuth';
-    private const   FIELD_WAIT_TIME            = 'WaitTime';
-    private const   FIELD_ADDRESS              = 'Address';
-    private const   FIELD_SCHEME               = 'Scheme';
-    private const   FIELD_JSON_ENCODE_OPTS     = 'JSONEncodeOpts';
-    private const   FIELD_TOKEN                = 'Token';
-    private const   FIELD_TOKEN_FILE           = 'TokenFile';
-    private const   FIELD_CA_FILE              = 'CAFile';
-    private const   FIELD_CERT_FILE            = 'CertFile';
-    private const   FIELD_KEY_FILE             = 'KeyFile';
-    private const   FIELD_INSECURE_SKIP_VERIFY = 'InsecureSkipVerify';
+    private const FIELD_HTTP_AUTH            = 'HttpAuth';
+    private const FIELD_WAIT_TIME            = 'WaitTime';
+    private const FIELD_ADDRESS              = 'Address';
+    private const FIELD_SCHEME               = 'Scheme';
+    private const FIELD_JSON_ENCODE_OPTS     = 'JSONEncodeOpts';
+    private const FIELD_TOKEN                = 'Token';
+    private const FIELD_TOKEN_FILE           = 'TokenFile';
+    private const FIELD_CA_FILE              = 'CAFile';
+    private const FIELD_CERT_FILE            = 'CertFile';
+    private const FIELD_KEY_FILE             = 'KeyFile';
+    private const FIELD_INSECURE_SKIP_VERIFY = 'InsecureSkipVerify';
 
     private const DefaultConfig = [
         self::FIELD_ADDRESS          => '127.0.0.1:8500',

@@ -27,22 +27,10 @@ use DCarbone\PHPConsulAPI\Hydration;
 class ExposePath extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_LISTENER_PORT   => [
-            Hydration::FIELD_TYPE     => Hydration::INTEGER,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_PATH            => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_LOCAL_PORT_PATH => [
-            Hydration::FIELD_TYPE     => Hydration::INTEGER,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_PROTOCOL        => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
+        self::FIELD_LISTENER_PORT   => Hydration::OMITEMPTY_INTEGER_FIELD,
+        self::FIELD_PATH            => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_LOCAL_PORT_PATH => Hydration::OMITEMPTY_INTEGER_FIELD,
+        self::FIELD_PROTOCOL        => Hydration::OMITEMPTY_STRING_FIELD,
     ];
 
     private const FIELD_LISTENER_PORT   = 'ListenerPort';
@@ -50,84 +38,84 @@ class ExposePath extends AbstractModel
     private const FIELD_LOCAL_PORT_PATH = 'LocalPortPath';
     private const FIELD_PROTOCOL        = 'Protocol';
 
-    /** @var int|null */
-    public ?int $ListenerPort = null;
-    /** @var string|null */
-    public ?string $Path = null;
-    /** @var int|null */
-    public ?int $LocalPathPort = null;
-    /** @var string|null */
-    public ?string $Protocol = null;
+    /** @var int */
+    public int $ListenerPort = 0;
+    /** @var string */
+    public string $Path = '';
+    /** @var int */
+    public int $LocalPathPort = 0;
+    /** @var string */
+    public string $Protocol = '';
     /** @var bool */
     public bool $ParsedFromCheck = false;
 
     /**
-     * @return int|null
+     * @return int
      */
-    public function getListenerPort(): ?int
+    public function getListenerPort(): int
     {
         return $this->ListenerPort;
     }
 
     /**
-     * @param int|null $ListenerPort
-     * @return \DCarbone\PHPConsulAPI\Agent\ExposePath
+     * @param int $ListenerPort
+     * @return \DCarbone\PHPConsulAPI\ConfigEntry\ExposePath
      */
-    public function setListenerPort(?int $ListenerPort): self
+    public function setListenerPort(int $ListenerPort): self
     {
         $this->ListenerPort = $ListenerPort;
         return $this;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getPath(): ?string
+    public function getPath(): string
     {
         return $this->Path;
     }
 
     /**
-     * @param string|null $Path
-     * @return \DCarbone\PHPConsulAPI\Agent\ExposePath
+     * @param string $Path
+     * @return \DCarbone\PHPConsulAPI\ConfigEntry\ExposePath
      */
-    public function setPath(?string $Path): self
+    public function setPath(string $Path): self
     {
         $this->Path = $Path;
         return $this;
     }
 
     /**
-     * @return int|null
+     * @return int
      */
-    public function getLocalPathPort(): ?int
+    public function getLocalPathPort(): int
     {
         return $this->LocalPathPort;
     }
 
     /**
-     * @param int|null $LocalPathPort
-     * @return \DCarbone\PHPConsulAPI\Agent\ExposePath
+     * @param int $LocalPathPort
+     * @return \DCarbone\PHPConsulAPI\ConfigEntry\ExposePath
      */
-    public function setLocalPathPort(?int $LocalPathPort): self
+    public function setLocalPathPort(int $LocalPathPort): self
     {
         $this->LocalPathPort = $LocalPathPort;
         return $this;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getProtocol(): ?string
+    public function getProtocol(): string
     {
         return $this->Protocol;
     }
 
     /**
-     * @param string|null $Protocol
-     * @return \DCarbone\PHPConsulAPI\Agent\ExposePath
+     * @param string $Protocol
+     * @return \DCarbone\PHPConsulAPI\ConfigEntry\ExposePath
      */
-    public function setProtocol(?string $Protocol): self
+    public function setProtocol(string $Protocol): self
     {
         $this->Protocol = $Protocol;
         return $this;
@@ -143,7 +131,7 @@ class ExposePath extends AbstractModel
 
     /**
      * @param bool $ParsedFromCheck
-     * @return \DCarbone\PHPConsulAPI\Agent\ExposePath
+     * @return \DCarbone\PHPConsulAPI\ConfigEntry\ExposePath
      */
     public function setParsedFromCheck(bool $ParsedFromCheck): self
     {

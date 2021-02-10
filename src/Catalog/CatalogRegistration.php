@@ -21,6 +21,7 @@ namespace DCarbone\PHPConsulAPI\Catalog;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Agent\AgentCheck;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
+use DCarbone\PHPConsulAPI\Health\HealthChecks;
 use DCarbone\PHPConsulAPI\Hydration;
 
 /**
@@ -37,9 +38,15 @@ class CatalogRegistration extends AbstractModel
             Hydration::FIELD_TYPE  => Hydration::OBJECT,
             Hydration::FIELD_CLASS => AgentCheck::class,
         ],
+        self::FIELD_CHECKS  => [
+            Hydration::FIELD_TYPE  => Hydration::OBJECT,
+            Hydration::FIELD_CLASS => HealthChecks::class,
+        ],
     ];
+
     private const FIELD_SERVICE = 'Service';
     private const FIELD_CHECK   = 'Check';
+    private const FIELD_CHECKS  = 'Checks';
 
     /** @var string */
     public string $ID = '';
@@ -57,6 +64,22 @@ class CatalogRegistration extends AbstractModel
     public ?AgentService $Service = null;
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentCheck|null */
     public ?AgentCheck $Check = null;
+    /** @var \DCarbone\PHPConsulAPI\Health\HealthChecks */
+    public HealthChecks $checks;
+    /** @var bool */
+    public bool $SkipNodeUpdate = false;
+
+    /**
+     * CatalogRegistration constructor.
+     * @param array|null $data
+     */
+    public function __construct(?array $data = [])
+    {
+        parent::__construct($data);
+        if (!isset($this->Checks)) {
+            $this->Checks = new HealthChecks(null);
+        }
+    }
 
     /**
      * @return string
@@ -67,12 +90,12 @@ class CatalogRegistration extends AbstractModel
     }
 
     /**
-     * @param string $id
+     * @param string $ID
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
-    public function setID(string $id): self
+    public function setID(string $ID): self
     {
-        $this->ID = $id;
+        $this->ID = $ID;
         return $this;
     }
 
@@ -85,12 +108,12 @@ class CatalogRegistration extends AbstractModel
     }
 
     /**
-     * @param string $node
+     * @param string $Node
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
-    public function setNode(string $node): self
+    public function setNode(string $Node): self
     {
-        $this->Node = $node;
+        $this->Node = $Node;
         return $this;
     }
 
@@ -103,12 +126,12 @@ class CatalogRegistration extends AbstractModel
     }
 
     /**
-     * @param string $address
+     * @param string $Address
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
-    public function setAddress(string $address): self
+    public function setAddress(string $Address): self
     {
-        $this->Address = $address;
+        $this->Address = $Address;
         return $this;
     }
 
@@ -121,12 +144,12 @@ class CatalogRegistration extends AbstractModel
     }
 
     /**
-     * @param array $taggedAddresses
+     * @param array $TaggedAddresses
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
-    public function setTaggedAddresses(array $taggedAddresses): self
+    public function setTaggedAddresses(array $TaggedAddresses): self
     {
-        $this->TaggedAddresses = $taggedAddresses;
+        $this->TaggedAddresses = $TaggedAddresses;
         return $this;
     }
 
@@ -139,12 +162,12 @@ class CatalogRegistration extends AbstractModel
     }
 
     /**
-     * @param array $nodeMeta
+     * @param array $NodeMeta
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
-    public function setNodeMeta(array $nodeMeta): self
+    public function setNodeMeta(array $NodeMeta): self
     {
-        $this->NodeMeta = $nodeMeta;
+        $this->NodeMeta = $NodeMeta;
         return $this;
     }
 
@@ -157,12 +180,12 @@ class CatalogRegistration extends AbstractModel
     }
 
     /**
-     * @param string $datacenter
+     * @param string $Datacenter
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
-    public function setDatacenter(string $datacenter): self
+    public function setDatacenter(string $Datacenter): self
     {
-        $this->Datacenter = $datacenter;
+        $this->Datacenter = $Datacenter;
         return $this;
     }
 
@@ -175,12 +198,12 @@ class CatalogRegistration extends AbstractModel
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Agent\AgentService|null $service
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentService|null $Service
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
-    public function setService(?AgentService $service): self
+    public function setService(?AgentService $Service): self
     {
-        $this->Service = $service;
+        $this->Service = $Service;
         return $this;
     }
 
@@ -193,12 +216,48 @@ class CatalogRegistration extends AbstractModel
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Agent\AgentCheck|null $check
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentCheck|null $Check
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
      */
-    public function setCheck(?AgentCheck $check): self
+    public function setCheck(?AgentCheck $Check): self
     {
-        $this->Check = $check;
+        $this->Check = $Check;
+        return $this;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Health\HealthChecks
+     */
+    public function getChecks(): HealthChecks
+    {
+        return $this->checks;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Health\HealthChecks $checks
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
+     */
+    public function setChecks(HealthChecks $checks): self
+    {
+        $this->checks = $checks;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSkipNodeUpdate(): bool
+    {
+        return $this->SkipNodeUpdate;
+    }
+
+    /**
+     * @param bool $SkipNodeUpdate
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogRegistration
+     */
+    public function setSkipNodeUpdate(bool $SkipNodeUpdate): self
+    {
+        $this->SkipNodeUpdate = $SkipNodeUpdate;
         return $this;
     }
 }

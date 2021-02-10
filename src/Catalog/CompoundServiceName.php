@@ -19,12 +19,19 @@ namespace DCarbone\PHPConsulAPI\Catalog;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class CompoundServiceName
  */
 class CompoundServiceName extends AbstractModel
 {
+    protected const FIELDS = [
+        self::FIELD_NAMESPACE => Hydration::OMITEMPTY_STRING_FIELD,
+    ];
+
+    private const FIELD_NAMESPACE = 'Namespace';
+
     /** @var string */
     public string $Name = '';
     /** @var string */
@@ -39,10 +46,30 @@ class CompoundServiceName extends AbstractModel
     }
 
     /**
+     * @param string $Name
+     * @return \DCarbone\PHPConsulAPI\Catalog\CompoundServiceName
+     */
+    public function setName(string $Name): self
+    {
+        $this->Name = $Name;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getNamespace(): string
     {
         return $this->Namespace;
+    }
+
+    /**
+     * @param string $Namespace
+     * @return \DCarbone\PHPConsulAPI\Catalog\CompoundServiceName
+     */
+    public function setNamespace(string $Namespace): self
+    {
+        $this->Namespace = $Namespace;
+        return $this;
     }
 }

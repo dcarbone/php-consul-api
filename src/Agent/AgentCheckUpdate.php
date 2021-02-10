@@ -22,8 +22,9 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class AgentCheckUpdate
+ * @internal use internally by AgentClient
  */
-class AgentCheckUpdate extends AbstractModel
+final class AgentCheckUpdate extends AbstractModel
 {
     /** @var string */
     public string $Status = '';

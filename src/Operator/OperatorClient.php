@@ -59,6 +59,7 @@ class OperatorClient extends AbstractClient
      * @param string $areaID
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Operator\OperatorAreasResponse
      */
     public function AreaGet(string $areaID, ?QueryOptions $opts = null): OperatorAreasResponse
@@ -72,6 +73,7 @@ class OperatorClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Operator\OperatorAreasResponse
      */
     public function AreaList(?QueryOptions $opts = null): OperatorAreasResponse
@@ -98,6 +100,7 @@ class OperatorClient extends AbstractClient
      * @param array $addresses
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Operator\OperatorAreaJoinResponse
      */
     public function AreaJoin(string $areaID, array $addresses, ?WriteOptions $opts = null): OperatorAreaJoinResponse
@@ -112,6 +115,7 @@ class OperatorClient extends AbstractClient
      * @param string $areaID
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Operator\OperatorSerfMembersResponse
      */
     public function AreaMembers(string $areaID, ?QueryOptions $opts = null): OperatorSerfMembersResponse
@@ -125,6 +129,7 @@ class OperatorClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Operator\OperatorAutopilotConfigurationResponse
      */
     public function AutopilotGetConfiguration(?QueryOptions $opts = null): OperatorAutopilotConfigurationResponse
@@ -150,6 +155,7 @@ class OperatorClient extends AbstractClient
      * @param \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration $conf
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\ValuedBoolResponse
      */
     public function AutopilotCASConfiguration(
@@ -165,6 +171,7 @@ class OperatorClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Operator\OperatorServerHealthsResponse
      */
     public function AutopilotServerHealth(?QueryOptions $opts = null): OperatorServerHealthsResponse
@@ -178,6 +185,7 @@ class OperatorClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Operator\OperatorAutopilotStateResponse
      */
     public function AutopilotState(?QueryOptions $opts = null): OperatorAutopilotStateResponse
@@ -191,6 +199,7 @@ class OperatorClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Operator\OperatorRaftConfigurationResponse
      */
     public function RaftGetConfiguration(?QueryOptions $opts = null): OperatorRaftConfigurationResponse
@@ -205,6 +214,7 @@ class OperatorClient extends AbstractClient
      * @param string $address
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
     public function RaftRemovePeerByAddress(string $address, ?WriteOptions $opts = null): ?Error
@@ -218,6 +228,7 @@ class OperatorClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\RequestResponse $resp
      * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
+     * @throws \Exception
      */
     protected function _writeIDResponse(RequestResponse $resp): ValuedWriteStringResponse
     {

@@ -22,6 +22,8 @@ use DCarbone\Go\HTTP;
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Consul;
 use DCarbone\PHPConsulAPI\Error;
+use DCarbone\PHPConsulAPI\MapResponse;
+use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Request;
 use DCarbone\PHPConsulAPI\ValuedStringResponse;
 
@@ -30,26 +32,39 @@ use DCarbone\PHPConsulAPI\ValuedStringResponse;
  */
 class AgentClient extends AbstractClient
 {
-    /** @var \DCarbone\PHPConsulAPI\Agent\AgentSelfResponse|null */
-    private ?AgentSelfResponse $_self = null;
+    /** @var \DCarbone\PHPConsulAPI\MapResponse|null */
+    private ?MapResponse $_self = null;
 
     /**
      * @param bool $refresh
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentSelfResponse
+     * @return \DCarbone\PHPConsulAPI\MapResponse
      */
-    public function Self(bool $refresh = false): AgentSelfResponse
+    public function Self(bool $refresh = false): MapResponse
     {
         if (!$refresh && isset($this->_self)) {
             return $this->_self;
         }
         $resp = $this->_doGet('v1/agent/self', null);
-        $ret  = new AgentSelfResponse();
+        $ret  = new MapResponse();
         $this->_hydrateResponse($resp, $ret);
         if (null === $ret->Err) {
             $this->_self = $ret;
         }
+        return $ret;
+    }
+
+    /**
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\MapResponse
+     */
+    public function Host(): MapResponse
+    {
+        $resp = $this->_requireOK($this->_doGet('v1/agent/host', null));
+        $ret  = new MapResponse();
+        $this->_hydrateResponse($resp, $ret);
         return $ret;
     }
 
@@ -88,8 +103,8 @@ class AgentClient extends AbstractClient
         if (null !== $self->Err) {
             return $ret;
         }
-        if (isset($self->AgentConfig['Config'], $self->AgentConfig['Config']['NodeName'])) {
-            $ret->Value = $self->AgentConfig['Config']['NodeName'];
+        if (isset($self->Map['Config'], $self->Map['Config']['NodeName'])) {
+            $ret->Value = $self->Map['Config']['NodeName'];
         }
         return $ret;
     }
@@ -145,23 +160,102 @@ class AgentClient extends AbstractClient
     }
 
     /**
-     * @param string $service
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentHealthServiceResponse
-     */
-    public function AgentHealthServiceByName(string $service): AgentHealthServiceResponse
-    {
-        return $this->_agentHealthService(\sprintf('v1/agent/health/service/name/%s', \urlencode($service)));
-    }
-
-    /**
      * @param string $id
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Agent\AgentHealthServiceResponse
      */
     public function AgentHealthServiceByID(string $id): AgentHealthServiceResponse
     {
-        return $this->_agentHealthService(\sprintf('v1/agent/health/service/id/%s', $id));
+        $r    = $this->_prepAgentHealthServiceRequest(\sprintf('v1/agent/health/service/id/%s', $id));
+        $resp = $this->_requireOK($this->_do($r));
+
+        if (null !== $resp->Err) {
+            return new AgentHealthServiceResponse(Consul::HealthCritical, null, $resp->Err);
+        }
+
+        if (HTTP\StatusNotFound === $resp->Response->getStatusCode()) {
+            return new AgentHealthServiceResponse(Consul::HealthCritical, null, null);
+        }
+
+        $dec = $this->_decodeBody($resp->Response->getBody());
+        if (null !== $dec->Err) {
+            return new AgentHealthServiceResponse(Consul::HealthCritical, null, $dec->Err);
+        }
+
+        switch ($resp->Response->getStatusCode()) {
+            case HTTP\StatusOK:
+                $status = Consul::HealthPassing;
+                break;
+            case HTTP\StatusTooManyRequests:
+                $status = Consul::HealthWarning;
+                break;
+            case HTTP\StatusServiceUnavailable:
+                $status = Consul::HealthCritical;
+                break;
+
+            default:
+                $status = Consul::HealthCritical;
+        }
+
+        return new AgentHealthServiceResponse($status, $dec->Decoded, null);
+    }
+
+    /**
+     * @param string $service
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentHealthServicesResponse
+     */
+    public function AgentHealthServiceByName(string $service): AgentHealthServicesResponse
+    {
+        $r    = $this->_prepAgentHealthServiceRequest(\sprintf('v1/agent/health/service/name/%s', \urlencode($service)));
+        $resp = $this->_requireOK($this->_do($r));
+
+        if (null !== $resp->Err) {
+            return new AgentHealthServicesResponse(Consul::HealthCritical, null, $resp->Err);
+        }
+
+        if (HTTP\StatusNotFound === $resp->Response->getStatusCode()) {
+            return new AgentHealthServicesResponse(Consul::HealthCritical, null, null);
+        }
+
+        $dec = $this->_decodeBody($resp->Response->getBody());
+        if (null !== $dec->Err) {
+            return new AgentHealthServicesResponse(Consul::HealthCritical, null, $dec->Err);
+        }
+
+        switch ($resp->Response->getStatusCode()) {
+            case HTTP\StatusOK:
+                $status = Consul::HealthPassing;
+                break;
+            case HTTP\StatusTooManyRequests:
+                $status = Consul::HealthWarning;
+                break;
+            case HTTP\StatusServiceUnavailable:
+                $status = Consul::HealthCritical;
+                break;
+
+            default:
+                $status = Consul::HealthCritical;
+        }
+
+        return new AgentHealthServicesResponse($status, $dec->Decoded, null);
+    }
+
+    /**
+     * @param string $serviceID
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceResponse
+     */
+    public function Service(string $serviceID, ?QueryOptions $opts = null): AgentServiceResponse
+    {
+        $resp = $this->_requireOK($this->_doGet(\sprintf('v1/agent/service/%s', $serviceID), $opts));
+        $ret  = new AgentServiceResponse();
+        $this->_hydrateResponse($resp, $ret);
+        return $ret;
     }
 
     /**
@@ -319,13 +413,13 @@ class AgentClient extends AbstractClient
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration $agentCheckRegistration
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration $check
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @return \DCarbone\PHPConsulAPI\Error|null
      */
-    public function CheckRegister(AgentCheckRegistration $agentCheckRegistration): ?Error
+    public function CheckRegister(AgentCheckRegistration $check): ?Error
     {
-        return $this->_executePut('v1/agent/check/register', $agentCheckRegistration, null)->Err;
+        return $this->_executePut('v1/agent/check/register', $check, null)->Err;
     }
 
     /**
@@ -440,47 +534,11 @@ class AgentClient extends AbstractClient
         return $this->_requireOK($this->_do($r))->Err;
     }
 
-    /**
-     * @param string $path
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentHealthServiceResponse
-     */
-    protected function _agentHealthService(string $path): AgentHealthServiceResponse
+    protected function _prepAgentHealthServiceRequest(string $path): Request
     {
         $r = $this->_newGetRequest($path, null);
         $r->params->add('format', 'json');
         $r->header->set('Accept', 'application/json');
-
-        $res = $this->_do($r);
-        if (null !== $res->Err) {
-            return new AgentHealthServiceResponse(Consul::HealthCritical, null, $res->Err);
-        }
-
-        if (HTTP\StatusNotFound === $res->Response->getStatusCode()) {
-            return new AgentHealthServiceResponse(Consul::HealthCritical, null, null);
-        }
-
-        [$data, $err] = $this->_decodeBody($res->Response->getBody());
-        if (null !== $err) {
-            return new AgentHealthServiceResponse(Consul::HealthCritical, null, $res->Err);
-        }
-
-        switch ($res->Response->getStatusCode()) {
-            case HTTP\StatusOK:
-                $status = Consul::HealthPassing;
-                break;
-            case HTTP\StatusTooManyRequests:
-                $status = Consul::HealthWarning;
-                break;
-            case HTTP\StatusServiceUnavailable:
-                $status = Consul::HealthCritical;
-                break;
-
-            default:
-                $status = Consul::HealthCritical;
-        }
-
-        return new AgentHealthServiceResponse($status, $data, null);
+        return $r;
     }
 }

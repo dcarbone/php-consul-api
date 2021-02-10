@@ -28,18 +28,21 @@ use DCarbone\PHPConsulAPI\Hydration;
 class PreparedQueryExecuteResponse extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_NODES => [
+        self::FIELD_NODES     => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_CLASS      => ServiceEntry::class,
             Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
         ],
-        self::FIELD_DNS   => [
+        self::FIELD_DNS       => [
             Hydration::FIELD_TYPE  => Hydration::OBJECT,
             Hydration::FIELD_CLASS => QueryDNSOptions::class,
         ],
+        self::FIELD_NAMESPACE => Hydration::OMITEMPTY_STRING_FIELD,
     ];
-    private const FIELD_NODES = 'Nodes';
-    private const FIELD_DNS   = 'DNS';
+
+    private const FIELD_NAMESPACE = 'Namespace';
+    private const FIELD_NODES     = 'Nodes';
+    private const FIELD_DNS       = 'DNS';
 
     /** @var string */
     public string $Service = '';
@@ -47,12 +50,24 @@ class PreparedQueryExecuteResponse extends AbstractModel
     public string $Namespace = '';
     /** @var \DCarbone\PHPConsulAPI\Health\ServiceEntry[] */
     public array $Nodes = [];
-    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions|null */
-    public ?QueryDNSOptions $DNS = null;
+    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions */
+    public QueryDNSOptions $DNS;
     /** @var string */
     public string $Datacenter = '';
     /** @var int */
     public int $Failovers = 0;
+
+    /**
+     * PreparedQueryExecuteResponse constructor.
+     * @param array|null $data
+     */
+    public function __construct(?array $data = [])
+    {
+        parent::__construct($data);
+        if (!isset($this->DNS)) {
+            $this->DNS = new QueryDNSOptions(null);
+        }
+    }
 
     /**
      * @return string
@@ -60,6 +75,16 @@ class PreparedQueryExecuteResponse extends AbstractModel
     public function getService(): string
     {
         return $this->Service;
+    }
+
+    /**
+     * @param string $Service
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryExecuteResponse
+     */
+    public function setService(string $Service): self
+    {
+        $this->Service = $Service;
+        return $this;
     }
 
     /**
@@ -71,6 +96,16 @@ class PreparedQueryExecuteResponse extends AbstractModel
     }
 
     /**
+     * @param string $Namespace
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryExecuteResponse
+     */
+    public function setNamespace(string $Namespace): self
+    {
+        $this->Namespace = $Namespace;
+        return $this;
+    }
+
+    /**
      * @return \DCarbone\PHPConsulAPI\Health\ServiceEntry[]
      */
     public function getNodes(): array
@@ -79,11 +114,31 @@ class PreparedQueryExecuteResponse extends AbstractModel
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions|null
+     * @param \DCarbone\PHPConsulAPI\Health\ServiceEntry[] $Nodes
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryExecuteResponse
      */
-    public function getDNS(): ?QueryDNSOptions
+    public function setNodes(array $Nodes): self
+    {
+        $this->Nodes = $Nodes;
+        return $this;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions
+     */
+    public function getDNS(): QueryDNSOptions
     {
         return $this->DNS;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions $DNS
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryExecuteResponse
+     */
+    public function setDNS(QueryDNSOptions $DNS): self
+    {
+        $this->DNS = $DNS;
+        return $this;
     }
 
     /**
@@ -95,10 +150,30 @@ class PreparedQueryExecuteResponse extends AbstractModel
     }
 
     /**
+     * @param string $Datacenter
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryExecuteResponse
+     */
+    public function setDatacenter(string $Datacenter): self
+    {
+        $this->Datacenter = $Datacenter;
+        return $this;
+    }
+
+    /**
      * @return int
      */
     public function getFailovers(): int
     {
         return $this->Failovers;
+    }
+
+    /**
+     * @param int $Failovers
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryExecuteResponse
+     */
+    public function setFailovers(int $Failovers): self
+    {
+        $this->Failovers = $Failovers;
+        return $this;
     }
 }

@@ -29,40 +29,27 @@ use DCarbone\PHPConsulAPI\Hydration;
 class AgentServiceConnectProxyConfig extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_DESTINATION_SERVICE_NAME => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_DESTINATION_SERVICE_ID   => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_LOCAL_SERVICE_ADDRESS    => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_LOCAL_SERVICE_PORT       => [
-            Hydration::FIELD_TYPE     => Hydration::INTEGER,
-            Hydration::FIELD_NULLABLE => true,
-        ],
+        self::FIELD_DESTINATION_SERVICE_NAME => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_DESTINATION_SERVICE_ID   => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_LOCAL_SERVICE_ADDRESS    => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_LOCAL_SERVICE_PORT       => Hydration::OMITEMPTY_INTEGER_FIELD,
         self::FIELD_CONFIG                   => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_ARRAY_TYPE => Hydration::MIXED,
-            Hydration::FIELD_NULLABLE   => true,
+            Hydration::FIELD_OMITEMPTY  => true,
         ],
         self::FIELD_UPSTREAMS                => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_CLASS      => Upstream::class,
             Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+            Hydration::FIELD_OMITEMPTY  => true,
         ],
         self::FIELD_MESH_GATEWAY             => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => MeshGatewayConfig::class,
+            Hydration::FIELD_TYPE      => Hydration::OBJECT,
+            Hydration::FIELD_CLASS     => MeshGatewayConfig::class,
+            Hydration::FIELD_OMITEMPTY => true,
         ],
-        self::FIELD_EXPOSE                   => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => ExposeConfig::class,
-        ],
+        self::FIELD_EXPOSE                   => Hydration::OMITEMPTY_BOOLEAN_FIELD,
     ];
 
     private const FIELD_DESTINATION_SERVICE_NAME = 'DestinationServiceName';
@@ -74,14 +61,14 @@ class AgentServiceConnectProxyConfig extends AbstractModel
     private const FIELD_MESH_GATEWAY             = 'MeshGateway';
     private const FIELD_EXPOSE                   = 'Expose';
 
-    /** @var string|null */
-    public ?string $DestinationServiceName = null;
-    /** @var string|null */
-    public ?string $DestinationServiceID = null;
-    /** @var string|null */
-    public ?string $LocalServiceAddress = null;
-    /** @var int|null */
-    public ?int $LocalServicePort = null;
+    /** @var string */
+    public string $DestinationServiceName = '';
+    /** @var string */
+    public string $DestinationServiceID = '';
+    /** @var string */
+    public string $LocalServiceAddress = '';
+    /** @var int */
+    public int $LocalServicePort = 0;
     /** @var \DCarbone\PHPConsulAPI\Agent\Upstream[] */
     public array $Upstreams = [];
     /** @var \DCarbone\PHPConsulAPI\ConfigEntry\MeshGatewayConfig */
@@ -105,72 +92,72 @@ class AgentServiceConnectProxyConfig extends AbstractModel
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getDestinationServiceName(): ?string
+    public function getDestinationServiceName(): string
     {
         return $this->DestinationServiceName;
     }
 
     /**
-     * @param string|null $DestinationServiceName
+     * @param string $DestinationServiceName
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceConnectProxyConfig
      */
-    public function setDestinationServiceName(?string $DestinationServiceName): self
+    public function setDestinationServiceName(string $DestinationServiceName): self
     {
         $this->DestinationServiceName = $DestinationServiceName;
         return $this;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getDestinationServiceID(): ?string
+    public function getDestinationServiceID(): string
     {
         return $this->DestinationServiceID;
     }
 
     /**
-     * @param string|null $DestinationServiceID
+     * @param string $DestinationServiceID
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceConnectProxyConfig
      */
-    public function setDestinationServiceID(?string $DestinationServiceID): self
+    public function setDestinationServiceID(string $DestinationServiceID): self
     {
         $this->DestinationServiceID = $DestinationServiceID;
         return $this;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getLocalServiceAddress(): ?string
+    public function getLocalServiceAddress(): string
     {
         return $this->LocalServiceAddress;
     }
 
     /**
-     * @param string|null $LocalServiceAddress
+     * @param string $LocalServiceAddress
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceConnectProxyConfig
      */
-    public function setLocalServiceAddress(?string $LocalServiceAddress): self
+    public function setLocalServiceAddress(string $LocalServiceAddress): self
     {
         $this->LocalServiceAddress = $LocalServiceAddress;
         return $this;
     }
 
     /**
-     * @return int|null
+     * @return int
      */
-    public function getLocalServicePort(): ?int
+    public function getLocalServicePort(): int
     {
         return $this->LocalServicePort;
     }
 
     /**
-     * @param int|null $LocalServicePort
+     * @param int $LocalServicePort
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceConnectProxyConfig
      */
-    public function setLocalServicePort(?int $LocalServicePort): self
+    public function setLocalServicePort(int $LocalServicePort): self
     {
         $this->LocalServicePort = $LocalServicePort;
         return $this;

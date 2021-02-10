@@ -37,6 +37,7 @@ class KVTxnResponse extends AbstractModel
             Hydration::FIELD_CLASS => TxnErrors::class,
         ],
     ];
+
     private const FIELD_RESULTS = 'Results';
     private const FIELD_ERRORS  = 'Errors';
 

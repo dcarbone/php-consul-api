@@ -29,9 +29,10 @@ class SerfMember extends AbstractModel
 {
     protected const FIELDS = [
         self::FIELD_RTT => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
+            Hydration::FIELD_CALLBACK => Hydration::HYDRATE_DURATION,
         ],
     ];
+
     private const FIELD_RTT = 'RTT';
 
     /** @var string */
@@ -52,8 +53,20 @@ class SerfMember extends AbstractModel
     public int $Protocol = 0;
     /** @var string */
     public string $Status = '';
-    /** @var \DCarbone\Go\Time\Duration|null */
-    public ?Time\Duration $RTT = null;
+    /** @var \DCarbone\Go\Time\Duration */
+    public Time\Duration $RTT;
+
+    /**
+     * SerfMember constructor.
+     * @param array|null $data
+     */
+    public function __construct(?array $data = [])
+    {
+        parent::__construct($data);
+        if (!isset($this->RTT)) {
+            $this->RTT = new Time\Duration(0);
+        }
+    }
 
     /**
      * @return string
@@ -61,6 +74,16 @@ class SerfMember extends AbstractModel
     public function getID(): string
     {
         return $this->ID;
+    }
+
+    /**
+     * @param string $ID
+     * @return \DCarbone\PHPConsulAPI\Operator\SerfMember
+     */
+    public function setID(string $ID): self
+    {
+        $this->ID = $ID;
+        return $this;
     }
 
     /**
@@ -72,11 +95,31 @@ class SerfMember extends AbstractModel
     }
 
     /**
+     * @param string $Name
+     * @return \DCarbone\PHPConsulAPI\Operator\SerfMember
+     */
+    public function setName(string $Name): self
+    {
+        $this->Name = $Name;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getAddr(): string
     {
         return $this->Addr;
+    }
+
+    /**
+     * @param string $Addr
+     * @return \DCarbone\PHPConsulAPI\Operator\SerfMember
+     */
+    public function setAddr(string $Addr): self
+    {
+        $this->Addr = $Addr;
+        return $this;
     }
 
     /**
@@ -88,11 +131,31 @@ class SerfMember extends AbstractModel
     }
 
     /**
+     * @param int $Port
+     * @return \DCarbone\PHPConsulAPI\Operator\SerfMember
+     */
+    public function setPort(int $Port): self
+    {
+        $this->Port = $Port;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getDatacenter(): string
     {
         return $this->Datacenter;
+    }
+
+    /**
+     * @param string $Datacenter
+     * @return \DCarbone\PHPConsulAPI\Operator\SerfMember
+     */
+    public function setDatacenter(string $Datacenter): self
+    {
+        $this->Datacenter = $Datacenter;
+        return $this;
     }
 
     /**
@@ -104,11 +167,31 @@ class SerfMember extends AbstractModel
     }
 
     /**
+     * @param string $Role
+     * @return \DCarbone\PHPConsulAPI\Operator\SerfMember
+     */
+    public function setRole(string $Role): self
+    {
+        $this->Role = $Role;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getBuild(): string
     {
         return $this->Build;
+    }
+
+    /**
+     * @param string $Build
+     * @return \DCarbone\PHPConsulAPI\Operator\SerfMember
+     */
+    public function setBuild(string $Build): self
+    {
+        $this->Build = $Build;
+        return $this;
     }
 
     /**
@@ -120,6 +203,16 @@ class SerfMember extends AbstractModel
     }
 
     /**
+     * @param int $Protocol
+     * @return \DCarbone\PHPConsulAPI\Operator\SerfMember
+     */
+    public function setProtocol(int $Protocol): self
+    {
+        $this->Protocol = $Protocol;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getStatus(): string
@@ -128,10 +221,30 @@ class SerfMember extends AbstractModel
     }
 
     /**
-     * @return \DCarbone\Go\Time\Duration|null
+     * @param string $Status
+     * @return \DCarbone\PHPConsulAPI\Operator\SerfMember
      */
-    public function getRTT(): ?Time\Duration
+    public function setStatus(string $Status): self
+    {
+        $this->Status = $Status;
+        return $this;
+    }
+
+    /**
+     * @return \DCarbone\Go\Time\Duration
+     */
+    public function getRTT(): Time\Duration
     {
         return $this->RTT;
+    }
+
+    /**
+     * @param \DCarbone\Go\Time\Duration $RTT
+     * @return \DCarbone\PHPConsulAPI\Operator\SerfMember
+     */
+    public function setRTT(Time\Duration $RTT): self
+    {
+        $this->RTT = $RTT;
+        return $this;
     }
 }

@@ -33,6 +33,7 @@ class PreparedQueryClient extends AbstractClient
      * @param \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition $query
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      */
     public function Create(PreparedQueryDefinition $query, ?WriteOptions $opts = null): ValuedWriteStringResponse
@@ -57,6 +58,7 @@ class PreparedQueryClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinitionsResponse
      */
     public function List(?QueryOptions $opts = null): PreparedQueryDefinitionsResponse
@@ -71,6 +73,7 @@ class PreparedQueryClient extends AbstractClient
      * @param string $queryID
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinitionsResponse
      */
     public function Get(string $queryID, ?QueryOptions $opts = null): PreparedQueryDefinitionsResponse
@@ -96,6 +99,7 @@ class PreparedQueryClient extends AbstractClient
      * @param string $queryIDOrName
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryExecuteResponseResponse
      */
     public function Execute(string $queryIDOrName, ?QueryOptions $opts = null): PreparedQueryExecuteResponseResponse

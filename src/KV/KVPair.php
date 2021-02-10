@@ -27,10 +27,7 @@ use DCarbone\PHPConsulAPI\Hydration;
 class KVPair extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_NAMESPACE => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
+        self::FIELD_NAMESPACE => Hydration::OMITEMPTY_STRING_FIELD,
     ];
 
     private const FIELD_NAMESPACE = 'Namespace';
@@ -49,8 +46,8 @@ class KVPair extends AbstractModel
     public string $Value = '';
     /** @var string */
     public string $Session = '';
-    /** @var string|null */
-    public ?string $Namespace = null;
+    /** @var string */
+    public string $Namespace = '';
 
     /**
      * KVPair constructor.

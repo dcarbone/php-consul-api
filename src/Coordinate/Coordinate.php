@@ -23,6 +23,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
  * Class Coordinate
+ *
+ * From github.com/hashicorp/serf/coordinate/coordinate.go
  */
 class Coordinate extends AbstractModel
 {
@@ -90,6 +92,16 @@ class Coordinate extends AbstractModel
     public function getHeight(): float
     {
         return $this->Height;
+    }
+
+    /**
+     * todo: prevent php-cs-fixer from being dumb.
+     *
+     * @return \DCarbone\PHPConsulAPI\Coordinate\Coordinate
+     */
+    public function Clone()
+    {
+        return clone $this;
     }
 
     /**

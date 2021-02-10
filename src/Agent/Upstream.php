@@ -19,6 +19,7 @@ namespace DCarbone\PHPConsulAPI\Agent;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\ConfigEntry\MeshGatewayConfig;
 use DCarbone\PHPConsulAPI\Hydration;
 
 /**
@@ -27,34 +28,20 @@ use DCarbone\PHPConsulAPI\Hydration;
 class Upstream extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_DESTINATION_TYPE      => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_DESTINATION_NAMESPACE => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_DATACENTER            => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_LOCAL_BIND_ADDRESS    => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_LOCAL_BIND_PORT       => [
-            Hydration::FIELD_TYPE     => Hydration::INTEGER,
-            Hydration::FIELD_NULLABLE => true,
-        ],
+        self::FIELD_DESTINATION_TYPE      => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_DESTINATION_NAMESPACE => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_DATACENTER            => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_LOCAL_BIND_ADDRESS    => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_LOCAL_BIND_PORT       => Hydration::OMITEMPTY_INTEGER_FIELD,
         self::FIELD_CONFIG                => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_ARRAY_TYPE => Hydration::MIXED,
-            Hydration::FIELD_NULLABLE   => true,
+            Hydration::FIELD_OMITEMPTY  => true,
         ],
         self::FIELD_MESH_GATEWAY          => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => MeshGatewayConfig::class,
+            Hydration::FIELD_TYPE      => Hydration::OBJECT,
+            Hydration::FIELD_CLASS     => MeshGatewayConfig::class,
+            Hydration::FIELD_OMITEMPTY => true,
         ],
     ];
 
@@ -66,21 +53,21 @@ class Upstream extends AbstractModel
     private const FIELD_CONFIG                = 'Config';
     private const FIELD_MESH_GATEWAY          = 'MeshGateway';
 
-    /** @var string|null */
-    public ?string $DestinationType = null;
-    /** @var string|null */
-    public ?string $DestinationNamespace = null;
+    /** @var string */
+    public string $DestinationType = '';
+    /** @var string */
+    public string $DestinationNamespace = '';
     /** @var string */
     public string $DestinationName = '';
-    /** @var string|null */
-    public ?string $Datacenter = null;
-    /** @var string|null */
-    public ?string $LocalBindAddress = null;
-    /** @var int|null */
-    public ?int $LocalBindPort = null;
+    /** @var string */
+    public string $Datacenter = '';
+    /** @var string */
+    public string $LocalBindAddress = '';
+    /** @var int */
+    public int $LocalBindPort = 0;
     /** @var array */
     public array $Config = [];
-    /** @var \DCarbone\PHPConsulAPI\Agent\MeshGatewayConfig */
+    /** @var \DCarbone\PHPConsulAPI\ConfigEntry\MeshGatewayConfig */
     public MeshGatewayConfig $MeshGatewayConfig;
 
     /**
@@ -96,38 +83,38 @@ class Upstream extends AbstractModel
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getDestinationType(): ?string
+    public function getDestinationType(): string
     {
         return $this->DestinationType;
     }
 
     /**
-     * @param string|null $destinationType
+     * @param string $DestinationType
      * @return \DCarbone\PHPConsulAPI\Agent\Upstream
      */
-    public function setDestinationType(?string $destinationType): self
+    public function setDestinationType(string $DestinationType): self
     {
-        $this->DestinationType = $destinationType;
+        $this->DestinationType = $DestinationType;
         return $this;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getDestinationNamespace(): ?string
+    public function getDestinationNamespace(): string
     {
         return $this->DestinationNamespace;
     }
 
     /**
-     * @param string|null $destinationNamespace
+     * @param string $DestinationNamespace
      * @return \DCarbone\PHPConsulAPI\Agent\Upstream
      */
-    public function setDestinationNamespace(?string $destinationNamespace): self
+    public function setDestinationNamespace(string $DestinationNamespace): self
     {
-        $this->DestinationNamespace = $destinationNamespace;
+        $this->DestinationNamespace = $DestinationNamespace;
         return $this;
     }
 
@@ -140,66 +127,66 @@ class Upstream extends AbstractModel
     }
 
     /**
-     * @param string $destinationName
+     * @param string $DestinationName
      * @return \DCarbone\PHPConsulAPI\Agent\Upstream
      */
-    public function setDestinationName(string $destinationName): self
+    public function setDestinationName(string $DestinationName): self
     {
-        $this->DestinationName = $destinationName;
+        $this->DestinationName = $DestinationName;
         return $this;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getDatacenter(): ?string
+    public function getDatacenter(): string
     {
         return $this->Datacenter;
     }
 
     /**
-     * @param string|null $datacenter
+     * @param string $Datacenter
      * @return \DCarbone\PHPConsulAPI\Agent\Upstream
      */
-    public function setDatacenter(?string $datacenter): self
+    public function setDatacenter(string $Datacenter): self
     {
-        $this->Datacenter = $datacenter;
+        $this->Datacenter = $Datacenter;
         return $this;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getLocalBindAddress(): ?string
+    public function getLocalBindAddress(): string
     {
         return $this->LocalBindAddress;
     }
 
     /**
-     * @param string|null $localBindAddress
+     * @param string $LocalBindAddress
      * @return \DCarbone\PHPConsulAPI\Agent\Upstream
      */
-    public function setLocalBindAddress(?string $localBindAddress): self
+    public function setLocalBindAddress(string $LocalBindAddress): self
     {
-        $this->LocalBindAddress = $localBindAddress;
+        $this->LocalBindAddress = $LocalBindAddress;
         return $this;
     }
 
     /**
-     * @return int|null
+     * @return int
      */
-    public function getLocalBindPort(): ?int
+    public function getLocalBindPort(): int
     {
         return $this->LocalBindPort;
     }
 
     /**
-     * @param int|null $localBindPort
+     * @param int $LocalBindPort
      * @return \DCarbone\PHPConsulAPI\Agent\Upstream
      */
-    public function setLocalBindPort(?int $localBindPort): self
+    public function setLocalBindPort(int $LocalBindPort): self
     {
-        $this->LocalBindPort = $localBindPort;
+        $this->LocalBindPort = $LocalBindPort;
         return $this;
     }
 
@@ -212,17 +199,17 @@ class Upstream extends AbstractModel
     }
 
     /**
-     * @param array $config
+     * @param array $Config
      * @return \DCarbone\PHPConsulAPI\Agent\Upstream
      */
-    public function setConfig(array $config): self
+    public function setConfig(array $Config): self
     {
-        $this->Config = $config;
+        $this->Config = $Config;
         return $this;
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Agent\MeshGatewayConfig
+     * @return \DCarbone\PHPConsulAPI\ConfigEntry\MeshGatewayConfig
      */
     public function getMeshGatewayConfig(): MeshGatewayConfig
     {
@@ -230,12 +217,12 @@ class Upstream extends AbstractModel
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Agent\MeshGatewayConfig $meshGatewayConfig
+     * @param \DCarbone\PHPConsulAPI\ConfigEntry\MeshGatewayConfig $MeshGatewayConfig
      * @return \DCarbone\PHPConsulAPI\Agent\Upstream
      */
-    public function setMeshGatewayConfig(MeshGatewayConfig $meshGatewayConfig): self
+    public function setMeshGatewayConfig(MeshGatewayConfig $MeshGatewayConfig): self
     {
-        $this->MeshGatewayConfig = $meshGatewayConfig;
+        $this->MeshGatewayConfig = $MeshGatewayConfig;
         return $this;
     }
 }

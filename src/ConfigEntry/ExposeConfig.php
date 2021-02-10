@@ -27,57 +27,54 @@ use DCarbone\PHPConsulAPI\Hydration;
 class ExposeConfig extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_CHECKS => [
-            Hydration::FIELD_TYPE     => Hydration::BOOLEAN,
-            Hydration::FIELD_NULLABLE => true,
-        ],
+        self::FIELD_CHECKS => Hydration::OMITEMPTY_STRING_FIELD,
         self::FIELD_PATHS  => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_CLASS      => ExposePath::class,
             Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
-            Hydration::FIELD_NULLABLE   => true,
+            Hydration::FIELD_OMITEMPTY  => true,
         ],
     ];
 
     private const FIELD_CHECKS = 'Checks';
     private const FIELD_PATHS  = 'Paths';
 
-    /** @var bool|null */
-    public ?bool $Checks = null;
-    /** @var array|null */
-    public ?array $Paths = null;
+    /** @var bool */
+    public bool $Checks = false;
+    /** @var array */
+    public array $Paths = [];
 
     /**
-     * @return bool|null
+     * @return bool
      */
-    public function getChecks(): ?bool
+    public function isChecks(): bool
     {
         return $this->Checks;
     }
 
     /**
-     * @param bool|null $Checks
+     * @param bool $Checks
      * @return \DCarbone\PHPConsulAPI\ConfigEntry\ExposeConfig
      */
-    public function setChecks(?bool $Checks): self
+    public function setChecks(bool $Checks): self
     {
         $this->Checks = $Checks;
         return $this;
     }
 
     /**
-     * @return array|null
+     * @return array
      */
-    public function getPaths(): ?array
+    public function getPaths(): array
     {
         return $this->Paths;
     }
 
     /**
-     * @param array|null $Paths
+     * @param array $Paths
      * @return \DCarbone\PHPConsulAPI\ConfigEntry\ExposeConfig
      */
-    public function setPaths(?array $Paths): self
+    public function setPaths(array $Paths): self
     {
         $this->Paths = $Paths;
         return $this;

@@ -31,6 +31,7 @@ class EventClient extends AbstractClient
      * @param \DCarbone\PHPConsulAPI\Event\UserEvent $event
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Event\UserEventResponse
      */
     public function Fire(UserEvent $event, ?WriteOptions $opts = null): UserEventResponse
@@ -55,6 +56,7 @@ class EventClient extends AbstractClient
      * @param string $name
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\Event\UserEventsResponse
      */
     public function List(string $name = '', ?QueryOptions $opts = null): UserEventsResponse

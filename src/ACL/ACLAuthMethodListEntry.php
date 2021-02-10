@@ -27,37 +27,29 @@ use DCarbone\PHPConsulAPI\Hydration;
 class ACLAuthMethodListEntry extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_DISPLAY_NAME    => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_DESCRIPTION     => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_NAMESPACE       => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
+        self::FIELD_DISPLAY_NAME    => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_DESCRIPTION     => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_NAMESPACE       => Hydration::OMITEMPTY_STRING_FIELD,
     ];
-    private const  FIELD_DISPLAY_NAME = 'DisplayName';
-    private const  FIELD_DESCRIPTION  = 'Description';
-    private const FIELD_NAMESPACE     = 'Namespace';
+
+    private const FIELD_DISPLAY_NAME = 'DisplayName';
+    private const FIELD_DESCRIPTION  = 'Description';
+    private const FIELD_NAMESPACE    = 'Namespace';
 
     /** @var string */
     public string $Name = '';
     /** @var string */
     public string $Type = '';
-    /** @var string|null */
-    public ?string $DisplayName = null;
-    /** @var string|null */
-    public ?string $Description = null;
+    /** @var string */
+    public string $DisplayName = '';
+    /** @var string */
+    public string $Description = '';
     /** @var int */
     public int $CreateIndex = 0;
     /** @var int */
     public int $ModifyIndex = 0;
-    /** @var string|null */
-    public ?string $Namespace = null;
+    /** @var string */
+    public string $Namespace = '';
 
     /**
      * @return string
@@ -65,6 +57,16 @@ class ACLAuthMethodListEntry extends AbstractModel
     public function getName(): string
     {
         return $this->Name;
+    }
+
+    /**
+     * @param string $Name
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodListEntry
+     */
+    public function setName(string $Name): self
+    {
+        $this->Name = $Name;
+        return $this;
     }
 
     /**
@@ -76,19 +78,49 @@ class ACLAuthMethodListEntry extends AbstractModel
     }
 
     /**
-     * @return string|null
+     * @param string $Type
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodListEntry
      */
-    public function getDisplayName(): ?string
+    public function setType(string $Type): self
+    {
+        $this->Type = $Type;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDisplayName(): string
     {
         return $this->DisplayName;
     }
 
     /**
-     * @return string|null
+     * @param string $DisplayName
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodListEntry
      */
-    public function getDescription(): ?string
+    public function setDisplayName(string $DisplayName): self
+    {
+        $this->DisplayName = $DisplayName;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
     {
         return $this->Description;
+    }
+
+    /**
+     * @param string $Description
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodListEntry
+     */
+    public function setDescription(string $Description): self
+    {
+        $this->Description = $Description;
+        return $this;
     }
 
     /**
@@ -100,6 +132,16 @@ class ACLAuthMethodListEntry extends AbstractModel
     }
 
     /**
+     * @param int $CreateIndex
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodListEntry
+     */
+    public function setCreateIndex(int $CreateIndex): self
+    {
+        $this->CreateIndex = $CreateIndex;
+        return $this;
+    }
+
+    /**
      * @return int
      */
     public function getModifyIndex(): int
@@ -108,10 +150,30 @@ class ACLAuthMethodListEntry extends AbstractModel
     }
 
     /**
-     * @return string|null
+     * @param int $ModifyIndex
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodListEntry
      */
-    public function getNamespace(): ?string
+    public function setModifyIndex(int $ModifyIndex): self
+    {
+        $this->ModifyIndex = $ModifyIndex;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNamespace(): string
     {
         return $this->Namespace;
+    }
+
+    /**
+     * @param string $Namespace
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodListEntry
+     */
+    public function setNamespace(string $Namespace): self
+    {
+        $this->Namespace = $Namespace;
+        return $this;
     }
 }

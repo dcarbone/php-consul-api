@@ -31,29 +31,24 @@ class ACLRole extends AbstractModel
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_CLASS      => ACLTokenPolicyLink::class,
             Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
-        ],
-        self::FIELD_ROLES              => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => ACLTokenRoleLink::class,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+            Hydration::FIELD_OMITEMPTY  => true,
         ],
         self::FIELD_SERVICE_IDENTITIES => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_CLASS      => ACLServiceIdentity::class,
             Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+            Hydration::FIELD_OMITEMPTY  => true,
         ],
         self::FIELD_NODE_IDENTITIES    => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_CLASS      => ACLNodeIdentity::class,
             Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+            Hydration::FIELD_OMITEMPTY  => true,
         ],
-        self::FIELD_NAMESPACE          => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
+        self::FIELD_NAMESPACE          => Hydration::OMITEMPTY_STRING_FIELD,
     ];
+
     private const FIELD_POLICIES           = 'Policies';
-    private const FIELD_ROLES              = 'Roles';
     private const FIELD_SERVICE_IDENTITIES = 'ServiceIdentities';
     private const FIELD_NODE_IDENTITIES    = 'NodeIdentities';
     private const FIELD_NAMESPACE          = 'Namespace';
@@ -76,8 +71,8 @@ class ACLRole extends AbstractModel
     public int $CreateIndex = 0;
     /** @var int */
     public int $ModifyIndex = 0;
-    /** @var string|null */
-    public ?string $Namespace = null;
+    /** @var string */
+    public string $Namespace = '';
 
     /**
      * @return string
@@ -242,18 +237,18 @@ class ACLRole extends AbstractModel
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getNamespace(): ?string
+    public function getNamespace(): string
     {
         return $this->Namespace;
     }
 
     /**
-     * @param string|null $Namespace
+     * @param string $Namespace
      * @return \DCarbone\PHPConsulAPI\ACL\ACLRole
      */
-    public function setNamespace(?string $Namespace): self
+    public function setNamespace(string $Namespace): self
     {
         $this->Namespace = $Namespace;
         return $this;

@@ -25,26 +25,29 @@ use DCarbone\PHPConsulAPI\ErrorContainer;
 /**
  * Class AgentHealthServiceResponse
  */
-class AgentHealthServiceResponse extends AbstractResponse
+class AgentHealthServicesResponse extends AbstractResponse
 {
     use ErrorContainer;
 
     /** @var string */
     public string $AggregatedStatus = '';
-    /** @var \DCarbone\PHPConsulAPI\Agent\AgentServiceChecksInfo|null */
-    public ?AgentServiceChecksInfo $AgentServiceChecksInfo = null;
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentServiceChecksInfo[]|null */
+    public ?array $AgentServiceChecksInfos = null;
 
     /**
      * AgentHealthServiceResponse constructor.
      * @param string $aggregatedStatus
-     * @param array|null $checkInfo
+     * @param array|null $checkInfos
      * @param \DCarbone\PHPConsulAPI\Error|null $err
      */
-    public function __construct(string $aggregatedStatus, ?array $checkInfo, ?Error $err)
+    public function __construct(string $aggregatedStatus, ?array $checkInfos, ?Error $err)
     {
         $this->AggregatedStatus = $aggregatedStatus;
-        if (null !== $checkInfo) {
-            $this->AgentServiceChecksInfo = new AgentServiceChecksInfo($checkInfo);
+        if (null !== $checkInfos) {
+            $this->AgentServiceChecksInfos = [];
+            foreach ($checkInfos as $checkInfo) {
+                $this->AgentServiceChecksInfos[] = new AgentServiceChecksInfo($checkInfo);
+            }
         }
         $this->Err = $err;
     }
@@ -60,9 +63,9 @@ class AgentHealthServiceResponse extends AbstractResponse
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceChecksInfo[]|null
      */
-    public function getAgentServiceChecksInfos(): ?AgentServiceChecksInfo
+    public function getAgentServiceChecksInfos(): ?array
     {
-        return $this->AgentServiceChecksInfo;
+        return $this->AgentServiceChecksInfos;
     }
 
     /**
@@ -84,7 +87,7 @@ class AgentHealthServiceResponse extends AbstractResponse
             return $this->AggregatedStatus;
         }
         if (1 === $offset) {
-            return $this->AgentServiceChecksInfo;
+            return $this->AgentServiceChecksInfos;
         }
         if (2 === $offset) {
             return $this->Err;

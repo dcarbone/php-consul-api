@@ -29,18 +29,27 @@ class AutopilotState extends AbstractModel
     protected const FIELDS = [
         self::FIELD_SERVERS         => [
             Hydration::FIELD_TYPE  => Hydration::ARRAY,
-            Hydration::FIELD_CLASS => self::class,
+            Hydration::FIELD_CLASS => AutopilotServer::class,
+        ],
+        self::FIELD_READ_REPLICAS   => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::STRING,
+            Hydration::FIELD_OMITEMPTY  => true,
         ],
         self::FIELD_REDUNDANCY_ZONE => [
-            Hydration::FIELD_TYPE  => Hydration::ARRAY,
-            Hydration::FIELD_CLASS => AutopilotZone::class,
+            Hydration::FIELD_TYPE      => Hydration::ARRAY,
+            Hydration::FIELD_CLASS     => AutopilotZone::class,
+            Hydration::FIELD_OMITEMPTY => true,
         ],
         self::FIELD_UPGRADE         => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => AutopilotUpgrade::class,
+            Hydration::FIELD_TYPE      => Hydration::OBJECT,
+            Hydration::FIELD_CLASS     => AutopilotUpgrade::class,
+            Hydration::FIELD_OMITEMPTY => true,
         ],
     ];
+
     private const FIELD_SERVERS         = 'Servers';
+    private const FIELD_READ_REPLICAS   = 'ReadReplicas';
     private const FIELD_REDUNDANCY_ZONE = 'RedundancyZone';
     private const FIELD_UPGRADE         = 'Upgrade';
 
@@ -50,7 +59,7 @@ class AutopilotState extends AbstractModel
     public int $FailureTolerance = 0;
     /** @var int */
     public int $OptimisticFailureTolerance = 0;
-    /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotState[] */
+    /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotServer[] */
     public array $Servers = [];
     /** @var string */
     public string $Leader = '';
@@ -72,11 +81,31 @@ class AutopilotState extends AbstractModel
     }
 
     /**
+     * @param bool $Healthy
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotState
+     */
+    public function setHealthy(bool $Healthy): self
+    {
+        $this->Healthy = $Healthy;
+        return $this;
+    }
+
+    /**
      * @return int
      */
     public function getFailureTolerance(): int
     {
         return $this->FailureTolerance;
+    }
+
+    /**
+     * @param int $FailureTolerance
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotState
+     */
+    public function setFailureTolerance(int $FailureTolerance): self
+    {
+        $this->FailureTolerance = $FailureTolerance;
+        return $this;
     }
 
     /**
@@ -88,11 +117,31 @@ class AutopilotState extends AbstractModel
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotState[]|null
+     * @param int $OptimisticFailureTolerance
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotState
+     */
+    public function setOptimisticFailureTolerance(int $OptimisticFailureTolerance): self
+    {
+        $this->OptimisticFailureTolerance = $OptimisticFailureTolerance;
+        return $this;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotServer[]
      */
     public function getServers(): array
     {
         return $this->Servers;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Operator\AutopilotServer[] $Servers
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotState
+     */
+    public function setServers(array $Servers): self
+    {
+        $this->Servers = $Servers;
+        return $this;
     }
 
     /**
@@ -104,27 +153,67 @@ class AutopilotState extends AbstractModel
     }
 
     /**
-     * @return string[]|null
+     * @param string $Leader
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotState
      */
-    public function getVoters(): ?array
+    public function setLeader(string $Leader): self
+    {
+        $this->Leader = $Leader;
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getVoters(): array
     {
         return $this->Voters;
     }
 
     /**
-     * @return string[]|null
+     * @param string[] $Voters
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotState
      */
-    public function getReadReplicas(): ?array
+    public function setVoters(array $Voters): self
+    {
+        $this->Voters = $Voters;
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getReadReplicas(): array
     {
         return $this->ReadReplicas;
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotZone[]|null
+     * @param string[] $ReadReplicas
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotState
+     */
+    public function setReadReplicas(array $ReadReplicas): self
+    {
+        $this->ReadReplicas = $ReadReplicas;
+        return $this;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotZone[]
      */
     public function getRedundancyZone(): array
     {
         return $this->RedundancyZone;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Operator\AutopilotZone[] $RedundancyZone
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotState
+     */
+    public function setRedundancyZone(array $RedundancyZone): self
+    {
+        $this->RedundancyZone = $RedundancyZone;
+        return $this;
     }
 
     /**
@@ -133,5 +222,15 @@ class AutopilotState extends AbstractModel
     public function getUpgrade(): ?AutopilotUpgrade
     {
         return $this->Upgrade;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Operator\AutopilotUpgrade|null $Upgrade
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotState
+     */
+    public function setUpgrade(?AutopilotUpgrade $Upgrade): self
+    {
+        $this->Upgrade = $Upgrade;
+        return $this;
     }
 }

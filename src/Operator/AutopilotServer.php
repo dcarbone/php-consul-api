@@ -28,15 +28,21 @@ use DCarbone\PHPConsulAPI\Hydration;
 class AutopilotServer extends AbstractModel implements \JsonSerializable
 {
     protected const FIELDS = [
-        self::FIELD_LAST_CONTACT => [
+        self::FIELD_LAST_CONTACT    => [
             Hydration::FIELD_CALLBACK => [ReadableDuration::class, 'hydrate'],
+            Hydration::FIELD_NULLABLE => true,
         ],
-        self::FIELD_STABLE_SINCE => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_TIME,
+        self::FIELD_STABLE_SINCE    => [
+            Hydration::FIELD_CALLBACK => Hydration::HYDRATE_TIME,
         ],
+        self::FIELD_REDUNDANCY_ZONE => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_UPGRADE_VERSION => Hydration::OMITEMPTY_STRING_FIELD,
     ];
-    private const FIELD_LAST_CONTACT = 'LastContact';
-    private const FIELD_STABLE_SINCE = 'StableSince';
+
+    private const FIELD_LAST_CONTACT    = 'LastContact';
+    private const FIELD_STABLE_SINCE    = 'StableSince';
+    private const FIELD_REDUNDANCY_ZONE = 'RedundancyZone';
+    private const FIELD_UPGRADE_VERSION = 'UpgradeVersion';
 
     /** @var string */
     public string $ID = '';
@@ -54,8 +60,10 @@ class AutopilotServer extends AbstractModel implements \JsonSerializable
     public int $LastTerm = 0;
     /** @var int */
     public int $LastIndex = 0;
-    /** @var \DCarbone\Go\Time\Time|null */
-    public ?Time\Time $StableSince = null;
+    /** @var bool */
+    public bool $Healthy = false;
+    /** @var \DCarbone\Go\Time\Time */
+    public Time\Time $StableSince;
     /** @var string */
     public string $RedundancyZone = '';
     /** @var string */
@@ -70,11 +78,33 @@ class AutopilotServer extends AbstractModel implements \JsonSerializable
     public string $NodeType = '';
 
     /**
+     * AutopilotServer constructor.
+     * @param array|null $data
+     */
+    public function __construct(?array $data = [])
+    {
+        parent::__construct($data);
+        if (!isset($this->StableSince)) {
+            $this->StableSince = Time::New();
+        }
+    }
+
+    /**
      * @return string
      */
     public function getID(): string
     {
         return $this->ID;
+    }
+
+    /**
+     * @param string $ID
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotServer
+     */
+    public function setID(string $ID): self
+    {
+        $this->ID = $ID;
+        return $this;
     }
 
     /**
@@ -86,11 +116,31 @@ class AutopilotServer extends AbstractModel implements \JsonSerializable
     }
 
     /**
+     * @param string $Name
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotServer
+     */
+    public function setName(string $Name): self
+    {
+        $this->Name = $Name;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getAddress(): string
     {
         return $this->Address;
+    }
+
+    /**
+     * @param string $Address
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotServer
+     */
+    public function setAddress(string $Address): self
+    {
+        $this->Address = $Address;
+        return $this;
     }
 
     /**
@@ -102,11 +152,31 @@ class AutopilotServer extends AbstractModel implements \JsonSerializable
     }
 
     /**
+     * @param string $NodeStatus
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotServer
+     */
+    public function setNodeStatus(string $NodeStatus): self
+    {
+        $this->NodeStatus = $NodeStatus;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getVersion(): string
     {
         return $this->Version;
+    }
+
+    /**
+     * @param string $Version
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotServer
+     */
+    public function setVersion(string $Version): self
+    {
+        $this->Version = $Version;
+        return $this;
     }
 
     /**
@@ -118,11 +188,31 @@ class AutopilotServer extends AbstractModel implements \JsonSerializable
     }
 
     /**
+     * @param \DCarbone\PHPConsulAPI\Operator\ReadableDuration|null $LastContact
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotServer
+     */
+    public function setLastContact(?ReadableDuration $LastContact): self
+    {
+        $this->LastContact = $LastContact;
+        return $this;
+    }
+
+    /**
      * @return int
      */
     public function getLastTerm(): int
     {
         return $this->LastTerm;
+    }
+
+    /**
+     * @param int $LastTerm
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotServer
+     */
+    public function setLastTerm(int $LastTerm): self
+    {
+        $this->LastTerm = $LastTerm;
+        return $this;
     }
 
     /**
@@ -134,11 +224,49 @@ class AutopilotServer extends AbstractModel implements \JsonSerializable
     }
 
     /**
-     * @return \DCarbone\Go\Time\Time|null
+     * @param int $LastIndex
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotServer
      */
-    public function getStableSince(): ?Time\Time
+    public function setLastIndex(int $LastIndex): self
+    {
+        $this->LastIndex = $LastIndex;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHealthy(): bool
+    {
+        return $this->Healthy;
+    }
+
+    /**
+     * @param bool $Healthy
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotServer
+     */
+    public function setHealthy(bool $Healthy): self
+    {
+        $this->Healthy = $Healthy;
+        return $this;
+    }
+
+    /**
+     * @return \DCarbone\Go\Time\Time
+     */
+    public function getStableSince(): Time\Time
     {
         return $this->StableSince;
+    }
+
+    /**
+     * @param \DCarbone\Go\Time\Time $StableSince
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotServer
+     */
+    public function setStableSince(Time\Time $StableSince): self
+    {
+        $this->StableSince = $StableSince;
+        return $this;
     }
 
     /**
@@ -150,11 +278,31 @@ class AutopilotServer extends AbstractModel implements \JsonSerializable
     }
 
     /**
+     * @param string $RedundancyZone
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotServer
+     */
+    public function setRedundancyZone(string $RedundancyZone): self
+    {
+        $this->RedundancyZone = $RedundancyZone;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getUpgradeVersion(): string
     {
         return $this->UpgradeVersion;
+    }
+
+    /**
+     * @param string $UpgradeVersion
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotServer
+     */
+    public function setUpgradeVersion(string $UpgradeVersion): self
+    {
+        $this->UpgradeVersion = $UpgradeVersion;
+        return $this;
     }
 
     /**
@@ -166,6 +314,16 @@ class AutopilotServer extends AbstractModel implements \JsonSerializable
     }
 
     /**
+     * @param bool $ReadReplica
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotServer
+     */
+    public function setReadReplica(bool $ReadReplica): self
+    {
+        $this->ReadReplica = $ReadReplica;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getStatus(): string
@@ -174,11 +332,31 @@ class AutopilotServer extends AbstractModel implements \JsonSerializable
     }
 
     /**
-     * @return array|null
+     * @param string $Status
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotServer
      */
-    public function getMeta(): ?array
+    public function setStatus(string $Status): self
+    {
+        $this->Status = $Status;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getMeta(): array
     {
         return $this->Meta;
+    }
+
+    /**
+     * @param array $Meta
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotServer
+     */
+    public function setMeta(array $Meta): self
+    {
+        $this->Meta = $Meta;
+        return $this;
     }
 
     /**
@@ -187,6 +365,16 @@ class AutopilotServer extends AbstractModel implements \JsonSerializable
     public function getNodeType(): string
     {
         return $this->NodeType;
+    }
+
+    /**
+     * @param string $NodeType
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotServer
+     */
+    public function setNodeType(string $NodeType): self
+    {
+        $this->NodeType = $NodeType;
+        return $this;
     }
 
     /**

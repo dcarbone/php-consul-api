@@ -27,16 +27,41 @@ use DCarbone\PHPConsulAPI\Hydration;
 class TxnOp extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_KV => [
+        self::FIELD_KV      => [
             Hydration::FIELD_TYPE     => Hydration::OBJECT,
             Hydration::FIELD_CLASS    => KVTxnOp::class,
             Hydration::FIELD_NULLABLE => true,
         ],
+        self::FIELD_NODE    => [
+            Hydration::FIELD_TYPE     => Hydration::OBJECT,
+            Hydration::FIELD_CLASS    => NodeTxnOp::class,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+        self::FIELD_SERVICE => [
+            Hydration::FIELD_TYPE     => Hydration::OBJECT,
+            Hydration::FIELD_CLASS    => ServiceTxnOp::class,
+            Hydration::FIELD_NULLABLE => true,
+        ],
+        self::FIELD_CHECK   => [
+            Hydration::FIELD_TYPE     => Hydration::OBJECT,
+            Hydration::FIELD_CLASS    => CheckTxnOp::class,
+            Hydration::FIELD_NULLABLE => true,
+        ],
     ];
-    private const FIELD_KV = 'KV';
+
+    private const FIELD_KV      = 'KV';
+    private const FIELD_NODE    = 'Node';
+    private const FIELD_SERVICE = 'Service';
+    private const FIELD_CHECK   = 'Check';
 
     /** @var \DCarbone\PHPConsulAPI\KV\KVTxnOp|null */
     public ?KVTxnOp $KV = null;
+    /** @var \DCarbone\PHPConsulAPI\KV\NodeTxnOp|null */
+    public ?NodeTxnOp $Node = null;
+    /** @var \DCarbone\PHPConsulAPI\KV\ServiceTxnOp|null */
+    public ?ServiceTxnOp $Service = null;
+    /** @var \DCarbone\PHPConsulAPI\KV\CheckTxnOp|null */
+    public ?CheckTxnOp $Check = null;
 
     /**
      * @return \DCarbone\PHPConsulAPI\KV\KVTxnOp|null
@@ -44,5 +69,69 @@ class TxnOp extends AbstractModel
     public function getKV(): ?KVTxnOp
     {
         return $this->KV;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\KV\KVTxnOp|null $KV
+     * @return \DCarbone\PHPConsulAPI\KV\TxnOp
+     */
+    public function setKV(?KVTxnOp $KV): self
+    {
+        $this->KV = $KV;
+        return $this;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\KV\NodeTxnOp|null
+     */
+    public function getNode(): ?NodeTxnOp
+    {
+        return $this->Node;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\KV\NodeTxnOp|null $Node
+     * @return \DCarbone\PHPConsulAPI\KV\TxnOp
+     */
+    public function setNode(?NodeTxnOp $Node): self
+    {
+        $this->Node = $Node;
+        return $this;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\KV\ServiceTxnOp|null
+     */
+    public function getService(): ?ServiceTxnOp
+    {
+        return $this->Service;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\KV\ServiceTxnOp|null $Service
+     * @return \DCarbone\PHPConsulAPI\KV\TxnOp
+     */
+    public function setService(?ServiceTxnOp $Service): self
+    {
+        $this->Service = $Service;
+        return $this;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\KV\CheckTxnOp|null
+     */
+    public function getCheck(): ?CheckTxnOp
+    {
+        return $this->Check;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\KV\CheckTxnOp|null $Check
+     * @return \DCarbone\PHPConsulAPI\KV\TxnOp
+     */
+    public function setCheck(?CheckTxnOp $Check): self
+    {
+        $this->Check = $Check;
+        return $this;
     }
 }

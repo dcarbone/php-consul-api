@@ -86,6 +86,7 @@ class ACLClient extends AbstractClient
      * @param string $id
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\ACL\ACLEntriesResponse
      */
     public function Info(string $id, ?QueryOptions $opts = null): ACLEntriesResponse
@@ -99,6 +100,7 @@ class ACLClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\ACL\ACLEntriesResponse
      */
     public function List(?QueryOptions $opts = null): ACLEntriesResponse
@@ -112,6 +114,7 @@ class ACLClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\ACL\ACLReplicationStatusResponse
      */
     public function Replication(?QueryOptions $opts = null): ACLReplicationStatusResponse

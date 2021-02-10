@@ -31,6 +31,7 @@ class StatusClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\ValuedStringResponse
      */
     public function LeaderWithQueryOptions(?QueryOptions $opts): ValuedStringResponse
@@ -53,6 +54,7 @@ class StatusClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\ValuedStringsResponse
      */
     public function PeersWithQueryOptions(?QueryOptions $opts): ValuedStringsResponse

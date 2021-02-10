@@ -33,6 +33,7 @@ class RaftConfiguration extends AbstractModel
             Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
         ],
     ];
+
     private const FIELD_SERVERS = 'Servers';
 
     /** @var \DCarbone\PHPConsulAPI\Operator\RaftServer[] */
@@ -49,25 +50,12 @@ class RaftConfiguration extends AbstractModel
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Operator\RaftServer[] $servers
+     * @param \DCarbone\PHPConsulAPI\Operator\RaftServer[] $Servers
      * @return \DCarbone\PHPConsulAPI\Operator\RaftConfiguration
      */
-    public function setServers(array $servers): self
+    public function setServers(array $Servers): self
     {
-        $this->Servers = [];
-        foreach ($servers as $Server) {
-            $this->addServer($Server);
-        }
-        return $this;
-    }
-
-    /**
-     * @param \DCarbone\PHPConsulAPI\Operator\RaftServer $server
-     * @return \DCarbone\PHPConsulAPI\Operator\RaftConfiguration
-     */
-    public function addServer(RaftServer $server): self
-    {
-        $this->Servers[] = $server;
+        $this->Servers = $Servers;
         return $this;
     }
 
@@ -80,12 +68,12 @@ class RaftConfiguration extends AbstractModel
     }
 
     /**
-     * @param int $index
+     * @param int $Index
      * @return \DCarbone\PHPConsulAPI\Operator\RaftConfiguration
      */
-    public function setIndex(int $index): self
+    public function setIndex(int $Index): self
     {
-        $this->Index = $index;
+        $this->Index = $Index;
         return $this;
     }
 }

@@ -19,12 +19,25 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class AutopilotZoneUpgradeVersions
  */
 class AutopilotZoneUpgradeVersions extends AbstractModel
 {
+    protected const FIELDS = [
+        self::FIELD_TARGET_VERSION_VOTERS     => Hydration::OMITEMPTY_STRING_ARRAY_FIELD,
+        self::FIELD_TARGET_VERSION_NON_VOTERS => Hydration::OMITEMPTY_STRING_ARRAY_FIELD,
+        self::FIELD_OTHER_VERSION_VOTERS      => Hydration::OMITEMPTY_STRING_ARRAY_FIELD,
+        self::FIELD_OTHER_VERSION_NON_VOTERS  => Hydration::OMITEMPTY_STRING_ARRAY_FIELD,
+    ];
+
+    private const FIELD_TARGET_VERSION_VOTERS     = 'TargetVersionVoters';
+    private const FIELD_TARGET_VERSION_NON_VOTERS = 'TargetVersionNonVoters';
+    private const FIELD_OTHER_VERSION_VOTERS      = 'OtherVersionVoters';
+    private const FIELD_OTHER_VERSION_NON_VOTERS  = 'OtherVersionNonVoters';
+
     /** @var string[] */
     public array $TargetVersionVoters = [];
     /** @var string[] */
@@ -43,11 +56,31 @@ class AutopilotZoneUpgradeVersions extends AbstractModel
     }
 
     /**
+     * @param string[] $TargetVersionVoters
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotZoneUpgradeVersions
+     */
+    public function setTargetVersionVoters(array $TargetVersionVoters): self
+    {
+        $this->TargetVersionVoters = $TargetVersionVoters;
+        return $this;
+    }
+
+    /**
      * @return string[]
      */
     public function getTargetVersionNonVoters(): array
     {
         return $this->TargetVersionNonVoters;
+    }
+
+    /**
+     * @param string[] $TargetVersionNonVoters
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotZoneUpgradeVersions
+     */
+    public function setTargetVersionNonVoters(array $TargetVersionNonVoters): self
+    {
+        $this->TargetVersionNonVoters = $TargetVersionNonVoters;
+        return $this;
     }
 
     /**
@@ -59,10 +92,30 @@ class AutopilotZoneUpgradeVersions extends AbstractModel
     }
 
     /**
+     * @param string[] $OtherVersionVoters
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotZoneUpgradeVersions
+     */
+    public function setOtherVersionVoters(array $OtherVersionVoters): self
+    {
+        $this->OtherVersionVoters = $OtherVersionVoters;
+        return $this;
+    }
+
+    /**
      * @return string[]
      */
     public function getOtherVersionNonVoters(): array
     {
         return $this->OtherVersionNonVoters;
+    }
+
+    /**
+     * @param string[] $OtherVersionNonVoters
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotZoneUpgradeVersions
+     */
+    public function setOtherVersionNonVoters(array $OtherVersionNonVoters): self
+    {
+        $this->OtherVersionNonVoters = $OtherVersionNonVoters;
+        return $this;
     }
 }

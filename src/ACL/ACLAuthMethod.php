@@ -28,50 +28,41 @@ use DCarbone\PHPConsulAPI\Hydration;
 class ACLAuthMethod extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_DISPLAY_NAME    => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_DESCRIPTION     => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
+        self::FIELD_DISPLAY_NAME    => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_DESCRIPTION     => Hydration::OMITEMPTY_STRING_FIELD,
         self::FIELD_MAX_TOKEN_TTL   => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
+            Hydration::FIELD_CALLBACK  => Hydration::HYDRATE_DURATION,
+            Hydration::FIELD_OMITEMPTY => true,
         ],
-        self::FIELD_TOKEN_LOCALITY  => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
+        self::FIELD_TOKEN_LOCALITY  => Hydration::OMITEMPTY_STRING_FIELD,
         self::FIELD_NAMESPACE_RULES => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_CLASS      => ACLAuthMethodNamespaceRule::class,
             Hydration::FIELD_ARRAY_TYPE => Hydration::class,
+            Hydration::FIELD_OMITEMPTY  => true,
         ],
-        self::FIELD_NAMESPACE       => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
+        self::FIELD_NAMESPACE       => Hydration::OMITEMPTY_STRING_FIELD,
     ];
-    private const  FIELD_DISPLAY_NAME    = 'DisplayName';
-    private const  FIELD_DESCRIPTION     = 'Description';
-    private const  FIELD_MAX_TOKEN_TTL   = 'MaxTokenTTL';
-    private const  FIELD_TOKEN_LOCALITY  = 'TokenLocality';
-    private const  FIELD_NAMESPACE_RULES = 'NamespaceRules';
-    private const  FIELD_NAMESPACE       = 'Namespace';
+
+    private const FIELD_DISPLAY_NAME    = 'DisplayName';
+    private const FIELD_DESCRIPTION     = 'Description';
+    private const FIELD_MAX_TOKEN_TTL   = 'MaxTokenTTL';
+    private const FIELD_TOKEN_LOCALITY  = 'TokenLocality';
+    private const FIELD_NAMESPACE_RULES = 'NamespaceRules';
+    private const FIELD_NAMESPACE       = 'Namespace';
 
     /** @var string */
     public string $Name = '';
     /** @var string */
     public string $Type = '';
-    /** @var string|null */
-    public ?string $DisplayName = null;
-    /** @var string|null */
-    public ?string $Description = null;
+    /** @var string */
+    public string $DisplayName = '';
+    /** @var string */
+    public string $Description = '';
     /** @var \DCarbone\Go\Time\Duration */
     public Time\Duration $MaxTokenTTL;
-    /** @var string|null */
-    public ?string $TokenLocality = null;
+    /** @var string */
+    public string $TokenLocality = '';
     /** @var array */
     public array $config = [];
     /** @var int */
@@ -80,8 +71,8 @@ class ACLAuthMethod extends AbstractModel
     public int $ModifyIndex = 0;
     /** @var \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodNamespaceRule[] */
     public array $NamespaceRules = [];
-    /** @var string|null */
-    public ?string $Namespace = null;
+    /** @var string */
+    public string $Namespace = '';
 
     /**
      * ACLAuthMethod constructor.
@@ -132,36 +123,36 @@ class ACLAuthMethod extends AbstractModel
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getDisplayName(): ?string
+    public function getDisplayName(): string
     {
         return $this->DisplayName;
     }
 
     /**
-     * @param string|null $DisplayName
+     * @param string $DisplayName
      * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethod
      */
-    public function setDisplayName(?string $DisplayName): self
+    public function setDisplayName(string $DisplayName): self
     {
         $this->DisplayName = $DisplayName;
         return $this;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getDescription(): ?string
+    public function getDescription(): string
     {
         return $this->Description;
     }
 
     /**
-     * @param string|null $Description
+     * @param string $Description
      * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethod
      */
-    public function setDescription(?string $Description): self
+    public function setDescription(string $Description): self
     {
         $this->Description = $Description;
         return $this;
@@ -186,18 +177,18 @@ class ACLAuthMethod extends AbstractModel
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getTokenLocality(): ?string
+    public function getTokenLocality(): string
     {
         return $this->TokenLocality;
     }
 
     /**
-     * @param string|null $TokenLocality
+     * @param string $TokenLocality
      * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethod
      */
-    public function setTokenLocality(?string $TokenLocality): self
+    public function setTokenLocality(string $TokenLocality): self
     {
         $this->TokenLocality = $TokenLocality;
         return $this;
@@ -276,18 +267,18 @@ class ACLAuthMethod extends AbstractModel
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getNamespace(): ?string
+    public function getNamespace(): string
     {
         return $this->Namespace;
     }
 
     /**
-     * @param string|null $Namespace
+     * @param string $Namespace
      * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethod
      */
-    public function setNamespace(?string $Namespace): self
+    public function setNamespace(string $Namespace): self
     {
         $this->Namespace = $Namespace;
         return $this;

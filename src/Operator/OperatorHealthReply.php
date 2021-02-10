@@ -33,6 +33,7 @@ class OperatorHealthReply extends AbstractModel
             Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
         ],
     ];
+
     private const FIELD_SERVERS = 'Servers';
 
     /** @var bool */
@@ -51,6 +52,16 @@ class OperatorHealthReply extends AbstractModel
     }
 
     /**
+     * @param bool $Healthy
+     * @return \DCarbone\PHPConsulAPI\Operator\OperatorHealthReply
+     */
+    public function setHealthy(bool $Healthy): self
+    {
+        $this->Healthy = $Healthy;
+        return $this;
+    }
+
+    /**
      * @return int
      */
     public function getFailureTolerance(): int
@@ -59,10 +70,30 @@ class OperatorHealthReply extends AbstractModel
     }
 
     /**
+     * @param int $FailureTolerance
+     * @return \DCarbone\PHPConsulAPI\Operator\OperatorHealthReply
+     */
+    public function setFailureTolerance(int $FailureTolerance): self
+    {
+        $this->FailureTolerance = $FailureTolerance;
+        return $this;
+    }
+
+    /**
      * @return \DCarbone\PHPConsulAPI\Operator\ServerHealth[]
      */
     public function getServers(): array
     {
         return $this->Servers;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Operator\ServerHealth[] $Servers
+     * @return \DCarbone\PHPConsulAPI\Operator\OperatorHealthReply
+     */
+    public function setServers(array $Servers): self
+    {
+        $this->Servers = $Servers;
+        return $this;
     }
 }

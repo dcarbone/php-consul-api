@@ -29,12 +29,13 @@ class ACLReplicationStatus extends AbstractModel
 {
     protected const FIELDS = [
         self::FIELD_LAST_SUCCESS => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_TIME,
+            Hydration::FIELD_CALLBACK => Hydration::HYDRATE_TIME,
         ],
         self::FIELD_LAST_ERROR   => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_TIME,
+            Hydration::FIELD_CALLBACK => Hydration::HYDRATE_TIME,
         ],
     ];
+
     private const FIELD_LAST_SUCCESS = 'LastSuccess';
     private const FIELD_LAST_ERROR   = 'LastError';
 

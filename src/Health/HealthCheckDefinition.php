@@ -31,13 +31,16 @@ class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
 {
     protected const FIELDS = [
         self::FIELD_INTERVAL_DURATION                          => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
+            Hydration::FIELD_CALLBACK => Hydration::HYDRATE_DURATION,
+            Hydration::FIELD_SKIP     => true,
         ],
         self::FIELD_TIMEOUT_DURATION                           => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
+            Hydration::FIELD_CALLBACK => Hydration::HYDRATE_DURATION,
+            Hydration::FIELD_SKIP     => true,
         ],
         self::FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER_DURATION => [
-            Hydration::FIELD_CALLBACK => Hydration::CALLABLE_HYDRATE_DURATION,
+            Hydration::FIELD_CALLBACK => Hydration::HYDRATE_DURATION,
+            Hydration::FIELD_SKIP     => true,
         ],
         self::FIELD_TIMEOUT                                    => [
             Hydration::FIELD_CALLBACK => [ReadableDuration::class, 'hydrate'],
@@ -49,6 +52,13 @@ class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
             Hydration::FIELD_CALLBACK => [ReadableDuration::class, 'hydrate'],
         ],
     ];
+
+    private const FIELD_HTTP                                       = 'HTTP';
+    private const FIELD_HEADER                                     = 'Header';
+    private const FIELD_METHOD                                     = 'Method';
+    private const FIELD_BODY                                       = 'Body';
+    private const FIELD_TLS_SKIP_VERIFY                            = 'TLSSkipVerify';
+    private const FIELD_TCP                                        = 'TCP';
     private const FIELD_INTERVAL_DURATION                          = 'IntervalDuration';
     private const FIELD_TIMEOUT_DURATION                           = 'TimeoutDuration';
     private const FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER_DURATION = 'DeregisterCriticalServiceAfterDuration';
@@ -62,6 +72,8 @@ class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
     public array $Header = [];
     /** @var string */
     public string $Method = '';
+    /** @var string */
+    public string $Body = '';
     /** @var bool */
     public bool $TLSSkipVerify = false;
     /** @var string */
@@ -91,7 +103,7 @@ class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
 
     /**
      * HealthCheckDefinition constructor.
-     * @param array $data
+     * @param array|null $data
      */
     public function __construct(?array $data = null)
     {
@@ -107,22 +119,22 @@ class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
         }
 
         if (!isset($this->IntervalDuration)) {
-            $this->IntervalDuration = Time::ParseDuration((string) $this->Interval);
+            $this->IntervalDuration = Time::ParseDuration((string)$this->Interval);
         } else {
-            $this->Interval = ReadableDuration::fromDuration((string) $this->IntervalDuration);
+            $this->Interval = ReadableDuration::fromDuration((string)$this->IntervalDuration);
         }
         if (null === $this->TimeoutDuration) {
-            $this->TimeoutDuration = Time::ParseDuration((string) $this->Timeout);
+            $this->TimeoutDuration = Time::ParseDuration((string)$this->Timeout);
         } else {
-            $this->Timeout = ReadableDuration::fromDuration((string) $this->TimeoutDuration);
+            $this->Timeout = ReadableDuration::fromDuration((string)$this->TimeoutDuration);
         }
         if (null === $this->DeregisterCriticalServiceAfterDuration) {
             $this->DeregisterCriticalServiceAfterDuration = Time::ParseDuration(
-                (string) $this->DeregisterCriticalServiceAfter
+                (string)$this->DeregisterCriticalServiceAfter
             );
         } else {
             $this->DeregisterCriticalServiceAfter = ReadableDuration::fromDuration(
-                (string) $this->DeregisterCriticalServiceAfterDuration
+                (string)$this->DeregisterCriticalServiceAfterDuration
             );
         }
     }
@@ -149,6 +161,24 @@ class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
     public function getMethod(): string
     {
         return $this->Method;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBody(): string
+    {
+        return $this->Body;
+    }
+
+    /**
+     * @param string $Body
+     * @return \DCarbone\PHPConsulAPI\Health\HealthCheckDefinition
+     */
+    public function setBody(string $Body): self
+    {
+        $this->Body = $Body;
+        return $this;
     }
 
     /**
@@ -217,29 +247,38 @@ class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
 
     public function jsonSerialize(): array
     {
-        $out = [
-            'HTTP'          => $this->HTTP,
-            'Header'        => $this->Header,
-            'Method'        => $this->Method,
-            'TLSSkipVerify' => $this->TLSSkipVerify,
-            'TCP'           => $this->TCP,
+        // prepare base definition
+        $prep = [
+            self::FIELD_HTTP            => $this->HTTP,
+            self::FIELD_HEADER          => $this->Header,
+            self::FIELD_METHOD          => $this->Method,
+            self::FIELD_BODY            => $this->Body,
+            self::FIELD_TLS_SKIP_VERIFY => $this->TLSSkipVerify,
+            self::FIELD_TCP             => $this->TCP,
 
         ];
         if (0 !== $this->IntervalDuration->Nanoseconds()) {
-            $out[self::FIELD_INTERVAL] = (string) $this->IntervalDuration;
+            $prep[self::FIELD_INTERVAL] = (string)$this->IntervalDuration;
         } elseif (0 !== $this->Interval->Nanoseconds()) {
-            $out[self::FIELD_INTERVAL] = (string) $this->Interval;
+            $prep[self::FIELD_INTERVAL] = (string)$this->Interval;
         }
         if (0 !== $this->TimeoutDuration->Nanoseconds()) {
-            $out[self::FIELD_TIMEOUT] = (string) $this->TimeoutDuration;
+            $prep[self::FIELD_TIMEOUT] = (string)$this->TimeoutDuration;
         } elseif (0 !== $this->Timeout->Nanoseconds()) {
-            $out[self::FIELD_TIMEOUT] = (string) $this->Timeout;
+            $prep[self::FIELD_TIMEOUT] = (string)$this->Timeout;
         }
         if (0 !== $this->DeregisterCriticalServiceAfterDuration->Nanoseconds()) {
-            $out[self::FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER] = (string) $this->DeregisterCriticalServiceAfterDuration;
+            $prep[self::FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER] = (string)$this->DeregisterCriticalServiceAfterDuration;
         } elseif (0 !== $this->DeregisterCriticalServiceAfter->Nanoseconds()) {
-            $out[self::FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER] = (string) $this->DeregisterCriticalServiceAfter;
+            $prep[self::FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER] = (string)$this->DeregisterCriticalServiceAfter;
         }
+
+        // handle per-field marshalling
+        $out = [];
+        foreach ($prep as $field => $value) {
+            $this->marshalField($out, $field, $value);
+        }
+
         return $out;
     }
 }

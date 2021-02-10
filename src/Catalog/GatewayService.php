@@ -27,17 +27,38 @@ use DCarbone\PHPConsulAPI\Hydration;
 class GatewayService extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_GATEWAY => [
+        self::FIELD_GATEWAY  => [
             Hydration::FIELD_TYPE  => Hydration::OBJECT,
             Hydration::FIELD_CLASS => CompoundServiceName::class,
         ],
-        self::FIELD_SERVICE => [
+        self::FIELD_SERVICE  => [
             Hydration::FIELD_TYPE  => Hydration::OBJECT,
             Hydration::FIELD_CLASS => CompoundServiceName::class,
         ],
+        self::FIELD_PORT     => Hydration::OMITEMPTY_INTEGER_FIELD,
+        self::FIELD_PROTOCOL => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_HOSTS    => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::STRING,
+            Hydration::FIELD_OMITEMPTY  => true,
+        ],
+        self::FIELD_CA_FILE      => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_CERT_FILE    => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_KEY_FILE     => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_SNI          => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_FROM_WILDCARD=> Hydration::OMITEMPTY_BOOLEAN_FIELD,
     ];
-    private const FIELD_GATEWAY = 'Gateway';
-    private const FIELD_SERVICE = 'Service';
+
+    private const FIELD_GATEWAY       = 'Gateway';
+    private const FIELD_SERVICE       = 'Service';
+    private const FIELD_PORT          = 'Port';
+    private const FIELD_PROTOCOL      = 'Protocol';
+    private const FIELD_HOSTS         = 'Hosts';
+    private const FIELD_CA_FILE       = 'CAFile';
+    private const FIELD_CERT_FILE     = 'CertFile';
+    private const FIELD_KEY_FILE      = 'KeyFile';
+    private const FIELD_SNI           = 'SNI';
+    private const FIELD_FROM_WILDCARD = 'FromWildcard';
 
     /** @var \DCarbone\PHPConsulAPI\Catalog\CompoundServiceName */
     public CompoundServiceName $Gateway;
@@ -86,11 +107,31 @@ class GatewayService extends AbstractModel
     }
 
     /**
+     * @param \DCarbone\PHPConsulAPI\Catalog\CompoundServiceName $Gateway
+     * @return \DCarbone\PHPConsulAPI\Catalog\GatewayService
+     */
+    public function setGateway(CompoundServiceName $Gateway): self
+    {
+        $this->Gateway = $Gateway;
+        return $this;
+    }
+
+    /**
      * @return \DCarbone\PHPConsulAPI\Catalog\CompoundServiceName
      */
     public function getService(): CompoundServiceName
     {
         return $this->Service;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Catalog\CompoundServiceName $Service
+     * @return \DCarbone\PHPConsulAPI\Catalog\GatewayService
+     */
+    public function setService(CompoundServiceName $Service): self
+    {
+        $this->Service = $Service;
+        return $this;
     }
 
     /**
@@ -102,11 +143,31 @@ class GatewayService extends AbstractModel
     }
 
     /**
+     * @param string $GatewayKind
+     * @return \DCarbone\PHPConsulAPI\Catalog\GatewayService
+     */
+    public function setGatewayKind(string $GatewayKind): self
+    {
+        $this->GatewayKind = $GatewayKind;
+        return $this;
+    }
+
+    /**
      * @return int
      */
     public function getPort(): int
     {
         return $this->Port;
+    }
+
+    /**
+     * @param int $Port
+     * @return \DCarbone\PHPConsulAPI\Catalog\GatewayService
+     */
+    public function setPort(int $Port): self
+    {
+        $this->Port = $Port;
+        return $this;
     }
 
     /**
@@ -118,11 +179,31 @@ class GatewayService extends AbstractModel
     }
 
     /**
-     * @return string[]|null
+     * @param string $Protocol
+     * @return \DCarbone\PHPConsulAPI\Catalog\GatewayService
      */
-    public function getHosts(): ?array
+    public function setProtocol(string $Protocol): self
+    {
+        $this->Protocol = $Protocol;
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getHosts(): array
     {
         return $this->Hosts;
+    }
+
+    /**
+     * @param string[] $Hosts
+     * @return \DCarbone\PHPConsulAPI\Catalog\GatewayService
+     */
+    public function setHosts(array $Hosts): self
+    {
+        $this->Hosts = $Hosts;
+        return $this;
     }
 
     /**
@@ -134,11 +215,31 @@ class GatewayService extends AbstractModel
     }
 
     /**
+     * @param string $CAFile
+     * @return \DCarbone\PHPConsulAPI\Catalog\GatewayService
+     */
+    public function setCAFile(string $CAFile): self
+    {
+        $this->CAFile = $CAFile;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getCertFile(): string
     {
         return $this->CertFile;
+    }
+
+    /**
+     * @param string $CertFile
+     * @return \DCarbone\PHPConsulAPI\Catalog\GatewayService
+     */
+    public function setCertFile(string $CertFile): self
+    {
+        $this->CertFile = $CertFile;
+        return $this;
     }
 
     /**
@@ -150,6 +251,16 @@ class GatewayService extends AbstractModel
     }
 
     /**
+     * @param string $KeyFile
+     * @return \DCarbone\PHPConsulAPI\Catalog\GatewayService
+     */
+    public function setKeyFile(string $KeyFile): self
+    {
+        $this->KeyFile = $KeyFile;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getSNI(): string
@@ -158,10 +269,30 @@ class GatewayService extends AbstractModel
     }
 
     /**
+     * @param string $SNI
+     * @return \DCarbone\PHPConsulAPI\Catalog\GatewayService
+     */
+    public function setSNI(string $SNI): self
+    {
+        $this->SNI = $SNI;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getFromWildCard(): string
     {
         return $this->FromWildCard;
+    }
+
+    /**
+     * @param string $FromWildCard
+     * @return \DCarbone\PHPConsulAPI\Catalog\GatewayService
+     */
+    public function setFromWildCard(string $FromWildCard): self
+    {
+        $this->FromWildCard = $FromWildCard;
+        return $this;
     }
 }

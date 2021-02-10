@@ -19,12 +19,19 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class ACLPolicyListEntry
  */
 class ACLPolicyListEntry extends AbstractModel
 {
+    protected const FIELDS = [
+        self::FIELD_NAMESPACE => Hydration::OMITEMPTY_STRING_FIELD,
+    ];
+
+    private const FIELD_NAMESPACE = 'Namespace';
+
     /** @var string */
     public string $ID = '';
     /** @var string */
@@ -39,8 +46,8 @@ class ACLPolicyListEntry extends AbstractModel
     public int $CreateIndex = 0;
     /** @var int */
     public int $ModifyIndex = 0;
-    /** @var string|null */
-    public ?string $Namespace = null;
+    /** @var string */
+    public string $Namespace = '';
 
     /**
      * @return string
@@ -48,6 +55,16 @@ class ACLPolicyListEntry extends AbstractModel
     public function getID(): string
     {
         return $this->ID;
+    }
+
+    /**
+     * @param string $ID
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLPolicyListEntry
+     */
+    public function setID(string $ID): self
+    {
+        $this->ID = $ID;
+        return $this;
     }
 
     /**
@@ -59,11 +76,31 @@ class ACLPolicyListEntry extends AbstractModel
     }
 
     /**
+     * @param string $Name
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLPolicyListEntry
+     */
+    public function setName(string $Name): self
+    {
+        $this->Name = $Name;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getDescription(): string
     {
         return $this->Description;
+    }
+
+    /**
+     * @param string $Description
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLPolicyListEntry
+     */
+    public function setDescription(string $Description): self
+    {
+        $this->Description = $Description;
+        return $this;
     }
 
     /**
@@ -75,11 +112,31 @@ class ACLPolicyListEntry extends AbstractModel
     }
 
     /**
+     * @param array $Datacenters
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLPolicyListEntry
+     */
+    public function setDatacenters(array $Datacenters): self
+    {
+        $this->Datacenters = $Datacenters;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getHash(): string
     {
         return $this->Hash;
+    }
+
+    /**
+     * @param string $Hash
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLPolicyListEntry
+     */
+    public function setHash(string $Hash): self
+    {
+        $this->Hash = $Hash;
+        return $this;
     }
 
     /**
@@ -91,6 +148,16 @@ class ACLPolicyListEntry extends AbstractModel
     }
 
     /**
+     * @param int $CreateIndex
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLPolicyListEntry
+     */
+    public function setCreateIndex(int $CreateIndex): self
+    {
+        $this->CreateIndex = $CreateIndex;
+        return $this;
+    }
+
+    /**
      * @return int
      */
     public function getModifyIndex(): int
@@ -99,10 +166,30 @@ class ACLPolicyListEntry extends AbstractModel
     }
 
     /**
-     * @return string|null
+     * @param int $ModifyIndex
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLPolicyListEntry
      */
-    public function getNamespace(): ?string
+    public function setModifyIndex(int $ModifyIndex): self
+    {
+        $this->ModifyIndex = $ModifyIndex;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNamespace(): string
     {
         return $this->Namespace;
+    }
+
+    /**
+     * @param string $Namespace
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLPolicyListEntry
+     */
+    public function setNamespace(string $Namespace): self
+    {
+        $this->Namespace = $Namespace;
+        return $this;
     }
 }

@@ -31,33 +31,20 @@ class AgentService extends AbstractModel
     use HasStringTags;
 
     protected const FIELDS = [
-        self::FIELD_KIND             => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
+        self::FIELD_KIND             => Hydration::OMITEMPTY_STRING_FIELD,
         self::FIELD_TAGGED_ADDRESSES => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_CLASS      => ServiceAddress::class,
             Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
-            Hydration::FIELD_NULLABLE   => true,
+            Hydration::FIELD_OMITEMPTY  => true,
         ],
         self::FIELD_WEIGHTS          => [
             Hydration::FIELD_TYPE     => Hydration::OBJECT,
             Hydration::FIELD_CLASS    => AgentWeights::class,
-            Hydration::FIELD_NULLABLE => false,
         ],
-        self::FIELD_CREATE_INDEX     => [
-            Hydration::FIELD_TYPE     => Hydration::INTEGER,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_MODIFY_INDEX     => [
-            Hydration::FIELD_TYPE     => Hydration::INTEGER,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_CONTENT_HASH     => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
+        self::FIELD_CREATE_INDEX     => Hydration::OMITEMPTY_INTEGER_FIELD,
+        self::FIELD_MODIFY_INDEX     => Hydration::OMITEMPTY_INTEGER_FIELD,
+        self::FIELD_CONTENT_HASH     => Hydration::OMITEMPTY_STRING_FIELD,
         self::FIELD_PROXY            => [
             Hydration::FIELD_TYPE     => Hydration::OBJECT,
             Hydration::FIELD_CLASS    => AgentServiceConnectProxyConfig::class,
@@ -68,14 +55,8 @@ class AgentService extends AbstractModel
             Hydration::FIELD_CLASS    => AgentServiceConnect::class,
             Hydration::FIELD_NULLABLE => true,
         ],
-        self::FIELD_NAMESPACE        => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_DATACENTER       => [
-            Hydration::FIELD_TYPE     => Hydration::STRING,
-            Hydration::FIELD_NULLABLE => true,
-        ],
+        self::FIELD_NAMESPACE        => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_DATACENTER       => Hydration::OMITEMPTY_STRING_FIELD,
     ];
 
     private const FIELD_KIND             = 'Kind';
@@ -89,8 +70,8 @@ class AgentService extends AbstractModel
     private const FIELD_NAMESPACE        = 'Namespace';
     private const FIELD_DATACENTER       = 'Datacenter';
 
-    /** @var string|null */
-    public ?string $Kind = null;
+    /** @var string */
+    public string $Kind = '';
     /** @var string */
     public string $ID = '';
     /** @var string */
@@ -101,26 +82,26 @@ class AgentService extends AbstractModel
     public int $Port = 0;
     /** @var string */
     public string $Address = '';
-    /** @var \DCarbone\PHPConsulAPI\Catalog\ServiceAddress[]|null */
-    public ?array $TaggedAddresses = null;
+    /** @var \DCarbone\PHPConsulAPI\Catalog\ServiceAddress[] */
+    public array $TaggedAddresses = [];
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentWeights */
     public AgentWeights $Weights;
     /** @var bool */
     public bool $EnableTagOverride = false;
-    /** @var int|null */
-    public ?int $CreateIndex = null;
-    /** @var int|null */
-    public ?int $ModifyIndex = null;
-    /** @var string|null */
-    public ?string $ContentHash = null;
+    /** @var int */
+    public int $CreateIndex = 0;
+    /** @var int */
+    public int $ModifyIndex = 0;
+    /** @var string */
+    public string $ContentHash = '';
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentServiceConnectProxyConfig|null */
     public ?AgentServiceConnectProxyConfig $Proxy = null;
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentServiceConnect|null */
     public ?AgentServiceConnect $Connect = null;
-    /** @var string|null */
-    public ?string $Namespace = null;
-    /** @var string|null */
-    public ?string $Datacenter = null;
+    /** @var string */
+    public string $Namespace = '';
+    /** @var string */
+    public string $Datacenter = '';
 
     /**
      * AgentService constructor.
@@ -135,18 +116,18 @@ class AgentService extends AbstractModel
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getKind(): ?string
+    public function getKind(): string
     {
         return $this->Kind;
     }
 
     /**
-     * @param string|null $Kind
+     * @param string $Kind
      * @return \DCarbone\PHPConsulAPI\Agent\AgentService
      */
-    public function setKind(?string $Kind): self
+    public function setKind(string $Kind): self
     {
         $this->Kind = $Kind;
         return $this;
@@ -243,18 +224,18 @@ class AgentService extends AbstractModel
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Catalog\ServiceAddress[]|null
+     * @return \DCarbone\PHPConsulAPI\Catalog\ServiceAddress[]
      */
-    public function getTaggedAddresses(): ?array
+    public function getTaggedAddresses(): array
     {
         return $this->TaggedAddresses;
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Catalog\ServiceAddress[]|null $TaggedAddresses
+     * @param \DCarbone\PHPConsulAPI\Catalog\ServiceAddress[] $TaggedAddresses
      * @return \DCarbone\PHPConsulAPI\Agent\AgentService
      */
-    public function setTaggedAddresses(?array $TaggedAddresses): self
+    public function setTaggedAddresses(array $TaggedAddresses): self
     {
         $this->TaggedAddresses = $TaggedAddresses;
         return $this;
@@ -297,54 +278,54 @@ class AgentService extends AbstractModel
     }
 
     /**
-     * @return int|null
+     * @return int
      */
-    public function getCreateIndex(): ?int
+    public function getCreateIndex(): int
     {
         return $this->CreateIndex;
     }
 
     /**
-     * @param int|null $CreateIndex
+     * @param int $CreateIndex
      * @return \DCarbone\PHPConsulAPI\Agent\AgentService
      */
-    public function setCreateIndex(?int $CreateIndex): self
+    public function setCreateIndex(int $CreateIndex): self
     {
         $this->CreateIndex = $CreateIndex;
         return $this;
     }
 
     /**
-     * @return int|null
+     * @return int
      */
-    public function getModifyIndex(): ?int
+    public function getModifyIndex(): int
     {
         return $this->ModifyIndex;
     }
 
     /**
-     * @param int|null $ModifyIndex
+     * @param int $ModifyIndex
      * @return \DCarbone\PHPConsulAPI\Agent\AgentService
      */
-    public function setModifyIndex(?int $ModifyIndex): self
+    public function setModifyIndex(int $ModifyIndex): self
     {
         $this->ModifyIndex = $ModifyIndex;
         return $this;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getContentHash(): ?string
+    public function getContentHash(): string
     {
         return $this->ContentHash;
     }
 
     /**
-     * @param string|null $ContentHash
+     * @param string $ContentHash
      * @return \DCarbone\PHPConsulAPI\Agent\AgentService
      */
-    public function setContentHash(?string $ContentHash): self
+    public function setContentHash(string $ContentHash): self
     {
         $this->ContentHash = $ContentHash;
         return $this;
@@ -387,45 +368,38 @@ class AgentService extends AbstractModel
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getNamespace(): ?string
+    public function getNamespace(): string
     {
         return $this->Namespace;
     }
 
     /**
-     * @param string|null $Namespace
+     * @param string $Namespace
      * @return \DCarbone\PHPConsulAPI\Agent\AgentService
      */
-    public function setNamespace(?string $Namespace): self
+    public function setNamespace(string $Namespace): self
     {
         $this->Namespace = $Namespace;
         return $this;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getDatacenter(): ?string
+    public function getDatacenter(): string
     {
         return $this->Datacenter;
     }
 
     /**
-     * @param string|null $Datacenter
+     * @param string $Datacenter
      * @return \DCarbone\PHPConsulAPI\Agent\AgentService
      */
-    public function setDatacenter(?string $Datacenter): self
+    public function setDatacenter(string $Datacenter): self
     {
         $this->Datacenter = $Datacenter;
         return $this;
-    }
-    /**
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return $this->ID;
     }
 }

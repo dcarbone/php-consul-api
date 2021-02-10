@@ -27,13 +27,28 @@ use DCarbone\PHPConsulAPI\Hydration;
 class AutopilotUpgrade extends AbstractModel
 {
     protected const FIELDS = [
+        self::FIELD_TARGET_VERSION               => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_TARGET_VERSION_VOTERS        => Hydration::OMITEMPTY_STRING_ARRAY_FIELD,
+        self::FIELD_TARGET_VERSION_NON_VOTERS    => Hydration::OMITEMPTY_STRING_ARRAY_FIELD,
+        self::FIELD_TARGET_VERSION_READ_REPLICAS => Hydration::OMITEMPTY_STRING_ARRAY_FIELD,
+        self::FIELD_OTHER_VERSION_VOTERS         => Hydration::OMITEMPTY_STRING_ARRAY_FIELD,
+        self::FIELD_OTHER_VERSION_NON_VOTERS     => Hydration::OMITEMPTY_STRING_ARRAY_FIELD,
+        self::FIELD_OTHER_VERSION_READ_REPLICAS  => Hydration::OMITEMPTY_STRING_ARRAY_FIELD,
         self::FIELD_REDUNDANCY_ZONES             => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_CLASS      => AutopilotZoneUpgradeVersions::class,
             Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
         ],
     ];
-    private const FIELD_REDUNDANCY_ZONES = 'RedundancyZones';
+
+    private const FIELD_TARGET_VERSION               = 'TargetVersion';
+    private const FIELD_TARGET_VERSION_VOTERS        = 'TargetVersionVoters';
+    private const FIELD_TARGET_VERSION_NON_VOTERS    = 'TargetVersionNonVoters';
+    private const FIELD_TARGET_VERSION_READ_REPLICAS = 'TargetVersionReadReplicas';
+    private const FIELD_OTHER_VERSION_VOTERS         = 'OtherVersionVoters';
+    private const FIELD_OTHER_VERSION_NON_VOTERS     = 'OtherVersionNonVoters';
+    private const FIELD_OTHER_VERSION_READ_REPLICAS  = 'OtherVersionReadReplicas';
+    private const FIELD_REDUNDANCY_ZONES             = 'RedundancyZones';
 
     /** @var string */
     public string $Status = '';
@@ -63,11 +78,31 @@ class AutopilotUpgrade extends AbstractModel
     }
 
     /**
+     * @param string $Status
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotUpgrade
+     */
+    public function setStatus(string $Status): self
+    {
+        $this->Status = $Status;
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getTargetVersion(): string
     {
         return $this->TargetVersion;
+    }
+
+    /**
+     * @param string $TargetVersion
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotUpgrade
+     */
+    public function setTargetVersion(string $TargetVersion): self
+    {
+        $this->TargetVersion = $TargetVersion;
+        return $this;
     }
 
     /**
@@ -79,11 +114,31 @@ class AutopilotUpgrade extends AbstractModel
     }
 
     /**
+     * @param string[] $TargetVersionVoters
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotUpgrade
+     */
+    public function setTargetVersionVoters(array $TargetVersionVoters): self
+    {
+        $this->TargetVersionVoters = $TargetVersionVoters;
+        return $this;
+    }
+
+    /**
      * @return string[]
      */
     public function getTargetVersionNonVoters(): array
     {
         return $this->TargetVersionNonVoters;
+    }
+
+    /**
+     * @param string[] $TargetVersionNonVoters
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotUpgrade
+     */
+    public function setTargetVersionNonVoters(array $TargetVersionNonVoters): self
+    {
+        $this->TargetVersionNonVoters = $TargetVersionNonVoters;
+        return $this;
     }
 
     /**
@@ -95,11 +150,31 @@ class AutopilotUpgrade extends AbstractModel
     }
 
     /**
+     * @param string[] $TargetVersionReadReplicas
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotUpgrade
+     */
+    public function setTargetVersionReadReplicas(array $TargetVersionReadReplicas): self
+    {
+        $this->TargetVersionReadReplicas = $TargetVersionReadReplicas;
+        return $this;
+    }
+
+    /**
      * @return string[]
      */
     public function getOtherVersionVoters(): array
     {
         return $this->OtherVersionVoters;
+    }
+
+    /**
+     * @param string[] $OtherVersionVoters
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotUpgrade
+     */
+    public function setOtherVersionVoters(array $OtherVersionVoters): self
+    {
+        $this->OtherVersionVoters = $OtherVersionVoters;
+        return $this;
     }
 
     /**
@@ -111,6 +186,16 @@ class AutopilotUpgrade extends AbstractModel
     }
 
     /**
+     * @param string[] $OtherVersionNonVoters
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotUpgrade
+     */
+    public function setOtherVersionNonVoters(array $OtherVersionNonVoters): self
+    {
+        $this->OtherVersionNonVoters = $OtherVersionNonVoters;
+        return $this;
+    }
+
+    /**
      * @return string[]
      */
     public function getOtherVersionReadReplicas(): array
@@ -119,10 +204,30 @@ class AutopilotUpgrade extends AbstractModel
     }
 
     /**
+     * @param string[] $OtherVersionReadReplicas
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotUpgrade
+     */
+    public function setOtherVersionReadReplicas(array $OtherVersionReadReplicas): self
+    {
+        $this->OtherVersionReadReplicas = $OtherVersionReadReplicas;
+        return $this;
+    }
+
+    /**
      * @return \DCarbone\PHPConsulAPI\Operator\AutopilotZoneUpgradeVersions[]
      */
     public function getRedundancyZones(): array
     {
         return $this->RedundancyZones;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Operator\AutopilotZoneUpgradeVersions[] $RedundancyZones
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotUpgrade
+     */
+    public function setRedundancyZones(array $RedundancyZones): self
+    {
+        $this->RedundancyZones = $RedundancyZones;
+        return $this;
     }
 }

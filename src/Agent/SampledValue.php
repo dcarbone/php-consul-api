@@ -37,6 +37,8 @@ class SampledValue extends AbstractModel
     public float $Max = 0.0;
     /** @var float */
     public float $Mean = 0.0;
+    /** @var float */
+    public float $Stddev = 0.0;
     /** @var array */
     public array $Labels = [];
 
@@ -145,6 +147,24 @@ class SampledValue extends AbstractModel
     public function setMean(float $mean): self
     {
         $this->Mean = $mean;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getStddev(): float
+    {
+        return $this->Stddev;
+    }
+
+    /**
+     * @param float $Stddev
+     * @return \DCarbone\PHPConsulAPI\Agent\SampledValue
+     */
+    public function setStddev(float $Stddev): self
+    {
+        $this->Stddev = $Stddev;
         return $this;
     }
 

@@ -41,6 +41,16 @@ class AutopilotZone extends AbstractModel
     }
 
     /**
+     * @param string[] $Servers
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotZone
+     */
+    public function setServers(array $Servers): self
+    {
+        $this->Servers = $Servers;
+        return $this;
+    }
+
+    /**
      * @return string[]
      */
     public function getVoters(): array
@@ -49,10 +59,30 @@ class AutopilotZone extends AbstractModel
     }
 
     /**
+     * @param string[] $Voters
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotZone
+     */
+    public function setVoters(array $Voters): self
+    {
+        $this->Voters = $Voters;
+        return $this;
+    }
+
+    /**
      * @return int
      */
     public function getFailureTolerance(): int
     {
         return $this->FailureTolerance;
+    }
+
+    /**
+     * @param int $FailureTolerance
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotZone
+     */
+    public function setFailureTolerance(int $FailureTolerance): self
+    {
+        $this->FailureTolerance = $FailureTolerance;
+        return $this;
     }
 }

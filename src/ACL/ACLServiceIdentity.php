@@ -19,12 +19,23 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class ACLServiceIdentity
  */
 class ACLServiceIdentity extends AbstractModel
 {
+    protected const FIELDS = [
+        self::FIELD_DATACENTERS => [
+            Hydration::FIELD_TYPE       => Hydration::ARRAY,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::STRING,
+            Hydration::FIELD_OMITEMPTY  => true,
+        ],
+    ];
+
+    private const FIELD_DATACENTERS = 'Datacenters';
+
     /** @var string */
     public string $ServiceName = '';
     /** @var array */

@@ -18,30 +18,31 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedResponse;
-use DCarbone\PHPConsulAPI\HydratedResponseInterface;
+use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
- * Class AgentSelfResponse
+ * Class AgentToken
  */
-class AgentSelfResponse extends AbstractValuedResponse implements HydratedResponseInterface
+class AgentToken extends AbstractModel
 {
-    /** @var array|null */
-    public ?array $AgentConfig = null;
+    /** @var string */
+    public string $Token = '';
 
     /**
-     * @return array|null
+     * @return string
      */
-    public function getValue()
+    public function getToken(): string
     {
-        return $this->AgentConfig;
+        return $this->Token;
     }
 
     /**
-     * @param mixed $decodedData
+     * @param string $Token
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentToken
      */
-    public function hydrateValue($decodedData): void
+    public function setToken(string $Token): self
     {
-        $this->AgentConfig = $decodedData;
+        $this->Token = $Token;
+        return $this;
     }
 }

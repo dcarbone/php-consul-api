@@ -18,8 +18,11 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
+use DCarbone\Go\Time;
+use DCarbone\PHPConsulAPI\Event\UserEvent;
 use DCarbone\PHPConsulAPI\KV\KVPair;
 use DCarbone\PHPConsulAPI\KV\KVTxnOp;
+use DCarbone\PHPConsulAPI\Operator\ReadableDuration;
 
 /**
  * Used to assist with hydrating json responses
@@ -28,6 +31,119 @@ use DCarbone\PHPConsulAPI\KV\KVTxnOp;
  */
 trait Hydratable
 {
+    /**
+     * Marshal field is designed to replicate (to ao point) what Golang does during the json.Marshal call
+     *
+     * @param array $output
+     * @param string $field
+     * @param mixed $value
+     */
+    protected function marshalField(array &$output, string $field, $value): void
+    {
+        $def = static::FIELDS[$field] ?? null;
+
+        // if this field has no special handling, set as-is and move on.
+        if (null === $def) {
+            $output[$field] = $value;
+            return;
+        }
+
+        // if this field is marked as being "skipped", do not set, then move on.
+        if (isset($def[Hydration::FIELD_SKIP]) && true === $def[Hydration::FIELD_SKIP]) {
+            return;
+        }
+
+        // if this field is not explicitly marked as "omitempty", set and move on.
+        if (!isset($def[Hydration::FIELD_OMITEMPTY]) || true !== $def[Hydration::FIELD_OMITEMPTY]) {
+            $output[$field] = $value;
+            return;
+        }
+
+        // otherwise, handle value setting on a per-type basis
+
+        $type = \gettype($value);
+
+        // strings must be non empty
+        if (Hydration::STRING === $type) {
+            if ('' !== $value) {
+                $output[$field] = $value;
+            }
+            return;
+        }
+
+        // integers must be non-zero (negatives are ok)
+        if (Hydration::INTEGER === $type) {
+            if (0 !== $value) {
+                $output[$field] = $value;
+            }
+            return;
+        }
+
+        // floats must be non-zero (negatives are ok)
+        if (Hydration::DOUBLE === $type) {
+            if (0.0 !== $value) {
+                $output[$field] = $value;
+            }
+            return;
+        }
+
+        // bools must be true
+        if (Hydration::BOOLEAN === $type) {
+            if ($value) {
+                $output[$field] = $value;
+            }
+            return;
+        }
+
+        // object "non-zero" calculations require a bit more finesse...
+        if (Hydration::OBJECT === $type) {
+            // AbstractModels are collections, and are non-zero if they contain at least 1 entry
+            if ($value instanceof AbstractModels) {
+                if (0 < \count($value)) {
+                    $output[$field] = $value;
+                }
+                return;
+            }
+
+            // Time\Duration types are non-zero if their internal value is > 0
+            if ($value instanceof Time\Duration || $value instanceof ReadableDuration) {
+                if (0 < $value->Nanoseconds()) {
+                    $output[$field] = $value;
+                }
+                return;
+            }
+
+            // Time\Time values are non-zero if they are anything greater than epoch
+            if ($value instanceof Time\Time) {
+                if (!$value->IsZero()) {
+                    $output[$field] = $value;
+                }
+                return;
+            }
+
+            // otherwise, by being defined it is non-zero, so add it.
+            $output[$field] = $value;
+            return;
+        }
+
+        // arrays must have at least 1 value
+        if (Hydration::ARRAY === $type) {
+            if ([] !== $value) {
+                $output[$field] = $value;
+            }
+            return;
+        }
+
+        // todo: be more better about resources
+        if (Hydration::RESOURCE === $type) {
+            $output[$field] = $value;
+            return;
+        }
+
+        // once we get here the only possible value type is "NULL", which are always considered "empty".  thus, do not
+        // set any value.
+    }
+
     /**
      * Attempts to hydrate the provided value into the provided field on the implementing class
      *
@@ -149,7 +265,7 @@ trait Hydratable
             return clone $value;
         }
         // otherwise, attempt to cast whatever was provided as an array and construct a new instance of $class
-        if (KVPair::class === $class || KVTxnOp::class) {
+        if (KVPair::class === $class || KVTxnOp::class || UserEvent::class) {
             // special case for KVPair and KVTxnOp
             // todo: find cleaner way to do this...
             return new $class((array)$value, true);
@@ -206,9 +322,19 @@ trait Hydratable
             return;
         }
 
-        // at this point, type and class must be defined
+        // try to determine field type by first looking up the field in the definition map, then by inspecting the
+        // the field's default value.
+        //
+        // objects _must_ have an entry in the map, as they are either un-initialized at class instantiation time or
+        // set to "NULL", at which point we cannot automatically determine the value type.
 
-        if (!isset($def[Hydration::FIELD_TYPE])) {
+        if (isset($def[Hydration::FIELD_TYPE])) {
+            // if the field has a FIELD_TYPE value in the definition map
+            $type = $def[Hydration::FIELD_TYPE];
+        } elseif (isset($this->{$field})) {
+            // if the field is set and non-null
+            $type = \gettype($this->{$field});
+        } else {
             throw new \LogicException(
                 \sprintf(
                     'Field "%s" on type "%s" is missing a FIELD_TYPE hydration entry: %s',
@@ -218,8 +344,6 @@ trait Hydratable
                 )
             );
         }
-
-        $type = $def[Hydration::FIELD_TYPE];
 
         if (Hydration::OBJECT === $type) {
             $this->hydrateObject($field, $value, $def);
@@ -321,20 +445,20 @@ trait Hydratable
                 );
             }
 
-            foreach ($value as $v) {
+            foreach ($value as $k => $v) {
                 // todo: causes double-checking for null if value isn't null, not great...
                 if (null === $v) {
                     continue;
                 }
-                $this->{$field}[] = $this->buildObjectValue($field, $v, $class, false);
+                $this->{$field}[$k] = $this->buildObjectValue($field, $v, $class, false);
             }
         } else {
             // in all other cases, just set as-is
-            foreach ($value as $v) {
+            foreach ($value as $k => $v) {
                 if (null === $v) {
                     continue;
                 }
-                $this->{$field}[] = $this->buildScalarValue($field, $v, $type, false);
+                $this->{$field}[$k] = $this->buildScalarValue($field, $v, $type, false);
             }
         }
     }

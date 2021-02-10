@@ -35,9 +35,10 @@ class CatalogNode extends AbstractModel
         self::FIELD_SERVICES => [
             Hydration::FIELD_TYPE       => Hydration::ARRAY,
             Hydration::FIELD_CLASS      => AgentService::class,
-            Hydration::FIELD_ARRAY_TYPE => HYdration::OBJECT,
+            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
         ],
     ];
+
     private const FIELD_NODE     = 'Node';
     private const FIELD_SERVICES = 'Services';
 
@@ -47,11 +48,21 @@ class CatalogNode extends AbstractModel
     public array $Services = [];
 
     /**
-     * @return \DCarbone\PHPConsulAPI\Catalog\Node
+     * @return \DCarbone\PHPConsulAPI\Catalog\Node|null
      */
-    public function getNode(): Node
+    public function getNode(): ?Node
     {
         return $this->Node;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Catalog\Node|null $Node
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogNode
+     */
+    public function setNode(?Node $Node): self
+    {
+        $this->Node = $Node;
+        return $this;
     }
 
     /**
@@ -60,5 +71,15 @@ class CatalogNode extends AbstractModel
     public function getServices(): array
     {
         return $this->Services;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentService[] $Services
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogNode
+     */
+    public function setServices(array $Services): self
+    {
+        $this->Services = $Services;
+        return $this;
     }
 }

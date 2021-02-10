@@ -19,20 +19,37 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class AutopilotConfiguration
  */
 class AutopilotConfiguration extends AbstractModel
 {
+    protected const FIELDS = [
+        self::FIELD_LAST_CONTACT_THRESHOLD    => [
+            Hydration::FIELD_CALLBACK => [ReadableDuration::class, 'hydrate'],
+            Hydration::FIELD_NULLABLE => true,
+        ],
+        self::FIELD_SERVER_STABILIZATION_TIME => [
+            Hydration::FIELD_CALLBACK => [ReadableDuration::class, 'hydrate'],
+            Hydration::FIELD_NULLABLE => true,
+        ],
+    ];
+
+    private const FIELD_LAST_CONTACT_THRESHOLD    = 'LastContactThreshold';
+    private const FIELD_SERVER_STABILIZATION_TIME = 'ServerStabilizationTime';
+
     /** @var bool */
     public bool $CleanupDeadServers = false;
-    /** @var string */
-    public string $LastContactThreshold = '';
+    /** @var \DCarbone\PHPConsulAPI\Operator\ReadableDuration|null */
+    public ?ReadableDuration $LastContactThreshold = null;
     /** @var int */
     public int $MaxTrailingLogs = 0;
-    /** @var string */
-    public string $ServerStabilizationTime = '';
+    /** @var int */
+    public int $MinQuorum = 0;
+    /** @var \DCarbone\PHPConsulAPI\Operator\ReadableDuration|null */
+    public ?ReadableDuration $ServerStabilizationTime = null;
     /** @var string */
     public string $RedundancyZoneTag = '';
     /** @var bool */
@@ -53,30 +70,30 @@ class AutopilotConfiguration extends AbstractModel
     }
 
     /**
-     * @param bool $cleanupDeadServers
+     * @param bool $CleanupDeadServers
      * @return \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration
      */
-    public function setCleanupDeadServers(bool $cleanupDeadServers): self
+    public function setCleanupDeadServers(bool $CleanupDeadServers): self
     {
-        $this->CleanupDeadServers = $cleanupDeadServers;
+        $this->CleanupDeadServers = $CleanupDeadServers;
         return $this;
     }
 
     /**
-     * @return string
+     * @return \DCarbone\PHPConsulAPI\Operator\ReadableDuration|null
      */
-    public function getLastContactThreshold(): string
+    public function getLastContactThreshold(): ?ReadableDuration
     {
         return $this->LastContactThreshold;
     }
 
     /**
-     * @param string $lastContactThreshold
+     * @param \DCarbone\PHPConsulAPI\Operator\ReadableDuration|null $LastContactThreshold
      * @return \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration
      */
-    public function setLastContactThreshold(string $lastContactThreshold): self
+    public function setLastContactThreshold(?ReadableDuration $LastContactThreshold): self
     {
-        $this->LastContactThreshold = $lastContactThreshold;
+        $this->LastContactThreshold = $LastContactThreshold;
         return $this;
     }
 
@@ -89,30 +106,48 @@ class AutopilotConfiguration extends AbstractModel
     }
 
     /**
-     * @param int $maxTrailingLogs
+     * @param int $MaxTrailingLogs
      * @return \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration
      */
-    public function setMaxTrailingLogs(int $maxTrailingLogs): self
+    public function setMaxTrailingLogs(int $MaxTrailingLogs): self
     {
-        $this->MaxTrailingLogs = $maxTrailingLogs;
+        $this->MaxTrailingLogs = $MaxTrailingLogs;
         return $this;
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getServerStabilizationTime(): string
+    public function getMinQuorum(): int
+    {
+        return $this->MinQuorum;
+    }
+
+    /**
+     * @param int $MinQuorum
+     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration
+     */
+    public function setMinQuorum(int $MinQuorum): self
+    {
+        $this->MinQuorum = $MinQuorum;
+        return $this;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Operator\ReadableDuration|null
+     */
+    public function getServerStabilizationTime(): ?ReadableDuration
     {
         return $this->ServerStabilizationTime;
     }
 
     /**
-     * @param string $serverStabilizationTime
+     * @param \DCarbone\PHPConsulAPI\Operator\ReadableDuration|null $ServerStabilizationTime
      * @return \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration
      */
-    public function setServerStabilizationTime(string $serverStabilizationTime): self
+    public function setServerStabilizationTime(?ReadableDuration $ServerStabilizationTime): self
     {
-        $this->ServerStabilizationTime = $serverStabilizationTime;
+        $this->ServerStabilizationTime = $ServerStabilizationTime;
         return $this;
     }
 
@@ -125,12 +160,12 @@ class AutopilotConfiguration extends AbstractModel
     }
 
     /**
-     * @param string $redundancyZoneTag
+     * @param string $RedundancyZoneTag
      * @return \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration
      */
-    public function setRedundancyZoneTag(string $redundancyZoneTag): self
+    public function setRedundancyZoneTag(string $RedundancyZoneTag): self
     {
-        $this->RedundancyZoneTag = $redundancyZoneTag;
+        $this->RedundancyZoneTag = $RedundancyZoneTag;
         return $this;
     }
 
@@ -143,12 +178,12 @@ class AutopilotConfiguration extends AbstractModel
     }
 
     /**
-     * @param bool $disableUpgradeMigration
+     * @param bool $DisableUpgradeMigration
      * @return \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration
      */
-    public function setDisableUpgradeMigration(bool $disableUpgradeMigration): self
+    public function setDisableUpgradeMigration(bool $DisableUpgradeMigration): self
     {
-        $this->DisableUpgradeMigration = $disableUpgradeMigration;
+        $this->DisableUpgradeMigration = $DisableUpgradeMigration;
         return $this;
     }
 
@@ -161,12 +196,12 @@ class AutopilotConfiguration extends AbstractModel
     }
 
     /**
-     * @param string $upgradeVersionTag
+     * @param string $UpgradeVersionTag
      * @return \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration
      */
-    public function setUpgradeVersionTag(string $upgradeVersionTag): self
+    public function setUpgradeVersionTag(string $UpgradeVersionTag): self
     {
-        $this->UpgradeVersionTag = $upgradeVersionTag;
+        $this->UpgradeVersionTag = $UpgradeVersionTag;
         return $this;
     }
 
@@ -179,12 +214,12 @@ class AutopilotConfiguration extends AbstractModel
     }
 
     /**
-     * @param int $createIndex
+     * @param int $CreateIndex
      * @return \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration
      */
-    public function setCreateIndex(int $createIndex): self
+    public function setCreateIndex(int $CreateIndex): self
     {
-        $this->CreateIndex = $createIndex;
+        $this->CreateIndex = $CreateIndex;
         return $this;
     }
 
@@ -197,12 +232,12 @@ class AutopilotConfiguration extends AbstractModel
     }
 
     /**
-     * @param int $modifyIndex
+     * @param int $ModifyIndex
      * @return \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration
      */
-    public function setModifyIndex(int $modifyIndex): self
+    public function setModifyIndex(int $ModifyIndex): self
     {
-        $this->ModifyIndex = $modifyIndex;
+        $this->ModifyIndex = $ModifyIndex;
         return $this;
     }
 }

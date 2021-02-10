@@ -47,15 +47,17 @@ abstract class AbstractModel implements \JsonSerializable
     }
 
     /**
-     * TODO: More specific omission of values?
-     *
-     * Produces equivalent of `json:",omitempty"` tag
+     * todo: this picks up non-public fields.  externalize this at some point.
      *
      * @return array
      */
     public function jsonSerialize(): array
     {
-        return \array_filter((array) $this);
+        $out = [];
+        foreach ((array)$this as $field => $value) {
+            $this->marshalField($out, $field, $value);
+        }
+        return $out;
     }
 
     /**

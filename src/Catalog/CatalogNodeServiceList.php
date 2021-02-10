@@ -38,6 +38,7 @@ class CatalogNodeServiceList extends AbstractModel
             Hydration::FIELD_ARRAY_TYPE => HYdration::OBJECT,
         ],
     ];
+
     private const FIELD_NODE     = 'Node';
     private const FIELD_SERVICES = 'Services';
 
@@ -55,10 +56,30 @@ class CatalogNodeServiceList extends AbstractModel
     }
 
     /**
+     * @param \DCarbone\PHPConsulAPI\Catalog\Node|null $Node
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogNodeServiceList
+     */
+    public function setNode(?Node $Node): self
+    {
+        $this->Node = $Node;
+        return $this;
+    }
+
+    /**
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogService[]
      */
     public function getServices(): array
     {
         return $this->Services;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Catalog\CatalogService[] $Services
+     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogNodeServiceList
+     */
+    public function setServices(array $Services): self
+    {
+        $this->Services = $Services;
+        return $this;
     }
 }
