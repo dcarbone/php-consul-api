@@ -78,7 +78,11 @@ abstract class AbstractClient
         // todo: per-request content and accept value setting.
         $body = $r->getBody();
         if (null !== $body) {
-            $opts[GuzzleRequestOptions::JSON] = $body;
+            if (\is_scalar($body)) {
+                $opts[GuzzleRequestOptions::BODY] = $body;
+            } else {
+                $opts[GuzzleRequestOptions::JSON] = $body;
+            }
         }
 
         return $opts;

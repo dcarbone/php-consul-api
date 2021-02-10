@@ -82,36 +82,6 @@ class Request
         }
 
         $this->body = $body;
-
-//        if (null !== $body) {
-//            switch (\gettype($body)) {
-//                case Hydration::OBJECT:
-//                case Hydration::ARRAY:
-//                    $this->body = \json_encode($body, $config->JSONEncodeOpts);
-//                    if (\JSON_ERROR_NONE !== \json_last_error()) {
-//                        throw new \RuntimeException(
-//                            \sprintf(
-//                                'Error encoding request body as json: %s',
-//                                \json_last_error_msg()
-//                            )
-//                        );
-//                    }
-//                    break;
-//
-//                case Hydration::INTEGER:
-//                case Hydration::DOUBLE:
-//                    $this->body = (string)$body;
-//                    break;
-//
-//                case Hydration::STRING:
-//                    $this->body = $body;
-//                    break;
-//
-//                case Hydration::BOOLEAN:
-//                    $this->body = $body ? Hydration::TRUE : Hydration::FALSE;
-//                    break;
-//            }
-//        }
     }
 
     /**
@@ -147,7 +117,7 @@ class Request
     }
 
     /**
-     * @return string
+     * @return mixed
      */
     public function getBody()
     {
