@@ -123,12 +123,12 @@ class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
         } else {
             $this->Interval = ReadableDuration::fromDuration((string)$this->IntervalDuration);
         }
-        if (null === $this->TimeoutDuration) {
+        if (!isset($this->TimeoutDuration)) {
             $this->TimeoutDuration = Time::ParseDuration((string)$this->Timeout);
         } else {
             $this->Timeout = ReadableDuration::fromDuration((string)$this->TimeoutDuration);
         }
-        if (null === $this->DeregisterCriticalServiceAfterDuration) {
+        if (!isset($this->DeregisterCriticalServiceAfterDuration)) {
             $this->DeregisterCriticalServiceAfterDuration = Time::ParseDuration(
                 (string)$this->DeregisterCriticalServiceAfter
             );
