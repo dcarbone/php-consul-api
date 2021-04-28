@@ -90,10 +90,10 @@ class GatewayService extends AbstractModel
     public function __construct(?array $data = [])
     {
         parent::__construct($data);
-        if (null === $this->Gateway) {
+        if (!isset($this->Gateway)) {
             $this->Gateway = new CompoundServiceName();
         }
-        if (null === $this->Service) {
+        if (!isset($this->Service)) {
             $this->Service = new CompoundServiceName();
         }
     }

@@ -98,7 +98,7 @@ final class RequestResponse
 
         // if there was no response, return as-is
         // note: should never see this in the wild.
-        if (null === $this->Response) {
+        if (!isset($this->Response)) {
             return $qm;
         }
 

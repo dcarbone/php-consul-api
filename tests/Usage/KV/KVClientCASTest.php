@@ -16,6 +16,7 @@ final class KVClientCASTest extends AbstractUsageTests
     public const KVOriginalValue = 'originalvalue';
     public const KVUpdatedValue  = 'updatedvalue';
     public const KVUpdatedValue2 = 'updatedvalue2';
+
     /** @var bool */
     protected static $singlePerClass = true;
 
