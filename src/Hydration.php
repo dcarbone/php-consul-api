@@ -47,6 +47,7 @@ final class Hydration
     public const FIELD_NULLABLE   = 4;
     public const FIELD_OMITEMPTY  = 5;
     public const FIELD_SKIP       = 6;
+    public const FIELD_MARSHAL_AS = 7;
 
     public const FIELD_QUERY_META = 'QueryMeta';
     public const FIELD_WRITE_META = 'WriteMeta';

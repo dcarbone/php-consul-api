@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\Session;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
-
 use function DCarbone\PHPConsulAPI\dur_to_millisecond;
+
+use DCarbone\PHPConsulAPI\Hydration;
 
 /**
  * Class SessionEntry

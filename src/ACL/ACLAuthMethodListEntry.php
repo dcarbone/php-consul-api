@@ -18,6 +18,7 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
+use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Hydration;
 
@@ -27,14 +28,21 @@ use DCarbone\PHPConsulAPI\Hydration;
 class ACLAuthMethodListEntry extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_DISPLAY_NAME    => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_DESCRIPTION     => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_NAMESPACE       => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_DISPLAY_NAME  => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_DESCRIPTION   => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_MAX_TOKEN_TTL => [
+            Hydration::FIELD_MARSHAL_AS => Hydration::STRING,
+            Hydration::FIELD_OMITEMPTY  => true,
+        ],
+        self::FIELD_TOKEN_LOCALITY => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_NAMESPACE      => Hydration::OMITEMPTY_STRING_FIELD,
     ];
 
-    private const FIELD_DISPLAY_NAME = 'DisplayName';
-    private const FIELD_DESCRIPTION  = 'Description';
-    private const FIELD_NAMESPACE    = 'Namespace';
+    private const FIELD_DISPLAY_NAME   = 'DisplayName';
+    private const FIELD_DESCRIPTION    = 'Description';
+    private const FIELD_MAX_TOKEN_TTL  = 'MaxTokenTTL';
+    private const FIELD_TOKEN_LOCALITY = 'TokenLocality';
+    private const FIELD_NAMESPACE      = 'Namespace';
 
     /** @var string */
     public string $Name = '';
@@ -44,6 +52,14 @@ class ACLAuthMethodListEntry extends AbstractModel
     public string $DisplayName = '';
     /** @var string */
     public string $Description = '';
+    /** @var \DCarbone\Go\Time\Duration */
+    public Time\Duration $MaxTokenTTL;
+    /**
+     * TokenLocality defines the kind of token that this auth method produces.
+     * This can be either 'local' or 'global'. If empty 'local' is assumed.
+     * @var string
+     */
+    public string $TokenLocality;
     /** @var int */
     public int $CreateIndex = 0;
     /** @var int */
@@ -124,6 +140,48 @@ class ACLAuthMethodListEntry extends AbstractModel
     }
 
     /**
+     * @return \DCarbone\Go\Time\Duration
+     */
+    public function getMaxTokenTTL(): Time\Duration
+    {
+        return $this->MaxTokenTTL;
+    }
+
+    /**
+     * @param \DCarbone\Go\Time\Duration $MaxTokenTTL
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodListEntry
+     */
+    public function setMaxTokenTTL(Time\Duration $MaxTokenTTL): self
+    {
+        $this->MaxTokenTTL = $MaxTokenTTL;
+        return $this;
+    }
+
+    /**
+     * TokenLocality defines the kind of token that this auth method produces.
+     * This can be either 'local' or 'global'. If empty 'local' is assumed.
+     *
+     * @return string
+     */
+    public function getTokenLocality(): string
+    {
+        return $this->TokenLocality;
+    }
+
+    /**
+     * TokenLocality defines the kind of token that this auth method produces.
+     * This can be either 'local' or 'global'. If empty 'local' is assumed.
+     *
+     * @param string $TokenLocality
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodListEntry
+     */
+    public function setTokenLocality(string $TokenLocality): self
+    {
+        $this->TokenLocality = $TokenLocality;
+        return $this;
+    }
+
+    /**
      * @return int
      */
     public function getCreateIndex(): int
@@ -175,5 +233,19 @@ class ACLAuthMethodListEntry extends AbstractModel
     {
         $this->Namespace = $Namespace;
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize(): array
+    {
+        $out = parent::jsonSerialize();
+        if (!isset($this->MaxTokenTTL) || 0 === $this->MaxTokenTTL->Nanoseconds()) {
+            $out[self::FIELD_MAX_TOKEN_TTL] = '';
+        } else {
+            $out[self::FIELD_MAX_TOKEN_TTL] = (string)$this->MaxTokenTTL;
+        }
+        return $out;
     }
 }

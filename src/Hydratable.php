@@ -53,6 +53,29 @@ trait Hydratable
             return;
         }
 
+        // if this field is marked as needing to be typecast to a specific type for output
+        if (isset($def[Hydration::FIELD_MARSHAL_AS])) {
+            switch ($def[Hydration::FIELD_MARSHAL_AS]) {
+                case Hydration::STRING:
+                    $value = (string)$value;
+                    break;
+                case Hydration::INTEGER:
+                    $value = (int)$value;
+                    break;
+                case Hydration::DOUBLE:
+                    $value = (float)$value;
+                    break;
+                case Hydration::BOOLEAN:
+                    $value = (bool)$value;
+                    break;
+
+                default:
+                    throw new \InvalidArgumentException(
+                        \sprintf('Unable to handle serializing to %s', $def[Hydration::FIELD_MARSHAL_AS])
+                    );
+            }
+        }
+
         // if this field is not explicitly marked as "omitempty", set and move on.
         if (!isset($def[Hydration::FIELD_OMITEMPTY]) || true !== $def[Hydration::FIELD_OMITEMPTY]) {
             $output[$field] = $value;

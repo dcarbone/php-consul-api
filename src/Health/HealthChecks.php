@@ -19,8 +19,8 @@ namespace DCarbone\PHPConsulAPI\Health;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\FakeSlice;
 use DCarbone\PHPConsulAPI\Consul;
+use DCarbone\PHPConsulAPI\FakeSlice;
 
 /**
  * Class HealthChecks

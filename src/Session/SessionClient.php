@@ -154,7 +154,7 @@ class SessionClient extends AbstractClient
     private function _get(string $path, ?QueryOptions $opts): SessionEntriesQueryResponse
     {
         $resp = $this->_requireOK($this->_doGet($path, $opts));
-        $ret = new SessionEntriesQueryResponse();
+        $ret  = new SessionEntriesQueryResponse();
         $this->_hydrateResponse($resp, $ret);
         return $ret;
     }
@@ -170,7 +170,7 @@ class SessionClient extends AbstractClient
     private function _create(string $path, SessionEntry $entry, ?WriteOptions $opts): ValuedWriteStringResponse
     {
         $resp = $this->_requireOK($this->_doPut($path, $entry->_toAPIPayload(), $opts));
-        $ret = new ValuedWriteStringResponse();
+        $ret  = new ValuedWriteStringResponse();
 
         if (null !== $resp->Err) {
             $ret->Err = $resp->Err;
