@@ -93,7 +93,7 @@ class ACLClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doGet(\sprintf('v1/acl/info/%s', $id), $opts));
         $ret  = new ACLEntriesResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -107,7 +107,7 @@ class ACLClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doGet('v1/acl/list', $opts));
         $ret  = new ACLEntriesResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -121,7 +121,7 @@ class ACLClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doGet('/v1/acl/replication', $opts));
         $ret  = new ACLReplicationStatusResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 }

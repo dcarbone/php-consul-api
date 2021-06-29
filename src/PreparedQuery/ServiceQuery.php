@@ -21,7 +21,7 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\HasSettableStringTags;
 use DCarbone\PHPConsulAPI\HasStringTags;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class ServiceQuery
@@ -32,10 +32,10 @@ class ServiceQuery extends AbstractModel
     use HasStringTags;
 
     protected const FIELDS = [
-        self::FIELD_NAMESPACE => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_NAMESPACE => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_FAILOVER  => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => QueryDatacenterOptions::class,
+            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS => QueryDatacenterOptions::class,
         ],
     ];
 

@@ -37,7 +37,7 @@ trait ResponseValueStringsTrait
     /**
      * @param mixed $decodedData
      */
-    public function hydrateValue($decodedData): void
+    public function unmarshalValue($decodedData): void
     {
         $this->Value = (array)$decodedData;
     }

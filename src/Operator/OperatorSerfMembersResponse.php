@@ -19,12 +19,12 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\HydratedResponseInterface;
+use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 /**
  * Class OperatorSerfMembersResponse
  */
-class OperatorSerfMembersResponse extends AbstractValuedQueryResponse implements HydratedResponseInterface
+class OperatorSerfMembersResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Operator\SerfMember[]|null */
     public ?array $SerfMembers = null;
@@ -40,7 +40,7 @@ class OperatorSerfMembersResponse extends AbstractValuedQueryResponse implements
     /**
      * @param mixed $decodedData
      */
-    public function hydrateValue($decodedData): void
+    public function unmarshalValue($decodedData): void
     {
         $this->SerfMembers = [];
         foreach ($decodedData as $datum) {

@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class SerfMember
@@ -29,7 +29,7 @@ class SerfMember extends AbstractModel
 {
     protected const FIELDS = [
         self::FIELD_RTT => [
-            Hydration::FIELD_CALLBACK => Hydration::HYDRATE_DURATION,
+            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_DURATION,
         ],
     ];
 

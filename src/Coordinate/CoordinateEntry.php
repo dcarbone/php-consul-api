@@ -19,7 +19,7 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class CoordinateEntry
@@ -28,9 +28,9 @@ class CoordinateEntry extends AbstractModel
 {
     protected const FIELDS = [
         self::FIELD_COORDINATE => [
-            Hydration::FIELD_TYPE     => Hydration::OBJECT,
-            Hydration::FIELD_CLASS    => Coordinate::class,
-            Hydration::FIELD_NULLABLE => true,
+            Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS    => Coordinate::class,
+            Transcoding::FIELD_NULLABLE => true,
         ],
     ];
 

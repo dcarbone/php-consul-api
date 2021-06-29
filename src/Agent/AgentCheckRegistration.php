@@ -18,7 +18,7 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class AgentCheckRegistration
@@ -26,9 +26,9 @@ use DCarbone\PHPConsulAPI\Hydration;
 class AgentCheckRegistration extends AgentServiceCheck
 {
     protected const FIELDS = [
-        self::FIELD_ID         => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_SERVICE_ID => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_NAMESPACE  => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_ID         => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_SERVICE_ID => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_NAMESPACE  => Transcoding::OMITEMPTY_STRING_FIELD,
     ];
 
     private const FIELD_ID         = 'ID';

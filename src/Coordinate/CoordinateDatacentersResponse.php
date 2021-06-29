@@ -19,12 +19,12 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
  */
 
 use DCarbone\PHPConsulAPI\AbstractValuedResponse;
-use DCarbone\PHPConsulAPI\HydratedResponseInterface;
+use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 /**
  * Class CoordinateDatacentersResponse
  */
-class CoordinateDatacentersResponse extends AbstractValuedResponse implements HydratedResponseInterface
+class CoordinateDatacentersResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Coordinate\CoordinateDatacenterMap[]|null */
     public ?array $DatacenterMap = null;
@@ -40,7 +40,7 @@ class CoordinateDatacentersResponse extends AbstractValuedResponse implements Hy
     /**
      * @param mixed $decodedData
      */
-    public function hydrateValue($decodedData): void
+    public function unmarshalValue($decodedData): void
     {
         $this->DatacenterMap = [];
         foreach ($decodedData as $item) {

@@ -23,7 +23,7 @@ use DCarbone\PHPConsulAPI\Agent\AgentCheck;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
 use DCarbone\PHPConsulAPI\FakeMap;
 use DCarbone\PHPConsulAPI\Health\HealthChecks;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class CatalogRegistration
@@ -31,19 +31,19 @@ use DCarbone\PHPConsulAPI\Hydration;
 class CatalogRegistration extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_TAGGED_ADDRESSES => Hydration::MAP_FIELD,
-        self::FIELD_NODE_META        => Hydration::MAP_FIELD,
+        self::FIELD_TAGGED_ADDRESSES => Transcoding::MAP_FIELD,
+        self::FIELD_NODE_META        => Transcoding::MAP_FIELD,
         self::FIELD_SERVICE          => [
-            Hydration::FIELD_TYPE        => Hydration::OBJECT,
-            Hydration::FIELD_CLASS       => AgentService::class,
+            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS => AgentService::class,
         ],
         self::FIELD_CHECK   => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => AgentCheck::class,
+            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS => AgentCheck::class,
         ],
         self::FIELD_CHECKS  => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => HealthChecks::class,
+            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS => HealthChecks::class,
         ],
     ];
 

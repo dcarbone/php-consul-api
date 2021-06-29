@@ -19,12 +19,12 @@ namespace DCarbone\PHPConsulAPI\Event;
  */
 
 use DCarbone\PHPConsulAPI\AbstractValuedWriteResponse;
-use DCarbone\PHPConsulAPI\HydratedResponseInterface;
+use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 /**
  * Class UserEventResponse
  */
-class UserEventResponse extends AbstractValuedWriteResponse implements HydratedResponseInterface
+class UserEventResponse extends AbstractValuedWriteResponse implements UnmarshalledResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Event\UserEvent|null */
     public ?UserEvent $UserEvent = null;
@@ -40,7 +40,7 @@ class UserEventResponse extends AbstractValuedWriteResponse implements HydratedR
     /**
      * @param mixed $decodedData
      */
-    public function hydrateValue($decodedData): void
+    public function unmarshalValue($decodedData): void
     {
         $this->UserEvent = new UserEvent((array)$decodedData);
     }

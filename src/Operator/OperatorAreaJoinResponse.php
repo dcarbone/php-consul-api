@@ -19,12 +19,12 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\PHPConsulAPI\AbstractValuedWriteResponse;
-use DCarbone\PHPConsulAPI\HydratedResponseInterface;
+use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 /**
  * Class OperatorAreaJoinResponse
  */
-class OperatorAreaJoinResponse extends AbstractValuedWriteResponse implements HydratedResponseInterface
+class OperatorAreaJoinResponse extends AbstractValuedWriteResponse implements UnmarshalledResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Operator\AreaJoinResponse[]|null */
     public ?array $AreaJoinResponses = null;
@@ -40,7 +40,7 @@ class OperatorAreaJoinResponse extends AbstractValuedWriteResponse implements Hy
     /**
      * @param mixed $decodedData
      */
-    public function hydrateValue($decodedData): void
+    public function unmarshalValue($decodedData): void
     {
         $this->AreaJoinResponses = [];
         foreach ($decodedData as $area) {

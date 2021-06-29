@@ -19,12 +19,12 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\PHPConsulAPI\AbstractValuedResponse;
-use DCarbone\PHPConsulAPI\HydratedResponseInterface;
+use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 /**
  * Class AutopilotStateResponse
  */
-class AutopilotStateResponse extends AbstractValuedResponse implements HydratedResponseInterface
+class AutopilotStateResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotState|null */
     public ?AutopilotState $AutopilotState = null;
@@ -40,7 +40,7 @@ class AutopilotStateResponse extends AbstractValuedResponse implements HydratedR
     /**
      * @param mixed $decodedData
      */
-    public function hydrateValue($decodedData): void
+    public function unmarshalValue($decodedData): void
     {
         $this->AutopilotState = new AutopilotState($decodedData);
     }

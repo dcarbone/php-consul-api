@@ -21,7 +21,7 @@ namespace DCarbone\PHPConsulAPI;
 /**
  * Class ValuedQueryBoolResponse
  */
-class ValuedQueryBoolResponse extends AbstractValuedQueryResponse implements HydratedResponseInterface
+class ValuedQueryBoolResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
     use ResponseValueBoolTrait;
 }

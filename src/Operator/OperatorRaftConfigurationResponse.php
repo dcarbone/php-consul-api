@@ -19,12 +19,12 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\PHPConsulAPI\AbstractValuedResponse;
-use DCarbone\PHPConsulAPI\HydratedResponseInterface;
+use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 /**
  * Class OperatorRaftConfigurationResponse
  */
-class OperatorRaftConfigurationResponse extends AbstractValuedResponse implements HydratedResponseInterface
+class OperatorRaftConfigurationResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Operator\RaftConfiguration|null */
     public ?RaftConfiguration $RaftConfiguration = null;
@@ -40,7 +40,7 @@ class OperatorRaftConfigurationResponse extends AbstractValuedResponse implement
     /**
      * @param mixed $decodedData
      */
-    public function hydrateValue($decodedData): void
+    public function unmarshalValue($decodedData): void
     {
         $this->RaftConfiguration = new RaftConfiguration($decodedData);
     }

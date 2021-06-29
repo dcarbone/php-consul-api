@@ -3,7 +3,7 @@
 namespace DCarbone\PHPConsulAPI;
 
 /*
-   Copyright 2020 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -18,166 +18,28 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\Event\UserEvent;
 use DCarbone\PHPConsulAPI\KV\KVPair;
 use DCarbone\PHPConsulAPI\KV\KVTxnOp;
-use DCarbone\PHPConsulAPI\Operator\ReadableDuration;
 
 /**
- * Used to assist with hydrating json responses
+ * Used to assist with unmarshalling json responses
  *
- * Trait Hydratable
+ * Trait Unmarshaller
  */
-trait Hydratable
+trait Unmarshaller
 {
     /**
-     * Marshal field is designed to replicate (to ao point) what Golang does during the json.Marshal call
-     *
-     * @param array $output
-     * @param string $field
-     * @param mixed $value
-     */
-    protected function marshalField(array &$output, string $field, $value): void
-    {
-        $def = static::FIELDS[$field] ?? null;
-
-        // if this field has no special handling, set as-is and move on.
-        if (null === $def) {
-            $output[$field] = $value;
-            return;
-        }
-
-        // if this field is marked as being "skipped", do not set, then move on.
-        if (isset($def[Hydration::FIELD_SKIP]) && true === $def[Hydration::FIELD_SKIP]) {
-            return;
-        }
-
-        // if this field is marked as needing to be typecast to a specific type for output
-        if (isset($def[Hydration::FIELD_MARSHAL_AS])) {
-            switch ($def[Hydration::FIELD_MARSHAL_AS]) {
-                case Hydration::STRING:
-                    $value = (string)$value;
-                    break;
-                case Hydration::INTEGER:
-                    $value = (int)$value;
-                    break;
-                case Hydration::DOUBLE:
-                    $value = (float)$value;
-                    break;
-                case Hydration::BOOLEAN:
-                    $value = (bool)$value;
-                    break;
-
-                default:
-                    throw new \InvalidArgumentException(
-                        \sprintf('Unable to handle serializing to %s', $def[Hydration::FIELD_MARSHAL_AS])
-                    );
-            }
-        }
-
-        // if this field is not explicitly marked as "omitempty", set and move on.
-        if (!isset($def[Hydration::FIELD_OMITEMPTY]) || true !== $def[Hydration::FIELD_OMITEMPTY]) {
-            $output[$field] = $value;
-            return;
-        }
-
-        // otherwise, handle value setting on a per-type basis
-
-        $type = \gettype($value);
-
-        // strings must be non empty
-        if (Hydration::STRING === $type) {
-            if ('' !== $value) {
-                $output[$field] = $value;
-            }
-            return;
-        }
-
-        // integers must be non-zero (negatives are ok)
-        if (Hydration::INTEGER === $type) {
-            if (0 !== $value) {
-                $output[$field] = $value;
-            }
-            return;
-        }
-
-        // floats must be non-zero (negatives are ok)
-        if (Hydration::DOUBLE === $type) {
-            if (0.0 !== $value) {
-                $output[$field] = $value;
-            }
-            return;
-        }
-
-        // bools must be true
-        if (Hydration::BOOLEAN === $type) {
-            if ($value) {
-                $output[$field] = $value;
-            }
-            return;
-        }
-
-        // object "non-zero" calculations require a bit more finesse...
-        if (Hydration::OBJECT === $type) {
-            // AbstractModels are collections, and are non-zero if they contain at least 1 entry
-            if ($value instanceof FakeSlice || $value instanceof FakeMap) {
-                if (0 < \count($value)) {
-                    $output[$field] = $value;
-                }
-                return;
-            }
-
-            // Time\Duration types are non-zero if their internal value is > 0
-            if ($value instanceof Time\Duration || $value instanceof ReadableDuration) {
-                if (0 < $value->Nanoseconds()) {
-                    $output[$field] = $value;
-                }
-                return;
-            }
-
-            // Time\Time values are non-zero if they are anything greater than epoch
-            if ($value instanceof Time\Time) {
-                if (!$value->IsZero()) {
-                    $output[$field] = $value;
-                }
-                return;
-            }
-
-            // otherwise, by being defined it is non-zero, so add it.
-            $output[$field] = $value;
-            return;
-        }
-
-        // arrays must have at least 1 value
-        if (Hydration::ARRAY === $type) {
-            if ([] !== $value) {
-                $output[$field] = $value;
-            }
-            return;
-        }
-
-        // todo: be more better about resources
-        if (Hydration::RESOURCE === $type) {
-            $output[$field] = $value;
-            return;
-        }
-
-        // once we get here the only possible value type is "NULL", which are always considered "empty".  thus, do not
-        // set any value.
-    }
-
-    /**
-     * Attempts to hydrate the provided value into the provided field on the implementing class
+     * Attempts to unmarshal the provided value into the provided field on the implementing class
      *
      * @param string $field
      * @param mixed $value
      */
-    protected function hydrateField(string $field, $value): void
+    protected function unmarshalField(string $field, $value): void
     {
         if (isset(static::FIELDS[$field])) {
             // if the implementing class has some explicitly defined overrides
-            $this->hydrateComplex($field, $value, static::FIELDS[$field]);
+            $this->unmarshalComplex($field, $value, static::FIELDS[$field]);
         } elseif (!\property_exists($this, $field)) {
             // if the field isn't explicitly defined on the implementing class, just set it to whatever the incoming
             // value is
@@ -187,8 +49,8 @@ trait Hydratable
             // note: this is not checked prior to the property_exists call as if the field is not explicitly defined but
             // is seen with a null value, we still want to define it as null on the implementing type.
         } elseif (isset($this->{$field}) && \is_scalar($this->{$field})) {
-            // if the property has a scalar default value, hydrate it as such.
-            $this->hydrateScalar($field, $value, false);
+            // if the property has a scalar default value, unmarshal it as such.
+            $this->unmarshalScalar($field, $value, false);
         } else {
             // if we fall down here, try to set the value as-is.  if this barfs, it indicates we have a bug to be
             // squished.
@@ -204,7 +66,7 @@ trait Hydratable
     protected function fieldIsNullable(array $fieldDef): bool
     {
         // todo: make sure this key is always a bool...
-        return $fieldDef[Hydration::FIELD_NULLABLE] ?? false;
+        return $fieldDef[Transcoding::FIELD_NULLABLE] ?? false;
     }
 
     /**
@@ -213,16 +75,16 @@ trait Hydratable
      */
     protected static function scalarZeroVal(string $type)
     {
-        if (Hydration::STRING === $type) {
+        if (Transcoding::STRING === $type) {
             return '';
         }
-        if (Hydration::INTEGER === $type) {
+        if (Transcoding::INTEGER === $type) {
             return 0;
         }
-        if (Hydration::DOUBLE === $type) {
+        if (Transcoding::DOUBLE === $type) {
             return 0.0;
         }
-        if (Hydration::BOOLEAN === $type) {
+        if (Transcoding::BOOLEAN === $type) {
             return false;
         }
 
@@ -248,16 +110,16 @@ trait Hydratable
             return self::scalarZeroVal($type);
         }
 
-        if (Hydration::STRING === $type) {
+        if (Transcoding::STRING === $type) {
             return (string)$value;
         }
-        if (Hydration::INTEGER === $type) {
+        if (Transcoding::INTEGER === $type) {
             return \intval($value, 10);
         }
-        if (Hydration::DOUBLE === $type) {
+        if (Transcoding::DOUBLE === $type) {
             return (float)$value;
         }
-        if (Hydration::BOOLEAN === $type) {
+        if (Transcoding::BOOLEAN === $type) {
             return (bool)$value;
         }
 
@@ -303,12 +165,12 @@ trait Hydratable
      * @param mixed $value
      * @param bool $nullable
      */
-    private function hydrateScalar(string $field, $value, bool $nullable): void
+    private function unmarshalScalar(string $field, $value, bool $nullable): void
     {
         $this->{$field} = $this->buildScalarValue(
             $field,
             $value,
-            isset($this->{$field}) ? \gettype($this->{$field}) : Hydration::MIXED,
+            isset($this->{$field}) ? \gettype($this->{$field}) : Transcoding::MIXED,
             $nullable
         );
     }
@@ -320,23 +182,23 @@ trait Hydratable
      * @param mixed $value
      * @param array $def
      */
-    private function hydrateComplex(string $field, $value, array $def): void
+    private function unmarshalComplex(string $field, $value, array $def): void
     {
         // check if a callable has been defined
-        if (isset($def[Hydration::FIELD_CALLBACK])) {
-            $cb = $def[Hydration::FIELD_CALLBACK];
+        if (isset($def[Transcoding::FIELD_UNMARSHAL_CALLBACK])) {
+            $cb = $def[Transcoding::FIELD_UNMARSHAL_CALLBACK];
             // allow for using a "setter" method
             if (\is_string($cb) && \method_exists($this, $cb)) {
                 $this->{$cb}($value);
                 return;
             }
             // handle all other callable input
-            $err = \call_user_func($def[Hydration::FIELD_CALLBACK], $this, $field, $value);
+            $err = \call_user_func($def[Transcoding::FIELD_UNMARSHAL_CALLBACK], $this, $field, $value);
             if (false === $err) {
                 throw new \RuntimeException(
                     \sprintf(
                         'Error calling hydration callback "%s" for field "%s" on class "%s"',
-                        \var_export($def[Hydration::FIELD_CALLBACK], true),
+                        \var_export($def[Transcoding::FIELD_UNMARSHAL_CALLBACK], true),
                         $field,
                         \get_class($this)
                     )
@@ -351,12 +213,12 @@ trait Hydratable
         // objects _must_ have an entry in the map, as they are either un-initialized at class instantiation time or
         // set to "NULL", at which point we cannot automatically determine the value type.
 
-        if (isset($def[Hydration::FIELD_TYPE])) {
+        if (isset($def[Transcoding::FIELD_TYPE])) {
             // if the field has a FIELD_TYPE value in the definition map
-            $type = $def[Hydration::FIELD_TYPE];
+            $fieldType = $def[Transcoding::FIELD_TYPE];
         } elseif (isset($this->{$field})) {
             // if the field is set and non-null
-            $type = \gettype($this->{$field});
+            $fieldType = \gettype($this->{$field});
         } else {
             throw new \LogicException(
                 \sprintf(
@@ -368,19 +230,19 @@ trait Hydratable
             );
         }
 
-        if (Hydration::OBJECT === $type) {
-            $this->hydrateObject($field, $value, $def);
+        if (Transcoding::OBJECT === $fieldType) {
+            $this->unmarshalObject($field, $value, $def);
             return;
         }
 
-        if (Hydration::ARRAY === $type) {
-            $this->hydrateArray($field, $value, $def);
+        if (Transcoding::ARRAY === $fieldType) {
+            $this->unmarshalArray($field, $value, $def);
             return;
         }
 
         // at this point, assume scalar
         // todo: handle non-scalar types here
-        $this->hydrateScalar($field, $value, self::fieldIsNullable($def));
+        $this->unmarshalScalar($field, $value, self::fieldIsNullable($def));
     }
 
     /**
@@ -388,9 +250,9 @@ trait Hydratable
      * @param mixed $value
      * @param array $def
      */
-    private function hydrateObject(string $field, $value, array $def): void
+    private function unmarshalObject(string $field, $value, array $def): void
     {
-        if (!isset($def[Hydration::FIELD_CLASS])) {
+        if (!isset($def[Transcoding::FIELD_CLASS])) {
             throw new \LogicException(
                 \sprintf(
                     'Field "%s" on type "%s" is missing FIELD_CLASS hydration entry: %s',
@@ -404,7 +266,7 @@ trait Hydratable
         $this->{$field} = $this->buildObjectValue(
             $field,
             $value,
-            $def[Hydration::FIELD_CLASS],
+            $def[Transcoding::FIELD_CLASS],
             self::fieldIsNullable($def)
         );
     }
@@ -414,11 +276,11 @@ trait Hydratable
      * @param mixed $value
      * @param array $def
      */
-    private function hydrateArray(string $field, $value, array $def): void
+    private function unmarshalArray(string $field, $value, array $def): void
     {
         // attempt to extract the two possible keys
-        $type  = $def[Hydration::FIELD_ARRAY_TYPE] ?? null;
-        $class = $def[Hydration::FIELD_CLASS]      ?? null;
+        $type  = $def[Transcoding::FIELD_ARRAY_TYPE] ?? null;
+        $class = $def[Transcoding::FIELD_CLASS]      ?? null;
 
         // type is required
         if (null === $type) {
@@ -456,7 +318,7 @@ trait Hydratable
         // currently the only supported array types are scalar or objects.  everything else will require
         // a custom callback for hydration purposes.
 
-        if (Hydration::OBJECT === $type) {
+        if (Transcoding::OBJECT === $type) {
             if (null === $class) {
                 throw new \DomainException(
                     \sprintf(

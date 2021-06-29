@@ -21,7 +21,7 @@ namespace DCarbone\PHPConsulAPI\Catalog;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Agent\AgentServiceConnectProxyConfig;
 use DCarbone\PHPConsulAPI\Health\HealthChecks;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class CatalogService
@@ -30,24 +30,24 @@ class CatalogService extends AbstractModel
 {
     protected const FIELDS = [
         self::FIELD_SERVICE_TAGGED_ADDRESSES => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => ServiceAddress::class,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
+            Transcoding::FIELD_CLASS      => ServiceAddress::class,
+            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
         ],
         self::FIELD_SERVICE_WEIGHTS          => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => Weights::class,
+            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS => Weights::class,
         ],
         self::FIELD_SERVICE_PROXY            => [
-            Hydration::FIELD_TYPE     => Hydration::OBJECT,
-            Hydration::FIELD_CLASS    => AgentServiceConnectProxyConfig::class,
-            Hydration::FIELD_NULLABLE => true,
+            Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS    => AgentServiceConnectProxyConfig::class,
+            Transcoding::FIELD_NULLABLE => true,
         ],
         self::FIELD_HEALTH_CHECKS            => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => HealthChecks::class,
+            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS => HealthChecks::class,
         ],
-        self::FIELD_NAMESPACE                => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_NAMESPACE                => Transcoding::OMITEMPTY_STRING_FIELD,
     ];
 
     private const FIELD_SERVICE_TAGGED_ADDRESSES = 'ServiceTaggedAddresses';

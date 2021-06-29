@@ -58,7 +58,7 @@ class KVClient extends AbstractClient
             if (null !== $dec->Err) {
                 $ret->Err = $dec->Err;
             } else {
-                $ret->hydrateValue($dec->Decoded[0]);
+                $ret->unmarshalValue($dec->Decoded[0]);
             }
         } elseif (HTTP\StatusNotFound !== $code) {
             $ret->Err = new Error(\sprintf('%s: %s', $code, $resp->Response->getReasonPhrase()));
@@ -82,7 +82,7 @@ class KVClient extends AbstractClient
         }
         $resp = $this->_requireOK($this->_do($r));
         $ret  = new WriteResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -110,7 +110,7 @@ class KVClient extends AbstractClient
         $r->params->set('recurse', '');
         $ret  = new KVPairsResponse();
         $resp = $this->_requireOK($this->_do($r));
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -127,7 +127,7 @@ class KVClient extends AbstractClient
         $r->params->set('keys', '');
         $ret  = new ValuedQueryStringsResponse();
         $resp = $this->_requireOK($this->_do($r));
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -147,7 +147,7 @@ class KVClient extends AbstractClient
         }
         $resp = $this->_requireOK($this->_do($r));
         $ret  = new ValuedWriteBoolResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -167,7 +167,7 @@ class KVClient extends AbstractClient
         }
         $resp = $this->_requireOK($this->_do($r));
         $ret  = new WriteResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -184,7 +184,7 @@ class KVClient extends AbstractClient
         $r->params['cas'] = (string)$p->ModifyIndex;
         $resp             = $this->_requireOK($this->_do($r));
         $ret              = new ValuedWriteBoolResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -204,7 +204,7 @@ class KVClient extends AbstractClient
         }
         $resp = $this->_requireOK($this->_do($r));
         $ret  = new WriteResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -221,7 +221,7 @@ class KVClient extends AbstractClient
         $r->params['recurse'] = '';
         $resp                 = $this->_requireOK($this->_do($r));
         $ret                  = new WriteResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 

@@ -22,7 +22,7 @@ use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use function DCarbone\PHPConsulAPI\dur_to_millisecond;
 
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class SessionEntry
@@ -31,14 +31,14 @@ class SessionEntry extends AbstractModel
 {
     protected const FIELDS = [
         self::FIELD_LOCK_DELAY     => [
-            Hydration::FIELD_CALLBACK => Hydration::HYDRATE_DURATION,
+            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_DURATION,
         ],
         self::FIELD_SERVICE_CHECKS => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => ServiceCheck::class,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
+            Transcoding::FIELD_CLASS      => ServiceCheck::class,
+            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
         ],
-        self::FIELD_NAMESPACE      => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_NAMESPACE      => Transcoding::OMITEMPTY_STRING_FIELD,
     ];
 
     private const FIELD_NAME           = 'Name';

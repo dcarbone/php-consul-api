@@ -19,12 +19,12 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\PHPConsulAPI\AbstractValuedResponse;
-use DCarbone\PHPConsulAPI\HydratedResponseInterface;
+use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 /**
  * Class OperatorServerHealthsResponse
  */
-class OperatorHealthReplyResponse extends AbstractValuedResponse implements HydratedResponseInterface
+class OperatorHealthReplyResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Operator\OperatorHealthReply|null */
     public ?OperatorHealthReply $OperatorHealthReply = null;
@@ -40,7 +40,7 @@ class OperatorHealthReplyResponse extends AbstractValuedResponse implements Hydr
     /**
      * @param mixed $decodedData
      */
-    public function hydrateValue($decodedData): void
+    public function unmarshalValue($decodedData): void
     {
         $this->OperatorHealthReply = new OperatorHealthReply((array)$decodedData);
     }

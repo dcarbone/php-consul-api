@@ -19,12 +19,12 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\HydratedResponseInterface;
+use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 /**
  * Class OperatorAreasResponse
  */
-class OperatorAreasResponse extends AbstractValuedQueryResponse implements HydratedResponseInterface
+class OperatorAreasResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Operator\Area[]|null */
     public ?array $Areas = null;
@@ -40,7 +40,7 @@ class OperatorAreasResponse extends AbstractValuedQueryResponse implements Hydra
     /**
      * @param mixed $decodedData
      */
-    public function hydrateValue($decodedData): void
+    public function unmarshalValue($decodedData): void
     {
         $this->Areas = [];
         foreach ($decodedData as $area) {

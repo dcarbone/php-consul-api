@@ -19,7 +19,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class OperatorHealthReply
@@ -28,9 +28,9 @@ class OperatorHealthReply extends AbstractModel
 {
     protected const FIELDS = [
         self::FIELD_SERVERS => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => ServerHealth::class,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
+            Transcoding::FIELD_CLASS      => ServerHealth::class,
+            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
         ],
     ];
 

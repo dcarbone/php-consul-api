@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\ACL;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class ACLAuthMethodListEntry
@@ -28,14 +28,15 @@ use DCarbone\PHPConsulAPI\Hydration;
 class ACLAuthMethodListEntry extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_DISPLAY_NAME  => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_DESCRIPTION   => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_DISPLAY_NAME  => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_DESCRIPTION   => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_MAX_TOKEN_TTL => [
-            Hydration::FIELD_MARSHAL_AS => Hydration::STRING,
-            Hydration::FIELD_OMITEMPTY  => true,
+            Transcoding::FIELD_MARSHAL_AS         => Transcoding::STRING,
+            Transcoding::FIELD_OMITEMPTY          => true,
+            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_DURATION,
         ],
-        self::FIELD_TOKEN_LOCALITY => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_NAMESPACE      => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_TOKEN_LOCALITY => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_NAMESPACE      => Transcoding::OMITEMPTY_STRING_FIELD,
     ];
 
     private const FIELD_DISPLAY_NAME   = 'DisplayName';

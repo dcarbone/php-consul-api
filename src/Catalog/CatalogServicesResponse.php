@@ -19,12 +19,12 @@ namespace DCarbone\PHPConsulAPI\Catalog;
  */
 
 use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\HydratedResponseInterface;
+use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 /**
  * Class CatalogServicesResponse
  */
-class CatalogServicesResponse extends AbstractValuedQueryResponse implements HydratedResponseInterface
+class CatalogServicesResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Catalog\CatalogService[]|null */
     public ?array $Services = null;
@@ -40,7 +40,7 @@ class CatalogServicesResponse extends AbstractValuedQueryResponse implements Hyd
     /**
      * @param mixed $decodedData
      */
-    public function hydrateValue($decodedData): void
+    public function unmarshalValue($decodedData): void
     {
         $this->Services = [];
         foreach ($decodedData as $node) {

@@ -21,8 +21,8 @@ namespace DCarbone\PHPConsulAPI\Health;
 use DCarbone\Go\Time;
 use DCarbone\Go\Time\Duration;
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
 use DCarbone\PHPConsulAPI\Operator\ReadableDuration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class HealthCheckDefinition
@@ -31,25 +31,25 @@ class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
 {
     protected const FIELDS = [
         self::FIELD_INTERVAL_DURATION                          => [
-            Hydration::FIELD_CALLBACK => Hydration::HYDRATE_DURATION,
-            Hydration::FIELD_SKIP     => true,
+            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_DURATION,
+            Transcoding::FIELD_SKIP               => true,
         ],
         self::FIELD_TIMEOUT_DURATION                           => [
-            Hydration::FIELD_CALLBACK => Hydration::HYDRATE_DURATION,
-            Hydration::FIELD_SKIP     => true,
+            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_DURATION,
+            Transcoding::FIELD_SKIP               => true,
         ],
         self::FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER_DURATION => [
-            Hydration::FIELD_CALLBACK => Hydration::HYDRATE_DURATION,
-            Hydration::FIELD_SKIP     => true,
+            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_DURATION,
+            Transcoding::FIELD_SKIP               => true,
         ],
         self::FIELD_TIMEOUT                                    => [
-            Hydration::FIELD_CALLBACK => [ReadableDuration::class, 'hydrate'],
+            Transcoding::FIELD_UNMARSHAL_CALLBACK => [ReadableDuration::class, 'unmarshalJSON'],
         ],
         self::FIELD_INTERVAL                                   => [
-            Hydration::FIELD_CALLBACK => [ReadableDuration::class, 'hydrate'],
+            Transcoding::FIELD_UNMARSHAL_CALLBACK => [ReadableDuration::class, 'unmarshalJSON'],
         ],
         self::FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER          => [
-            Hydration::FIELD_CALLBACK => [ReadableDuration::class, 'hydrate'],
+            Transcoding::FIELD_UNMARSHAL_CALLBACK => [ReadableDuration::class, 'unmarshalJSON'],
         ],
     ];
 

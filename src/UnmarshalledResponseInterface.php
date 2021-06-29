@@ -19,12 +19,12 @@ namespace DCarbone\PHPConsulAPI;
  */
 
 /**
- * Interface HydratedResponseInterface
+ * Interface UnmarshalledResponseInterface
  */
-interface HydratedResponseInterface
+interface UnmarshalledResponseInterface
 {
     /**
      * @param mixed $decodedData
      */
-    public function hydrateValue($decodedData): void;
+    public function unmarshalValue($decodedData): void;
 }

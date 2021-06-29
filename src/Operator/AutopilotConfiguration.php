@@ -19,7 +19,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class AutopilotConfiguration
@@ -28,12 +28,12 @@ class AutopilotConfiguration extends AbstractModel
 {
     protected const FIELDS = [
         self::FIELD_LAST_CONTACT_THRESHOLD    => [
-            Hydration::FIELD_CALLBACK => [ReadableDuration::class, 'hydrate'],
-            Hydration::FIELD_NULLABLE => true,
+            Transcoding::FIELD_UNMARSHAL_CALLBACK => [ReadableDuration::class, 'unmarshalJSON'],
+            Transcoding::FIELD_NULLABLE           => true,
         ],
         self::FIELD_SERVER_STABILIZATION_TIME => [
-            Hydration::FIELD_CALLBACK => [ReadableDuration::class, 'hydrate'],
-            Hydration::FIELD_NULLABLE => true,
+            Transcoding::FIELD_UNMARSHAL_CALLBACK => [ReadableDuration::class, 'unmarshalJSON'],
+            Transcoding::FIELD_NULLABLE           => true,
         ],
     ];
 

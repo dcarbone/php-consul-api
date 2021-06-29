@@ -21,7 +21,7 @@ namespace DCarbone\PHPConsulAPI\Agent;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\ConfigEntry\ExposeConfig;
 use DCarbone\PHPConsulAPI\ConfigEntry\MeshGatewayConfig;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class AgentServiceConnectProxyConfig
@@ -29,29 +29,29 @@ use DCarbone\PHPConsulAPI\Hydration;
 class AgentServiceConnectProxyConfig extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_DESTINATION_SERVICE_NAME => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_DESTINATION_SERVICE_ID   => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_LOCAL_SERVICE_ADDRESS    => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_LOCAL_SERVICE_PORT       => Hydration::OMITEMPTY_INTEGER_FIELD,
+        self::FIELD_DESTINATION_SERVICE_NAME => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_DESTINATION_SERVICE_ID   => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_LOCAL_SERVICE_ADDRESS    => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_LOCAL_SERVICE_PORT       => Transcoding::OMITEMPTY_INTEGER_FIELD,
         self::FIELD_CONFIG                   => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::MIXED,
-            Hydration::FIELD_OMITEMPTY  => true,
+            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
+            Transcoding::FIELD_ARRAY_TYPE => Transcoding::MIXED,
+            Transcoding::FIELD_OMITEMPTY  => true,
         ],
         self::FIELD_UPSTREAMS                => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => Upstream::class,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
-            Hydration::FIELD_OMITEMPTY  => true,
+            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
+            Transcoding::FIELD_CLASS      => Upstream::class,
+            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
+            Transcoding::FIELD_OMITEMPTY  => true,
         ],
         self::FIELD_MESH_GATEWAY             => [
-            Hydration::FIELD_TYPE      => Hydration::OBJECT,
-            Hydration::FIELD_CLASS     => MeshGatewayConfig::class,
-            Hydration::FIELD_OMITEMPTY => true,
+            Transcoding::FIELD_TYPE      => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS     => MeshGatewayConfig::class,
+            Transcoding::FIELD_OMITEMPTY => true,
         ],
         self::FIELD_EXPOSE                   => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => ExposeConfig::class,
+            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS => ExposeConfig::class,
         ],
     ];
 

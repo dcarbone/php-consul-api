@@ -19,12 +19,12 @@ namespace DCarbone\PHPConsulAPI\Health;
  */
 
 use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\HydratedResponseInterface;
+use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 /**
  * Class ServiceEntriesResponse
  */
-class ServiceEntriesResponse extends AbstractValuedQueryResponse implements HydratedResponseInterface
+class ServiceEntriesResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Health\ServiceEntry[]|null */
     public ?array $ServiceEntries = null;
@@ -40,7 +40,7 @@ class ServiceEntriesResponse extends AbstractValuedQueryResponse implements Hydr
     /**
      * @param mixed $decodedData
      */
-    public function hydrateValue($decodedData): void
+    public function unmarshalValue($decodedData): void
     {
         $this->ServiceEntries = [];
         foreach ($decodedData as $entry) {

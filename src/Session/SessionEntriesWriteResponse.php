@@ -19,12 +19,12 @@ namespace DCarbone\PHPConsulAPI\Session;
  */
 
 use DCarbone\PHPConsulAPI\AbstractValuedWriteResponse;
-use DCarbone\PHPConsulAPI\HydratedResponseInterface;
+use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 /**
  * Class SessionEntriesWriteResponse
  */
-class SessionEntriesWriteResponse extends AbstractValuedWriteResponse implements HydratedResponseInterface
+class SessionEntriesWriteResponse extends AbstractValuedWriteResponse implements UnmarshalledResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Session\SessionEntry[]|null */
     public ?array $SessionEntries = null;
@@ -40,7 +40,7 @@ class SessionEntriesWriteResponse extends AbstractValuedWriteResponse implements
     /**
      * @param mixed $decodedData
      */
-    public function hydrateValue($decodedData): void
+    public function unmarshalValue($decodedData): void
     {
         $this->SessionEntries = [];
         foreach ($decodedData as $datum) {

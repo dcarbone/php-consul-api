@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\Agent;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\ConfigEntry\MeshGatewayConfig;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class Upstream
@@ -28,20 +28,20 @@ use DCarbone\PHPConsulAPI\Hydration;
 class Upstream extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_DESTINATION_TYPE      => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_DESTINATION_NAMESPACE => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_DATACENTER            => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_LOCAL_BIND_ADDRESS    => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_LOCAL_BIND_PORT       => Hydration::OMITEMPTY_INTEGER_FIELD,
+        self::FIELD_DESTINATION_TYPE      => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_DESTINATION_NAMESPACE => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_DATACENTER            => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_LOCAL_BIND_ADDRESS    => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_LOCAL_BIND_PORT       => Transcoding::OMITEMPTY_INTEGER_FIELD,
         self::FIELD_CONFIG                => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::MIXED,
-            Hydration::FIELD_OMITEMPTY  => true,
+            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
+            Transcoding::FIELD_ARRAY_TYPE => Transcoding::MIXED,
+            Transcoding::FIELD_OMITEMPTY  => true,
         ],
         self::FIELD_MESH_GATEWAY          => [
-            Hydration::FIELD_TYPE      => Hydration::OBJECT,
-            Hydration::FIELD_CLASS     => MeshGatewayConfig::class,
-            Hydration::FIELD_OMITEMPTY => true,
+            Transcoding::FIELD_TYPE      => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS     => MeshGatewayConfig::class,
+            Transcoding::FIELD_OMITEMPTY => true,
         ],
     ];
 

@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\ACL;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class ACLReplicationStatus
@@ -29,10 +29,10 @@ class ACLReplicationStatus extends AbstractModel
 {
     protected const FIELDS = [
         self::FIELD_LAST_SUCCESS => [
-            Hydration::FIELD_CALLBACK => Hydration::HYDRATE_TIME,
+            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_TIME,
         ],
         self::FIELD_LAST_ERROR   => [
-            Hydration::FIELD_CALLBACK => Hydration::HYDRATE_TIME,
+            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_TIME,
         ],
     ];
 

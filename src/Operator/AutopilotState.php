@@ -19,7 +19,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class AutopilotState
@@ -28,23 +28,23 @@ class AutopilotState extends AbstractModel
 {
     protected const FIELDS = [
         self::FIELD_SERVERS         => [
-            Hydration::FIELD_TYPE  => Hydration::ARRAY,
-            Hydration::FIELD_CLASS => AutopilotServer::class,
+            Transcoding::FIELD_TYPE  => Transcoding::ARRAY,
+            Transcoding::FIELD_CLASS => AutopilotServer::class,
         ],
         self::FIELD_READ_REPLICAS   => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::STRING,
-            Hydration::FIELD_OMITEMPTY  => true,
+            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
+            Transcoding::FIELD_ARRAY_TYPE => Transcoding::STRING,
+            Transcoding::FIELD_OMITEMPTY  => true,
         ],
         self::FIELD_REDUNDANCY_ZONE => [
-            Hydration::FIELD_TYPE      => Hydration::ARRAY,
-            Hydration::FIELD_CLASS     => AutopilotZone::class,
-            Hydration::FIELD_OMITEMPTY => true,
+            Transcoding::FIELD_TYPE      => Transcoding::ARRAY,
+            Transcoding::FIELD_CLASS     => AutopilotZone::class,
+            Transcoding::FIELD_OMITEMPTY => true,
         ],
         self::FIELD_UPGRADE         => [
-            Hydration::FIELD_TYPE      => Hydration::OBJECT,
-            Hydration::FIELD_CLASS     => AutopilotUpgrade::class,
-            Hydration::FIELD_OMITEMPTY => true,
+            Transcoding::FIELD_TYPE      => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS     => AutopilotUpgrade::class,
+            Transcoding::FIELD_OMITEMPTY => true,
         ],
     ];
 

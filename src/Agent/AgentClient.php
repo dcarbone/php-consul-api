@@ -48,7 +48,7 @@ class AgentClient extends AbstractClient
         }
         $resp = $this->_requireOK($this->_doGet('v1/agent/self', null));
         $ret  = new MapResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         if (null === $ret->Err) {
             $this->_self = $ret;
         }
@@ -64,7 +64,7 @@ class AgentClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doGet('v1/agent/host', null));
         $ret  = new MapResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -77,7 +77,7 @@ class AgentClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doGet('v1/agent/metrics', null));
         $ret  = new MetricsInfoResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -121,7 +121,7 @@ class AgentClient extends AbstractClient
         $r->filterQuery($filter);
         $resp = $this->_requireOK($this->_do($r));
         $ret  = new AgentChecksResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -146,7 +146,7 @@ class AgentClient extends AbstractClient
         $r->filterQuery($filter);
         $resp = $this->_requireOK($this->_do($r));
         $ret  = new AgentServicesResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -254,7 +254,7 @@ class AgentClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doGet(\sprintf('v1/agent/service/%s', $serviceID), $opts));
         $ret  = new AgentServiceResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -267,7 +267,7 @@ class AgentClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doGet('v1/agent/members', null));
         $ret  = new AgentMembersResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -286,7 +286,7 @@ class AgentClient extends AbstractClient
         }
         $resp = $this->_requireOK($this->_do($r));
         $ret  = new AgentMembersResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 

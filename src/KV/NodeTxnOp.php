@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\KV;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Catalog\Node;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class NodeTxnOp
@@ -29,8 +29,8 @@ class NodeTxnOp extends AbstractModel
 {
     protected const FIELDS = [
         self::FIELD_NODE => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => Node::class,
+            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS => Node::class,
         ],
     ];
 

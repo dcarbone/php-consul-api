@@ -19,7 +19,7 @@ namespace DCarbone\PHPConsulAPI\KV;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class TxnResponse
@@ -28,12 +28,12 @@ class TxnResponse extends AbstractModel
 {
     protected const FIELDS = [
         self::FIELD_RESULTS => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => TxnResults::class,
+            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS => TxnResults::class,
         ],
         self::FIELD_ERRORS  => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => TxnErrors::class,
+            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS => TxnErrors::class,
         ],
     ];
 

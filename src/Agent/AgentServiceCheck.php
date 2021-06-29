@@ -19,7 +19,7 @@ namespace DCarbone\PHPConsulAPI\Agent;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class AgentServiceCheck
@@ -27,37 +27,37 @@ use DCarbone\PHPConsulAPI\Hydration;
 class AgentServiceCheck extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_CHECK_ID                          => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_NAME                              => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_CHECK_ID                          => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_NAME                              => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_SCRIPT_ARGS                       => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::STRING,
-            Hydration::FIELD_OMITEMPTY  => true,
+            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
+            Transcoding::FIELD_ARRAY_TYPE => Transcoding::STRING,
+            Transcoding::FIELD_OMITEMPTY  => true,
         ],
-        self::FIELD_DOCKER_CONTAINER_ID               => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_SHELL                             => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_INTERVAL                          => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_TIMEOUT                           => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_TTL                               => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_HTTP                              => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_DOCKER_CONTAINER_ID               => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_SHELL                             => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_INTERVAL                          => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_TIMEOUT                           => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_TTL                               => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_HTTP                              => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_HEADER                            => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::MIXED,
-            Hydration::FIELD_OMITEMPTY  => true,
+            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
+            Transcoding::FIELD_ARRAY_TYPE => Transcoding::MIXED,
+            Transcoding::FIELD_OMITEMPTY  => true,
         ],
-        self::FIELD_METHOD                            => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_BODY                              => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_TCP                               => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_STATUS                            => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_NOTES                             => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_TLS_SKIP_VERIFY                   => Hydration::OMITEMPTY_BOOLEAN_FIELD,
-        self::FIELD_GRPC                              => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_GRPC_USE_TLS                      => Hydration::OMITEMPTY_BOOLEAN_FIELD,
-        self::FIELD_ALIAS_NODE                        => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_ALIAS_SERVICE                     => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_SUCCESS_BEFORE_PASSING            => Hydration::OMITEMPTY_INTEGER_FIELD,
-        self::FIELD_FAILURES_BEFORE_CRITICAL          => Hydration::OMITEMPTY_INTEGER_FIELD,
-        self::FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER => Hydration::OMITEMPTY_BOOLEAN_FIELD,
+        self::FIELD_METHOD                            => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_BODY                              => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_TCP                               => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_STATUS                            => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_NOTES                             => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_TLS_SKIP_VERIFY                   => Transcoding::OMITEMPTY_BOOLEAN_FIELD,
+        self::FIELD_GRPC                              => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_GRPC_USE_TLS                      => Transcoding::OMITEMPTY_BOOLEAN_FIELD,
+        self::FIELD_ALIAS_NODE                        => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_ALIAS_SERVICE                     => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_SUCCESS_BEFORE_PASSING            => Transcoding::OMITEMPTY_INTEGER_FIELD,
+        self::FIELD_FAILURES_BEFORE_CRITICAL          => Transcoding::OMITEMPTY_INTEGER_FIELD,
+        self::FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER => Transcoding::OMITEMPTY_BOOLEAN_FIELD,
     ];
 
     private const FIELD_CHECK_ID                          = 'CheckID';

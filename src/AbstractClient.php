@@ -327,7 +327,7 @@ abstract class AbstractClient
     {
         $resp = $this->_requireOK($this->_doPut($path, $body, $opts));
         $ret  = new WriteResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -342,7 +342,7 @@ abstract class AbstractClient
     {
         $resp = $this->_requireOK($this->_doDelete($path, $opts));
         $ret  = new WriteResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -359,7 +359,7 @@ abstract class AbstractClient
         $r    = $this->_newPutRequest($path, $body, $opts);
         $resp = $this->_requireOK($this->_do($r));
         $ret  = new ValuedWriteStringResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -375,7 +375,7 @@ abstract class AbstractClient
         $r    = $this->_newGetRequest($path, $opts);
         $resp = $this->_requireOK($this->_do($r));
         $ret  = new ValuedQueryStringResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -391,28 +391,28 @@ abstract class AbstractClient
         $r    = $this->_newGetRequest($path, $opts);
         $resp = $this->_requireOK($this->_do($r));
         $ret  = new ValuedQueryStringsResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
     /**
-     * todo: move into Hydrator?
+     * todo: move into Unmarshaller?
      *
      * @param \DCarbone\PHPConsulAPI\RequestResponse $resp
      * @param \DCarbone\PHPConsulAPI\AbstractResponse $ret
      * @throws \Exception
      */
-    protected function _hydrateResponse(RequestResponse $resp, AbstractResponse $ret): void
+    protected function _unmarshalResponse(RequestResponse $resp, AbstractResponse $ret): void
     {
         // determine if this response contains a *Meta field
-        if (\property_exists($ret, Hydration::FIELD_QUERY_META)) {
+        if (\property_exists($ret, Transcoding::FIELD_QUERY_META)) {
             $ret->QueryMeta = $resp->buildQueryMeta();
-        } elseif (\property_exists($ret, Hydration::FIELD_WRITE_META)) {
+        } elseif (\property_exists($ret, Transcoding::FIELD_WRITE_META)) {
             $ret->WriteMeta = $resp->buildWriteMeta();
         }
 
         // todo: can probably assume that all responses have an Err field...
-        $hasErrField = \property_exists($ret, Hydration::FIELD_ERR);
+        $hasErrField = \property_exists($ret, Transcoding::FIELD_ERR);
 
         // if there was an error in the response, set and return
         if (null !== $resp->Err) {
@@ -423,7 +423,7 @@ abstract class AbstractClient
         }
 
         // if this response type is non-valued, return
-        if (!($ret instanceof HydratedResponseInterface)) {
+        if (!($ret instanceof UnmarshalledResponseInterface)) {
             return;
         }
 
@@ -437,6 +437,6 @@ abstract class AbstractClient
         }
 
         // finally, have response create its value
-        $ret->hydrateValue($dec->Decoded);
+        $ret->unmarshalValue($dec->Decoded);
     }
 }

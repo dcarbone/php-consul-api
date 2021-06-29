@@ -19,7 +19,7 @@ namespace DCarbone\PHPConsulAPI\Health;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class HealthCheck
@@ -27,10 +27,10 @@ use DCarbone\PHPConsulAPI\Hydration;
 class HealthCheck extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_NAMESPACE  => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_NAMESPACE  => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_DEFINITION => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => HealthCheckDefinition::class,
+            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS => HealthCheckDefinition::class,
         ],
     ];
 

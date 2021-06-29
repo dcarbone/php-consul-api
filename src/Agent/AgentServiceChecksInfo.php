@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\Agent;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Health\HealthChecks;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class AgentServiceChecksInfo
@@ -29,13 +29,13 @@ class AgentServiceChecksInfo extends AbstractModel
 {
     protected const FIELDS = [
         self::FIELD_SERVICE => [
-            Hydration::FIELD_TYPE     => Hydration::OBJECT,
-            Hydration::FIELD_CLASS    => AgentService::class,
-            Hydration::FIELD_NULLABLE => true,
+            Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS    => AgentService::class,
+            Transcoding::FIELD_NULLABLE => true,
         ],
         self::FIELD_CHECKS  => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => HealthChecks::class,
+            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS => HealthChecks::class,
         ],
     ];
 

@@ -28,7 +28,7 @@ use GuzzleHttp\RequestOptions;
  */
 class Config
 {
-    use Hydratable;
+    use Unmarshaller;
 
     public const DEFAULT_REQUEST_OPTIONS = [
         RequestOptions::HTTP_ERRORS    => false,
@@ -37,10 +37,10 @@ class Config
 
     protected const FIELDS = [
         self::FIELD_HTTP_AUTH => [
-            Hydration::FIELD_CALLBACK => 'setHttpAuth',
+            Transcoding::FIELD_UNMARSHAL_CALLBACK => 'setHttpAuth',
         ],
         self::FIELD_WAIT_TIME => [
-            Hydration::FIELD_CALLBACK => Hydration::HYDRATE_NULLABLE_DURATION,
+            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_NULLABLE_DURATION,
         ],
     ];
 
@@ -167,7 +167,7 @@ class Config
     public function __construct(array $config = [])
     {
         foreach ($config + self::_getDefaultConfig() as $k => $v) {
-            $this->hydrateField($k, $v);
+            $this->unmarshalField($k, $v);
         }
 
         // quick validation on key/cert combo

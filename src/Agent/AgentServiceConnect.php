@@ -19,7 +19,7 @@ namespace DCarbone\PHPConsulAPI\Agent;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class AgentServiceConnect
@@ -27,11 +27,11 @@ use DCarbone\PHPConsulAPI\Hydration;
 class AgentServiceConnect extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_NATIVE          => Hydration::OMITEMPTY_BOOLEAN_FIELD,
+        self::FIELD_NATIVE          => Transcoding::OMITEMPTY_BOOLEAN_FIELD,
         self::FIELD_SIDECAR_SERVICE => [
-            Hydration::FIELD_TYPE      => Hydration::ARRAY,
-            Hydration::FIELD_CLASS     => AgentServiceRegistration::class,
-            Hydration::FIELD_OMITEMPTY => true,
+            Transcoding::FIELD_TYPE      => Transcoding::ARRAY,
+            Transcoding::FIELD_CLASS     => AgentServiceRegistration::class,
+            Transcoding::FIELD_OMITEMPTY => true,
         ],
     ];
 

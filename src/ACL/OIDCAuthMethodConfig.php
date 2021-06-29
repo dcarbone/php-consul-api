@@ -23,6 +23,6 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 /**
  * Class OIDCAuthMethodConfig
  */
-class OIDCAuthMethodConfig extends AbstractModel{
-
+class OIDCAuthMethodConfig extends AbstractModel
+{
 }

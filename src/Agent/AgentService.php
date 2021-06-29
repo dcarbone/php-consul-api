@@ -22,7 +22,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Catalog\ServiceAddress;
 use DCarbone\PHPConsulAPI\FakeMap;
 use DCarbone\PHPConsulAPI\HasStringTags;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class AgentService
@@ -32,35 +32,35 @@ class AgentService extends AbstractModel
     use HasStringTags;
 
     protected const FIELDS = [
-        self::FIELD_KIND             => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_META             => Hydration::MAP_FIELD,
+        self::FIELD_KIND             => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_META             => Transcoding::MAP_FIELD,
         self::FIELD_TAGGED_ADDRESSES => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => ServiceAddress::class,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
-            Hydration::FIELD_OMITEMPTY  => true,
+            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
+            Transcoding::FIELD_CLASS      => ServiceAddress::class,
+            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
+            Transcoding::FIELD_OMITEMPTY  => true,
         ],
         self::FIELD_WEIGHTS          => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => AgentWeights::class,
+            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS => AgentWeights::class,
         ],
-        self::FIELD_CREATE_INDEX     => Hydration::OMITEMPTY_INTEGER_FIELD,
-        self::FIELD_MODIFY_INDEX     => Hydration::OMITEMPTY_INTEGER_FIELD,
-        self::FIELD_CONTENT_HASH     => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_CREATE_INDEX     => Transcoding::OMITEMPTY_INTEGER_FIELD,
+        self::FIELD_MODIFY_INDEX     => Transcoding::OMITEMPTY_INTEGER_FIELD,
+        self::FIELD_CONTENT_HASH     => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_PROXY            => [
-            Hydration::FIELD_TYPE      => Hydration::OBJECT,
-            Hydration::FIELD_CLASS     => AgentServiceConnectProxyConfig::class,
-            Hydration::FIELD_NULLABLE  => true,
-            Hydration::FIELD_OMITEMPTY => true,
+            Transcoding::FIELD_TYPE      => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS     => AgentServiceConnectProxyConfig::class,
+            Transcoding::FIELD_NULLABLE  => true,
+            Transcoding::FIELD_OMITEMPTY => true,
         ],
         self::FIELD_CONNECT          => [
-            Hydration::FIELD_TYPE      => Hydration::OBJECT,
-            Hydration::FIELD_CLASS     => AgentServiceConnect::class,
-            Hydration::FIELD_NULLABLE  => true,
-            Hydration::FIELD_OMITEMPTY => true,
+            Transcoding::FIELD_TYPE      => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS     => AgentServiceConnect::class,
+            Transcoding::FIELD_NULLABLE  => true,
+            Transcoding::FIELD_OMITEMPTY => true,
         ],
-        self::FIELD_NAMESPACE        => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_DATACENTER       => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_NAMESPACE        => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_DATACENTER       => Transcoding::OMITEMPTY_STRING_FIELD,
     ];
 
     private const FIELD_KIND             = 'Kind';

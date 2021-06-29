@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\KV;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class ServiceTxnOp
@@ -29,8 +29,8 @@ class ServiceTxnOp extends AbstractModel
 {
     protected const FIELDS = [
         self::FIELD_SERVICE => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => AgentService::class,
+            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS => AgentService::class,
         ],
     ];
 

@@ -23,7 +23,8 @@ namespace DCarbone\PHPConsulAPI;
  */
 abstract class AbstractModel implements \JsonSerializable
 {
-    use Hydratable;
+    use Marshaller;
+    use Unmarshaller;
 
     protected const FIELDS = [];
 
@@ -42,7 +43,7 @@ abstract class AbstractModel implements \JsonSerializable
             return;
         }
         foreach ($data as $field => $value) {
-            $this->hydrateField($field, $value);
+            $this->unmarshalField($field, $value);
         }
     }
 

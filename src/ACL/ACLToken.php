@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\ACL;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class ACLToken
@@ -29,45 +29,45 @@ class ACLToken extends AbstractModel
 {
     protected const FIELDS = [
         self::FIELD_POLICIES           => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => ACLTokenPolicyLink::class,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
-            Hydration::FIELD_OMITEMPTY  => true,
+            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
+            Transcoding::FIELD_CLASS      => ACLTokenPolicyLink::class,
+            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
+            Transcoding::FIELD_OMITEMPTY  => true,
         ],
         self::FIELD_ROLES              => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => ACLTokenRoleLink::class,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
-            Hydration::FIELD_OMITEMPTY  => true,
+            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
+            Transcoding::FIELD_CLASS      => ACLTokenRoleLink::class,
+            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
+            Transcoding::FIELD_OMITEMPTY  => true,
         ],
         self::FIELD_SERVICE_IDENTITIES => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => ACLServiceIdentity::class,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
-            Hydration::FIELD_OMITEMPTY  => true,
+            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
+            Transcoding::FIELD_CLASS      => ACLServiceIdentity::class,
+            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
+            Transcoding::FIELD_OMITEMPTY  => true,
         ],
         self::FIELD_NODE_IDENTITIES    => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => ACLNodeIdentity::class,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
-            Hydration::FIELD_OMITEMPTY  => true,
+            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
+            Transcoding::FIELD_CLASS      => ACLNodeIdentity::class,
+            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
+            Transcoding::FIELD_OMITEMPTY  => true,
         ],
-        self::FIELD_AUTH_METHOD        => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_AUTH_METHOD        => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_EXPIRATION_TTL     => [
-            Hydration::FIELD_CALLBACK  => Hydration::HYDRATE_DURATION,
-            Hydration::FIELD_OMITEMPTY => true,
+            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_DURATION,
+            Transcoding::FIELD_OMITEMPTY          => true,
         ],
         self::FIELD_EXPIRATION_TIME    => [
-            Hydration::FIELD_CALLBACK  => Hydration::HYDRATE_NULLABLE_TIME,
-            Hydration::FIELD_NULLABLE  => true,
-            Hydration::FIELD_OMITEMPTY => true,
+            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_NULLABLE_TIME,
+            Transcoding::FIELD_NULLABLE           => true,
+            Transcoding::FIELD_OMITEMPTY          => true,
         ],
         self::FIELD_CREATE_TIME        => [
-            Hydration::FIELD_CALLBACK  => Hydration::HYDRATE_TIME,
-            Hydration::FIELD_OMITEMPTY => true,
+            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_TIME,
+            Transcoding::FIELD_OMITEMPTY          => true,
         ],
-        self::FIELD_RULES              => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_NAMESPACE          => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_RULES              => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_NAMESPACE          => Transcoding::OMITEMPTY_STRING_FIELD,
     ];
 
     private const FIELD_POLICIES           = 'Policies';

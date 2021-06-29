@@ -19,7 +19,7 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class MeshGatewayConfig
@@ -27,7 +27,7 @@ use DCarbone\PHPConsulAPI\Hydration;
 class MeshGatewayConfig extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_MODE => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_MODE => Transcoding::OMITEMPTY_STRING_FIELD,
     ];
 
     private const FIELD_MODE = 'Mode';

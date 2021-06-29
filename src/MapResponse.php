@@ -21,7 +21,7 @@ namespace DCarbone\PHPConsulAPI;
 /**
  * Class MapResponse
  */
-class MapResponse extends AbstractValuedResponse implements HydratedResponseInterface
+class MapResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
     /** @var array|null */
     public ?array $Map = null;
@@ -37,7 +37,7 @@ class MapResponse extends AbstractValuedResponse implements HydratedResponseInte
     /**
      * @param mixed $decodedData
      */
-    public function hydrateValue($decodedData): void
+    public function unmarshalValue($decodedData): void
     {
         $this->Map = $decodedData;
     }

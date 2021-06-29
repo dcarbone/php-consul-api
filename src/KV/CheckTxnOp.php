@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\KV;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Health\HealthCheck;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class CheckTxnOp
@@ -29,8 +29,8 @@ class CheckTxnOp extends AbstractModel
 {
     protected const FIELDS = [
         self::FIELD_CHECK => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => HealthCheck::class,
+            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS => HealthCheck::class,
         ],
     ];
 

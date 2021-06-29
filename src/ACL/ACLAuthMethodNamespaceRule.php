@@ -19,7 +19,7 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class ACLAuthMethodNamespaceRule
@@ -27,8 +27,8 @@ use DCarbone\PHPConsulAPI\Hydration;
 class ACLAuthMethodNamespaceRule extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_SELECTOR       => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_BIND_NAMESPACE => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_SELECTOR       => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_BIND_NAMESPACE => Transcoding::OMITEMPTY_STRING_FIELD,
     ];
 
     private const FIELD_SELECTOR       = 'Selector';

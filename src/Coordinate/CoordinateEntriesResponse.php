@@ -19,12 +19,12 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
  */
 
 use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\HydratedResponseInterface;
+use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 /**
  * Class CoordinateEntriesResponse
  */
-class CoordinateEntriesResponse extends AbstractValuedQueryResponse implements HydratedResponseInterface
+class CoordinateEntriesResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry[]|null */
     public ?array $Nodes = null;
@@ -40,7 +40,7 @@ class CoordinateEntriesResponse extends AbstractValuedQueryResponse implements H
     /**
      * @param mixed $decodedData
      */
-    public function hydrateValue($decodedData): void
+    public function unmarshalValue($decodedData): void
     {
         $this->Nodes = [];
         foreach ($decodedData as $node) {

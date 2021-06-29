@@ -27,16 +27,16 @@ class QueryOptions extends AbstractModel implements RequestOptions
 {
     protected const FIELDS = [
         self::FIELD_MAX_AGE => [
-            Hydration::FIELD_CALLBACK => Hydration::HYDRATE_NULLABLE_DURATION,
+            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_NULLABLE_DURATION,
         ],
         self::FIELD_STALE_IF_ERROR => [
-            Hydration::FIELD_CALLBACK => Hydration::HYDRATE_NULLABLE_DURATION,
+            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_NULLABLE_DURATION,
         ],
         self::FIELD_WAIT_TIME => [
-            Hydration::FIELD_CALLBACK => Hydration::HYDRATE_NULLABLE_DURATION,
+            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_NULLABLE_DURATION,
         ],
         self::FIELD_TIMEOUT => [
-            Hydration::FIELD_CALLBACK => Hydration::HYDRATE_NULLABLE_DURATION,
+            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_NULLABLE_DURATION,
         ],
     ];
 

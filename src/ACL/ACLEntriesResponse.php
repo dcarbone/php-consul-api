@@ -19,12 +19,12 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\HydratedResponseInterface;
+use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 /**
  * Class ACLEntriesResponse
  */
-class ACLEntriesResponse extends AbstractValuedQueryResponse implements HydratedResponseInterface
+class ACLEntriesResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\ACL\ACLEntry[]|null */
     public array $ACLEntries = [];
@@ -40,7 +40,7 @@ class ACLEntriesResponse extends AbstractValuedQueryResponse implements Hydrated
     /**
      * @param mixed $decodedData
      */
-    public function hydrateValue($decodedData): void
+    public function unmarshalValue($decodedData): void
     {
         foreach ($decodedData as $entry) {
             $this->ACLEntries[] = new ACLEntry($entry);

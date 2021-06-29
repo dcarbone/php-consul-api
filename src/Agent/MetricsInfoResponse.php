@@ -19,12 +19,12 @@ namespace DCarbone\PHPConsulAPI\Agent;
  */
 
 use DCarbone\PHPConsulAPI\AbstractValuedResponse;
-use DCarbone\PHPConsulAPI\HydratedResponseInterface;
+use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 /**
  * Class MetricsInfoResponse
  */
-class MetricsInfoResponse extends AbstractValuedResponse implements HydratedResponseInterface
+class MetricsInfoResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Agent\MetricsInfo|null */
     public ?MetricsInfo $MetricsInfo = null;
@@ -40,7 +40,7 @@ class MetricsInfoResponse extends AbstractValuedResponse implements HydratedResp
     /**
      * @param mixed $decodedData
      */
-    public function hydrateValue($decodedData): void
+    public function unmarshalValue($decodedData): void
     {
         $this->MetricsInfo = new MetricsInfo((array)$decodedData);
     }

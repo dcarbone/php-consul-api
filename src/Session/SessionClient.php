@@ -96,7 +96,7 @@ class SessionClient extends AbstractClient
             case HTTP\StatusNotFound:
                 break;
             case HTTP\StatusOK:
-                $this->_hydrateResponse($resp, $ret);
+                $this->_unmarshalResponse($resp, $ret);
                 break;
             default:
                 $ret->Err = new Error(
@@ -155,7 +155,7 @@ class SessionClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doGet($path, $opts));
         $ret  = new SessionEntriesQueryResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 

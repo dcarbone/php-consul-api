@@ -19,7 +19,7 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class PreparedQueryDefinition
@@ -28,16 +28,16 @@ class PreparedQueryDefinition extends AbstractModel
 {
     protected const FIELDS = [
         self::FIELD_SERVICE  => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => ServiceQuery::class,
+            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS => ServiceQuery::class,
         ],
         self::FIELD_DNS      => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => QueryDNSOptions::class,
+            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS => QueryDNSOptions::class,
         ],
         self::FIELD_Template => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => QueryTemplate::class,
+            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS => QueryTemplate::class,
         ],
     ];
 

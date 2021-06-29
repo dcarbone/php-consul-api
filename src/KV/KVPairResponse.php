@@ -19,12 +19,12 @@ namespace DCarbone\PHPConsulAPI\KV;
  */
 
 use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\HydratedResponseInterface;
+use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 /**
  * Class KVPairResponse
  */
-class KVPairResponse extends AbstractValuedQueryResponse implements HydratedResponseInterface
+class KVPairResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\KV\KVPair|null */
     public ?KVPair $KVPair = null;
@@ -40,7 +40,7 @@ class KVPairResponse extends AbstractValuedQueryResponse implements HydratedResp
     /**
      * @param mixed $decodedData
      */
-    public function hydrateValue($decodedData): void
+    public function unmarshalValue($decodedData): void
     {
         $this->KVPair = new KVPair((array)$decodedData, true);
     }

@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class AutopilotServer
@@ -29,14 +29,14 @@ class AutopilotServer extends AbstractModel implements \JsonSerializable
 {
     protected const FIELDS = [
         self::FIELD_LAST_CONTACT    => [
-            Hydration::FIELD_CALLBACK => [ReadableDuration::class, 'hydrate'],
-            Hydration::FIELD_NULLABLE => true,
+            Transcoding::FIELD_UNMARSHAL_CALLBACK => [ReadableDuration::class, 'unmarshalJSON'],
+            Transcoding::FIELD_NULLABLE           => true,
         ],
         self::FIELD_STABLE_SINCE    => [
-            Hydration::FIELD_CALLBACK => Hydration::HYDRATE_TIME,
+            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_TIME,
         ],
-        self::FIELD_REDUNDANCY_ZONE => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_UPGRADE_VERSION => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_REDUNDANCY_ZONE => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_UPGRADE_VERSION => Transcoding::OMITEMPTY_STRING_FIELD,
     ];
 
     private const FIELD_LAST_CONTACT    = 'LastContact';

@@ -19,12 +19,12 @@
 namespace DCarbone\PHPConsulAPI\PreparedQuery;
 
 use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\HydratedResponseInterface;
+use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 /**
  * Class PreparedQueryDefinitionsResponse
  */
-class PreparedQueryDefinitionsResponse extends AbstractValuedQueryResponse implements HydratedResponseInterface
+class PreparedQueryDefinitionsResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition[]|null */
     public ?array $PreparedQueryDefinitions = null;
@@ -40,7 +40,7 @@ class PreparedQueryDefinitionsResponse extends AbstractValuedQueryResponse imple
     /**
      * @param mixed $decodedData
      */
-    public function hydrateValue($decodedData): void
+    public function unmarshalValue($decodedData): void
     {
         $this->PreparedQueryDefinitions = [];
         foreach ($decodedData as $datum) {

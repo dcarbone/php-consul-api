@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Health\ServiceEntry;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class PreparedQueryExecuteResponse
@@ -29,15 +29,15 @@ class PreparedQueryExecuteResponse extends AbstractModel
 {
     protected const FIELDS = [
         self::FIELD_NODES     => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => ServiceEntry::class,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
+            Transcoding::FIELD_CLASS      => ServiceEntry::class,
+            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
         ],
         self::FIELD_DNS       => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => QueryDNSOptions::class,
+            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS => QueryDNSOptions::class,
         ],
-        self::FIELD_NAMESPACE => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_NAMESPACE => Transcoding::OMITEMPTY_STRING_FIELD,
     ];
 
     private const FIELD_NAMESPACE = 'Namespace';

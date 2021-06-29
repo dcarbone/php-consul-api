@@ -19,7 +19,7 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class ACLServiceIdentity
@@ -28,9 +28,9 @@ class ACLServiceIdentity extends AbstractModel
 {
     protected const FIELDS = [
         self::FIELD_DATACENTERS => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::STRING,
-            Hydration::FIELD_OMITEMPTY  => true,
+            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
+            Transcoding::FIELD_ARRAY_TYPE => Transcoding::STRING,
+            Transcoding::FIELD_OMITEMPTY  => true,
         ],
     ];
 

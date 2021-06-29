@@ -19,7 +19,7 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class ACLRole
@@ -28,24 +28,24 @@ class ACLRole extends AbstractModel
 {
     protected const FIELDS = [
         self::FIELD_POLICIES           => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => ACLTokenPolicyLink::class,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
-            Hydration::FIELD_OMITEMPTY  => true,
+            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
+            Transcoding::FIELD_CLASS      => ACLTokenPolicyLink::class,
+            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
+            Transcoding::FIELD_OMITEMPTY  => true,
         ],
         self::FIELD_SERVICE_IDENTITIES => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => ACLServiceIdentity::class,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
-            Hydration::FIELD_OMITEMPTY  => true,
+            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
+            Transcoding::FIELD_CLASS      => ACLServiceIdentity::class,
+            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
+            Transcoding::FIELD_OMITEMPTY  => true,
         ],
         self::FIELD_NODE_IDENTITIES    => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => ACLNodeIdentity::class,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
-            Hydration::FIELD_OMITEMPTY  => true,
+            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
+            Transcoding::FIELD_CLASS      => ACLNodeIdentity::class,
+            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
+            Transcoding::FIELD_OMITEMPTY  => true,
         ],
-        self::FIELD_NAMESPACE          => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_NAMESPACE          => Transcoding::OMITEMPTY_STRING_FIELD,
     ];
 
     private const FIELD_POLICIES           = 'Policies';

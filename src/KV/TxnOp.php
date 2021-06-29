@@ -19,7 +19,7 @@ namespace DCarbone\PHPConsulAPI\KV;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class TxnOp
@@ -28,24 +28,24 @@ class TxnOp extends AbstractModel
 {
     protected const FIELDS = [
         self::FIELD_KV      => [
-            Hydration::FIELD_TYPE     => Hydration::OBJECT,
-            Hydration::FIELD_CLASS    => KVTxnOp::class,
-            Hydration::FIELD_NULLABLE => true,
+            Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS    => KVTxnOp::class,
+            Transcoding::FIELD_NULLABLE => true,
         ],
         self::FIELD_NODE    => [
-            Hydration::FIELD_TYPE     => Hydration::OBJECT,
-            Hydration::FIELD_CLASS    => NodeTxnOp::class,
-            Hydration::FIELD_NULLABLE => true,
+            Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS    => NodeTxnOp::class,
+            Transcoding::FIELD_NULLABLE => true,
         ],
         self::FIELD_SERVICE => [
-            Hydration::FIELD_TYPE     => Hydration::OBJECT,
-            Hydration::FIELD_CLASS    => ServiceTxnOp::class,
-            Hydration::FIELD_NULLABLE => true,
+            Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS    => ServiceTxnOp::class,
+            Transcoding::FIELD_NULLABLE => true,
         ],
         self::FIELD_CHECK   => [
-            Hydration::FIELD_TYPE     => Hydration::OBJECT,
-            Hydration::FIELD_CLASS    => CheckTxnOp::class,
-            Hydration::FIELD_NULLABLE => true,
+            Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS    => CheckTxnOp::class,
+            Transcoding::FIELD_NULLABLE => true,
         ],
     ];
 

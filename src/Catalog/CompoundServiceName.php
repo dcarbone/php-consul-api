@@ -19,7 +19,7 @@ namespace DCarbone\PHPConsulAPI\Catalog;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class CompoundServiceName
@@ -27,7 +27,7 @@ use DCarbone\PHPConsulAPI\Hydration;
 class CompoundServiceName extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_NAMESPACE => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_NAMESPACE => Transcoding::OMITEMPTY_STRING_FIELD,
     ];
 
     private const FIELD_NAMESPACE = 'Namespace';

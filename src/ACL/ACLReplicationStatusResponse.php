@@ -19,12 +19,12 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\HydratedResponseInterface;
+use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 /**
  * Class ACLReplicationStatusResponse
  */
-class ACLReplicationStatusResponse extends AbstractValuedQueryResponse implements HydratedResponseInterface
+class ACLReplicationStatusResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\ACL\ACLReplicationStatus|null */
     public ?ACLReplicationStatus $ACLReplicationStatus = null;
@@ -40,7 +40,7 @@ class ACLReplicationStatusResponse extends AbstractValuedQueryResponse implement
     /**
      * @param mixed $decodedData
      */
-    public function hydrateValue($decodedData): void
+    public function unmarshalValue($decodedData): void
     {
         $this->ACLReplicationStatus = new ACLReplicationStatus((array)$decodedData);
     }

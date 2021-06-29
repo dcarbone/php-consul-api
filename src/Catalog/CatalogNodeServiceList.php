@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\Catalog;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class CatalogNodeServiceList
@@ -29,13 +29,13 @@ class CatalogNodeServiceList extends AbstractModel
 {
     protected const FIELDS = [
         self::FIELD_NODE     => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => Node::class,
+            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS => Node::class,
         ],
         self::FIELD_SERVICES => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => AgentService::class,
-            Hydration::FIELD_ARRAY_TYPE => HYdration::OBJECT,
+            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
+            Transcoding::FIELD_CLASS      => AgentService::class,
+            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
         ],
     ];
 

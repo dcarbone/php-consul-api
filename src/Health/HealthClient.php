@@ -192,7 +192,7 @@ class HealthClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doGet($path, $opts));
         $ret  = new HealthChecksResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -233,7 +233,7 @@ class HealthClient extends AbstractClient
         }
         $resp = $this->_requireOK($this->_do($r));
         $ret  = new ServiceEntriesResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 }

@@ -70,7 +70,7 @@ class OperatorClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doGet(\sprintf('v1/operator/area/%s', \urlencode($areaID)), $opts));
         $ret  = new OperatorAreasResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -84,7 +84,7 @@ class OperatorClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doGet('v1/operator/area', $opts));
         $ret  = new OperatorAreasResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -111,7 +111,7 @@ class OperatorClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doPut(\sprintf('v1/operator/area/%s/join', $areaID), $addresses, $opts));
         $ret  = new OperatorAreaJoinResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -126,7 +126,7 @@ class OperatorClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doGet(\sprintf('v1/operator/area/%s/members', $areaID), $opts));
         $ret  = new OperatorSerfMembersResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -140,7 +140,7 @@ class OperatorClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doGet('v1/operator/autopilot/configuration', $opts));
         $ret  = new OperatorAutopilotConfigurationResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -168,7 +168,7 @@ class OperatorClient extends AbstractClient
     ): ValuedBoolResponse {
         $resp = $this->_requireOK($this->_doPut('v1/operator/autopilot/configuration', $conf, $opts));
         $ret  = new ValuedBoolResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -182,7 +182,7 @@ class OperatorClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doGet('v1/operator/autopilot/health', $opts));
         $ret  = new OperatorHealthReplyResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -196,7 +196,7 @@ class OperatorClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doGet('v1/operator/autopilot/state', $opts));
         $ret  = new AutopilotStateResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -210,7 +210,7 @@ class OperatorClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doGet('v1/operator/raft/configuration', $opts));
         $ret  = new OperatorRaftConfigurationResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 

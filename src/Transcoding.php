@@ -21,9 +21,9 @@ namespace DCarbone\PHPConsulAPI;
 use DCarbone\Go\Time;
 
 /**
- * Class Hydration
+ * Class Transcoding
  */
-final class Hydration
+final class Transcoding
 {
     public const STRING   = 'string';
     public const INTEGER  = 'integer';
@@ -40,23 +40,24 @@ final class Hydration
     public const TRUE  = 'true';
     public const FALSE = 'false';
 
-    public const FIELD_TYPE       = 0;
-    public const FIELD_CLASS      = 1;
-    public const FIELD_ARRAY_TYPE = 2;
-    public const FIELD_CALLBACK   = 3;
-    public const FIELD_NULLABLE   = 4;
-    public const FIELD_OMITEMPTY  = 5;
-    public const FIELD_SKIP       = 6;
-    public const FIELD_MARSHAL_AS = 7;
+    public const FIELD_TYPE               = 0;
+    public const FIELD_CLASS              = 1;
+    public const FIELD_ARRAY_TYPE         = 2;
+    public const FIELD_UNMARSHAL_CALLBACK = 3;
+    public const FIELD_NULLABLE           = 4;
+    public const FIELD_OMITEMPTY          = 5;
+    public const FIELD_SKIP               = 6;
+    public const FIELD_MARSHAL_AS         = 7;
+    public const FIELD_UNMARSHAL_AS       = 8;
 
     public const FIELD_QUERY_META = 'QueryMeta';
     public const FIELD_WRITE_META = 'WriteMeta';
     public const FIELD_ERR        = 'Err';
 
-    public const HYDRATE_TIME              = [self::class, 'hydrateTime'];
-    public const HYDRATE_NULLABLE_TIME     = [self::class, 'hydrateNullableTime'];
-    public const HYDRATE_DURATION          = [self::class, 'hydrateDuration'];
-    public const HYDRATE_NULLABLE_DURATION = [self::class, 'hydrateNullableDuration'];
+    public const UNMARSHAL_TIME              = [self::class, 'unmarshalTime'];
+    public const UNMARSHAL_NULLABLE_TIME     = [self::class, 'unmarshalNullableTime'];
+    public const UNMARSHAL_DURATION          = [self::class, 'unmarshalDuration'];
+    public const UNMARSHAL_NULLABLE_DURATION = [self::class, 'unmarshalNullableDuration'];
 
     public const MAP_FIELD = [self::FIELD_TYPE => self::OBJECT, self::FIELD_CLASS => FakeMap::class];
 
@@ -86,7 +87,7 @@ final class Hydration
      * @param \DCarbone\Go\Time\Time|string $value
      * @throws \Exception
      */
-    public static function hydrateTime(object $instance, string $field, $value): void
+    public static function unmarshalTime(object $instance, string $field, $value): void
     {
         if ($value instanceof Time\Time) {
             $instance->{$field} = clone $value;
@@ -101,21 +102,23 @@ final class Hydration
      * @param \DCarbone\Go\Time\Time|string|null $value
      * @throws \Exception
      */
-    public static function hydrateNullableTime(object $instance, string $field, $value): void
+    public static function unmarshalNullableTime(object $instance, string $field, $value): void
     {
         if (null === $value) {
             $instance->{$field} = null;
             return;
         }
-        self::hydrateTime($instance, $field, $value);
+        self::unmarshalTime($instance, $field, $value);
     }
 
     /**
+     * This accepts a multitude of $value types.  See Time::Duration for implementation details.
+     *
      * @param object $instance
      * @param string $field
      * @param mixed $value
      */
-    public static function hydrateDuration(object $instance, string $field, $value): void
+    public static function unmarshalDuration(object $instance, string $field, $value): void
     {
         $instance->{$field} = Time::Duration($value);
     }
@@ -125,12 +128,12 @@ final class Hydration
      * @param string $field
      * @param mixed $value
      */
-    public static function hydrateNullableDuration(object $instance, string $field, $value): void
+    public static function unmarshalNullableDuration(object $instance, string $field, $value): void
     {
         if (null === $value) {
             $instance->{$field} = null;
             return;
         }
-        self::hydrateDuration($instance, $field, $value);
+        self::unmarshalDuration($instance, $field, $value);
     }
 }

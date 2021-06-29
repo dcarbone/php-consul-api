@@ -62,7 +62,7 @@ class CatalogClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doGet('v1/catalog/datacenters', null));
         $ret  = new ValuedStringsResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -76,7 +76,7 @@ class CatalogClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doGet('v1/catalog/nodes', $opts));
         $ret  = new NodesResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -90,7 +90,7 @@ class CatalogClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doGet('v1/catalog/services', $opts));
         $ret  = new ValuedQueryStringsResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -105,7 +105,7 @@ class CatalogClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doGet(\sprintf('v1/catalog/node-services/%s', \urlencode($node)), $opts));
         $ret  = new CatalogNodeServicesListResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -128,7 +128,7 @@ class CatalogClient extends AbstractClient
         }
         $resp = $this->_requireOK($this->_do($r));
         $ret  = new CatalogServicesResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -155,7 +155,7 @@ class CatalogClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doGet(\sprintf('v1/catalog/node/%s', $node), $opts));
         $ret  = new CatalogNodeResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -170,7 +170,7 @@ class CatalogClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doGet(\sprintf('v1/catalog/gateway-services/%s', \urlencode($gateway)), $opts));
         $ret  = new GatewayServicesResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 }

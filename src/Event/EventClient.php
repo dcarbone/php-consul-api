@@ -48,7 +48,7 @@ class EventClient extends AbstractClient
         }
         $resp = $this->_requireOK($this->_do($r));
         $ret  = new UserEventResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -67,7 +67,7 @@ class EventClient extends AbstractClient
         }
         $resp = $this->_requireOK($this->_do($r));
         $ret  = new UserEventsResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 

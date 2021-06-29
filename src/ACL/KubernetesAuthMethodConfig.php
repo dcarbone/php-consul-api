@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\ACL;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\FakeMap;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class KubernetesAuthMethodConfig
@@ -28,9 +28,9 @@ use DCarbone\PHPConsulAPI\Hydration;
 class KubernetesAuthMethodConfig extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_HOST                => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_CA_CERT             => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_SERVICE_ACCOUNT_JWT => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_HOST                => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_CA_CERT             => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_SERVICE_ACCOUNT_JWT => Transcoding::OMITEMPTY_STRING_FIELD,
     ];
 
     private const FIELD_HOST                = 'Host';

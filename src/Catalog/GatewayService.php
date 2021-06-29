@@ -19,7 +19,7 @@ namespace DCarbone\PHPConsulAPI\Catalog;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class GatewayService
@@ -28,25 +28,25 @@ class GatewayService extends AbstractModel
 {
     protected const FIELDS = [
         self::FIELD_GATEWAY  => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => CompoundServiceName::class,
+            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS => CompoundServiceName::class,
         ],
         self::FIELD_SERVICE  => [
-            Hydration::FIELD_TYPE  => Hydration::OBJECT,
-            Hydration::FIELD_CLASS => CompoundServiceName::class,
+            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS => CompoundServiceName::class,
         ],
-        self::FIELD_PORT     => Hydration::OMITEMPTY_INTEGER_FIELD,
-        self::FIELD_PROTOCOL => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_PORT     => Transcoding::OMITEMPTY_INTEGER_FIELD,
+        self::FIELD_PROTOCOL => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_HOSTS    => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::STRING,
-            Hydration::FIELD_OMITEMPTY  => true,
+            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
+            Transcoding::FIELD_ARRAY_TYPE => Transcoding::STRING,
+            Transcoding::FIELD_OMITEMPTY  => true,
         ],
-        self::FIELD_CA_FILE      => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_CERT_FILE    => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_KEY_FILE     => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_SNI          => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_FROM_WILDCARD=> Hydration::OMITEMPTY_BOOLEAN_FIELD,
+        self::FIELD_CA_FILE      => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_CERT_FILE    => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_KEY_FILE     => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_SNI          => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_FROM_WILDCARD=> Transcoding::OMITEMPTY_BOOLEAN_FIELD,
     ];
 
     private const FIELD_GATEWAY       = 'Gateway';

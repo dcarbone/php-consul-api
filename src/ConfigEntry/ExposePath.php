@@ -19,7 +19,7 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class ExposePath
@@ -27,10 +27,10 @@ use DCarbone\PHPConsulAPI\Hydration;
 class ExposePath extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_LISTENER_PORT   => Hydration::OMITEMPTY_INTEGER_FIELD,
-        self::FIELD_PATH            => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_LOCAL_PORT_PATH => Hydration::OMITEMPTY_INTEGER_FIELD,
-        self::FIELD_PROTOCOL        => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_LISTENER_PORT   => Transcoding::OMITEMPTY_INTEGER_FIELD,
+        self::FIELD_PATH            => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_LOCAL_PORT_PATH => Transcoding::OMITEMPTY_INTEGER_FIELD,
+        self::FIELD_PROTOCOL        => Transcoding::OMITEMPTY_STRING_FIELD,
     ];
 
     private const FIELD_LISTENER_PORT   = 'ListenerPort';

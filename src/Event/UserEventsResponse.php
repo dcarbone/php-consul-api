@@ -19,12 +19,12 @@ namespace DCarbone\PHPConsulAPI\Event;
  */
 
 use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\HydratedResponseInterface;
+use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 /**
  * Class UserEventsResponse
  */
-class UserEventsResponse extends AbstractValuedQueryResponse implements HydratedResponseInterface
+class UserEventsResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Event\UserEvent[]|null */
     public ?array $UserEvents = null;
@@ -40,7 +40,7 @@ class UserEventsResponse extends AbstractValuedQueryResponse implements Hydrated
     /**
      * @param mixed $decodedData
      */
-    public function hydrateValue($decodedData): void
+    public function unmarshalValue($decodedData): void
     {
         $this->UserEvents = [];
         foreach ($decodedData as $datum) {

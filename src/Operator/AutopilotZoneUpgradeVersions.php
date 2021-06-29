@@ -19,7 +19,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class AutopilotZoneUpgradeVersions
@@ -27,10 +27,10 @@ use DCarbone\PHPConsulAPI\Hydration;
 class AutopilotZoneUpgradeVersions extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_TARGET_VERSION_VOTERS     => Hydration::OMITEMPTY_STRING_ARRAY_FIELD,
-        self::FIELD_TARGET_VERSION_NON_VOTERS => Hydration::OMITEMPTY_STRING_ARRAY_FIELD,
-        self::FIELD_OTHER_VERSION_VOTERS      => Hydration::OMITEMPTY_STRING_ARRAY_FIELD,
-        self::FIELD_OTHER_VERSION_NON_VOTERS  => Hydration::OMITEMPTY_STRING_ARRAY_FIELD,
+        self::FIELD_TARGET_VERSION_VOTERS     => Transcoding::OMITEMPTY_STRING_ARRAY_FIELD,
+        self::FIELD_TARGET_VERSION_NON_VOTERS => Transcoding::OMITEMPTY_STRING_ARRAY_FIELD,
+        self::FIELD_OTHER_VERSION_VOTERS      => Transcoding::OMITEMPTY_STRING_ARRAY_FIELD,
+        self::FIELD_OTHER_VERSION_NON_VOTERS  => Transcoding::OMITEMPTY_STRING_ARRAY_FIELD,
     ];
 
     private const FIELD_TARGET_VERSION_VOTERS     = 'TargetVersionVoters';

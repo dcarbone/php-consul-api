@@ -21,7 +21,7 @@ namespace DCarbone\PHPConsulAPI;
 /**
  * Class ValuedWriteBoolResponse
  */
-class ValuedWriteBoolResponse extends AbstractValuedWriteResponse implements HydratedResponseInterface
+class ValuedWriteBoolResponse extends AbstractValuedWriteResponse implements UnmarshalledResponseInterface
 {
     use ResponseValueBoolTrait;
 }

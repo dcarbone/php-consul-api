@@ -19,7 +19,7 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class ExposeConfig
@@ -27,12 +27,12 @@ use DCarbone\PHPConsulAPI\Hydration;
 class ExposeConfig extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_CHECKS => Hydration::OMITEMPTY_STRING_FIELD,
+        self::FIELD_CHECKS => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_PATHS  => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => ExposePath::class,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
-            Hydration::FIELD_OMITEMPTY  => true,
+            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
+            Transcoding::FIELD_CLASS      => ExposePath::class,
+            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
+            Transcoding::FIELD_OMITEMPTY  => true,
         ],
     ];
 

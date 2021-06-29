@@ -40,7 +40,7 @@ class PreparedQueryClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doPost('v1/query', $query, $opts));
         $ret  = new ValuedWriteStringResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -65,7 +65,7 @@ class PreparedQueryClient extends AbstractClient
     {
         $resp = $this->_doGet('v1/query', $opts);
         $ret  = new PreparedQueryDefinitionsResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -80,7 +80,7 @@ class PreparedQueryClient extends AbstractClient
     {
         $resp = $this->_doGet(\sprintf('v1/query/%s', $queryID), $opts);
         $ret  = new PreparedQueryDefinitionsResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -106,7 +106,7 @@ class PreparedQueryClient extends AbstractClient
     {
         $resp = $this->_doGet(\sprintf('v1/query/%s/execute', $queryIDOrName), $opts);
         $ret  = new PreparedQueryExecuteResponseResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 }

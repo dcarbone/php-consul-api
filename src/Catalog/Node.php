@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\Catalog;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\FakeMap;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class Node
@@ -28,8 +28,8 @@ use DCarbone\PHPConsulAPI\Hydration;
 class Node extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_TAGGED_ADDRESSES => Hydration::MAP_FIELD,
-        self::FIELD_META             => Hydration::MAP_FIELD,
+        self::FIELD_TAGGED_ADDRESSES => Transcoding::MAP_FIELD,
+        self::FIELD_META             => Transcoding::MAP_FIELD,
     ];
 
     private const FIELD_TAGGED_ADDRESSES = 'TaggedAddresses';

@@ -38,7 +38,7 @@ class CoordinateClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doGet('v1/coordinate/datacenters', null));
         $ret  = new CoordinateDatacentersResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -52,7 +52,7 @@ class CoordinateClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doGet('v1/coordinate/nodes', $opts));
         $ret  = new CoordinateEntriesResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
@@ -78,7 +78,7 @@ class CoordinateClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doGet(\sprintf('v1/coordinate/node/%s', $node), $opts));
         $ret  = new CoordinateEntriesResponse();
-        $this->_hydrateResponse($resp, $ret);
+        $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 }

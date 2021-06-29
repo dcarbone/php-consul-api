@@ -19,12 +19,12 @@ namespace DCarbone\PHPConsulAPI\Agent;
  */
 
 use DCarbone\PHPConsulAPI\AbstractValuedResponse;
-use DCarbone\PHPConsulAPI\HydratedResponseInterface;
+use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 /**
  * Class AgentServicesResponse
  */
-class AgentServicesResponse extends AbstractValuedResponse implements HydratedResponseInterface
+class AgentServicesResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentService[]|null */
     public ?array $Services = null;
@@ -40,7 +40,7 @@ class AgentServicesResponse extends AbstractValuedResponse implements HydratedRe
     /**
      * @param mixed $decodedData
      */
-    public function hydrateValue($decodedData): void
+    public function unmarshalValue($decodedData): void
     {
         $this->Services = [];
         foreach ($decodedData as $k => $service) {

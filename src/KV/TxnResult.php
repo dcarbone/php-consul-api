@@ -22,7 +22,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Catalog\CatalogService;
 use DCarbone\PHPConsulAPI\Catalog\Node;
 use DCarbone\PHPConsulAPI\Health\HealthCheck;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class TxnResult
@@ -31,24 +31,24 @@ class TxnResult extends AbstractModel
 {
     protected const FIELDS = [
         self::FIELD_KV      => [
-            Hydration::FIELD_TYPE     => Hydration::OBJECT,
-            Hydration::FIELD_CLASS    => KVPair::class,
-            Hydration::FIELD_NULLABLE => true,
+            Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS    => KVPair::class,
+            Transcoding::FIELD_NULLABLE => true,
         ],
         self::FIELD_NODE    => [
-            Hydration::FIELD_TYPE     => Hydration::OBJECT,
-            Hydration::FIELD_CLASS    => Node::class,
-            Hydration::FIELD_NULLABLE => true,
+            Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS    => Node::class,
+            Transcoding::FIELD_NULLABLE => true,
         ],
         self::FIELD_SERVICE => [
-            Hydration::FIELD_TYPE     => Hydration::OBJECT,
-            Hydration::FIELD_CLASS    => CatalogService::class,
-            Hydration::FIELD_NULLABLE => true,
+            Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS    => CatalogService::class,
+            Transcoding::FIELD_NULLABLE => true,
         ],
         self::FIELD_CHECK   => [
-            Hydration::FIELD_TYPE     => Hydration::OBJECT,
-            Hydration::FIELD_CLASS    => HealthCheck::class,
-            Hydration::FIELD_NULLABLE => true,
+            Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
+            Transcoding::FIELD_CLASS    => HealthCheck::class,
+            Transcoding::FIELD_NULLABLE => true,
         ],
     ];
 

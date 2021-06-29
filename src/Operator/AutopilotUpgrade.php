@@ -19,7 +19,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Hydration;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
  * Class AutopilotUpgrade
@@ -27,17 +27,17 @@ use DCarbone\PHPConsulAPI\Hydration;
 class AutopilotUpgrade extends AbstractModel
 {
     protected const FIELDS = [
-        self::FIELD_TARGET_VERSION               => Hydration::OMITEMPTY_STRING_FIELD,
-        self::FIELD_TARGET_VERSION_VOTERS        => Hydration::OMITEMPTY_STRING_ARRAY_FIELD,
-        self::FIELD_TARGET_VERSION_NON_VOTERS    => Hydration::OMITEMPTY_STRING_ARRAY_FIELD,
-        self::FIELD_TARGET_VERSION_READ_REPLICAS => Hydration::OMITEMPTY_STRING_ARRAY_FIELD,
-        self::FIELD_OTHER_VERSION_VOTERS         => Hydration::OMITEMPTY_STRING_ARRAY_FIELD,
-        self::FIELD_OTHER_VERSION_NON_VOTERS     => Hydration::OMITEMPTY_STRING_ARRAY_FIELD,
-        self::FIELD_OTHER_VERSION_READ_REPLICAS  => Hydration::OMITEMPTY_STRING_ARRAY_FIELD,
+        self::FIELD_TARGET_VERSION               => Transcoding::OMITEMPTY_STRING_FIELD,
+        self::FIELD_TARGET_VERSION_VOTERS        => Transcoding::OMITEMPTY_STRING_ARRAY_FIELD,
+        self::FIELD_TARGET_VERSION_NON_VOTERS    => Transcoding::OMITEMPTY_STRING_ARRAY_FIELD,
+        self::FIELD_TARGET_VERSION_READ_REPLICAS => Transcoding::OMITEMPTY_STRING_ARRAY_FIELD,
+        self::FIELD_OTHER_VERSION_VOTERS         => Transcoding::OMITEMPTY_STRING_ARRAY_FIELD,
+        self::FIELD_OTHER_VERSION_NON_VOTERS     => Transcoding::OMITEMPTY_STRING_ARRAY_FIELD,
+        self::FIELD_OTHER_VERSION_READ_REPLICAS  => Transcoding::OMITEMPTY_STRING_ARRAY_FIELD,
         self::FIELD_REDUNDANCY_ZONES             => [
-            Hydration::FIELD_TYPE       => Hydration::ARRAY,
-            Hydration::FIELD_CLASS      => AutopilotZoneUpgradeVersions::class,
-            Hydration::FIELD_ARRAY_TYPE => Hydration::OBJECT,
+            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
+            Transcoding::FIELD_CLASS      => AutopilotZoneUpgradeVersions::class,
+            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
         ],
     ];
 
