@@ -448,17 +448,19 @@ trait Hydratable
             foreach ($value as $k => $v) {
                 // todo: causes double-checking for null if value isn't null, not great...
                 if (null === $v) {
-                    continue;
+                    $this->{$field}[$k] = null;
+                } else {
+                    $this->{$field}[$k] = $this->buildObjectValue($field, $v, $class, false);
                 }
-                $this->{$field}[$k] = $this->buildObjectValue($field, $v, $class, false);
             }
         } else {
             // in all other cases, just set as-is
             foreach ($value as $k => $v) {
                 if (null === $v) {
-                    continue;
+                    $this->{$field}[$k] = null;
+                } else {
+                    $this->{$field}[$k] = $this->buildScalarValue($field, $v, $type, false);
                 }
-                $this->{$field}[$k] = $this->buildScalarValue($field, $v, $type, false);
             }
         }
     }
