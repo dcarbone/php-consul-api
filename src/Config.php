@@ -175,9 +175,9 @@ class Config
         $k = $this->KeyFile;
         if (('' !== $k && '' === $c) || ('' !== $c && '' === $k)) {
             throw new \InvalidArgumentException(
-                \sprintf(
+                sprintf(
                     '%s - CertFile and KeyFile must be both either empty or populated.  Key: %s; Cert: %s',
-                    \get_class($this),
+                    static::class,
                     $k,
                     $c
                 )
@@ -412,13 +412,13 @@ class Config
     public function setHttpAuth($httpAuth): self
     {
         if (\is_string($httpAuth)) {
-            $colon = \strpos($httpAuth, ':');
+            $colon = strpos($httpAuth, ':');
             if (false === $colon) {
                 $username = $httpAuth;
                 $password = null;
             } else {
-                $username = \substr($httpAuth, 0, $colon);
-                $password = \substr($httpAuth, $colon + 1);
+                $username = substr($httpAuth, 0, $colon);
+                $password = substr($httpAuth, $colon + 1);
             }
             $httpAuth = new HttpAuth($username, $password);
         }
@@ -429,9 +429,9 @@ class Config
         }
 
         throw new \InvalidArgumentException(
-            \sprintf(
+            sprintf(
                 '%s::setHttpAuth - Value is expected to be string of "username:password" or instance of "\\DCarbone\\PHPConsulApi\\HttpAuth", %s seen.',
-                \get_class($this),
+                static::class,
                 \is_string($httpAuth) ? $httpAuth : \gettype($httpAuth)
             )
         );
@@ -563,7 +563,7 @@ class Config
             return $_ENV[$param];
         }
 
-        if (false !== ($value = \getenv($param))) {
+        if (false !== ($value = getenv($param))) {
             return $value;
         }
 

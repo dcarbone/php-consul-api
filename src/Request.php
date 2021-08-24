@@ -62,8 +62,8 @@ class Request
         $this->scheme  = $config->Scheme;
         $this->address = $config->Address;
 
-        $this->method = \strtoupper($method);
-        $this->path   = \ltrim(\rtrim($path, " \t\n\r\0\x0B&?"), " \t\n\r\0\x0B/");
+        $this->method = strtoupper($method);
+        $this->path   = ltrim(rtrim($path, " \t\n\r\0\x0B&?"), " \t\n\r\0\x0B/");
 
         $this->header = new Values();
         $this->params = new Params();

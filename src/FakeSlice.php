@@ -40,9 +40,9 @@ abstract class FakeSlice implements \Iterator, \ArrayAccess, \Countable, \JsonSe
     {
         if (!isset($this->containedClass)) {
             throw new \DomainException(
-                \sprintf(
+                sprintf(
                     'Class "%s" must define $containedClass',
-                    \get_called_class()
+                    static::class
                 )
             );
         }
@@ -75,12 +75,12 @@ abstract class FakeSlice implements \Iterator, \ArrayAccess, \Countable, \JsonSe
      */
     public function current()
     {
-        return \current($this->_list);
+        return current($this->_list);
     }
 
     public function next(): void
     {
-        \next($this->_list);
+        next($this->_list);
     }
 
     /**
@@ -88,7 +88,7 @@ abstract class FakeSlice implements \Iterator, \ArrayAccess, \Countable, \JsonSe
      */
     public function key()
     {
-        return \key($this->_list);
+        return key($this->_list);
     }
 
     /**
@@ -96,12 +96,12 @@ abstract class FakeSlice implements \Iterator, \ArrayAccess, \Countable, \JsonSe
      */
     public function valid(): bool
     {
-        return null !== \key($this->_list);
+        return null !== key($this->_list);
     }
 
     public function rewind(): void
     {
-        \reset($this->_list);
+        reset($this->_list);
     }
 
     /**
@@ -199,15 +199,15 @@ abstract class FakeSlice implements \Iterator, \ArrayAccess, \Countable, \JsonSe
     {
         if (!\is_int($offset)) {
             throw new \InvalidArgumentException(
-                \sprintf(
+                sprintf(
                     'Cannot use offset of type "%s" with "%s"',
                     \gettype($offset),
-                    \get_class($this)
+                    static::class
                 )
             );
         }
         if (0 > $offset || $offset >= $this->_size) {
-            throw new \OutOfRangeException(\sprintf('Offset %d does not exist in this list', $offset));
+            throw new \OutOfRangeException(sprintf('Offset %d does not exist in this list', $offset));
         }
     }
 
@@ -234,9 +234,9 @@ abstract class FakeSlice implements \Iterator, \ArrayAccess, \Countable, \JsonSe
 
         // if we make it down here, fail.
         throw new \InvalidArgumentException(
-            \sprintf(
+            sprintf(
                 '%s accepts only objects of type %s, null, or associative array definition as values',
-                \get_class($this),
+                static::class,
                 $this->containedClass,
             )
         );

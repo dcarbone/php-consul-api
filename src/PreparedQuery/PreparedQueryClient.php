@@ -78,7 +78,7 @@ class PreparedQueryClient extends AbstractClient
      */
     public function Get(string $queryID, ?QueryOptions $opts = null): PreparedQueryDefinitionsResponse
     {
-        $resp = $this->_doGet(\sprintf('v1/query/%s', $queryID), $opts);
+        $resp = $this->_doGet(sprintf('v1/query/%s', $queryID), $opts);
         $ret  = new PreparedQueryDefinitionsResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
@@ -92,7 +92,7 @@ class PreparedQueryClient extends AbstractClient
      */
     public function Delete(string $queryID, ?WriteOptions $opts = null): WriteResponse
     {
-        return $this->_executeDelete(\sprintf('v1/query/%s', $queryID), $opts);
+        return $this->_executeDelete(sprintf('v1/query/%s', $queryID), $opts);
     }
 
     /**
@@ -104,7 +104,7 @@ class PreparedQueryClient extends AbstractClient
      */
     public function Execute(string $queryIDOrName, ?QueryOptions $opts = null): PreparedQueryExecuteResponseResponse
     {
-        $resp = $this->_doGet(\sprintf('v1/query/%s/execute', $queryIDOrName), $opts);
+        $resp = $this->_doGet(sprintf('v1/query/%s/execute', $queryIDOrName), $opts);
         $ret  = new PreparedQueryExecuteResponseResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;

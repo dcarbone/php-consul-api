@@ -32,7 +32,7 @@ class ACLTokenListEntryQueryResponse extends AbstractValuedQueryResponse impleme
     /**
      * @return \DCarbone\PHPConsulAPI\ACL\ACLTokenListEntry[]|null
      */
-    public function getValue()
+    public function getValue(): ?array
     {
         return $this->ACLTokenListEntries;
     }

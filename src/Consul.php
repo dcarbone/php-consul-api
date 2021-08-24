@@ -171,15 +171,15 @@ class Consul
         $config = Config::merge($config);
 
         if ('' !== $config->TokenFile) {
-            if (!\file_exists($config->TokenFile) || !\is_readable($config->TokenFile)) {
+            if (!file_exists($config->TokenFile) || !is_readable($config->TokenFile)) {
                 throw new \RuntimeException(
-                    \sprintf(
+                    sprintf(
                         'Provided $TokenFile "%s" either does not exist or is not readable',
                         $config->TokenFile
                     )
                 );
             }
-            $data = \trim(\file_get_contents($config->TokenFile));
+            $data = trim(file_get_contents($config->TokenFile));
             if ('' === $config->Token && '' !== $data) {
                 $config->Token = $data;
             }

@@ -58,9 +58,9 @@ class KVPair extends AbstractModel
     {
         parent::__construct($data);
         if ($_decodeValue) {
-            $dec = \base64_decode($this->Value, true);
+            $dec = base64_decode($this->Value, true);
             if (false === $dec) {
-                throw new \InvalidArgumentException(\sprintf('Could not base64 decode value "%s"', $this->Value));
+                throw new \InvalidArgumentException(sprintf('Could not base64 decode value "%s"', $this->Value));
             }
             $this->Value = $dec;
         }

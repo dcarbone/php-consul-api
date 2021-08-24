@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dcarbone/php-cs-fixer-phpdoc-force-fqcn.git",
-                "reference": "5d32e263c21d6d2acd809fd9b71210f6f49884b0"
+                "reference": "6d74a956f5a5c4f2b5a80721bddde423a8558b06"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dcarbone/php-cs-fixer-phpdoc-force-fqcn/zipball/5d32e263c21d6d2acd809fd9b71210f6f49884b0",
-                "reference": "5d32e263c21d6d2acd809fd9b71210f6f49884b0",
+                "url": "https://api.github.com/repos/dcarbone/php-cs-fixer-phpdoc-force-fqcn/zipball/6d74a956f5a5c4f2b5a80721bddde423a8558b06",
+                "reference": "6d74a956f5a5c4f2b5a80721bddde423a8558b06",
                 "shasum": ""
             },
             "require": {
@@ -52,7 +52,7 @@
             "support": {
                 "source": "https://github.com/dcarbone/php-cs-fixer-phpdoc-force-fqcn/tree/master"
             },
-            "time": "2021-08-24T17:09:35+00:00"
+            "time": "2021-08-24T18:40:10+00:00"
         },
         {
             "name": "composer/semver",

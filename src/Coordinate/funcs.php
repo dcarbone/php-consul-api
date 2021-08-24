@@ -39,14 +39,14 @@ function unitVectorAt(array $vec1, array $vec2): array
     }
 
     foreach ($ret as $k => &$v) {
-        $v = \lcg_value() - 0.5;
+        $v = lcg_value() - 0.5;
     }
 
     if (($mag = magnitude($ret)) && $mag > ZeroThreshold) {
         return [mul($ret, 1.0 / $mag), 0.0];
     }
 
-    $ret    = \array_fill(0, \count($ret), 0.0);
+    $ret    = array_fill(0, \count($ret), 0.0);
     $ret[0] = 1.0;
     return $ret;
 }
@@ -103,5 +103,5 @@ function magnitude(array $vec): float
     foreach ($vec as $k => $v) {
         $sum += ($v * $v);
     }
-    return \sqrt($sum);
+    return sqrt($sum);
 }

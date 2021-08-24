@@ -36,7 +36,7 @@ class EventClient extends AbstractClient
      */
     public function Fire(UserEvent $event, ?WriteOptions $opts = null): UserEventResponse
     {
-        $r = $this->_newPutRequest(\sprintf('v1/event/fire/%s', $event->Name), '' !== $event->Payload ? $event->Payload : null, $opts);
+        $r = $this->_newPutRequest(sprintf('v1/event/fire/%s', $event->Name), '' !== $event->Payload ? $event->Payload : null, $opts);
         if ('' !== ($nf = $event->NodeFilter)) {
             $r->params->set('node', $nf);
         }
@@ -81,8 +81,8 @@ class EventClient extends AbstractClient
             throw new \InvalidArgumentException("{$uuid} is not a valid UUID");
         }
 
-        $lower  = \substr($uuid, 0, 8)  + \substr($uuid, 9, 4)  + \substr($uuid, 14, 4);
-        $upper  = \substr($uuid, 19, 4) + \substr($uuid, 24, 12);
+        $lower  = substr($uuid, 0, 8)  + substr($uuid, 9, 4)  + substr($uuid, 14, 4);
+        $upper  = substr($uuid, 19, 4) + substr($uuid, 24, 12);
         $lowVal = \intval($lower, 10);
         if (0 >= $lowVal) {
             throw new \InvalidArgumentException("{$lower} is not greater than 0");

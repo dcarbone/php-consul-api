@@ -76,7 +76,7 @@ class CoordinateClient extends AbstractClient
      */
     public function Node(string $node, ?QueryOptions $opts = null): CoordinateEntriesResponse
     {
-        $resp = $this->_requireOK($this->_doGet(\sprintf('v1/coordinate/node/%s', $node), $opts));
+        $resp = $this->_requireOK($this->_doGet(sprintf('v1/coordinate/node/%s', $node), $opts));
         $ret  = new CoordinateEntriesResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;

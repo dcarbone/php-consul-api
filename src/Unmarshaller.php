@@ -40,7 +40,7 @@ trait Unmarshaller
         if (isset(static::FIELDS[$field])) {
             // if the implementing class has some explicitly defined overrides
             $this->unmarshalComplex($field, $value, static::FIELDS[$field]);
-        } elseif (!\property_exists($this, $field)) {
+        } elseif (!property_exists($this, $field)) {
             // if the field isn't explicitly defined on the implementing class, just set it to whatever the incoming
             // value is
             $this->{$field} = $value;
@@ -48,7 +48,7 @@ trait Unmarshaller
             // if the value is null at this point, ignore and move on.
             // note: this is not checked prior to the property_exists call as if the field is not explicitly defined but
             // is seen with a null value, we still want to define it as null on the implementing type.
-        } elseif (isset($this->{$field}) && \is_scalar($this->{$field})) {
+        } elseif (isset($this->{$field}) && is_scalar($this->{$field})) {
             // if the property has a scalar default value, unmarshal it as such.
             $this->unmarshalScalar($field, $value, false);
         } else {
@@ -188,7 +188,7 @@ trait Unmarshaller
         if (isset($def[Transcoding::FIELD_UNMARSHAL_CALLBACK])) {
             $cb = $def[Transcoding::FIELD_UNMARSHAL_CALLBACK];
             // allow for using a "setter" method
-            if (\is_string($cb) && \method_exists($this, $cb)) {
+            if (\is_string($cb) && method_exists($this, $cb)) {
                 $this->{$cb}($value);
                 return;
             }
@@ -196,11 +196,11 @@ trait Unmarshaller
             $err = \call_user_func($def[Transcoding::FIELD_UNMARSHAL_CALLBACK], $this, $field, $value);
             if (false === $err) {
                 throw new \RuntimeException(
-                    \sprintf(
+                    sprintf(
                         'Error calling hydration callback "%s" for field "%s" on class "%s"',
-                        \var_export($def[Transcoding::FIELD_UNMARSHAL_CALLBACK], true),
+                        var_export($def[Transcoding::FIELD_UNMARSHAL_CALLBACK], true),
                         $field,
-                        \get_class($this)
+                        static::class
                     )
                 );
             }
@@ -221,11 +221,11 @@ trait Unmarshaller
             $fieldType = \gettype($this->{$field});
         } else {
             throw new \LogicException(
-                \sprintf(
+                sprintf(
                     'Field "%s" on type "%s" is missing a FIELD_TYPE hydration entry: %s',
                     $field,
-                    \get_class($this),
-                    \var_export($def, true)
+                    static::class,
+                    var_export($def, true)
                 )
             );
         }
@@ -254,11 +254,11 @@ trait Unmarshaller
     {
         if (!isset($def[Transcoding::FIELD_CLASS])) {
             throw new \LogicException(
-                \sprintf(
+                sprintf(
                     'Field "%s" on type "%s" is missing FIELD_CLASS hydration entry: %s',
                     $field,
-                    \get_class($this),
-                    \var_export($def, true)
+                    static::class,
+                    var_export($def, true)
                 )
             );
         }
@@ -285,11 +285,11 @@ trait Unmarshaller
         // type is required
         if (null === $type) {
             throw new \DomainException(
-                \sprintf(
+                sprintf(
                     'Field "%s" on type "%s" definition is missing FIELD_ARRAY_TYPE value: %s',
                     $field,
-                    \get_class($this),
-                    \var_export($def, true)
+                    static::class,
+                    var_export($def, true)
                 )
             );
         }
@@ -306,10 +306,10 @@ trait Unmarshaller
         // by the time we get here, $value must be an array
         if (!\is_array($value)) {
             throw new \RuntimeException(
-                \sprintf(
+                sprintf(
                     'Field "%s" on type "%s" is an array but provided value is "%s"',
                     $field,
-                    \get_class($this),
+                    static::class,
                     \gettype($value)
                 )
             );
@@ -321,11 +321,11 @@ trait Unmarshaller
         if (Transcoding::OBJECT === $type) {
             if (null === $class) {
                 throw new \DomainException(
-                    \sprintf(
+                    sprintf(
                         'Field "%s" on type "%s" definition is missing FIELD_CLASS value: %s',
                         $field,
-                        \get_class($this),
-                        \var_export($def, true)
+                        static::class,
+                        var_export($def, true)
                     )
                 );
             }

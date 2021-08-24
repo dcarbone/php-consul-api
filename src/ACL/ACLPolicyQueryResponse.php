@@ -18,24 +18,24 @@ namespace DCarbone\PHPConsulAPI\KV;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedWriteResponse;
-use DCarbone\PHPConsulAPI\ACL\ACLToken;
+use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
+use DCarbone\PHPConsulAPI\ACL\ACLPolicy;
 use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 /**
- * Class ACLTokenWriteResponse
+ * Class ACLPolicyWriteResponse
  */
-class ACLTokenWriteResponse extends AbstractValuedWriteResponse implements UnmarshalledResponseInterface
+class ACLPolicyQueryResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\ACL\ACLToken|null */
-    public ?ACLToken $ACLToken = null;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLPolicy|null */
+    public ?ACLPolicy $ACLPolicy = null;
 
     /**
-     * @return \DCarbone\PHPConsulAPI\ACL\ACLToken|null
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLPolicy|null
      */
-    public function getValue(): ?ACLToken
+    public function getValue(): ?ACLPolicy
     {
-        return $this->ACLToken;
+        return $this->ACLPolicy;
     }
 
     /**
@@ -43,6 +43,6 @@ class ACLTokenWriteResponse extends AbstractValuedWriteResponse implements Unmar
      */
     public function unmarshalValue($decodedData): void
     {
-        $this->ACLToken = new ACLToken((array)$decodedData);
+        $this->ACLPolicy = new ACLPolicy((array)$decodedData);
     }
 }

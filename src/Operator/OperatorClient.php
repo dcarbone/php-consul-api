@@ -55,7 +55,7 @@ class OperatorClient extends AbstractClient
     public function AreaUpdate(string $areaID, Area $area, ?WriteOptions $opts = null): ValuedWriteStringResponse
     {
         return $this->_writeIDResponse(
-            $this->_requireOK($this->_doPut(\sprintf('v1/operator/area/%s', $areaID), $area, $opts))
+            $this->_requireOK($this->_doPut(sprintf('v1/operator/area/%s', $areaID), $area, $opts))
         );
     }
 
@@ -68,7 +68,7 @@ class OperatorClient extends AbstractClient
      */
     public function AreaGet(string $areaID, ?QueryOptions $opts = null): OperatorAreasResponse
     {
-        $resp = $this->_requireOK($this->_doGet(\sprintf('v1/operator/area/%s', \urlencode($areaID)), $opts));
+        $resp = $this->_requireOK($this->_doGet(sprintf('v1/operator/area/%s', urlencode($areaID)), $opts));
         $ret  = new OperatorAreasResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
@@ -96,7 +96,7 @@ class OperatorClient extends AbstractClient
      */
     public function AreaDelete(string $areaID, ?WriteOptions $opts = null): WriteResponse
     {
-        return $this->_executeDelete(\sprintf('v1/operator/area/%s', $areaID), $opts);
+        return $this->_executeDelete(sprintf('v1/operator/area/%s', $areaID), $opts);
     }
 
     /**
@@ -109,7 +109,7 @@ class OperatorClient extends AbstractClient
      */
     public function AreaJoin(string $areaID, array $addresses, ?WriteOptions $opts = null): OperatorAreaJoinResponse
     {
-        $resp = $this->_requireOK($this->_doPut(\sprintf('v1/operator/area/%s/join', $areaID), $addresses, $opts));
+        $resp = $this->_requireOK($this->_doPut(sprintf('v1/operator/area/%s/join', $areaID), $addresses, $opts));
         $ret  = new OperatorAreaJoinResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
@@ -124,7 +124,7 @@ class OperatorClient extends AbstractClient
      */
     public function AreaMembers(string $areaID, ?QueryOptions $opts = null): OperatorSerfMembersResponse
     {
-        $resp = $this->_requireOK($this->_doGet(\sprintf('v1/operator/area/%s/members', $areaID), $opts));
+        $resp = $this->_requireOK($this->_doGet(sprintf('v1/operator/area/%s/members', $areaID), $opts));
         $ret  = new OperatorSerfMembersResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;

@@ -51,12 +51,12 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
      */
     public function current()
     {
-        return \current($this->_children);
+        return current($this->_children);
     }
 
     public function next(): void
     {
-        \next($this->_children);
+        next($this->_children);
     }
 
     /**
@@ -64,7 +64,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
      */
     public function key()
     {
-        return \key($this->_children);
+        return key($this->_children);
     }
 
     /**
@@ -73,12 +73,12 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
      */
     public function valid()
     {
-        return null !== \key($this->_children);
+        return null !== key($this->_children);
     }
 
     public function rewind(): void
     {
-        \reset($this->_children);
+        reset($this->_children);
     }
 
     /**
@@ -112,11 +112,11 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     public function offsetExists($offset)
     {
         if (\is_string($offset)) {
-            $subPath = \str_replace($this->_prefix, '', $offset);
-            $cnt     = \substr_count($subPath, '/');
+            $subPath = str_replace($this->_prefix, '', $offset);
+            $cnt     = substr_count($subPath, '/');
 
-            if (1 < $cnt || (1 === $cnt && '/' !== \substr($subPath, -1))) {
-                $childKey = $this->_prefix . \substr($subPath, 0, \strpos($subPath, '/') + 1);
+            if (1 < $cnt || (1 === $cnt && '/' !== substr($subPath, -1))) {
+                $childKey = $this->_prefix . substr($subPath, 0, strpos($subPath, '/') + 1);
                 if (isset($this->_children[$childKey])) {
                     return isset($this->_children[$childKey][$offset]);
                 }
@@ -133,10 +133,10 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     public function offsetGet($offset)
     {
         if (\is_string($offset)) {
-            $subPath = \str_replace($this->_prefix, '', $offset);
-            $cnt     = \substr_count($subPath, '/');
-            if (1 < $cnt || (1 === $cnt && '/' !== \substr($subPath, -1))) {
-                $childKey = $this->_prefix . \substr($subPath, 0, \strpos($subPath, '/') + 1);
+            $subPath = str_replace($this->_prefix, '', $offset);
+            $cnt     = substr_count($subPath, '/');
+            if (1 < $cnt || (1 === $cnt && '/' !== substr($subPath, -1))) {
+                $childKey = $this->_prefix . substr($subPath, 0, strpos($subPath, '/') + 1);
                 if (isset($this[$childKey])) {
                     return $this->_children[$childKey][$offset];
                 }
@@ -147,10 +147,10 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
             return $this->_children[$offset];
         }
 
-        \trigger_error(
-            \sprintf(
+        trigger_error(
+            sprintf(
                 '%s - Requested offset %s does not exist in tree with prefix "%s".',
-                \get_class($this),
+                static::class,
                 $offset,
                 $this->getPrefix()
             )
@@ -166,11 +166,11 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     public function offsetSet($offset, $value): void
     {
         if ('string' === \gettype($offset)) {
-            $subPath = \str_replace($this->_prefix, '', $offset);
-            $cnt     = \substr_count($subPath, '/');
+            $subPath = str_replace($this->_prefix, '', $offset);
+            $cnt     = substr_count($subPath, '/');
 
-            if (1 < $cnt || (1 === $cnt && '/' !== \substr($subPath, -1))) {
-                $childKey                            = $this->_prefix . \substr($subPath, 0, \strpos($subPath, '/') + 1);
+            if (1 < $cnt || (1 === $cnt && '/' !== substr($subPath, -1))) {
+                $childKey                            = $this->_prefix . substr($subPath, 0, strpos($subPath, '/') + 1);
                 $this->_children[$childKey][$offset] = $value;
             } else {
                 $this->_children[$offset] = $value;

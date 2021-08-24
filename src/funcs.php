@@ -29,9 +29,9 @@ function dur_to_millisecond(Time\Duration $dur): string
     $ns = $dur->Nanoseconds();
     $ms = $dur->Milliseconds();
 
-    if (0 < $ns && 0 === $ms) {
+    if (0 < $ns && 0 === (int)$ms) {
         $ms = 1;
     }
 
-    return \sprintf('%dms', $ms);
+    return sprintf('%dms', $ms);
 }

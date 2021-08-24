@@ -23,7 +23,7 @@ use DCarbone\PHPConsulAPI\ACL\ACLToken;
 use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 /**
- * Class ACLWriteTokenResponse
+ * Class ACLTokenQueryResponse
  */
 class ACLTokenQueryResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {

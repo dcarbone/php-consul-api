@@ -39,7 +39,7 @@ class HealthClient extends AbstractClient
      */
     public function Node(string $node, ?QueryOptions $opts = null): HealthChecksResponse
     {
-        return $this->_getHealthChecks(\sprintf('v1/health/node/%s', $node), $opts);
+        return $this->_getHealthChecks(sprintf('v1/health/node/%s', $node), $opts);
     }
 
     /**
@@ -50,7 +50,7 @@ class HealthClient extends AbstractClient
      */
     public function Checks(string $service, ?QueryOptions $opts = null): HealthChecksResponse
     {
-        return $this->_getHealthChecks(\sprintf('v1/health/checks/%s', $service), $opts);
+        return $this->_getHealthChecks(sprintf('v1/health/checks/%s', $service), $opts);
     }
 
     /**
@@ -168,17 +168,17 @@ class HealthClient extends AbstractClient
         if (!\in_array($state, $validStates, true)) {
             $ret      = new HealthChecksResponse();
             $ret->Err = new Error(
-                \sprintf(
+                sprintf(
                     '%s::state - "$state" must be string with value of ["%s"].  %s seen.',
-                    \get_class($this),
-                    \implode('", "', $validStates),
+                    static::class,
+                    implode('", "', $validStates),
                     $state
                 )
             );
             return $ret;
         }
 
-        return $this->_getHealthChecks(\sprintf('v1/health/state/%s', $state), $opts);
+        return $this->_getHealthChecks(sprintf('v1/health/state/%s', $state), $opts);
     }
 
     /**
@@ -224,7 +224,7 @@ class HealthClient extends AbstractClient
                 $uri = 'v1/health/service/%s';
         }
 
-        $r = $this->_newGetRequest(\sprintf($uri, $service), $opts);
+        $r = $this->_newGetRequest(sprintf($uri, $service), $opts);
         if ([] !== $tags) {
             $r->params->set('tag', ...$tags);
         }

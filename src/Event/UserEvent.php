@@ -52,9 +52,9 @@ class UserEvent extends AbstractModel
     {
         parent::__construct($data);
         if ($_decodeValue) {
-            $dec = \base64_decode($this->Payload, true);
+            $dec = base64_decode($this->Payload, true);
             if (false === $dec) {
-                throw new \InvalidArgumentException(\sprintf('Could not base64 decode payload "%s"', $this->Payload));
+                throw new \InvalidArgumentException(sprintf('Could not base64 decode payload "%s"', $this->Payload));
             }
             $this->Payload = $dec;
         }

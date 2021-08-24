@@ -78,7 +78,7 @@ abstract class AbstractClient
         // todo: per-request content and accept value setting.
         $body = $r->getBody();
         if (null !== $body) {
-            if (\is_scalar($body)) {
+            if (is_scalar($body)) {
                 $opts[GuzzleRequestOptions::BODY] = $body;
             } else {
                 $opts[GuzzleRequestOptions::JSON] = $body;
@@ -152,7 +152,7 @@ abstract class AbstractClient
      */
     protected function _do(Request $r): RequestResponse
     {
-        $start    = \microtime(true);
+        $start    = microtime(true);
         $response = null;
         $err      = null;
 
@@ -170,9 +170,9 @@ abstract class AbstractClient
         } catch (\Exception $e) {
             // If there has been an exception of any kind, catch it and create Error object
             $err = new Error(
-                \sprintf(
+                sprintf(
                     '%s - Error seen while executing "%s".  Message: "%s"',
-                    \get_class($this),
+                    static::class,
                     $r->getUri(),
                     $e->getMessage()
                 )
@@ -180,7 +180,7 @@ abstract class AbstractClient
         }
 
         // calculate execution time
-        $dur = new Time\Duration(\intval((\microtime(true) - $start) * Time::Second, 10));
+        $dur = new Time\Duration(\intval((microtime(true) - $start) * Time::Second, 10));
 
         return new RequestResponse($r->meta(), $dur, $response, $err);
     }
@@ -212,9 +212,9 @@ abstract class AbstractClient
 
                 // Otherwise, return error
                 $r->Err = new Error(
-                    \sprintf(
+                    sprintf(
                         '%s - Non-%d response seen.  Response code: %d.  Response: %s',
-                        \get_class($this),
+                        static::class,
                         $statusCode,
                         $actualCode,
                         $r->Response->getBody()->getContents()
@@ -222,9 +222,9 @@ abstract class AbstractClient
                 );
             } else {
                 $r->Err = new Error(
-                    \sprintf(
+                    sprintf(
                         '%s - Expected response to be instance of \\Psr\\Message\\ResponseInterface, %s seen.',
-                        \get_class($this),
+                        static::class,
                         \is_object($r->Response) ? \get_class($r->Response) : \gettype($r->Response)
                     )
                 );
@@ -297,19 +297,19 @@ abstract class AbstractClient
      */
     protected function _decodeBody(StreamInterface $body): DecodedBody
     {
-        $data = @\json_decode((string)$body, true);
+        $data = @json_decode((string)$body, true);
 
-        if (\JSON_ERROR_NONE === \json_last_error()) {
+        if (\JSON_ERROR_NONE === json_last_error()) {
             return new DecodedBody($data, null);
         }
 
         return new DecodedBody(
             null,
             new Error(
-                \sprintf(
+                sprintf(
                     '%s - Unable to parse response as JSON.  Message: %s',
-                    \get_class($this),
-                    \json_last_error_msg()
+                    static::class,
+                    json_last_error_msg()
                 )
             )
         );
@@ -405,14 +405,14 @@ abstract class AbstractClient
     protected function _unmarshalResponse(RequestResponse $resp, AbstractResponse $ret): void
     {
         // determine if this response contains a *Meta field
-        if (\property_exists($ret, Transcoding::FIELD_QUERY_META)) {
+        if (property_exists($ret, Transcoding::FIELD_QUERY_META)) {
             $ret->QueryMeta = $resp->buildQueryMeta();
-        } elseif (\property_exists($ret, Transcoding::FIELD_WRITE_META)) {
+        } elseif (property_exists($ret, Transcoding::FIELD_WRITE_META)) {
             $ret->WriteMeta = $resp->buildWriteMeta();
         }
 
         // todo: can probably assume that all responses have an Err field...
-        $hasErrField = \property_exists($ret, Transcoding::FIELD_ERR);
+        $hasErrField = property_exists($ret, Transcoding::FIELD_ERR);
 
         // if there was an error in the response, set and return
         if (null !== $resp->Err) {

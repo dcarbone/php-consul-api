@@ -71,7 +71,7 @@ class SessionClient extends AbstractClient
      */
     public function Destroy(string $id, ?WriteOptions $opts = null): WriteResponse
     {
-        return $this->_executePut(\sprintf('v1/session/destroy/%s', $id), null, $opts);
+        return $this->_executePut(sprintf('v1/session/destroy/%s', $id), null, $opts);
     }
 
     /**
@@ -84,7 +84,7 @@ class SessionClient extends AbstractClient
     {
         $ret = new SessionEntriesWriteResponse();
 
-        $resp = $this->_doPut(\sprintf('v1/session/renew/%s', $id), null, $opts);
+        $resp = $this->_doPut(sprintf('v1/session/renew/%s', $id), null, $opts);
         if (null !== $resp->Err) {
             $ret->Err = $resp->Err;
             return $ret;
@@ -100,9 +100,9 @@ class SessionClient extends AbstractClient
                 break;
             default:
                 $ret->Err = new Error(
-                    \sprintf(
+                    sprintf(
                         '%s::renew - Unexpected response code %d.  Reason: %s',
-                        \get_class($this),
+                        static::class,
                         $code,
                         $resp->Response->getReasonPhrase()
                     )
@@ -120,7 +120,7 @@ class SessionClient extends AbstractClient
      */
     public function Info(string $id, ?QueryOptions $opts = null): SessionEntriesQueryResponse
     {
-        return $this->_get(\sprintf('v1/session/info/%s', $id), $opts);
+        return $this->_get(sprintf('v1/session/info/%s', $id), $opts);
     }
 
     /**
@@ -131,7 +131,7 @@ class SessionClient extends AbstractClient
      */
     public function Node(string $node, ?QueryOptions $opts = null): SessionEntriesQueryResponse
     {
-        return $this->_get(\sprintf('v1/session/node/%s', $node), $opts);
+        return $this->_get(sprintf('v1/session/node/%s', $node), $opts);
     }
 
     /**

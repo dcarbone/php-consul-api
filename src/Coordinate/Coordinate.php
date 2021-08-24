@@ -46,15 +46,15 @@ class Coordinate extends AbstractModel
         if (\is_array($data)) {
             parent::__construct($data);
         } elseif ($data instanceof CoordinateConfig) {
-            $this->Vec        = \array_fill(0, $data->Dimensionality, 0.0);
+            $this->Vec        = array_fill(0, $data->Dimensionality, 0.0);
             $this->Error      = $data->VivaldiErrorMax;
             $this->Adjustment = 0.0;
             $this->Height     = $data->HeightMin;
         } else {
             throw new \InvalidArgumentException(
-                \sprintf(
+                sprintf(
                     '%s::__construct - Argument 1 must be array of values or instance of %s, %s seen',
-                    \get_class($this),
+                    static::class,
                     CoordinateConfig::class,
                     \is_object($data) ? \get_class($data) : \gettype($data)
                 )
@@ -110,11 +110,11 @@ class Coordinate extends AbstractModel
     public function IsValid(): bool
     {
         foreach ($this->Vec as $vec) {
-            if (!\is_finite($vec)) {
+            if (!is_finite($vec)) {
                 return false;
             }
         }
-        return \is_finite($this->Error) && \is_finite($this->Adjustment) && \is_finite($this->Height);
+        return is_finite($this->Error) && is_finite($this->Adjustment) && is_finite($this->Height);
     }
 
     /**
@@ -142,7 +142,7 @@ class Coordinate extends AbstractModel
         [$unit, $mag] = unitVectorAt($this->Vec, $other->Vec);
         $ret->Vec     = add($ret->Vec, mul($unit, $force));
         if ($mag > ZeroThreshold) {
-            $ret->Height = \max(($ret->Height + $other->Height) * $force / $mag + $ret->Height, $config->HeightMin);
+            $ret->Height = max(($ret->Height + $other->Height) * $force / $mag + $ret->Height, $config->HeightMin);
         }
 
         return $ret;

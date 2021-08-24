@@ -44,7 +44,7 @@ trait ResponseValueBoolTrait
             return;
         }
         if (\is_string($decodedData)) {
-            $this->Value = Transcoding::TRUE === \strtolower(\trim($decodedData));
+            $this->Value = Transcoding::TRUE === strtolower(trim($decodedData));
             return;
         }
         $this->Value = (bool)$decodedData;

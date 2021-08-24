@@ -43,12 +43,12 @@ class FakeMap implements \ArrayAccess, \Countable, \Iterator, \JsonSerializable
      */
     public function current()
     {
-        return \current($this->_map);
+        return current($this->_map);
     }
 
     public function next(): void
     {
-        \next($this->_map);
+        next($this->_map);
     }
 
     /**
@@ -56,7 +56,7 @@ class FakeMap implements \ArrayAccess, \Countable, \Iterator, \JsonSerializable
      */
     public function key()
     {
-        return \key($this->_map);
+        return key($this->_map);
     }
 
     /**
@@ -64,12 +64,12 @@ class FakeMap implements \ArrayAccess, \Countable, \Iterator, \JsonSerializable
      */
     public function valid(): bool
     {
-        return null !== \key($this->_map);
+        return null !== key($this->_map);
     }
 
     public function rewind(): void
     {
-        \reset($this->_map);
+        reset($this->_map);
     }
 
     /**

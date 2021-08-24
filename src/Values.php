@@ -68,7 +68,7 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
     public function add(string $key, string ...$value): void
     {
         if (isset($this->values[$key])) {
-            $this->values[$key] = \array_merge($this->values[$key], $value);
+            $this->values[$key] = array_merge($this->values[$key], $value);
         } else {
             $this->values[$key] = $value;
         }
@@ -103,12 +103,12 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
      */
     public function current()
     {
-        return \current($this->values);
+        return current($this->values);
     }
 
     public function next(): void
     {
-        \next($this->values);
+        next($this->values);
     }
 
     /**
@@ -116,7 +116,7 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
      */
     public function key(): ?string
     {
-        return \key($this->values);
+        return key($this->values);
     }
 
     /**
@@ -124,12 +124,12 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
      */
     public function valid(): bool
     {
-        return null !== \key($this->values);
+        return null !== key($this->values);
     }
 
     public function rewind(): void
     {
-        \reset($this->values);
+        reset($this->values);
     }
 
     /**
@@ -198,7 +198,7 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
                 if ('' === $v) {
                     $str .= $k;
                 } else {
-                    $str .= \sprintf('%s=%s', $k, $this->encode($v));
+                    $str .= sprintf('%s=%s', $k, $this->encode($v));
                 }
             }
         }

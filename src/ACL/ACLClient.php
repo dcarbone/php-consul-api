@@ -20,6 +20,8 @@ namespace DCarbone\PHPConsulAPI\ACL;
 
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Error;
+use DCarbone\PHPConsulAPI\KV\ACLPolicyQueryResponse;
+use DCarbone\PHPConsulAPI\KV\ACLPolicyWriteResponse;
 use DCarbone\PHPConsulAPI\KV\ACLTokenQueryResponse;
 use DCarbone\PHPConsulAPI\KV\ACLTokenWriteResponse;
 use DCarbone\PHPConsulAPI\QueryOptions;
@@ -71,7 +73,7 @@ class ACLClient extends AbstractClient
      */
     public function Destroy(string $id, ?WriteOptions $opts = null): WriteResponse
     {
-        return $this->_executePut(\sprintf('v1/acl/destroy/%s', $id), null, $opts);
+        return $this->_executePut(sprintf('v1/acl/destroy/%s', $id), null, $opts);
     }
 
     /**
@@ -82,7 +84,7 @@ class ACLClient extends AbstractClient
      */
     public function Clone(string $id, ?WriteOptions $opts = null): ValuedWriteStringResponse
     {
-        return $this->_doPutValuedStr(\sprintf('v1/acl/clone/%s', $id), null, $opts);
+        return $this->_doPutValuedStr(sprintf('v1/acl/clone/%s', $id), null, $opts);
     }
 
     /**
@@ -94,7 +96,7 @@ class ACLClient extends AbstractClient
      */
     public function Info(string $id, ?QueryOptions $opts = null): ACLEntriesResponse
     {
-        $resp = $this->_requireOK($this->_doGet(\sprintf('v1/acl/info/%s', $id), $opts));
+        $resp = $this->_requireOK($this->_doGet(sprintf('v1/acl/info/%s', $id), $opts));
         $ret  = new ACLEntriesResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
@@ -157,7 +159,7 @@ class ACLClient extends AbstractClient
             $ret->Err = new Error('must specify AccessorID for Token Updating');
             return $ret;
         }
-        $resp = $this->_requireOK($this->_doPut(\sprintf('/v1/acl/token/%s', $token->AccessorID), $token, $opts));
+        $resp = $this->_requireOK($this->_doPut(sprintf('/v1/acl/token/%s', $token->AccessorID), $token, $opts));
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
@@ -177,7 +179,9 @@ class ACLClient extends AbstractClient
             $ret->Err = new Error('must specify tokenID for Token Cloning');
             return $ret;
         }
-        $resp = $this->_requireOK($this->_doPut(\sprintf('/v1/acl/token/%s/clone', $tokenID), ['description' => $description], $opts));
+        $resp = $this->_requireOK(
+            $this->_doPut(sprintf('/v1/acl/token/%s/clone', $tokenID), ['description' => $description], $opts)
+        );
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
@@ -190,7 +194,7 @@ class ACLClient extends AbstractClient
      */
     public function TokenDelete(string $tokenID, ?WriteOptions $opts = null): WriteResponse
     {
-        return $this->_executeDelete(\sprintf('/v1/acl/token/%s', $tokenID), $opts);
+        return $this->_executeDelete(sprintf('/v1/acl/token/%s', $tokenID), $opts);
     }
 
     /**
@@ -202,7 +206,7 @@ class ACLClient extends AbstractClient
      */
     public function TokenRead(string $tokenID, ?QueryOptions $opts = null): ACLTokenQueryResponse
     {
-        $resp = $this->_requireOK($this->_doGet(\sprintf('/v1/acl/token/%s', $tokenID), $opts));
+        $resp = $this->_requireOK($this->_doGet(sprintf('/v1/acl/token/%s', $tokenID), $opts));
         $ret  = new ACLTokenQueryResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
@@ -232,6 +236,99 @@ class ACLClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doGet('/v1/acl/tokens', $opts));
         $ret  = new ACLTokenListEntryQueryResponse();
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\ACL\ACLPolicy $policy
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\KV\ACLPolicyWriteResponse
+     */
+    public function PolicyCreate(ACLPolicy $policy, ?WriteOptions $opts = null): ACLPolicyWriteResponse
+    {
+        $ret = new ACLPolicyWriteResponse();
+        if ('' !== $policy->ID) {
+            $ret->Err = new Error('cannot specify an id in Policy Create');
+            return $ret;
+        }
+        $resp = $this->_requireOK($this->_doPut('/v1/acl/policy', $policy, $opts));
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\ACL\ACLPolicy $policy
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\KV\ACLPolicyWriteResponse
+     */
+    public function PolicyUpdate(ACLPolicy $policy, ?WriteOptions $opts = null): ACLPolicyWriteResponse
+    {
+        $ret = new ACLPolicyWriteResponse();
+        if ('' === $policy->ID) {
+            $ret->Err = new Error('must specify an ID in Policy Update');
+            return $ret;
+        }
+        $resp = $this->_requireOK($this->_doPut(sprintf('/v1/ac/policy/%s', $policy->ID), $policy, $opts));
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    /**
+     * @param string $policyID
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
+     */
+    public function PolicyDelete(string $policyID, ?WriteOptions $opts = null): WriteResponse
+    {
+        return $this->_executeDelete(sprintf('/v1/acl/policy/%s', $policyID), $opts);
+    }
+
+    /**
+     * @param string $policyID
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\KV\ACLPolicyQueryResponse
+     */
+    public function PolicyRead(string $policyID, ?QueryOptions $opts = null): ACLPolicyQueryResponse
+    {
+        $resp = $this->_requireOK($this->_doGet(sprintf('/v1/acl/policy/%s', $policyID), $opts));
+        $ret  = new ACLPolicyQueryResponse();
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    /**
+     * @param string $policyName
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\KV\ACLPolicyQueryResponse
+     */
+    public function PolicyReadByName(string $policyName, ?QueryOptions $opts = null): ACLPolicyQueryResponse
+    {
+        $resp = $this->_requireOK($this->_doGet(sprintf('/v1/acl/policy/name/%s', $policyName), $opts));
+        $ret  = new ACLPolicyQueryResponse();
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLPolicyListEntryQueryResponse
+     */
+    public function PolicyList(?QueryOptions $opts = null): ACLPolicyListEntryQueryResponse
+    {
+        $resp = $this->_requireOK($this->_doGet('/v1/acl/policies', $opts));
+        $ret  = new ACLPolicyListEntryQueryResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }

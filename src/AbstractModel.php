@@ -66,6 +66,6 @@ abstract class AbstractModel implements \JsonSerializable
      */
     public function __toString(): string
     {
-        return \get_class($this);
+        return static::class;
     }
 }

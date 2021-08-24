@@ -29,6 +29,6 @@ class Params extends Values
      */
     protected function encode(string $v): string
     {
-        return \urlencode($v);
+        return urlencode($v);
     }
 }

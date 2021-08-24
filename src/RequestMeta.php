@@ -62,6 +62,6 @@ class RequestMeta
      */
     public function __toString(): string
     {
-        return \sprintf('%s %s', $this->method, $this->uri);
+        return sprintf('%s %s', $this->method, $this->uri);
     }
 }

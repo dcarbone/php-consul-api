@@ -103,7 +103,7 @@ class CatalogClient extends AbstractClient
      */
     public function NodeServicesList(string $node, ?QueryOptions $opts = null): CatalogNodeServicesListResponse
     {
-        $resp = $this->_requireOK($this->_doGet(\sprintf('v1/catalog/node-services/%s', \urlencode($node)), $opts));
+        $resp = $this->_requireOK($this->_doGet(sprintf('v1/catalog/node-services/%s', urlencode($node)), $opts));
         $ret  = new CatalogNodeServicesListResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
@@ -122,7 +122,7 @@ class CatalogClient extends AbstractClient
         array $tags,
         ?QueryOptions $opts = null
     ): CatalogServicesResponse {
-        $r = $this->_newGetRequest(\sprintf('v1/catalog/service/%s', $service), $opts);
+        $r = $this->_newGetRequest(sprintf('v1/catalog/service/%s', $service), $opts);
         if ([] !== $tags) {
             $r->params->set('tag', ...$tags);
         }
@@ -153,7 +153,7 @@ class CatalogClient extends AbstractClient
      */
     public function Node(string $node, ?QueryOptions $opts = null): CatalogNodeResponse
     {
-        $resp = $this->_requireOK($this->_doGet(\sprintf('v1/catalog/node/%s', $node), $opts));
+        $resp = $this->_requireOK($this->_doGet(sprintf('v1/catalog/node/%s', $node), $opts));
         $ret  = new CatalogNodeResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
@@ -168,7 +168,7 @@ class CatalogClient extends AbstractClient
      */
     public function GatewayServices(string $gateway, ?QueryOptions $opts = null): GatewayServicesResponse
     {
-        $resp = $this->_requireOK($this->_doGet(\sprintf('v1/catalog/gateway-services/%s', \urlencode($gateway)), $opts));
+        $resp = $this->_requireOK($this->_doGet(sprintf('v1/catalog/gateway-services/%s', urlencode($gateway)), $opts));
         $ret  = new GatewayServicesResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;

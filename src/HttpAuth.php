@@ -87,6 +87,6 @@ class HttpAuth implements \JsonSerializable
      */
     public function __toString(): string
     {
-        return \trim(\sprintf('%s:%s', $this->username, $this->password), ':');
+        return trim(sprintf('%s:%s', $this->username, $this->password), ':');
     }
 }

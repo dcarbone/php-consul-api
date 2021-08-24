@@ -41,7 +41,7 @@ class KVClient extends AbstractClient
      */
     public function Get(string $key, ?QueryOptions $opts = null): KVPairResponse
     {
-        $resp     = $this->_doGet(\sprintf('v1/kv/%s', $key), $opts);
+        $resp     = $this->_doGet(sprintf('v1/kv/%s', $key), $opts);
         $ret      = new KVPairResponse();
         $ret->Err = $resp->Err;
         if (null !== $resp->Err) {
@@ -61,7 +61,7 @@ class KVClient extends AbstractClient
                 $ret->unmarshalValue($dec->Decoded[0]);
             }
         } elseif (HTTP\StatusNotFound !== $code) {
-            $ret->Err = new Error(\sprintf('%s: %s', $code, $resp->Response->getReasonPhrase()));
+            $ret->Err = new Error(sprintf('%s: %s', $code, $resp->Response->getReasonPhrase()));
         }
 
         return $ret;
@@ -76,7 +76,7 @@ class KVClient extends AbstractClient
      */
     public function Put(KVPair $p, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = $this->_newPutRequest(\sprintf('v1/kv/%s', $p->Key), $p->Value, $opts);
+        $r = $this->_newPutRequest(sprintf('v1/kv/%s', $p->Key), $p->Value, $opts);
         if (0 !== $p->Flags) {
             $r->params->set('flags', (string)$p->Flags);
         }
@@ -94,7 +94,7 @@ class KVClient extends AbstractClient
      */
     public function Delete(string $key, ?WriteOptions $opts = null): WriteResponse
     {
-        return $this->_executeDelete(\sprintf('v1/kv/%s', $key), $opts);
+        return $this->_executeDelete(sprintf('v1/kv/%s', $key), $opts);
     }
 
     /**
@@ -106,7 +106,7 @@ class KVClient extends AbstractClient
      */
     public function List(string $prefix = '', ?QueryOptions $opts = null): KVPairsResponse
     {
-        $r = $this->_newGetRequest(\sprintf('v1/kv/%s', $prefix), $opts);
+        $r = $this->_newGetRequest(sprintf('v1/kv/%s', $prefix), $opts);
         $r->params->set('recurse', '');
         $ret  = new KVPairsResponse();
         $resp = $this->_requireOK($this->_do($r));
@@ -123,7 +123,7 @@ class KVClient extends AbstractClient
      */
     public function Keys(string $prefix = '', ?QueryOptions $opts = null): ValuedQueryStringsResponse
     {
-        $r = $this->_newGetRequest(\sprintf('v1/kv/%s', $prefix), $opts);
+        $r = $this->_newGetRequest(sprintf('v1/kv/%s', $prefix), $opts);
         $r->params->set('keys', '');
         $ret  = new ValuedQueryStringsResponse();
         $resp = $this->_requireOK($this->_do($r));
@@ -140,7 +140,7 @@ class KVClient extends AbstractClient
      */
     public function CAS(KVPair $p, ?WriteOptions $opts = null): ValuedWriteBoolResponse
     {
-        $r = $this->_newPutRequest(\sprintf('v1/kv/%s', $p->Key), $p->Value, $opts);
+        $r = $this->_newPutRequest(sprintf('v1/kv/%s', $p->Key), $p->Value, $opts);
         $r->params->set('cas', (string)$p->ModifyIndex);
         if (0 !== $p->Flags) {
             $r->params->set('flags', (string)$p->Flags);
@@ -160,7 +160,7 @@ class KVClient extends AbstractClient
      */
     public function Acquire(KVPair $p, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = $this->_newPutRequest(\sprintf('v1/kv/%s', $p->Key), $p->Value, $opts);
+        $r = $this->_newPutRequest(sprintf('v1/kv/%s', $p->Key), $p->Value, $opts);
         $r->params->set('acquire', $p->Session);
         if (0 !== $p->Flags) {
             $r->params->set('flags', (string)$p->Flags);
@@ -180,7 +180,7 @@ class KVClient extends AbstractClient
      */
     public function DeleteCAS(KVPair $p, ?WriteOptions $opts = null): ValuedWriteBoolResponse
     {
-        $r                = $this->_newDeleteRequest(\sprintf('v1/kv/%s', \ltrim($p->Key, '/')), $opts);
+        $r                = $this->_newDeleteRequest(sprintf('v1/kv/%s', ltrim($p->Key, '/')), $opts);
         $r->params['cas'] = (string)$p->ModifyIndex;
         $resp             = $this->_requireOK($this->_do($r));
         $ret              = new ValuedWriteBoolResponse();
@@ -197,7 +197,7 @@ class KVClient extends AbstractClient
      */
     public function Release(KVPair $p, ?WriteOptions $opts = null): WriteResponse
     {
-        $r = $this->_newPutRequest(\sprintf('v1/kv/%s', $p->Key), $p->Value, $opts);
+        $r = $this->_newPutRequest(sprintf('v1/kv/%s', $p->Key), $p->Value, $opts);
         $r->params->set('release', $p->Session);
         if (0 !== $p->Flags) {
             $r->params->set('flags', (string)$p->Flags);
@@ -217,7 +217,7 @@ class KVClient extends AbstractClient
      */
     public function DeleteTree(string $prefix, ?WriteOptions $opts = null): WriteResponse
     {
-        $r                    = $this->_newDeleteRequest(\sprintf('v1/kv/%s', $prefix), $opts);
+        $r                    = $this->_newDeleteRequest(sprintf('v1/kv/%s', $prefix), $opts);
         $r->params['recurse'] = '';
         $resp                 = $this->_requireOK($this->_do($r));
         $ret                  = new WriteResponse();
@@ -293,21 +293,21 @@ class KVClient extends AbstractClient
 
         $treeHierarchy = [];
         foreach ($valueList as $path => $kvp) {
-            $slashPos = \strpos($path, '/');
+            $slashPos = strpos($path, '/');
             if (false === $slashPos) {
                 $treeHierarchy[$path] = $kvp;
                 continue;
             }
 
-            $root = \substr($path, 0, $slashPos + 1);
+            $root = substr($path, 0, $slashPos + 1);
 
             if (!isset($treeHierarchy[$root])) {
                 $treeHierarchy[$root] = new KVTree($root);
             }
 
-            if ('/' === \substr($path, -1)) {
+            if ('/' === substr($path, -1)) {
                 $_path = '';
-                foreach (\explode('/', $prefix) as $part) {
+                foreach (explode('/', $prefix) as $part) {
                     if ('' === $part) {
                         continue;
                     }
@@ -323,9 +323,9 @@ class KVClient extends AbstractClient
                     }
                 }
             } else {
-                $kvPrefix = \substr($path, 0, \strrpos($path, '/') + 1);
+                $kvPrefix = substr($path, 0, strrpos($path, '/') + 1);
                 $_path    = '';
-                foreach (\explode('/', $kvPrefix) as $part) {
+                foreach (explode('/', $kvPrefix) as $part) {
                     if ('' === $part) {
                         continue;
                     }

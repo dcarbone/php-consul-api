@@ -68,7 +68,7 @@ trait Marshaller
 
                 default:
                     throw new \InvalidArgumentException(
-                        \sprintf('Unable to handle serializing to %s', $def[Transcoding::FIELD_MARSHAL_AS])
+                        sprintf('Unable to handle serializing to %s', $def[Transcoding::FIELD_MARSHAL_AS])
                     );
             }
         }

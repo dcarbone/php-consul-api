@@ -38,7 +38,7 @@ class HealthChecks extends FakeSlice
         $passing = $warning = $critical = $maintenance = false;
         foreach ($this as $check) {
             /** @var \DCarbone\PHPConsulAPI\Health\HealthCheck $check */
-            if (Consul::NodeMaint === $check->CheckID || 0 === \strpos($check->CheckID, Consul::ServiceMaintPrefix)) {
+            if (Consul::NodeMaint === $check->CheckID || 0 === strpos($check->CheckID, Consul::ServiceMaintPrefix)) {
                 // TODO: Maybe just return maintenance right now...?
                 $maintenance = true;
                 continue;

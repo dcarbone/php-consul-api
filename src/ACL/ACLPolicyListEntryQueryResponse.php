@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI\KV;
+namespace DCarbone\PHPConsulAPI\ACL;
 
 /*
    Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -18,24 +18,23 @@ namespace DCarbone\PHPConsulAPI\KV;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedWriteResponse;
-use DCarbone\PHPConsulAPI\ACL\ACLToken;
+use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
 use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 /**
- * Class ACLTokenWriteResponse
+ * Class ACLPolicyListEntryQueryResponse
  */
-class ACLTokenWriteResponse extends AbstractValuedWriteResponse implements UnmarshalledResponseInterface
+class ACLPolicyListEntryQueryResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\ACL\ACLToken|null */
-    public ?ACLToken $ACLToken = null;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLPolicyListEntry[]|null */
+    public ?array $ACLPolicyListEntries = [];
 
     /**
-     * @return \DCarbone\PHPConsulAPI\ACL\ACLToken|null
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLPolicyListEntry[]|null
      */
-    public function getValue(): ?ACLToken
+    public function getValue(): ?array
     {
-        return $this->ACLToken;
+        return $this->ACLPolicyListEntries;
     }
 
     /**
@@ -43,6 +42,9 @@ class ACLTokenWriteResponse extends AbstractValuedWriteResponse implements Unmar
      */
     public function unmarshalValue($decodedData): void
     {
-        $this->ACLToken = new ACLToken((array)$decodedData);
+        $this->ACLPolicyListEntries = [];
+        foreach ($decodedData as $datum) {
+            $this->ACLPolicyListEntries[] = new ACLPolicyListEntry($datum);
+        }
     }
 }

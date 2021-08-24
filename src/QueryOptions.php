@@ -465,14 +465,14 @@ class QueryOptions extends AbstractModel implements RequestOptions
             $cc = [];
             $s  = $this->MaxAge->Seconds();
             if (0 < $s) {
-                $cc[] = \sprintf('max-age=%.0f', $s);
+                $cc[] = sprintf('max-age=%.0f', $s);
             }
             $s = $this->StaleIfError->Seconds();
             if (0 < $s) {
-                $cc[] = \sprintf('stale-if-error=%.0f', $s);
+                $cc[] = sprintf('stale-if-error=%.0f', $s);
             }
             if ([] !== $cc) {
-                $r->header->set('Cache-Control', \implode(', ', $cc));
+                $r->header->set('Cache-Control', implode(', ', $cc));
             }
         }
 

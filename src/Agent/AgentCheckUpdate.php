@@ -72,6 +72,6 @@ final class AgentCheckUpdate extends AbstractModel
      */
     public function __toString(): string
     {
-        return \sprintf('%s: %s', $this->Status, $this->Output);
+        return sprintf('%s: %s', $this->Status, $this->Output);
     }
 }
