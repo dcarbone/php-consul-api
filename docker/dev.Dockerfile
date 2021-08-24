@@ -16,5 +16,5 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && rm 'composer-setup.php'
 
 # install php-cs tools (thanks, cytopia!)
-COPY --from=cytopia/phpcs:2-php7.4 /usr/bin/phpcs /usr/bin/phpcs
-COPY --from=cytopia/php-cs-fixer:2-php7.4 /usr/bin/php-cs-fixer /usr/bin/php-cs-fixer
+COPY --from=cytopia/phpcs:3-php7.4 /usr/bin/phpcs /usr/bin/phpcs
+COPY --from=cytopia/php-cs-fixer:3-php7.4 /usr/bin/php-cs-fixer /usr/bin/php-cs-fixer

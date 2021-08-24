@@ -4,10 +4,16 @@
       "DCarbone\\PHPConsulAPI\\Tools\\PHPCSFixer\\": "src/"
     }
   },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/dcarbone/php-cs-fixer-phpdoc-force-fqcn"
+    }
+  ],
   "require": {
     "php": "^7.4",
-    "friendsofphp/php-cs-fixer": "^2.18",
-    "adamwojs/php-cs-fixer-phpdoc-force-fqcn": "^v1.0"
+    "friendsofphp/php-cs-fixer": "^3.0",
+    "adamwojs/php-cs-fixer-phpdoc-force-fqcn": "dev-master"
   },
   "config": {
     "platform": {

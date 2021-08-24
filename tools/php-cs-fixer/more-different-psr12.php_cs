@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-use DCarbone\PHPConsulAPI\Tools\PHPCSFixer\Fixer\FQCN\ForceFQCNFixer;
+use AdamWojs\PhpCsFixerPhpdocForceFQCN\Fixer\Phpdoc\ForceFQCNFixer;
 use PhpCsFixer\Config;
 
 $config = new Config('php-consul-api');
