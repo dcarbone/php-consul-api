@@ -32,6 +32,7 @@ class ACLAuthMethod extends AbstractModel
         self::FIELD_DESCRIPTION     => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_MAX_TOKEN_TTL   => [
             Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_DURATION,
+            Transcoding::FIELD_MARSHAL_AS         => Transcoding::STRING,
             Transcoding::FIELD_OMITEMPTY          => true,
         ],
         self::FIELD_TOKEN_LOCALITY  => Transcoding::OMITEMPTY_STRING_FIELD,
@@ -167,12 +168,12 @@ class ACLAuthMethod extends AbstractModel
     }
 
     /**
-     * @param \DCarbone\Go\Time\Duration $MaxTokenTTL
+     * @param \DCarbone\Go\Time\Duration|int|string $MaxTokenTTL
      * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethod
      */
-    public function setMaxTokenTTL(Time\Duration $MaxTokenTTL): self
+    public function setMaxTokenTTL($MaxTokenTTL): self
     {
-        $this->MaxTokenTTL = $MaxTokenTTL;
+        $this->MaxTokenTTL = Time::ParseDuration($MaxTokenTTL);
         return $this;
     }
 
