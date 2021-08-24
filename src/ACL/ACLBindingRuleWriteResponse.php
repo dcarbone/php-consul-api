@@ -18,23 +18,23 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
+use DCarbone\PHPConsulAPI\AbstractValuedWriteResponse;
 use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 /**
- * Class ACLPolicyWriteResponse
+ * Class ACLBindingRuleWriteResponse
  */
-class ACLPolicyQueryResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
+class ACLBindingRuleWriteResponse extends AbstractValuedWriteResponse implements UnmarshalledResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\ACL\ACLPolicy|null */
-    public ?ACLPolicy $ACLPolicy = null;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLBindingRule|null */
+    public ?ACLBindingRule $ACLBindingRule = null;
 
     /**
-     * @return \DCarbone\PHPConsulAPI\ACL\ACLPolicy|null
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLBindingRule|null
      */
-    public function getValue(): ?ACLPolicy
+    public function getValue(): ?ACLBindingRule
     {
-        return $this->ACLPolicy;
+        return $this->ACLBindingRule;
     }
 
     /**
@@ -42,6 +42,6 @@ class ACLPolicyQueryResponse extends AbstractValuedQueryResponse implements Unma
      */
     public function unmarshalValue($decodedData): void
     {
-        $this->ACLPolicy = new ACLPolicy((array)$decodedData);
+        $this->ACLBindingRule = new ACLBindingRule((array)$decodedData);
     }
 }

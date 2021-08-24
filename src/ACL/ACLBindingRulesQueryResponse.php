@@ -22,19 +22,19 @@ use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
 use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 /**
- * Class ACLPolicyWriteResponse
+ * Class ACLBindingRulesQueryResponse
  */
-class ACLPolicyQueryResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
+class ACLBindingRulesQueryResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\ACL\ACLPolicy|null */
-    public ?ACLPolicy $ACLPolicy = null;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLBindingRule[]|null */
+    public ?array $ACLBindingRules = [];
 
     /**
-     * @return \DCarbone\PHPConsulAPI\ACL\ACLPolicy|null
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLBindingRule[]|null
      */
-    public function getValue(): ?ACLPolicy
+    public function getValue(): ?array
     {
-        return $this->ACLPolicy;
+        return $this->ACLBindingRules;
     }
 
     /**
@@ -42,6 +42,9 @@ class ACLPolicyQueryResponse extends AbstractValuedQueryResponse implements Unma
      */
     public function unmarshalValue($decodedData): void
     {
-        $this->ACLPolicy = new ACLPolicy((array)$decodedData);
+        $this->ACLBindingRules = [];
+        foreach ($decodedData as $datum) {
+            $this->ACLBindingRules[] = new ACLBindingRule($datum);
+        }
     }
 }

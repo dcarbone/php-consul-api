@@ -187,11 +187,11 @@ abstract class AbstractClient
 
     /**
      * @param \DCarbone\PHPConsulAPI\RequestResponse $r
-     * @param int $statusCode
+     * @param int[] $allowed
      * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\RequestResponse
      */
-    protected function _requireStatus(RequestResponse $r, int $statusCode): RequestResponse
+    protected function _requireStatus(RequestResponse $r, int ...$allowed): RequestResponse
     {
         // If a previous error occurred, just return as-is.
         if (null !== $r->Err) {
@@ -205,8 +205,8 @@ abstract class AbstractClient
                 // Get the response code...
                 $actualCode = $r->Response->getStatusCode();
 
-                // If $desiredCode, move right along
-                if ($statusCode === $actualCode) {
+                // If response code is in allowed list, move right along
+                if (\in_array($actualCode, $allowed, true)) {
                     return $r;
                 }
 
@@ -215,7 +215,7 @@ abstract class AbstractClient
                     sprintf(
                         '%s - Non-%d response seen.  Response code: %d.  Response: %s',
                         static::class,
-                        $statusCode,
+                        $allowed,
                         $actualCode,
                         $r->Response->getBody()->getContents()
                     )
@@ -242,6 +242,16 @@ abstract class AbstractClient
     protected function _requireOK(RequestResponse $r): RequestResponse
     {
         return $this->_requireStatus($r, HTTP\StatusOK);
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\RequestResponse $r
+     * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\RequestResponse
+     */
+    protected function _requireNotFoundOrOK(RequestResponse $r): RequestResponse
+    {
+        return $this->_requireStatus($r, HTTP\StatusOK, HTTP\StatusNotFound);
     }
 
     /**
@@ -326,6 +336,22 @@ abstract class AbstractClient
     protected function _executePut(string $path, $body, ?WriteOptions $opts): WriteResponse
     {
         $resp = $this->_requireOK($this->_doPut($path, $body, $opts));
+        $ret  = new WriteResponse();
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    /**
+     * @param string $path
+     * @param mixed $body
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
+     */
+    protected function _executePost(string $path, $body, ?WriteOptions $opts): WriteResponse
+    {
+        $resp = $this->_requireOK($this->_doPost($path, $body, $opts));
         $ret  = new WriteResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;

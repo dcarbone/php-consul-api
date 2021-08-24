@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI\KV;
+namespace DCarbone\PHPConsulAPI\ACL;
 
 /*
    Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -19,7 +19,6 @@ namespace DCarbone\PHPConsulAPI\KV;
  */
 
 use DCarbone\PHPConsulAPI\AbstractValuedWriteResponse;
-use DCarbone\PHPConsulAPI\ACL\ACLToken;
 use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 /**

@@ -22,19 +22,19 @@ use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
 use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 /**
- * Class ACLPolicyWriteResponse
+ * Class ACLRolesQueryResponse
  */
-class ACLPolicyQueryResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
+class ACLRolesQueryResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\ACL\ACLPolicy|null */
-    public ?ACLPolicy $ACLPolicy = null;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLRole[]|null */
+    public ?array $ACLRoles = [];
 
     /**
-     * @return \DCarbone\PHPConsulAPI\ACL\ACLPolicy|null
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLRole[]|null
      */
-    public function getValue(): ?ACLPolicy
+    public function getValue(): ?array
     {
-        return $this->ACLPolicy;
+        return $this->ACLRoles;
     }
 
     /**
@@ -42,6 +42,9 @@ class ACLPolicyQueryResponse extends AbstractValuedQueryResponse implements Unma
      */
     public function unmarshalValue($decodedData): void
     {
-        $this->ACLPolicy = new ACLPolicy((array)$decodedData);
+        $this->ACLRoles = [];
+        foreach ($decodedData as $datum) {
+            $this->ACLRoles[] = new ACLRole($datum);
+        }
     }
 }

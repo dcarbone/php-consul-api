@@ -22,19 +22,19 @@ use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
 use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 /**
- * Class ACLPolicyWriteResponse
+ * Class ACLAuthMethodWriteResponse
  */
-class ACLPolicyQueryResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
+class ACLAuthMethodQueryResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\ACL\ACLPolicy|null */
-    public ?ACLPolicy $ACLPolicy = null;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLAuthMethod|null */
+    public ?ACLAuthMethod $ACLAuthMethod = null;
 
     /**
-     * @return \DCarbone\PHPConsulAPI\ACL\ACLPolicy|null
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethod|null
      */
-    public function getValue(): ?ACLPolicy
+    public function getValue(): ?ACLAuthMethod
     {
-        return $this->ACLPolicy;
+        return $this->ACLAuthMethod;
     }
 
     /**
@@ -42,6 +42,6 @@ class ACLPolicyQueryResponse extends AbstractValuedQueryResponse implements Unma
      */
     public function unmarshalValue($decodedData): void
     {
-        $this->ACLPolicy = new ACLPolicy((array)$decodedData);
+        $this->ACLAuthMethod = new ACLAuthMethod((array)$decodedData);
     }
 }

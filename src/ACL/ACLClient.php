@@ -20,10 +20,6 @@ namespace DCarbone\PHPConsulAPI\ACL;
 
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\KV\ACLPolicyQueryResponse;
-use DCarbone\PHPConsulAPI\KV\ACLPolicyWriteResponse;
-use DCarbone\PHPConsulAPI\KV\ACLTokenQueryResponse;
-use DCarbone\PHPConsulAPI\KV\ACLTokenWriteResponse;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\ValuedWriteStringResponse;
 use DCarbone\PHPConsulAPI\WriteOptions;
@@ -135,7 +131,7 @@ class ACLClient extends AbstractClient
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\KV\ACLTokenWriteResponse
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLTokenWriteResponse
      */
     public function TokenCreate(ACLToken $token, ?WriteOptions $opts = null): ACLTokenWriteResponse
     {
@@ -150,7 +146,7 @@ class ACLClient extends AbstractClient
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\KV\ACLTokenWriteResponse
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLTokenWriteResponse
      */
     public function TokenUpdate(ACLToken $token, ?WriteOptions $opts = null): ACLTokenWriteResponse
     {
@@ -170,7 +166,7 @@ class ACLClient extends AbstractClient
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\KV\ACLTokenWriteResponse
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLTokenWriteResponse
      */
     public function TokenClone(string $tokenID, string $description, ?WriteOptions $opts = null): ACLTokenWriteResponse
     {
@@ -202,7 +198,7 @@ class ACLClient extends AbstractClient
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\KV\ACLTokenQueryResponse
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLTokenQueryResponse
      */
     public function TokenRead(string $tokenID, ?QueryOptions $opts = null): ACLTokenQueryResponse
     {
@@ -216,7 +212,7 @@ class ACLClient extends AbstractClient
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\KV\ACLTokenQueryResponse
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLTokenQueryResponse
      */
     public function TokenReadSelf(?QueryOptions $opts = null): ACLTokenQueryResponse
     {
@@ -245,7 +241,7 @@ class ACLClient extends AbstractClient
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\KV\ACLPolicyWriteResponse
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLPolicyWriteResponse
      */
     public function PolicyCreate(ACLPolicy $policy, ?WriteOptions $opts = null): ACLPolicyWriteResponse
     {
@@ -264,7 +260,7 @@ class ACLClient extends AbstractClient
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\KV\ACLPolicyWriteResponse
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLPolicyWriteResponse
      */
     public function PolicyUpdate(ACLPolicy $policy, ?WriteOptions $opts = null): ACLPolicyWriteResponse
     {
@@ -273,7 +269,7 @@ class ACLClient extends AbstractClient
             $ret->Err = new Error('must specify an ID in Policy Update');
             return $ret;
         }
-        $resp = $this->_requireOK($this->_doPut(sprintf('/v1/ac/policy/%s', $policy->ID), $policy, $opts));
+        $resp = $this->_requireOK($this->_doPut(sprintf('/v1/acl/policy/%s', $policy->ID), $policy, $opts));
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
@@ -294,7 +290,7 @@ class ACLClient extends AbstractClient
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\KV\ACLPolicyQueryResponse
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLPolicyQueryResponse
      */
     public function PolicyRead(string $policyID, ?QueryOptions $opts = null): ACLPolicyQueryResponse
     {
@@ -309,7 +305,7 @@ class ACLClient extends AbstractClient
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\KV\ACLPolicyQueryResponse
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLPolicyQueryResponse
      */
     public function PolicyReadByName(string $policyName, ?QueryOptions $opts = null): ACLPolicyQueryResponse
     {
@@ -329,6 +325,322 @@ class ACLClient extends AbstractClient
     {
         $resp = $this->_requireOK($this->_doGet('/v1/acl/policies', $opts));
         $ret  = new ACLPolicyListEntryQueryResponse();
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\ACL\ACLRole $role
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLRoleWriteResponse
+     */
+    public function RoleCreate(ACLRole $role, ?WriteOptions $opts = null): ACLRoleWriteResponse
+    {
+        $ret = new ACLRoleWriteResponse();
+        if ('' !== $role->ID) {
+            $ret->Err = new Error('cannot specify an id in Role Create');
+            return $ret;
+        }
+        $resp = $this->_requireOK($this->_doPut('/v1/acl/role', $role, $opts));
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\ACL\ACLRole $role
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLRoleWriteResponse
+     */
+    public function RoleUpdate(ACLRole $role, ?WriteOptions $opts = null): ACLRoleWriteResponse
+    {
+        $ret = new ACLRoleWriteResponse();
+        if ('' === $role->ID) {
+            $ret->Err = new Error('must specify an ID in Role Update');
+            return $ret;
+        }
+        $resp = $this->_requireOK($this->_doPut(sprintf('/v1/acl/role/%s', $role->ID), $role, $opts));
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    /**
+     * @param string $roleID
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
+     */
+    public function RoleDelete(string $roleID, ?WriteOptions $opts = null): WriteResponse
+    {
+        return $this->_executeDelete(sprintf('/v1/acl/role/%s', $roleID), $opts);
+    }
+
+    /**
+     * @param string $roleID
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLRoleQueryResponse
+     */
+    public function RoleRead(string $roleID, ?QueryOptions $opts = null): ACLRoleQueryResponse
+    {
+        $resp = $this->_requireNotFoundOrOK($this->_doGet(sprintf('/v1/acl/role/%s', $roleID), $opts));
+        $ret  = new ACLRoleQueryResponse();
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    /**
+     * @param string $roleName
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLRoleQueryResponse
+     */
+    public function RoleReadByName(string $roleName, ?QueryOptions $opts = null): ACLRoleQueryResponse
+    {
+        $resp = $this->_requireOK($this->_doGet(sprintf('/v1/acl/role/name/%s', $roleName), $opts));
+        $ret  = new ACLRoleQueryResponse();
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLRolesQueryResponse
+     */
+    public function RoleList(?QueryOptions $opts = null): ACLRolesQueryResponse
+    {
+        $resp = $this->_requireOK($this->_doGet('/v1/acl/roles', $opts));
+        $ret  = new ACLRolesQueryResponse();
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\ACL\ACLAuthMethod $authMethod
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodWriteResponse
+     */
+    public function AuthMethodCreate(ACLAuthMethod $authMethod, ?WriteOptions $opts = null): ACLAuthMethodWriteResponse
+    {
+        $ret = new ACLAuthMethodWriteResponse();
+        if ('' !== $authMethod->Name) {
+            $ret->Err = new Error('cannot specify an Name in AuthMethod Create');
+            return $ret;
+        }
+        $resp = $this->_requireOK($this->_doPut('/v1/acl/auth-method', $authMethod, $opts));
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\ACL\ACLAuthMethod $authMethod
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodWriteResponse
+     */
+    public function AuthMethodUpdate(ACLAuthMethod $authMethod, ?WriteOptions $opts = null): ACLAuthMethodWriteResponse
+    {
+        $ret = new ACLAuthMethodWriteResponse();
+        if ('' === $authMethod->ID) {
+            $ret->Err = new Error('must specify an ID in AuthMethod Update');
+            return $ret;
+        }
+        $resp = $this->_requireOK($this->_doPut(sprintf('/v1/acl/auth-method/%s', $authMethod->ID), $authMethod, $opts));
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    /**
+     * @param string $authMethodID
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
+     */
+    public function AuthMethodDelete(string $authMethodID, ?WriteOptions $opts = null): WriteResponse
+    {
+        return $this->_executeDelete(sprintf('/v1/acl/authMethod/%s', $authMethodID), $opts);
+    }
+
+    /**
+     * @param string $authMethodID
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodQueryResponse
+     */
+    public function AuthMethodRead(string $authMethodID, ?QueryOptions $opts = null): ACLAuthMethodQueryResponse
+    {
+        $resp = $this->_requireNotFoundOrOK($this->_doGet(sprintf('/v1/acl/authMethod/%s', $authMethodID), $opts));
+        $ret  = new ACLAuthMethodQueryResponse();
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodListEntryQueryResponse
+     */
+    public function AuthMethodList(?QueryOptions $opts = null): ACLAuthMethodListEntryQueryResponse
+    {
+        $resp = $this->_requireOK($this->_doGet('/v1/acl/auth-methods', $opts));
+        $ret  = new ACLAuthMethodListEntryQueryResponse();
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\ACL\ACLBindingRule $bindingRule
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLBindingRuleWriteResponse
+     */
+    public function BindingRuleCreate(
+        ACLBindingRule $bindingRule,
+        ?WriteOptions $opts = null
+    ): ACLBindingRuleWriteResponse {
+        $ret = new ACLBindingRuleWriteResponse();
+        if ('' !== $bindingRule->ID) {
+            $ret->Err = new Error('cannot specify an id in BindingRule Create');
+            return $ret;
+        }
+        $resp = $this->_requireOK($this->_doPut('/v1/acl/binding-rule', $bindingRule, $opts));
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\ACL\ACLBindingRule $bindingRule
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLBindingRuleWriteResponse
+     */
+    public function BindingRuleUpdate(
+        ACLBindingRule $bindingRule,
+        ?WriteOptions $opts = null
+    ): ACLBindingRuleWriteResponse {
+        $ret = new ACLBindingRuleWriteResponse();
+        if ('' === $bindingRule->ID) {
+            $ret->Err = new Error('must specify an ID in BindingRule Update');
+            return $ret;
+        }
+        $resp = $this->_requireOK($this->_doPut(sprintf('/v1/acl/binding-rule/%s', $bindingRule->ID), $bindingRule, $opts));
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    /**
+     * @param string $bindingRuleID
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
+     */
+    public function BindingRuleDelete(string $bindingRuleID, ?WriteOptions $opts = null): WriteResponse
+    {
+        return $this->_executeDelete(sprintf('/v1/acl/binding-rule/%s', $bindingRuleID), $opts);
+    }
+
+    /**
+     * @param string $bindingRuleID
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLBindingRuleQueryResponse
+     */
+    public function BindingRuleRead(string $bindingRuleID, ?QueryOptions $opts = null): ACLBindingRuleQueryResponse
+    {
+        $resp = $this->_requireNotFoundOrOK($this->_doGet(sprintf('/v1/acl/binding-rule/%s', $bindingRuleID), $opts));
+        $ret  = new ACLBindingRuleQueryResponse();
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLBindingRulesQueryResponse
+     */
+    public function BindingRuleList(?QueryOptions $opts = null): ACLBindingRulesQueryResponse
+    {
+        $resp = $this->_requireOK($this->_doGet('/v1/acl/binding-rules', $opts));
+        $ret  = new ACLBindingRulesQueryResponse();
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\ACL\ACLLoginParams $login
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLTokenWriteResponse
+     */
+    public function Login(ACLLoginParams $login, ?WriteOptions $opts = null): ACLTokenWriteResponse
+    {
+        $resp = $this->_requireOK($this->_doPost('/v1/acl/login', $login, $opts));
+        $ret  = new ACLTokenWriteResponse();
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @return \DCarbone\PHPConsulAPI\WriteResponse
+     */
+    public function Logout(?WriteOptions $opts = null): WriteResponse
+    {
+        return $this->_executePost('/v1/acl/logout', null, $opts);
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\ACL\ACLOIDCAuthURLParams $auth
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
+     */
+    public function OIDCAuthURL(ACLOIDCAuthURLParams $auth, ?WriteOptions $opts = null): ValuedWriteStringResponse
+    {
+        $ret = new ValuedWriteStringResponse();
+        if ('' === $auth->AuthMethod) {
+            $ret->Err = new Error('must specify an auth method name');
+            return $ret;
+        }
+        $resp = $this->_requireOK($this->_doPost('/v1/acl/oidc/auth-url', $auth, $opts));
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\ACL\ACLOIDCCallbackParams $auth
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLTokenWriteResponse
+     */
+    public function OIDCCallback(ACLOIDCCallbackParams $auth, ?WriteOptions $opts = null): ACLTokenWriteResponse
+    {
+        $ret = new ACLTokenWriteResponse();
+        if ('' === $auth->AuthMethod) {
+            $ret->Err = new Error('must specify an auth method name');
+            return $ret;
+        }
+        $resp = $this->_requireOK($this->_doPost('/v1/acl/oidc/callback', $auth, $opts));
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }

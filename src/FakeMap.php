@@ -39,6 +39,26 @@ class FakeMap implements \ArrayAccess, \Countable, \Iterator, \JsonSerializable
     }
 
     /**
+     * @param mixed $input
+     * @return \DCarbone\PHPConsulAPI\FakeMap|null
+     */
+    public static function parse($input): ?self
+    {
+        if (null === $input) {
+            return null;
+        }
+        if (\is_object($input) && $input instanceof self) {
+            return $input;
+        }
+        if (\is_array($input)) {
+            return new self($input);
+        }
+        throw new \InvalidArgumentException(
+            sprintf('Cannot parse input of type %s to %s', \gettype($input), self::class)
+        );
+    }
+
+    /**
      * @return mixed
      */
     public function current()
