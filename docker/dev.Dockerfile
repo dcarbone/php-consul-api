@@ -1,5 +1,6 @@
 FROM php:7.4-cli
 LABEL description="PHP Consul API development container"
+LABEL author="Daniel Carbone<daniel.p.carbone@gmail.com>"
 
 # set for php-cs-fixer
 ENV WORKDIR /app
