@@ -198,38 +198,43 @@ abstract class AbstractClient
             return $r;
         }
 
-        // If we have any kind of response...
-        if (null !== $r->Response) {
-            // If this is a response...
-            if ($r->Response instanceof ResponseInterface) {
-                // Get the response code...
-                $actualCode = $r->Response->getStatusCode();
-
-                // If response code is in allowed list, move right along
-                if (\in_array($actualCode, $allowed, true)) {
-                    return $r;
-                }
-
-                // Otherwise, return error
-                $r->Err = new Error(
-                    sprintf(
-                        '%s - Non-%d response seen.  Response code: %d.  Response: %s',
-                        static::class,
-                        $allowed,
-                        $actualCode,
-                        $r->Response->getBody()->getContents()
-                    )
-                );
-            } else {
-                $r->Err = new Error(
-                    sprintf(
-                        '%s - Expected response to be instance of \\Psr\\Message\\ResponseInterface, %s seen.',
-                        static::class,
-                        \is_object($r->Response) ? \get_class($r->Response) : \gettype($r->Response)
-                    )
-                );
-            }
+        // if no response, return immediately
+        if (null === $r->Response) {
+            return $r;
         }
+
+        // if, for whatever reason, we see an unexpected response structure...
+        if (!($r->Response instanceof ResponseInterface)) {
+            $r->Err = new Error(
+                sprintf(
+                    '%s - Expected response to be instance of \\Psr\\Message\\ResponseInterface, %s seen.',
+                    static::class,
+                    \is_object($r->Response) ? \get_class($r->Response) : \gettype($r->Response)
+                )
+            );
+            return $r;
+        }
+
+        // once here, assume operable response instance
+
+        // Get the response code...
+        $actualCode = $r->Response->getStatusCode();
+
+        // If response code is in allowed list, move right along
+        if (\in_array($actualCode, $allowed, true)) {
+            return $r;
+        }
+
+        // Otherwise, return error
+        $r->Err = new Error(
+            sprintf(
+                '%s - Non-%d response seen.  Response code: %d.  Response: %s',
+                static::class,
+                $allowed,
+                $actualCode,
+                $r->Response->getBody()->getContents()
+            )
+        );
 
         return $r;
     }
@@ -380,7 +385,7 @@ abstract class AbstractClient
      * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      */
-    protected function _doPutValuedStr(string $path, $body, ?WriteOptions $opts): ValuedWriteStringResponse
+    protected function _executePutValuedStr(string $path, $body, ?WriteOptions $opts): ValuedWriteStringResponse
     {
         $r    = $this->_newPutRequest($path, $body, $opts);
         $resp = $this->_requireOK($this->_do($r));
@@ -396,7 +401,7 @@ abstract class AbstractClient
      * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\ValuedQueryStringResponse
      */
-    protected function _doGetValuedStr(string $path, ?QueryOptions $opts): ValuedQueryStringResponse
+    protected function _executeGetValuedStr(string $path, ?QueryOptions $opts): ValuedQueryStringResponse
     {
         $r    = $this->_newGetRequest($path, $opts);
         $resp = $this->_requireOK($this->_do($r));
@@ -412,7 +417,7 @@ abstract class AbstractClient
      * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\ValuedQueryStringsResponse
      */
-    protected function _doGetValuedStrs(string $path, ?QueryOptions $opts): ValuedQueryStringsResponse
+    protected function _executeGetValuedStrs(string $path, ?QueryOptions $opts): ValuedQueryStringsResponse
     {
         $r    = $this->_newGetRequest($path, $opts);
         $resp = $this->_requireOK($this->_do($r));
@@ -431,6 +436,7 @@ abstract class AbstractClient
     protected function _unmarshalResponse(RequestResponse $resp, AbstractResponse $ret): void
     {
         // determine if this response contains a *Meta field
+        // TODO: change to use interfaces + instanceof?
         if (property_exists($ret, Transcoding::FIELD_QUERY_META)) {
             $ret->QueryMeta = $resp->buildQueryMeta();
         } elseif (property_exists($ret, Transcoding::FIELD_WRITE_META)) {
@@ -453,7 +459,7 @@ abstract class AbstractClient
             return;
         }
 
-        // attempt response decoded
+        // attempt response decode
         $dec = $this->_decodeBody($resp->Response->getBody());
         if (null !== $dec->Err) {
             if ($hasErrField) {

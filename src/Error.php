@@ -48,6 +48,23 @@ class Error implements \JsonSerializable
     }
 
     /**
+     * @param \DCarbone\PHPConsulAPI\RequestResponse $resp
+     * @throws \Exception
+     * @return \DCarbone\PHPConsulAPI\Error
+     */
+    public static function unexpectedResponseCodeError(RequestResponse $resp): self
+    {
+        return new static(
+            sprintf(
+                'unexpected response code: %d (%s)',
+                $resp->Response->getStatusCode(),
+                $resp->Response->getBody()->getContents(),
+            )
+
+        );
+    }
+
+    /**
      * @return \DCarbone\Go\Time\Time
      */
     public function getTime(): Time\Time

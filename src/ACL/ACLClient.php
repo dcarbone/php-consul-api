@@ -36,7 +36,7 @@ class ACLClient extends AbstractClient
      */
     public function Bootstrap(): ValuedWriteStringResponse
     {
-        return $this->_doPutValuedStr('v1/acl/bootstrap', null, null);
+        return $this->_executePutValuedStr('v1/acl/bootstrap', null, null);
     }
 
     /**
@@ -47,7 +47,7 @@ class ACLClient extends AbstractClient
      */
     public function Create(ACLEntry $acl, ?WriteOptions $opts = null): ValuedWriteStringResponse
     {
-        return $this->_doPutValuedStr('v1/acl/create', $acl, $opts);
+        return $this->_executePutValuedStr('v1/acl/create', $acl, $opts);
     }
 
     /**
@@ -80,7 +80,7 @@ class ACLClient extends AbstractClient
      */
     public function Clone(string $id, ?WriteOptions $opts = null): ValuedWriteStringResponse
     {
-        return $this->_doPutValuedStr(sprintf('v1/acl/clone/%s', $id), null, $opts);
+        return $this->_executePutValuedStr(sprintf('v1/acl/clone/%s', $id), null, $opts);
     }
 
     /**
