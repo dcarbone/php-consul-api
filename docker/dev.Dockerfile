@@ -1,4 +1,5 @@
 FROM php:7.4-cli
+LABEL description="PHP Consul API development container"
 
 # set for php-cs-fixer
 ENV WORKDIR /app
