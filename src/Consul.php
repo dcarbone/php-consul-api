@@ -131,13 +131,13 @@ class Consul
 
     // "private" constants
 
-    public const headerConsulPrefix             = 'X-Consul-';
-    public const headerConsulIndex              = self::headerConsulPrefix . 'Index';
-    public const headerConsulContentHash        = self::headerConsulPrefix . 'ContentHash';
-    public const headerConsulKnownLeader        = self::headerConsulPrefix . 'KnownLeader';
-    public const headerConsulLastContact        = self::headerConsulPrefix . 'LastContact';
-    public const headerConsulTranslateAddresses = self::headerConsulPrefix . 'Translate-Addresses';
-    public const headerCache                    = 'X-Cache';
+    public const _headerConsulPrefix             = 'X-Consul-';
+    public const _headerConsulIndex              = self::_headerConsulPrefix . 'Index';
+    public const _headerConsulContentHash        = self::_headerConsulPrefix . 'ContentHash';
+    public const _headerConsulKnownLeader        = self::_headerConsulPrefix . 'KnownLeader';
+    public const _headerConsulLastContact        = self::_headerConsulPrefix . 'LastContact';
+    public const _headerConsulTranslateAddresses = self::_headerConsulPrefix . 'Translate-Addresses';
+    public const _headerCache                    = 'X-Cache';
 
     /** @var \DCarbone\PHPConsulAPI\ACL\ACLClient */
     public ACLClient $ACL;

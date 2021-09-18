@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 /*
    Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -18,30 +18,16 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\ConfigEntry\ConfigEntry;
+use DCarbone\PHPConsulAPI\AbstractModel;
 
 /**
- * @param \DCarbone\Go\Time\Duration $dur
- * @return string
+ * Class ServiceResolverConfigEntry
  */
-function dur_to_millisecond(Time\Duration $dur): string
+class ServiceResolverConfigEntry extends AbstractModel implements ConfigEntry
 {
-    $ns = $dur->Nanoseconds();
-    $ms = $dur->Milliseconds();
+    use ConfigEntryTrait;
 
-    if (0 < $ns && 0 === (int)$ms) {
-        $ms = 1;
-    }
-
-    return sprintf('%dms', $ms);
-}
-
-/**
- * @param string $kind
- * @param string $Name
- * @return \DCarbone\PHPConsulAPI\ConfigEntry\ConfigEntry
- */
-function MakeConfigEntry(string $kind, string $Name): ConfigEntry
-{
+    private const FIELD_DEFAULT_SUBSET = 'DefaultSubset';
+    private const FIELD_SUBSETS        = 'Subsets';
+    private const FIELD_REDIRECT       = 'Redirect';
 }

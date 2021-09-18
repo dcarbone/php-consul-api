@@ -142,7 +142,7 @@ trait Unmarshaller
             if ($nullable) {
                 return null;
             }
-            // .. and this field must be an instance of the provided class, return empty new empty instance
+            // ... and this field must be an instance of the provided class, return empty new empty instance
             return new $class([]);
         }
         // if the incoming value is already an instance of the class, clone it and return

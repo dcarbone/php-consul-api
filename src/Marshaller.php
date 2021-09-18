@@ -19,7 +19,6 @@ namespace DCarbone\PHPConsulAPI;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\Operator\ReadableDuration;
 
 /**
  * Used to assist with marshalling types into json
@@ -73,7 +72,7 @@ trait Marshaller
             }
         }
 
-        // if this field is not explicitly marked as "omitempty", set and move on.
+        // if this field is NOT explicitly marked as "omitempty", set and move on.
         if (!isset($def[Transcoding::FIELD_OMITEMPTY]) || true !== $def[Transcoding::FIELD_OMITEMPTY]) {
             $output[$field] = $value;
             return;
@@ -126,7 +125,7 @@ trait Marshaller
             }
 
             // Time\Duration types are non-zero if their internal value is > 0
-            if ($value instanceof Time\Duration || $value instanceof ReadableDuration) {
+            if ($value instanceof Time\Duration) {
                 if (0 < $value->Nanoseconds()) {
                     $output[$field] = $value;
                 }

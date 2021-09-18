@@ -59,7 +59,15 @@ final class Transcoding
     public const UNMARSHAL_DURATION          = [self::class, 'unmarshalDuration'];
     public const UNMARSHAL_NULLABLE_DURATION = [self::class, 'unmarshalNullableDuration'];
 
-    public const MAP_FIELD = [self::FIELD_TYPE => self::OBJECT, self::FIELD_CLASS => FakeMap::class];
+    //-- common field type definitions
+
+    public const MAP_FIELD      = [self::FIELD_TYPE => self::OBJECT, self::FIELD_CLASS => FakeMap::class];
+    public const DURATION_FIELD = [
+        self::FIELD_TYPE  => self::OBJECT,
+        self::FIELD_CLASS => Time\Duration::class,
+    ] + self::UNMARSHAL_DURATION;
+
+    //-- common field type definitions with omitempty
 
     public const OMITEMPTY_FIELD = [self::FIELD_OMITEMPTY => true];
 
@@ -71,6 +79,11 @@ final class Transcoding
         self::FIELD_TYPE       => self::ARRAY,
         self::FIELD_ARRAY_TYPE => self::STRING,
     ] + self::OMITEMPTY_FIELD;
+    public const OMITEMPTY_INTEGER_ARRAY_FIELD = [
+        self::FIELD_TYPE       => self::ARRAY,
+        self::FIELD_ARRAY_TYPE => self::INTEGER,
+    ]                                                  + self::OMITEMPTY_FIELD;
+    public const OMITEMPTY_MAP_FIELD = self::MAP_FIELD + self::OMITEMPTY_FIELD;
 
     /**
      * @param string $type

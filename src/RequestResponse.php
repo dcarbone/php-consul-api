@@ -104,26 +104,26 @@ final class RequestResponse
 
         // populate query meta fields based on response
 
-        if ('' !== ($h = $this->Response->getHeaderLine(Consul::headerConsulIndex))) {
+        if ('' !== ($h = $this->Response->getHeaderLine(Consul::_headerConsulIndex))) {
             $qm->LastIndex = (int)$h;
         }
 
-        $qm->LastContentHash = $this->Response->getHeaderLine(Consul::headerConsulContentHash);
+        $qm->LastContentHash = $this->Response->getHeaderLine(Consul::_headerConsulContentHash);
 
         // note: do not need to check both as guzzle response compares headers insensitively
-        if ('' !== ($h = $this->Response->getHeaderLine(Consul::headerConsulKnownLeader))) {
+        if ('' !== ($h = $this->Response->getHeaderLine(Consul::_headerConsulKnownLeader))) {
             $qm->KnownLeader = (bool)$h;
         }
         // note: do not need to check both as guzzle response compares headers insensitively
-        if ('' !== ($h = $this->Response->getHeaderLine(Consul::headerConsulLastContact))) {
+        if ('' !== ($h = $this->Response->getHeaderLine(Consul::_headerConsulLastContact))) {
             $qm->LastContact = (int)$h;
         }
 
-        if ('' !== ($h = $this->Response->getHeaderLine(Consul::headerConsulTranslateAddresses))) {
+        if ('' !== ($h = $this->Response->getHeaderLine(Consul::_headerConsulTranslateAddresses))) {
             $qm->AddressTranslationEnabled = (bool)$h;
         }
 
-        if ('' !== ($h = $this->Response->getHeaderLine(Consul::headerCache))) {
+        if ('' !== ($h = $this->Response->getHeaderLine(Consul::_headerCache))) {
             $qm->CacheAge = Time::Duration(\intval($h, 10) * Time::Second);
         }
 
