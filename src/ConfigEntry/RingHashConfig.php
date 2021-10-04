@@ -19,18 +19,20 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
- * Class ServiceResolverConfigEntry
+ * Class RingHashConfig
  */
-class ServiceResolverConfigEntry extends AbstractModel implements ConfigEntry
+class RingHashConfig extends AbstractModel
 {
-    use ConfigEntryTrait;
+    protected const FIELDS = [
+        self::FIELD_MINIMUM_RING_SIZE => Transcoding::OMITEMPTY_INTEGER_FIELD,
+        self::FIELD_MAXIMUM_RING_SIZE => Transcoding::OMITEMPTY_INTEGER_FIELD,
+    ];
 
-    private const FIELD_DEFAULT_SUBSET = 'DefaultSubset';
-    private const FIELD_SUBSETS        = 'Subsets';
-    private const FIELD_REDIRECT       = 'Redirect';
-    private const FIELD_FAILOVER = 'Failover';
-    private const FIELD_CONNECT_TIMEOUT = 'ConnectTimeout';
-    private const FIELD_LOAD_BALANCER = 'LoadBalancer';
+    private const FIELD_MINIMUM_RING_SIZE = 'MinimumRingSize';
+    private const FIELD_MAXIMUM_RING_SIZE = 'MaximumRingSize';
+
+    
 }

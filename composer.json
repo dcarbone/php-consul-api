@@ -48,7 +48,6 @@
     }
   },
   "scripts": {
-    "build-docker-dev": "docker buildx build -f docker/dev.Dockerfile -t dancarbone/php-consul-api-dev:7.4 --push .",
     "php-cs-fixer": "vendor/bin/php-cs-fixer fix --config tools/php-cs-fixer/more-different-psr12.php_cs src/"
   }
 }
