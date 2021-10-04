@@ -16,8 +16,8 @@
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\Event\EventClient;
+use DCarbone\PHPConsulAPITests\ConsulManager;
 use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 
 /**
@@ -32,7 +32,7 @@ final class EventClientUsageTest extends AbstractUsageTests
 
     public function testCanConstructClient(): void
     {
-        $client = new EventClient(new Config());
+        $client = new EventClient(ConsulManager::testConfig());
         static::assertInstanceOf(EventClient::class, $client);
     }
 }

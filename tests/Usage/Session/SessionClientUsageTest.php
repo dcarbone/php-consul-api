@@ -1,12 +1,12 @@
 <?php namespace DCarbone\PHPConsulAPITests\Usage\Session;
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\Consul;
 use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPI\Session\SessionClient;
 use DCarbone\PHPConsulAPI\Session\SessionEntry;
 use DCarbone\PHPConsulAPI\WriteMeta;
+use DCarbone\PHPConsulAPITests\ConsulManager;
 use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 
 /**
@@ -27,7 +27,7 @@ final class SessionClientUsageTest extends AbstractUsageTests
         /** @var \DCarbone\PHPConsulAPI\Session\SessionEntry $session */
         /** @var \DCarbone\PHPConsulAPI\Session\SessionEntry[] $sessions */
         /** @var \DCarbone\PHPConsulAPI\Error $err */
-        $client = new SessionClient(new Config());
+        $client = new SessionClient(ConsulManager::testConfig());
 
         [$id, $wm, $err] = $client->CreateNoChecks(new SessionEntry([
             'Name'     => $name,

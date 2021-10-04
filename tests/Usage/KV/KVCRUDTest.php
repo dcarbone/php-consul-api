@@ -17,13 +17,13 @@ namespace DCarbone\PHPConsulAPITests\Usage\KV;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\KV\KVClient;
 use DCarbone\PHPConsulAPI\KV\KVPair;
 use DCarbone\PHPConsulAPI\KV\KVPairs;
 use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPI\WriteMeta;
+use DCarbone\PHPConsulAPITests\ConsulManager;
 use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 use PHPUnit\Framework\AssertionFailedError;
 
@@ -49,7 +49,7 @@ final class KVCRUDTest extends AbstractUsageTests
 
     public function testCanPutKey(): void
     {
-        $client = new KVClient(new Config());
+        $client = new KVClient(ConsulManager::testConfig());
 
         [$wm, $err] = $client->Put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
         static::assertNull($err, \sprintf('Unable to set kvp: %s', (string)$err));
@@ -61,7 +61,7 @@ final class KVCRUDTest extends AbstractUsageTests
      */
     public function testCanGetKey(): void
     {
-        $client = new KVClient(new Config());
+        $client = new KVClient(ConsulManager::testConfig());
         $client->Put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
 
         [$kv, $qm, $err] = $client->Get(self::KVKey1);
@@ -77,7 +77,7 @@ final class KVCRUDTest extends AbstractUsageTests
      */
     public function testCanDeleteKey(): void
     {
-        $client = new KVClient(new Config());
+        $client = new KVClient(ConsulManager::testConfig());
         $client->Put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
 
         [$wm, $err] = $client->Delete(self::KVKey1);
@@ -95,7 +95,7 @@ final class KVCRUDTest extends AbstractUsageTests
 
     public function testListReturnsErrorWithInvalidPrefix(): void
     {
-        $client        = new KVClient(new Config());
+        $client        = new KVClient(ConsulManager::testConfig());
         [$_, $_, $err] = $client->List(12345);
         static::assertInstanceOf(
             Error::class,
@@ -116,7 +116,7 @@ final class KVCRUDTest extends AbstractUsageTests
         /** @var \DCarbone\PHPConsulAPI\KV\KVPair[] $list */
         /** @var \DCarbone\PHPConsulAPI\QueryMeta $qm */
         /** @var \DCarbone\PHPConsulAPI\Error $err */
-        $client = new KVClient(new Config());
+        $client = new KVClient(ConsulManager::testConfig());
         $client->Put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
         $client->Put(new KVPair(['Key' => self::KVKey2, 'Value' => self::KVValue2]));
         $client->Put(new KVPair(['Key' => self::KVKey3, 'Value' => self::KVValue3]));
@@ -164,7 +164,7 @@ final class KVCRUDTest extends AbstractUsageTests
         /** @var \DCarbone\PHPConsulAPI\KV\KVPair[] $list */
         /** @var \DCarbone\PHPConsulAPI\QueryMeta $qm */
         /** @var \DCarbone\PHPConsulAPI\Error $err */
-        $client = new KVClient(new Config());
+        $client = new KVClient(ConsulManager::testConfig());
         $client->Put(new KVPair(['Key' => self::KVPrefix . '/' . self::KVKey1, 'Value' => self::KVValue1]));
         $client->Put(new KVPair(['Key' => self::KVPrefix . '/' . self::KVKey2, 'Value' => self::KVValue2]));
         $client->Put(new KVPair(['Key' => self::KVPrefix . '/' . self::KVKey3, 'Value' => self::KVValue3]));
@@ -206,7 +206,7 @@ final class KVCRUDTest extends AbstractUsageTests
 
     public function testKeysReturnsErrorWithInvalidPrefix(): void
     {
-        $client        = new KVClient(new Config());
+        $client        = new KVClient(ConsulManager::testConfig());
         [$_, $_, $err] = $client->Keys(12345);
         static::assertInstanceOf(
             Error::class,
@@ -227,7 +227,7 @@ final class KVCRUDTest extends AbstractUsageTests
         /** @var string[] $list */
         /** @var \DCarbone\PHPConsulAPI\QueryMeta $qm */
         /** @var \DCarbone\PHPConsulAPI\Error $err */
-        $client = new KVClient(new Config());
+        $client = new KVClient(ConsulManager::testConfig());
         $client->Put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
         $client->Put(new KVPair(['Key' => self::KVKey2, 'Value' => self::KVValue2]));
         $client->Put(new KVPair(['Key' => self::KVKey3, 'Value' => self::KVValue3]));

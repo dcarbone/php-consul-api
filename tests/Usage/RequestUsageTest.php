@@ -16,11 +16,11 @@
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\KV\KVPair;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Request;
 use DCarbone\PHPConsulAPI\WriteOptions;
+use DCarbone\PHPConsulAPITests\ConsulManager;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
@@ -34,7 +34,7 @@ final class RequestUsageTest extends TestCase
 {
     public function testCanConstructWithoutBody(): void
     {
-        $r = new Request('', '', new Config(), null);
+        $r = new Request('', '', ConsulManager::testConfig(), null);
         static::assertInstanceOf(Request::class, $r);
     }
 
@@ -43,7 +43,7 @@ final class RequestUsageTest extends TestCase
      */
     public function testCanConstructWithBody(): void
     {
-        $r = new Request('', '', new Config(), new KVPair());
+        $r = new Request('', '', ConsulManager::testConfig(), new KVPair());
         static::assertInstanceOf(Request::class, $r);
     }
 
@@ -52,7 +52,7 @@ final class RequestUsageTest extends TestCase
      */
     public function testCanCreatePsr7Uri(): void
     {
-        $r   = new Request('GET', 'kv', new Config(), null);
+        $r   = new Request('GET', 'kv', ConsulManager::testConfig(), null);
         $uri = $r->getUri();
         static::assertInstanceOf(UriInterface::class, $uri);
         static::assertSame('/kv', $uri->getPath());
@@ -63,7 +63,7 @@ final class RequestUsageTest extends TestCase
      */
     public function testCanCreatePsr7Request(): void
     {
-        $r = new Request('GET', '/kv', new Config(), null);
+        $r = new Request('GET', '/kv', ConsulManager::testConfig(), null);
 
         $psr7Request = $r->toPsrRequest();
         static::assertInstanceOf(RequestInterface::class, $psr7Request);
@@ -76,7 +76,7 @@ final class RequestUsageTest extends TestCase
      */
     public function testCanSetQueryOptions(): void
     {
-        $r = new Request('GET', 'kv', new Config(), null);
+        $r = new Request('GET', 'kv', ConsulManager::testConfig(), null);
         $r->applyOptions(new QueryOptions(['Pretty' => true]));
 
         $psr7 = $r->toPsrRequest();
@@ -89,7 +89,7 @@ final class RequestUsageTest extends TestCase
      */
     public function testCanSetWriteOptions(): void
     {
-        $r = new Request('GET', 'kv', new Config(), null);
+        $r = new Request('GET', 'kv', ConsulManager::testConfig(), null);
         $r->applyOptions(new WriteOptions(['Datacenter' => 'dc1']));
 
         $psr7 = $r->toPsrRequest();

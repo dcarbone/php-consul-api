@@ -31,14 +31,10 @@ final class ConfigUsageTest extends TestCase
     public const DEFAULT_ADDRESS = '127.0.0.1:8500';
     public const DEFAULT_SCHEME  = 'http';
 
-    /**
-     * @return \DCarbone\PHPConsulAPITests\Usage\Config
-     */
-    public function testCanConstructConfig()
+    public function testCanConstructConfig(): void
     {
         $config = new Config();
-        static::assertInstanceOf(Config::class, $config);
-        return $config;
+        self::assertInstanceOf(Config::class, $config);
     }
 
     /**
@@ -51,18 +47,18 @@ final class ConfigUsageTest extends TestCase
         $expectedAddress = $_ENV[Consul::HTTPAddrEnvName] ?: self::DEFAULT_ADDRESS;
         $expectedScheme  = $_ENV[Consul::HTTPSSLEnvName] ? 'https' : self::DEFAULT_SCHEME;
 
-        static::assertSame(
+        self::assertSame(
             $expectedAddress,
             $config->getAddress(),
             \sprintf('Default address is not "%s"', $expectedAddress)
         );
-        static::assertSame(
+        self::assertSame(
             $expectedScheme,
             $config->getScheme(),
             \sprintf('Default scheme is not "%s"', $expectedScheme)
         );
-        static::assertNotNull($config->getHttpClient(), 'HttpClient is null');
-        static::assertFalse($config->isInsecureSkipVerify(), 'InsecureSkipVerify is not false');
+        self::assertNotNull($config->getHttpClient(), 'HttpClient is null');
+        self::assertFalse($config->isInsecureSkipVerify(), 'InsecureSkipVerify is not false');
     }
 
     protected function setUp(): void
