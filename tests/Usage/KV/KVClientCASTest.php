@@ -1,8 +1,8 @@
 <?php namespace DCarbone\PHPConsulAPITests\Usage\KV;
 
-use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\KV\KVClient;
 use DCarbone\PHPConsulAPI\KV\KVPair;
+use DCarbone\PHPConsulAPITests\ConsulManager;
 use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 
 /**
@@ -24,7 +24,7 @@ final class KVClientCASTest extends AbstractUsageTests
     {
         /** @var \DCarbone\PHPConsulAPI\KV\KVPair $kv */
         /** @var \DCarbone\PHPConsulAPI\Error $err */
-        $client = new KVClient(new Config());
+        $client = new KVClient(ConsulManager::testConfig());
 
         [$_, $err] = $client->Put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVOriginalValue]));
         static::assertNull($err, \sprintf('Unable to put KV: %s', $err));

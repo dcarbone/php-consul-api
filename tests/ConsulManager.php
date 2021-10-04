@@ -16,6 +16,8 @@
    limitations under the License.
  */
 
+use DCarbone\PHPConsulAPI\Config;
+
 /**
  * Class ConsulManager
  */
@@ -66,5 +68,15 @@ final class ConsulManager
             }
             \sleep(1);
         }
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Config
+     */
+    public static function testConfig(): Config{
+        $conf = new Config();
+        $conf->Address = '127.0.0.1:8500';
+        $conf->Scheme = 'http';
+        return $conf;
     }
 }

@@ -16,9 +16,9 @@
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\Coordinate\CoordinateClient;
 use DCarbone\PHPConsulAPI\QueryMeta;
+use DCarbone\PHPConsulAPITests\ConsulManager;
 use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 
 /**
@@ -33,7 +33,7 @@ final class CoordinateClientTest extends AbstractUsageTests
 
     public function testCanConstructClient(): void
     {
-        $client = new CoordinateClient(new Config());
+        $client = new CoordinateClient(ConsulManager::testConfig());
         static::assertInstanceOf(CoordinateClient::class, $client);
     }
 
@@ -42,7 +42,7 @@ final class CoordinateClientTest extends AbstractUsageTests
      */
     public function testDatacenters(): void
     {
-        $client = new CoordinateClient(new Config());
+        $client = new CoordinateClient(ConsulManager::testConfig());
 
         [$dcs, $err] = $client->Datacenters();
         static::assertNull($err, \sprintf('CoordinateClient::datacenters() - %s', $err));
@@ -55,7 +55,7 @@ final class CoordinateClientTest extends AbstractUsageTests
      */
     public function testNodes(): void
     {
-        $client = new CoordinateClient(new Config());
+        $client = new CoordinateClient(ConsulManager::testConfig());
 
         [$nodes, $qm, $err] = $client->Nodes();
         static::assertNull($err, \sprintf('CoordinateClient::nodes() - %s', $err));

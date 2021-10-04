@@ -16,8 +16,8 @@
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\KV\KVClient;
+use DCarbone\PHPConsulAPITests\ConsulManager;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -29,7 +29,7 @@ final class KVClientTest extends TestCase
 {
     public function testCanConstructClient(): void
     {
-        $kv = new KVClient(new Config());
+        $kv = new KVClient(ConsulManager::testConfig());
         static::assertInstanceOf(KVClient::class, $kv);
     }
 }

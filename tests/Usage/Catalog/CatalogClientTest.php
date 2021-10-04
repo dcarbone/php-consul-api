@@ -23,9 +23,9 @@ use DCarbone\PHPConsulAPI\Catalog\CatalogNode;
 use DCarbone\PHPConsulAPI\Catalog\CatalogRegistration;
 use DCarbone\PHPConsulAPI\Catalog\CatalogService;
 use DCarbone\PHPConsulAPI\Catalog\Node;
-use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPI\WriteMeta;
+use DCarbone\PHPConsulAPITests\ConsulManager;
 use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 use PHPUnit\Framework\AssertionFailedError;
 
@@ -48,7 +48,7 @@ final class CatalogClientTest extends AbstractUsageTests
 
     public function testCanConstructClient(): void
     {
-        $client = new CatalogClient(new Config());
+        $client = new CatalogClient(ConsulManager::testConfig());
         static::assertInstanceOf(CatalogClient::class, $client);
     }
 
@@ -57,7 +57,7 @@ final class CatalogClientTest extends AbstractUsageTests
      */
     public function testCanRegisterService(): void
     {
-        $client = new CatalogClient(new Config());
+        $client = new CatalogClient(ConsulManager::testConfig());
 
         $registration = new CatalogRegistration([
             'Node'    => 'dc1',
@@ -80,7 +80,7 @@ final class CatalogClientTest extends AbstractUsageTests
      */
     public function testCanGetService(): void
     {
-        $client = new CatalogClient(new Config());
+        $client = new CatalogClient(ConsulManager::testConfig());
 
         [$service, $qm, $err] = $client->Service(self::ServiceName);
         static::assertNull($err, 'CatalogClient::service returned error: ' . $err);
@@ -95,7 +95,7 @@ final class CatalogClientTest extends AbstractUsageTests
      */
     public function testCanRegisterSecondServiceWithSameName(): void
     {
-        $client = new CatalogClient(new Config());
+        $client = new CatalogClient(ConsulManager::testConfig());
 
         [$wm, $err] = $client->Register(new CatalogRegistration([
             'Node'    => 'dc1',
@@ -117,7 +117,7 @@ final class CatalogClientTest extends AbstractUsageTests
      */
     public function testCanGetListOfService(): void
     {
-        $client = new CatalogClient(new Config());
+        $client = new CatalogClient(ConsulManager::testConfig());
 
         [$service, $qm, $err] = $client->Service(self::ServiceName);
         static::assertNull($err, 'CatalogClient::service returned error: ' . $err);
@@ -140,7 +140,7 @@ final class CatalogClientTest extends AbstractUsageTests
      */
     public function testCanGetListOfServices(): void
     {
-        $client = new CatalogClient(new Config());
+        $client = new CatalogClient(ConsulManager::testConfig());
 
         [$services, $qm, $err] = $client->Services();
 
@@ -161,7 +161,7 @@ final class CatalogClientTest extends AbstractUsageTests
      */
     public function testCanDeregisterService(): void
     {
-        $client = new CatalogClient(new Config());
+        $client = new CatalogClient(ConsulManager::testConfig());
 
         [$wm, $err] = $client->Deregister(new CatalogDeregistration([
             'Node'      => 'dc1',
@@ -184,7 +184,7 @@ final class CatalogClientTest extends AbstractUsageTests
      */
     public function testCanGetDatacenters(): void
     {
-        $client = new CatalogClient(new Config());
+        $client = new CatalogClient(ConsulManager::testConfig());
 
         [$dcs, $err] = $client->Datacenters();
 
@@ -204,7 +204,7 @@ final class CatalogClientTest extends AbstractUsageTests
      */
     public function testCanGetListOfNodes(): void
     {
-        $client = new CatalogClient(new Config());
+        $client = new CatalogClient(ConsulManager::testConfig());
 
         [$nodes, $qm, $err] = $client->Nodes();
         try {
@@ -225,7 +225,7 @@ final class CatalogClientTest extends AbstractUsageTests
      */
     public function testCanGetNode(): void
     {
-        $client = new CatalogClient(new Config());
+        $client = new CatalogClient(ConsulManager::testConfig());
 
         [$nodes] = $client->Nodes();
         try {

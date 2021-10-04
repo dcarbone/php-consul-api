@@ -16,10 +16,10 @@
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration;
 use DCarbone\PHPConsulAPI\Operator\OperatorClient;
 use DCarbone\PHPConsulAPI\Operator\OperatorHealthReply;
+use DCarbone\PHPConsulAPITests\ConsulManager;
 use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 
 /**
@@ -34,7 +34,7 @@ final class OperatorAutopilotTest extends AbstractUsageTests
 
     public function testCanGetAutopilotConfiguration(): void
     {
-        $client = new OperatorClient(new Config());
+        $client = new OperatorClient(ConsulManager::testConfig());
 
         [$conf, $err] = $client->AutopilotGetConfiguration();
         static::assertNull($err, \sprintf('Unable to list autopilot configuration: %s', $err));
@@ -50,7 +50,7 @@ final class OperatorAutopilotTest extends AbstractUsageTests
      */
     public function testCanSetAutopilotConfiguration(): void
     {
-        $client = new OperatorClient(new Config());
+        $client = new OperatorClient(ConsulManager::testConfig());
 
         /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration $current */
         /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration $updated */
@@ -74,7 +74,7 @@ final class OperatorAutopilotTest extends AbstractUsageTests
      */
     public function testCanCASAutopilotConfiguration(): void
     {
-        $client = new OperatorClient(new Config());
+        $client = new OperatorClient(ConsulManager::testConfig());
         /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration $current */
         /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration $updated */
         [$current]               = $client->AutopilotGetConfiguration();
@@ -95,7 +95,7 @@ final class OperatorAutopilotTest extends AbstractUsageTests
 
     public function testCanGetAutopilotServerHealth(): void
     {
-        $client = new OperatorClient(new Config());
+        $client = new OperatorClient(ConsulManager::testConfig());
 
         /** @var \DCarbone\PHPConsulAPI\Operator\OperatorHealthReply $healths */
         [$healths, $err] = $client->AutopilotServerHealth();

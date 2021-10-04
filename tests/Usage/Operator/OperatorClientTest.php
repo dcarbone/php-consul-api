@@ -16,8 +16,8 @@
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\Operator\OperatorClient;
+use DCarbone\PHPConsulAPITests\ConsulManager;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -29,7 +29,7 @@ final class OperatorClientTest extends TestCase
 {
     public function testCanConstructOperatorClient(): void
     {
-        $client = new OperatorClient(new Config());
+        $client = new OperatorClient(ConsulManager::testConfig());
         self::assertInstanceOf(OperatorClient::class, $client);
     }
 }

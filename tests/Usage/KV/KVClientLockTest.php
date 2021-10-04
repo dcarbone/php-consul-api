@@ -1,13 +1,13 @@
 <?php namespace DCarbone\PHPConsulAPITests\Usage\KV;
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\Consul;
 use DCarbone\PHPConsulAPI\KV\KVClient;
 use DCarbone\PHPConsulAPI\KV\KVPair;
 use DCarbone\PHPConsulAPI\Session\SessionClient;
 use DCarbone\PHPConsulAPI\Session\SessionEntry;
 use DCarbone\PHPConsulAPI\WriteMeta;
+use DCarbone\PHPConsulAPITests\ConsulManager;
 use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 
 /**
@@ -25,7 +25,7 @@ final class KVClientLockTest extends AbstractUsageTests
         static $name = 'lockme';
         static $key  = 'lockable';
 
-        $conf          = new Config();
+        $conf          = ConsulManager::testConfig();
         $kvClient      = new KVClient($conf);
         $sessionClient = new SessionClient($conf);
 
