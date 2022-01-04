@@ -73,6 +73,7 @@ abstract class FakeSlice implements \Iterator, \ArrayAccess, \Countable, \JsonSe
     /**
      * @return \DCarbone\PHPConsulAPI\AbstractModel|false
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return current($this->_list);
@@ -86,7 +87,7 @@ abstract class FakeSlice implements \Iterator, \ArrayAccess, \Countable, \JsonSe
     /**
      * @return int|null
      */
-    public function key()
+    public function key(): ?int
     {
         return key($this->_list);
     }
@@ -108,7 +109,7 @@ abstract class FakeSlice implements \Iterator, \ArrayAccess, \Countable, \JsonSe
      * @param mixed $offset
      * @return bool
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return \is_int($offset) && isset($this->_list[$offset]);
     }
@@ -117,7 +118,7 @@ abstract class FakeSlice implements \Iterator, \ArrayAccess, \Countable, \JsonSe
      * @param mixed $offset
      * @return \DCarbone\PHPConsulAPI\AbstractModel|null
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): ?AbstractModel
     {
         $this->_validateOffset($offset);
         if (isset($this->_list[$offset])) {

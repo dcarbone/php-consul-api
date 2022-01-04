@@ -39,6 +39,7 @@ abstract class AbstractValuedQueryResponse extends AbstractResponse implements V
      * @param mixed $offset
      * @return \DCarbone\PHPConsulAPI\Error|\DCarbone\PHPConsulAPI\QueryMeta|mixed|null
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if (0 === $offset) {
