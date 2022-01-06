@@ -1,0 +1,28 @@
+name: Tests
+
+on: [ push, workflow_dispatch ]
+
+jobs:
+  run:
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: [ "7.4", "8.0", "8.1" ]
+    name: PHP ${{ matrix.php-version }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: json
+          ini-values: precision=14,serialize_precision=-1
+      - name: Cache Composer deps
+        uses: actions/cache@v2
+        with:
+          path: /tmp/composer-cache
+          key: ${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('**/composer.lock') }}
+      - name: Install Composer deps
+        run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      - name: Run tests
+        run: ./vendor/bin/phpunit
