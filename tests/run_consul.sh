@@ -13,4 +13,4 @@ done;
 # TODO: maybe some ltrimming?
 echo Starting Single consul instance with flags \""${FLAGS}"\" >> "${TMPDIR}"/consul.log
 
-/usr/bin/env consul agent${FLAGS} >> "${TMPDIR}"/consul.log 2>&1 & echo $! > "${TMPDIR}"/consul.pid
+/usr/bin/env consul agent"${FLAGS}" >> "${TMPDIR}"/consul.log 2>&1 & echo $! > "${TMPDIR}"/consul.pid

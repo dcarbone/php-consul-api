@@ -18,8 +18,8 @@
   "require": {
     "php": ">=7.4",
     "ext-json": "*",
-    "dcarbone/gotime": "0.4.*",
-    "dcarbone/gohttp": "v0.3.*",
+    "dcarbone/gotime": "0.5.*",
+    "dcarbone/gohttp": "v0.3.0",
     "guzzlehttp/guzzle": "~7",
     "guzzlehttp/psr7": "~2"
   },
@@ -33,7 +33,7 @@
     }
   },
   "require-dev": {
-    "phpunit/phpunit": "@stable"
+    "phpunit/phpunit": "^9.5"
   },
   "autoload-dev": {
     "files": [
