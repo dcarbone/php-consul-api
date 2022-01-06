@@ -13,11 +13,9 @@ jobs:
     steps:
       - name: Install Consul
         run: |
-          mkdir -p $HOME/bin \
-          && echo "export PATH=$HOME/bin:$PATH" >> $GITHUB_PATH \
-          && wget -q "https://releases.hashicorp.com/consul/1.11.1/consul_1.11.1_linux_amd64.zip" \
-          && unzip consul_1.11.1_linux_amd64.zip -d $HOME/bin \
-          && chmod +x $HOME/bin/consul
+          wget -q "https://releases.hashicorp.com/consul/1.11.1/consul_1.11.1_linux_amd64.zip" \
+          && unzip consul_1.11.1_linux_amd64.zip -d /usr/local/bin/ \
+          && chmod +x /usr/local/bin/consul
       - uses: actions/checkout@v2
       - uses: shivammathur/setup-php@v2
         with:
