@@ -3,14 +3,8 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 TMPDIR=${DIR}/../tmp
 
-FLAGS=""
+consul_args=("$@")
 
-for flag in "$@"
-do
-    FLAGS+=" ${flag}"
-done;
+echo Starting Single consul instance with flags \""${consul_args[*]}"\"
 
-# TODO: maybe some ltrimming?
-echo Starting Single consul instance with flags \""${FLAGS}"\" >> "${TMPDIR}"/consul.log
-
-/usr/bin/env consul agent"${FLAGS}" & echo $! > "${TMPDIR}"/consul.pid
+/usr/bin/env consul agent "${consul_args[@]}" & echo $! > "${TMPDIR}"/consul.pid
