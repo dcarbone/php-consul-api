@@ -15,7 +15,7 @@ jobs:
         run: |
           mkdir -p $HOME/bin \
           && echo "export PATH=$HOME/bin:$PATH" >> $GITHUB_PATH \
-          && wget "https://releases.hashicorp.com/consul/1.11.1/consul_1.11.1_linux_amd64.zip" \
+          && wget -q "https://releases.hashicorp.com/consul/1.11.1/consul_1.11.1_linux_amd64.zip" \
           && unzip consul_1.11.1_linux_amd64.zip -d $HOME/bin \
           && chmod +x $HOME/bin/consul
       - uses: actions/checkout@v2
@@ -25,6 +25,6 @@ jobs:
           extensions: json
           ini-values: precision=14,serialize_precision=-1
       - name: Install Composer deps
-        run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+        run: composer update --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
       - name: Run tests
         run: ./vendor/bin/phpunit
