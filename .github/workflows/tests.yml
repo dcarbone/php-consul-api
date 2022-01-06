@@ -14,8 +14,9 @@ jobs:
       - name: Install Consul
         run: |
           wget -q "https://releases.hashicorp.com/consul/1.11.1/consul_1.11.1_linux_amd64.zip" \
-          && unzip consul_1.11.1_linux_amd64.zip -d /usr/local/bin/ \
-          && chmod +x /usr/local/bin/consul
+          && unzip consul_1.11.1_linux_amd64.zip -d /usr/local/bin/
+      - name: Verify consul
+        run: chmod +x /usr/local/bin/consul && consul version
       - uses: actions/checkout@v2
       - uses: shivammathur/setup-php@v2
         with:
