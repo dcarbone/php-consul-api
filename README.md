@@ -1,6 +1,6 @@
 # php-consul-api
 
-[![Build Status](https://travis-ci.org/dcarbone/php-consul-api.svg?branch=master)](https://travis-ci.org/dcarbone/php-consul-api)
+[![Tests](https://github.com/dcarbone/php-consul-api/actions/workflows/tests.yml/badge.svg)](https://github.com/dcarbone/php-consul-api/actions/workflows/tests.yml)
 
 PHP client for the [Consul HTTP API](https://www.consul.io/docs/agent/http.html)
 
