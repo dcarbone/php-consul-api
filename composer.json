@@ -16,12 +16,12 @@
     "php-consul-api"
   ],
   "require": {
-    "php": ">=7.4",
+    "php": "^7.4.* || ^8.0",
     "ext-json": "*",
-    "dcarbone/gotime": "v0.5.*",
+    "dcarbone/gotime": "v0.4.* || v0.5.*",
     "dcarbone/gohttp": "v0.3.*",
-    "guzzlehttp/guzzle": "~7",
-    "guzzlehttp/psr7": "~1"
+    "guzzlehttp/guzzle": "7.4.*",
+    "guzzlehttp/psr7": "2.*"
   },
   "autoload": {
     "files": [
