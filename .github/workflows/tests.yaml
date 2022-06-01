@@ -1,0 +1,60 @@
+name: "Tests"
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '**.php'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'phpunit.xml'
+  push:
+    branches:
+      - main
+    paths:
+      - '**.php'
+      - 'composer.json'
+      - 'composer.lock'
+      - 'phpunit.xml'
+      - '.github/workflows/tests/yaml'
+
+env:
+  CONSUL_HTTP_ADDR: "127.0.0.1:8500"
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php-version: ["7.4", "8.0", "8.1", "8.2"]
+
+    name: Tests - PHP ${{ matrix.php-version }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: json
+      - uses: actions/cache@v3
+        with:
+          path: /tmp/composer-cache
+          key: ${{ matrix.php-version }}-${{ hashFiles('composer.lock') }}
+      - run: |
+          composer install \
+            --no-ansi \
+            --no-interaction \
+            --no-scripts \
+            --no-suggest \
+            --no-progress \
+            --prefer-dist
+      - run: |
+          mkdir -p $HOME/bin
+          export PATH="$HOME/bin:$PATH"
+          wget https://releases.hashicorp.com/consul/1.12.1/consul_1.12.1_linux_amd64.zip
+          unzip consul_1.12.1_linux_amd64.zip -d "${HOME}/bin"
+          rm consul_1.12.1_linux_amd64.zip
+          chmod +x "${HOME}/bin/consul"
+
+      - run: |
+          ./vendor/bin/phpunit -c phpunit.xml
