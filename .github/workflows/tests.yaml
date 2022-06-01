@@ -17,7 +17,7 @@ on:
       - 'composer.json'
       - 'composer.lock'
       - 'phpunit.xml'
-      - '.github/workflows/tests/yaml'
+      - '.github/workflows/tests.yaml'
 
 env:
   CONSUL_HTTP_ADDR: "127.0.0.1:8500"
@@ -36,6 +36,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           extensions: json
+          ini-values: precision=14,serialize_precision=-1
       - uses: actions/cache@v3
         with:
           path: /tmp/composer-cache
