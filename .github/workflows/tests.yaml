@@ -42,6 +42,13 @@ jobs:
           path: /tmp/composer-cache
           key: ${{ matrix.php-version }}-${{ hashFiles('composer.lock') }}
       - run: |
+          composer update \
+            --no-ansi \
+            --no-interaction \
+            --no-scripts \
+            --no-suggest \
+            --no-progress \
+            --prefer-dist
           composer install \
             --no-ansi \
             --no-interaction \
