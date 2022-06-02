@@ -37,24 +37,17 @@ jobs:
           php-version: ${{ matrix.php-version }}
           extensions: json
           ini-values: precision=14,serialize_precision=-1
-      - uses: actions/cache@v3
-        with:
-          path: /tmp/composer-cache
-          key: ${{ matrix.php-version }}-${{ hashFiles('composer.lock') }}
       - run: |
           composer update \
             --no-ansi \
             --no-interaction \
             --no-scripts \
-            --no-suggest \
-            --no-progress \
-            --prefer-dist
+            --no-progress
       - run: |
           wget https://releases.hashicorp.com/consul/1.12.1/consul_1.12.1_linux_amd64.zip
           unzip consul_1.12.1_linux_amd64.zip -d /usr/local/bin/
           rm consul_1.12.1_linux_amd64.zip
           chmod +x /usr/local/bin/consul
           consul --version
-
       - run: |
           ./vendor/bin/phpunit -c phpunit.xml
