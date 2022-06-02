@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php-version: ["7.4", "8.0", "8.1", "8.2"]
+        php-version: ["7.4", "8.0", "8.1"]
 
     name: Tests - PHP ${{ matrix.php-version }}
     steps:
@@ -43,13 +43,6 @@ jobs:
           key: ${{ matrix.php-version }}-${{ hashFiles('composer.lock') }}
       - run: |
           composer update \
-            --no-ansi \
-            --no-interaction \
-            --no-scripts \
-            --no-suggest \
-            --no-progress \
-            --prefer-dist
-          composer install \
             --no-ansi \
             --no-interaction \
             --no-scripts \
