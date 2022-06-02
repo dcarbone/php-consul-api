@@ -1,6 +1,6 @@
 # php-consul-api
 
-[![Tests](https://github.com/dcarbone/php-consul-api/actions/workflows/tests.yml/badge.svg)](https://github.com/dcarbone/php-consul-api/actions/workflows/tests.yml)
+[![Tests](https://github.com/dcarbone/php-consul-api/actions/workflows/tests.yaml/badge.svg)](https://github.com/dcarbone/php-consul-api/actions/workflows/tests.yaml)
 
 PHP client for the [Consul HTTP API](https://www.consul.io/docs/agent/http.html)
 
