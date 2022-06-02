@@ -38,6 +38,7 @@ abstract class AbstractValuedResponse extends AbstractResponse implements Valued
      * @param mixed $offset
      * @return \DCarbone\PHPConsulAPI\Error|mixed|null
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if (0 === $offset) {

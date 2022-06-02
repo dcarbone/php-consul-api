@@ -99,9 +99,9 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
     }
 
     /**
-     * @return array|string
+     * @return array
      */
-    public function current()
+    public function current(): array
     {
         return current($this->values);
     }
@@ -136,7 +136,7 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
      * @param mixed $offset
      * @return bool
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return isset($this->values[$offset]);
     }
@@ -145,7 +145,7 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
      * @param string $offset
      * @return string
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): string
     {
         return $this->get($offset);
     }
@@ -170,7 +170,7 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
     /**
      * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->values;
     }
