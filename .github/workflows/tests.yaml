@@ -24,7 +24,7 @@ env:
 
 jobs:
   tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         php-version: ["7.4", "8.0", "8.1"]
@@ -50,12 +50,11 @@ jobs:
             --no-progress \
             --prefer-dist
       - run: |
-          mkdir -p $HOME/bin
-          export PATH="$HOME/bin:$PATH"
           wget https://releases.hashicorp.com/consul/1.12.1/consul_1.12.1_linux_amd64.zip
-          unzip consul_1.12.1_linux_amd64.zip -d "${HOME}/bin"
+          unzip consul_1.12.1_linux_amd64.zip -d /usr/local/bin/
           rm consul_1.12.1_linux_amd64.zip
-          chmod +x "${HOME}/bin/consul"
+          chmod +x /usr/local/bin/consul
+          consul --version
 
       - run: |
           ./vendor/bin/phpunit -c phpunit.xml
