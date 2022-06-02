@@ -3,7 +3,7 @@ name: "Tests"
 on:
   pull_request:
     branches:
-      - main
+      - master
     paths:
       - '**.php'
       - 'composer.json'
@@ -11,7 +11,7 @@ on:
       - 'phpunit.xml'
   push:
     branches:
-      - main
+      - master
     paths:
       - '**.php'
       - 'composer.json'
