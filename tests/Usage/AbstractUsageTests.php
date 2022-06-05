@@ -1,4 +1,6 @@
-<?php namespace DCarbone\PHPConsulAPITests\Usage;
+<?php
+
+namespace DCarbone\PHPConsulAPITests\Usage;
 
 /*
    Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -25,9 +27,9 @@ use PHPUnit\Framework\TestCase;
 abstract class AbstractUsageTests extends TestCase
 {
     /** @var bool */
-    protected static $singlePerClass = false;
+    protected static bool $singlePerClass = false;
     /** @var bool */
-    protected $singlePerTest = false;
+    protected bool $singlePerTest = false;
 
     public static function setUpBeforeClass(): void
     {

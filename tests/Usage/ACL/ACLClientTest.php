@@ -1,4 +1,6 @@
-<?php namespace DCarbone\PHPConsulAPITests\Usage\ACL;
+<?php
+
+namespace DCarbone\PHPConsulAPITests\Usage\ACL;
 
 /*
    Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -29,7 +31,6 @@ use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
  */
 final class ACLClientTest extends AbstractUsageTests
 {
-
     /** @var string */
     protected $bootstrappedACL;
 
@@ -43,9 +44,9 @@ final class ACLClientTest extends AbstractUsageTests
         $client = new ACLClient(ConsulManager::testConfig());
 
         [$aclID, $wm, $err] = $client->Bootstrap();
-        static::assertNull($err, 'ACL::bootstrap() returned error: ' . $err);
-        static::assertInstanceOf(WriteMeta::class, $wm);
-        static::assertIsString($aclID);
+        self::assertNull($err, 'ACL::bootstrap() returned error: ' . $err);
+        self::assertInstanceOf(WriteMeta::class, $wm);
+        self::assertIsString($aclID);
 
         return $aclID;
     }
@@ -59,9 +60,9 @@ final class ACLClientTest extends AbstractUsageTests
         $client = new ACLClient(ConsulManager::testConfig());
 
         [$acls, $qm, $err] = $client->Info($aclID);
-        static::assertNull($err, 'ACL::info() return error: ' . $err);
-        static::assertInstanceOf(QueryMeta::class, $qm);
-        static::assertIsArray($acls);
+        self::assertNull($err, 'ACL::info() return error: ' . $err);
+        self::assertInstanceOf(QueryMeta::class, $qm);
+        self::assertIsArray($acls);
         \var_dump($acls);
     }
 }

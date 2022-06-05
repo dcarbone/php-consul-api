@@ -1,4 +1,7 @@
-<?php /** @noinspection PhpMissingFieldTypeInspection */
+<?php
+
+/** @noinspection PhpMissingFieldTypeInspection */
+
 namespace DCarbone\PHPConsulAPITests\Usage\KV;
 
 /*
@@ -52,8 +55,8 @@ final class KVCRUDTest extends AbstractUsageTests
         $client = new KVClient(ConsulManager::testConfig());
 
         [$wm, $err] = $client->Put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
-        static::assertNull($err, \sprintf('Unable to set kvp: %s', (string)$err));
-        static::assertInstanceOf(WriteMeta::class, $wm);
+        self::assertNull($err, \sprintf('Unable to set kvp: %s', (string)$err));
+        self::assertInstanceOf(WriteMeta::class, $wm);
     }
 
     /**
@@ -65,11 +68,11 @@ final class KVCRUDTest extends AbstractUsageTests
         $client->Put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
 
         [$kv, $qm, $err] = $client->Get(self::KVKey1);
-        static::assertNull($err, \sprintf('KV::get returned error: %s', (string)$err));
-        static::assertInstanceOf(QueryMeta::class, $qm);
-        static::assertInstanceOf(KVPair::class, $kv);
-        static::assertSame(self::KVKey1, $kv->Key);
-        static::assertSame(self::KVValue1, $kv->Value);
+        self::assertNull($err, \sprintf('KV::get returned error: %s', (string)$err));
+        self::assertInstanceOf(QueryMeta::class, $qm);
+        self::assertInstanceOf(KVPair::class, $kv);
+        self::assertSame(self::KVKey1, $kv->Key);
+        self::assertSame(self::KVValue1, $kv->Value);
     }
 
     /**
@@ -81,8 +84,8 @@ final class KVCRUDTest extends AbstractUsageTests
         $client->Put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
 
         [$wm, $err] = $client->Delete(self::KVKey1);
-        static::assertNull($err, \sprintf('KV::delete returned error: %s', $err));
-        static::assertInstanceOf(
+        self::assertNull($err, \sprintf('KV::delete returned error: %s', $err));
+        self::assertInstanceOf(
             WriteMeta::class,
             $wm,
             \sprintf(
@@ -97,7 +100,7 @@ final class KVCRUDTest extends AbstractUsageTests
     {
         $client        = new KVClient(ConsulManager::testConfig());
         [$_, $_, $err] = $client->List(12345);
-        static::assertInstanceOf(
+        self::assertInstanceOf(
             Error::class,
             $err,
             \sprintf(
@@ -123,12 +126,12 @@ final class KVCRUDTest extends AbstractUsageTests
 
         /** @noinspection PhpUnhandledExceptionInspection */
         [$list, $qm, $err] = $client->List();
-        static::assertNull($err, \sprintf('KV::valueList returned error: %s', $err));
+        self::assertNull($err, \sprintf('KV::valueList returned error: %s', $err));
 
         try {
-            static::assertInstanceOf(KVPairs::class, $list);
-            static::assertInstanceOf(QueryMeta::class, $qm);
-            static::assertCount(3, $list);
+            self::assertInstanceOf(KVPairs::class, $list);
+            self::assertInstanceOf(QueryMeta::class, $qm);
+            self::assertCount(3, $list);
 
             $key1found = false;
             $key2found = false;
@@ -144,9 +147,9 @@ final class KVCRUDTest extends AbstractUsageTests
                 }
             }
 
-            static::assertTrue($key1found, 'Key1 not found in list!');
-            static::assertTrue($key2found, 'Key2 not found in list!');
-            static::assertTrue($key3found, 'Key3 not found in list!');
+            self::assertTrue($key1found, 'Key1 not found in list!');
+            self::assertTrue($key2found, 'Key2 not found in list!');
+            self::assertTrue($key3found, 'Key3 not found in list!');
         } catch (AssertionFailedError $e) {
             echo "\nno prefix \$list value:\n";
             \var_dump($list);
@@ -170,13 +173,13 @@ final class KVCRUDTest extends AbstractUsageTests
         $client->Put(new KVPair(['Key' => self::KVPrefix . '/' . self::KVKey3, 'Value' => self::KVValue3]));
 
         [$list, $qm, $err] = $client->List(self::KVPrefix);
-        static::assertNull($err, \sprintf('KV::valueList returned error: %s', $err));
-        static::assertInstanceOf(QueryMeta::class, $qm);
+        self::assertNull($err, \sprintf('KV::valueList returned error: %s', $err));
+        self::assertInstanceOf(QueryMeta::class, $qm);
 
         try {
-            static::assertInstanceOf(KVPairs::class, $list);
-            static::assertCount(3, $list);
-            static::assertContainsOnlyInstancesOf(KVPair::class, $list);
+            self::assertInstanceOf(KVPairs::class, $list);
+            self::assertCount(3, $list);
+            self::assertContainsOnlyInstancesOf(KVPair::class, $list);
 
             $key1found = false;
             $key2found = false;
@@ -192,9 +195,9 @@ final class KVCRUDTest extends AbstractUsageTests
                 }
             }
 
-            static::assertTrue($key1found, 'Key1 not found in list!');
-            static::assertTrue($key2found, 'Key2 not found in list!');
-            static::assertTrue($key3found, 'Key3 not found in list!');
+            self::assertTrue($key1found, 'Key1 not found in list!');
+            self::assertTrue($key2found, 'Key2 not found in list!');
+            self::assertTrue($key3found, 'Key3 not found in list!');
         } catch (AssertionFailedError $e) {
             echo "\nprefix \$list value:\n";
             \var_dump($list);
@@ -208,7 +211,7 @@ final class KVCRUDTest extends AbstractUsageTests
     {
         $client        = new KVClient(ConsulManager::testConfig());
         [$_, $_, $err] = $client->Keys(12345);
-        static::assertInstanceOf(
+        self::assertInstanceOf(
             Error::class,
             $err,
             \sprintf(
@@ -233,13 +236,13 @@ final class KVCRUDTest extends AbstractUsageTests
         $client->Put(new KVPair(['Key' => self::KVKey3, 'Value' => self::KVValue3]));
 
         [$list, $qm, $err] = $client->Keys();
-        static::assertNull($err, \sprintf('KV::keys returned error: %s', $err));
-        static::assertInstanceOf(QueryMeta::class, $qm);
+        self::assertNull($err, \sprintf('KV::keys returned error: %s', $err));
+        self::assertInstanceOf(QueryMeta::class, $qm);
 
         try {
-            static::assertIsArray($list);
-            static::assertCount(3, $list);
-            static::assertContainsOnly('string', $list, true);
+            self::assertIsArray($list);
+            self::assertCount(3, $list);
+            self::assertContainsOnly('string', $list, true);
 
             $key1found = false;
             $key2found = false;
@@ -255,9 +258,9 @@ final class KVCRUDTest extends AbstractUsageTests
                 }
             }
 
-            static::assertTrue($key1found, 'Key1 not found in list!');
-            static::assertTrue($key2found, 'Key2 not found in list!');
-            static::assertTrue($key3found, 'Key3 not found in list!');
+            self::assertTrue($key1found, 'Key1 not found in list!');
+            self::assertTrue($key2found, 'Key2 not found in list!');
+            self::assertTrue($key3found, 'Key3 not found in list!');
         } catch (AssertionFailedError $e) {
             echo "\nprefix \$list value:\n";
             \var_dump($list);

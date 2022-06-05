@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DCarbone\PHPConsulAPI;
 
@@ -78,7 +80,7 @@ abstract class AbstractClient
         // todo: per-request content and accept value setting.
         $body = $r->getBody();
         if (null !== $body) {
-            if (is_scalar($body)) {
+            if (\is_scalar($body)) {
                 $opts[GuzzleRequestOptions::BODY] = $body;
             } else {
                 $opts[GuzzleRequestOptions::JSON] = $body;

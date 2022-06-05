@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DCarbone\PHPConsulAPI\Session;
 
@@ -20,9 +22,9 @@ namespace DCarbone\PHPConsulAPI\Session;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\AbstractModel;
-use function DCarbone\PHPConsulAPI\dur_to_millisecond;
-
 use DCarbone\PHPConsulAPI\Transcoding;
+
+use function DCarbone\PHPConsulAPI\dur_to_millisecond;
 
 /**
  * Class SessionEntry

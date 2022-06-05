@@ -1,4 +1,6 @@
-<?php namespace DCarbone\PHPConsulAPITests\Usage\Operator;
+<?php
+
+namespace DCarbone\PHPConsulAPITests\Usage\Operator;
 
 /*
    Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -37,8 +39,8 @@ final class OperatorAutopilotTest extends AbstractUsageTests
         $client = new OperatorClient(ConsulManager::testConfig());
 
         [$conf, $err] = $client->AutopilotGetConfiguration();
-        static::assertNull($err, \sprintf('Unable to list autopilot configuration: %s', $err));
-        static::assertInstanceOf(
+        self::assertNull($err, \sprintf('Unable to list autopilot configuration: %s', $err));
+        self::assertInstanceOf(
             AutopilotConfiguration::class,
             $conf,
             \sprintf('Expected instance of %s, saw: %s', AutopilotConfiguration::class, \json_encode($conf))
@@ -58,14 +60,14 @@ final class OperatorAutopilotTest extends AbstractUsageTests
         $new                     = clone $current;
         $new->CleanupDeadServers = !$current->CleanupDeadServers;
         $err                     = $client->AutopilotSetConfiguration($new);
-        static::assertNull($err, 'Unable to update Autopilot configuration: ' . $err);
+        self::assertNull($err, 'Unable to update Autopilot configuration: ' . $err);
         [$updated, $err] = $client->AutopilotGetConfiguration();
-        static::assertNull($err, 'Unable to get updated Autopilot configuration: ' . $err);
-        static::assertInstanceOf(AutopilotConfiguration::class, $updated);
+        self::assertNull($err, 'Unable to get updated Autopilot configuration: ' . $err);
+        self::assertInstanceOf(AutopilotConfiguration::class, $updated);
         if ($current->CleanupDeadServers) {
-            static::assertFalse($updated->CleanupDeadServers, 'Autopilot conf did not change');
+            self::assertFalse($updated->CleanupDeadServers, 'Autopilot conf did not change');
         } else {
-            static::assertTrue($updated->CleanupDeadServers, 'Autopilot conf did not change');
+            self::assertTrue($updated->CleanupDeadServers, 'Autopilot conf did not change');
         }
     }
 
@@ -81,15 +83,15 @@ final class OperatorAutopilotTest extends AbstractUsageTests
         $new                     = clone $current;
         $new->CleanupDeadServers = !$current->CleanupDeadServers;
         [$ok, $err]              = $client->AutopilotCASConfiguration($new);
-        static::assertNull($err, 'Unable to update Autopilot configuration: ' . $err);
-        static::assertTrue($ok);
+        self::assertNull($err, 'Unable to update Autopilot configuration: ' . $err);
+        self::assertTrue($ok);
         [$updated, $err] = $client->AutopilotGetConfiguration();
-        static::assertNull($err, 'Unable to get updated Autopilot configuration: ' . $err);
-        static::assertInstanceOf(AutopilotConfiguration::class, $updated);
+        self::assertNull($err, 'Unable to get updated Autopilot configuration: ' . $err);
+        self::assertInstanceOf(AutopilotConfiguration::class, $updated);
         if ($current->CleanupDeadServers) {
-            static::assertFalse($updated->CleanupDeadServers, 'Autopilot conf did not change');
+            self::assertFalse($updated->CleanupDeadServers, 'Autopilot conf did not change');
         } else {
-            static::assertTrue($updated->CleanupDeadServers, 'Autopilot conf did not change');
+            self::assertTrue($updated->CleanupDeadServers, 'Autopilot conf did not change');
         }
     }
 
@@ -99,8 +101,8 @@ final class OperatorAutopilotTest extends AbstractUsageTests
 
         /** @var \DCarbone\PHPConsulAPI\Operator\OperatorHealthReply $healths */
         [$healths, $err] = $client->AutopilotServerHealth();
-        static::assertNull($err, 'Unable to get Autopilot server health: %s' . $err);
-        static::assertInstanceOf(OperatorHealthReply::class, $healths);
-        static::assertCount(1, $healths->Servers);
+        self::assertNull($err, 'Unable to get Autopilot server health: %s' . $err);
+        self::assertInstanceOf(OperatorHealthReply::class, $healths);
+        self::assertCount(1, $healths->Servers);
     }
 }

@@ -1,4 +1,6 @@
-<?php namespace DCarbone\PHPConsulAPITests;
+<?php
+
+namespace DCarbone\PHPConsulAPITests;
 
 /*
    Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -73,7 +75,8 @@ final class ConsulManager
     /**
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public static function testConfig(): Config{
+    public static function testConfig(): Config
+    {
         $conf = new Config();
         $conf->Address = '127.0.0.1:8500';
         $conf->Scheme = 'http';

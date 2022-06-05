@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
@@ -33,6 +35,4 @@ class RingHashConfig extends AbstractModel
 
     private const FIELD_MINIMUM_RING_SIZE = 'MinimumRingSize';
     private const FIELD_MAXIMUM_RING_SIZE = 'MaximumRingSize';
-
-    
 }

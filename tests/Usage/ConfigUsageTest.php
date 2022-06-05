@@ -1,4 +1,6 @@
-<?php namespace DCarbone\PHPConsulAPITests\Usage;
+<?php
+
+namespace DCarbone\PHPConsulAPITests\Usage;
 
 use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\Consul;
@@ -50,12 +52,12 @@ final class ConfigUsageTest extends TestCase
         self::assertSame(
             $expectedAddress,
             $config->getAddress(),
-            \sprintf('Default address is not "%s"', $expectedAddress)
+            sprintf('Default address is not "%s"', $expectedAddress)
         );
         self::assertSame(
             $expectedScheme,
             $config->getScheme(),
-            \sprintf('Default scheme is not "%s"', $expectedScheme)
+            sprintf('Default scheme is not "%s"', $expectedScheme)
         );
         self::assertNotNull($config->getHttpClient(), 'HttpClient is null');
         self::assertFalse($config->isInsecureSkipVerify(), 'InsecureSkipVerify is not false');

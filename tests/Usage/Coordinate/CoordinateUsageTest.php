@@ -1,15 +1,17 @@
-<?php namespace DCarbone\PHPConsulAPITests\Usage\Coordinate;
+<?php
 
-use function DCarbone\PHPConsulAPI\Coordinate\add;
+namespace DCarbone\PHPConsulAPITests\Usage\Coordinate;
+
 use DCarbone\PHPConsulAPI\Coordinate\Coordinate;
 use DCarbone\PHPConsulAPI\Coordinate\CoordinateConfig;
-use function DCarbone\PHPConsulAPI\Coordinate\diff;
 use DCarbone\PHPConsulAPI\Coordinate\DimensionalityConflictException;
-
-use function DCarbone\PHPConsulAPI\Coordinate\magnitude;
-use function DCarbone\PHPConsulAPI\Coordinate\unitVectorAt;
 use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 use PHPUnit\Framework\AssertionFailedError;
+
+use function DCarbone\PHPConsulAPI\Coordinate\add;
+use function DCarbone\PHPConsulAPI\Coordinate\diff;
+use function DCarbone\PHPConsulAPI\Coordinate\magnitude;
+use function DCarbone\PHPConsulAPI\Coordinate\unitVectorAt;
 
 /**
  * These tests were largely pulled from https://github.com/hashicorp/serf/blob/master/coordinate/coordinate_test.go
@@ -65,12 +67,12 @@ final class CoordinateUsageTest extends AbstractUsageTests
         $config = CoordinateConfig::Default();
         $coord  = new Coordinate($config);
 
-        static::assertIsArray($coord->Vec);
-        static::assertCount($config->Dimensionality, $coord->Vec);
-        static::assertContainsOnly('float', $coord->Vec);
-        static::assertSame($config->VivaldiErrorMax, $coord->Error);
-        static::assertSame($config->HeightMin, $coord->Height);
-        static::assertSame(0.0, $coord->Adjustment);
+        self::assertIsArray($coord->Vec);
+        self::assertCount($config->Dimensionality, $coord->Vec);
+        self::assertContainsOnly('float', $coord->Vec);
+        self::assertSame($config->VivaldiErrorMax, $coord->Error);
+        self::assertSame($config->HeightMin, $coord->Height);
+        self::assertSame(0.0, $coord->Adjustment);
     }
 
     public function testCanConstructCoordinateWithArrayOfValues(): void
@@ -80,12 +82,12 @@ final class CoordinateUsageTest extends AbstractUsageTests
                 'Vec' => [0.1, 0.2],
             ]
         );
-        static::assertInstanceOf(Coordinate::class, $coord);
-        static::assertIsArray($coord->Vec);
-        static::assertCount(2, $coord->Vec);
-        static::assertContainsOnly('float', $coord->Vec);
-        static::assertSame($coord->Vec[0], 0.1);
-        static::assertSame($coord->Vec[1], 0.2);
+        self::assertInstanceOf(Coordinate::class, $coord);
+        self::assertIsArray($coord->Vec);
+        self::assertCount(2, $coord->Vec);
+        self::assertContainsOnly('float', $coord->Vec);
+        self::assertSame($coord->Vec[0], 0.1);
+        self::assertSame($coord->Vec[1], 0.2);
     }
 
     /**
@@ -95,34 +97,34 @@ final class CoordinateUsageTest extends AbstractUsageTests
     {
         $coord = new Coordinate(CoordinateConfig::Default());
 
-        static::assertTrue($coord->IsValid());
+        self::assertTrue($coord->IsValid());
 
         foreach ($coord->Vec as &$field) {
             $field = \NAN;
-            static::assertFalse($coord->IsValid());
+            self::assertFalse($coord->IsValid());
 
             $field = 0.0;
-            static::assertTrue($coord->IsValid());
+            self::assertTrue($coord->IsValid());
 
             $field = \INF;
-            static::assertFalse($coord->IsValid());
+            self::assertFalse($coord->IsValid());
 
             $field = 0.0;
-            static::assertTrue($coord->IsValid());
+            self::assertTrue($coord->IsValid());
         }
 
         foreach ([&$coord->Error, &$coord->Adjustment, &$coord->Height] as &$field) {
             $field = \NAN;
-            static::assertFalse($coord->IsValid());
+            self::assertFalse($coord->IsValid());
 
             $field = 0.0;
-            static::assertTrue($coord->IsValid());
+            self::assertTrue($coord->IsValid());
 
             $field = \INF;
-            static::assertFalse($coord->IsValid());
+            self::assertFalse($coord->IsValid());
 
             $field = 0.0;
-            static::assertTrue($coord->IsValid());
+            self::assertTrue($coord->IsValid());
         }
     }
 
@@ -137,9 +139,9 @@ final class CoordinateUsageTest extends AbstractUsageTests
         $conf->Dimensionality = 2;
         $alien                = new Coordinate($conf);
 
-        static::assertTrue($coord1->IsCompatibleWith($coord2), 'coord1 should be compatible with coord2');
-        static::assertFalse($coord1->IsCompatibleWith($alien), 'coord1 should NOT be compatible with alien');
-        static::assertFalse($coord2->IsCompatibleWith($alien), 'coord2 should NOT be compatible with alien');
+        self::assertTrue($coord1->IsCompatibleWith($coord2), 'coord1 should be compatible with coord2');
+        self::assertFalse($coord1->IsCompatibleWith($alien), 'coord1 should NOT be compatible with alien');
+        self::assertFalse($coord2->IsCompatibleWith($alien), 'coord2 should NOT be compatible with alien');
     }
 
     public function testApplyForce(): void
@@ -220,7 +222,7 @@ final class CoordinateUsageTest extends AbstractUsageTests
      */
     protected function verifyEqualFloats(float $f1, float $f2): void
     {
-        static::assertLessThanOrEqual(
+        self::assertLessThanOrEqual(
             self::ZeroThreshold,
             \abs($f1 - $f2),
             \sprintf('equal assertion fail, %.6f != %.6f', $f1, $f2)
@@ -233,7 +235,7 @@ final class CoordinateUsageTest extends AbstractUsageTests
      */
     protected function verifyEqualVectors(array $vec1, array $vec2): void
     {
-        static::assertSameSize($vec1, $vec2);
+        self::assertSameSize($vec1, $vec2);
         try {
             foreach ($vec1 as $k => $v) {
                 $this->verifyEqualFloats($v, $vec2[$k]);

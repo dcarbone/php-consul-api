@@ -1,4 +1,6 @@
-<?php namespace DCarbone\PHPConsulAPITests\Usage;
+<?php
+
+namespace DCarbone\PHPConsulAPITests\Usage;
 
 /*
    Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -35,7 +37,7 @@ final class RequestUsageTest extends TestCase
     public function testCanConstructWithoutBody(): void
     {
         $r = new Request('', '', ConsulManager::testConfig(), null);
-        static::assertInstanceOf(Request::class, $r);
+        self::assertInstanceOf(Request::class, $r);
     }
 
     /**
@@ -44,7 +46,7 @@ final class RequestUsageTest extends TestCase
     public function testCanConstructWithBody(): void
     {
         $r = new Request('', '', ConsulManager::testConfig(), new KVPair());
-        static::assertInstanceOf(Request::class, $r);
+        self::assertInstanceOf(Request::class, $r);
     }
 
     /**
@@ -54,8 +56,8 @@ final class RequestUsageTest extends TestCase
     {
         $r   = new Request('GET', 'kv', ConsulManager::testConfig(), null);
         $uri = $r->getUri();
-        static::assertInstanceOf(UriInterface::class, $uri);
-        static::assertSame('/kv', $uri->getPath());
+        self::assertInstanceOf(UriInterface::class, $uri);
+        self::assertSame('/kv', $uri->getPath());
     }
 
     /**
@@ -66,9 +68,9 @@ final class RequestUsageTest extends TestCase
         $r = new Request('GET', '/kv', ConsulManager::testConfig(), null);
 
         $psr7Request = $r->toPsrRequest();
-        static::assertInstanceOf(RequestInterface::class, $psr7Request);
+        self::assertInstanceOf(RequestInterface::class, $psr7Request);
 
-        static::assertSame('GET', $psr7Request->getMethod());
+        self::assertSame('GET', $psr7Request->getMethod());
     }
 
     /**
@@ -81,7 +83,7 @@ final class RequestUsageTest extends TestCase
 
         $psr7 = $r->toPsrRequest();
         $uri  = $psr7->getUri();
-        static::assertSame('pretty', $uri->getQuery());
+        self::assertSame('pretty', $uri->getQuery());
     }
 
     /**
@@ -94,6 +96,6 @@ final class RequestUsageTest extends TestCase
 
         $psr7 = $r->toPsrRequest();
         $uri  = $psr7->getUri();
-        static::assertSame('dc=dc1', $uri->getQuery());
+        self::assertSame('dc=dc1', $uri->getQuery());
     }
 }
