@@ -20,7 +20,7 @@ use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 final class KVClientLockTest extends AbstractUsageTests
 {
     /** @var bool */
-    protected static $singlePerClass = true;
+    protected static bool $singlePerClass = true;
 
     public function testAcquireAndRelease(): void
     {

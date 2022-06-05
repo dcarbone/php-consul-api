@@ -37,7 +37,7 @@ final class AgentClientTest extends AbstractUsageTests
     public const Service1Name = 'test_1_service';
     public const Service2Name = 'test_2_service';
     /** @var bool */
-    protected static $singlePerClass = true;
+    protected static bool $singlePerClass = true;
 
     public function testCanConstructAgentClient(): void
     {

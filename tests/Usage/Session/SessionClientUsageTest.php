@@ -19,7 +19,7 @@ use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 final class SessionClientUsageTest extends AbstractUsageTests
 {
     /** @var bool */
-    protected static $singlePerClass = true;
+    protected static bool $singlePerClass = true;
 
     public function testNoChecksLifecycle(): void
     {

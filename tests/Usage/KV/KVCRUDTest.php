@@ -48,7 +48,7 @@ final class KVCRUDTest extends AbstractUsageTests
 
     public const KVPrefix = 'tests';
     /** @var bool */
-    protected $singlePerTest = true;
+    protected bool $singlePerTest = true;
 
     public function testCanPutKey(): void
     {
