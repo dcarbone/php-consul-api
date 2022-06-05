@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 /*
    Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)

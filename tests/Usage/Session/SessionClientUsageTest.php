@@ -1,4 +1,6 @@
-<?php namespace DCarbone\PHPConsulAPITests\Usage\Session;
+<?php
+
+namespace DCarbone\PHPConsulAPITests\Usage\Session;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\Consul;
@@ -17,7 +19,7 @@ use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 final class SessionClientUsageTest extends AbstractUsageTests
 {
     /** @var bool */
-    protected static $singlePerClass = true;
+    protected static bool $singlePerClass = true;
 
     public function testNoChecksLifecycle(): void
     {
@@ -34,40 +36,40 @@ final class SessionClientUsageTest extends AbstractUsageTests
             'Behavior' => Consul::SessionBehaviorDelete,
             'TTL'      => $ttl,
         ]));
-        static::assertNull($err, \sprintf('Error creating session: %s', $err));
-        static::assertInstanceOf(WriteMeta::class, $wm);
-        static::assertIsString($id, 'Expected ID to be string');
+        self::assertNull($err, \sprintf('Error creating session: %s', $err));
+        self::assertInstanceOf(WriteMeta::class, $wm);
+        self::assertIsString($id, 'Expected ID to be string');
 
         [$sessions, $qm, $err] = $client->Info($id);
-        static::assertNull($err, \sprintf('Error getting %s info: %s', $id, $err));
-        static::assertInstanceOf(QueryMeta::class, $qm);
-        static::assertIsArray($sessions);
-        static::assertCount(1, $sessions);
-        static::assertContainsOnly(SessionEntry::class, $sessions);
-        static::assertSame($id, $sessions[0]->ID);
-        static::assertSame($name, $sessions[0]->Name);
-        static::assertSame($ttl, $sessions[0]->TTL);
-        static::assertInstanceOf(Time\Duration::class, $sessions[0]->LockDelay);
-        static::assertSame(Consul::SessionBehaviorDelete, $sessions[0]->Behavior);
+        self::assertNull($err, \sprintf('Error getting %s info: %s', $id, $err));
+        self::assertInstanceOf(QueryMeta::class, $qm);
+        self::assertIsArray($sessions);
+        self::assertCount(1, $sessions);
+        self::assertContainsOnly(SessionEntry::class, $sessions);
+        self::assertSame($id, $sessions[0]->ID);
+        self::assertSame($name, $sessions[0]->Name);
+        self::assertSame($ttl, $sessions[0]->TTL);
+        self::assertInstanceOf(Time\Duration::class, $sessions[0]->LockDelay);
+        self::assertSame(Consul::SessionBehaviorDelete, $sessions[0]->Behavior);
 
         $session = $sessions[0];
 
-        static::assertInstanceOf(Time\Duration::class, $session->LockDelay);
-        static::assertSame(15 * Time::Second, $session->LockDelay->Nanoseconds());
+        self::assertInstanceOf(Time\Duration::class, $session->LockDelay);
+        self::assertSame(15 * Time::Second, $session->LockDelay->Nanoseconds());
 
         [$sessions, $wm, $err] = $client->Renew($id);
-        static::assertNull($err, \sprintf('Error renewing session: %s', $err));
-        static::assertInstanceOf(WriteMeta::class, $wm);
-        static::assertIsArray($sessions);
-        static::assertCount(1, $sessions);
-        static::assertContainsOnlyInstancesOf(SessionEntry::class, $sessions);
+        self::assertNull($err, \sprintf('Error renewing session: %s', $err));
+        self::assertInstanceOf(WriteMeta::class, $wm);
+        self::assertIsArray($sessions);
+        self::assertCount(1, $sessions);
+        self::assertContainsOnlyInstancesOf(SessionEntry::class, $sessions);
 
         [$_, $err] = $client->Destroy($id);
-        static::assertNull($err, \sprintf('Error destroying session: %s', $err));
+        self::assertNull($err, \sprintf('Error destroying session: %s', $err));
 
         [$sessions, $_, $err] = $client->Info($id);
-        static::assertNull($err, \sprintf('Error getting list after expected expiration: %s', $err));
-        static::assertIsArray($sessions, 'Expected $sessions to be an array');
-        static::assertCount(0, $sessions, 'Expected $sessions to be empty');
+        self::assertNull($err, \sprintf('Error getting list after expected expiration: %s', $err));
+        self::assertIsArray($sessions, 'Expected $sessions to be an array');
+        self::assertCount(0, $sessions, 'Expected $sessions to be empty');
     }
 }

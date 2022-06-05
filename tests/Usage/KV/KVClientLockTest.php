@@ -1,4 +1,6 @@
-<?php namespace DCarbone\PHPConsulAPITests\Usage\KV;
+<?php
+
+namespace DCarbone\PHPConsulAPITests\Usage\KV;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\Consul;
@@ -18,7 +20,7 @@ use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 final class KVClientLockTest extends AbstractUsageTests
 {
     /** @var bool */
-    protected static $singlePerClass = true;
+    protected static bool $singlePerClass = true;
 
     public function testAcquireAndRelease(): void
     {
@@ -39,17 +41,17 @@ final class KVClientLockTest extends AbstractUsageTests
                 ]
             )
         );
-        static::assertNull($err, \sprintf('Error creating session: %s', $err));
+        self::assertNull($err, \sprintf('Error creating session: %s', $err));
 
         $kv         = new KVPair(['Key' => $key, 'Value' => 'whatever', 'Session' => $id]);
         [$wm, $err] = $kvClient->Acquire($kv);
-        static::assertNull($err, \sprintf('Error acquiring lock: %s', $err));
-        static::assertInstanceOf(WriteMeta::class, $wm);
+        self::assertNull($err, \sprintf('Error acquiring lock: %s', $err));
+        self::assertInstanceOf(WriteMeta::class, $wm);
 
         [$kv, $_, $err] = $kvClient->Get($key);
-        static::assertNull($err, \sprintf('Error retrieving key: %s', $err));
-        static::assertInstanceOf(KVPair::class, $kv);
-        static::assertSame($id, $kv->Session);
-        static::assertSame('whatever', $kv->Value);
+        self::assertNull($err, \sprintf('Error retrieving key: %s', $err));
+        self::assertInstanceOf(KVPair::class, $kv);
+        self::assertSame($id, $kv->Session);
+        self::assertSame('whatever', $kv->Value);
     }
 }

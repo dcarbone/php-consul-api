@@ -1,4 +1,6 @@
-<?php namespace DCarbone\PHPConsulAPITests\Usage\Operator;
+<?php
+
+namespace DCarbone\PHPConsulAPITests\Usage\Operator;
 
 /*
    Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -30,6 +32,6 @@ final class ReadableDurationTest extends TestCase
     public function testReadableJsonEncoding(): void
     {
         $rd = new ReadableDuration(\time() * Time::Second);
-        static::assertSame('"' . (string)$rd . '"', \json_encode($rd));
+        self::assertSame('"' . (string)$rd . '"', \json_encode($rd));
     }
 }

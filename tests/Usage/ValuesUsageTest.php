@@ -1,4 +1,6 @@
-<?php namespace DCarbone\PHPConsulAPITests\Usage;
+<?php
+
+namespace DCarbone\PHPConsulAPITests\Usage;
 
 /*
    Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -29,7 +31,7 @@ final class ValuesUsageTest extends TestCase
     public function testCanConstruct(): void
     {
         $values = new Values();
-        static::assertInstanceOf(Values::class, $values);
+        self::assertInstanceOf(Values::class, $values);
     }
 
     /**
@@ -72,7 +74,7 @@ final class ValuesUsageTest extends TestCase
         $values->add('test', 'value3');
 
         $all = $values->getAll('test');
-        static::assertIsArray($all);
-        static::assertCount(3, $all);
+        self::assertIsArray($all);
+        self::assertCount(3, $all);
     }
 }

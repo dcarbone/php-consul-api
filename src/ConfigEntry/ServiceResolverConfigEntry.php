@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
@@ -27,10 +29,10 @@ class ServiceResolverConfigEntry extends AbstractModel implements ConfigEntry
 {
     use ConfigEntryTrait;
 
-    private const FIELD_DEFAULT_SUBSET = 'DefaultSubset';
-    private const FIELD_SUBSETS        = 'Subsets';
-    private const FIELD_REDIRECT       = 'Redirect';
-    private const FIELD_FAILOVER = 'Failover';
+    private const FIELD_DEFAULT_SUBSET  = 'DefaultSubset';
+    private const FIELD_SUBSETS         = 'Subsets';
+    private const FIELD_REDIRECT        = 'Redirect';
+    private const FIELD_FAILOVER        = 'Failover';
     private const FIELD_CONNECT_TIMEOUT = 'ConnectTimeout';
-    private const FIELD_LOAD_BALANCER = 'LoadBalancer';
+    private const FIELD_LOAD_BALANCER   = 'LoadBalancer';
 }

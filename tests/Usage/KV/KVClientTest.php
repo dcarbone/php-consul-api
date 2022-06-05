@@ -1,4 +1,6 @@
-<?php namespace DCarbone\PHPConsulAPITests\Usage\KV;
+<?php
+
+namespace DCarbone\PHPConsulAPITests\Usage\KV;
 
 /*
    Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -30,6 +32,6 @@ final class KVClientTest extends TestCase
     public function testCanConstructClient(): void
     {
         $kv = new KVClient(ConsulManager::testConfig());
-        static::assertInstanceOf(KVClient::class, $kv);
+        self::assertInstanceOf(KVClient::class, $kv);
     }
 }

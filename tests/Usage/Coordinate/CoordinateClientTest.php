@@ -1,4 +1,6 @@
-<?php namespace DCarbone\PHPConsulAPITests\Usage\Coordinate;
+<?php
+
+namespace DCarbone\PHPConsulAPITests\Usage\Coordinate;
 
 /*
    Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -29,12 +31,12 @@ use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 final class CoordinateClientTest extends AbstractUsageTests
 {
     /** @var bool */
-    protected static $singlePerClass = true;
+    protected static bool $singlePerClass = true;
 
     public function testCanConstructClient(): void
     {
         $client = new CoordinateClient(ConsulManager::testConfig());
-        static::assertInstanceOf(CoordinateClient::class, $client);
+        self::assertInstanceOf(CoordinateClient::class, $client);
     }
 
     /**
@@ -45,9 +47,9 @@ final class CoordinateClientTest extends AbstractUsageTests
         $client = new CoordinateClient(ConsulManager::testConfig());
 
         [$dcs, $err] = $client->Datacenters();
-        static::assertNull($err, \sprintf('CoordinateClient::datacenters() - %s', $err));
-        static::assertIsArray($dcs);
-        static::assertGreaterThan(0, \count($dcs), 'Expected at least 1 datacenter');
+        self::assertNull($err, \sprintf('CoordinateClient::datacenters() - %s', $err));
+        self::assertIsArray($dcs);
+        self::assertGreaterThan(0, \count($dcs), 'Expected at least 1 datacenter');
     }
 
     /**
@@ -58,8 +60,8 @@ final class CoordinateClientTest extends AbstractUsageTests
         $client = new CoordinateClient(ConsulManager::testConfig());
 
         [$nodes, $qm, $err] = $client->Nodes();
-        static::assertNull($err, \sprintf('CoordinateClient::nodes() - %s', $err));
-        static::assertInstanceOf(QueryMeta::class, $qm);
-        static::assertIsArray($nodes);
+        self::assertNull($err, \sprintf('CoordinateClient::nodes() - %s', $err));
+        self::assertInstanceOf(QueryMeta::class, $qm);
+        self::assertIsArray($nodes);
     }
 }

@@ -1,4 +1,6 @@
-<?php namespace DCarbone\PHPConsulAPITests\Usage\Event;
+<?php
+
+namespace DCarbone\PHPConsulAPITests\Usage\Event;
 
 /*
    Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -28,11 +30,11 @@ use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 final class EventClientUsageTest extends AbstractUsageTests
 {
     /** @var bool */
-    protected static $singlePerClass = true;
+    protected static bool $singlePerClass = true;
 
     public function testCanConstructClient(): void
     {
         $client = new EventClient(ConsulManager::testConfig());
-        static::assertInstanceOf(EventClient::class, $client);
+        self::assertInstanceOf(EventClient::class, $client);
     }
 }
