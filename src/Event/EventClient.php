@@ -83,7 +83,7 @@ class EventClient extends AbstractClient
             throw new \InvalidArgumentException("{$uuid} is not a valid UUID");
         }
 
-        $lower  = substr($uuid, 0, 8)  + substr($uuid, 9, 4)  + substr($uuid, 14, 4);
+        $lower  = substr($uuid, 0, 8) + substr($uuid, 9, 4) + substr($uuid, 14, 4);
         $upper  = substr($uuid, 19, 4) + substr($uuid, 24, 12);
         $lowVal = \intval($lower, 10);
         if (0 >= $lowVal) {

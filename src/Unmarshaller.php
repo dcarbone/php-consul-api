@@ -282,7 +282,7 @@ trait Unmarshaller
     {
         // attempt to extract the two possible keys
         $type  = $def[Transcoding::FIELD_ARRAY_TYPE] ?? null;
-        $class = $def[Transcoding::FIELD_CLASS]      ?? null;
+        $class = $def[Transcoding::FIELD_CLASS] ?? null;
 
         // type is required
         if (null === $type) {

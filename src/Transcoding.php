@@ -73,9 +73,9 @@ final class Transcoding
 
     public const OMITEMPTY_FIELD = [self::FIELD_OMITEMPTY => true];
 
-    public const OMITEMPTY_STRING_FIELD       = [self::FIELD_TYPE => self::STRING]  + self::OMITEMPTY_FIELD;
+    public const OMITEMPTY_STRING_FIELD       = [self::FIELD_TYPE => self::STRING] + self::OMITEMPTY_FIELD;
     public const OMITEMPTY_INTEGER_FIELD      = [self::FIELD_TYPE => self::INTEGER] + self::OMITEMPTY_FIELD;
-    public const OMITEMPTY_DOUBLE_FIELD       = [self::FIELD_TYPE => self::DOUBLE]  + self::OMITEMPTY_FIELD;
+    public const OMITEMPTY_DOUBLE_FIELD       = [self::FIELD_TYPE => self::DOUBLE] + self::OMITEMPTY_FIELD;
     public const OMITEMPTY_BOOLEAN_FIELD      = [self::FIELD_TYPE => self::BOOLEAN] + self::OMITEMPTY_FIELD;
     public const OMITEMPTY_STRING_ARRAY_FIELD = [
         self::FIELD_TYPE       => self::ARRAY,
@@ -84,7 +84,7 @@ final class Transcoding
     public const OMITEMPTY_INTEGER_ARRAY_FIELD = [
         self::FIELD_TYPE       => self::ARRAY,
         self::FIELD_ARRAY_TYPE => self::INTEGER,
-    ]                                                  + self::OMITEMPTY_FIELD;
+    ] + self::OMITEMPTY_FIELD;
     public const OMITEMPTY_MAP_FIELD = self::MAP_FIELD + self::OMITEMPTY_FIELD;
 
     /**

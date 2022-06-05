@@ -77,9 +77,9 @@ final class ConsulManager
      */
     public static function testConfig(): Config
     {
-        $conf = new Config();
+        $conf          = new Config();
         $conf->Address = '127.0.0.1:8500';
-        $conf->Scheme = 'http';
+        $conf->Scheme  = 'http';
         return $conf;
     }
 }

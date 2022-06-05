@@ -29,6 +29,13 @@ $config
 
             // php-cs-fixer builtins:
             'self_static_accessor' => true,
+
+            'binary_operator_spaces' => [
+                'operators' => [
+                    '=>' => 'align',
+                    '=' => 'align',
+                ]
+            ]
         ]
     );
 

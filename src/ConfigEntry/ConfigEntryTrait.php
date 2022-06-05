@@ -32,6 +32,8 @@ trait ConfigEntryTrait
     /** @var string */
     public string $Name = '';
     /** @var string */
+    public string $Partition = '';
+    /** @var string  */
     public string $Namespace = '';
     /** @var \DCarbone\PHPConsulAPI\FakeMap|null */
     public ?FakeMap $Meta = null;
@@ -73,6 +75,24 @@ trait ConfigEntryTrait
     public function setName(string $Name): ConfigEntry
     {
         $this->Name = $Name;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    /**
+     * @param string $Partition
+     * @return \DCarbone\PHPConsulAPI\ConfigEntry\ConfigEntry
+     */
+    public function setPartition(string $Partition): ConfigEntry
+    {
+        $this->Partition = $Partition;
         return $this;
     }
 

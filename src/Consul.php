@@ -131,6 +131,22 @@ class Consul
     public const ACLModeLegacy   = '2';
     public const ACLModeUnknown  = '3';
 
+    public const ServiceDefaults    = 'service-defaults';
+    public const ProxyDefaults      = 'proxy-defaults';
+    public const ServiceRouter      = 'service-router';
+    public const ServiceSplitter    = 'service-splitter';
+    public const ServiceResolver    = 'service-resolver';
+    public const IngressGateway     = 'ingress-gateway';
+    public const TerminatingGateway = 'terminating-gateway';
+    public const ServiceIntentions  = 'service-intentions';
+    public const MeshConfig         = 'mesh';
+    public const ExportedServices   = 'exported-services';
+    public const ProxyConfigGlobal  = 'global';
+    public const MeshConfigMesh     = self::MeshConfig;
+
+    public const ProxyModeTransparent = 'transparent';
+    public const ProxyModeDirect      = 'direct';
+
     // "private" constants
 
     public const _headerConsulPrefix             = 'X-Consul-';

@@ -21,7 +21,7 @@ namespace DCarbone\PHPConsulAPI;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\ConfigEntry\ConfigEntry;
+use DCarbone\PHPConsulAPI\ConfigEntry;
 
 /**
  * @param \DCarbone\Go\Time\Duration $dur
@@ -44,6 +44,14 @@ function dur_to_millisecond(Time\Duration $dur): string
  * @param string $Name
  * @return \DCarbone\PHPConsulAPI\ConfigEntry\ConfigEntry
  */
-function MakeConfigEntry(string $kind, string $Name): ConfigEntry
+function MakeConfigEntry(string $kind, string $Name): ConfigEntry\ConfigEntry
 {
+    switch ($kind) {
+        case Consul::ServiceDefaults:
+            return new ConfigEntry\ServiceConfigEntry(
+                [
+                ConfigEntry\ServiceConfigEntry::FIELD_
+            ]
+            );
+    }
 }

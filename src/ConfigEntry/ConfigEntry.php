@@ -32,12 +32,18 @@ use DCarbone\PHPConsulAPI\Transcoding;
 interface ConfigEntry
 {
     public const INTERFACE_FIELDS = [
+        self::FIELD_PARTITION         => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_NAMESPACE         => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_META              => Transcoding::MAP_FIELD,
     ];
 
-    public const FIELD_NAMESPACE = 'Namespace';
-    public const FIELD_META      = 'Meta';
+    public const FIELD_KIND         = 'Kind';
+    public const FIELD_NAME         = 'Name';
+    public const FIELD_PARTITION    = 'Partition';
+    public const FIELD_NAMESPACE    = 'Namespace';
+    public const FIELD_META         = 'Meta';
+    public const FIELD_CREATE_INDEX = 'CreateIndex';
+    public const FIELD_MODIFY_INDEX = 'ModifyIndex';
 
     /**
      * @return string
@@ -48,6 +54,11 @@ interface ConfigEntry
      * @return string
      */
     public function GetName(): string;
+
+    /**
+     * @return string
+     */
+    public function GetPartition(): string;
 
     /**
      * @return string
