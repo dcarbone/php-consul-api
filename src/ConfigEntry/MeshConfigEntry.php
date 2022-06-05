@@ -21,6 +21,7 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Consul;
 use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
@@ -41,7 +42,18 @@ class MeshConfigEntry extends AbstractModel implements ConfigEntry
 
     private const FIELD_TRANSPARENT_PROXY = 'TransparentProxy';
 
+    /** @var string */
+    public string $kind = Consul::MeshConfig;
+    /** @var \DCarbone\PHPConsulAPI\ConfigEntry\TransparentProxyConfig */
     public TransparentProxyConfig $TransparentProxy;
+
+    /**
+     * @return string
+     */
+    public function getKind(): string
+    {
+        return Consul::MeshConfig;
+    }
 
     /**
      * @return \DCarbone\PHPConsulAPI\ConfigEntry\TransparentProxyConfig

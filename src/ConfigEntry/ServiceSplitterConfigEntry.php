@@ -21,6 +21,7 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Consul;
 use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
@@ -41,8 +42,18 @@ class ServiceSplitterConfigEntry extends AbstractModel implements ConfigEntry
 
     private const FIELD_SPLITS = 'Splits';
 
+    /** @var string */
+    public string $Kind = Consul::ServiceSplitter;
     /** @var \DCarbone\PHPConsulAPI\ConfigEntry\ServiceSplit[] */
     public array $Splits = [];
+
+    /**
+     * @return string
+     */
+    public function getKind(): string
+    {
+        return Consul::ServiceSplitter;
+    }
 
     /**
      * @return \DCarbone\PHPConsulAPI\ConfigEntry\ServiceSplit[]

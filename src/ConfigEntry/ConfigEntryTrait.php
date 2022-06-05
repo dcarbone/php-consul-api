@@ -28,8 +28,6 @@ use DCarbone\PHPConsulAPI\FakeMap;
 trait ConfigEntryTrait
 {
     /** @var string */
-    public string $Kind = '';
-    /** @var string */
     public string $Name = '';
     /** @var string */
     public string $Partition = '';
@@ -41,24 +39,6 @@ trait ConfigEntryTrait
     public int $CreateIndex = 0;
     /** @var int */
     public int $ModifyIndex = 0;
-
-    /**
-     * @return string
-     */
-    public function getKind(): string
-    {
-        return $this->Kind;
-    }
-
-    /**
-     * @param string $Kind
-     * @return \DCarbone\PHPConsulAPI\ConfigEntry\ConfigEntry
-     */
-    public function setKind(string $Kind): ConfigEntry
-    {
-        $this->Kind = $Kind;
-        return $this;
-    }
 
     /**
      * @return string
