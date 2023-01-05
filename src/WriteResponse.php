@@ -41,6 +41,7 @@ class WriteResponse extends AbstractResponse
      * @param mixed $offset
      * @return \DCarbone\PHPConsulAPI\Error|\DCarbone\PHPConsulAPI\WriteMeta|mixed|null
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if (0 === $offset) {
