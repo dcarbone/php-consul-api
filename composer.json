@@ -20,8 +20,8 @@
     "ext-json": "*",
     "dcarbone/gotime": "v0.4.* || v0.5.*",
     "dcarbone/gohttp": "v0.3.*",
-    "guzzlehttp/guzzle": "7.4.*",
-    "guzzlehttp/psr7": "2.*"
+    "guzzlehttp/guzzle": "^7.4",
+    "guzzlehttp/psr7": "^2.4"
   },
   "autoload": {
     "files": [
