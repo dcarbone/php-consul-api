@@ -6,7 +6,11 @@ updates:
     schedule:
       interval: "daily"
 
-  - package-ecosystem: composer
-    directory: /
+  - package-ecosystem: "composer"
+    directory: "/"
+    assignees:
+      - "dcarbone"
     schedule:
-      interval: daily
+      interval: "daily"
+    allow:
+      - dependency-type: "all"
