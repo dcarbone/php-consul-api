@@ -230,7 +230,7 @@ abstract class AbstractClient
         // Otherwise, return error
         $r->Err = new Error(
             sprintf(
-                '%s - Non-[%s] response seen.  Response code: %d.  Response: %s',
+                '%s - Unexpected response code seen. Expected: [%s];  Response code: %d;  Response: %s',
                 static::class,
                 implode(', ', $allowed),
                 $actualCode,
