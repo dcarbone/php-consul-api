@@ -24,10 +24,10 @@ env:
 
 jobs:
   tests:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
-        php-version: ["7.4", "8.0", "8.1"]
+        php-version: ["7.4", "8.0", "8.1", "8.2"]
 
     name: Tests - PHP ${{ matrix.php-version }}
     steps:
@@ -44,9 +44,9 @@ jobs:
             --no-scripts \
             --no-progress
       - run: |
-          wget https://releases.hashicorp.com/consul/1.12.1/consul_1.12.1_linux_amd64.zip
-          unzip consul_1.12.1_linux_amd64.zip -d /usr/local/bin/
-          rm consul_1.12.1_linux_amd64.zip
+          wget https://releases.hashicorp.com/consul/1.15.2/consul_1.15.2_linux_amd64.zip
+          unzip consul_1.15.2_linux_amd64.zip -d /usr/local/bin/
+          rm consul_1.15.2_linux_amd64.zip
           chmod +x /usr/local/bin/consul
           consul --version
       - run: |
