@@ -9,6 +9,7 @@ on:
       - 'composer.json'
       - 'composer.lock'
       - 'phpunit.xml'
+      - '.github/workflows/tests.yaml'
   push:
     branches:
       - master
