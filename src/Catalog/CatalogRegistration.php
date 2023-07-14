@@ -72,7 +72,7 @@ class CatalogRegistration extends AbstractModel
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentCheck|null */
     public ?AgentCheck $Check = null;
     /** @var \DCarbone\PHPConsulAPI\Health\HealthChecks */
-    public HealthChecks $checks;
+    public HealthChecks $Checks;
     /** @var bool */
     public bool $SkipNodeUpdate = false;
 
@@ -243,7 +243,7 @@ class CatalogRegistration extends AbstractModel
      */
     public function getChecks(): HealthChecks
     {
-        return $this->checks;
+        return $this->Checks;
     }
 
     /**
@@ -252,7 +252,7 @@ class CatalogRegistration extends AbstractModel
      */
     public function setChecks(HealthChecks $checks): self
     {
-        $this->checks = $checks;
+        $this->Checks = $checks;
         return $this;
     }
 
