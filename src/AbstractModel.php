@@ -75,7 +75,9 @@ abstract class AbstractModel implements \JsonSerializable
         $out = [];
         // marshal directly defined fields
         foreach ((array)$this as $field => $value) {
-            $this->marshalField($out, $field, $value);
+            if (substr($field, -4) !== '_dyn') {
+                $this->marshalField($out, $field, $value);
+            }
         }
         // marshal dynamically defined fields
         foreach ($this->_dyn as $field => $value) {
