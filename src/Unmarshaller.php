@@ -32,22 +32,6 @@ use DCarbone\PHPConsulAPI\KV\KVTxnOp;
 trait Unmarshaller
 {
     /**
-     * Stores dynamically assigned variables
-     * @var array
-     */
-    private array $_dyn = [];
-
-    public function __set(string $field, $value): void
-    {
-        $this->_dyn[$field] = $value;
-    }
-
-    public function __get(string $field)
-    {
-        return $this->_dyn[$field] ?? null;
-    }
-
-    /**
      * Attempts to unmarshal the provided value into the provided field on the implementing class
      *
      * @param string $field
