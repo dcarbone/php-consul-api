@@ -46,8 +46,8 @@ jobs:
             --no-progress
       - run: |
           wget https://releases.hashicorp.com/consul/1.15.2/consul_1.15.2_linux_amd64.zip
-          unzip consul_1.15.2_linux_amd64.zip -d /usr/local/bin/
-          rm consul_1.15.2_linux_amd64.zip
+          unzip consul_1.16.1_linux_amd64.zip -d /usr/local/bin/
+          rm consul_1.16.1_linux_amd64.zip
           chmod +x /usr/local/bin/consul
           consul --version
       - run: |

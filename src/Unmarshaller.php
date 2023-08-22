@@ -32,6 +32,22 @@ use DCarbone\PHPConsulAPI\KV\KVTxnOp;
 trait Unmarshaller
 {
     /**
+     * Stores dynamically assigned variables
+     * @var array
+     */
+    private array $_dyn = [];
+
+    public function __set(string $field, $value): void
+    {
+        $this->_dyn[$field] = $value;
+    }
+
+    public function __get(string $field)
+    {
+        return $this->_dyn[$field] ?? null;
+    }
+
+    /**
      * Attempts to unmarshal the provided value into the provided field on the implementing class
      *
      * @param string $field
@@ -46,19 +62,22 @@ trait Unmarshaller
             // if the field isn't explicitly defined on the implementing class, just set it to whatever the incoming
             // value is
             $this->{$field} = $value;
-        } /** @noinspection PhpStatementHasEmptyBodyInspection */ elseif (null === $value) {
-            // if the value is null at this point, ignore and move on.
-            // note: this is not checked prior to the property_exists call as if the field is not explicitly defined but
-            // is seen with a null value, we still want to define it as null on the implementing type.
-        } elseif (isset($this->{$field}) && is_scalar($this->{$field})) {
-            // if the property has a scalar default value, unmarshal it as such.
-            $this->unmarshalScalar($field, $value, false);
-        } else {
-            // if we fall down here, try to set the value as-is.  if this barfs, it indicates we have a bug to be
-            // squished.
-            // todo: should this be an exception?
-            $this->{$field} = $value;
+        } elseif (null !== $value) {
+            // at this point, value must be non-null to be operable
+            if (isset($this->{$field}) && is_scalar($this->{$field})) {
+                // if the property has a scalar default value, unmarshal it as such.
+                $this->unmarshalScalar($field, $value, false);
+            } else {
+                // if we fall down here, try to set the value as-is.  if this barfs, it indicates we have a bug to be
+                // squished.
+                // todo: should this be an exception?
+                $this->{$field} = $value;
+            }
         }
+
+        // if the value is null at this point, ignore and move on.
+        // note: this is not checked prior to the property_exists call as if the field is not explicitly defined but
+        // is seen with a null value, we still want to define it as null on the implementing type.
     }
 
     /**
@@ -333,7 +352,7 @@ trait Unmarshaller
             }
 
             foreach ($value as $k => $v) {
-                // todo: causes double-checking for null if value isn't null, not great...
+                // short circuit to prevent additional func call
                 if (null === $v) {
                     $this->{$field}[$k] = null;
                 } else {
@@ -343,6 +362,7 @@ trait Unmarshaller
         } else {
             // in all other cases, just set as-is
             foreach ($value as $k => $v) {
+                // short circuit to prevent additional func call
                 if (null === $v) {
                     $this->{$field}[$k] = null;
                 } else {
