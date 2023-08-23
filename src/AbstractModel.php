@@ -73,15 +73,19 @@ abstract class AbstractModel implements \JsonSerializable
     public function jsonSerialize(): array
     {
         $out = [];
-        // marshal directly defined fields
+        // marshal fields
         foreach ((array)$this as $field => $value) {
-            if (substr($field, -4) !== '_dyn') {
+            // marshal dynamically defined fields
+            // todo: this is crap.
+            if (substr($field, -4) === '_dyn') {
+                if ([] !== $value) {
+                    foreach ($value as $k => $v) {
+                        $this->marshalField($out, $k, $v);
+                    }
+                }
+            } else {
                 $this->marshalField($out, $field, $value);
             }
-        }
-        // marshal dynamically defined fields
-        foreach ($this->_dyn as $field => $value) {
-            $this->marshalField($out, $field, $value);
         }
         return $out;
     }
