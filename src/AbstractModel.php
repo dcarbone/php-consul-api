@@ -31,6 +31,12 @@ abstract class AbstractModel implements \JsonSerializable
     protected const FIELDS = [];
 
     /**
+     * Stores dynamically assigned variables
+     * @var array
+     */
+    private array $_dyn = [];
+
+    /**
      * AbstractModel constructor.
      *
      * Convenience method to help set scalar types.  Any extending class must have a constructor that builds any
@@ -49,6 +55,16 @@ abstract class AbstractModel implements \JsonSerializable
         }
     }
 
+    public function __set(string $field, $value): void
+    {
+        $this->_dyn[$field] = $value;
+    }
+
+    public function __get(string $field)
+    {
+        return $this->_dyn[$field] ?? null;
+    }
+
     /**
      * todo: this picks up non-public fields.  externalize this at some point.
      *
@@ -57,8 +73,19 @@ abstract class AbstractModel implements \JsonSerializable
     public function jsonSerialize(): array
     {
         $out = [];
+        // marshal fields
         foreach ((array)$this as $field => $value) {
-            $this->marshalField($out, $field, $value);
+            // marshal dynamically defined fields
+            // todo: this is crap.
+            if (substr($field, -4) === '_dyn') {
+                if ([] !== $value) {
+                    foreach ($value as $k => $v) {
+                        $this->marshalField($out, $k, $v);
+                    }
+                }
+            } else {
+                $this->marshalField($out, $field, $value);
+            }
         }
         return $out;
     }

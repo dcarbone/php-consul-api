@@ -22,6 +22,7 @@ on:
 
 env:
   CONSUL_HTTP_ADDR: "127.0.0.1:8500"
+  CONSUL_VERSION: '1.16.1'
 
 jobs:
   tests:
@@ -33,22 +34,32 @@ jobs:
     name: Tests - PHP ${{ matrix.php-version }}
     steps:
       - uses: actions/checkout@v3
+
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
           extensions: json
           ini-values: precision=14,serialize_precision=-1
-      - run: |
+
+      - name: 'Composer update'
+        # language=bash
+        run: |
           composer update \
             --no-ansi \
             --no-interaction \
             --no-scripts \
             --no-progress
-      - run: |
-          wget https://releases.hashicorp.com/consul/1.15.2/consul_1.15.2_linux_amd64.zip
-          unzip consul_1.15.2_linux_amd64.zip -d /usr/local/bin/
-          rm consul_1.15.2_linux_amd64.zip
+
+      - name: 'Install Consul'
+        # language=bash
+        run: |
+          wget https://releases.hashicorp.com/consul/${{ env.CONSUL_VERSION }}/consul_${{ env.CONSUL_VERSION }}_linux_amd64.zip
+          unzip consul_${{ env.CONSUL_VERSION }}_linux_amd64.zip -d /usr/local/bin/
+          rm consul_${{ env.CONSUL_VERSION }}_linux_amd64.zip
           chmod +x /usr/local/bin/consul
           consul --version
-      - run: |
+
+      - name: 'Execute tests'
+        # language=bash
+        run: |
           ./vendor/bin/phpunit -c phpunit.xml

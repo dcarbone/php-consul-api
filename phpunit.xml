@@ -43,5 +43,9 @@
         <testsuite name="usage-session">
             <directory>./tests/Usage/Session</directory>
         </testsuite>
+
+        <testsuite name="usage-random">
+            <directory>./tests/Usage/Random</directory>
+        </testsuite>
     </testsuites>
 </phpunit>
