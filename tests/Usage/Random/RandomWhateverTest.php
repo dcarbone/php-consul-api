@@ -39,7 +39,7 @@ final class RandomWhateverTest extends TestCase
 
         $this->assertIsObject($dec);
 
-        $kvp = new KVPair($dec, false);
+        $kvp = new KVPair((array)$dec, false);
 
         self::assertEquals($v, $kvp->{$k});
     }
