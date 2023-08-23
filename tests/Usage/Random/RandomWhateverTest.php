@@ -33,7 +33,7 @@ final class RandomWhateverTest extends TestCase
         static $k = 'nope';
         static $v = 'should not be here';
 
-        $json = sprintf('{"%s":%s"}', $k, $v);
+        $json = sprintf('{"%s":"%s"}', $k, $v);
 
         $dec = json_decode($json);
 
