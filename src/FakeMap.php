@@ -60,6 +60,7 @@ class FakeMap implements \ArrayAccess, \Countable, \Iterator, \JsonSerializable
         );
     }
 
+    #[\ReturnTypeWillChange]
     /**
      * @return mixed
      */
@@ -73,6 +74,7 @@ class FakeMap implements \ArrayAccess, \Countable, \Iterator, \JsonSerializable
         next($this->_map);
     }
 
+    #[\ReturnTypeWillChange]
     /**
      * @return bool|float|int|string|null
      */
@@ -103,6 +105,7 @@ class FakeMap implements \ArrayAccess, \Countable, \Iterator, \JsonSerializable
         return isset($this->_map[$offset]) || \array_key_exists($offset, $this->_map);
     }
 
+    #[\ReturnTypeWillChange]
     /**
      * @param mixed $offset
      * @return mixed
