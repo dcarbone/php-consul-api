@@ -60,9 +60,12 @@ abstract class AbstractModel implements \JsonSerializable
         $this->_dyn[$field] = $value;
     }
 
-    public function __get(string $field)
+    public function &__get(string $field)
     {
-        return $this->_dyn[$field] ?? null;
+        if (!array_key_exists($field, $this->_dyn)) {
+            $this->_dyn[$field] = null;
+        }
+        return $this->_dyn[$field];
     }
 
     /**
