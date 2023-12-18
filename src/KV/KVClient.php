@@ -294,7 +294,9 @@ class KVClient extends AbstractClient
         }
 
         $treeHierarchy = [];
-        foreach ($valueList as $path => $kvp) {
+	    /** @var KVPair $kvp */
+        foreach ($valueList as $kvp) {
+            $path = $kvp->getKey();
             $slashPos = strpos($path, '/');
             if (false === $slashPos) {
                 $treeHierarchy[$path] = $kvp;
