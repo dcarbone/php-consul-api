@@ -131,6 +131,10 @@ class Consul
     public const ACLModeLegacy   = '2';
     public const ACLModeUnknown  = '3';
 
+    public const ProxyModeDefault = '';
+    public const ProxyModeTransparent = 'transparent';
+    public const ProxyModeDirect = 'direct';
+
     // "private" constants
 
     public const _headerConsulPrefix             = 'X-Consul-';
