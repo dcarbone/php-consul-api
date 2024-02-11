@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2023 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,28 +20,30 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-/**
- * Class HasSettableStringTags
- */
-trait HasSettableStringTags
+use DCarbone\PHPConsulAPI\AbstractModel;
+
+class TransparentProxyConfig extends AbstractModel
 {
+    /** @var int  */
+    public int $OutboundListenerPort = 0;
+    /** @var bool  */
+    public bool $DialedDirectly = false;
+
     /**
-     * @param array $tags
-     * @return $this
+     * @return int
      */
-    public function setTags(array $tags): static
+    public function getOutboundListenerPort(): int
     {
-        $this->Tags = $tags;
-        return $this;
+        return $this->OutboundListenerPort;
     }
 
     /**
-     * @param string $tag
-     * @return $this
+     * @param int $OutboundListenerPort
+     * @return TransparentProxyConfig
      */
-    public function addTag(string $tag): static
+    public function setOutboundListenerPort(int $OutboundListenerPort): TransparentProxyConfig
     {
-        $this->Tags[] = $tag;
+        $this->OutboundListenerPort = $OutboundListenerPort;
         return $this;
     }
 }

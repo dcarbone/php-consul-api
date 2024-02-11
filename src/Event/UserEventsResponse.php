@@ -34,7 +34,7 @@ class UserEventsResponse extends AbstractValuedQueryResponse implements Unmarsha
     /**
      * @return \DCarbone\PHPConsulAPI\Event\UserEvent[]|null
      */
-    public function getValue()
+    public function getValue(): ?array
     {
         return $this->UserEvents;
     }
@@ -42,7 +42,7 @@ class UserEventsResponse extends AbstractValuedQueryResponse implements Unmarsha
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->UserEvents = [];
         foreach ($decodedData as $datum) {

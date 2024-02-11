@@ -277,6 +277,6 @@ class AgentCheck extends AbstractModel
      */
     public function __toString(): string
     {
-        return (string)$this->CheckID;
+        return $this->CheckID;
     }
 }

@@ -42,7 +42,7 @@ class SessionEntriesWriteResponse extends AbstractValuedWriteResponse implements
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->SessionEntries = [];
         foreach ($decodedData as $datum) {

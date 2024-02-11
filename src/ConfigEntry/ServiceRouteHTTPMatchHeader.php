@@ -170,7 +170,7 @@ class ServiceRouteHTTPMatchHeader extends AbstractModel
     /**
      * @return bool|string
      */
-    public function getInvert()
+    public function getInvert(): bool|string
     {
         return $this->Invert;
     }
@@ -179,7 +179,7 @@ class ServiceRouteHTTPMatchHeader extends AbstractModel
      * @param bool|string $Invert
      * @return ServiceRouteHTTPMatchHeader
      */
-    public function setInvert($Invert)
+    public function setInvert(bool|string $Invert): static
     {
         $this->Invert = $Invert;
         return $this;

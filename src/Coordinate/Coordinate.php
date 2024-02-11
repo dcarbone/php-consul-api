@@ -101,7 +101,7 @@ class Coordinate extends AbstractModel
      *
      * @return \DCarbone\PHPConsulAPI\Coordinate\Coordinate
      */
-    public function Clone()
+    public function Clone(): Coordinate|static
     {
         return clone $this;
     }

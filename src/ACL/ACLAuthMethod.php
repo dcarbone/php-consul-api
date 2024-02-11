@@ -55,6 +55,8 @@ class ACLAuthMethod extends AbstractModel
     private const FIELD_NAMESPACE       = 'Namespace';
 
     /** @var string */
+    public string $ID = '';
+    /** @var string */
     public string $Name = '';
     /** @var string */
     public string $Type = '';
@@ -87,6 +89,24 @@ class ACLAuthMethod extends AbstractModel
         if (!isset($this->MaxTokenTTL)) {
             $this->MaxTokenTTL = new Time\Duration();
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getID(): string
+    {
+        return $this->ID;
+    }
+
+    /**
+     * @param string $ID
+     * @return ACLAuthMethod
+     */
+    public function setID(string $ID): ACLAuthMethod
+    {
+        $this->ID = $ID;
+        return $this;
     }
 
     /**
@@ -170,10 +190,10 @@ class ACLAuthMethod extends AbstractModel
     }
 
     /**
-     * @param \DCarbone\Go\Time\Duration|int|string $MaxTokenTTL
+     * @param int|string|\DCarbone\Go\Time\Duration $MaxTokenTTL
      * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethod
      */
-    public function setMaxTokenTTL($MaxTokenTTL): self
+    public function setMaxTokenTTL(int|string|Time\Duration $MaxTokenTTL): self
     {
         $this->MaxTokenTTL = Time::ParseDuration($MaxTokenTTL);
         return $this;

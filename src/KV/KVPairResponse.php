@@ -42,7 +42,7 @@ class KVPairResponse extends AbstractValuedQueryResponse implements Unmarshalled
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->KVPair = new KVPair((array)$decodedData, true);
     }

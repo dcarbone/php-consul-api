@@ -34,7 +34,7 @@ class ServiceEntriesResponse extends AbstractValuedQueryResponse implements Unma
     /**
      * @return \DCarbone\PHPConsulAPI\Health\ServiceEntry[]|null
      */
-    public function getValue()
+    public function getValue(): ?array
     {
         return $this->ServiceEntries;
     }
@@ -42,7 +42,7 @@ class ServiceEntriesResponse extends AbstractValuedQueryResponse implements Unma
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->ServiceEntries = [];
         foreach ($decodedData as $entry) {

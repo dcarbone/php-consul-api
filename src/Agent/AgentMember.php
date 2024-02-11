@@ -137,16 +137,12 @@ class AgentMember extends AbstractModel
      */
     public function ACLMode(): string
     {
-        switch ($this->Tags[Consul::MemberTagKeyACLMode] ?? null) {
-            case Consul::ACLModeDisabled:
-                return Consul::ACLModeDisabled;
-            case Consul::ACLModeEnabled:
-                return Consul::ACLModeEnabled;
-            case Consul::ACLModeLegacy:
-                return Consul::ACLModeLegacy;
-            default:
-                return Consul::ACLModeUnknown;
-        }
+        return match ($this->Tags[Consul::MemberTagKeyACLMode] ?? null) {
+            Consul::ACLModeDisabled => Consul::ACLModeDisabled,
+            Consul::ACLModeEnabled => Consul::ACLModeEnabled,
+            Consul::ACLModeLegacy => Consul::ACLModeLegacy,
+            default => Consul::ACLModeUnknown,
+        };
     }
 
     /**

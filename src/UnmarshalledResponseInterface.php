@@ -28,5 +28,5 @@ interface UnmarshalledResponseInterface
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void;
+    public function unmarshalValue(mixed $decodedData): void;
 }

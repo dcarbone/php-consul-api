@@ -42,7 +42,7 @@ class ACLBindingRuleWriteResponse extends AbstractValuedWriteResponse implements
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->ACLBindingRule = new ACLBindingRule((array)$decodedData);
     }

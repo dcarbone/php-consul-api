@@ -34,7 +34,7 @@ class OperatorAreaJoinResponse extends AbstractValuedWriteResponse implements Un
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\AreaJoinResponse[]|null
      */
-    public function getValue()
+    public function getValue(): ?array
     {
         return $this->AreaJoinResponses;
     }
@@ -42,7 +42,7 @@ class OperatorAreaJoinResponse extends AbstractValuedWriteResponse implements Un
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->AreaJoinResponses = [];
         foreach ($decodedData as $area) {

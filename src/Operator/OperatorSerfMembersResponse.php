@@ -34,7 +34,7 @@ class OperatorSerfMembersResponse extends AbstractValuedQueryResponse implements
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\SerfMember[]|null
      */
-    public function getValue()
+    public function getValue(): ?array
     {
         return $this->SerfMembers;
     }
@@ -42,7 +42,7 @@ class OperatorSerfMembersResponse extends AbstractValuedQueryResponse implements
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->SerfMembers = [];
         foreach ($decodedData as $datum) {

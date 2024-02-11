@@ -110,7 +110,7 @@ class ACLOIDCAuthURLParams extends AbstractModel
      * @param mixed $Meta
      * @return \DCarbone\PHPConsulAPI\ACL\ACLOIDCAuthURLParams
      */
-    public function setMeta($Meta): self
+    public function setMeta(mixed $Meta): self
     {
         $this->Meta = FakeMap::parse($Meta);
         return $this;

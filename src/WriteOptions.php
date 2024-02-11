@@ -41,7 +41,7 @@ class WriteOptions extends AbstractModel implements RequestOptions
 
     /**
      * WriteOptions constructor.
-     * @param array $data
+     * @param array|null $data
      */
     public function __construct(?array $data = null)
     {
@@ -124,9 +124,9 @@ class WriteOptions extends AbstractModel implements RequestOptions
     }
 
     /**
-     * @param \DCarbone\Go\Time\Duration|float|int|string|null $timeout
+     * @param float|int|string|\DCarbone\Go\Time\Duration|null $timeout
      */
-    public function setTimeout($timeout): void
+    public function setTimeout(float|int|string|Time\Duration|null $timeout): void
     {
         $this->Timeout = Time::Duration($timeout);
     }

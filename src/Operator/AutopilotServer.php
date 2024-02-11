@@ -380,7 +380,7 @@ class AutopilotServer extends AbstractModel implements \JsonSerializable
     }
 
     /**
-     * @return array|mixed|void
+     * @return array
      */
     public function jsonSerialize(): array
     {

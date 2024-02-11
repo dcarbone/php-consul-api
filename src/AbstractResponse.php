@@ -28,7 +28,7 @@ abstract class AbstractResponse implements \ArrayAccess
     /**
      * @param mixed $offset
      */
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
         throw new \BadMethodCallException(sprintf('Calling %s on class %s is forbidden', __METHOD__, static::class));
     }
@@ -37,7 +37,7 @@ abstract class AbstractResponse implements \ArrayAccess
      * @param mixed $offset
      * @param mixed $value
      */
-    public function offsetSet($offset, $value): void
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         throw new \BadMethodCallException(sprintf('Calling %s on class %s is forbidden', __METHOD__, static::class));
     }
@@ -46,7 +46,7 @@ abstract class AbstractResponse implements \ArrayAccess
      * @param mixed $offset
      * @return \OutOfRangeException
      */
-    protected function _newOutOfRangeException($offset): \OutOfRangeException
+    protected function _newOutOfRangeException(mixed $offset): \OutOfRangeException
     {
         return new \OutOfRangeException(sprintf('Offset %s does not exist', $offset));
     }

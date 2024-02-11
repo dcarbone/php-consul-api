@@ -102,7 +102,7 @@ final class Transcoding
      * @param \DCarbone\Go\Time\Time|string $value
      * @throws \Exception
      */
-    public static function unmarshalTime(object $instance, string $field, $value): void
+    public static function unmarshalTime(object $instance, string $field, Time\Time|string $value): void
     {
         if ($value instanceof Time\Time) {
             $instance->{$field} = clone $value;
@@ -117,7 +117,7 @@ final class Transcoding
      * @param \DCarbone\Go\Time\Time|string|null $value
      * @throws \Exception
      */
-    public static function unmarshalNullableTime(object $instance, string $field, $value): void
+    public static function unmarshalNullableTime(object $instance, string $field, Time\Time|string|null $value): void
     {
         if (null === $value) {
             $instance->{$field} = null;
@@ -133,7 +133,7 @@ final class Transcoding
      * @param string $field
      * @param mixed $value
      */
-    public static function unmarshalDuration(object $instance, string $field, $value): void
+    public static function unmarshalDuration(object $instance, string $field, mixed $value): void
     {
         $instance->{$field} = Time::Duration($value);
     }
@@ -143,7 +143,7 @@ final class Transcoding
      * @param string $field
      * @param mixed $value
      */
-    public static function unmarshalNullableDuration(object $instance, string $field, $value): void
+    public static function unmarshalNullableDuration(object $instance, string $field, mixed $value): void
     {
         if (null === $value) {
             $instance->{$field} = null;

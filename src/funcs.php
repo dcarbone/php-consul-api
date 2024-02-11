@@ -21,7 +21,6 @@ namespace DCarbone\PHPConsulAPI;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\ConfigEntry\ConfigEntry;
 
 /**
  * @param \DCarbone\Go\Time\Duration $dur
@@ -37,13 +36,4 @@ function dur_to_millisecond(Time\Duration $dur): string
     }
 
     return sprintf('%dms', $ms);
-}
-
-/**
- * @param string $kind
- * @param string $Name
- * @return \DCarbone\PHPConsulAPI\ConfigEntry\ConfigEntry
- */
-function MakeConfigEntry(string $kind, string $Name): ConfigEntry
-{
 }

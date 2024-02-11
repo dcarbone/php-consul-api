@@ -34,7 +34,7 @@ class CoordinateDatacentersResponse extends AbstractValuedResponse implements Un
     /**
      * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateDatacenterMap[]|null
      */
-    public function getValue()
+    public function getValue(): ?array
     {
         return $this->DatacenterMap;
     }
@@ -42,7 +42,7 @@ class CoordinateDatacentersResponse extends AbstractValuedResponse implements Un
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->DatacenterMap = [];
         foreach ($decodedData as $item) {

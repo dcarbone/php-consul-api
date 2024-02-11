@@ -34,7 +34,7 @@ class AgentMembersResponse extends AbstractValuedResponse implements Unmarshalle
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentMember[]|null
      */
-    public function getValue()
+    public function getValue(): ?array
     {
         return $this->Members;
     }
@@ -42,7 +42,7 @@ class AgentMembersResponse extends AbstractValuedResponse implements Unmarshalle
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->Members = [];
         foreach ($decodedData as $member) {

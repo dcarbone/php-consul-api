@@ -185,20 +185,12 @@ class AgentClient extends AbstractClient
             return new AgentHealthServiceResponse(Consul::HealthCritical, null, $dec->Err);
         }
 
-        switch ($resp->Response->getStatusCode()) {
-            case HTTP\StatusOK:
-                $status = Consul::HealthPassing;
-                break;
-            case HTTP\StatusTooManyRequests:
-                $status = Consul::HealthWarning;
-                break;
-            case HTTP\StatusServiceUnavailable:
-                $status = Consul::HealthCritical;
-                break;
-
-            default:
-                $status = Consul::HealthCritical;
-        }
+        $status = match ($resp->Response->getStatusCode()) {
+            HTTP\StatusOK => Consul::HealthPassing,
+            HTTP\StatusTooManyRequests => Consul::HealthWarning,
+            HTTP\StatusServiceUnavailable => Consul::HealthCritical,
+            default => Consul::HealthCritical,
+        };
 
         return new AgentHealthServiceResponse($status, $dec->Decoded, null);
     }
@@ -227,20 +219,12 @@ class AgentClient extends AbstractClient
             return new AgentHealthServicesResponse(Consul::HealthCritical, null, $dec->Err);
         }
 
-        switch ($resp->Response->getStatusCode()) {
-            case HTTP\StatusOK:
-                $status = Consul::HealthPassing;
-                break;
-            case HTTP\StatusTooManyRequests:
-                $status = Consul::HealthWarning;
-                break;
-            case HTTP\StatusServiceUnavailable:
-                $status = Consul::HealthCritical;
-                break;
-
-            default:
-                $status = Consul::HealthCritical;
-        }
+        $status = match ($resp->Response->getStatusCode()) {
+            HTTP\StatusOK => Consul::HealthPassing,
+            HTTP\StatusTooManyRequests => Consul::HealthWarning,
+            HTTP\StatusServiceUnavailable => Consul::HealthCritical,
+            default => Consul::HealthCritical,
+        };
 
         return new AgentHealthServicesResponse($status, $dec->Decoded, null);
     }

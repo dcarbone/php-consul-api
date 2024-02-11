@@ -64,7 +64,7 @@ class EventClient extends AbstractClient
     public function List(string $name = '', ?QueryOptions $opts = null): UserEventsResponse
     {
         $r = $this->_newGetRequest('v1/event/list', $opts);
-        if ('' !== (string) $name) {
+        if ('' !== $name) {
             $r->params->set('name', $name);
         }
         $resp = $this->_requireOK($this->_do($r));

@@ -79,8 +79,9 @@ class SessionClient extends AbstractClient
     /**
      * @param string $id
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
      * @return \DCarbone\PHPConsulAPI\Session\SessionEntriesWriteResponse
+     * @throws \Exception
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function Renew(string $id, ?WriteOptions $opts = null): SessionEntriesWriteResponse
     {

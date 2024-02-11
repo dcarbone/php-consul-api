@@ -23,6 +23,7 @@ namespace DCarbone\PHPConsulAPI\Agent;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\ConfigEntry\ExposeConfig;
 use DCarbone\PHPConsulAPI\ConfigEntry\MeshGatewayConfig;
+use DCarbone\PHPConsulAPI\FakeMap;
 use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
@@ -31,15 +32,17 @@ use DCarbone\PHPConsulAPI\Transcoding;
 class AgentServiceConnectProxyConfig extends AbstractModel
 {
     protected const FIELDS = [
+        self::FIELD_ENVOY_EXTENSIONS => [
+            Transcoding::FIELD_CLASS => EnvoyExtension::class,
+            Transcoding::FIELD_TYPE => Transcoding::ARRAY,
+            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
+            Transcoding::FIELD_OMITEMPTY => true,
+        ],
         self::FIELD_DESTINATION_SERVICE_NAME => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_DESTINATION_SERVICE_ID   => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_LOCAL_SERVICE_ADDRESS    => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_LOCAL_SERVICE_PORT       => Transcoding::OMITEMPTY_INTEGER_FIELD,
-        self::FIELD_CONFIG                   => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::MIXED,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
+        self::FIELD_CONFIG                   => Transcoding::OMITEMPTY_MAP_FIELD,
         self::FIELD_UPSTREAMS                => [
             Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
             Transcoding::FIELD_CLASS      => Upstream::class,
@@ -57,6 +60,7 @@ class AgentServiceConnectProxyConfig extends AbstractModel
         ],
     ];
 
+    private const FIELD_ENVOY_EXTENSIONS = 'EnvoyExtension';
     private const FIELD_DESTINATION_SERVICE_NAME = 'DestinationServiceName';
     private const FIELD_DESTINATION_SERVICE_ID   = 'DestinationServiceID';
     private const FIELD_LOCAL_SERVICE_ADDRESS    = 'LocalServiceAddress';
@@ -66,6 +70,8 @@ class AgentServiceConnectProxyConfig extends AbstractModel
     private const FIELD_MESH_GATEWAY             = 'MeshGateway';
     private const FIELD_EXPOSE                   = 'Expose';
 
+    /** @var \DCarbone\PHPConsulAPI\Agent\EnvoyExtension[] */
+    public array $EnvoyExtensions = [];
     /** @var string */
     public string $DestinationServiceName = '';
     /** @var string */
@@ -74,6 +80,14 @@ class AgentServiceConnectProxyConfig extends AbstractModel
     public string $LocalServiceAddress = '';
     /** @var int */
     public int $LocalServicePort = 0;
+    /** @var \DCarbone\PHPConsulAPI\FakeMap|null */
+    public ?FakeMap $Config = null;
+    /** @var string */
+    public string $LocalServiceSocketPath = '';
+    /** @var string */
+    public string $Mode = '';
+    /** @var \DCarbone\PHPConsulAPI\Agent\TransparentProxyConfig|null */
+    public ?TransparentProxyConfig $TransparentProxy = null;
     /** @var \DCarbone\PHPConsulAPI\Agent\Upstream[] */
     public array $Upstreams = [];
     /** @var \DCarbone\PHPConsulAPI\ConfigEntry\MeshGatewayConfig */
@@ -94,6 +108,34 @@ class AgentServiceConnectProxyConfig extends AbstractModel
         if (!isset($this->Expose)) {
             $this->Expose = new ExposeConfig(null);
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getEnvoyExtensions(): array
+    {
+        return $this->EnvoyExtensions;
+    }
+
+    /**
+     * @param EnvoyExtension $envoyExtension
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceConnectProxyConfig
+     */
+    public function addEnvoyExtension(EnvoyExtension $envoyExtension): self
+    {
+        $this->EnvoyExtensions[] = $envoyExtension;
+        return $this;
+    }
+
+    /**
+     * @param array $EnvoyExtensions
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceConnectProxyConfig
+     */
+    public function setEnvoyExtensions(array $EnvoyExtensions): self
+    {
+        $this->EnvoyExtensions = $EnvoyExtensions;
+        return $this;
     }
 
     /**
@@ -165,6 +207,78 @@ class AgentServiceConnectProxyConfig extends AbstractModel
     public function setLocalServicePort(int $LocalServicePort): self
     {
         $this->LocalServicePort = $LocalServicePort;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLocalServiceSocketPath(): string
+    {
+        return $this->LocalServiceSocketPath;
+    }
+
+    /**
+     * @param string $LocalServiceSocketPath
+     * @return AgentServiceConnectProxyConfig
+     */
+    public function setLocalServiceSocketPath(string $LocalServiceSocketPath): self
+    {
+        $this->LocalServiceSocketPath = $LocalServiceSocketPath;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMode(): string
+    {
+        return $this->Mode;
+    }
+
+    /**
+     * @param string $Mode
+     * @return AgentServiceConnectProxyConfig
+     */
+    public function setMode(string $Mode): self
+    {
+        $this->Mode = $Mode;
+        return $this;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Agent\TransparentProxyConfig|null
+     */
+    public function getTransparentProxy(): ?TransparentProxyConfig
+    {
+        return $this->TransparentProxy;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\Agent\TransparentProxyConfig|null $TransparentProxy
+     * @return AgentServiceConnectProxyConfig
+     */
+    public function setTransparentProxy(?TransparentProxyConfig $TransparentProxy): self
+    {
+        $this->TransparentProxy = $TransparentProxy;
+        return $this;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\FakeMap|null
+     */
+    public function getConfig(): ?FakeMap
+    {
+        return $this->Config;
+    }
+
+    /**
+     * @param array|\DCarbone\PHPConsulAPI\FakeMap|\stdClass|null $Config
+     * @return AgentServiceConnectProxyConfig
+     */
+    public function setConfig(array|FakeMap|\stdClass|null $Config): self
+    {
+        $this->Config = FakeMap::parse($Config);
         return $this;
     }
 

@@ -117,7 +117,7 @@ class ProxyConfigEntry extends AbstractModel implements ConfigEntry
      * @param mixed $Config
      * @return ProxyConfigEntry
      */
-    public function setConfig($Config): self
+    public function setConfig(mixed $Config): self
     {
         $this->Config = FakeMap::parse($Config);
         return $this;

@@ -39,7 +39,7 @@ trait ResponseValueBoolTrait
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         if (\is_bool($decodedData)) {
             $this->Value = $decodedData;

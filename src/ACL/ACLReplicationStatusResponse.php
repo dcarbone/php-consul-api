@@ -42,7 +42,7 @@ class ACLReplicationStatusResponse extends AbstractValuedQueryResponse implement
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->ACLReplicationStatus = new ACLReplicationStatus((array)$decodedData);
     }

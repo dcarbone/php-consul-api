@@ -33,7 +33,7 @@ class ReadableDuration extends Time\Duration implements \JsonSerializable, Scala
      * @param string $field
      * @param mixed $value
      */
-    public static function unmarshalJSON(object $instance, string $field, $value): void
+    public static function unmarshalJSON(object $instance, string $field, mixed $value): void
     {
         $instance->{$field} = new self(\intval($value, 10));
     }

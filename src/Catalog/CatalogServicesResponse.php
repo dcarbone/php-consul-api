@@ -34,7 +34,7 @@ class CatalogServicesResponse extends AbstractValuedQueryResponse implements Unm
     /**
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogService[]|null
      */
-    public function getValue()
+    public function getValue(): ?array
     {
         return $this->Services;
     }
@@ -42,7 +42,7 @@ class CatalogServicesResponse extends AbstractValuedQueryResponse implements Unm
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->Services = [];
         foreach ($decodedData as $node) {

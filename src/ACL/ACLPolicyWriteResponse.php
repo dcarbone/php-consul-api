@@ -42,7 +42,7 @@ class ACLPolicyWriteResponse extends AbstractValuedWriteResponse implements Unma
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->ACLPolicy = new ACLPolicy((array)$decodedData);
     }

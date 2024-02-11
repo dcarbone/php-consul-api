@@ -160,8 +160,9 @@ class HealthClient extends AbstractClient
     /**
      * @param string $state
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
      * @return \DCarbone\PHPConsulAPI\Health\HealthChecksResponse
+     * @throws \Exception
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function State(string $state, ?QueryOptions $opts = null): HealthChecksResponse
     {
@@ -215,16 +216,11 @@ class HealthClient extends AbstractClient
         ?QueryOptions $opts,
         string $healthType
     ): ServiceEntriesResponse {
-        switch ($healthType) {
-            case self::connectHealth:
-                $uri = 'v1/health/connect/%s';
-                break;
-            case self::ingressHealth:
-                $uri = 'v1/health/ingress/%s';
-                break;
-            default:
-                $uri = 'v1/health/service/%s';
-        }
+        $uri = match ($healthType) {
+            self::connectHealth => 'v1/health/connect/%s',
+            self::ingressHealth => 'v1/health/ingress/%s',
+            default => 'v1/health/service/%s',
+        };
 
         $r = $this->_newGetRequest(sprintf($uri, $service), $opts);
         if ([] !== $tags) {

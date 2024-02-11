@@ -28,14 +28,14 @@ final class DecodedBody
     use ErrorContainer;
 
     /** @var mixed */
-    public $Decoded = null;
+    public mixed $Decoded = null;
 
     /**
      * DecodedBody constructor.
      * @param mixed $decoded
      * @param \DCarbone\PHPConsulAPI\Error|null $err
      */
-    public function __construct($decoded, ?Error $err)
+    public function __construct(mixed $decoded, ?Error $err)
     {
         $this->Decoded = $decoded;
         $this->Err     = $err;
@@ -44,7 +44,7 @@ final class DecodedBody
     /**
      * @return mixed
      */
-    public function getDecoded()
+    public function getDecoded(): mixed
     {
         return $this->Decoded;
     }

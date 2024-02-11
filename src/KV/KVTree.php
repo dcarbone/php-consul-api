@@ -51,7 +51,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     /**
      * @return \DCarbone\PHPConsulAPI\KV\KVPair|\DCarbone\PHPConsulAPI\KV\KVTree can return any type
      */
-    public function current()
+    public function current(): KVTree|KVPair
     {
         return current($this->_children);
     }
@@ -64,7 +64,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     /**
      * @return string scalar on success, or null on failure
      */
-    public function key()
+    public function key(): string
     {
         return key($this->_children);
     }
@@ -73,7 +73,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
      * @return bool The return value will be casted to boolean and then evaluated.
      * Returns true on success or false on failure.
      */
-    public function valid()
+    public function valid(): bool
     {
         return null !== key($this->_children);
     }
@@ -86,15 +86,15 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     /**
      * @return bool true if the current entry can be iterated over, otherwise returns false
      */
-    public function hasChildren()
+    public function hasChildren(): bool
     {
         return $this->current() instanceof self;
     }
 
     /**
-     * @return \RecursiveIterator an iterator for the current entry
+     * @return \RecursiveIterator|\DCarbone\PHPConsulAPI\KV\KVTree|\DCarbone\PHPConsulAPI\KV\KVPair an iterator for the current entry
      */
-    public function getChildren()
+    public function getChildren(): \RecursiveIterator|KVTree|KVPair
     {
         return $this->current();
     }
@@ -102,7 +102,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     /**
      * @return int the custom count as an integer
      */
-    public function count()
+    public function count(): int
     {
         return \count($this->_children);
     }
@@ -111,7 +111,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
      * @param mixed $offset an offset to check for
      * @return bool true on success or false on failure
      */
-    public function offsetExists($offset)
+    public function offsetExists(mixed $offset): bool
     {
         if (\is_string($offset)) {
             $subPath = str_replace($this->_prefix, '', $offset);
@@ -130,9 +130,9 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
 
     /**
      * @param mixed $offset the offset to retrieve
-     * @return \DCarbone\PHPConsulAPI\KV\KVPair|\DCarbone\PHPConsulAPI\KV\KVTree
+     * @return \DCarbone\PHPConsulAPI\KV\KVTree|\DCarbone\PHPConsulAPI\KV\KVPair|null
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): KVTree|KVPair|null
     {
         if (\is_string($offset)) {
             $subPath = str_replace($this->_prefix, '', $offset);
@@ -165,7 +165,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
      * @param mixed $offset the offset to assign the value to
      * @param mixed $value the value to set
      */
-    public function offsetSet($offset, $value): void
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         if ('string' === \gettype($offset)) {
             $subPath = str_replace($this->_prefix, '', $offset);
@@ -187,7 +187,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     /**
      * @param mixed $offset the offset to unset
      */
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
         // do nothing, yo...
     }
@@ -195,7 +195,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
     /**
      * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         $json = [$this->_prefix => []];
         foreach ($this->_children as $k => $child) {

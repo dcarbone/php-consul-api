@@ -34,7 +34,7 @@ class MetricsInfoResponse extends AbstractValuedResponse implements Unmarshalled
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\MetricsInfo|null
      */
-    public function getValue()
+    public function getValue(): ?MetricsInfo
     {
         return $this->MetricsInfo;
     }
@@ -42,7 +42,7 @@ class MetricsInfoResponse extends AbstractValuedResponse implements Unmarshalled
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->MetricsInfo = new MetricsInfo((array)$decodedData);
     }
