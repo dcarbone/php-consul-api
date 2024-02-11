@@ -32,7 +32,7 @@ abstract class AbstractValuedQueryResponse extends AbstractResponse implements V
      * @param mixed $offset
      * @return bool
      */
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
         return \is_int($offset) && 0 <= $offset && $offset < 3;
     }
@@ -41,8 +41,7 @@ abstract class AbstractValuedQueryResponse extends AbstractResponse implements V
      * @param mixed $offset
      * @return \DCarbone\PHPConsulAPI\Error|\DCarbone\PHPConsulAPI\QueryMeta|mixed|null
      */
-    #[\ReturnTypeWillChange]
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         if (0 === $offset) {
             return $this->getValue();

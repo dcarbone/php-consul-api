@@ -71,16 +71,16 @@ class AgentHealthServiceResponse extends AbstractResponse
      * @param mixed $offset
      * @return bool
      */
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
         return \is_int($offset) && 0 <= $offset && $offset < 3;
     }
 
     /**
      * @param mixed $offset
-     * @return array|\DCarbone\PHPConsulAPI\Agent\AgentServiceChecksInfo[]|\DCarbone\PHPConsulAPI\Error|mixed|string|null
+     * @return \DCarbone\PHPConsulAPI\Error|string|AgentServiceChecksInfo|null
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): Error|string|null|AgentServiceChecksInfo
     {
         if (0 === $offset) {
             return $this->AggregatedStatus;

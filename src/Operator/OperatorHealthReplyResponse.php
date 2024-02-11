@@ -34,7 +34,7 @@ class OperatorHealthReplyResponse extends AbstractValuedResponse implements Unma
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\OperatorHealthReply|mixed|null
      */
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->OperatorHealthReply;
     }
@@ -42,7 +42,7 @@ class OperatorHealthReplyResponse extends AbstractValuedResponse implements Unma
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->OperatorHealthReply = new OperatorHealthReply((array)$decodedData);
     }

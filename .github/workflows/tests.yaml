@@ -22,18 +22,18 @@ on:
 
 env:
   CONSUL_HTTP_ADDR: "127.0.0.1:8500"
-  CONSUL_VERSION: '1.16.1'
+  CONSUL_VERSION: '1.17.2'
 
 jobs:
   tests:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        php-version: ["7.4", "8.0", "8.1", "8.2"]
+        php-version: ["8.0", "8.1", "8.2"]
 
     name: Tests - PHP ${{ matrix.php-version }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: shivammathur/setup-php@v2
         with:

@@ -50,7 +50,7 @@ class Request
     private string $method;
 
     /** @var mixed */
-    private $body;
+    private mixed $body;
 
     /**
      * Request constructor.
@@ -59,7 +59,7 @@ class Request
      * @param \DCarbone\PHPConsulAPI\Config $config
      * @param mixed $body
      */
-    public function __construct(string $method, string $path, Config $config, $body)
+    public function __construct(string $method, string $path, Config $config, mixed $body)
     {
         $this->scheme  = $config->Scheme;
         $this->address = $config->Address;
@@ -121,7 +121,7 @@ class Request
     /**
      * @return mixed
      */
-    public function getBody()
+    public function getBody(): mixed
     {
         return $this->body;
     }

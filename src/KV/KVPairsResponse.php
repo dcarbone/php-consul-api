@@ -34,7 +34,7 @@ class KVPairsResponse extends AbstractValuedQueryResponse implements Unmarshalle
     /**
      * @return \DCarbone\PHPConsulAPI\KV\KVPairs|null
      */
-    public function getValue()
+    public function getValue(): ?KVPairs
     {
         return $this->KVPairs;
     }
@@ -42,7 +42,7 @@ class KVPairsResponse extends AbstractValuedQueryResponse implements Unmarshalle
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->KVPairs = new KVPairs((array)$decodedData);
     }

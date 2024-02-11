@@ -277,12 +277,12 @@ class KVClient extends AbstractClient
     }
 
     /**
-     * @param string|null $prefix
+     * @param string $prefix
      * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @return array(
-     * @var \DCarbone\PHPConsulAPI\KV\KVPair[]|\DCarbone\PHPConsulAPI\KV\KVTree[]|null array of trees, values, or null on error
-     * @var \DCarbone\PHPConsulAPI\Error|null error, if any
+     *  @var \DCarbone\PHPConsulAPI\KV\KVPair[]|\DCarbone\PHPConsulAPI\KV\KVTree[]|null array of trees, values, or null on error
+     *  @var \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
     public function Tree(string $prefix = '', ?QueryOptions $opts = null): array
@@ -294,7 +294,7 @@ class KVClient extends AbstractClient
         }
 
         $treeHierarchy = [];
-	    /** @var KVPair $kvp */
+        /** @var KVPair $kvp */
         foreach ($valueList as $kvp) {
             $path = $kvp->getKey();
             $slashPos = strpos($path, '/');
@@ -309,7 +309,7 @@ class KVClient extends AbstractClient
                 $treeHierarchy[$root] = new KVTree($root);
             }
 
-            if ('/' === substr($path, -1)) {
+            if (str_ends_with($path, '/')) {
                 $_path = '';
                 foreach (explode('/', $prefix) as $part) {
                     if ('' === $part) {

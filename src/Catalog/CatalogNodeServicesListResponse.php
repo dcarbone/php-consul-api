@@ -34,7 +34,7 @@ class CatalogNodeServicesListResponse extends AbstractValuedQueryResponse implem
     /**
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogNodeServiceList|null
      */
-    public function getValue()
+    public function getValue(): ?CatalogNodeServiceList
     {
         return $this->CatalogNodeServiceList;
     }
@@ -42,7 +42,7 @@ class CatalogNodeServicesListResponse extends AbstractValuedQueryResponse implem
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->CatalogNodeServiceList = new CatalogNodeServiceList((array)$decodedData);
     }

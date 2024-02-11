@@ -138,7 +138,7 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
      * @param mixed $offset
      * @return bool
      */
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
         return isset($this->values[$offset]);
     }

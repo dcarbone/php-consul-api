@@ -90,7 +90,7 @@ class ACLLoginParams extends AbstractModel
      * @param mixed $Meta
      * @return \DCarbone\PHPConsulAPI\ACL\ACLLoginParams
      */
-    public function setMeta($Meta): self
+    public function setMeta(mixed $Meta): self
     {
         $this->Meta = FakeMap::parse($Meta);
         return $this;

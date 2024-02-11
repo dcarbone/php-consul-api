@@ -31,7 +31,7 @@ class MapResponse extends AbstractValuedResponse implements UnmarshalledResponse
     /**
      * @return array|null
      */
-    public function getValue()
+    public function getValue(): ?array
     {
         return $this->Map;
     }
@@ -39,7 +39,7 @@ class MapResponse extends AbstractValuedResponse implements UnmarshalledResponse
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->Map = $decodedData;
     }

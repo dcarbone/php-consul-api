@@ -42,7 +42,7 @@ class ACLRoleWriteResponse extends AbstractValuedWriteResponse implements Unmars
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->ACLRole = new ACLRole((array)$decodedData);
     }

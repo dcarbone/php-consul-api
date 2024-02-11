@@ -23,6 +23,7 @@ namespace DCarbone\PHPConsulAPI\Agent;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\ConfigEntry\ExposeConfig;
 use DCarbone\PHPConsulAPI\ConfigEntry\MeshGatewayConfig;
+use DCarbone\PHPConsulAPI\FakeMap;
 use DCarbone\PHPConsulAPI\Transcoding;
 
 /**
@@ -41,11 +42,7 @@ class AgentServiceConnectProxyConfig extends AbstractModel
         self::FIELD_DESTINATION_SERVICE_ID   => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_LOCAL_SERVICE_ADDRESS    => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_LOCAL_SERVICE_PORT       => Transcoding::OMITEMPTY_INTEGER_FIELD,
-        self::FIELD_CONFIG                   => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::MIXED,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
+        self::FIELD_CONFIG                   => Transcoding::OMITEMPTY_MAP_FIELD,
         self::FIELD_UPSTREAMS                => [
             Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
             Transcoding::FIELD_CLASS      => Upstream::class,
@@ -83,6 +80,8 @@ class AgentServiceConnectProxyConfig extends AbstractModel
     public string $LocalServiceAddress = '';
     /** @var int */
     public int $LocalServicePort = 0;
+    /** @var \DCarbone\PHPConsulAPI\FakeMap|null */
+    public ?FakeMap $Config = null;
     /** @var string */
     public string $LocalServiceSocketPath = '';
     /** @var string */
@@ -262,6 +261,24 @@ class AgentServiceConnectProxyConfig extends AbstractModel
     public function setTransparentProxy(?TransparentProxyConfig $TransparentProxy): self
     {
         $this->TransparentProxy = $TransparentProxy;
+        return $this;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\FakeMap|null
+     */
+    public function getConfig(): ?FakeMap
+    {
+        return $this->Config;
+    }
+
+    /**
+     * @param array|\DCarbone\PHPConsulAPI\FakeMap|\stdClass|null $Config
+     * @return AgentServiceConnectProxyConfig
+     */
+    public function setConfig(array|FakeMap|\stdClass|null $Config): self
+    {
+        $this->Config = FakeMap::parse($Config);
         return $this;
     }
 

@@ -53,6 +53,6 @@ class QueryDNSOptions extends AbstractModel
      */
     public function __toString(): string
     {
-        return (string) $this->TTL;
+        return $this->TTL;
     }
 }

@@ -34,7 +34,7 @@ class OperatorAreasResponse extends AbstractValuedQueryResponse implements Unmar
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\Area[]|null
      */
-    public function getValue()
+    public function getValue(): ?array
     {
         return $this->Areas;
     }
@@ -42,7 +42,7 @@ class OperatorAreasResponse extends AbstractValuedQueryResponse implements Unmar
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->Areas = [];
         foreach ($decodedData as $area) {

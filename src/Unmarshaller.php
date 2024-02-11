@@ -37,7 +37,7 @@ trait Unmarshaller
      * @param string $field
      * @param mixed $value
      */
-    protected function unmarshalField(string $field, $value): void
+    protected function unmarshalField(string $field, mixed $value): void
     {
         if (isset(static::FIELDS[$field])) {
             // if the implementing class has some explicitly defined overrides
@@ -78,7 +78,7 @@ trait Unmarshaller
      * @param string $type
      * @return false|float|int|string|null
      */
-    protected static function scalarZeroVal(string $type)
+    protected static function scalarZeroVal(string $type): float|bool|int|string|null
     {
         if (Transcoding::STRING === $type) {
             return '';
@@ -103,7 +103,7 @@ trait Unmarshaller
      * @param bool $nullable
      * @return bool|float|int|string
      */
-    private function buildScalarValue(string $field, $value, string $type, bool $nullable)
+    private function buildScalarValue(string $field, mixed $value, string $type, bool $nullable): float|bool|int|string|null
     {
         // if the incoming value is null...
         if (null === $value) {
@@ -134,12 +134,12 @@ trait Unmarshaller
 
     /**
      * @param string $field
-     * @param array|object $value
+     * @param object|array $value
      * @param string $class
      * @param bool $nullable
      * @return object|null
      */
-    private function buildObjectValue(string $field, $value, string $class, bool $nullable): ?object
+    private function buildObjectValue(string $field, object|array $value, string $class, bool $nullable): ?object
     {
         // if the incoming value is null...
         if (null === $value) {
@@ -170,7 +170,7 @@ trait Unmarshaller
      * @param mixed $value
      * @param bool $nullable
      */
-    private function unmarshalScalar(string $field, $value, bool $nullable): void
+    private function unmarshalScalar(string $field, mixed $value, bool $nullable): void
     {
         $this->{$field} = $this->buildScalarValue(
             $field,
@@ -187,7 +187,7 @@ trait Unmarshaller
      * @param mixed $value
      * @param array $def
      */
-    private function unmarshalComplex(string $field, $value, array $def): void
+    private function unmarshalComplex(string $field, mixed $value, array $def): void
     {
         // check if a callable has been defined
         if (isset($def[Transcoding::FIELD_UNMARSHAL_CALLBACK])) {
@@ -255,7 +255,7 @@ trait Unmarshaller
      * @param mixed $value
      * @param array $def
      */
-    private function unmarshalObject(string $field, $value, array $def): void
+    private function unmarshalObject(string $field, mixed $value, array $def): void
     {
         if (!isset($def[Transcoding::FIELD_CLASS])) {
             throw new \LogicException(
@@ -281,7 +281,7 @@ trait Unmarshaller
      * @param mixed $value
      * @param array $def
      */
-    private function unmarshalArray(string $field, $value, array $def): void
+    private function unmarshalArray(string $field, mixed $value, array $def): void
     {
         // attempt to extract the two possible keys
         $type  = $def[Transcoding::FIELD_ARRAY_TYPE] ?? null;

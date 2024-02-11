@@ -29,7 +29,7 @@ trait HasSettableStringTags
      * @param array $tags
      * @return $this
      */
-    public function setTags(array $tags)
+    public function setTags(array $tags): static
     {
         $this->Tags = $tags;
         return $this;
@@ -39,7 +39,7 @@ trait HasSettableStringTags
      * @param string $tag
      * @return $this
      */
-    public function addTag(string $tag)
+    public function addTag(string $tag): static
     {
         $this->Tags[] = $tag;
         return $this;

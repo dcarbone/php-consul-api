@@ -90,7 +90,7 @@ class QueryOptions extends AbstractModel implements RequestOptions
 
     /**
      * QueryOptions constructor.
-     * @param array $data
+     * @param array|null $data
      */
     public function __construct(?array $data = null)
     {
@@ -198,9 +198,9 @@ class QueryOptions extends AbstractModel implements RequestOptions
     }
 
     /**
-     * @param \DCarbone\Go\Time\Duration|float|int|string|null $maxAge
+     * @param float|int|string|\DCarbone\Go\Time\Duration|null $maxAge
      */
-    public function setMaxAge($maxAge): void
+    public function setMaxAge(float|int|string|Time\Duration|null $maxAge): void
     {
         $this->MaxAge = Time::Duration($maxAge);
     }
@@ -214,9 +214,9 @@ class QueryOptions extends AbstractModel implements RequestOptions
     }
 
     /**
-     * @param \DCarbone\Go\Time\Duration|float|int|string|null $staleIfError
+     * @param float|int|string|\DCarbone\Go\Time\Duration|null $staleIfError
      */
-    public function setStaleIfError($staleIfError): void
+    public function setStaleIfError(float|int|string|Time\Duration|null $staleIfError): void
     {
         $this->StaleIfError = Time::Duration($staleIfError);
     }
@@ -248,7 +248,7 @@ class QueryOptions extends AbstractModel implements RequestOptions
     /**
      * @param mixed $waitTime
      */
-    public function setWaitTime($waitTime): void
+    public function setWaitTime(mixed $waitTime): void
     {
         $this->WaitTime = Time::Duration($waitTime);
     }
@@ -390,9 +390,9 @@ class QueryOptions extends AbstractModel implements RequestOptions
     }
 
     /**
-     * @param \DCarbone\Go\Time\Duration|float|int|string|null $timeout
+     * @param float|int|string|\DCarbone\Go\Time\Duration|null $timeout
      */
-    public function setTimeout($timeout): void
+    public function setTimeout(float|int|string|Time\Duration|null $timeout): void
     {
         $this->Timeout = Time::Duration($timeout);
     }

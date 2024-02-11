@@ -36,7 +36,7 @@ trait Marshaller
      * @param string $field
      * @param mixed $value
      */
-    protected function marshalField(array &$output, string $field, $value): void
+    protected function marshalField(array &$output, string $field, mixed $value): void
     {
         $def = static::FIELDS[$field] ?? null;
 
@@ -53,25 +53,15 @@ trait Marshaller
 
         // if this field is marked as needing to be typecast to a specific type for output
         if (isset($def[Transcoding::FIELD_MARSHAL_AS])) {
-            switch ($def[Transcoding::FIELD_MARSHAL_AS]) {
-                case Transcoding::STRING:
-                    $value = (string)$value;
-                    break;
-                case Transcoding::INTEGER:
-                    $value = (int)$value;
-                    break;
-                case Transcoding::DOUBLE:
-                    $value = (float)$value;
-                    break;
-                case Transcoding::BOOLEAN:
-                    $value = (bool)$value;
-                    break;
-
-                default:
-                    throw new \InvalidArgumentException(
-                        sprintf('Unable to handle serializing to %s', $def[Transcoding::FIELD_MARSHAL_AS])
-                    );
-            }
+            $value = match ($def[Transcoding::FIELD_MARSHAL_AS]) {
+                Transcoding::STRING => (string)$value,
+                Transcoding::INTEGER => (int)$value,
+                Transcoding::DOUBLE => (float)$value,
+                Transcoding::BOOLEAN => (bool)$value,
+                default => throw new \InvalidArgumentException(
+                    sprintf('Unable to handle serializing to %s', $def[Transcoding::FIELD_MARSHAL_AS])
+                ),
+            };
         }
 
         // if this field is NOT explicitly marked as "omitempty", set and move on.

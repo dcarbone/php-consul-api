@@ -339,7 +339,7 @@ class Config
      * @param mixed $waitTime
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setWaitTime($waitTime): self
+    public function setWaitTime(mixed $waitTime): self
     {
         $this->WaitTime = Time::Duration($waitTime);
         return $this;
@@ -411,7 +411,7 @@ class Config
      * @param \DCarbone\PHPConsulAPI\HttpAuth|string $httpAuth
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public function setHttpAuth($httpAuth): self
+    public function setHttpAuth(HttpAuth|string $httpAuth): self
     {
         if (\is_string($httpAuth)) {
             $colon = strpos($httpAuth, ':');

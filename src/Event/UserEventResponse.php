@@ -34,7 +34,7 @@ class UserEventResponse extends AbstractValuedWriteResponse implements Unmarshal
     /**
      * @return \DCarbone\PHPConsulAPI\Event\UserEvent|null
      */
-    public function getValue()
+    public function getValue(): ?UserEvent
     {
         return $this->UserEvent;
     }
@@ -42,7 +42,7 @@ class UserEventResponse extends AbstractValuedWriteResponse implements Unmarshal
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->UserEvent = new UserEvent((array)$decodedData);
     }

@@ -97,7 +97,7 @@ abstract class AbstractClient
      * @param \DCarbone\PHPConsulAPI\RequestOptions|null $opts
      * @return \DCarbone\PHPConsulAPI\Request
      */
-    protected function _newRequest(string $method, string $path, $body, ?RequestOptions $opts): Request
+    protected function _newRequest(string $method, string $path, mixed $body, ?RequestOptions $opts): Request
     {
         $r = new Request($method, $path, $this->_config, $body);
         $r->applyOptions($opts);
@@ -110,7 +110,7 @@ abstract class AbstractClient
      * @param \DCarbone\PHPConsulAPI\RequestOptions|null $opts
      * @return \DCarbone\PHPConsulAPI\Request
      */
-    protected function _newPostRequest(string $path, $body, ?RequestOptions $opts): Request
+    protected function _newPostRequest(string $path, mixed $body, ?RequestOptions $opts): Request
     {
         return $this->_newRequest(HTTP\MethodPost, $path, $body, $opts);
     }
@@ -121,7 +121,7 @@ abstract class AbstractClient
      * @param \DCarbone\PHPConsulAPI\RequestOptions|null $opts
      * @return \DCarbone\PHPConsulAPI\Request
      */
-    protected function _newPutRequest(string $path, $body, ?RequestOptions $opts): Request
+    protected function _newPutRequest(string $path, mixed $body, ?RequestOptions $opts): Request
     {
         return $this->_newRequest(HTTP\MethodPut, $path, $body, $opts);
     }
@@ -279,7 +279,7 @@ abstract class AbstractClient
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @return \DCarbone\PHPConsulAPI\RequestResponse
      */
-    protected function _doPost(string $path, $body, ?RequestOptions $opts): RequestResponse
+    protected function _doPost(string $path, mixed $body, ?RequestOptions $opts): RequestResponse
     {
         return $this->_do($this->_newPostRequest($path, $body, $opts));
     }
@@ -291,7 +291,7 @@ abstract class AbstractClient
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @return \DCarbone\PHPConsulAPI\RequestResponse
      */
-    protected function _doPut(string $path, $body, ?RequestOptions $opts): RequestResponse
+    protected function _doPut(string $path, mixed $body, ?RequestOptions $opts): RequestResponse
     {
         return $this->_do($this->_newPutRequest($path, $body, $opts));
     }
@@ -340,7 +340,7 @@ abstract class AbstractClient
      * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\WriteResponse
      */
-    protected function _executePut(string $path, $body, ?WriteOptions $opts): WriteResponse
+    protected function _executePut(string $path, mixed $body, ?WriteOptions $opts): WriteResponse
     {
         $resp = $this->_requireOK($this->_doPut($path, $body, $opts));
         $ret  = new WriteResponse();
@@ -356,7 +356,7 @@ abstract class AbstractClient
      * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\WriteResponse
      */
-    protected function _executePost(string $path, $body, ?WriteOptions $opts): WriteResponse
+    protected function _executePost(string $path, mixed $body, ?WriteOptions $opts): WriteResponse
     {
         $resp = $this->_requireOK($this->_doPost($path, $body, $opts));
         $ret  = new WriteResponse();
@@ -387,7 +387,7 @@ abstract class AbstractClient
      * @throws \Exception
      * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
      */
-    protected function _executePutValuedStr(string $path, $body, ?WriteOptions $opts): ValuedWriteStringResponse
+    protected function _executePutValuedStr(string $path, mixed $body, ?WriteOptions $opts): ValuedWriteStringResponse
     {
         $r    = $this->_newPutRequest($path, $body, $opts);
         $resp = $this->_requireOK($this->_do($r));

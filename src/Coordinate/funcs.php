@@ -37,7 +37,7 @@ function unitVectorAt(array $vec1, array $vec2): array
     $ret = diff($vec1, $vec2);
 
     if (($mag = magnitude($ret)) && $mag > ZeroThreshold) {
-        return [mul($ret, 1.0 / $mag), (float) $mag];
+        return [mul($ret, 1.0 / $mag), $mag];
     }
 
     foreach ($ret as $k => &$v) {

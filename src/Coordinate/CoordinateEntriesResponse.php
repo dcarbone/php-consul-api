@@ -34,7 +34,7 @@ class CoordinateEntriesResponse extends AbstractValuedQueryResponse implements U
     /**
      * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry[]|null
      */
-    public function getValue()
+    public function getValue(): ?array
     {
         return $this->Nodes;
     }
@@ -42,7 +42,7 @@ class CoordinateEntriesResponse extends AbstractValuedQueryResponse implements U
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->Nodes = [];
         foreach ($decodedData as $node) {

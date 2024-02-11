@@ -106,7 +106,7 @@ trait ConfigEntryTrait
      * @param mixed $Meta
      * @return ProxyConfigEntry
      */
-    public function setMeta($Meta): ProxyConfigEntry
+    public function setMeta(mixed $Meta): ProxyConfigEntry
     {
         $this->Meta = FakeMap::parse($Meta);
         return $this;

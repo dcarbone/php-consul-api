@@ -42,7 +42,7 @@ class ACLTokenWriteResponse extends AbstractValuedWriteResponse implements Unmar
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->ACLToken = new ACLToken((array)$decodedData);
     }

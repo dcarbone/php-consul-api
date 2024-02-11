@@ -34,7 +34,7 @@ class HealthChecksResponse extends AbstractValuedQueryResponse implements Unmars
     /**
      * @return \DCarbone\PHPConsulAPI\Health\HealthChecks|null
      */
-    public function getValue()
+    public function getValue(): ?HealthChecks
     {
         return $this->HealthChecks;
     }
@@ -42,7 +42,7 @@ class HealthChecksResponse extends AbstractValuedQueryResponse implements Unmars
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->HealthChecks = new HealthChecks((array)$decodedData);
     }

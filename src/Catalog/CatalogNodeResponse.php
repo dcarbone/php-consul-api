@@ -34,7 +34,7 @@ class CatalogNodeResponse extends AbstractValuedQueryResponse implements Unmarsh
     /**
      * @return \DCarbone\PHPConsulAPI\Catalog\CatalogNode|null
      */
-    public function getValue()
+    public function getValue(): ?CatalogNode
     {
         return $this->Node;
     }
@@ -42,7 +42,7 @@ class CatalogNodeResponse extends AbstractValuedQueryResponse implements Unmarsh
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->Node = new CatalogNode((array)$decodedData);
     }

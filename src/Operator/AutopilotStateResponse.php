@@ -34,7 +34,7 @@ class AutopilotStateResponse extends AbstractValuedResponse implements Unmarshal
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\AutopilotState|null
      */
-    public function getValue()
+    public function getValue(): ?AutopilotState
     {
         return $this->AutopilotState;
     }
@@ -42,7 +42,7 @@ class AutopilotStateResponse extends AbstractValuedResponse implements Unmarshal
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->AutopilotState = new AutopilotState($decodedData);
     }

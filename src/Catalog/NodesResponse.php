@@ -34,7 +34,7 @@ class NodesResponse extends AbstractValuedQueryResponse implements UnmarshalledR
     /**
      * @return \DCarbone\PHPConsulAPI\Catalog\Node[]|mixed|null
      */
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->Nodes;
     }
@@ -42,7 +42,7 @@ class NodesResponse extends AbstractValuedQueryResponse implements UnmarshalledR
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->Nodes = [];
         foreach ($decodedData as $node) {

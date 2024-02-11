@@ -149,8 +149,9 @@ class OperatorClient extends AbstractClient
     /**
      * @param \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration $conf
      * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
      * @return \DCarbone\PHPConsulAPI\Error|null
+     * @throws \Exception
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function AutopilotSetConfiguration(AutopilotConfiguration $conf, ?WriteOptions $opts = null): ?Error
     {
@@ -227,7 +228,7 @@ class OperatorClient extends AbstractClient
     {
         $r = $this->_newDeleteRequest('v1/operator/raft/peer', $opts);
         $r->applyOptions($opts);
-        $r->params->set('address', (string)$address);
+        $r->params->set('address', $address);
         return $this->_requireOK($this->_do($r))->Err;
     }
 

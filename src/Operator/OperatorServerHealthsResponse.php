@@ -34,7 +34,7 @@ class OperatorServerHealthsResponse extends AbstractValuedResponse implements Un
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\ServerHealth[]|null
      */
-    public function getValue()
+    public function getValue(): ?array
     {
         return $this->ServerHealths;
     }
@@ -42,7 +42,7 @@ class OperatorServerHealthsResponse extends AbstractValuedResponse implements Un
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->ServerHealths = [];
         foreach ($decodedData as $datum) {

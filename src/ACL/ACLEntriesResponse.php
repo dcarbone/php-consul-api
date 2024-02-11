@@ -42,7 +42,7 @@ class ACLEntriesResponse extends AbstractValuedQueryResponse implements Unmarsha
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         foreach ($decodedData as $entry) {
             $this->ACLEntries[] = new ACLEntry($entry);

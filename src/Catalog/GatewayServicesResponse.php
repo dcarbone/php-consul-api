@@ -34,7 +34,7 @@ class GatewayServicesResponse extends AbstractValuedQueryResponse implements Unm
     /**
      * @return \DCarbone\PHPConsulAPI\Catalog\GatewayService[]|mixed|null
      */
-    public function getValue()
+    public function getValue(): mixed
     {
         return $this->GatewayServices;
     }
@@ -42,7 +42,7 @@ class GatewayServicesResponse extends AbstractValuedQueryResponse implements Unm
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->GatewayServices = [];
         foreach ($decodedData as $service) {

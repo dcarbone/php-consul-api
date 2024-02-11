@@ -23,7 +23,7 @@ namespace DCarbone\PHPConsulAPI;
 /**
  * Class FakeMap
  */
-class FakeMap implements \ArrayAccess, \Countable, \Iterator, \JsonSerializable
+class FakeMap extends \ArrayIterator implements \ArrayAccess, \Countable, \Iterator, \JsonSerializable
 {
     /** @var array */
     private array $_map = [];
@@ -41,16 +41,19 @@ class FakeMap implements \ArrayAccess, \Countable, \Iterator, \JsonSerializable
     }
 
     /**
-     * @param mixed $input
+     * @param array|\DCarbone\PHPConsulAPI\FakeMap|\stdClass|null $input
      * @return \DCarbone\PHPConsulAPI\FakeMap|null
      */
-    public static function parse($input): ?self
+    public static function parse(array|FakeMap|\stdClass|null $input): ?self
     {
         if (null === $input) {
             return null;
         }
-        if (\is_object($input) && $input instanceof self) {
-            return $input;
+        if (\is_object($input)) {
+            if ($input instanceof self) {
+                return $input;
+            }
+            return new self((array)$input);
         }
         if (\is_array($input)) {
             return new self($input);
@@ -60,11 +63,10 @@ class FakeMap implements \ArrayAccess, \Countable, \Iterator, \JsonSerializable
         );
     }
 
-    #[\ReturnTypeWillChange]
     /**
      * @return mixed
      */
-    public function current()
+    public function current(): mixed
     {
         return current($this->_map);
     }
@@ -74,11 +76,10 @@ class FakeMap implements \ArrayAccess, \Countable, \Iterator, \JsonSerializable
         next($this->_map);
     }
 
-    #[\ReturnTypeWillChange]
     /**
-     * @return bool|float|int|string|null
+     * @return int|string|null
      */
-    public function key()
+    public function key(): int|string|null
     {
         return key($this->_map);
     }
@@ -100,17 +101,16 @@ class FakeMap implements \ArrayAccess, \Countable, \Iterator, \JsonSerializable
      * @param mixed $offset
      * @return bool
      */
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
         return isset($this->_map[$offset]) || \array_key_exists($offset, $this->_map);
     }
 
-    #[\ReturnTypeWillChange]
     /**
      * @param mixed $offset
      * @return mixed
      */
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->_map[$offset] ?? null;
     }
@@ -119,7 +119,7 @@ class FakeMap implements \ArrayAccess, \Countable, \Iterator, \JsonSerializable
      * @param mixed $offset
      * @param mixed $value
      */
-    public function offsetSet($offset, $value): void
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->_map[$offset] = $value;
     }
@@ -127,7 +127,7 @@ class FakeMap implements \ArrayAccess, \Countable, \Iterator, \JsonSerializable
     /**
      * @param mixed $offset
      */
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
         unset($this->_map[$offset]);
     }
@@ -145,6 +145,6 @@ class FakeMap implements \ArrayAccess, \Countable, \Iterator, \JsonSerializable
      */
     public function jsonSerialize(): object
     {
-        return (object)$this->_map;
+        return (object)$this->getArrayCopy();
     }
 }

@@ -42,7 +42,7 @@ class ACLTokenListEntryQueryResponse extends AbstractValuedQueryResponse impleme
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->ACLTokenListEntries = [];
         foreach ($decodedData as $datum) {

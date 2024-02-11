@@ -34,7 +34,7 @@ class OperatorRaftConfigurationResponse extends AbstractValuedResponse implement
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\RaftConfiguration|null
      */
-    public function getValue()
+    public function getValue(): ?RaftConfiguration
     {
         return $this->RaftConfiguration;
     }
@@ -42,7 +42,7 @@ class OperatorRaftConfigurationResponse extends AbstractValuedResponse implement
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->RaftConfiguration = new RaftConfiguration($decodedData);
     }

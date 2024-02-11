@@ -60,7 +60,7 @@ abstract class FakeSlice implements \Iterator, \ArrayAccess, \Countable, \JsonSe
     /**
      * @param array|\DCarbone\PHPConsulAPI\AbstractModel|null $value
      */
-    public function append($value): void
+    public function append(array|AbstractModel|null $value): void
     {
         // validate provided value is either null or instance of allowed child class
         $value = $this->_validateValue($value);
@@ -75,8 +75,7 @@ abstract class FakeSlice implements \Iterator, \ArrayAccess, \Countable, \JsonSe
     /**
      * @return \DCarbone\PHPConsulAPI\AbstractModel|false
      */
-    #[\ReturnTypeWillChange]
-    public function current()
+    public function current(): bool|AbstractModel
     {
         return current($this->_list);
     }
@@ -111,7 +110,7 @@ abstract class FakeSlice implements \Iterator, \ArrayAccess, \Countable, \JsonSe
      * @param mixed $offset
      * @return bool
      */
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
         return \is_int($offset) && isset($this->_list[$offset]);
     }
@@ -120,13 +119,9 @@ abstract class FakeSlice implements \Iterator, \ArrayAccess, \Countable, \JsonSe
      * @param mixed $offset
      * @return \DCarbone\PHPConsulAPI\AbstractModel|null
      */
-    public function offsetGet($offset): ?AbstractModel
+    public function offsetGet(mixed $offset): ?AbstractModel
     {
         $this->_validateOffset($offset);
-        if (isset($this->_list[$offset])) {
-            return $this->_list[$offset];
-        }
-
         return $this->_list[$offset];
     }
 
@@ -134,7 +129,7 @@ abstract class FakeSlice implements \Iterator, \ArrayAccess, \Countable, \JsonSe
      * @param mixed $offset
      * @param mixed $value
      */
-    public function offsetSet($offset, $value): void
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         // if incoming offset is null, assume [] (append) operation.
         if (null === $offset) {
@@ -152,7 +147,7 @@ abstract class FakeSlice implements \Iterator, \ArrayAccess, \Countable, \JsonSe
     /**
      * @param mixed $offset
      */
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
         // validate provided offset value
         $this->_validateOffset($offset);
@@ -198,7 +193,7 @@ abstract class FakeSlice implements \Iterator, \ArrayAccess, \Countable, \JsonSe
     /**
      * @param mixed $offset
      */
-    private function _validateOffset($offset): void
+    private function _validateOffset(mixed $offset): void
     {
         if (!\is_int($offset)) {
             throw new \InvalidArgumentException(
@@ -218,7 +213,7 @@ abstract class FakeSlice implements \Iterator, \ArrayAccess, \Countable, \JsonSe
      * @param mixed $value
      * @return \DCarbone\PHPConsulAPI\AbstractModel|null
      */
-    private function _validateValue($value): ?AbstractModel
+    private function _validateValue(mixed $value): ?AbstractModel
     {
         // fast path for null values
         if (null === $value) {

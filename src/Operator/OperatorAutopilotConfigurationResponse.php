@@ -34,7 +34,7 @@ class OperatorAutopilotConfigurationResponse extends AbstractValuedResponse impl
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration|null
      */
-    public function getValue()
+    public function getValue(): ?AutopilotConfiguration
     {
         return $this->AutopilotConfiguration;
     }
@@ -42,7 +42,7 @@ class OperatorAutopilotConfigurationResponse extends AbstractValuedResponse impl
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->AutopilotConfiguration = new AutopilotConfiguration((array)$decodedData);
     }

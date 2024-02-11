@@ -36,12 +36,20 @@ class EnvoyExtension extends AbstractModel
     public string $Name = '';
     /** @var bool */
     public bool $Required = false;
-    /** @var \DCarbone\PHPConsulAPI\FakeMap|null */
-    public ?FakeMap $Arguments = null;
+    /** @var \DCarbone\PHPConsulAPI\FakeMap */
+    public FakeMap $Arguments;
     /** @var string */
     public string $ConsulVersion = '';
     /** @var string */
     public string $EnvoyVersion = '';
+
+    public function __construct(?array $data = [])
+    {
+        parent::__construct($data);
+        if (!isset($this->Arguments)) {
+            $this->Arguments = new FakeMap(null);
+        }
+    }
 
     /**
      * @return string
@@ -55,7 +63,7 @@ class EnvoyExtension extends AbstractModel
      * @param string $Name
      * @return EnvoyExtension
      */
-    public function setName(string $Name): EnvoyExtension
+    public function setName(string $Name): self
     {
         $this->Name = $Name;
         return $this;
@@ -73,7 +81,7 @@ class EnvoyExtension extends AbstractModel
      * @param bool $Required
      * @return EnvoyExtension
      */
-    public function setRequired(bool $Required): EnvoyExtension
+    public function setRequired(bool $Required): self
     {
         $this->Required = $Required;
         return $this;
@@ -88,12 +96,12 @@ class EnvoyExtension extends AbstractModel
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\FakeMap|null $Arguments
+     * @param array|\DCarbone\PHPConsulAPI\FakeMap|\stdClass|null $Arguments
      * @return EnvoyExtension
      */
-    public function setArguments(?FakeMap $Arguments): EnvoyExtension
+    public function setArguments(array|FakeMap|\stdClass|null $Arguments): self
     {
-        $this->Arguments = $Arguments;
+        $this->Arguments = FakeMap::parse($Arguments);
         return $this;
     }
 
@@ -109,7 +117,7 @@ class EnvoyExtension extends AbstractModel
      * @param string $ConsulVersion
      * @return EnvoyExtension
      */
-    public function setConsulVersion(string $ConsulVersion): EnvoyExtension
+    public function setConsulVersion(string $ConsulVersion): self
     {
         $this->ConsulVersion = $ConsulVersion;
         return $this;
@@ -127,7 +135,7 @@ class EnvoyExtension extends AbstractModel
      * @param string $EnvoyVersion
      * @return EnvoyExtension
      */
-    public function setEnvoyVersion(string $EnvoyVersion): EnvoyExtension
+    public function setEnvoyVersion(string $EnvoyVersion): self
     {
         $this->EnvoyVersion = $EnvoyVersion;
         return $this;

@@ -34,7 +34,7 @@ class AgentServiceResponse extends AbstractValuedResponse implements Unmarshalle
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentService|null
      */
-    public function getValue()
+    public function getValue(): ?AgentService
     {
         return $this->Service;
     }
@@ -42,7 +42,7 @@ class AgentServiceResponse extends AbstractValuedResponse implements Unmarshalle
     /**
      * @param mixed $decodedData
      */
-    public function unmarshalValue($decodedData): void
+    public function unmarshalValue(mixed $decodedData): void
     {
         $this->Service = new AgentService((array)$decodedData);
     }
