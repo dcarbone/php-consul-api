@@ -33,7 +33,7 @@ jobs:
 
     name: Tests - PHP ${{ matrix.php-version }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v4
 
       - uses: shivammathur/setup-php@v2
         with:
