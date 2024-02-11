@@ -27,7 +27,7 @@ Require Entry:
 ```json
 {
     "require": {
-        "dcarbone/php-consul-api": "^v1.0"
+        "dcarbone/php-consul-api": "^v2.0"
     }
 }
 ```
@@ -35,8 +35,8 @@ Require Entry:
 ## Configuration
 
 First, construct a [Config](./src/Config.php). This class is modeled quite closely after the
-[Config Struct](https://github.com/hashicorp/consul/blob/v1.9.3/api/api.go#L280) present in the
-[Consul API Subpackage](https://github.com/hashicorp/consul/blob/v1.9.3/api).
+[Config Struct](https://github.com/hashicorp/consul/blob/7736539db5305d267b2fd4faa6e86590ca20e556/api/api.go#L339) present in the
+[Consul API Subpackage](https://github.com/hashicorp/consul/tree/v1.17.2/api).
 
 ### Default Configuration
 
@@ -73,7 +73,7 @@ $config = new \DCarbone\PHPConsulAPI\Config([
 #### Configuration Note:
 
 By default, this client will attempt to locate a series of environment variables to describe much of the above
-configuration properties.  See [here](./src/Config.php#L559) for that list, and see [here](./src/Consul.php#L40) for
+configuration properties.  See [here](./src/Config.php) for that list, and see [here](./src/Consul.php) for
 a list of the env var names.
 
 For more advanced client configuration, such as proxy configuration, you must construct your own GuzzleHttp client
@@ -100,15 +100,16 @@ Next, construct a [Consul](./src/Consul.php) object:
 $consul = new \DCarbone\PHPConsulAPI\Consul($config);
 ```
 
-*NOTE*: If you do not create your own config object, [Consul](./src/Consul.php#L171) will create it's own
-using [Config::newDefaultConfig()](./src/Config.php#L253) and attempt to locate a suitable HTTP Client.
+*NOTE*: If you do not create your own config object, [Consul](./src/Consul.php) will create it's own
+using [Config::newDefaultConfig()](./src/Config.php) and attempt to locate a suitable HTTP Client.
 
 Once constructed, you interact with each Consul API via it's corresponding Client class:
 
 ```php
 $kvResp = $consul->KV->Keys();
-if (null !== $kvResp->Err)
+if (null !== $kvResp->Err) {
     die($kvResp->Err);
+}
 
 var_dump($kvResp->Value);
 ```
