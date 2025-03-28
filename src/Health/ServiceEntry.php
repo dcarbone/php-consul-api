@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Health;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -25,9 +25,6 @@ use DCarbone\PHPConsulAPI\Agent\AgentService;
 use DCarbone\PHPConsulAPI\Catalog\Node;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-/**
- * Class ServiceEntry
- */
 class ServiceEntry extends AbstractModel
 {
     protected const FIELDS = [
@@ -51,17 +48,10 @@ class ServiceEntry extends AbstractModel
     private const FIELD_SERVICE = 'Service';
     private const FIELD_CHECKS  = 'Checks';
 
-    /** @var \DCarbone\PHPConsulAPI\Catalog\Node|null */
     public ?Node $Node = null;
-    /** @var \DCarbone\PHPConsulAPI\Agent\AgentService|null */
     public ?AgentService $Service = null;
-    /** @var \DCarbone\PHPConsulAPI\Health\HealthChecks */
     public HealthChecks $Checks;
 
-    /**
-     * ServiceEntry constructor.
-     * @param array|null $data
-     */
     public function __construct(?array $data = [])
     {
         parent::__construct($data);
@@ -70,54 +60,33 @@ class ServiceEntry extends AbstractModel
         }
     }
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\Catalog\Node|null
-     */
     public function getNode(): ?Node
     {
         return $this->Node;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\Catalog\Node|null $Node
-     * @return \DCarbone\PHPConsulAPI\Health\ServiceEntry
-     */
     public function setNode(?Node $Node): self
     {
         $this->Node = $Node;
         return $this;
     }
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentService|null
-     */
     public function getService(): ?AgentService
     {
         return $this->Service;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\Agent\AgentService|null $Service
-     * @return \DCarbone\PHPConsulAPI\Health\ServiceEntry
-     */
     public function setService(?AgentService $Service): self
     {
         $this->Service = $Service;
         return $this;
     }
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\Health\HealthChecks
-     */
     public function getChecks(): HealthChecks
     {
         return $this->Checks;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\Health\HealthChecks $Checks
-     * @return \DCarbone\PHPConsulAPI\Health\ServiceEntry
-     */
     public function setChecks(HealthChecks $Checks): self
     {
         $this->Checks = $Checks;

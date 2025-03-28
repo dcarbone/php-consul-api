@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Operator;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,9 +23,6 @@ namespace DCarbone\PHPConsulAPI\Operator;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-/**
- * Class RaftConfiguration
- */
 class RaftConfiguration extends AbstractModel
 {
     protected const FIELDS = [
@@ -38,41 +35,25 @@ class RaftConfiguration extends AbstractModel
 
     private const FIELD_SERVERS = 'Servers';
 
-    /** @var \DCarbone\PHPConsulAPI\Operator\RaftServer[] */
     public array $Servers = [];
-    /** @var int */
     public int $Index = 0;
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\Operator\RaftServer[]
-     */
     public function getServers(): array
     {
         return $this->Servers;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\Operator\RaftServer[] $Servers
-     * @return \DCarbone\PHPConsulAPI\Operator\RaftConfiguration
-     */
     public function setServers(array $Servers): self
     {
         $this->Servers = $Servers;
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getIndex(): int
     {
         return $this->Index;
     }
 
-    /**
-     * @param int $Index
-     * @return \DCarbone\PHPConsulAPI\Operator\RaftConfiguration
-     */
     public function setIndex(int $Index): self
     {
         $this->Index = $Index;

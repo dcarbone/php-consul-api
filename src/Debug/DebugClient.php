@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Debug;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -25,16 +25,8 @@ use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\ValuedStringResponse;
 
-/**
- * Class DebugClient
- */
 class DebugClient extends AbstractClient
 {
-    /**
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\ValuedStringResponse
-     */
     public function Heap(): ValuedStringResponse
     {
         $ret  = new ValuedStringResponse();
@@ -50,12 +42,6 @@ class DebugClient extends AbstractClient
         return $ret;
     }
 
-    /**
-     * @param int $seconds
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\ValuedStringResponse
-     */
     public function Profile(int $seconds): ValuedStringResponse
     {
         $ret = new ValuedStringResponse();
@@ -74,12 +60,6 @@ class DebugClient extends AbstractClient
         return $ret;
     }
 
-    /**
-     * @param int $seconds
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\ValuedStringResponse
-     */
     public function Trace(int $seconds): ValuedStringResponse
     {
         $ret = new ValuedStringResponse();
@@ -98,11 +78,6 @@ class DebugClient extends AbstractClient
         return $ret;
     }
 
-    /**
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\ValuedStringResponse
-     */
     public function Goroutine(): ValuedStringResponse
     {
         $ret  = new ValuedStringResponse();

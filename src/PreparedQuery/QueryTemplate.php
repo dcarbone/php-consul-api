@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\PreparedQuery;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -22,46 +22,27 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
-/**
- * Class QueryTemplate
- */
 class QueryTemplate extends AbstractModel
 {
-    /** @var string */
     public string $Type = '';
-    /** @var string */
     public string $Regexp = '';
 
-    /**
-     * @return string
-     */
     public function getType(): string
     {
         return $this->Type;
     }
 
-    /**
-     * @param string $Type
-     * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryTemplate
-     */
     public function setType(string $Type): self
     {
         $this->Type = $Type;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getRegexp(): string
     {
         return $this->Regexp;
     }
 
-    /**
-     * @param string $Regexp
-     * @return \DCarbone\PHPConsulAPI\PreparedQuery\QueryTemplate
-     */
     public function setRegexp(string $Regexp): self
     {
         $this->Regexp = $Regexp;

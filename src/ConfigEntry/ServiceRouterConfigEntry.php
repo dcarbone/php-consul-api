@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,9 +23,6 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-/**
- * Class ServiceRouterConfigEntry
- */
 class ServiceRouterConfigEntry extends AbstractModel implements ConfigEntry
 {
     use ConfigEntryTrait;
@@ -41,21 +38,13 @@ class ServiceRouterConfigEntry extends AbstractModel implements ConfigEntry
 
     private const FIELD_ROUTES = 'Routes';
 
-    /** @var \DCarbone\PHPConsulAPI\ConfigEntry\ServiceRoute[] */
     public array $Routes = [];
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\ConfigEntry\ServiceRoute[]
-     */
     public function getRoutes(): array
     {
         return $this->Routes;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\ConfigEntry\ServiceRoute[] $Routes
-     * @return ServiceRouterConfigEntry
-     */
     public function setRoutes(array $Routes): self
     {
         $this->Routes = $Routes;

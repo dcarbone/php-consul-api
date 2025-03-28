@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Catalog;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,25 +23,15 @@ namespace DCarbone\PHPConsulAPI\Catalog;
 use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
 use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
-/**
- * Class CatalogNodeResponse
- */
 class CatalogNodeResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\Catalog\CatalogNode|null */
     public ?CatalogNode $Node = null;
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogNode|null
-     */
     public function getValue(): ?CatalogNode
     {
         return $this->Node;
     }
 
-    /**
-     * @param mixed $decodedData
-     */
     public function unmarshalValue(mixed $decodedData): void
     {
         $this->Node = new CatalogNode((array)$decodedData);

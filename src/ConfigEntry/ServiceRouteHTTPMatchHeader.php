@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,9 +23,6 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-/**
- * Class ServiceRouteHTTPMatchHeader
- */
 class ServiceRouteHTTPMatchHeader extends AbstractModel
 {
     protected const FIELDS = [
@@ -44,141 +41,85 @@ class ServiceRouteHTTPMatchHeader extends AbstractModel
     private const FIELD_REGEX   = 'Regex';
     private const FIELD_INVERT  = 'Invert';
 
-    /** @var string */
     public string $Name = '';
-    /** @var bool */
     public bool $Present = false;
-    /** @var string */
     public string $Exact = '';
-    /** @var string */
     public string $Prefix = '';
-    /** @var string */
     public string $Suffix = '';
-    /** @var string */
     public string $Regex = '';
-    /** @var bool|string */
     public bool $Invert = false;
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->Name;
     }
 
-    /**
-     * @param string $Name
-     * @return ServiceRouteHTTPMatchHeader
-     */
     public function setName(string $Name): self
     {
         $this->Name = $Name;
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isPresent(): bool
     {
         return $this->Present;
     }
 
-    /**
-     * @param bool $Present
-     * @return ServiceRouteHTTPMatchHeader
-     */
     public function setPresent(bool $Present): self
     {
         $this->Present = $Present;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getExact(): string
     {
         return $this->Exact;
     }
 
-    /**
-     * @param string $Exact
-     * @return ServiceRouteHTTPMatchHeader
-     */
     public function setExact(string $Exact): self
     {
         $this->Exact = $Exact;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getPrefix(): string
     {
         return $this->Prefix;
     }
 
-    /**
-     * @param string $Prefix
-     * @return ServiceRouteHTTPMatchHeader
-     */
     public function setPrefix(string $Prefix): self
     {
         $this->Prefix = $Prefix;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getSuffix(): string
     {
         return $this->Suffix;
     }
 
-    /**
-     * @param string $Suffix
-     * @return ServiceRouteHTTPMatchHeader
-     */
     public function setSuffix(string $Suffix): self
     {
         $this->Suffix = $Suffix;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getRegex(): string
     {
         return $this->Regex;
     }
 
-    /**
-     * @param string $Regex
-     * @return ServiceRouteHTTPMatchHeader
-     */
     public function setRegex(string $Regex): self
     {
         $this->Regex = $Regex;
         return $this;
     }
 
-    /**
-     * @return bool|string
-     */
     public function getInvert(): bool|string
     {
         return $this->Invert;
     }
 
-    /**
-     * @param bool|string $Invert
-     * @return ServiceRouteHTTPMatchHeader
-     */
     public function setInvert(bool|string $Invert): static
     {
         $this->Invert = $Invert;

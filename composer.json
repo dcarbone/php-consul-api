@@ -16,9 +16,9 @@
     "php-consul-api"
   ],
   "require": {
-    "php": "8.*",
+    "php": "^8.1",
     "ext-json": "*",
-    "dcarbone/gotime": "v0.5.*",
+    "dcarbone/gotime": "^v0.6",
     "dcarbone/gohttp": "v0.3.*",
     "guzzlehttp/guzzle": "^7.4",
     "guzzlehttp/psr7": "^2.4"
@@ -33,7 +33,7 @@
     }
   },
   "require-dev": {
-    "phpunit/phpunit": "@stable"
+    "phpunit/phpunit": "^10.5 || ^11.0"
   },
   "autoload-dev": {
     "files": [
@@ -46,6 +46,6 @@
     }
   },
   "scripts": {
-    "php-cs-fixer": "vendor/bin/php-cs-fixer fix --config tools/php-cs-fixer/php-consul-api-rules.php_cs src/"
+    "php-cs-fixer": "tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --config tools/php-cs-fixer/php-consul-api-rules.php_cs src/"
   }
 }

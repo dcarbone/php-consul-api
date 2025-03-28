@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\KV;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,9 +23,6 @@ namespace DCarbone\PHPConsulAPI\KV;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-/**
- * Class TxnOp
- */
 class TxnOp extends AbstractModel
 {
     protected const FIELDS = [
@@ -56,81 +53,49 @@ class TxnOp extends AbstractModel
     private const FIELD_SERVICE = 'Service';
     private const FIELD_CHECK   = 'Check';
 
-    /** @var \DCarbone\PHPConsulAPI\KV\KVTxnOp|null */
     public ?KVTxnOp $KV = null;
-    /** @var \DCarbone\PHPConsulAPI\KV\NodeTxnOp|null */
     public ?NodeTxnOp $Node = null;
-    /** @var \DCarbone\PHPConsulAPI\KV\ServiceTxnOp|null */
     public ?ServiceTxnOp $Service = null;
-    /** @var \DCarbone\PHPConsulAPI\KV\CheckTxnOp|null */
     public ?CheckTxnOp $Check = null;
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\KV\KVTxnOp|null
-     */
     public function getKV(): ?KVTxnOp
     {
         return $this->KV;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\KV\KVTxnOp|null $KV
-     * @return \DCarbone\PHPConsulAPI\KV\TxnOp
-     */
     public function setKV(?KVTxnOp $KV): self
     {
         $this->KV = $KV;
         return $this;
     }
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\KV\NodeTxnOp|null
-     */
     public function getNode(): ?NodeTxnOp
     {
         return $this->Node;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\KV\NodeTxnOp|null $Node
-     * @return \DCarbone\PHPConsulAPI\KV\TxnOp
-     */
     public function setNode(?NodeTxnOp $Node): self
     {
         $this->Node = $Node;
         return $this;
     }
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\KV\ServiceTxnOp|null
-     */
     public function getService(): ?ServiceTxnOp
     {
         return $this->Service;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\KV\ServiceTxnOp|null $Service
-     * @return \DCarbone\PHPConsulAPI\KV\TxnOp
-     */
     public function setService(?ServiceTxnOp $Service): self
     {
         $this->Service = $Service;
         return $this;
     }
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\KV\CheckTxnOp|null
-     */
     public function getCheck(): ?CheckTxnOp
     {
         return $this->Check;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\KV\CheckTxnOp|null $Check
-     * @return \DCarbone\PHPConsulAPI\KV\TxnOp
-     */
     public function setCheck(?CheckTxnOp $Check): self
     {
         $this->Check = $Check;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,9 +23,6 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-/**
- * Class ServiceResolverSubset
- */
 class ServiceResolverSubset extends AbstractModel
 {
     protected const FIELDS = [
@@ -36,41 +33,25 @@ class ServiceResolverSubset extends AbstractModel
     private const FIELD_FILTER       = 'Filter';
     private const FIELD_ONLY_PASSING = 'OnlyPassing';
 
-    /** @var string */
     public string $Filter = '';
-    /** @var bool */
     public bool $OnlyPassing = false;
 
-    /**
-     * @return string
-     */
     public function getFilter(): string
     {
         return $this->Filter;
     }
 
-    /**
-     * @param string $Filter
-     * @return ServiceResolverSubset
-     */
     public function setFilter(string $Filter): self
     {
         $this->Filter = $Filter;
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isOnlyPassing(): bool
     {
         return $this->OnlyPassing;
     }
 
-    /**
-     * @param bool $OnlyPassing
-     * @return ServiceResolverSubset
-     */
     public function setOnlyPassing(bool $OnlyPassing): self
     {
         $this->OnlyPassing = $OnlyPassing;

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,25 +23,15 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
 use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
 use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
-/**
- * Class PreparedQueryDefinitionsResponse
- */
 class PreparedQueryDefinitionsResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition[]|null */
     public ?array $PreparedQueryDefinitions = null;
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition[]|null
-     */
     public function getValue(): ?array
     {
         return $this->PreparedQueryDefinitions;
     }
 
-    /**
-     * @param mixed $decodedData
-     */
     public function unmarshalValue(mixed $decodedData): void
     {
         $this->PreparedQueryDefinitions = [];

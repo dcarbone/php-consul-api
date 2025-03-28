@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Operator;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,25 +23,15 @@ namespace DCarbone\PHPConsulAPI\Operator;
 use DCarbone\PHPConsulAPI\AbstractValuedResponse;
 use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
-/**
- * Class OperatorAutopilotConfigurationResponse
- */
 class OperatorAutopilotConfigurationResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration|null */
     public ?AutopilotConfiguration $AutopilotConfiguration = null;
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration|null
-     */
     public function getValue(): ?AutopilotConfiguration
     {
         return $this->AutopilotConfiguration;
     }
 
-    /**
-     * @param mixed $decodedData
-     */
     public function unmarshalValue(mixed $decodedData): void
     {
         $this->AutopilotConfiguration = new AutopilotConfiguration((array)$decodedData);

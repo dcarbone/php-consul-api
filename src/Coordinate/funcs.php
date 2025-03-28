@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Coordinate;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -81,11 +81,6 @@ function diff(array $vec1, array $vec2): array
     return $ret;
 }
 
-/**
- * @param array $vec
- * @param float $factor
- * @return array
- */
 function mul(array $vec, float $factor): array
 {
     $ret = [];
@@ -95,10 +90,6 @@ function mul(array $vec, float $factor): array
     return $ret;
 }
 
-/**
- * @param array $vec
- * @return float
- */
 function magnitude(array $vec): float
 {
     $sum = 0.0;

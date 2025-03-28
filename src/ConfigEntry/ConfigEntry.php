@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -39,33 +39,15 @@ interface ConfigEntry
     public const FIELD_NAMESPACE = 'Namespace';
     public const FIELD_META      = 'Meta';
 
-    /**
-     * @return string
-     */
     public function GetKind(): string;
 
-    /**
-     * @return string
-     */
     public function GetName(): string;
 
-    /**
-     * @return string
-     */
     public function GetNamespace(): string;
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\FakeMap|null
-     */
     public function GetMeta(): ?FakeMap;
 
-    /**
-     * @return int
-     */
     public function GetCreateIndex(): int;
 
-    /**
-     * @return int
-     */
     public function GetModifyIndex(): int;
 }

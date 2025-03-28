@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -22,27 +22,16 @@ namespace DCarbone\PHPConsulAPI\Agent;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
-/**
- * Class AgentWeights
- */
 class AgentWeights extends AbstractModel
 {
-    /** @var int */
     public int $Passing = 0;
-    /** @var int */
     public int $Warning = 0;
 
-    /**
-     * @return int
-     */
     public function getPassing(): int
     {
         return $this->Passing;
     }
 
-    /**
-     * @return int
-     */
     public function getWarning(): int
     {
         return $this->Warning;

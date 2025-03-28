@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\KV;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,18 +23,10 @@ namespace DCarbone\PHPConsulAPI\KV;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\FakeSlice;
 
-/**
- * Class KVPairs
- */
 class KVPairs extends FakeSlice
 {
-    /** @var string */
     protected string $containedClass = KVPair::class;
 
-    /**
-     * @param array $data
-     * @return \DCarbone\PHPConsulAPI\AbstractModel
-     */
     protected function newChild(array $data): AbstractModel
     {
         return new KVPair($data, true);

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -22,27 +22,15 @@ namespace DCarbone\PHPConsulAPI;
 
 use DCarbone\Go\Time;
 
-/**
- * Class WriteOptions
- */
 class WriteOptions extends AbstractModel implements RequestOptions
 {
-    /** @var string */
     public string $Namespace = '';
-    /** @var string */
     public string $Datacenter = '';
-    /** @var string */
     public string $Token = '';
-    /** @var int */
     public int $RelayFactor = 0;
 
-    /** @var \DCarbone\Go\Time\Duration|null */
     public ?Time\Duration $Timeout = null;
 
-    /**
-     * WriteOptions constructor.
-     * @param array|null $data
-     */
     public function __construct(?array $data = null)
     {
         parent::__construct($data);
@@ -51,89 +39,56 @@ class WriteOptions extends AbstractModel implements RequestOptions
         }
     }
 
-    /**
-     * @return string
-     */
     public function getNamespace(): string
     {
         return $this->Namespace;
     }
 
-    /**
-     * @param string $namespace
-     */
     public function setNamespace(string $namespace): void
     {
         $this->Namespace = $namespace;
     }
 
-    /**
-     * @return string
-     */
     public function getDatacenter(): string
     {
         return $this->Datacenter;
     }
 
-    /**
-     * @param string $datacenter
-     */
     public function setDatacenter(string $datacenter): void
     {
         $this->Datacenter = $datacenter;
     }
 
-    /**
-     * @return string
-     */
     public function getToken(): string
     {
         return $this->Token;
     }
 
-    /**
-     * @param string $token
-     */
     public function setToken(string $token): void
     {
         $this->Token = $token;
     }
 
-    /**
-     * @return int
-     */
     public function getRelayFactor(): int
     {
         return $this->RelayFactor;
     }
 
-    /**
-     * @param int $relayFactor
-     */
     public function setRelayFactor(int $relayFactor): void
     {
         $this->RelayFactor = $relayFactor;
     }
 
-    /**
-     * @return \DCarbone\Go\Time\Duration|null
-     */
     public function getTimeout(): ?Time\Duration
     {
         return $this->Timeout;
     }
 
-    /**
-     * @param float|int|string|\DCarbone\Go\Time\Duration|null $timeout
-     */
     public function setTimeout(float|int|string|Time\Duration|null $timeout): void
     {
         $this->Timeout = Time::Duration($timeout);
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\Request $r
-     */
     public function apply(Request $r): void
     {
         if ('' !== $this->Namespace) {

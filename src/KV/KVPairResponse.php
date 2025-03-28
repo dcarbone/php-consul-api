@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\KV;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,25 +23,15 @@ namespace DCarbone\PHPConsulAPI\KV;
 use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
 use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
-/**
- * Class KVPairResponse
- */
 class KVPairResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\KV\KVPair|null */
     public ?KVPair $KVPair = null;
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\KV\KVPair|null
-     */
     public function getValue(): ?KVPair
     {
         return $this->KVPair;
     }
 
-    /**
-     * @param mixed $decodedData
-     */
     public function unmarshalValue(mixed $decodedData): void
     {
         $this->KVPair = new KVPair((array)$decodedData, true);

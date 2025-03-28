@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Event;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -22,26 +22,15 @@ namespace DCarbone\PHPConsulAPI\Event;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
-/**
- * Class UserEvent
- */
 class UserEvent extends AbstractModel
 {
-    /** @var string */
     public string $ID = '';
-    /** @var string */
     public string $Name = '';
-    /** @var string */
     public string $Payload = '';
-    /** @var string */
     public string $NodeFilter = '';
-    /** @var string */
     public string $ServiceFilter = '';
-    /** @var string */
     public string $TagFilter = '';
-    /** @var int */
     public int $Version = 0;
-    /** @var int */
     public int $LTime = 0;
 
     /**
@@ -62,65 +51,41 @@ class UserEvent extends AbstractModel
         }
     }
 
-    /**
-     * @return string
-     */
     public function getID(): string
     {
         return $this->ID;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->Name;
     }
 
-    /**
-     * @return string
-     */
     public function getPayload(): string
     {
         return $this->Payload;
     }
 
-    /**
-     * @return string
-     */
     public function getNodeFilter(): string
     {
         return $this->NodeFilter;
     }
 
-    /**
-     * @return string
-     */
     public function getServiceFilter(): string
     {
         return $this->ServiceFilter;
     }
 
-    /**
-     * @return string
-     */
     public function getTagFilter(): string
     {
         return $this->TagFilter;
     }
 
-    /**
-     * @return int
-     */
     public function getVersion(): int
     {
         return $this->Version;
     }
 
-    /**
-     * @return int
-     */
     public function getLTime(): int
     {
         return $this->LTime;

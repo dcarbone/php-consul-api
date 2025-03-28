@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
-   Copyright 2023 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -24,23 +24,14 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 
 class TransparentProxyConfig extends AbstractModel
 {
-    /** @var int  */
     public int $OutboundListenerPort = 0;
-    /** @var bool  */
     public bool $DialedDirectly = false;
 
-    /**
-     * @return int
-     */
     public function getOutboundListenerPort(): int
     {
         return $this->OutboundListenerPort;
     }
 
-    /**
-     * @param int $OutboundListenerPort
-     * @return TransparentProxyConfig
-     */
     public function setOutboundListenerPort(int $OutboundListenerPort): TransparentProxyConfig
     {
         $this->OutboundListenerPort = $OutboundListenerPort;

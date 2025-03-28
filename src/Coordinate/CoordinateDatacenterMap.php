@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Coordinate;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,9 +23,6 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-/**
- * Class CoordinateDatacenterMap
- */
 class CoordinateDatacenterMap extends AbstractModel
 {
     protected const FIELDS = [
@@ -38,32 +35,20 @@ class CoordinateDatacenterMap extends AbstractModel
 
     private const FIELD_COORDINATES = 'Coordinates';
 
-    /** @var string */
     public string $Datacenter = '';
-    /** @var string */
     public string $AreaID = '';
-    /** @var \DCarbone\PHPConsulAPI\Coordinate\Coordinate[] */
     public array $Coordinates = [];
 
-    /**
-     * @return string
-     */
     public function getDatacenter(): string
     {
         return $this->Datacenter;
     }
 
-    /**
-     * @return string
-     */
     public function getAreaID(): string
     {
         return $this->AreaID;
     }
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\Coordinate\Coordinate[]
-     */
     public function getCoordinates(): array
     {
         return $this->Coordinates;

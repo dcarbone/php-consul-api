@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\ACL;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,25 +23,15 @@ namespace DCarbone\PHPConsulAPI\ACL;
 use DCarbone\PHPConsulAPI\AbstractValuedWriteResponse;
 use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
-/**
- * Class ACLAuthMethodWriteResponse
- */
 class ACLAuthMethodWriteResponse extends AbstractValuedWriteResponse implements UnmarshalledResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\ACL\ACLAuthMethod|null */
     public ?ACLAuthMethod $ACLAuthMethod = null;
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethod|null
-     */
     public function getValue(): ?ACLAuthMethod
     {
         return $this->ACLAuthMethod;
     }
 
-    /**
-     * @param mixed $decodedData
-     */
     public function unmarshalValue(mixed $decodedData): void
     {
         $this->ACLAuthMethod = new ACLAuthMethod((array)$decodedData);

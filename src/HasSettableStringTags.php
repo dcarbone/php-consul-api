@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,25 +20,14 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-/**
- * Class HasSettableStringTags
- */
 trait HasSettableStringTags
 {
-    /**
-     * @param array $tags
-     * @return $this
-     */
     public function setTags(array $tags): static
     {
         $this->Tags = $tags;
         return $this;
     }
 
-    /**
-     * @param string $tag
-     * @return $this
-     */
     public function addTag(string $tag): static
     {
         $this->Tags[] = $tag;

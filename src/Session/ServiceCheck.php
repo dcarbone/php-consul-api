@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -22,46 +22,27 @@ namespace DCarbone\PHPConsulAPI\Session;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
-/**
- * Class ServiceCheck
- */
 class ServiceCheck extends AbstractModel
 {
-    /** @var string */
     public string $ID = '';
-    /** @var string */
     public string $Namespace = '';
 
-    /**
-     * @return string
-     */
     public function getID(): string
     {
         return $this->ID;
     }
 
-    /**
-     * @param string $id
-     * @return \DCarbone\PHPConsulAPI\Session\ServiceCheck
-     */
     public function setID(string $id): self
     {
         $this->ID = $id;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getNamespace(): string
     {
         return $this->Namespace;
     }
 
-    /**
-     * @param string $namespace
-     * @return \DCarbone\PHPConsulAPI\Session\ServiceCheck
-     */
     public function setNamespace(string $namespace): self
     {
         $this->Namespace = $namespace;

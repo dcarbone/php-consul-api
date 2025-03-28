@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Operator;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -22,86 +22,51 @@ namespace DCarbone\PHPConsulAPI\Operator;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
-/**
- * Class Area
- */
 class Area extends AbstractModel
 {
-    /** @var string */
     public string $ID = '';
-    /** @var string */
     public string $PeerDatacenter = '';
-    /** @var string[] */
     public array $RetryJoin = [];
-    /** @var bool */
     public bool $UseTLS = false;
 
-    /**
-     * @return string
-     */
     public function getID(): string
     {
         return $this->ID;
     }
 
-    /**
-     * @param string $id
-     * @return \DCarbone\PHPConsulAPI\Operator\Area
-     */
     public function setID(string $id): self
     {
         $this->ID = $id;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getPeerDatacenter(): string
     {
         return $this->PeerDatacenter;
     }
 
-    /**
-     * @param string $peerDatacenter
-     * @return \DCarbone\PHPConsulAPI\Operator\Area
-     */
     public function setPeerDatacenter(string $peerDatacenter): self
     {
         $this->PeerDatacenter = $peerDatacenter;
         return $this;
     }
 
-    /**
-     * @return string[]
-     */
     public function getRetryJoin(): array
     {
         return $this->RetryJoin;
     }
 
-    /**
-     * @param string[] $retryJoin
-     * @return \DCarbone\PHPConsulAPI\Operator\Area
-     */
     public function setRetryJoin(array $retryJoin): self
     {
         $this->RetryJoin = $retryJoin;
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isUseTLS(): bool
     {
         return $this->UseTLS;
     }
 
-    /**
-     * @param bool $useTLS
-     * @return \DCarbone\PHPConsulAPI\Operator\Area
-     */
     public function setUseTLS(bool $useTLS): self
     {
         $this->UseTLS = $useTLS;

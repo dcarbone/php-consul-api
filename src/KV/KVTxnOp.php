@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\KV;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -22,22 +22,13 @@ namespace DCarbone\PHPConsulAPI\KV;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
-/**
- * Class KVTxnOp
- */
 class KVTxnOp extends AbstractModel
 {
-    /** @var string */
     public string $Verb = '';
-    /** @var string */
     public string $Key = '';
-    /** @var string */
     public string $Value = '';
-    /** @var int */
     public int $Flags = 0;
-    /** @var int */
     public int $Index = 0;
-    /** @var string */
     public string $Session = '';
 
     /**
@@ -57,49 +48,31 @@ class KVTxnOp extends AbstractModel
         }
     }
 
-    /**
-     * @return string
-     */
     public function getVerb(): string
     {
         return $this->Verb;
     }
 
-    /**
-     * @return string
-     */
     public function getKey(): string
     {
         return $this->Key;
     }
 
-    /**
-     * @return string
-     */
     public function getValue(): string
     {
         return $this->Value;
     }
 
-    /**
-     * @return int
-     */
     public function getFlags(): int
     {
         return $this->Flags;
     }
 
-    /**
-     * @return int
-     */
     public function getIndex(): int
     {
         return $this->Index;
     }
 
-    /**
-     * @return string
-     */
     public function getSession(): string
     {
         return $this->Session;

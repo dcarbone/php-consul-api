@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -22,46 +22,27 @@ namespace DCarbone\PHPConsulAPI\Agent;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
-/**
- * Class MemberOpts
- */
 class MemberOpts extends AbstractModel
 {
-    /** @var bool */
     public bool $WAN = false;
-    /** @var string */
     public string $Segment = '';
 
-    /**
-     * @return bool
-     */
     public function isWAN(): bool
     {
         return $this->WAN;
     }
 
-    /**
-     * @param bool $wan
-     * @return \DCarbone\PHPConsulAPI\Agent\MemberOpts
-     */
     public function setWAN(bool $wan): self
     {
         $this->WAN = $wan;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getSegment(): string
     {
         return $this->Segment;
     }
 
-    /**
-     * @param string $segment
-     * @return \DCarbone\PHPConsulAPI\Agent\MemberOpts
-     */
     public function setSegment(string $segment): self
     {
         $this->Segment = $segment;

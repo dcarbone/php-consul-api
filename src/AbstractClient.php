@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -27,35 +27,20 @@ use GuzzleHttp\RequestOptions as GuzzleRequestOptions;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
-/**
- * Class AbstractClient
- */
 abstract class AbstractClient
 {
-    /** @var \DCarbone\PHPConsulAPI\Config */
     protected Config $_config;
 
-    /**
-     * AbstractConsulClient constructor.
-     * @param \DCarbone\PHPConsulAPI\Config $config
-     */
     public function __construct(Config $config)
     {
         $this->_config = $config;
     }
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\Config
-     */
     public function getConfig(): Config
     {
         return $this->_config;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\Request $r
-     * @return array
-     */
     protected function _buildGuzzleRequestOptions(Request $r): array
     {
         // todo: figure out better guzzle integration
@@ -90,13 +75,6 @@ abstract class AbstractClient
         return $opts;
     }
 
-    /**
-     * @param string $method
-     * @param string $path
-     * @param mixed $body
-     * @param \DCarbone\PHPConsulAPI\RequestOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\Request
-     */
     protected function _newRequest(string $method, string $path, mixed $body, ?RequestOptions $opts): Request
     {
         $r = new Request($method, $path, $this->_config, $body);
@@ -104,54 +82,26 @@ abstract class AbstractClient
         return $r;
     }
 
-    /**
-     * @param string $path
-     * @param mixed $body
-     * @param \DCarbone\PHPConsulAPI\RequestOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\Request
-     */
     protected function _newPostRequest(string $path, mixed $body, ?RequestOptions $opts): Request
     {
         return $this->_newRequest(HTTP\MethodPost, $path, $body, $opts);
     }
 
-    /**
-     * @param string $path
-     * @param mixed $body
-     * @param \DCarbone\PHPConsulAPI\RequestOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\Request
-     */
     protected function _newPutRequest(string $path, mixed $body, ?RequestOptions $opts): Request
     {
         return $this->_newRequest(HTTP\MethodPut, $path, $body, $opts);
     }
 
-    /**
-     * @param string $path
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\Request
-     */
     protected function _newGetRequest(string $path, ?QueryOptions $opts): Request
     {
         return $this->_newRequest(HTTP\MethodGet, $path, null, $opts);
     }
 
-    /**
-     * @param string $path
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\Request
-     */
     protected function _newDeleteRequest(string $path, ?WriteOptions $opts): Request
     {
         return $this->_newRequest(HTTP\MethodDelete, $path, null, $opts);
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\Request $r
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\RequestResponse
-     */
     protected function _do(Request $r): RequestResponse
     {
         $start    = microtime(true);
@@ -187,12 +137,6 @@ abstract class AbstractClient
         return new RequestResponse($r->meta(), $dur, $response, $err);
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\RequestResponse $r
-     * @param int[] $allowed
-     * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\RequestResponse
-     */
     protected function _requireStatus(RequestResponse $r, int ...$allowed): RequestResponse
     {
         // If a previous error occurred, just return as-is.
@@ -241,77 +185,36 @@ abstract class AbstractClient
         return $r;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\RequestResponse $r
-     * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\RequestResponse
-     */
     protected function _requireOK(RequestResponse $r): RequestResponse
     {
         return $this->_requireStatus($r, HTTP\StatusOK);
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\RequestResponse $r
-     * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\RequestResponse
-     */
     protected function _requireNotFoundOrOK(RequestResponse $r): RequestResponse
     {
         return $this->_requireStatus($r, HTTP\StatusOK, HTTP\StatusNotFound);
     }
 
-    /**
-     * @param string $path
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @return \DCarbone\PHPConsulAPI\RequestResponse
-     */
     protected function _doGet(string $path, ?QueryOptions $opts): RequestResponse
     {
         return $this->_do($this->_newGetRequest($path, $opts));
     }
 
-    /**
-     * @param string $path
-     * @param mixed $body
-     * @param \DCarbone\PHPConsulAPI\RequestOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @return \DCarbone\PHPConsulAPI\RequestResponse
-     */
     protected function _doPost(string $path, mixed $body, ?RequestOptions $opts): RequestResponse
     {
         return $this->_do($this->_newPostRequest($path, $body, $opts));
     }
 
-    /**
-     * @param string $path
-     * @param mixed $body
-     * @param \DCarbone\PHPConsulAPI\RequestOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @return \DCarbone\PHPConsulAPI\RequestResponse
-     */
     protected function _doPut(string $path, mixed $body, ?RequestOptions $opts): RequestResponse
     {
         return $this->_do($this->_newPutRequest($path, $body, $opts));
     }
 
-    /**
-     * @param string $path
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @return \DCarbone\PHPConsulAPI\RequestResponse
-     */
     protected function _doDelete(string $path, ?WriteOptions $opts): RequestResponse
     {
         return $this->_do($this->_newDeleteRequest($path, $opts));
     }
 
-    /**
-     * @param \Psr\Http\Message\StreamInterface $body
-     * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\DecodedBody
-     */
     protected function _decodeBody(StreamInterface $body): DecodedBody
     {
         $data = @json_decode((string)$body, true);
@@ -332,14 +235,6 @@ abstract class AbstractClient
         );
     }
 
-    /**
-     * @param string $path
-     * @param mixed $body
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\WriteResponse
-     */
     protected function _executePut(string $path, mixed $body, ?WriteOptions $opts): WriteResponse
     {
         $resp = $this->_requireOK($this->_doPut($path, $body, $opts));
@@ -348,14 +243,6 @@ abstract class AbstractClient
         return $ret;
     }
 
-    /**
-     * @param string $path
-     * @param mixed $body
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\WriteResponse
-     */
     protected function _executePost(string $path, mixed $body, ?WriteOptions $opts): WriteResponse
     {
         $resp = $this->_requireOK($this->_doPost($path, $body, $opts));
@@ -364,13 +251,6 @@ abstract class AbstractClient
         return $ret;
     }
 
-    /**
-     * @param string $path
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\WriteResponse
-     */
     protected function _executeDelete(string $path, ?WriteOptions $opts): WriteResponse
     {
         $resp = $this->_requireOK($this->_doDelete($path, $opts));
@@ -379,14 +259,6 @@ abstract class AbstractClient
         return $ret;
     }
 
-    /**
-     * @param string $path
-     * @param mixed $body
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
-     */
     protected function _executePutValuedStr(string $path, mixed $body, ?WriteOptions $opts): ValuedWriteStringResponse
     {
         $r    = $this->_newPutRequest($path, $body, $opts);
@@ -396,13 +268,6 @@ abstract class AbstractClient
         return $ret;
     }
 
-    /**
-     * @param string $path
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\ValuedQueryStringResponse
-     */
     protected function _executeGetValuedStr(string $path, ?QueryOptions $opts): ValuedQueryStringResponse
     {
         $r    = $this->_newGetRequest($path, $opts);
@@ -412,13 +277,6 @@ abstract class AbstractClient
         return $ret;
     }
 
-    /**
-     * @param string $path
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\ValuedQueryStringsResponse
-     */
     protected function _executeGetValuedStrs(string $path, ?QueryOptions $opts): ValuedQueryStringsResponse
     {
         $r    = $this->_newGetRequest($path, $opts);

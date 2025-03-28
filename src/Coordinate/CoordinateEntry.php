@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Coordinate;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,9 +23,6 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-/**
- * Class CoordinateEntry
- */
 class CoordinateEntry extends AbstractModel
 {
     protected const FIELDS = [
@@ -38,61 +35,37 @@ class CoordinateEntry extends AbstractModel
 
     private const FIELD_COORDINATE = 'Coord';
 
-    /** @var string */
     public string $Node = '';
-    /** @var string */
     public string $Segment = '';
-    /** @var \DCarbone\PHPConsulAPI\Coordinate\Coordinate|null */
     public ?Coordinate $Coord = null;
 
-    /**
-     * @return string
-     */
     public function getNode(): string
     {
         return $this->Node;
     }
 
-    /**
-     * @param string $Node
-     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry
-     */
     public function setNode(string $Node): self
     {
         $this->Node = $Node;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getSegment(): string
     {
         return $this->Segment;
     }
 
-    /**
-     * @param string $Segment
-     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry
-     */
     public function setSegment(string $Segment): self
     {
         $this->Segment = $Segment;
         return $this;
     }
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\Coordinate\Coordinate|null
-     */
     public function getCoord(): ?Coordinate
     {
         return $this->Coord;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\Coordinate\Coordinate|null $Coord
-     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry
-     */
     public function setCoord(?Coordinate $Coord): self
     {
         $this->Coord = $Coord;

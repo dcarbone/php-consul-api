@@ -22,14 +22,18 @@ on:
 
 env:
   CONSUL_HTTP_ADDR: "127.0.0.1:8500"
-  CONSUL_VERSION: '1.17.2'
+  CONSUL_VERSION: '1.20.5'
 
 jobs:
   tests:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        php-version: ["8.0", "8.1", "8.2"]
+        php-version:
+          - '8.1'
+          - '8.2'
+          - '8.3'
+          - '8.4'
 
     name: Tests - PHP ${{ matrix.php-version }}
     steps:

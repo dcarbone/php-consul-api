@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -26,39 +26,21 @@ use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
 
-/**
- * Class Request
- */
 class Request
 {
-    /** @var \DCarbone\PHPConsulAPI\Values */
     public Values $header;
-    /** @var \DCarbone\PHPConsulAPI\Params */
     public Params $params;
 
-    /** @var \DCarbone\Go\Time\Duration|null */
     public ?Time\Duration $timeout = null;
 
-    /** @var string */
     private string $scheme;
-    /** @var string */
     private string $address;
-    /** @var string */
     private string $path;
 
-    /** @var string */
     private string $method;
 
-    /** @var mixed */
     private mixed $body;
 
-    /**
-     * Request constructor.
-     * @param string $method
-     * @param string $path
-     * @param \DCarbone\PHPConsulAPI\Config $config
-     * @param mixed $body
-     */
     public function __construct(string $method, string $path, Config $config, mixed $body)
     {
         $this->scheme  = $config->Scheme;
@@ -86,49 +68,31 @@ class Request
         $this->body = $body;
     }
 
-    /**
-     * @return string
-     */
     public function getScheme(): string
     {
         return $this->scheme;
     }
 
-    /**
-     * @return string
-     */
     public function getAddress(): string
     {
         return $this->address;
     }
 
-    /**
-     * @return string
-     */
     public function getPath(): string
     {
         return $this->path;
     }
 
-    /**
-     * @return string
-     */
     public function getMethod(): string
     {
         return $this->method;
     }
 
-    /**
-     * @return mixed
-     */
     public function getBody(): mixed
     {
         return $this->body;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\RequestOptions|null $opts
-     */
     public function applyOptions(?RequestOptions $opts): void
     {
         if (null === $opts) {
@@ -137,9 +101,6 @@ class Request
         $opts->apply($this);
     }
 
-    /**
-     * @param string $filter
-     */
     public function filterQuery(string $filter): void
     {
         if ('' === $filter) {
@@ -148,9 +109,6 @@ class Request
         $this->params->set('filter', $filter);
     }
 
-    /**
-     * @return \Psr\Http\Message\UriInterface
-     */
     public function getUri(): UriInterface
     {
         $uri = "{$this->scheme}://{$this->address}/{$this->path}";
@@ -175,9 +133,6 @@ class Request
         );
     }
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\RequestMeta
-     */
     public function meta(): RequestMeta
     {
         return new RequestMeta($this->method, $this->getUri());

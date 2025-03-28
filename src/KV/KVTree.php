@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\KV;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,37 +20,22 @@ namespace DCarbone\PHPConsulAPI\KV;
    limitations under the License.
  */
 
-/**
- * Class KVTree
- */
 class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \ArrayAccess
 {
-    /** @var string */
     private string $_prefix;
 
-    /** @var \DCarbone\PHPConsulAPI\KV\KVPair[]|\DCarbone\PHPConsulAPI\KV\KVTree[] */
     private array $_children = [];
 
-    /**
-     * KVTree constructor.
-     * @param string $prefix
-     */
     public function __construct(string $prefix)
     {
         $this->_prefix = $prefix;
     }
 
-    /**
-     * @return string
-     */
     public function getPrefix(): string
     {
         return $this->_prefix;
     }
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\KV\KVPair|\DCarbone\PHPConsulAPI\KV\KVTree can return any type
-     */
     public function current(): KVTree|KVPair
     {
         return current($this->_children);
@@ -69,10 +54,6 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
         return key($this->_children);
     }
 
-    /**
-     * @return bool The return value will be casted to boolean and then evaluated.
-     * Returns true on success or false on failure.
-     */
     public function valid(): bool
     {
         return null !== key($this->_children);
@@ -91,26 +72,16 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
         return $this->current() instanceof self;
     }
 
-    /**
-     * @return \RecursiveIterator|\DCarbone\PHPConsulAPI\KV\KVTree|\DCarbone\PHPConsulAPI\KV\KVPair an iterator for the current entry
-     */
     public function getChildren(): \RecursiveIterator|KVTree|KVPair
     {
         return $this->current();
     }
 
-    /**
-     * @return int the custom count as an integer
-     */
     public function count(): int
     {
         return \count($this->_children);
     }
 
-    /**
-     * @param mixed $offset an offset to check for
-     * @return bool true on success or false on failure
-     */
     public function offsetExists(mixed $offset): bool
     {
         if (\is_string($offset)) {
@@ -128,10 +99,6 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
         return isset($this->_children[$offset]) || \array_key_exists($offset, $this->_children);
     }
 
-    /**
-     * @param mixed $offset the offset to retrieve
-     * @return \DCarbone\PHPConsulAPI\KV\KVTree|\DCarbone\PHPConsulAPI\KV\KVPair|null
-     */
     public function offsetGet(mixed $offset): KVTree|KVPair|null
     {
         if (\is_string($offset)) {
@@ -161,10 +128,6 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
         return null;
     }
 
-    /**
-     * @param mixed $offset the offset to assign the value to
-     * @param mixed $value the value to set
-     */
     public function offsetSet(mixed $offset, mixed $value): void
     {
         if ('string' === \gettype($offset)) {
@@ -184,17 +147,11 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
         }
     }
 
-    /**
-     * @param mixed $offset the offset to unset
-     */
     public function offsetUnset(mixed $offset): void
     {
         // do nothing, yo...
     }
 
-    /**
-     * @return array
-     */
     public function jsonSerialize(): array
     {
         $json = [$this->_prefix => []];
@@ -208,9 +165,6 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
         return $json;
     }
 
-    /**
-     * @return string
-     */
     public function __toString()
     {
         return $this->_prefix;

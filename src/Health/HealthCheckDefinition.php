@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Health;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -26,9 +26,6 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Operator\ReadableDuration;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-/**
- * Class HealthCheckDefinition
- */
 class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
 {
     protected const FIELDS = [
@@ -68,45 +65,20 @@ class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
     private const FIELD_TIMEOUT                                    = 'Timeout';
     private const FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER          = 'DeregisterCriticalServiceAfter';
 
-    /** @var string */
     public string $HTTP = '';
-    /** @var array */
     public array $Header = [];
-    /** @var string */
     public string $Method = '';
-    /** @var string */
     public string $Body = '';
-    /** @var bool */
     public bool $TLSSkipVerify = false;
-    /** @var string */
     public string $TCP = '';
-    /** @var \DCarbone\Go\Time\Duration */
     public Duration $IntervalDuration;
-    /** @var \DCarbone\Go\Time\Duration */
     public Duration $TimeoutDuration;
-    /** @var \DCarbone\Go\Time\Duration */
     public Duration $DeregisterCriticalServiceAfterDuration;
 
-    /**
-     * @var \DCarbone\PHPConsulAPI\Operator\ReadableDuration
-     * @deprecated use $IntervalDuration
-     */
     public ReadableDuration $Interval;
-    /**
-     * @var \DCarbone\PHPConsulAPI\Operator\ReadableDuration
-     * @deprecated use $TimeoutDuration
-     */
     public ReadableDuration $Timeout;
-    /**
-     * @var \DCarbone\PHPConsulAPI\Operator\ReadableDuration
-     * @deprecated use $DeregisterCriticalServiceAfterDuration
-     */
     public ReadableDuration $DeregisterCriticalServiceAfter;
 
-    /**
-     * HealthCheckDefinition constructor.
-     * @param array|null $data
-     */
     public function __construct(?array $data = null)
     {
         parent::__construct($data);
@@ -141,107 +113,67 @@ class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
         }
     }
 
-    /**
-     * @return string
-     */
     public function getHTTP(): string
     {
         return $this->HTTP;
     }
 
-    /**
-     * @return array
-     */
     public function getHeader(): array
     {
         return $this->Header;
     }
 
-    /**
-     * @return string
-     */
     public function getMethod(): string
     {
         return $this->Method;
     }
 
-    /**
-     * @return string
-     */
     public function getBody(): string
     {
         return $this->Body;
     }
 
-    /**
-     * @param string $Body
-     * @return \DCarbone\PHPConsulAPI\Health\HealthCheckDefinition
-     */
     public function setBody(string $Body): self
     {
         $this->Body = $Body;
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isTLSSkipVerify(): bool
     {
         return $this->TLSSkipVerify;
     }
 
-    /**
-     * @return string
-     */
     public function getTCP(): string
     {
         return $this->TCP;
     }
 
-    /**
-     * @return \DCarbone\Go\Time\Duration|null
-     */
     public function getIntervalDuration(): ?Duration
     {
         return $this->IntervalDuration;
     }
 
-    /**
-     * @return \DCarbone\Go\Time\Duration|null
-     */
     public function getTimeoutDuration(): ?Duration
     {
         return $this->TimeoutDuration;
     }
 
-    /**
-     * @return \DCarbone\Go\Time\Duration|null
-     */
     public function getDeregisterCriticalServiceAfterDuration(): ?Duration
     {
         return $this->DeregisterCriticalServiceAfterDuration;
     }
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\Operator\ReadableDuration|null
-     */
     public function getInterval(): ?ReadableDuration
     {
         return $this->Interval;
     }
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\Operator\ReadableDuration|null
-     */
     public function getTimeout(): ?ReadableDuration
     {
         return $this->Timeout;
     }
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\Operator\ReadableDuration|null
-     */
     public function getDeregisterCriticalServiceAfter(): ?ReadableDuration
     {
         return $this->DeregisterCriticalServiceAfter;

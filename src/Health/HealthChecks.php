@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Health;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -24,22 +24,14 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Consul;
 use DCarbone\PHPConsulAPI\FakeSlice;
 
-/**
- * Class HealthChecks
- */
 class HealthChecks extends FakeSlice
 {
-    /** @var string */
     protected string $containedClass = HealthCheck::class;
 
-    /**
-     * @return string
-     */
     public function AggregatedStatus(): string
     {
         $passing = $warning = $critical = $maintenance = false;
         foreach ($this as $check) {
-            /** @var \DCarbone\PHPConsulAPI\Health\HealthCheck $check */
             if (Consul::NodeMaint === $check->CheckID || 0 === strpos($check->CheckID, Consul::ServiceMaintPrefix)) {
                 // TODO: Maybe just return maintenance right now...?
                 $maintenance = true;
@@ -76,10 +68,6 @@ class HealthChecks extends FakeSlice
         return Consul::HealthPassing;
     }
 
-    /**
-     * @param array $data
-     * @return \DCarbone\PHPConsulAPI\AbstractModel
-     */
     protected function newChild(array $data): AbstractModel
     {
         return new HealthCheck($data);

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Health;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -24,45 +24,22 @@ use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\QueryOptions;
 
-/**
- * Class HealthClient
- */
 class HealthClient extends AbstractClient
 {
     private const serviceHealth = 'service';
     private const connectHealth = 'connect';
     private const ingressHealth = 'ingress';
 
-    /**
-     * @param string $node
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @return \DCarbone\PHPConsulAPI\Health\HealthChecksResponse
-     */
     public function Node(string $node, ?QueryOptions $opts = null): HealthChecksResponse
     {
         return $this->_getHealthChecks(sprintf('v1/health/node/%s', $node), $opts);
     }
 
-    /**
-     * @param string $service
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @return \DCarbone\PHPConsulAPI\Health\HealthChecksResponse
-     */
     public function Checks(string $service, ?QueryOptions $opts = null): HealthChecksResponse
     {
         return $this->_getHealthChecks(sprintf('v1/health/checks/%s', $service), $opts);
     }
 
-    /**
-     * @param string $service
-     * @param array $tags
-     * @param bool $passingOnly
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @return \DCarbone\PHPConsulAPI\Health\ServiceEntriesResponse
-     */
     public function ServiceMultipleTags(
         string $service,
         array $tags = [],
@@ -72,14 +49,6 @@ class HealthClient extends AbstractClient
         return $this->_getServiceEntries($service, $tags, $passingOnly, $opts, self::serviceHealth);
     }
 
-    /**
-     * @param string $service
-     * @param string $tag
-     * @param bool $passingOnly
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @return \DCarbone\PHPConsulAPI\Health\ServiceEntriesResponse
-     */
     public function Service(
         string $service,
         string $tag = '',
@@ -89,14 +58,6 @@ class HealthClient extends AbstractClient
         return $this->ServiceMultipleTags($service, '' !== $tag ? [$tag] : [], $passingOnly, $opts);
     }
 
-    /**
-     * @param string $service
-     * @param array $tags
-     * @param bool $passingOnly
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @return \DCarbone\PHPConsulAPI\Health\ServiceEntriesResponse
-     */
     public function IngressMultipleTags(
         string $service,
         array $tags = [],
@@ -106,14 +67,6 @@ class HealthClient extends AbstractClient
         return $this->_getServiceEntries($service, $tags, $passingOnly, $opts, self::ingressHealth);
     }
 
-    /**
-     * @param string $service
-     * @param string $tag
-     * @param bool $passingOnly
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @return \DCarbone\PHPConsulAPI\Health\ServiceEntriesResponse
-     */
     public function Ingress(
         string $service,
         string $tag = '',
@@ -123,14 +76,6 @@ class HealthClient extends AbstractClient
         return $this->IngressMultipleTags($service, '' !== $tag ? [$tag] : [], $passingOnly, $opts);
     }
 
-    /**
-     * @param string $service
-     * @param array $tags
-     * @param bool $passingOnly
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @return \DCarbone\PHPConsulAPI\Health\ServiceEntriesResponse
-     */
     public function ConnectMultipleTags(
         string $service,
         array $tags = [],
@@ -140,14 +85,6 @@ class HealthClient extends AbstractClient
         return $this->_getServiceEntries($service, $tags, $passingOnly, $opts, self::connectHealth);
     }
 
-    /**
-     * @param string $service
-     * @param string $tag
-     * @param bool $passingOnly
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @return \DCarbone\PHPConsulAPI\Health\ServiceEntriesResponse
-     */
     public function Connect(
         string $service,
         string $tag = '',
@@ -157,13 +94,6 @@ class HealthClient extends AbstractClient
         return $this->ConnectMultipleTags($service, '' !== $tag ? [$tag] : [], $passingOnly, $opts);
     }
 
-    /**
-     * @param string $state
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\Health\HealthChecksResponse
-     * @throws \Exception
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
     public function State(string $state, ?QueryOptions $opts = null): HealthChecksResponse
     {
         static $validStates = ['any', 'warning', 'critical', 'passing', 'unknown'];
@@ -184,13 +114,6 @@ class HealthClient extends AbstractClient
         return $this->_getHealthChecks(sprintf('v1/health/state/%s', $state), $opts);
     }
 
-    /**
-     * @param string $path
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\Health\HealthChecksResponse
-     */
     protected function _getHealthChecks(string $path, ?QueryOptions $opts): HealthChecksResponse
     {
         $resp = $this->_requireOK($this->_doGet($path, $opts));
@@ -199,16 +122,6 @@ class HealthClient extends AbstractClient
         return $ret;
     }
 
-    /**
-     * @param string $service
-     * @param array $tags
-     * @param bool $passingOnly
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @param string $healthType
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\Health\ServiceEntriesResponse
-     */
     private function _getServiceEntries(
         string $service,
         array $tags,

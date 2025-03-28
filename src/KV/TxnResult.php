@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\KV;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -26,9 +26,6 @@ use DCarbone\PHPConsulAPI\Catalog\Node;
 use DCarbone\PHPConsulAPI\Health\HealthCheck;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-/**
- * Class TxnResult
- */
 class TxnResult extends AbstractModel
 {
     protected const FIELDS = [
@@ -59,81 +56,49 @@ class TxnResult extends AbstractModel
     private const FIELD_SERVICE = 'Service';
     private const FIELD_CHECK   = 'Check';
 
-    /** @var \DCarbone\PHPConsulAPI\KV\KVPair|null */
     public ?KVPair $KV = null;
-    /** @var \DCarbone\PHPConsulAPI\Catalog\Node|null */
     public ?Node $Node = null;
-    /** @var \DCarbone\PHPConsulAPI\Catalog\CatalogService|null */
     public ?CatalogService $Service = null;
-    /** @var \DCarbone\PHPConsulAPI\Health\HealthCheck|null */
     public ?HealthCheck $Check = null;
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\KV\KVPair|null
-     */
     public function getKV(): ?KVPair
     {
         return $this->KV;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\KV\KVPair|null $KV
-     * @return \DCarbone\PHPConsulAPI\KV\TxnResult
-     */
     public function setKV(?KVPair $KV): self
     {
         $this->KV = $KV;
         return $this;
     }
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\Catalog\Node|null
-     */
     public function getNode(): ?Node
     {
         return $this->Node;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\Catalog\Node|null $Node
-     * @return \DCarbone\PHPConsulAPI\KV\TxnResult
-     */
     public function setNode(?Node $Node): self
     {
         $this->Node = $Node;
         return $this;
     }
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\Catalog\CatalogService|null
-     */
     public function getService(): ?CatalogService
     {
         return $this->Service;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\Catalog\CatalogService|null $Service
-     * @return \DCarbone\PHPConsulAPI\KV\TxnResult
-     */
     public function setService(?CatalogService $Service): self
     {
         $this->Service = $Service;
         return $this;
     }
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\Health\HealthCheck|null
-     */
     public function getCheck(): ?HealthCheck
     {
         return $this->Check;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\Health\HealthCheck|null $Check
-     * @return \DCarbone\PHPConsulAPI\KV\TxnResult
-     */
     public function setCheck(?HealthCheck $Check): self
     {
         $this->Check = $Check;
