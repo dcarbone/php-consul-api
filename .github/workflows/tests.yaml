@@ -45,12 +45,12 @@ jobs:
         # language=sh
         run: |
           _phpunit_version=
-          case "${{ inputs.php-version }}" in
+          case "${{ matrix.php-version }}" in
             8.1) _phpunit_version='10.5' ;;
             8.2) _phpunit_version='11.1' ;;
             8.3) _phpunit_version='11.1' ;;
             8.4) _phpunit_version='11.1' ;;
-            *) echo "Unsupported PHP version: ${{ inputs.php-version }}" && exit 1 ;;
+            *) echo "Unsupported PHP version: ${{ matrix.php-version }}" && exit 1 ;;
           esac
           echo "phpunit-version=${_phpunit_version}" >> $GITHUB_OUTPUT
 
@@ -85,7 +85,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: "composer-${{ runner.os }}-${{ inputs.php-version }}-${{ steps.vars.outputs.phpunit-version }}-${{ hashFiles('composer.lock') }}"
+          key: "composer-${{ runner.os }}-${{ matrix.php-version }}-${{ steps.vars.outputs.phpunit-version }}-${{ hashFiles('composer.lock') }}"
 
       - name: 'Install composer deps'
         shell: bash -e {0}
@@ -99,7 +99,7 @@ jobs:
         uses: actions/cache/save@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: "composer-${{ runner.os }}-${{ inputs.php-version }}-${{ steps.vars.outputs.phpunit-version }}-${{ hashFiles('composer.lock') }}"
+          key: "composer-${{ runner.os }}-${{ matrix.php-version }}-${{ steps.vars.outputs.phpunit-version }}-${{ hashFiles('composer.lock') }}"
 
       - name: 'Install Consul'
         # language=bash
