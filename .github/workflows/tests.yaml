@@ -3,7 +3,7 @@ name: "Tests"
 on:
   pull_request:
     branches:
-      - master
+      - main
     paths:
       - '**.php'
       - 'composer.json'
@@ -12,7 +12,7 @@ on:
       - '.github/workflows/tests.yaml'
   push:
     branches:
-      - master
+      - main
     paths:
       - '**.php'
       - 'composer.json'
