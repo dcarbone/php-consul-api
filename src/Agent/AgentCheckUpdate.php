@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -22,56 +22,33 @@ namespace DCarbone\PHPConsulAPI\Agent;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
-/**
- * Class AgentCheckUpdate
- * @internal use internally by AgentClient
- */
 final class AgentCheckUpdate extends AbstractModel
 {
-    /** @var string */
     public string $Status = '';
-    /** @var string */
     public string $Output = '';
 
-    /**
-     * @return string
-     */
     public function getStatus(): string
     {
         return $this->Status;
     }
 
-    /**
-     * @param string $status
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheckUpdate
-     */
     public function setStatus(string $status): self
     {
         $this->Status = $status;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getOutput(): string
     {
         return $this->Output;
     }
 
-    /**
-     * @param string $output
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheckUpdate
-     */
     public function setOutput(string $output): self
     {
         $this->Output = $output;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return sprintf('%s: %s', $this->Status, $this->Output);

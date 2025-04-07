@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Operator;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,25 +23,15 @@ namespace DCarbone\PHPConsulAPI\Operator;
 use DCarbone\PHPConsulAPI\AbstractValuedResponse;
 use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
-/**
- * Class OperatorRaftConfigurationResponse
- */
 class OperatorRaftConfigurationResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\Operator\RaftConfiguration|null */
     public ?RaftConfiguration $RaftConfiguration = null;
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\Operator\RaftConfiguration|null
-     */
     public function getValue(): ?RaftConfiguration
     {
         return $this->RaftConfiguration;
     }
 
-    /**
-     * @param mixed $decodedData
-     */
     public function unmarshalValue(mixed $decodedData): void
     {
         $this->RaftConfiguration = new RaftConfiguration($decodedData);

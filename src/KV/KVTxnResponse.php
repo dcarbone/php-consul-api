@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\KV;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,9 +23,6 @@ namespace DCarbone\PHPConsulAPI\KV;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-/**
- * Class KVTxnResponse
- */
 class KVTxnResponse extends AbstractModel
 {
     protected const FIELDS = [
@@ -43,22 +40,14 @@ class KVTxnResponse extends AbstractModel
     private const FIELD_RESULTS = 'Results';
     private const FIELD_ERRORS  = 'Errors';
 
-    /** @var \DCarbone\PHPConsulAPI\KV\KVPair[] */
     public array $Results = [];
-    /** @var \DCarbone\PHPConsulAPI\KV\TxnErrors|null */
     public ?TxnErrors $Errors = null;
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\KV\KVPair[]
-     */
     public function getResults(): array
     {
         return $this->Results;
     }
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\KV\TxnErrors|null
-     */
     public function getErrors(): ?TxnErrors
     {
         return $this->Errors;

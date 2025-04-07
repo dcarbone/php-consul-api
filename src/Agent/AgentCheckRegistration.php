@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -22,9 +22,6 @@ namespace DCarbone\PHPConsulAPI\Agent;
 
 use DCarbone\PHPConsulAPI\Transcoding;
 
-/**
- * Class AgentCheckRegistration
- */
 class AgentCheckRegistration extends AgentServiceCheck
 {
     protected const FIELDS = [
@@ -37,61 +34,37 @@ class AgentCheckRegistration extends AgentServiceCheck
     private const FIELD_SERVICE_ID = 'ServiceID';
     private const FIELD_NAMESPACE  = 'Namespace';
 
-    /** @var string */
     public string $ID = '';
-    /** @var string */
     public string $ServiceID = '';
-    /** @var string */
     public string $Namespace = '';
 
-    /**
-     * @return string
-     */
     public function getID(): string
     {
         return $this->ID;
     }
 
-    /**
-     * @param string $ID
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration
-     */
     public function setID(string $ID): self
     {
         $this->ID = $ID;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getServiceID(): string
     {
         return $this->ServiceID;
     }
 
-    /**
-     * @param string $ServiceID
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration
-     */
     public function setServiceID(string $ServiceID): self
     {
         $this->ServiceID = $ServiceID;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getNamespace(): string
     {
         return $this->Namespace;
     }
 
-    /**
-     * @param string $Namespace
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration
-     */
     public function setNamespace(string $Namespace): self
     {
         $this->Namespace = $Namespace;

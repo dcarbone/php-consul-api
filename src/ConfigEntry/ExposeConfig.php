@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,9 +23,6 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-/**
- * Class ExposeConfig
- */
 class ExposeConfig extends AbstractModel
 {
     protected const FIELDS = [
@@ -41,41 +38,25 @@ class ExposeConfig extends AbstractModel
     private const FIELD_CHECKS = 'Checks';
     private const FIELD_PATHS  = 'Paths';
 
-    /** @var bool */
     public bool $Checks = false;
-    /** @var array */
     public array $Paths = [];
 
-    /**
-     * @return bool
-     */
     public function isChecks(): bool
     {
         return $this->Checks;
     }
 
-    /**
-     * @param bool $Checks
-     * @return \DCarbone\PHPConsulAPI\ConfigEntry\ExposeConfig
-     */
     public function setChecks(bool $Checks): self
     {
         $this->Checks = $Checks;
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getPaths(): array
     {
         return $this->Paths;
     }
 
-    /**
-     * @param array $Paths
-     * @return \DCarbone\PHPConsulAPI\ConfigEntry\ExposeConfig
-     */
     public function setPaths(array $Paths): self
     {
         $this->Paths = $Paths;

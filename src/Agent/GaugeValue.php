@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -22,66 +22,39 @@ namespace DCarbone\PHPConsulAPI\Agent;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
-/**
- * Class GaugeValue
- */
 class GaugeValue extends AbstractModel
 {
-    /** @var string */
     public string $Name = '';
-    /** @var float */
     public float $Value = 0.0;
-    /** @var array */
     public array $Labels = [];
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->Name;
     }
 
-    /**
-     * @param string $name
-     * @return \DCarbone\PHPConsulAPI\Agent\GaugeValue
-     */
     public function setName(string $name): self
     {
         $this->Name = $name;
         return $this;
     }
 
-    /**
-     * @return float
-     */
     public function getValue(): float
     {
         return $this->Value;
     }
 
-    /**
-     * @param float $value
-     * @return \DCarbone\PHPConsulAPI\Agent\GaugeValue
-     */
     public function setValue(float $value): self
     {
         $this->Value = $value;
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public function getLabels(): array
     {
         return $this->Labels;
     }
 
-    /**
-     * @param array $labels
-     * @return \DCarbone\PHPConsulAPI\Agent\GaugeValue
-     */
     public function setLabels(array $labels): self
     {
         $this->Labels = $labels;

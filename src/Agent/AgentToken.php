@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -22,26 +22,15 @@ namespace DCarbone\PHPConsulAPI\Agent;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
-/**
- * Class AgentToken
- */
 class AgentToken extends AbstractModel
 {
-    /** @var string */
     public string $Token = '';
 
-    /**
-     * @return string
-     */
     public function getToken(): string
     {
         return $this->Token;
     }
 
-    /**
-     * @param string $Token
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentToken
-     */
     public function setToken(string $Token): self
     {
         $this->Token = $Token;

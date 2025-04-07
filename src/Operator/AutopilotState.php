@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Operator;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,9 +23,6 @@ namespace DCarbone\PHPConsulAPI\Operator;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-/**
- * Class AutopilotState
- */
 class AutopilotState extends AbstractModel
 {
     protected const FIELDS = [
@@ -55,181 +52,109 @@ class AutopilotState extends AbstractModel
     private const FIELD_REDUNDANCY_ZONE = 'RedundancyZone';
     private const FIELD_UPGRADE         = 'Upgrade';
 
-    /** @var bool */
     public bool $Healthy = false;
-    /** @var int */
     public int $FailureTolerance = 0;
-    /** @var int */
     public int $OptimisticFailureTolerance = 0;
-    /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotServer[] */
     public array $Servers = [];
-    /** @var string */
     public string $Leader = '';
-    /** @var string[] */
     public array $Voters = [];
-    /** @var string[] */
     public array $ReadReplicas = [];
-    /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotZone[] */
     public array $RedundancyZone = [];
-    /** @var \DCarbone\PHPConsulAPI\Operator\AutopilotUpgrade|null */
     public ?AutopilotUpgrade $Upgrade = null;
 
-    /**
-     * @return bool
-     */
     public function isHealthy(): bool
     {
         return $this->Healthy;
     }
 
-    /**
-     * @param bool $Healthy
-     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotState
-     */
     public function setHealthy(bool $Healthy): self
     {
         $this->Healthy = $Healthy;
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getFailureTolerance(): int
     {
         return $this->FailureTolerance;
     }
 
-    /**
-     * @param int $FailureTolerance
-     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotState
-     */
     public function setFailureTolerance(int $FailureTolerance): self
     {
         $this->FailureTolerance = $FailureTolerance;
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getOptimisticFailureTolerance(): int
     {
         return $this->OptimisticFailureTolerance;
     }
 
-    /**
-     * @param int $OptimisticFailureTolerance
-     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotState
-     */
     public function setOptimisticFailureTolerance(int $OptimisticFailureTolerance): self
     {
         $this->OptimisticFailureTolerance = $OptimisticFailureTolerance;
         return $this;
     }
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotServer[]
-     */
     public function getServers(): array
     {
         return $this->Servers;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\Operator\AutopilotServer[] $Servers
-     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotState
-     */
     public function setServers(array $Servers): self
     {
         $this->Servers = $Servers;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getLeader(): string
     {
         return $this->Leader;
     }
 
-    /**
-     * @param string $Leader
-     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotState
-     */
     public function setLeader(string $Leader): self
     {
         $this->Leader = $Leader;
         return $this;
     }
 
-    /**
-     * @return string[]
-     */
     public function getVoters(): array
     {
         return $this->Voters;
     }
 
-    /**
-     * @param string[] $Voters
-     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotState
-     */
     public function setVoters(array $Voters): self
     {
         $this->Voters = $Voters;
         return $this;
     }
 
-    /**
-     * @return string[]
-     */
     public function getReadReplicas(): array
     {
         return $this->ReadReplicas;
     }
 
-    /**
-     * @param string[] $ReadReplicas
-     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotState
-     */
     public function setReadReplicas(array $ReadReplicas): self
     {
         $this->ReadReplicas = $ReadReplicas;
         return $this;
     }
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotZone[]
-     */
     public function getRedundancyZone(): array
     {
         return $this->RedundancyZone;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\Operator\AutopilotZone[] $RedundancyZone
-     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotState
-     */
     public function setRedundancyZone(array $RedundancyZone): self
     {
         $this->RedundancyZone = $RedundancyZone;
         return $this;
     }
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotUpgrade|null
-     */
     public function getUpgrade(): ?AutopilotUpgrade
     {
         return $this->Upgrade;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\Operator\AutopilotUpgrade|null $Upgrade
-     * @return \DCarbone\PHPConsulAPI\Operator\AutopilotState
-     */
     public function setUpgrade(?AutopilotUpgrade $Upgrade): self
     {
         $this->Upgrade = $Upgrade;

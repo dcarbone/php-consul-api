@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,25 +20,15 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-/**
- * Trait ResponseValueBoolTrait
- */
 trait ResponseValueBoolTrait
 {
-    /** @var bool */
     public bool $Value = false;
 
-    /**
-     * @return bool
-     */
     public function getValue(): bool
     {
         return $this->Value;
     }
 
-    /**
-     * @param mixed $decodedData
-     */
     public function unmarshalValue(mixed $decodedData): void
     {
         if (\is_bool($decodedData)) {
@@ -52,9 +42,6 @@ trait ResponseValueBoolTrait
         $this->Value = (bool)$decodedData;
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return $this->Value ? Transcoding::TRUE : Transcoding::FALSE;

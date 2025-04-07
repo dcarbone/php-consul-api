@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,26 +20,15 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-/**
- * Class AbstractValuedResponse
- */
 abstract class AbstractValuedResponse extends AbstractResponse implements ValuedResponseInterface
 {
     use ErrorContainer;
 
-    /**
-     * @param mixed $offset
-     * @return bool
-     */
     public function offsetExists(mixed $offset): bool
     {
         return \is_int($offset) && 0 <= $offset && $offset < 2;
     }
 
-    /**
-     * @param mixed $offset
-     * @return \DCarbone\PHPConsulAPI\Error|mixed|null
-     */
     public function offsetGet(mixed $offset): mixed
     {
         if (0 === $offset) {

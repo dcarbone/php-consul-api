@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Coordinate;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,19 +20,10 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
    limitations under the License.
  */
 
-/**
- * Class DimensionalityConflictException
- */
 class DimensionalityConflictException extends \DomainException
 {
     public const DefaultMessage = 'coordinate dimensionality does not match';
 
-    /**
-     * DimensionalityConflictException constructor.
-     * @param string $message
-     * @param int $code
-     * @param \Throwable|null $previous
-     */
     public function __construct(string $message = '', int $code = 0, \Throwable $previous = null)
     {
         parent::__construct('' === $message ? static::DefaultMessage : $message, $code, $previous);

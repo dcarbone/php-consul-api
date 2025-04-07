@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -32,28 +32,16 @@ class Error implements \JsonSerializable
     private const FIELD_MESSAGE   = 'message';
     private const FIELD_TIMESTAMP = 'timestamp';
 
-    /** @var \DCarbone\Go\Time\Time */
     private Time\Time $time;
 
-    /** @var string */
     private string $message;
 
-    /**
-     * Error constructor.
-     * @param string $message
-     * @throws \Exception
-     */
     public function __construct(string $message)
     {
         $this->time    = Time::Now();
         $this->message = $message;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\RequestResponse $resp
-     * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\Error
-     */
     public static function unexpectedResponseCodeError(RequestResponse $resp): self
     {
         return new static(
@@ -66,25 +54,16 @@ class Error implements \JsonSerializable
         );
     }
 
-    /**
-     * @return \DCarbone\Go\Time\Time
-     */
     public function getTime(): Time\Time
     {
         return $this->time;
     }
 
-    /**
-     * @return string
-     */
     public function getMessage(): string
     {
         return $this->message;
     }
 
-    /**
-     * @return array
-     */
     public function jsonSerialize(): array
     {
         return [
@@ -93,9 +72,6 @@ class Error implements \JsonSerializable
         ];
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         return $this->message;

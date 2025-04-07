@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,9 +23,6 @@ namespace DCarbone\PHPConsulAPI\Agent;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-/**
- * Class AgentServiceConnect
- */
 class AgentServiceConnect extends AbstractModel
 {
     protected const FIELDS = [
@@ -40,41 +37,25 @@ class AgentServiceConnect extends AbstractModel
     private const FIELD_NATIVE          = 'Native';
     private const FIELD_SIDECAR_SERVICE = 'SidecarService';
 
-    /** @var bool */
     public bool $Native = false;
-    /** @var \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration[] */
     public array $SidecarService = [];
 
-    /**
-     * @return bool
-     */
     public function isNative(): bool
     {
         return $this->Native;
     }
 
-    /**
-     * @param bool $Native
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceConnect
-     */
     public function setNative(bool $Native): self
     {
         $this->Native = $Native;
         return $this;
     }
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration[]
-     */
     public function getSidecarService(): array
     {
         return $this->SidecarService;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration[] $SidecarService
-     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceConnect
-     */
     public function setSidecarService(array $SidecarService): self
     {
         $this->SidecarService = $SidecarService;

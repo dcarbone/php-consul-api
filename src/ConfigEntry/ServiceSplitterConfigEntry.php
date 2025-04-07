@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,9 +23,6 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-/**
- * Class ServiceSplitterConfigEntry
- */
 class ServiceSplitterConfigEntry extends AbstractModel implements ConfigEntry
 {
     use ConfigEntryTrait;
@@ -41,21 +38,13 @@ class ServiceSplitterConfigEntry extends AbstractModel implements ConfigEntry
 
     private const FIELD_SPLITS = 'Splits';
 
-    /** @var \DCarbone\PHPConsulAPI\ConfigEntry\ServiceSplit[] */
     public array $Splits = [];
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\ConfigEntry\ServiceSplit[]
-     */
     public function getSplits(): array
     {
         return $this->Splits;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\ConfigEntry\ServiceSplit[] $Splits
-     * @return ServiceSplitterConfigEntry
-     */
     public function setSplits(array $Splits): self
     {
         $this->Splits = $Splits;

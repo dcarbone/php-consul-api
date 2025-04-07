@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,18 +20,10 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-/**
- * Class Values
- */
 class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
 {
-    /** @var array */
     private array $values = [];
 
-    /**
-     * @param string $key
-     * @return string
-     */
     public function get(string $key): string
     {
         if (isset($this->values[$key])) {
@@ -41,10 +33,6 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
         return '';
     }
 
-    /**
-     * @param string $key
-     * @return string[]
-     */
     public function getAll(string $key): array
     {
         if (isset($this->values[$key])) {
@@ -54,19 +42,11 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
         return [];
     }
 
-    /**
-     * @param string $key
-     * @param string ...$value
-     */
     public function set(string $key, string ...$value): void
     {
         $this->values[$key] = $value;
     }
 
-    /**
-     * @param string $key
-     * @param string ...$value
-     */
     public function add(string $key, string ...$value): void
     {
         if (isset($this->values[$key])) {
@@ -76,33 +56,21 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
         }
     }
 
-    /**
-     * @param string $key
-     */
     public function delete(string $key): void
     {
         unset($this->values[$key]);
     }
 
-    /**
-     * @return int
-     */
     public function count(): int
     {
         return \count($this->values);
     }
 
-    /**
-     * @return array
-     */
     public function toPsr7Array(): array
     {
         return $this->values;
     }
 
-    /**
-     * @return array
-     */
     public function current(): array
     {
         return current($this->values);
@@ -113,17 +81,11 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
         next($this->values);
     }
 
-    /**
-     * @return string|null
-     */
     public function key(): ?string
     {
         return key($this->values);
     }
 
-    /**
-     * @return bool
-     */
     public function valid(): bool
     {
         return null !== key($this->values);
@@ -134,61 +96,36 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
         reset($this->values);
     }
 
-    /**
-     * @param mixed $offset
-     * @return bool
-     */
     public function offsetExists(mixed $offset): bool
     {
         return isset($this->values[$offset]);
     }
 
-    /**
-     * @param string $offset
-     * @return string
-     */
     public function offsetGet($offset): string
     {
         return $this->get($offset);
     }
 
-    /**
-     * @param string $offset
-     * @param string $value
-     */
     public function offsetSet($offset, $value): void
     {
         $this->set($offset, $value);
     }
 
-    /**
-     * @param string $offset
-     */
     public function offsetUnset($offset): void
     {
         $this->delete($offset);
     }
 
-    /**
-     * @return array
-     */
     public function jsonSerialize(): array
     {
         return $this->values;
     }
 
-    /**
-     * @param string $v
-     * @return string
-     */
     protected function encode(string $v): string
     {
         return $v;
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string
     {
         $str = '';

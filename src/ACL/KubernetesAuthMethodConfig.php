@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\ACL;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -24,9 +24,6 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\FakeMap;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-/**
- * Class KubernetesAuthMethodConfig
- */
 class KubernetesAuthMethodConfig extends AbstractModel
 {
     protected const FIELDS = [
@@ -39,61 +36,37 @@ class KubernetesAuthMethodConfig extends AbstractModel
     private const FIELD_CA_CERT             = 'CACert';
     private const FIELD_SERVICE_ACCOUNT_JWT = 'ServiceAccountJWT';
 
-    /** @var string */
     public string $Host = '';
-    /** @var string */
     public string $CACert = '';
-    /** @var string */
     public string $ServiceAccountJWT = '';
 
-    /**
-     * @return string
-     */
     public function getHost(): string
     {
         return $this->Host;
     }
 
-    /**
-     * @param string $Host
-     * @return \DCarbone\PHPConsulAPI\ACL\KubernetesAuthMethodConfig
-     */
     public function setHost(string $Host): self
     {
         $this->Host = $Host;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getCACert(): string
     {
         return $this->CACert;
     }
 
-    /**
-     * @param string $CACert
-     * @return \DCarbone\PHPConsulAPI\ACL\KubernetesAuthMethodConfig
-     */
     public function setCACert(string $CACert): self
     {
         $this->CACert = $CACert;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getServiceAccountJWT(): string
     {
         return $this->ServiceAccountJWT;
     }
 
-    /**
-     * @param string $ServiceAccountJWT
-     * @return \DCarbone\PHPConsulAPI\ACL\KubernetesAuthMethodConfig
-     */
     public function setServiceAccountJWT(string $ServiceAccountJWT): self
     {
         $this->ServiceAccountJWT = $ServiceAccountJWT;

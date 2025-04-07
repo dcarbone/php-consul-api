@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\PreparedQuery;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -26,18 +26,8 @@ use DCarbone\PHPConsulAPI\ValuedWriteStringResponse;
 use DCarbone\PHPConsulAPI\WriteOptions;
 use DCarbone\PHPConsulAPI\WriteResponse;
 
-/**
- * Class PreparedQueryClient
- */
 class PreparedQueryClient extends AbstractClient
 {
-    /**
-     * @param \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition $query
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\ValuedWriteStringResponse
-     */
     public function Create(PreparedQueryDefinition $query, ?WriteOptions $opts = null): ValuedWriteStringResponse
     {
         $resp = $this->_requireOK($this->_doPost('v1/query', $query, $opts));
@@ -46,23 +36,11 @@ class PreparedQueryClient extends AbstractClient
         return $ret;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition $query
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @return \DCarbone\PHPConsulAPI\WriteResponse
-     */
     public function Update(PreparedQueryDefinition $query, ?WriteOptions $opts = null): WriteResponse
     {
         return $this->_executePut('v1/query', $query, $opts);
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinitionsResponse
-     */
     public function List(?QueryOptions $opts = null): PreparedQueryDefinitionsResponse
     {
         $resp = $this->_doGet('v1/query', $opts);
@@ -71,13 +49,6 @@ class PreparedQueryClient extends AbstractClient
         return $ret;
     }
 
-    /**
-     * @param string $queryID
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinitionsResponse
-     */
     public function Get(string $queryID, ?QueryOptions $opts = null): PreparedQueryDefinitionsResponse
     {
         $resp = $this->_doGet(sprintf('v1/query/%s', $queryID), $opts);
@@ -86,24 +57,11 @@ class PreparedQueryClient extends AbstractClient
         return $ret;
     }
 
-    /**
-     * @param string $queryID
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @return \DCarbone\PHPConsulAPI\WriteResponse
-     */
     public function Delete(string $queryID, ?WriteOptions $opts = null): WriteResponse
     {
         return $this->_executeDelete(sprintf('v1/query/%s', $queryID), $opts);
     }
 
-    /**
-     * @param string $queryIDOrName
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryExecuteResponseResponse
-     */
     public function Execute(string $queryIDOrName, ?QueryOptions $opts = null): PreparedQueryExecuteResponseResponse
     {
         $resp = $this->_doGet(sprintf('v1/query/%s/execute', $queryIDOrName), $opts);

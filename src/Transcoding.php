@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -22,9 +22,6 @@ namespace DCarbone\PHPConsulAPI;
 
 use DCarbone\Go\Time;
 
-/**
- * Class Transcoding
- */
 final class Transcoding
 {
     public const STRING   = 'string';
@@ -87,21 +84,11 @@ final class Transcoding
     ]                                                  + self::OMITEMPTY_FIELD;
     public const OMITEMPTY_MAP_FIELD = self::MAP_FIELD + self::OMITEMPTY_FIELD;
 
-    /**
-     * @param string $type
-     * @return bool
-     */
     public static function isScalar(string $type): bool
     {
         return \in_array($type, self::SCALAR, true);
     }
 
-    /**
-     * @param object $instance
-     * @param string $field
-     * @param \DCarbone\Go\Time\Time|string $value
-     * @throws \Exception
-     */
     public static function unmarshalTime(object $instance, string $field, Time\Time|string $value): void
     {
         if ($value instanceof Time\Time) {
@@ -111,12 +98,6 @@ final class Transcoding
         $instance->{$field} = Time\Time::createFromFormat(\DATE_RFC3339, $value);
     }
 
-    /**
-     * @param object $instance
-     * @param string $field
-     * @param \DCarbone\Go\Time\Time|string|null $value
-     * @throws \Exception
-     */
     public static function unmarshalNullableTime(object $instance, string $field, Time\Time|string|null $value): void
     {
         if (null === $value) {
@@ -138,11 +119,6 @@ final class Transcoding
         $instance->{$field} = Time::Duration($value);
     }
 
-    /**
-     * @param object $instance
-     * @param string $field
-     * @param mixed $value
-     */
     public static function unmarshalNullableDuration(object $instance, string $field, mixed $value): void
     {
         if (null === $value) {

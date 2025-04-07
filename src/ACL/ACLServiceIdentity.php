@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\ACL;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,9 +23,6 @@ namespace DCarbone\PHPConsulAPI\ACL;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-/**
- * Class ACLServiceIdentity
- */
 class ACLServiceIdentity extends AbstractModel
 {
     protected const FIELDS = [
@@ -38,22 +35,14 @@ class ACLServiceIdentity extends AbstractModel
 
     private const FIELD_DATACENTERS = 'Datacenters';
 
-    /** @var string */
     public string $ServiceName = '';
-    /** @var array */
     public array $Datacenters = [];
 
-    /**
-     * @return string
-     */
     public function getServiceName(): string
     {
         return $this->ServiceName;
     }
 
-    /**
-     * @return array
-     */
     public function getDatacenters(): array
     {
         return $this->Datacenters;

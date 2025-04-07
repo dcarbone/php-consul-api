@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,9 +23,6 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-/**
- * Class ServiceResolverSubset
- */
 class ServiceResolverRedirect extends AbstractModel
 {
     protected const FIELDS = [
@@ -40,81 +37,49 @@ class ServiceResolverRedirect extends AbstractModel
     private const FIELD_NAMESPACE      = 'Namespace';
     private const FIELD_DATACENTER     = 'Datacenter';
 
-    /** @var string */
     public string $Service = '';
-    /** @var string */
     public string $ServiceSubset = '';
-    /** @var string */
     public string $Namespace = '';
-    /** @var string */
     public string $Datacenter = '';
 
-    /**
-     * @return string
-     */
     public function getService(): string
     {
         return $this->Service;
     }
 
-    /**
-     * @param string $Service
-     * @return ServiceResolverRedirect
-     */
     public function setService(string $Service): self
     {
         $this->Service = $Service;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getServiceSubset(): string
     {
         return $this->ServiceSubset;
     }
 
-    /**
-     * @param string $ServiceSubset
-     * @return ServiceResolverRedirect
-     */
     public function setServiceSubset(string $ServiceSubset): self
     {
         $this->ServiceSubset = $ServiceSubset;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getNamespace(): string
     {
         return $this->Namespace;
     }
 
-    /**
-     * @param string $Namespace
-     * @return ServiceResolverRedirect
-     */
     public function setNamespace(string $Namespace): self
     {
         $this->Namespace = $Namespace;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getDatacenter(): string
     {
         return $this->Datacenter;
     }
 
-    /**
-     * @param string $Datacenter
-     * @return ServiceResolverRedirect
-     */
     public function setDatacenter(string $Datacenter): self
     {
         $this->Datacenter = $Datacenter;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Status;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -25,17 +25,8 @@ use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\ValuedStringResponse;
 use DCarbone\PHPConsulAPI\ValuedStringsResponse;
 
-/**
- * Class StatusClient
- */
 class StatusClient extends AbstractClient
 {
-    /**
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\ValuedStringResponse
-     */
     public function LeaderWithQueryOptions(?QueryOptions $opts): ValuedStringResponse
     {
         $resp = $this->_requireOK($this->_doGet('v1/status/leader', $opts));
@@ -44,21 +35,11 @@ class StatusClient extends AbstractClient
         return $ret;
     }
 
-    /**
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @return \DCarbone\PHPConsulAPI\ValuedStringResponse
-     */
     public function Leader(): ValuedStringResponse
     {
         return $this->LeaderWithQueryOptions(null);
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @throws \Exception
-     * @return \DCarbone\PHPConsulAPI\ValuedStringsResponse
-     */
     public function PeersWithQueryOptions(?QueryOptions $opts): ValuedStringsResponse
     {
         $resp = $this->_requireOK($this->_doGet('v1/status/peers', $opts));
@@ -67,10 +48,6 @@ class StatusClient extends AbstractClient
         return $ret;
     }
 
-    /**
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @return \DCarbone\PHPConsulAPI\ValuedStringsResponse
-     */
     public function Peers(): ValuedStringsResponse
     {
         return $this->PeersWithQueryOptions(null);

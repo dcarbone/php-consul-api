@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
-   Copyright 2023 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -32,15 +32,10 @@ class EnvoyExtension extends AbstractModel
 
     private const FIELD_ARGUMENTS = 'Arguments';
 
-    /** @var string */
     public string $Name = '';
-    /** @var bool */
     public bool $Required = false;
-    /** @var \DCarbone\PHPConsulAPI\FakeMap */
     public FakeMap $Arguments;
-    /** @var string */
     public string $ConsulVersion = '';
-    /** @var string */
     public string $EnvoyVersion = '';
 
     public function __construct(?array $data = [])
@@ -51,90 +46,55 @@ class EnvoyExtension extends AbstractModel
         }
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->Name;
     }
 
-    /**
-     * @param string $Name
-     * @return EnvoyExtension
-     */
     public function setName(string $Name): self
     {
         $this->Name = $Name;
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isRequired(): bool
     {
         return $this->Required;
     }
 
-    /**
-     * @param bool $Required
-     * @return EnvoyExtension
-     */
     public function setRequired(bool $Required): self
     {
         $this->Required = $Required;
         return $this;
     }
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\FakeMap|null
-     */
     public function getArguments(): ?FakeMap
     {
         return $this->Arguments;
     }
 
-    /**
-     * @param array|\DCarbone\PHPConsulAPI\FakeMap|\stdClass|null $Arguments
-     * @return EnvoyExtension
-     */
     public function setArguments(array|FakeMap|\stdClass|null $Arguments): self
     {
         $this->Arguments = FakeMap::parse($Arguments);
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getConsulVersion(): string
     {
         return $this->ConsulVersion;
     }
 
-    /**
-     * @param string $ConsulVersion
-     * @return EnvoyExtension
-     */
     public function setConsulVersion(string $ConsulVersion): self
     {
         $this->ConsulVersion = $ConsulVersion;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getEnvoyVersion(): string
     {
         return $this->EnvoyVersion;
     }
 
-    /**
-     * @param string $EnvoyVersion
-     * @return EnvoyExtension
-     */
     public function setEnvoyVersion(string $EnvoyVersion): self
     {
         $this->EnvoyVersion = $EnvoyVersion;

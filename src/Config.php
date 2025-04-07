@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -25,9 +25,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\RequestOptions;
 
-/**
- * Class Config
- */
 class Config
 {
     use Unmarshaller;
@@ -71,23 +68,10 @@ class Config
      */
     public string $Address = '';
 
-    /**
-     * The scheme to use.  Currently only HTTP and HTTPS are supported.
-     *
-     * @var string
-     */
     public string $Scheme = '';
 
-    /**
-     * The name of the datacenter you wish all queries to be made against by default
-     *
-     * @var string
-     */
     public string $Datacenter = '';
 
-    /**
-     * @var string
-     */
     public string $Namespace = '';
 
     /**
@@ -97,18 +81,8 @@ class Config
      */
     public ?HttpAuth $HttpAuth = null;
 
-    /**
-     * Time to wait on certain blockable endpoints
-     *
-     * @var \DCarbone\Go\Time\Duration|null
-     */
     public ?Time\Duration $WaitTime = null;
 
-    /**
-     * ACL token to use by default
-     *
-     * @var string
-     */
     public string $Token = '';
 
     /**
@@ -120,11 +94,6 @@ class Config
      */
     public string $TokenFile = '';
 
-    /**
-     * Optional path to CA certificate
-     *
-     * @var string
-     */
     public string $CAFile = '';
 
     /**
@@ -141,31 +110,12 @@ class Config
      */
     public string $KeyFile = '';
 
-    /**
-     * Whether to skip SSL validation.  This does nothing unless you use it within your HttpClient of choice.
-     *
-     * @var bool
-     */
     public bool $InsecureSkipVerify = false;
 
-    /**
-     * Your HttpClient of choice.
-     *
-     * @var \GuzzleHttp\ClientInterface
-     */
     public ClientInterface $HttpClient;
 
-    /**
-     * Bitwise options to provide to JSON encoder when encoding request bodies
-     *
-     * @var int
-     */
     public int $JSONEncodeOpts = 0;
 
-    /**
-     * Config constructor.
-     * @param array $config
-     */
     public function __construct(array $config = [])
     {
         foreach ($config + self::_getDefaultConfig() as $k => $v) {
@@ -192,10 +142,6 @@ class Config
         }
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\Config|null $inc
-     * @return \DCarbone\PHPConsulAPI\Config
-     */
     public static function merge(?self $inc): self
     {
         $actual = static::newDefaultConfig();
@@ -247,170 +193,103 @@ class Config
         return $actual;
     }
 
-    /**
-     * Construct a configuration object from Environment Variables and use bare guzzle client instance
-     *
-     * @return \DCarbone\PHPConsulAPI\Config
-     */
     public static function newDefaultConfig(): self
     {
         return new static(self::_getDefaultConfig());
     }
 
-    /**
-     * @return string
-     */
     public function getAddress(): string
     {
         return $this->Address;
     }
 
-    /**
-     * @param string $address
-     * @return \DCarbone\PHPConsulAPI\Config
-     */
     public function setAddress(string $address): self
     {
         $this->Address = $address;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getScheme(): string
     {
         return $this->Scheme;
     }
 
-    /**
-     * @param string $scheme
-     * @return \DCarbone\PHPConsulAPI\Config
-     */
     public function setScheme(string $scheme): self
     {
         $this->Scheme = $scheme;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getDatacenter(): string
     {
         return $this->Datacenter;
     }
 
-    /**
-     * @param string $datacenter
-     * @return \DCarbone\PHPConsulAPI\Config
-     */
     public function setDatacenter(string $datacenter): self
     {
         $this->Datacenter = $datacenter;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getNamespace(): string
     {
         return $this->Namespace;
     }
 
-    /**
-     * @param string $namespace
-     */
     public function setNamespace(string $namespace): void
     {
         $this->Namespace = $namespace;
     }
 
-    /**
-     * @return \DCarbone\Go\Time\Duration
-     */
     public function getWaitTime(): Time\Duration
     {
         return $this->WaitTime;
     }
 
-    /**
-     * @param mixed $waitTime
-     * @return \DCarbone\PHPConsulAPI\Config
-     */
     public function setWaitTime(mixed $waitTime): self
     {
         $this->WaitTime = Time::Duration($waitTime);
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getToken(): string
     {
         return $this->Token;
     }
 
-    /**
-     * @param string $token
-     * @return \DCarbone\PHPConsulAPI\Config
-     */
     public function setToken(string $token): self
     {
         $this->Token = $token;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getTokenFile(): string
     {
         return $this->TokenFile;
     }
 
-    /**
-     * @param string $tokenFile
-     * @return \DCarbone\PHPConsulAPI\Config
-     */
     public function setTokenFile(string $tokenFile): self
     {
         $this->TokenFile = $tokenFile;
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isInsecureSkipVerify(): bool
     {
         return $this->InsecureSkipVerify;
     }
 
-    /**
-     * @param bool $insecureSkipVerify
-     * @return \DCarbone\PHPConsulAPI\Config
-     */
     public function setInsecureSkipVerify(bool $insecureSkipVerify): self
     {
         $this->InsecureSkipVerify = $insecureSkipVerify;
         return $this;
     }
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\HttpAuth
-     */
     public function getHttpAuth(): HttpAuth
     {
         return $this->HttpAuth;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\HttpAuth|string $httpAuth
-     * @return \DCarbone\PHPConsulAPI\Config
-     */
     public function setHttpAuth(HttpAuth|string $httpAuth): self
     {
         if (\is_string($httpAuth)) {
@@ -439,99 +318,61 @@ class Config
         );
     }
 
-    /**
-     * @return string
-     */
     public function getCAFile(): string
     {
         return $this->CAFile;
     }
 
-    /**
-     * @param string $caFile
-     * @return \DCarbone\PHPConsulAPI\Config
-     */
     public function setCAFile(string $caFile): self
     {
         $this->CAFile = $caFile;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getCertFile(): string
     {
         return $this->CertFile;
     }
 
-    /**
-     * @param string $certFile
-     * @return \DCarbone\PHPConsulAPI\Config
-     */
     public function setCertFile(string $certFile): self
     {
         $this->CertFile = $certFile;
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getKeyFile(): string
     {
         return $this->KeyFile;
     }
 
-    /**
-     * @param string $keyFile
-     * @return \DCarbone\PHPConsulAPI\Config
-     */
     public function setKeyFile(string $keyFile): self
     {
         $this->KeyFile = $keyFile;
         return $this;
     }
 
-    /**
-     * @return \GuzzleHttp\ClientInterface
-     */
     public function getHttpClient(): ClientInterface
     {
         return $this->HttpClient;
     }
 
-    /**
-     * @param \GuzzleHttp\ClientInterface $httpClient
-     * @return \DCarbone\PHPConsulAPI\Config
-     */
     public function setHttpClient(ClientInterface $httpClient): self
     {
         $this->HttpClient = $httpClient;
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getJSONEncodeOpts(): int
     {
         return $this->JSONEncodeOpts;
     }
 
-    /**
-     * @param int $jsonEncodeOpts
-     * @return \DCarbone\PHPConsulAPI\Config
-     */
     public function setJSONEncodeOpts(int $jsonEncodeOpts): self
     {
         $this->JSONEncodeOpts = $jsonEncodeOpts;
         return $this;
     }
 
-    /**
-     * @return array
-     */
     public static function getEnvironmentConfig(): array
     {
         $ret = [];
@@ -555,10 +396,6 @@ class Config
         return $ret;
     }
 
-    /**
-     * @param string $param
-     * @return string|null
-     */
     protected static function _tryGetEnvParam(string $param): ?string
     {
         if (isset($_ENV[$param])) {
@@ -576,9 +413,6 @@ class Config
         return null;
     }
 
-    /**
-     * @return array
-     */
     private static function _getDefaultConfig(): array
     {
         $conf = self::DEFAULT_CONFIG;

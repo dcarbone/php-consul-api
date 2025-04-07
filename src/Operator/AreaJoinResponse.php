@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Operator;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -22,37 +22,22 @@ namespace DCarbone\PHPConsulAPI\Operator;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
-/**
- * Class AreaJoinResponse
- */
 class AreaJoinResponse extends AbstractModel
 {
-    /** @var string */
     public string $Address = '';
-    /** @var bool */
     public bool $Joined = false;
-    /** @var string */
     public string $Error = '';
 
-    /**
-     * @return string
-     */
     public function getAddress(): string
     {
         return $this->Address;
     }
 
-    /**
-     * @return bool
-     */
     public function isJoined(): bool
     {
         return $this->Joined;
     }
 
-    /**
-     * @return string
-     */
     public function getError(): string
     {
         return $this->Error;

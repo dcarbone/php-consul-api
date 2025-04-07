@@ -3,7 +3,7 @@ name: "Tests"
 on:
   pull_request:
     branches:
-      - master
+      - main
     paths:
       - '**.php'
       - 'composer.json'
@@ -12,7 +12,7 @@ on:
       - '.github/workflows/tests.yaml'
   push:
     branches:
-      - master
+      - main
     paths:
       - '**.php'
       - 'composer.json'
@@ -22,18 +22,37 @@ on:
 
 env:
   CONSUL_HTTP_ADDR: "127.0.0.1:8500"
-  CONSUL_VERSION: '1.17.2'
+  CONSUL_VERSION: '1.20.5'
 
 jobs:
   tests:
     runs-on: ubuntu-22.04
     strategy:
       matrix:
-        php-version: ["8.0", "8.1", "8.2"]
+        php-version:
+          - '8.1'
+          - '8.2'
+          - '8.3'
+          - '8.4'
 
     name: Tests - PHP ${{ matrix.php-version }}
     steps:
       - uses: actions/checkout@v4
+
+      - name: 'Define vars'
+        id: vars
+        shell: bash -e {0}
+        # language=sh
+        run: |
+          _phpunit_version=
+          case "${{ matrix.php-version }}" in
+            8.1) _phpunit_version='10.5' ;;
+            8.2) _phpunit_version='11.1' ;;
+            8.3) _phpunit_version='11.1' ;;
+            8.4) _phpunit_version='11.1' ;;
+            *) echo "Unsupported PHP version: ${{ matrix.php-version }}" && exit 1 ;;
+          esac
+          echo "phpunit-version=${_phpunit_version}" >> $GITHUB_OUTPUT
 
       - uses: shivammathur/setup-php@v2
         with:
@@ -41,23 +60,77 @@ jobs:
           extensions: json
           ini-values: precision=14,serialize_precision=-1
 
-      - name: 'Composer update'
-        # language=bash
-        run: |
-          composer update \
-            --no-ansi \
-            --no-interaction \
-            --no-scripts \
-            --no-progress
+      - name: 'Install jq'
+        uses: dcarbone/install-jq-action@v3
+        with:
+          force: true
 
-      - name: 'Install Consul'
+      - name: 'Set composer dep versions'
+        shell: bash -e {0}
+        # language=sh
+        run: |
+          tmpf="$(mktemp)"
+          jq -rcM '."require-dev"."phpunit/phpunit" = "^${{ steps.vars.outputs.phpunit-version }}"' composer.json > "${tmpf}"
+          mv "${tmpf}" composer.json
+
+      - name: 'Get composer cache directory'
+        id: composer-cache
+        shell: bash -e {0}
+        # language=sh
+        run: |
+          echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: 'Init composer dep cache'
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: "composer-${{ runner.os }}-${{ matrix.php-version }}-${{ steps.vars.outputs.phpunit-version }}-${{ hashFiles('composer.lock') }}"
+
+      - name: 'Install composer deps'
+        shell: bash -e {0}
+        # language=sh
+        run: |
+          rm composer.lock
+          composer update --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: 'Save composer dep cache'
+        if: steps.cache.outputs.cache-hit != 'true' && steps.cache.outputs.cache-hit != true
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: "composer-${{ runner.os }}-${{ matrix.php-version }}-${{ steps.vars.outputs.phpunit-version }}-${{ hashFiles('composer.lock') }}"
+
+      - name: 'Restore consul ${{ env.CONSUL_VERSION }}'
+        id: consul-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: '${{ runner.tool_cache }}/consul'
+          key: 'consul-${{ env.CONSUL_VERSION }}'
+
+      - name: 'Install consul ${{ env.CONSUL_VERSION }}'
+        if: '! steps.consul-cache.outputs.cache-hit'
+        working-directory: '${{ runner.temp }}'
         # language=bash
         run: |
-          wget https://releases.hashicorp.com/consul/${{ env.CONSUL_VERSION }}/consul_${{ env.CONSUL_VERSION }}_linux_amd64.zip
-          unzip consul_${{ env.CONSUL_VERSION }}_linux_amd64.zip -d /usr/local/bin/
-          rm consul_${{ env.CONSUL_VERSION }}_linux_amd64.zip
-          chmod +x /usr/local/bin/consul
-          consul --version
+          mkdir consul
+          wget -O consul.zip https://releases.hashicorp.com/consul/${{ env.CONSUL_VERSION }}/consul_${{ env.CONSUL_VERSION }}_linux_amd64.zip
+          unzip 'consul.zip' consul -d consul/
+          rm consul.zip
+          chmod +x consul/consul
+
+      - name: 'Install consul ${{ env.CONSUL_VERSION }} into tool cache'
+        uses: AnimMouse/tool-cache@v1
+        with:
+          folder_name: consul
+          cache_hit: ${{ steps.consul-cache.outputs.cache-hit }}
+
+      - name: 'Save consul ${{ env.CONSUL_VERSION }} cache'
+        if: '! steps.consul-cache.outputs.cache-hit'
+        uses: actions/cache/save@v4
+        with:
+          path: '${{ runner.tool_cache }}/consul'
+          key: 'consul-${{ env.CONSUL_VERSION }}'
 
       - name: 'Execute tests'
         # language=bash

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Coordinate;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -30,19 +30,11 @@ use DCarbone\PHPConsulAPI\AbstractModel;
  */
 class Coordinate extends AbstractModel
 {
-    /** @var int[] */
     public array $Vec = [];
-    /** @var float */
     public float $Error = 0.0;
-    /** @var float */
     public float $Adjustment = 0.0;
-    /** @var float */
     public float $Height = 0.0;
 
-    /**
-     * Coordinate constructor.
-     * @param array|\DCarbone\PHPConsulAPI\Coordinate\CoordinateConfig $data
-     */
     public function __construct($data = [])
     {
         if (\is_array($data)) {
@@ -64,33 +56,21 @@ class Coordinate extends AbstractModel
         }
     }
 
-    /**
-     * @return int[]
-     */
     public function getVec(): array
     {
         return $this->Vec;
     }
 
-    /**
-     * @return float
-     */
     public function getError(): float
     {
         return $this->Error;
     }
 
-    /**
-     * @return float
-     */
     public function getAdjustment(): float
     {
         return $this->Adjustment;
     }
 
-    /**
-     * @return float
-     */
     public function getHeight(): float
     {
         return $this->Height;
@@ -106,9 +86,6 @@ class Coordinate extends AbstractModel
         return clone $this;
     }
 
-    /**
-     * @return bool
-     */
     public function IsValid(): bool
     {
         foreach ($this->Vec as $vec) {
@@ -119,21 +96,11 @@ class Coordinate extends AbstractModel
         return is_finite($this->Error) && is_finite($this->Adjustment) && is_finite($this->Height);
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\Coordinate\Coordinate $other
-     * @return bool
-     */
     public function IsCompatibleWith(self $other): bool
     {
         return \count($this->Vec) === \count($other->Vec);
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\Coordinate\CoordinateConfig $config
-     * @param float $force
-     * @param \DCarbone\PHPConsulAPI\Coordinate\Coordinate $other
-     * @return \DCarbone\PHPConsulAPI\Coordinate\Coordinate
-     */
     public function ApplyForce(CoordinateConfig $config, float $force, self $other): self
     {
         if (!$this->IsCompatibleWith($other)) {
@@ -150,10 +117,6 @@ class Coordinate extends AbstractModel
         return $ret;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\Coordinate\Coordinate $other
-     * @return \DCarbone\Go\Time\Duration
-     */
     public function DistanceTo(self $other): Time\Duration
     {
         static $secondsToNanoseconds = 1.0e9;
@@ -170,10 +133,6 @@ class Coordinate extends AbstractModel
         return Time::Duration($dist * $secondsToNanoseconds);
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\Coordinate\Coordinate $other
-     * @return float
-     */
     protected function rawDistanceTo(self $other): float
     {
         return magnitude(diff($this->Vec, $other->Vec)) + $this->Height + $other->Height;

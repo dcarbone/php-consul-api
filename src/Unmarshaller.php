@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -24,19 +24,8 @@ use DCarbone\PHPConsulAPI\Event\UserEvent;
 use DCarbone\PHPConsulAPI\KV\KVPair;
 use DCarbone\PHPConsulAPI\KV\KVTxnOp;
 
-/**
- * Used to assist with unmarshalling json responses
- *
- * Trait Unmarshaller
- */
 trait Unmarshaller
 {
-    /**
-     * Attempts to unmarshal the provided value into the provided field on the implementing class
-     *
-     * @param string $field
-     * @param mixed $value
-     */
     protected function unmarshalField(string $field, mixed $value): void
     {
         if (isset(static::FIELDS[$field])) {
@@ -64,91 +53,45 @@ trait Unmarshaller
         // is seen with a null value, we still want to define it as null on the implementing type.
     }
 
-    /**
-     * @param array $fieldDef
-     * @return bool
-     */
     protected function fieldIsNullable(array $fieldDef): bool
     {
         // todo: make sure this key is always a bool...
         return $fieldDef[Transcoding::FIELD_NULLABLE] ?? false;
     }
 
-    /**
-     * @param string $type
-     * @return false|float|int|string|null
-     */
     protected static function scalarZeroVal(string $type): float|bool|int|string|null
     {
-        if (Transcoding::STRING === $type) {
-            return '';
-        }
-        if (Transcoding::INTEGER === $type) {
-            return 0;
-        }
-        if (Transcoding::DOUBLE === $type) {
-            return 0.0;
-        }
-        if (Transcoding::BOOLEAN === $type) {
-            return false;
-        }
-
-        return null;
+        return match ($type) {
+            Transcoding::STRING => '',
+            Transcoding::INTEGER => 0,
+            Transcoding::DOUBLE => 0.0,
+            Transcoding::BOOLEAN => false,
+            default => null,
+        };
     }
 
-    /**
-     * @param string $field
-     * @param mixed $value
-     * @param string $type
-     * @param bool $nullable
-     * @return bool|float|int|string
-     */
     private function buildScalarValue(string $field, mixed $value, string $type, bool $nullable): float|bool|int|string|null
     {
-        // if the incoming value is null...
         if (null === $value) {
-            // ...and this field is nullable, just return null
-            if ($nullable) {
-                return null;
-            }
-            // otherwise return zero val for this type
-            return self::scalarZeroVal($type);
+            return $nullable ? null : self::scalarZeroVal($type);
         }
 
-        if (Transcoding::STRING === $type) {
-            return (string)$value;
-        }
-        if (Transcoding::INTEGER === $type) {
-            return \intval($value, 10);
-        }
-        if (Transcoding::DOUBLE === $type) {
-            return (float)$value;
-        }
-        if (Transcoding::BOOLEAN === $type) {
-            return (bool)$value;
-        }
+        return match ($type) {
+            Transcoding::STRING => (string)$value,
+            Transcoding::INTEGER => \intval($value, 10),
+            Transcoding::DOUBLE => (float)$value,
+            Transcoding::BOOLEAN => (bool)$value,
 
-        // if we fall down to here, default to try to set the value to whatever it happens to be.
-        return $value;
+            // if we fall down to here, default to try to set the value to whatever it happens to be.
+            default => $value,
+        };
     }
 
-    /**
-     * @param string $field
-     * @param object|array $value
-     * @param string $class
-     * @param bool $nullable
-     * @return object|null
-     */
-    private function buildObjectValue(string $field, object|array $value, string $class, bool $nullable): ?object
+    private function buildObjectValue(string $field, null|object|array $value, string $class, bool $nullable): ?object
     {
         // if the incoming value is null...
         if (null === $value) {
-            // ...and this field is nullable, return null
-            if ($nullable) {
-                return null;
-            }
-            // ... and this field must be an instance of the provided class, return empty new empty instance
-            return new $class([]);
+            return $nullable ? null : new $class([]);
         }
         // if the incoming value is already an instance of the class, clone it and return
         if ($value instanceof $class) {
@@ -163,13 +106,6 @@ trait Unmarshaller
         return new $class((array)$value);
     }
 
-    /**
-     * Handles scalar type field hydration
-     *
-     * @param string $field
-     * @param mixed $value
-     * @param bool $nullable
-     */
     private function unmarshalScalar(string $field, mixed $value, bool $nullable): void
     {
         $this->{$field} = $this->buildScalarValue(
@@ -180,13 +116,6 @@ trait Unmarshaller
         );
     }
 
-    /**
-     * Handles complex type field hydration
-     *
-     * @param string $field
-     * @param mixed $value
-     * @param array $def
-     */
     private function unmarshalComplex(string $field, mixed $value, array $def): void
     {
         // check if a callable has been defined
@@ -250,11 +179,6 @@ trait Unmarshaller
         $this->unmarshalScalar($field, $value, self::fieldIsNullable($def));
     }
 
-    /**
-     * @param string $field
-     * @param mixed $value
-     * @param array $def
-     */
     private function unmarshalObject(string $field, mixed $value, array $def): void
     {
         if (!isset($def[Transcoding::FIELD_CLASS])) {
@@ -276,11 +200,6 @@ trait Unmarshaller
         );
     }
 
-    /**
-     * @param string $field
-     * @param mixed $value
-     * @param array $def
-     */
     private function unmarshalArray(string $field, mixed $value, array $def): void
     {
         // attempt to extract the two possible keys

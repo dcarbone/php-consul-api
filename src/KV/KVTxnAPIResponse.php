@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\KV;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,30 +23,19 @@ namespace DCarbone\PHPConsulAPI\KV;
 use DCarbone\PHPConsulAPI\ErrorContainer;
 use DCarbone\PHPConsulAPI\QueryMetaContainer;
 
-/**
- * Class KVTxnAPIResponse
- */
 class KVTxnAPIResponse
 {
     use QueryMetaContainer;
     use ErrorContainer;
 
-    /** @var bool */
     public bool $OK = false;
-    /** @var \DCarbone\PHPConsulAPI\KV\KVTxnResponse|null */
     public ?KVTxnResponse $KVTxnResponse = null;
 
-    /**
-     * @return bool
-     */
     public function isOK(): bool
     {
         return $this->OK;
     }
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\KV\KVTxnResponse|null
-     */
     public function getKVTxnResponse(): ?KVTxnResponse
     {
         return $this->KVTxnResponse;

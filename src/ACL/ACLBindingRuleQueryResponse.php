@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\ACL;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -23,25 +23,15 @@ namespace DCarbone\PHPConsulAPI\ACL;
 use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
 use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
-/**
- * Class ACLBindingRuleWriteResponse
- */
 class ACLBindingRuleQueryResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    /** @var \DCarbone\PHPConsulAPI\ACL\ACLBindingRule|null */
     public ?ACLBindingRule $ACLBindingRule = null;
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\ACL\ACLBindingRule|null
-     */
     public function getValue(): ?ACLBindingRule
     {
         return $this->ACLBindingRule;
     }
 
-    /**
-     * @param mixed $decodedData
-     */
     public function unmarshalValue(mixed $decodedData): void
     {
         $this->ACLBindingRule = new ACLBindingRule((array)$decodedData);
