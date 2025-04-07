@@ -101,14 +101,36 @@ jobs:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: "composer-${{ runner.os }}-${{ matrix.php-version }}-${{ steps.vars.outputs.phpunit-version }}-${{ hashFiles('composer.lock') }}"
 
-      - name: 'Install Consul'
+      - name: 'Restore consul ${{ env.CONSUL_VERSION }}'
+        id: consul-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: '${{ runner.tool_cache }}/consul'
+          key: 'consul-${{ env.CONSUL_VERSION }}'
+
+      - name: 'Install consul ${{ env.CONSUL_VERSION }}'
+        if: '! steps.consul-cache.outputs.cache-hit'
+        working-directory: '${{ runner.temp }}'
         # language=bash
         run: |
-          wget https://releases.hashicorp.com/consul/${{ env.CONSUL_VERSION }}/consul_${{ env.CONSUL_VERSION }}_linux_amd64.zip
-          unzip consul_${{ env.CONSUL_VERSION }}_linux_amd64.zip -d /usr/local/bin/
+          mkdir consul
+          wget -O consul.zip https://releases.hashicorp.com/consul/${{ env.CONSUL_VERSION }}/consul_${{ env.CONSUL_VERSION }}_linux_amd64.zip
+          unzip 'consul.zip' consul -d consul/
           rm consul_${{ env.CONSUL_VERSION }}_linux_amd64.zip
-          chmod +x /usr/local/bin/consul
-          consul --version
+          chmod +x consul/consul
+          
+      - name: 'Install consul ${{ env.CONSUL_VERSION }} into tool cache'
+        uses: AnimMouse/tool-cache@v1
+        with:
+          folder_name: consul
+          cache_hit: ${{ steps.consul-cache.outputs.cache-hit }}
+
+      - name: 'Save consul ${{ env.CONSUL_VERSION }} cache'
+        if: '! steps.consul-cache.outputs.cache-hit'
+        uses: actions/cache/save@v4
+        with:
+          path: '${{ runner.tool_cache }}/consul'
+          key: 'consul-${{ env.CONSUL_VERSION }}'
 
       - name: 'Execute tests'
         # language=bash
