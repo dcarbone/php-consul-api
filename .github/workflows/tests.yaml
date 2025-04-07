@@ -116,9 +116,9 @@ jobs:
           mkdir consul
           wget -O consul.zip https://releases.hashicorp.com/consul/${{ env.CONSUL_VERSION }}/consul_${{ env.CONSUL_VERSION }}_linux_amd64.zip
           unzip 'consul.zip' consul -d consul/
-          rm consul_${{ env.CONSUL_VERSION }}_linux_amd64.zip
+          rm consul.zip
           chmod +x consul/consul
-          
+
       - name: 'Install consul ${{ env.CONSUL_VERSION }} into tool cache'
         uses: AnimMouse/tool-cache@v1
         with:
