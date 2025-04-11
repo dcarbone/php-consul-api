@@ -25,15 +25,19 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class ACLRoleQueryResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?ACLRole $ACLRole = null;
+    public null|ACLRole $ACLRole = null;
 
-    public function getValue(): ?ACLRole
+    public function getValue(): null|ACLRole
     {
         return $this->ACLRole;
     }
 
     public function unmarshalValue(mixed $decodedData): void
     {
-        $this->ACLRole = new ACLRole((array)$decodedData);
+        if (null === $decodedData) {
+            $this->ACLRole = null;
+            return;
+        }
+        $this->ACLRole = ACLRole::jsonUnserialize($decodedData);
     }
 }

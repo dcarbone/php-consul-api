@@ -27,7 +27,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class ServiceEntry extends AbstractModel
 {
-    protected const FIELDS = [
+    public const FIELDS = [
         self::FIELD_NODE    => [
             Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
             Transcoding::FIELD_CLASS    => Node::class,

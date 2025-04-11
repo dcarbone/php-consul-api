@@ -27,63 +27,38 @@ use GuzzleHttp\RequestOptions;
 
 class Config
 {
-    use Unmarshaller;
-
     public const DEFAULT_REQUEST_OPTIONS = [
         RequestOptions::HTTP_ERRORS    => false,
         RequestOptions::DECODE_CONTENT => false,
     ];
 
-    protected const FIELDS = [
-        self::FIELD_HTTP_AUTH => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => 'setHttpAuth',
-        ],
-        self::FIELD_WAIT_TIME => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_NULLABLE_DURATION,
-        ],
-    ];
+    public const DEFAULT_ADDRESS = '127.0.0.1:8500';
+    public const DEFAULT_SCHEME = 'http';
 
-    private const FIELD_HTTP_AUTH            = 'HttpAuth';
-    private const FIELD_WAIT_TIME            = 'WaitTime';
-    private const FIELD_ADDRESS              = 'Address';
-    private const FIELD_SCHEME               = 'Scheme';
-    private const FIELD_JSON_ENCODE_OPTS     = 'JSONEncodeOpts';
-    private const FIELD_TOKEN                = 'Token';
-    private const FIELD_TOKEN_FILE           = 'TokenFile';
-    private const FIELD_CA_FILE              = 'CAFile';
-    private const FIELD_CERT_FILE            = 'CertFile';
-    private const FIELD_KEY_FILE             = 'KeyFile';
-    private const FIELD_INSECURE_SKIP_VERIFY = 'InsecureSkipVerify';
-
-    private const DEFAULT_CONFIG = [
-        self::FIELD_ADDRESS          => '127.0.0.1:8500',
-        self::FIELD_SCHEME           => 'http',
-        self::FIELD_JSON_ENCODE_OPTS => \JSON_UNESCAPED_SLASHES,
-    ];
 
     /**
      * The address, including port, of your Consul Agent
      *
      * @var string
      */
-    public string $Address = '';
+    public string $Address;
 
-    public string $Scheme = '';
+    public string $Scheme;
 
-    public string $Datacenter = '';
+    public string $Datacenter;
 
-    public string $Namespace = '';
+    public string $Namespace;
 
     /**
      * HTTP authentication, if used
      *
      * @var \DCarbone\PHPConsulAPI\HttpAuth|null
      */
-    public ?HttpAuth $HttpAuth = null;
+    public null|HttpAuth $HttpAuth;
 
-    public ?Time\Duration $WaitTime = null;
+    public null|Time\Duration $WaitTime;
 
-    public string $Token = '';
+    public string $Token;
 
     /**
      * File containing the current token to use for this client.
@@ -92,35 +67,71 @@ class Config
      *
      * @var string
      */
-    public string $TokenFile = '';
+    public string $TokenFile;
 
-    public string $CAFile = '';
+    public string $CAFile;
 
     /**
      * Optional path to certificate.  If set, KeyFile must also be set
      *
      * @var string
      */
-    public string $CertFile = '';
+    public string $CertFile;
 
     /**
      * Optional path to private key.  If set, CertFile must also be set
      *
      * @var string
      */
-    public string $KeyFile = '';
+    public string $KeyFile;
 
-    public bool $InsecureSkipVerify = false;
+    public bool $InsecureSkipVerify;
 
     public ClientInterface $HttpClient;
 
-    public int $JSONEncodeOpts = 0;
+    public int $JSONEncodeOpts;
+    public int $JSONDecodeMaxDepth;
+    public int $JSONDecodeOpts;
 
-    public function __construct(array $config = [])
-    {
-        foreach ($config + self::_getDefaultConfig() as $k => $v) {
-            $this->unmarshalField($k, $v);
-        }
+    public function __construct(
+        string $Address = self::DEFAULT_ADDRESS,
+        string $Scheme = self::DEFAULT_SCHEME,
+        string $Datacenter = '',
+        string $Namespace = '',
+        null|string|HttpAuth $HttpAuth = null,
+        null|string|int|float|\DateInterval|Time\Duration $WaitTime = null,
+        string $Token = '',
+        string $TokenFile = '',
+        string $CAFile = '',
+        string $CertFile = '',
+        string $KeyFile = '',
+        bool $InsecureSkipVerify = false,
+        null|ClientInterface $HttpClient = null,
+        int $JSONEncodeOpts = JSON_UNESCAPED_SLASHES,
+        int $JSONDecodeMaxDepth = 512,
+        int $JSONDecodeOpts = 0,
+    ) {
+        $this->Address = self::_resolveValue($Address, Consul::HTTPAddrEnvName, self::DEFAULT_ADDRESS);
+        $scheme = strtolower(self::_resolveValue($Scheme, Consul::HTTPSSLEnvName, self::DEFAULT_SCHEME));
+        $this->Scheme = match ($scheme) {
+            'true' => 'https',
+            'false' => 'http',
+            default => $scheme,
+        };
+        $this->Datacenter = $Datacenter;
+        $this->Namespace = $Namespace;
+        $this->setHttpAuth(self::_resolveValue($HttpAuth, Consul::HTTPAuthEnvName, null));
+        $this->setWaitTime($WaitTime);
+        $this->Token = self::_resolveValue($Token, Consul::HTTPTokenEnvName, '');
+        $this->TokenFile = self::_resolveValue($TokenFile, Consul::HTTPTokenFileEnvName, '');
+        $this->CAFile = self::_resolveValue($CAFile, Consul::HTTPCAFileEnvName, '');
+        $this->CertFile = self::_resolveValue($CertFile, Consul::HTTPClientCertEnvName, '');
+        $this->KeyFile = self::_resolveValue($KeyFile, Consul::HTTPClientKeyEnvName, '');
+        $skipVerify = self::_resolveValue($InsecureSkipVerify, Consul::HTTPSSLVerifyEnvName, false);
+        $this->InsecureSkipVerify = match($skipVerify) {
+            is_string($skipVerify) => strtolower($skipVerify) === 'true',
+            default => $skipVerify,
+        };
 
         // quick validation on key/cert combo
         $c = $this->CertFile;
@@ -136,13 +147,14 @@ class Config
             );
         }
 
-        // if client hasn't been constructed, construct.
-        if (!isset($this->HttpClient)) {
-            $this->HttpClient = new Client();
-        }
+        $this->HttpClient = $HttpClient ?? new Client();
+
+        $this->JSONEncodeOpts = $JSONEncodeOpts;
+        $this->JSONDecodeMaxDepth = $JSONDecodeMaxDepth;
+        $this->JSONDecodeOpts = $JSONDecodeOpts;
     }
 
-    public static function merge(?self $inc): self
+    public static function merge(null|Config $inc): Config
     {
         $actual = static::newDefaultConfig();
         if (null === $inc) {
@@ -190,12 +202,16 @@ class Config
         if (0 !== $inc->JSONEncodeOpts) {
             $actual->JSONEncodeOpts = $inc->JSONEncodeOpts;
         }
+        if (0 !== $inc->JSONDecodeMaxDepth) {
+            $actual->JSONDecodeMaxDepth = $inc->JSONDecodeMaxDepth;
+        }
+        $actual->JSONDecodeOpts = self::_resolveValue($inc->JSONDecodeOpts, '', $actual->JSONDecodeOpts);
         return $actual;
     }
 
     public static function newDefaultConfig(): self
     {
-        return new static(self::_getDefaultConfig());
+        return new static();
     }
 
     public function getAddress(): string
@@ -214,7 +230,7 @@ class Config
         return $this->Scheme;
     }
 
-    public function setScheme(string $scheme): self
+    public function setScheme(bool|string $scheme): self
     {
         $this->Scheme = $scheme;
         return $this;
@@ -246,7 +262,7 @@ class Config
         return $this->WaitTime;
     }
 
-    public function setWaitTime(mixed $waitTime): self
+    public function setWaitTime(null|string|int|float|\DateInterval|Time\Duration $waitTime): self
     {
         $this->WaitTime = Time::Duration($waitTime);
         return $this;
@@ -290,9 +306,14 @@ class Config
         return $this->HttpAuth;
     }
 
-    public function setHttpAuth(HttpAuth|string $httpAuth): self
+    public function setHttpAuth(null|string|HttpAuth $httpAuth): self
     {
-        if (\is_string($httpAuth)) {
+        if (null === $httpAuth) {
+            $this->HttpAuth = null;
+            return $this;
+        }
+
+        if (is_string($httpAuth)) {
             $colon = strpos($httpAuth, ':');
             if (false === $colon) {
                 $username = $httpAuth;
@@ -304,18 +325,8 @@ class Config
             $httpAuth = new HttpAuth($username, $password);
         }
 
-        if ($httpAuth instanceof HttpAuth) {
-            $this->HttpAuth = $httpAuth;
-            return $this;
-        }
-
-        throw new \InvalidArgumentException(
-            sprintf(
-                '%s::setHttpAuth - Value is expected to be string of "username:password" or instance of "\\DCarbone\\PHPConsulApi\\HttpAuth", %s seen.',
-                static::class,
-                \is_string($httpAuth) ? $httpAuth : \gettype($httpAuth)
-            )
-        );
+        $this->HttpAuth = $httpAuth;
+        return $this;
     }
 
     public function getCAFile(): string
@@ -373,77 +384,44 @@ class Config
         return $this;
     }
 
-    public static function getEnvironmentConfig(): array
+    public function getJSONDecodeMaxDepth(): int
     {
-        $ret = [];
-        foreach (
-            [
-                Consul::HTTPAddrEnvName       => static::_tryGetEnvParam(Consul::HTTPAddrEnvName),
-                Consul::HTTPTokenEnvName      => static::_tryGetEnvParam(Consul::HTTPTokenEnvName),
-                Consul::HTTPTokenFileEnvName  => static::_tryGetEnvParam(Consul::HTTPTokenFileEnvName),
-                Consul::HTTPAuthEnvName       => static::_tryGetEnvParam(Consul::HTTPAuthEnvName),
-                Consul::HTTPCAFileEnvName     => static::_tryGetEnvParam(Consul::HTTPCAFileEnvName),
-                Consul::HTTPClientCertEnvName => static::_tryGetEnvParam(Consul::HTTPClientCertEnvName),
-                Consul::HTTPClientKeyEnvName  => static::_tryGetEnvParam(Consul::HTTPClientKeyEnvName),
-                Consul::HTTPSSLEnvName        => static::_tryGetEnvParam(Consul::HTTPSSLEnvName),
-                Consul::HTTPSSLVerifyEnvName  => static::_tryGetEnvParam(Consul::HTTPSSLVerifyEnvName),
-            ] as $k => $v
-        ) {
-            if (null !== $v) {
-                $ret[$k] = $v;
-            }
-        }
-        return $ret;
+        return $this->JSONDecodeMaxDepth;
     }
 
-    protected static function _tryGetEnvParam(string $param): ?string
+    public function setJSONDecodeMaxDepth(int $JSONDecodeMaxDepth): Config
     {
-        if (isset($_ENV[$param])) {
-            return $_ENV[$param];
-        }
-
-        if (false !== ($value = getenv($param))) {
-            return $value;
-        }
-
-        if (isset($_SERVER[$param])) {
-            return $_SERVER[$param];
-        }
-
-        return null;
+        $this->JSONDecodeMaxDepth = $JSONDecodeMaxDepth;
+        return $this;
     }
 
-    private static function _getDefaultConfig(): array
+    public function getJSONDecodeOpts(): int
     {
-        $conf = self::DEFAULT_CONFIG;
+        return $this->JSONDecodeOpts;
+    }
 
-        // parse env vars
-        foreach (static::getEnvironmentConfig() as $k => $v) {
-            if (Consul::HTTPAddrEnvName === $k) {
-                $conf[self::FIELD_ADDRESS] = $v;
-            } elseif (Consul::HTTPTokenEnvName === $k) {
-                $conf[self::FIELD_TOKEN] = $v;
-            } elseif (Consul::HTTPTokenFileEnvName === $k) {
-                $conf[self::FIELD_TOKEN_FILE] = $v;
-            } elseif (Consul::HTTPAuthEnvName === $k) {
-                $conf[self::FIELD_HTTP_AUTH] = $v;
-            } elseif (Consul::HTTPCAFileEnvName === $k) {
-                $conf[self::FIELD_CA_FILE] = $v;
-            } elseif (Consul::HTTPClientCertEnvName === $k) {
-                $conf[self::FIELD_CERT_FILE] = $v;
-            } elseif (Consul::HTTPClientKeyEnvName === $k) {
-                $conf[self::FIELD_KEY_FILE] = $v;
-            } elseif (Consul::HTTPSSLEnvName === $k) {
-                if ((bool)$v) {
-                    $conf[self::FIELD_SCHEME] = 'https';
-                }
-            } elseif (Consul::HTTPSSLVerifyEnvName === $k) {
-                if ((bool)$v) {
-                    $conf[self::FIELD_INSECURE_SKIP_VERIFY] = true;
-                }
+    public function setJSONDecodeOpts(int $JSONDecodeOpts): Config
+    {
+        $this->JSONDecodeOpts = $JSONDecodeOpts;
+        return $this;
+    }
+
+    protected static function _resolveValue(mixed $explicit, string $env, mixed $default): mixed
+    {
+        if ($explicit !== $default) {
+            return $explicit;
+        }
+
+        if ($env !== '') {
+            if (isset($_ENV[$env])) {
+                return $_ENV[$env];
+            } elseif (false !== ($value = getenv($env))) {
+                return $value;
+            } elseif (isset($_SERVER[$env])) {
+                return $_SERVER[$env];
             }
         }
 
-        return $conf;
+        return $default;
     }
 }

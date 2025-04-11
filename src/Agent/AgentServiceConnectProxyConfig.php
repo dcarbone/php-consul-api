@@ -28,7 +28,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class AgentServiceConnectProxyConfig extends AbstractModel
 {
-    protected const FIELDS = [
+    public const FIELDS = [
         self::FIELD_ENVOY_EXTENSIONS => [
             Transcoding::FIELD_CLASS => EnvoyExtension::class,
             Transcoding::FIELD_TYPE => Transcoding::ARRAY,

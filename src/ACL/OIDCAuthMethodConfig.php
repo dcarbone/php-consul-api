@@ -24,4 +24,21 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 
 class OIDCAuthMethodConfig extends AbstractModel
 {
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new static();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        return $out;
+    }
 }

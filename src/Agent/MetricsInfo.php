@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class MetricsInfo extends AbstractModel
 {
-    protected const FIELDS = [
+    public const FIELDS = [
         self::FIELD_GAUGES => [
             Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
             Transcoding::FIELD_CLASS      => GaugeValue::class,

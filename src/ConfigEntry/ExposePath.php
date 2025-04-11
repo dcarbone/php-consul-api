@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class ExposePath extends AbstractModel
 {
-    protected const FIELDS = [
+    public const FIELDS = [
         self::FIELD_LISTENER_PORT   => Transcoding::OMITEMPTY_INTEGER_FIELD,
         self::FIELD_PATH            => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_LOCAL_PORT_PATH => Transcoding::OMITEMPTY_INTEGER_FIELD,

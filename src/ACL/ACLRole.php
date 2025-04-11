@@ -21,47 +21,43 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class ACLRole extends AbstractModel
 {
-    protected const FIELDS = [
-        self::FIELD_POLICIES           => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => ACLTokenPolicyLink::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-        self::FIELD_SERVICE_IDENTITIES => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => ACLServiceIdentity::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-        self::FIELD_NODE_IDENTITIES    => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => ACLNodeIdentity::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-        self::FIELD_NAMESPACE          => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
+    public string $ID;
+    public string $Name;
+    public string $Description;
+    public array $Policies;
+    public array $ServiceIdentities;
+    public array $NodeIdentities;
+    public string $Hash;
+    public int $CreateIndex;
+    public int $ModifyIndex;
+    public string $Namespace;
 
-    private const FIELD_POLICIES           = 'Policies';
-    private const FIELD_SERVICE_IDENTITIES = 'ServiceIdentities';
-    private const FIELD_NODE_IDENTITIES    = 'NodeIdentities';
-    private const FIELD_NAMESPACE          = 'Namespace';
-
-    public string $ID = '';
-    public string $Name = '';
-    public string $Description = '';
-    public array $Policies = [];
-    public array $ServiceIdentities = [];
-    public array $NodeIdentities = [];
-    public string $Hash = '';
-    public int $CreateIndex = 0;
-    public int $ModifyIndex = 0;
-    public string $Namespace = '';
+    public function __construct(
+        string $ID = '',
+        string $Name = '',
+        string $Description = '',
+        iterable $Policies = [],
+        iterable $ServiceIdentities = [],
+        iterable $NodeIdentities = [],
+        string $Hash = '',
+        int $CreateIndex = 0,
+        int $ModifyIndex = 0,
+        string $Namespace = ''
+    ) {
+        $this->ID = $ID;
+        $this->Name = $Name;
+        $this->Description = $Description;
+        $this->setPolicies(...$Policies);
+        $this->setServiceIdentities(...$ServiceIdentities);
+        $this->setNodeIdentities(...$NodeIdentities);
+        $this->Hash = $Hash;
+        $this->CreateIndex = $CreateIndex;
+        $this->ModifyIndex = $ModifyIndex;
+        $this->Namespace = $Namespace;
+    }
 
     public function getID(): string
     {
@@ -101,7 +97,7 @@ class ACLRole extends AbstractModel
         return $this->Policies;
     }
 
-    public function setPolicies(array $Policies): self
+    public function setPolicies(ACLTokenPolicyLink ...$Policies): self
     {
         $this->Policies = $Policies;
         return $this;
@@ -112,7 +108,7 @@ class ACLRole extends AbstractModel
         return $this->ServiceIdentities;
     }
 
-    public function setServiceIdentities(array $ServiceIdentities): self
+    public function setServiceIdentities(ACLServiceIdentity ...$ServiceIdentities): self
     {
         $this->ServiceIdentities = $ServiceIdentities;
         return $this;
@@ -123,7 +119,7 @@ class ACLRole extends AbstractModel
         return $this->NodeIdentities;
     }
 
-    public function setNodeIdentities(array $NodeIdentities): self
+    public function setNodeIdentities(ACLNodeIdentity ...$NodeIdentities): self
     {
         $this->NodeIdentities = $NodeIdentities;
         return $this;
@@ -171,5 +167,55 @@ class ACLRole extends AbstractModel
     {
         $this->Namespace = $Namespace;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new static();
+        foreach ($decoded as $k => $v) {
+            if ('Policies' === $k) {
+                foreach ($v as $vv) {
+                    $n->Policies[] = ACLTokenPolicyLink::jsonUnserialize($vv);
+                }
+            } elseif ('ServiceIdentities' === $k) {
+                foreach ($v as $vv) {
+                    $n->ServiceIdentities[] = ACLServiceIdentity::jsonUnserialize($vv);
+                }
+            } elseif ('NodeIdentities' === $k) {
+                foreach ($v as $vv) {
+                    $n->NodeIdentities[] = ACLNodeIdentity::jsonUnserialize($vv);
+                }
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->ID = $this->ID;
+        $out->Name = $this->Name;
+        $out->Description = $this->Description;
+        $out->Hash = $this->Hash;
+        if ([] !== $this->Policies) {
+            $out->Policies = $this->Policies;
+        }
+        if ([] !== $this->ServiceIdentities) {
+            $out->ServiceIdentities = $this->ServiceIdentities;
+        }
+        if ([] !== $this->NodeIdentities) {
+            $out->NodeIdentities = $this->NodeIdentities;
+        }
+        $out->CreateIndex = $this->CreateIndex;
+        $out->ModifyIndex = $this->ModifyIndex;
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        return $out;
     }
 }

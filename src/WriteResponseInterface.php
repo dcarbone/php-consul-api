@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI\ACL;
+namespace DCarbone\PHPConsulAPI;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,22 +20,7 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
-
-class ACLPolicyListEntryQueryResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
+interface WriteResponseInterface
 {
-    public array $ACLPolicyListEntries = [];
-
-    public function getValue(): array
-    {
-        return $this->ACLPolicyListEntries;
-    }
-
-    public function unmarshalValue(mixed $decodedData): void
-    {
-        foreach ($decodedData as $datum) {
-            $this->ACLPolicyListEntries[] = ACLPolicyListEntry::jsonUnserialize($datum);
-        }
-    }
+    public function getWriteMeta(): null|WriteMeta;
 }

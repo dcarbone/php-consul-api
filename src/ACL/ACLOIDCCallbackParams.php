@@ -24,10 +24,22 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 
 class ACLOIDCCallbackParams extends AbstractModel
 {
-    public string $AuthMethod = '';
-    public string $State = '';
-    public string $Code = '';
-    public string $ClientNonce = '';
+    public string $AuthMethod;
+    public string $State;
+    public string $Code;
+    public string $ClientNonce;
+
+    public function __construct(
+        string $AuthMethod = '',
+        string $State = '',
+        string $Code = '',
+        string $ClientNonce = '',
+    ) {
+        $this->AuthMethod = $AuthMethod;
+        $this->State = $State;
+        $this->Code = $Code;
+        $this->ClientNonce = $ClientNonce;
+    }
 
     public function getAuthMethod(): string
     {
@@ -71,5 +83,27 @@ class ACLOIDCCallbackParams extends AbstractModel
     {
         $this->ClientNonce = $ClientNonce;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new static();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->AuthMethod = $this->AuthMethod;
+        $out->State = $this->State;
+        $out->Code = $this->Code;
+        $out->ClientNonce = $this->ClientNonce;
+        return $out;
     }
 }

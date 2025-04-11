@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class UpstreamConfiguration extends AbstractModel
 {
-    protected const FIELDS = [
+    public const FIELDS = [
         self::FIELD_NAME                 => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_NAMESPACE            => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_ENJOY_LISTENER_JSON  => Transcoding::OMITEMPTY_STRING_FIELD,

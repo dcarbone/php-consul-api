@@ -21,24 +21,19 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\FakeMap;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class KubernetesAuthMethodConfig extends AbstractModel
 {
-    protected const FIELDS = [
-        self::FIELD_HOST                => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_CA_CERT             => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_SERVICE_ACCOUNT_JWT => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
+    public string $Host;
+    public string $CACert;
+    public string $ServiceAccountJWT;
 
-    private const FIELD_HOST                = 'Host';
-    private const FIELD_CA_CERT             = 'CACert';
-    private const FIELD_SERVICE_ACCOUNT_JWT = 'ServiceAccountJWT';
-
-    public string $Host = '';
-    public string $CACert = '';
-    public string $ServiceAccountJWT = '';
+    public function __construct(string $Host = '', string $CACert = '', string $ServiceAccountJWT = '')
+    {
+        $this->Host = $Host;
+        $this->CACert = $CACert;
+        $this->ServiceAccountJWT = $ServiceAccountJWT;
+    }
 
     public function getHost(): string
     {
@@ -77,16 +72,41 @@ class KubernetesAuthMethodConfig extends AbstractModel
      * RenderToConfig converts this into a map[string]interface{} suitable for use
      * in the ACLAuthMethod.Config field.
      *
-     * @return \DCarbone\PHPConsulAPI\FakeMap
+     * @return array
      */
-    public function RenderToConfig(): FakeMap
+    public function RenderToConfig(): array
     {
-        return new FakeMap(
-            [
-                self::FIELD_HOST                => $this->Host,
-                self::FIELD_CA_CERT             => $this->CACert,
-                self::FIELD_SERVICE_ACCOUNT_JWT => $this->ServiceAccountJWT,
-            ]
-        );
+        return [
+            'Host' => $this->Host,
+            'CACert' => $this->CACert,
+            'ServiceAccountJWT' => $this->ServiceAccountJWT,
+        ];
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new static();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        if ('' !== $this->Host) {
+            $out->Host = $this->Host;
+        }
+        if ('' !== $this->CACert) {
+            $out->CACert = $this->CACert;
+        }
+        if ('' !== $this->ServiceAccountJWT) {
+            $out->ServiceAccountJWT = $this->ServiceAccountJWT;
+        }
+        return $out;
     }
 }

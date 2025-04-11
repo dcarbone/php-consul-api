@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class AutopilotUpgrade extends AbstractModel
 {
-    protected const FIELDS = [
+    public const FIELDS = [
         self::FIELD_TARGET_VERSION               => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_TARGET_VERSION_VOTERS        => Transcoding::OMITEMPTY_STRING_ARRAY_FIELD,
         self::FIELD_TARGET_VERSION_NON_VOTERS    => Transcoding::OMITEMPTY_STRING_ARRAY_FIELD,

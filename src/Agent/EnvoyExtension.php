@@ -26,7 +26,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class EnvoyExtension extends AbstractModel
 {
-    protected const FIELDS = [
+    public const FIELDS = [
         self::FIELD_ARGUMENTS => Transcoding::MAP_FIELD,
     ];
 

@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class HealthCheck extends AbstractModel
 {
-    protected const FIELDS = [
+    public const FIELDS = [
         self::FIELD_NAMESPACE  => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_DEFINITION => [
             Transcoding::FIELD_TYPE  => Transcoding::OBJECT,

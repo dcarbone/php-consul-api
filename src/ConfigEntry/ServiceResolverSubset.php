@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class ServiceResolverSubset extends AbstractModel
 {
-    protected const FIELDS = [
+    public const FIELDS = [
         self::FIELD_FILTER       => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_ONLY_PASSING => Transcoding::OMITEMPTY_BOOLEAN_FIELD,
     ];

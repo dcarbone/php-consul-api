@@ -21,20 +21,17 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class ACLAuthMethodNamespaceRule extends AbstractModel
 {
-    protected const FIELDS = [
-        self::FIELD_SELECTOR       => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_BIND_NAMESPACE => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
+    public string $Selector;
+    public string $BindNamespace;
 
-    private const FIELD_SELECTOR       = 'Selector';
-    private const FIELD_BIND_NAMESPACE = 'BindNamespace';
-
-    public string $Selector = '';
-    public string $BindNamespace = '';
+    public function __construct(string $Selector = '', string $BindNamespace = '')
+    {
+        $this->Selector = $Selector;
+        $this->BindNamespace = $BindNamespace;
+    }
 
     public function getSelector(): string
     {
@@ -56,5 +53,29 @@ class ACLAuthMethodNamespaceRule extends AbstractModel
     {
         $this->BindNamespace = $BindNamespace;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new static();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        if ('' !== $this->Selector) {
+            $out->Selector = $this->Selector;
+        }
+        if ('' !== $this->BindNamespace) {
+            $out->BindNamespace = $this->BindNamespace;
+        }
+        return $out;
     }
 }

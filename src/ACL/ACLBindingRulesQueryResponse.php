@@ -25,9 +25,9 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class ACLBindingRulesQueryResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?array $ACLBindingRules = [];
+    public array $ACLBindingRules = [];
 
-    public function getValue(): ?array
+    public function getValue(): array
     {
         return $this->ACLBindingRules;
     }
@@ -36,7 +36,7 @@ class ACLBindingRulesQueryResponse extends AbstractValuedQueryResponse implement
     {
         $this->ACLBindingRules = [];
         foreach ($decodedData as $datum) {
-            $this->ACLBindingRules[] = new ACLBindingRule($datum);
+            $this->ACLBindingRules[] = ACLBindingRule::jsonUnserialize($datum);
         }
     }
 }

@@ -27,7 +27,7 @@ class ServiceConfigEntry extends AbstractModel implements ConfigEntry
 {
     use ConfigEntryTrait;
 
-    protected const FIELDS = ConfigEntry::INTERFACE_FIELDS + [
+    public const FIELDS = ConfigEntry::INTERFACE_FIELDS + [
         self::FIELD_PROTOCOL          => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_MODE              => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_TRANSPARENT_PROXY => [

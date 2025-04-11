@@ -28,7 +28,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
 {
-    protected const FIELDS = [
+    public const FIELDS = [
         self::FIELD_INTERVAL_DURATION                          => [
             Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_DURATION,
             Transcoding::FIELD_SKIP               => true,

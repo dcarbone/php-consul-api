@@ -28,7 +28,7 @@ class ProxyConfigEntry extends AbstractModel implements ConfigEntry
 {
     use ConfigEntryTrait;
 
-    protected const FIELDS = ConfigEntry::INTERFACE_FIELDS + [
+    public const FIELDS = ConfigEntry::INTERFACE_FIELDS + [
         self::FIELD_MODE              => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_CONFIG            => Transcoding::MAP_FIELD,
         self::FIELD_TRANSPARENT_PROXY => [

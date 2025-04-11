@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class ExposeConfig extends AbstractModel
 {
-    protected const FIELDS = [
+    public const FIELDS = [
         self::FIELD_CHECKS => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_PATHS  => [
             Transcoding::FIELD_TYPE       => Transcoding::ARRAY,

@@ -25,18 +25,17 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class ACLAuthMethodListEntryQueryResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?array $ACLAuthMethodListEntries = [];
+    public array $ACLAuthMethodListEntries = [];
 
-    public function getValue(): ?array
+    public function getValue(): array
     {
         return $this->ACLAuthMethodListEntries;
     }
 
     public function unmarshalValue(mixed $decodedData): void
     {
-        $this->ACLAuthMethodListEntries = [];
         foreach ($decodedData as $datum) {
-            $this->ACLAuthMethodListEntries[] = new ACLAuthMethodListEntry($datum);
+            $this->ACLAuthMethodListEntries[] = ACLAuthMethodListEntry::jsonUnserialize($datum);
         }
     }
 }

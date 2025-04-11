@@ -21,24 +21,37 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class ACLPolicyListEntry extends AbstractModel
 {
-    protected const FIELDS = [
-        self::FIELD_NAMESPACE => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
+    public string $ID;
+    public string $Name;
+    public string $Description;
+    public array $Datacenters;
+    public string $Hash;
+    public int $CreateIndex;
+    public int $ModifyIndex;
+    public string $Namespace;
 
-    private const FIELD_NAMESPACE = 'Namespace';
-
-    public string $ID = '';
-    public string $Name = '';
-    public string $Description = '';
-    public array $Datacenters = [];
-    public string $Hash = '';
-    public int $CreateIndex = 0;
-    public int $ModifyIndex = 0;
-    public string $Namespace = '';
+    public function __construct(
+        string $ID = '',
+        string $Name = '',
+        string $Description = '',
+        iterable $Datacenters = [],
+        string $Hash = '',
+        int $CreateIndex = 0,
+        int $ModifyIndex = 0,
+        string $Namespace = '',
+    ) {
+        $this->ID = $ID;
+        $this->Name = $Name;
+        $this->Description = $Description;
+        $this->setDatacenters(...$Datacenters);
+        $this->Hash = $Hash;
+        $this->CreateIndex = $CreateIndex;
+        $this->ModifyIndex = $ModifyIndex;
+        $this->Namespace = $Namespace;
+    }
 
     public function getID(): string
     {
@@ -78,7 +91,7 @@ class ACLPolicyListEntry extends AbstractModel
         return $this->Datacenters;
     }
 
-    public function setDatacenters(array $Datacenters): self
+    public function setDatacenters(string ...$Datacenters): self
     {
         $this->Datacenters = $Datacenters;
         return $this;
@@ -126,5 +139,37 @@ class ACLPolicyListEntry extends AbstractModel
     {
         $this->Namespace = $Namespace;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new static();
+        foreach ($decoded as $k => $v) {
+            if ('Datacenters' === $k) {
+                $n->setDatacenters(...$v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->ID = $this->ID;
+        $out->Name = $this->Name;
+        $out->Description = $this->Description;
+        $out->Datacenters = $this->Datacenters;
+        $out->Hash = $this->Hash;
+        $out->CreateIndex = $this->CreateIndex;
+        $out->ModifyIndex = $this->ModifyIndex;
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        return $out;
     }
 }

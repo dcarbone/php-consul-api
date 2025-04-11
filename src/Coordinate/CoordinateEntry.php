@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class CoordinateEntry extends AbstractModel
 {
-    protected const FIELDS = [
+    public const FIELDS = [
         self::FIELD_COORDINATE => [
             Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
             Transcoding::FIELD_CLASS    => Coordinate::class,

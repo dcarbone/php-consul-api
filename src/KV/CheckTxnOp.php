@@ -26,7 +26,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class CheckTxnOp extends AbstractModel
 {
-    protected const FIELDS = [
+    public const FIELDS = [
         self::FIELD_CHECK => [
             Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
             Transcoding::FIELD_CLASS => HealthCheck::class,

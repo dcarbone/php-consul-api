@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class RingHashConfig extends AbstractModel
 {
-    protected const FIELDS = [
+    public const FIELDS = [
         self::FIELD_MINIMUM_RING_SIZE => Transcoding::OMITEMPTY_INTEGER_FIELD,
         self::FIELD_MAXIMUM_RING_SIZE => Transcoding::OMITEMPTY_INTEGER_FIELD,
     ];

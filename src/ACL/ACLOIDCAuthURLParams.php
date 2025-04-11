@@ -21,21 +21,25 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\FakeMap;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class ACLOIDCAuthURLParams extends AbstractModel
 {
-    protected const FIELDS = [
-        self::FIELD_META => Transcoding::MAP_FIELD + [Transcoding::FIELD_OMITEMPTY => true],
-    ];
+    public string $AuthMethod;
+    public string $RedirectURI;
+    public string $ClientNonce;
+    public null|array $Meta;
 
-    private const FIELD_META = 'Meta';
-
-    public string $AuthMethod = '';
-    public string $RedirectURI = '';
-    public string $ClientNonce = '';
-    public ?FakeMap $Meta = null;
+    public function __construct(
+        string $AuthMethod = '',
+        string $RedirectURI = '',
+        string $ClientNonce = '',
+        null|array|\stdClass $Meta = null
+    ) {
+        $this->AuthMethod = $AuthMethod;
+        $this->RedirectURI = $RedirectURI;
+        $this->ClientNonce = $ClientNonce;
+        $this->setMeta($Meta);
+    }
 
     public function getAuthMethod(): string
     {
@@ -70,14 +74,45 @@ class ACLOIDCAuthURLParams extends AbstractModel
         return $this;
     }
 
-    public function getMeta(): ?FakeMap
+    public function getMeta(): null|array
     {
         return $this->Meta;
     }
 
-    public function setMeta(mixed $Meta): self
+    public function setMeta(null|array|\stdClass $Meta): self
     {
-        $this->Meta = FakeMap::parse($Meta);
+        $this->Meta = match($Meta) {
+            null => null,
+            default => (array)$Meta,
+        };
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new static();
+        foreach ($decoded as $k => $v) {
+            if ('Meta' === $k) {
+                $n->setMeta($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->AuthMethod = $this->AuthMethod;
+        $out->RedirectURI = $this->RedirectURI;
+        $out->ClientNonce = $this->ClientNonce;
+        if (null !== $this->Meta && [] !== $this->Meta) {
+            $out->Meta = $this->Meta;
+        }
+        return $out;
     }
 }

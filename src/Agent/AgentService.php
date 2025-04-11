@@ -30,7 +30,7 @@ class AgentService extends AbstractModel
 {
     use HasStringTags;
 
-    protected const FIELDS = [
+    public const FIELDS = [
         self::FIELD_KIND             => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_META             => Transcoding::MAP_FIELD,
         self::FIELD_TAGGED_ADDRESSES => [

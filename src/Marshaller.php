@@ -22,27 +22,18 @@ namespace DCarbone\PHPConsulAPI;
 
 use DCarbone\Go\Time;
 
-trait Marshaller
+abstract class Marshaller
 {
-    /**
-     * Marshal field is designed to replicate (to ao point) what Golang does during the json.Marshal call
-     *
-     * @param array $output
-     * @param string $field
-     * @param mixed $value
-     */
-    protected function marshalField(array &$output, string $field, mixed $value): void
+    protected static function marshalField(\stdClass $output, string $field, null|array $def, mixed $value): void
     {
-        $def = static::FIELDS[$field] ?? null;
-
         // if this field has no special handling, set as-is and move on.
         if (null === $def) {
-            $output[$field] = $value;
+            $output->{$field} = $value;
             return;
         }
 
         // if this field is marked as being "skipped", do not set, then move on.
-        if (isset($def[Transcoding::FIELD_SKIP]) && true === $def[Transcoding::FIELD_SKIP]) {
+        if ($def[Transcoding::FIELD_SKIP] ?? false) {
             return;
         }
 
@@ -72,7 +63,7 @@ trait Marshaller
         // strings must be non empty
         if (Transcoding::STRING === $type) {
             if ('' !== $value) {
-                $output[$field] = $value;
+                $output->{$field} = $value;
             }
             return;
         }
@@ -80,7 +71,7 @@ trait Marshaller
         // integers must be non-zero (negatives are ok)
         if (Transcoding::INTEGER === $type) {
             if (0 !== $value) {
-                $output[$field] = $value;
+                $output->{$field} = $value;
             }
             return;
         }
@@ -88,7 +79,7 @@ trait Marshaller
         // floats must be non-zero (negatives are ok)
         if (Transcoding::DOUBLE === $type) {
             if (0.0 !== $value) {
-                $output[$field] = $value;
+                $output->{$field} = $value;
             }
             return;
         }
@@ -96,7 +87,7 @@ trait Marshaller
         // bools must be true
         if (Transcoding::BOOLEAN === $type) {
             if ($value) {
-                $output[$field] = $value;
+                $output->{$field} = $value;
             }
             return;
         }
@@ -106,7 +97,7 @@ trait Marshaller
             // AbstractModels are collections, and are non-zero if they contain at least 1 entry
             if ($value instanceof FakeSlice || $value instanceof FakeMap) {
                 if (0 < \count($value)) {
-                    $output[$field] = $value;
+                    $output->{$field} = $value;
                 }
                 return;
             }
@@ -114,7 +105,7 @@ trait Marshaller
             // Time\Duration types are non-zero if their internal value is > 0
             if ($value instanceof Time\Duration) {
                 if (0 < $value->Nanoseconds()) {
-                    $output[$field] = $value;
+                    $output->{$field} = $value;
                 }
                 return;
             }
@@ -122,31 +113,36 @@ trait Marshaller
             // Time\Time values are non-zero if they are anything greater than epoch
             if ($value instanceof Time\Time) {
                 if (!$value->IsZero()) {
-                    $output[$field] = $value;
+                    $output->{$field} = $value;
                 }
                 return;
             }
 
             // otherwise, by being defined it is non-zero, so add it.
-            $output[$field] = $value;
+            $output->{$field} = $value;
             return;
         }
 
         // arrays must have at least 1 value
         if (Transcoding::ARRAY === $type) {
             if ([] !== $value) {
-                $output[$field] = $value;
+                $output->{$field} = $value;
             }
             return;
         }
 
         // todo: be more better about resources
         if (Transcoding::RESOURCE === $type) {
-            $output[$field] = $value;
+            $output->{$field} = $value;
             return;
         }
 
         // once we get here the only possible value type is "NULL", which are always considered "empty".  thus, do not
         // set any value.
+    }
+
+    public static function marshalJSON(object $obj, array $fields, array $dynamic): \stdClass
+    {
+
     }
 }

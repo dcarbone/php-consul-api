@@ -24,36 +24,41 @@ use DCarbone\PHPConsulAPI\Event\UserEvent;
 use DCarbone\PHPConsulAPI\KV\KVPair;
 use DCarbone\PHPConsulAPI\KV\KVTxnOp;
 
-trait Unmarshaller
+abstract class Unmarshaller
 {
-    protected function unmarshalField(string $field, mixed $value): void
+    public static function unmarshalJSON(mixed $decoded, AbstractModel $model): void
     {
-        if (isset(static::FIELDS[$field])) {
+        if (null === $decoded) {
+            return;
+        }
+        if (is_scalar($decoded)) {
+
+        }
+        if (isset($model::FIELDS[$field])) {
             // if the implementing class has some explicitly defined overrides
-            $this->unmarshalComplex($field, $value, static::FIELDS[$field]);
-        } elseif (!property_exists($this, $field)) {
+            self::unmarshalComplex(model: $model, field: $field, value: $value, def: $model::FIELDS[$field]);
+        } elseif (!property_exists($model, $field)) {
             // if the field isn't explicitly defined on the implementing class, just set it to whatever the incoming
             // value is
-            $this->{$field} = $value;
+            $model->{$field} = $value;
         } elseif (null !== $value) {
             // at this point, value must be non-null to be operable
-            if (isset($this->{$field}) && is_scalar($this->{$field})) {
+            if (isset($model->{$field}) && is_scalar($model->{$field})) {
                 // if the property has a scalar default value, unmarshal it as such.
-                $this->unmarshalScalar($field, $value, false);
+                self::unmarshalScalar(model: $model, field: $field, value: $value, nullable: false);
             } else {
                 // if we fall down here, try to set the value as-is.  if this barfs, it indicates we have a bug to be
                 // squished.
                 // todo: should this be an exception?
-                $this->{$field} = $value;
+                $model->{$field} = $value;
             }
         }
-
         // if the value is null at this point, ignore and move on.
         // note: this is not checked prior to the property_exists call as if the field is not explicitly defined but
         // is seen with a null value, we still want to define it as null on the implementing type.
     }
 
-    protected function fieldIsNullable(array $fieldDef): bool
+    protected static function fieldIsNullable(array $fieldDef): bool
     {
         // todo: make sure this key is always a bool...
         return $fieldDef[Transcoding::FIELD_NULLABLE] ?? false;
@@ -70,15 +75,15 @@ trait Unmarshaller
         };
     }
 
-    private function buildScalarValue(string $field, mixed $value, string $type, bool $nullable): float|bool|int|string|null
+    private static function buildScalarValue(mixed $value, string $type, bool $nullable): float|bool|int|string|null
     {
         if (null === $value) {
-            return $nullable ? null : self::scalarZeroVal($type);
+            return $nullable ? null : self::scalarZeroVal(type: $type);
         }
 
         return match ($type) {
             Transcoding::STRING => (string)$value,
-            Transcoding::INTEGER => \intval($value, 10),
+            Transcoding::INTEGER => (int)$value,
             Transcoding::DOUBLE => (float)$value,
             Transcoding::BOOLEAN => (bool)$value,
 
@@ -87,11 +92,11 @@ trait Unmarshaller
         };
     }
 
-    private function buildObjectValue(string $field, null|object|array $value, string $class, bool $nullable): ?object
+    private static function buildObjectValue(null|object|array $value, string $class, bool $nullable): ?object
     {
         // if the incoming value is null...
         if (null === $value) {
-            return $nullable ? null : new $class([]);
+            return $nullable ? null : new $class();
         }
         // if the incoming value is already an instance of the class, clone it and return
         if ($value instanceof $class) {
@@ -101,40 +106,41 @@ trait Unmarshaller
         if (KVPair::class === $class || KVTxnOp::class === $class || UserEvent::class === $class) {
             // special case for KVPair and KVTxnOp
             // todo: find cleaner way to do this...
+            $inst = new $class();
+            self::unmarshalJSON();
             return new $class((array)$value, true);
         }
         return new $class((array)$value);
     }
 
-    private function unmarshalScalar(string $field, mixed $value, bool $nullable): void
+    private static function unmarshalScalar(AbstractModel $model, string $field, mixed $value, bool $nullable): void
     {
-        $this->{$field} = $this->buildScalarValue(
-            $field,
-            $value,
-            isset($this->{$field}) ? \gettype($this->{$field}) : Transcoding::MIXED,
-            $nullable
+        $model->{$field} = self::buildScalarValue(
+            value: $value,
+            type: isset($model->{$field}) ? \gettype($model->{$field}) : Transcoding::MIXED,
+            nullable: $nullable
         );
     }
 
-    private function unmarshalComplex(string $field, mixed $value, array $def): void
+    private static function unmarshalComplex(AbstractModel $model, string $field, mixed $value, array $def): void
     {
         // check if a callable has been defined
         if (isset($def[Transcoding::FIELD_UNMARSHAL_CALLBACK])) {
             $cb = $def[Transcoding::FIELD_UNMARSHAL_CALLBACK];
             // allow for using a "setter" method
-            if (\is_string($cb) && method_exists($this, $cb)) {
-                $this->{$cb}($value);
+            if (\is_string($cb) && method_exists($model, $cb)) {
+                $model->{$cb}($value);
                 return;
             }
             // handle all other callable input
-            $err = \call_user_func($def[Transcoding::FIELD_UNMARSHAL_CALLBACK], $this, $field, $value);
+            $err = \call_user_func($def[Transcoding::FIELD_UNMARSHAL_CALLBACK], $model, $field, $value);
             if (false === $err) {
                 throw new \RuntimeException(
                     sprintf(
                         'Error calling hydration callback "%s" for field "%s" on class "%s"',
                         var_export($def[Transcoding::FIELD_UNMARSHAL_CALLBACK], true),
                         $field,
-                        static::class
+                        $model::class
                     )
                 );
             }
@@ -150,57 +156,56 @@ trait Unmarshaller
         if (isset($def[Transcoding::FIELD_TYPE])) {
             // if the field has a FIELD_TYPE value in the definition map
             $fieldType = $def[Transcoding::FIELD_TYPE];
-        } elseif (isset($this->{$field})) {
+        } elseif (isset($model->{$field})) {
             // if the field is set and non-null
-            $fieldType = \gettype($this->{$field});
+            $fieldType = \gettype($model->{$field});
         } else {
             throw new \LogicException(
                 sprintf(
                     'Field "%s" on type "%s" is missing a FIELD_TYPE hydration entry: %s',
                     $field,
-                    static::class,
+                    $model::class,
                     var_export($def, true)
                 )
             );
         }
 
         if (Transcoding::OBJECT === $fieldType) {
-            $this->unmarshalObject($field, $value, $def);
+            self::unmarshalObject($model, $field, $value, $def);
             return;
         }
 
         if (Transcoding::ARRAY === $fieldType) {
-            $this->unmarshalArray($field, $value, $def);
+            self::unmarshalArray($model, $field, $value, $def);
             return;
         }
 
         // at this point, assume scalar
         // todo: handle non-scalar types here
-        $this->unmarshalScalar($field, $value, self::fieldIsNullable($def));
+        self::unmarshalScalar($model, $field, $value, self::fieldIsNullable($def));
     }
 
-    private function unmarshalObject(string $field, mixed $value, array $def): void
+    private static function unmarshalObject(AbstractModel $model, string $field, mixed $value, array $def): void
     {
         if (!isset($def[Transcoding::FIELD_CLASS])) {
             throw new \LogicException(
                 sprintf(
                     'Field "%s" on type "%s" is missing FIELD_CLASS hydration entry: %s',
                     $field,
-                    static::class,
+                    $model::class,
                     var_export($def, true)
                 )
             );
         }
 
-        $this->{$field} = $this->buildObjectValue(
-            $field,
+        $model->{$field} = self::buildObjectValue(
             $value,
             $def[Transcoding::FIELD_CLASS],
             self::fieldIsNullable($def)
         );
     }
 
-    private function unmarshalArray(string $field, mixed $value, array $def): void
+    private static function unmarshalArray(AbstractModel $model, string $field, mixed $value, array $def): void
     {
         // attempt to extract the two possible keys
         $type  = $def[Transcoding::FIELD_ARRAY_TYPE] ?? null;
@@ -212,7 +217,7 @@ trait Unmarshaller
                 sprintf(
                     'Field "%s" on type "%s" definition is missing FIELD_ARRAY_TYPE value: %s',
                     $field,
-                    static::class,
+                    $model::class,
                     var_export($def, true)
                 )
             );
@@ -221,8 +226,8 @@ trait Unmarshaller
         // is the incoming value null?
         if (null === $value) {
             // if this value can be null'd, allow it.
-            if (static::fieldIsNullable($def)) {
-                $this->{$field} = null;
+            if (self::fieldIsNullable($def)) {
+                $model->{$field} = null;
             }
             return;
         }
@@ -233,7 +238,7 @@ trait Unmarshaller
                 sprintf(
                     'Field "%s" on type "%s" is an array but provided value is "%s"',
                     $field,
-                    static::class,
+                    $model::class,
                     \gettype($value)
                 )
             );
@@ -248,7 +253,7 @@ trait Unmarshaller
                     sprintf(
                         'Field "%s" on type "%s" definition is missing FIELD_CLASS value: %s',
                         $field,
-                        static::class,
+                        $model::class,
                         var_export($def, true)
                     )
                 );
@@ -257,9 +262,9 @@ trait Unmarshaller
             foreach ($value as $k => $v) {
                 // short circuit to prevent additional func call
                 if (null === $v) {
-                    $this->{$field}[$k] = null;
+                    $model->{$field}[$k] = null;
                 } else {
-                    $this->{$field}[$k] = $this->buildObjectValue($field, $v, $class, false);
+                    $model->{$field}[$k] = self::buildObjectValue($v, $class, false);
                 }
             }
         } else {
@@ -267,9 +272,9 @@ trait Unmarshaller
             foreach ($value as $k => $v) {
                 // short circuit to prevent additional func call
                 if (null === $v) {
-                    $this->{$field}[$k] = null;
+                    $model->{$field}[$k] = null;
                 } else {
-                    $this->{$field}[$k] = $this->buildScalarValue($field, $v, $type, false);
+                    $model->{$field}[$k] = self::buildScalarValue($v, $type, false);
                 }
             }
         }

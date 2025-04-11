@@ -26,7 +26,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class Node extends AbstractModel
 {
-    protected const FIELDS = [
+    public const FIELDS = [
         self::FIELD_TAGGED_ADDRESSES => Transcoding::MAP_FIELD,
         self::FIELD_META             => Transcoding::MAP_FIELD,
     ];

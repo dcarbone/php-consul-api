@@ -25,15 +25,19 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class ACLBindingRuleWriteResponse extends AbstractValuedWriteResponse implements UnmarshalledResponseInterface
 {
-    public ?ACLBindingRule $ACLBindingRule = null;
+    public null|ACLBindingRule $ACLBindingRule = null;
 
-    public function getValue(): ?ACLBindingRule
+    public function getValue(): null|ACLBindingRule
     {
         return $this->ACLBindingRule;
     }
 
     public function unmarshalValue(mixed $decodedData): void
     {
-        $this->ACLBindingRule = new ACLBindingRule((array)$decodedData);
+        if (null === $decodedData) {
+            $this->ACLBindingRule = null;
+            return;
+        }
+        $this->ACLBindingRule = ACLBindingRule::jsonUnserialize($decodedData);
     }
 }

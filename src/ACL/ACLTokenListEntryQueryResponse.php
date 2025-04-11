@@ -25,18 +25,17 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class ACLTokenListEntryQueryResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?array $ACLTokenListEntries = [];
+    public array $ACLTokenListEntries = [];
 
-    public function getValue(): ?array
+    public function getValue(): array
     {
         return $this->ACLTokenListEntries;
     }
 
     public function unmarshalValue(mixed $decodedData): void
     {
-        $this->ACLTokenListEntries = [];
         foreach ($decodedData as $datum) {
-            $this->ACLTokenListEntries[] = new ACLTokenListEntry($datum);
+            $this->ACLTokenListEntries[] = ACLTokenListEntry::jsonUnserialize($datum);
         }
     }
 }

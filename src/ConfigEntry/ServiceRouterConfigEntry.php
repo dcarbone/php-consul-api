@@ -27,7 +27,7 @@ class ServiceRouterConfigEntry extends AbstractModel implements ConfigEntry
 {
     use ConfigEntryTrait;
 
-    protected const FIELDS = ConfigEntry::INTERFACE_FIELDS + [
+    public const FIELDS = ConfigEntry::INTERFACE_FIELDS + [
         self::FIELD_ROUTES => [
             Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
             Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,

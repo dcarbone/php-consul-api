@@ -24,8 +24,14 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 
 class ACLNodeIdentity extends AbstractModel
 {
-    public string $NodeName = '';
-    public string $Datacenter = '';
+    public string $NodeName;
+    public string $Datacenter;
+
+    public function __construct(string $NodeName = '', string $Datacenter = '')
+    {
+        $this->NodeName = $NodeName;
+        $this->Datacenter = $Datacenter;
+    }
 
     public function getNodeName(): string
     {
@@ -35,5 +41,25 @@ class ACLNodeIdentity extends AbstractModel
     public function getDatacenter(): string
     {
         return $this->Datacenter;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new static();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->NodeName = $this->NodeName;
+        $out->Datacenter = $this->Datacenter;
+        return $out;
     }
 }

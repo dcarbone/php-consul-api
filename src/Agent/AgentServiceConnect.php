@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class AgentServiceConnect extends AbstractModel
 {
-    protected const FIELDS = [
+    public const FIELDS = [
         self::FIELD_NATIVE          => Transcoding::OMITEMPTY_BOOLEAN_FIELD,
         self::FIELD_SIDECAR_SERVICE => [
             Transcoding::FIELD_TYPE      => Transcoding::ARRAY,

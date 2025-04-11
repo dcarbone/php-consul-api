@@ -28,7 +28,7 @@ use function DCarbone\PHPConsulAPI\dur_to_millisecond;
 
 class SessionEntry extends AbstractModel
 {
-    protected const FIELDS = [
+    public const FIELDS = [
         self::FIELD_LOCK_DELAY     => [
             Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_DURATION,
         ],

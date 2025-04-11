@@ -21,25 +21,40 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class ACLBindingRule extends AbstractModel
 {
-    protected const FIELDS = [
-        self::FIELD_NAMESPACE => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
+    public string $ID;
+    public string $Description;
+    public string $AuthMethod;
+    public string $Selector;
+    public string $BindType;
+    public string $BindName;
+    public int $CreateIndex;
+    public int $ModifyIndex;
+    public string $Namespace;
 
-    private const FIELD_NAMESPACE = 'Namespace';
-
-    public string $ID = '';
-    public string $Description = '';
-    public string $AuthMethod = '';
-    public string $Selector = '';
-    public string $BindType = '';
-    public string $BindName = '';
-    public int $CreateIndex = 0;
-    public int $ModifyIndex = 0;
-    public string $Namespace = '';
+    public function __construct(
+        string $ID = '',
+        string $Description = '',
+        string $AuthMethod = '',
+        string $Selector = '',
+        string $BindType = '',
+        string $BindName = '',
+        int $CreateIndex = 0,
+        int $ModifyIndex = 0,
+        string $Namespace = ''
+    ) {
+        $this->ID = $ID;
+        $this->Description = $Description;
+        $this->AuthMethod = $AuthMethod;
+        $this->Selector = $Selector;
+        $this->BindType = $BindType;
+        $this->BindName = $BindName;
+        $this->CreateIndex = $CreateIndex;
+        $this->ModifyIndex = $ModifyIndex;
+        $this->Namespace = $Namespace;
+    }
 
     public function getID(): string
     {
@@ -138,5 +153,34 @@ class ACLBindingRule extends AbstractModel
     {
         $this->Namespace = $Namespace;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new static();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->ID = $this->ID;
+        $out->Description = $this->Description;
+        $out->AuthMethod = $this->AuthMethod;
+        $out->Selector = $this->Selector;
+        $out->BindType = $this->BindType;
+        $out->BindName = $this->BindName;
+        $out->CreateIndex = $this->CreateIndex;
+        $out->ModifyIndex = $this->ModifyIndex;
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        return $out;
     }
 }

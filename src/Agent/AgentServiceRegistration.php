@@ -31,7 +31,7 @@ class AgentServiceRegistration extends AbstractModel
     use HasSettableStringTags;
     use HasStringTags;
 
-    protected const FIELDS = [
+    public const FIELDS = [
         self::FIELD_KIND                => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_ID                  => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_NAME                => Transcoding::OMITEMPTY_STRING_FIELD,
