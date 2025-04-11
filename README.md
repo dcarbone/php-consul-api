@@ -31,7 +31,7 @@ There are a couple breaking changes between v2 and v3:
       constructors are the preferred method of construction.
     * Construction via associative array will be removed entirely in V4 (whenever I get around to that).
 4. All of that `Transcoding` nonsense has been removed.
-5. The `Config` class may no longer be constructed with a map.  You must use construction parameters.
+5. The `Config` class may no longer be constructed with a map.  You must use constructorc parameters.
 
 ## Composer
 
