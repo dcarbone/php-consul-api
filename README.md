@@ -24,8 +24,8 @@ is made and backwards compatibility issues will not be addressed.
 
 There are a couple breaking changes between v2 and v3:
 
-1. The `FakeMap` class has been removed.  It sucked.
-2. The `FakeSlice` class has been removed.  It sucked.
+1. The `FakeMap` class has been removed.
+2. The `FakeSlice` class has been removed.
 3. All models now have parameterized constructors. 
     * For the life of V3 I will continue to support construction from associative arrays, but the parameterized 
       constructors are the preferred method of construction.
