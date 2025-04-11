@@ -20,6 +20,18 @@ This library is loosely based upon the [official GO client](https://github.com/h
 Newer versions of the api lib will probably work in a limited capacity with older versions of Consul, but no guarantee
 is made and backwards compatibility issues will not be addressed.
 
+### V3 Breaking Changes
+
+There are three big breaking changes between v2 and v3:
+
+1. The `FakeMap` class has been removed.  It sucked.
+2. The `FakeSlice` class has been removed.  It sucked.
+3. All models now have parameterized constructors. 
+    * For the life of V3 I will continue to support construction from associative arrays, but the parameterized 
+      constructors are the preferred method of construction.
+    * Construction via associative array will be removed entirely in V4 (whenever I get around to that).
+4. All of that `Transcoding` nonsense has been removed.
+
 ## Composer
 
 This lib is designed to be used with [Composer](https://getcomposer.org)
