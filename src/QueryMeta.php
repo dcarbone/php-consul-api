@@ -24,15 +24,38 @@ use DCarbone\Go\Time;
 
 class QueryMeta
 {
-    public string $RequestUrl = '';
-    public int $LastIndex = 0;
-    public string $LastContentHash = '';
-    public int $LastContact = 0;
-    public bool $KnownLeader = false;
-    public ?Time\Duration $RequestTime = null;
-    public bool $AddressTranslationEnabled = false;
-    public bool $CacheHit = false;
-    public ?Time\Duration $CacheAge = null;
+    public string $RequestUrl;
+    public int $LastIndex;
+    public string $LastContentHash;
+    public int $LastContact;
+    public bool $KnownLeader;
+    public Time\Duration $RequestTime;
+    public bool $AddressTranslationEnabled;
+    public bool $CacheHit;
+    public Time\Duration $CacheAge;
+
+    public function __construct(
+        string $RequestUrl,
+        null|int|float|string|\DateInterval|Time\Duration $RequestTime,
+        int $LastIndex = 0,
+        string $LastContentHash = '',
+        int $LastContact = 0,
+        bool $KnownLeader = false,
+        bool $AddressTranslationEnabled = false,
+        bool $CacheHit = false,
+        null|int|float|string|\DateInterval|Time\Duration $CacheAge = null
+    ) {
+        $this->RequestUrl = $RequestUrl;
+        $this->RequestTime = Time::Duration($RequestTime);
+
+        $this->LastIndex = $LastIndex;
+        $this->LastContentHash = $LastContentHash;
+        $this->LastContact = $LastContact;
+        $this->KnownLeader = $KnownLeader;
+        $this->AddressTranslationEnabled = $AddressTranslationEnabled;
+        $this->CacheHit = $CacheHit;
+        $this->CacheAge = Time::Duration($CacheAge);
+    }
 
     public function getRequestUrl(): string
     {
@@ -59,7 +82,7 @@ class QueryMeta
         return $this->KnownLeader;
     }
 
-    public function getRequestTime(): ?Time\Duration
+    public function getRequestTime(): null|Time\Duration
     {
         return $this->RequestTime;
     }
@@ -74,7 +97,7 @@ class QueryMeta
         return $this->CacheHit;
     }
 
-    public function getCacheAge(): ?Time\Duration
+    public function getCacheAge(): null|Time\Duration
     {
         return $this->CacheAge;
     }

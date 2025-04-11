@@ -22,21 +22,32 @@ namespace DCarbone\PHPConsulAPI;
 
 use DCarbone\Go\Time;
 
-class WriteOptions extends AbstractModel implements RequestOptions
+class WriteOptions implements RequestOptions
 {
-    public string $Namespace = '';
-    public string $Datacenter = '';
-    public string $Token = '';
-    public int $RelayFactor = 0;
+    public string $Namespace;
+    public string $Datacenter;
+    public string $Token;
+    public int $RelayFactor;
 
-    public ?Time\Duration $Timeout = null;
+    public Time\Duration $Timeout;
 
-    public function __construct(?array $data = null)
-    {
-        parent::__construct($data);
-        if (!($this->Timeout instanceof Time\Duration)) {
-            $this->Timeout = Time::Duration($this->Timeout);
+    public function __construct(
+        array $data = [], // Deprecated do not use.
+        string $Namespace = '',
+        string $Datacenter = '',
+        string $Token = '',
+        int $RelayFactor = 0,
+        null|int|float|string|\DateInterval|Time\Duration $Timeout = null,
+    ) {
+        if ([] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+            return;
         }
+        $this->Namespace = $Namespace;
+        $this->Datacenter = $Datacenter;
+        $this->Token = $Token;
+        $this->RelayFactor = $RelayFactor;
+        $this->Timeout = Time::Duration($Timeout);
     }
 
     public function getNamespace(): string
@@ -84,7 +95,7 @@ class WriteOptions extends AbstractModel implements RequestOptions
         return $this->Timeout;
     }
 
-    public function setTimeout(float|int|string|Time\Duration|null $timeout): void
+    public function setTimeout(null|int|float|string|\DateInterval|Time\Duration $timeout): void
     {
         $this->Timeout = Time::Duration($timeout);
     }
@@ -104,8 +115,27 @@ class WriteOptions extends AbstractModel implements RequestOptions
             $r->params->set('relay-factor', (string) $this->RelayFactor);
         }
 
-        if (null !== $this->Timeout) {
+        if (0 < $this->Timeout->Nanoseconds()) {
             $r->timeout = $this->Timeout;
         }
+    }
+
+    /**
+     * @param \stdClass $decoded
+     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $into
+     * @return self
+     * @deprecated  This is only here to support construction with map.  It will be removed in a future version.
+     */
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    {
+        $n = $into ?? new static();
+        foreach ($decoded as $k => $v) {
+            if ('Timeout' === $k) {
+                $n->Timeout = Time::Duration($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
     }
 }

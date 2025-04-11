@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
+class Values implements \ArrayAccess, \Countable, \JsonSerializable
 {
     private array $values = [];
 
@@ -63,7 +63,7 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
 
     public function count(): int
     {
-        return \count($this->values);
+        return count($this->values);
     }
 
     public function toPsr7Array(): array
@@ -71,47 +71,30 @@ class Values implements \Iterator, \ArrayAccess, \Countable, \JsonSerializable
         return $this->values;
     }
 
-    public function current(): array
+    public function getIterator(): iterable
     {
-        return current($this->values);
-    }
-
-    public function next(): void
-    {
-        next($this->values);
-    }
-
-    public function key(): ?string
-    {
-        return key($this->values);
-    }
-
-    public function valid(): bool
-    {
-        return null !== key($this->values);
-    }
-
-    public function rewind(): void
-    {
-        reset($this->values);
+        if ([] === $this->values) {
+            return new \EmptyIterator();
+        }
+        return new \ArrayIterator($this->values);
     }
 
     public function offsetExists(mixed $offset): bool
     {
-        return isset($this->values[$offset]);
+        return array_key_exists($offset, $this->values);
     }
 
-    public function offsetGet($offset): string
+    public function offsetGet(mixed $offset): string
     {
         return $this->get($offset);
     }
 
-    public function offsetSet($offset, $value): void
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->set($offset, $value);
     }
 
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
         $this->delete($offset);
     }

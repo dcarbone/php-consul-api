@@ -22,65 +22,75 @@ namespace DCarbone\PHPConsulAPI;
 
 use DCarbone\Go\Time;
 
-class QueryOptions extends AbstractModel implements RequestOptions
+class QueryOptions implements RequestOptions
 {
-    protected const FIELDS = [
-        self::FIELD_MAX_AGE => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_NULLABLE_DURATION,
-        ],
-        self::FIELD_STALE_IF_ERROR => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_NULLABLE_DURATION,
-        ],
-        self::FIELD_WAIT_TIME => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_NULLABLE_DURATION,
-        ],
-        self::FIELD_TIMEOUT => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_NULLABLE_DURATION,
-        ],
-    ];
+    public string $Namespace;
+    public string $Datacenter;
+    public bool $AllowStale;
+    public bool $RequireConsistent;
+    public bool $UseCache;
+    public Time\Duration $MaxAge;
+    public Time\Duration $StaleIfError;
+    public int $WaitIndex;
+    public string $WaitHash;
+    public Time\Duration $WaitTime;
+    public string $Token;
+    public string $Near;
+    public string $Filter;
+    public array $NodeMeta;
+    public int $RelayFactor;
+    public bool $LocalOnly;
+    public bool $Connect;
 
-    private const FIELD_MAX_AGE        = 'MaxAge';
-    private const FIELD_STALE_IF_ERROR = 'StaleIfError';
-    private const FIELD_WAIT_TIME      = 'WaitTime';
-    private const FIELD_TIMEOUT        = 'Timeout';
+    public Time\Duration $Timeout;
 
-    public string $Namespace = '';
-    public string $Datacenter = '';
-    public bool $AllowStale = false;
-    public bool $RequireConsistent = false;
-    public bool $UseCache = false;
-    public ?Time\Duration $MaxAge = null;
-    public ?Time\Duration $StaleIfError = null;
-    public int $WaitIndex = 0;
-    public string $WaitHash = '';
-    public ?Time\Duration $WaitTime = null;
-    public string $Token = '';
-    public string $Near = '';
-    public string $Filter = '';
-    public array $NodeMeta = [];
-    public int $RelayFactor = 0;
-    public bool $LocalOnly = false;
-    public bool $Connect = false;
+    public bool $Pretty;
 
-    public ?Time\Duration $Timeout = null;
-
-    public bool $Pretty = false;
-
-    public function __construct(?array $data = null)
-    {
-        parent::__construct($data);
-        if (!($this->MaxAge instanceof Time\Duration)) {
-            $this->MaxAge = Time::Duration($this->MaxAge);
+    public function __construct(
+        array $data = [], // Deprecated do not use.
+        string $Namespace = '',
+        string $Datacenter = '',
+        bool $AllowStale = false,
+        bool $RequireConsistent = false,
+        bool $UseCache = false,
+        null|int|float|string|\DateInterval|Time\Duration $MaxAge = null,
+        null|int|float|string|\DateInterval|Time\Duration $StaleIfError = null,
+        int $WaitIndex = 0,
+        string $WaitHash = '',
+        null|int|float|string|\DateInterval|Time\Duration $WaitTime = null,
+        string $Token = '',
+        string $Near = '',
+        string $Filter = '',
+        array $NodeMeta = [],
+        int $RelayFactor = 0,
+        bool $LocalOnly = false,
+        bool $Connect = false,
+        null|int|float|string|\DateInterval|Time\Duration $Timeout = null,
+        bool $Pretty = false,
+    ) {
+        if ([] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+            return;
         }
-        if (!($this->StaleIfError instanceof Time\Duration)) {
-            $this->StaleIfError = Time::Duration($this->StaleIfError);
-        }
-        if (!($this->WaitTime instanceof Time\Duration)) {
-            $this->WaitTime = Time::Duration($this->WaitTime);
-        }
-        if (!($this->Timeout instanceof Time\Duration)) {
-            $this->Timeout = Time::Duration($this->Timeout);
-        }
+        $this->Namespace = $Namespace;
+        $this->Datacenter = $Datacenter;
+        $this->AllowStale = $AllowStale;
+        $this->RequireConsistent = $RequireConsistent;
+        $this->UseCache = $UseCache;
+        $this->MaxAge = Time::Duration($MaxAge);
+        $this->StaleIfError = Time::Duration($StaleIfError);
+        $this->WaitIndex = $WaitIndex;
+        $this->WaitHash = $WaitHash;
+        $this->WaitTime = Time::Duration($WaitTime);
+        $this->Token = $Token;
+        $this->Near = $Near;
+        $this->Filter = $Filter;
+        $this->NodeMeta = $NodeMeta;
+        $this->RelayFactor = $RelayFactor;
+        $this->LocalOnly = $LocalOnly;
+        $this->Connect = $Connect;
+        $this->Timeout = Time::Duration($Timeout);
+        $this->Pretty = $Pretty;
     }
 
     public function getNamespace(): string
@@ -138,7 +148,7 @@ class QueryOptions extends AbstractModel implements RequestOptions
         return $this->MaxAge;
     }
 
-    public function setMaxAge(float|int|string|Time\Duration|null $maxAge): void
+    public function setMaxAge(null|int|float|string|\DateInterval|Time\Duration $maxAge): void
     {
         $this->MaxAge = Time::Duration($maxAge);
     }
@@ -148,7 +158,7 @@ class QueryOptions extends AbstractModel implements RequestOptions
         return $this->StaleIfError;
     }
 
-    public function setStaleIfError(float|int|string|Time\Duration|null $staleIfError): void
+    public function setStaleIfError(null|int|float|string|\DateInterval|Time\Duration $staleIfError): void
     {
         $this->StaleIfError = Time::Duration($staleIfError);
     }
@@ -168,7 +178,7 @@ class QueryOptions extends AbstractModel implements RequestOptions
         return $this->WaitTime;
     }
 
-    public function setWaitTime(mixed $waitTime): void
+    public function setWaitTime(null|int|float|string|\DateInterval|Time\Duration $waitTime): void
     {
         $this->WaitTime = Time::Duration($waitTime);
     }
@@ -253,12 +263,12 @@ class QueryOptions extends AbstractModel implements RequestOptions
         $this->Connect = $connect;
     }
 
-    public function getTimeout(): ?Time\Duration
+    public function getTimeout(): Time\Duration
     {
         return $this->Timeout;
     }
 
-    public function setTimeout(float|int|string|Time\Duration|null $timeout): void
+    public function setTimeout(null|int|float|string|\DateInterval|Time\Duration $timeout): void
     {
         $this->Timeout = Time::Duration($timeout);
     }
@@ -288,9 +298,9 @@ class QueryOptions extends AbstractModel implements RequestOptions
             $r->params->set('consistent', '');
         }
         if (0 !== $this->WaitIndex) {
-            $r->params->set('index', (string) $this->WaitIndex);
+            $r->params->set('index', (string)$this->WaitIndex);
         }
-        if (isset($this->WaitTime) && 0 < $this->WaitTime->Microseconds()) {
+        if (0 < $this->WaitTime->Microseconds()) {
             $r->params->set('wait', dur_to_millisecond($this->WaitTime));
         }
         if ('' !== $this->WaitHash) {
@@ -305,13 +315,13 @@ class QueryOptions extends AbstractModel implements RequestOptions
         if ('' !== $this->Filter) {
             $r->params->set('filter', $this->Filter);
         }
-        if (isset($this->NodeMeta) && [] !== $this->NodeMeta) {
+        if ([] !== $this->NodeMeta) {
             foreach ($this->NodeMeta as $k => $v) {
                 $r->params->add('node-meta', "{$k}:{$v}");
             }
         }
         if (0 !== $this->RelayFactor) {
-            $r->params->set('relay-factor', (string) $this->RelayFactor);
+            $r->params->set('relay-factor', (string)$this->RelayFactor);
         }
         if ($this->LocalOnly) {
             $r->params->set('local-only', 'true');
@@ -335,12 +345,37 @@ class QueryOptions extends AbstractModel implements RequestOptions
             }
         }
 
-        if (null !== $this->Timeout) {
+        if (0 < $this->Timeout->Nanoseconds()) {
             $r->timeout = $this->Timeout;
         }
 
         if ($this->Pretty) {
             $r->params->set('pretty', '');
         }
+    }
+
+    /**
+     * @param \stdClass $decoded
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $into
+     * @return self
+     * @deprecated  This is only here to support construction with map.  It will be removed in a future version.
+     */
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    {
+        $n = $into ?? new static();
+        foreach ($decoded as $k => $v) {
+            if ('MaxAge' === $k) {
+                $n->MaxAge = Time::Duration($v);
+            } elseif ('StaleIfError' === $k) {
+                $n->StaleIfError = Time::Duration($v);
+            } elseif ('WaitTime' === $k) {
+                $n->WaitTime = Time::Duration($v);
+            } elseif ('Timeout' === $k) {
+                $n->Timeout = Time::Duration($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
     }
 }

@@ -21,9 +21,8 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\ScalarType;
 
-class ReadableDuration extends Time\Duration implements \JsonSerializable, ScalarType
+class ReadableDuration extends Time\Duration implements \JsonSerializable
 {
     public static function unmarshalJSON(object $instance, string $field, mixed $value): void
     {
