@@ -82,7 +82,7 @@ class QueryMeta
         return $this->KnownLeader;
     }
 
-    public function getRequestTime(): null|Time\Duration
+    public function getRequestTime(): Time\Duration
     {
         return $this->RequestTime;
     }
@@ -97,7 +97,7 @@ class QueryMeta
         return $this->CacheHit;
     }
 
-    public function getCacheAge(): null|Time\Duration
+    public function getCacheAge(): Time\Duration
     {
         return $this->CacheAge;
     }
