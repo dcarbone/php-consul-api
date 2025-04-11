@@ -25,15 +25,19 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class ACLAuthMethodWriteResponse extends AbstractValuedWriteResponse implements UnmarshalledResponseInterface
 {
-    public ?ACLAuthMethod $ACLAuthMethod = null;
+    public null|ACLAuthMethod $ACLAuthMethod = null;
 
-    public function getValue(): ?ACLAuthMethod
+    public function getValue(): null|ACLAuthMethod
     {
         return $this->ACLAuthMethod;
     }
 
     public function unmarshalValue(mixed $decodedData): void
     {
-        $this->ACLAuthMethod = new ACLAuthMethod((array)$decodedData);
+        if (null === $decodedData) {
+            $this->ACLAuthMethod = null;
+            return;
+        }
+        $this->ACLAuthMethod = ACLAuthMethod::jsonUnserialize($decodedData);
     }
 }

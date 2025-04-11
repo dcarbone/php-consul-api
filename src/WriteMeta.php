@@ -24,9 +24,14 @@ use DCarbone\Go\Time;
 
 class WriteMeta
 {
-    public ?Time\Duration $RequestTime = null;
+    public Time\Duration $RequestTime;
 
-    public function getRequestTime(): ?Time\Duration
+    public function __construct(Time\Duration $RequestTime)
+    {
+        $this->RequestTime = $RequestTime;
+    }
+
+    public function getRequestTime(): Time\Duration
     {
         return $this->RequestTime;
     }

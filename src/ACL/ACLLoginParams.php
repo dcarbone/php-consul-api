@@ -21,20 +21,27 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\FakeMap;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class ACLLoginParams extends AbstractModel
 {
-    protected const FIELDS = [
-        self::FIELD_META => Transcoding::MAP_FIELD + [Transcoding::FIELD_OMITEMPTY => true],
-    ];
+    public string $AuthMethod;
+    public string $BearerToken;
+    public null|array $Meta;
 
-    private const FIELD_META = 'Meta';
-
-    public string $AuthMethod = '';
-    public string $BearerToken = '';
-    public ?FakeMap $Meta = null;
+    public function __construct(
+        array $data = [], // Deprecated, will be removed.
+        string $AuthMethod = '',
+        string $BearerToken = '',
+        null|array|\stdClass $Meta = null,
+    ) {
+        if ([] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+            return;
+        }
+        $this->AuthMethod = $AuthMethod;
+        $this->BearerToken = $BearerToken;
+        $this->setMeta($Meta);
+    }
 
     public function getAuthMethod(): string
     {
@@ -58,14 +65,44 @@ class ACLLoginParams extends AbstractModel
         return $this;
     }
 
-    public function getMeta(): ?FakeMap
+    public function getMeta(): array
     {
         return $this->Meta;
     }
 
-    public function setMeta(mixed $Meta): self
+    public function setMeta(null|array|\stdClass $Meta): self
     {
-        $this->Meta = FakeMap::parse($Meta);
+        $this->Meta = match($Meta) {
+            null => null,
+            default => (array)$Meta,
+        };
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    {
+        $n = $into ?? new static();
+        foreach ($decoded as $k => $v) {
+            if ('Meta' === $k) {
+                $n->setMeta($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->AuthMethod = $this->AuthMethod;
+        $out->BearerToken = $this->BearerToken;
+        if (null !== $this->Meta && [] !== $this->Meta) {
+            $out->Meta = $this->Meta;
+        }
+        return $out;
     }
 }

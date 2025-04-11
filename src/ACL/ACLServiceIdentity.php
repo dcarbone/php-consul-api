@@ -21,22 +21,26 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class ACLServiceIdentity extends AbstractModel
 {
-    protected const FIELDS = [
-        self::FIELD_DATACENTERS => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::STRING,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-    ];
-
     private const FIELD_DATACENTERS = 'Datacenters';
 
-    public string $ServiceName = '';
-    public array $Datacenters = [];
+    public string $ServiceName;
+    public array $Datacenters;
+
+    public function __construct(
+        array $data = [], // Deprecated, will be removed.
+        string $ServiceName = '',
+        iterable $Datacenters = []
+    ) {
+        if ([] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+            return;
+        }
+        $this->ServiceName = $ServiceName;
+        $this->Datacenters = $Datacenters;
+    }
 
     public function getServiceName(): string
     {
@@ -46,5 +50,37 @@ class ACLServiceIdentity extends AbstractModel
     public function getDatacenters(): array
     {
         return $this->Datacenters;
+    }
+
+    public function setDatacenters(string ...$datacenters): self
+    {
+        $this->Datacenters = $datacenters;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    {
+        $n = $into ?? new static();
+        foreach ($decoded as $k => $v) {
+            if ('Datacenters' === $k) {
+                $n->setDatacenters(...$v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->ServiceName = $this->ServiceName;
+        if ([] !== $this->Datacenters) {
+            $out->Datacenters = $this->Datacenters;
+        }
+        return $out;
     }
 }

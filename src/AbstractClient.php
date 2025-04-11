@@ -217,9 +217,15 @@ abstract class AbstractClient
 
     protected function _decodeBody(StreamInterface $body): DecodedBody
     {
-        $data = @json_decode((string)$body, true);
+        $data = @json_decode(
+            json: (string)$body,
+            associative: false,
+            depth: $this->_config->JSONDecodeMaxDepth,
+            flags: $this->_config->JSONDecodeOpts,
+        );
 
-        if (\JSON_ERROR_NONE === json_last_error()) {
+        $jsonErr = json_last_error();
+        if (\JSON_ERROR_NONE === $jsonErr) {
             return new DecodedBody($data, null);
         }
 
@@ -227,8 +233,9 @@ abstract class AbstractClient
             null,
             new Error(
                 sprintf(
-                    '%s - Unable to parse response as JSON.  Message: %s',
+                    '%s - Unable to parse response as JSON: (%d) %s',
                     static::class,
+                    $jsonErr,
                     json_last_error_msg()
                 )
             )
@@ -296,21 +303,15 @@ abstract class AbstractClient
     protected function _unmarshalResponse(RequestResponse $resp, AbstractResponse $ret): void
     {
         // determine if this response contains a *Meta field
-        // TODO: change to use interfaces + instanceof?
-        if (property_exists($ret, Transcoding::FIELD_QUERY_META)) {
+        if ($ret instanceof QueryResponseInterface) {
             $ret->QueryMeta = $resp->buildQueryMeta();
-        } elseif (property_exists($ret, Transcoding::FIELD_WRITE_META)) {
+        } elseif ($ret instanceof WriteResponseInterface) {
             $ret->WriteMeta = $resp->buildWriteMeta();
         }
 
-        // todo: can probably assume that all responses have an Err field...
-        $hasErrField = property_exists($ret, Transcoding::FIELD_ERR);
-
         // if there was an error in the response, set and return
         if (null !== $resp->Err) {
-            if ($hasErrField) {
-                $ret->Err = $resp->Err;
-            }
+            $ret->Err = $resp->Err;
             return;
         }
 
@@ -322,9 +323,7 @@ abstract class AbstractClient
         // attempt response decode
         $dec = $this->_decodeBody($resp->Response->getBody());
         if (null !== $dec->Err) {
-            if ($hasErrField) {
-                $ret->Err = $dec->Err;
-            }
+            $ret->Err = $dec->Err;
             return;
         }
 

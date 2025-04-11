@@ -20,12 +20,7 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-/**
- * This is a quick hack to allow for classes to be non-null during definition testing, yet still provide
- * go-like functionality in practice.
- *
- * Interface ScalarType
- */
-interface ScalarType
+interface QueryResponseInterface
 {
+    public function getQueryMeta(): null|QueryMeta;
 }

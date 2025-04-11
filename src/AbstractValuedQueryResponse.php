@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-abstract class AbstractValuedQueryResponse extends AbstractResponse implements ValuedResponseInterface
+abstract class AbstractValuedQueryResponse extends AbstractResponse implements QueryResponseInterface, ValuedResponseInterface
 {
     use QueryMetaContainer;
     use ErrorContainer;

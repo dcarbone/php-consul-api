@@ -22,31 +22,7 @@ namespace DCarbone\PHPConsulAPI;
 
 abstract class AbstractModel implements \JsonSerializable
 {
-    use Marshaller;
-    use Unmarshaller;
-
-    protected const FIELDS = [];
-
     private array $_dyn = [];
-
-    /**
-     * AbstractModel constructor.
-     *
-     * Convenience method to help set scalar types.  Any extending class must have a constructor that builds any
-     * array / object properties it may have.
-     *
-     * @param array|null $data
-     */
-    public function __construct(?array $data = [])
-    {
-        // fast path for "empty"
-        if (null === $data || [] === $data) {
-            return;
-        }
-        foreach ($data as $field => $value) {
-            $this->unmarshalField($field, $value);
-        }
-    }
 
     public function __set(string $field, $value): void
     {
@@ -61,29 +37,14 @@ abstract class AbstractModel implements \JsonSerializable
         return $this->_dyn[$field];
     }
 
-    /**
-     * todo: this picks up non-public fields.  externalize this at some point.
-     *
-     * @return array
-     */
-    public function jsonSerialize(): array
+    public function __unset(string $field): void
     {
-        $out = [];
-        // marshal fields
-        foreach ((array)$this as $field => $value) {
-            // marshal dynamically defined fields
-            // todo: this is crap.
-            if (substr($field, -4) === '_dyn') {
-                if ([] !== $value) {
-                    foreach ($value as $k => $v) {
-                        $this->marshalField($out, $k, $v);
-                    }
-                }
-            } else {
-                $this->marshalField($out, $field, $value);
-            }
-        }
-        return $out;
+        unset($this->_dyn[$field]);
+    }
+
+    public function _getDynamicFields(): array
+    {
+        return $this->_dyn;
     }
 
     public function __toString(): string

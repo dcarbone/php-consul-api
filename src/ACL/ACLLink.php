@@ -24,16 +24,61 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 
 class ACLLink extends AbstractModel
 {
-    public string $ID = '';
-    public string $Name = '';
+    public string $ID;
+    public string $Name;
+
+    public function __construct(
+        array $data = [], // Deprecated, will be removed.
+        string $ID = '',
+        string $Name = '',
+    ) {
+        if ([] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+            return;
+        }
+        $this->ID = $ID;
+        $this->Name = $Name;
+    }
 
     public function getID(): string
     {
         return $this->ID;
     }
 
+    public function setID(string $ID): self
+    {
+        $this->ID = $ID;
+        return $this;
+    }
+
     public function getName(): string
     {
         return $this->Name;
+    }
+
+    public function setName(string $Name): self
+    {
+        $this->Name = $Name;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    {
+        $n = $into ?? new static();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->ID = $this->ID;
+        $out->Name = $this->Name;
+        return $out;
     }
 }

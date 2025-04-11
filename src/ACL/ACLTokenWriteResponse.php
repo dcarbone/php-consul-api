@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class ACLTokenWriteResponse extends AbstractValuedWriteResponse implements UnmarshalledResponseInterface
 {
-    public ?ACLToken $ACLToken = null;
+    public null|ACLToken $ACLToken = null;
 
     public function getValue(): ?ACLToken
     {
@@ -34,6 +34,10 @@ class ACLTokenWriteResponse extends AbstractValuedWriteResponse implements Unmar
 
     public function unmarshalValue(mixed $decodedData): void
     {
-        $this->ACLToken = new ACLToken((array)$decodedData);
+        if (null === $decodedData) {
+            $this->ACLToken = null;
+            return;
+        }
+        $this->ACLToken = ACLToken::jsonUnserialize($decodedData);
     }
 }

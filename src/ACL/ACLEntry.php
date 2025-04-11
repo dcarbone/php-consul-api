@@ -24,12 +24,33 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 
 class ACLEntry extends AbstractModel
 {
-    public int $CreateIndex = 0;
-    public int $ModifyIndex = 0;
-    public string $ID = '';
-    public string $Name = '';
-    public string $Type = '';
-    public string $Rules = '';
+    public int $CreateIndex;
+    public int $ModifyIndex;
+    public string $ID;
+    public string $Name;
+    public string $Type;
+    public string $Rules;
+
+    public function __construct(
+        array $data = [], // Deprecated, will be removed.
+        int $CreateIndex = 0,
+        int $ModifyIndex = 0,
+        string $ID = '',
+        string $Name = '',
+        string $Type = '',
+        string $Rules = ''
+    ) {
+        if ([] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+            return;
+        }
+        $this->CreateIndex = $CreateIndex;
+        $this->ModifyIndex = $ModifyIndex;
+        $this->ID = $ID;
+        $this->Name = $Name;
+        $this->Type = $Type;
+        $this->Rules = $Rules;
+    }
 
     public function getCreateIndex(): int
     {
@@ -95,5 +116,29 @@ class ACLEntry extends AbstractModel
     {
         $this->Rules = $rules;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    {
+        $n = $into ?? new static();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->CreateIndex = $this->CreateIndex;
+        $out->ModifyIndex = $this->ModifyIndex;
+        $out->ID = $this->ID;
+        $out->Name = $this->Name;
+        $out->Type = $this->Type;
+        $out->Rules = $this->Rules;
+        return $out;
     }
 }

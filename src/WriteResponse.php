@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-class WriteResponse extends AbstractResponse
+class WriteResponse extends AbstractResponse implements WriteResponseInterface
 {
     use WriteMetaContainer;
     use ErrorContainer;

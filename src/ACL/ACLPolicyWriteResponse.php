@@ -25,15 +25,19 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class ACLPolicyWriteResponse extends AbstractValuedWriteResponse implements UnmarshalledResponseInterface
 {
-    public ?ACLPolicy $ACLPolicy = null;
+    public null|ACLPolicy $ACLPolicy = null;
 
-    public function getValue(): ?ACLPolicy
+    public function getValue(): null|ACLPolicy
     {
         return $this->ACLPolicy;
     }
 
     public function unmarshalValue(mixed $decodedData): void
     {
-        $this->ACLPolicy = new ACLPolicy((array)$decodedData);
+        if (null === $decodedData) {
+            $this->ACLPolicy = null;
+            return;
+        }
+        $this->ACLPolicy = ACLPolicy::jsonUnserialize($decodedData);
     }
 }
