@@ -22,7 +22,7 @@ is made and backwards compatibility issues will not be addressed.
 
 ### V3 Breaking Changes
 
-There are three big breaking changes between v2 and v3:
+There are a couple breaking changes between v2 and v3:
 
 1. The `FakeMap` class has been removed.  It sucked.
 2. The `FakeSlice` class has been removed.  It sucked.
