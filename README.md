@@ -103,7 +103,7 @@ prior to constructing a PHPConsulAPI Config object.
 As an example:
 
 ```php
-$proxyClient = new \GuzzleHttp\Client(['proxy' => 'whatever proxy you want']]);
+$proxyClient = new \GuzzleHttp\Client(['proxy' => 'whatever proxy you want']);
 $config = new \DCarbone\PHPConsulAPI\Config(
     HttpClient: $proxyClient,
     Address: 'address of server',
