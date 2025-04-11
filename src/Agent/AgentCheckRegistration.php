@@ -27,10 +27,10 @@ class AgentCheckRegistration extends AgentServiceCheck
     public string $Namespace;
 
     public function __construct(
+        null|array $data = null, // Deprecated, will be removed.
         string $ID = '',
         string $ServiceID = '',
         string $Namespace = '',
-        null|array $data = null,
     ) {
         $this->ID = $ID;
         $this->ServiceID = $ServiceID;

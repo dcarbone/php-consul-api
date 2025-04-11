@@ -38,7 +38,7 @@ class AgentCheck extends AbstractModel
     public string $Namespace;
 
     public function __construct(
-        null|array $data = null,
+        null|array $data = null, // Deprecated, will be removed.
         string $Node = '',
         string $CheckID = '',
         string $Name = '',

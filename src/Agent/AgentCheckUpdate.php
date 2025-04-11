@@ -28,7 +28,7 @@ final class AgentCheckUpdate extends AbstractModel
     public string $Output;
 
     public function __construct(
-        null|array $data = null,
+        null|array $data = null, // Deprecated, will be removed.
         string $Status = '',
         string $Output = ''
     ) {
