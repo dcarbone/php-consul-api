@@ -30,20 +30,19 @@ class ACLOIDCCallbackParams extends AbstractModel
     public string $ClientNonce;
 
     public function __construct(
-        array $data = [], // Deprecated, will be removed.
+        null|array $data = null, // Deprecated, will be removed.
         string $AuthMethod = '',
         string $State = '',
         string $Code = '',
         string $ClientNonce = '',
     ) {
-        if ([] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
-            return;
-        }
         $this->AuthMethod = $AuthMethod;
         $this->State = $State;
         $this->Code = $Code;
         $this->ClientNonce = $ClientNonce;
+        if (null !== $data && [] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+        }
     }
 
     public function getAuthMethod(): string

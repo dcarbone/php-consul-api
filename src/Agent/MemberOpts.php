@@ -24,8 +24,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 
 class MemberOpts extends AbstractModel
 {
-    public bool $WAN = false;
-    public string $Segment = '';
+    public bool $WAN;
+    public string $Segment;
 
     public function isWAN(): bool
     {

@@ -292,10 +292,8 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function BindingRuleCreate(
-        ACLBindingRule $bindingRule,
-        null|WriteOptions $opts = null
-    ): ACLBindingRuleWriteResponse {
+    public function BindingRuleCreate(ACLBindingRule $bindingRule, null|WriteOptions $opts = null): ACLBindingRuleWriteResponse
+    {
         $ret = new ACLBindingRuleWriteResponse();
         if ('' !== $bindingRule->ID) {
             $ret->Err = new Error('cannot specify an id in BindingRule Create');
@@ -306,10 +304,8 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function BindingRuleUpdate(
-        ACLBindingRule $bindingRule,
-        null|WriteOptions $opts = null
-    ): ACLBindingRuleWriteResponse {
+    public function BindingRuleUpdate(ACLBindingRule $bindingRule, null|WriteOptions $opts = null): ACLBindingRuleWriteResponse
+    {
         $ret = new ACLBindingRuleWriteResponse();
         if ('' === $bindingRule->ID) {
             $ret->Err = new Error('must specify an ID in BindingRule Update');

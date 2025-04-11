@@ -28,16 +28,15 @@ class ACLNodeIdentity extends AbstractModel
     public string $Datacenter;
 
     public function __construct(
-        array $data = [], // Deprecated, will be removed.
+        null|array $data = null, // Deprecated, will be removed.
         string $NodeName = '',
         string $Datacenter = ''
     ) {
-        if ([] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
-            return;
-        }
         $this->NodeName = $NodeName;
         $this->Datacenter = $Datacenter;
+        if (null !== $data && [] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+        }
     }
 
     public function getNodeName(): string

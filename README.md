@@ -26,12 +26,13 @@ There are a couple breaking changes between v2 and v3:
 
 1. The `FakeMap` class has been removed.
 2. The `FakeSlice` class has been removed.
-3. All models now have parameterized constructors. 
+3. The `ReadableDuration` class has been removed.
+4. All models now have parameterized constructors. 
     * For the life of V3 I will continue to support construction from associative arrays, but the parameterized 
       constructors are the preferred method of construction.
     * Construction via associative array will be removed entirely in V4 (whenever I get around to that).
-4. All of that `Transcoding` nonsense has been removed.
-5. The `Config` class may no longer be constructed with a map.  You must use constructor parameters.
+5. All of that `Transcoding` nonsense has been removed.
+6. The `Config` class may no longer be constructed with a map.  You must use constructor parameters.
 ## Composer
 
 This lib is designed to be used with [Composer](https://getcomposer.org)

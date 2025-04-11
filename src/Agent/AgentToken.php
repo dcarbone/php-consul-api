@@ -24,7 +24,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 
 class AgentToken extends AbstractModel
 {
-    public string $Token = '';
+    public string $Token;
 
     public function getToken(): string
     {

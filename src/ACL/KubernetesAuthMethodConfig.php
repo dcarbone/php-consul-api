@@ -29,18 +29,17 @@ class KubernetesAuthMethodConfig extends AbstractModel
     public string $ServiceAccountJWT;
 
     public function __construct(
-        array $data = [], // Deprecated, will be removed.
+        null|array $data = null, // Deprecated, will be removed.
         string $Host = '',
         string $CACert = '',
         string $ServiceAccountJWT = ''
     ) {
-        if ([] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
-            return;
-        }
         $this->Host = $Host;
         $this->CACert = $CACert;
         $this->ServiceAccountJWT = $ServiceAccountJWT;
+        if (null !== $data && [] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+        }
     }
 
     public function getHost(): string

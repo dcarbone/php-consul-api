@@ -28,16 +28,15 @@ class ACLLink extends AbstractModel
     public string $Name;
 
     public function __construct(
-        array $data = [], // Deprecated, will be removed.
+        null|array $data = null, // Deprecated, will be removed.
         string $ID = '',
         string $Name = '',
     ) {
-        if ([] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
-            return;
-        }
         $this->ID = $ID;
         $this->Name = $Name;
+        if (null !== $data && [] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+        }
     }
 
     public function getID(): string

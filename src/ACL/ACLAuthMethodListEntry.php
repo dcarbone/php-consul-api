@@ -41,7 +41,7 @@ class ACLAuthMethodListEntry extends AbstractModel
     public string $Namespace;
 
     public function __construct(
-        array $data = [], // Deprecated, will be removed.
+        null|array $data = null, // Deprecated, will be removed.
         string $Name = '',
         string $Type = '',
         string $DisplayName = '',
@@ -52,10 +52,6 @@ class ACLAuthMethodListEntry extends AbstractModel
         int $ModifyIndex = 0,
         string $Namespace = ''
     ) {
-        if ([] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
-            return;
-        }
         $this->Name = $Name;
         $this->Type = $Type;
         $this->DisplayName = $DisplayName;
@@ -65,6 +61,9 @@ class ACLAuthMethodListEntry extends AbstractModel
         $this->CreateIndex = $CreateIndex;
         $this->ModifyIndex = $ModifyIndex;
         $this->Namespace = $Namespace;
+        if (null !== $data && [] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+        }
     }
 
     public function getName(): string

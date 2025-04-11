@@ -35,7 +35,7 @@ class ACLReplicationStatus extends AbstractModel
     public Time\Time $LastError;
 
     public function __construct(
-        array $data = [], // Deprecated, will be removed.
+        null|array $data = null, // Deprecated, will be removed.
         bool $Enabled = false,
         bool $Running = false,
         string $SourceDatacenter = '',
@@ -45,10 +45,6 @@ class ACLReplicationStatus extends AbstractModel
         null|Time\Time $LastSuccess = null,
         null|Time\Time $LastError = null,
     ) {
-        if ([] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
-            return;
-        }
         $this->Enabled = $Enabled;
         $this->Running = $Running;
         $this->SourceDatacenter = $SourceDatacenter;
@@ -57,6 +53,9 @@ class ACLReplicationStatus extends AbstractModel
         $this->ReplicatedTokenIndex = $ReplicatedTokenIndex;
         $this->LastSuccess = $LastSuccess ?? Time::New();
         $this->LastError = $LastError ?? Time::New();
+        if (null !== $data && [] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+        }
     }
 
     public function isEnabled(): bool

@@ -24,8 +24,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 
 class TransparentProxyConfig extends AbstractModel
 {
-    public int $OutboundListenerPort = 0;
-    public bool $DialedDirectly = false;
+    public int $OutboundListenerPort;
+    public bool $DialedDirectly;
 
     public function getOutboundListenerPort(): int
     {

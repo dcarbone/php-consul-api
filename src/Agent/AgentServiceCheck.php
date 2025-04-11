@@ -83,13 +83,13 @@ class AgentServiceCheck extends AbstractModel
     private const FIELD_FAILURES_BEFORE_CRITICAL          = 'FailuresBeforeCritical';
     private const FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER = 'DeregisterCriticalServiceAfter';
 
-    public string $CheckID = '';
-    public string $Name = '';
-    public array $ScriptArgs = [];
-    public string $DockerContainerID = '';
-    public string $Shell = '';
-    public string $Interval = '';
-    public string $Timeout = '';
+    public string $CheckID;
+    public string $Name;
+    public array $ScriptArgs;
+    public string $DockerContainerID;
+    public string $Shell;
+    public string $Interval;
+    public string $Timeout;
     public string $TTL = '';
     public string $HTTP = '';
     public array $Header = [];

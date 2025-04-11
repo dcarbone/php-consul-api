@@ -28,7 +28,7 @@ class AgentHealthServiceResponse extends AbstractResponse
 {
     use ErrorContainer;
 
-    public string $AggregatedStatus = '';
+    public string $AggregatedStatus;
     public ?AgentServiceChecksInfo $AgentServiceChecksInfo = null;
 
     public function __construct(string $aggregatedStatus, ?array $checkInfo, ?Error $err)

@@ -37,8 +37,8 @@ class AgentServiceConnect extends AbstractModel
     private const FIELD_NATIVE          = 'Native';
     private const FIELD_SIDECAR_SERVICE = 'SidecarService';
 
-    public bool $Native = false;
-    public array $SidecarService = [];
+    public bool $Native;
+    public array $SidecarService;
 
     public function isNative(): bool
     {

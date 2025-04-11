@@ -25,9 +25,9 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 class OIDCAuthMethodConfig extends AbstractModel
 {
     public function __construct(
-        array $data = [], // Deprecated, will be removed.
+        null|array $data = null, // Deprecated, will be removed.
     ) {
-        if ([] !== $data) {
+        if (null !== $data && [] !== $data) {
             $this->jsonUnserialize((object)$data, $this);
         }
     }

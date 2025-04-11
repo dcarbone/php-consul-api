@@ -53,11 +53,11 @@ class MetricsInfo extends AbstractModel
     private const FIELD_COUNTERS = 'Counters';
     private const FIELD_SAMPLES  = 'Samples';
 
-    public string $Timestamp = '';
-    public array $Gauges = [];
-    public array $Points = [];
-    public array $Counters = [];
-    public array $Samples = [];
+    public string $Timestamp;
+    public array $Gauges;
+    public array $Points;
+    public array $Counters;
+    public array $Samples;
 
     public function getTimestamp(): string
     {

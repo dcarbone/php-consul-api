@@ -28,16 +28,15 @@ class ACLAuthMethodNamespaceRule extends AbstractModel
     public string $BindNamespace;
 
     public function __construct(
-        array $data = [], // Deprecated, will be removed.
+        null|array $data = null, // Deprecated, will be removed.
         string $Selector = '',
         string $BindNamespace = '',
     ) {
-        if ([] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
-            return;
-        }
         $this->Selector = $Selector;
         $this->BindNamespace = $BindNamespace;
+        if (null !== $data && [] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+        }
     }
 
     public function getSelector(): string

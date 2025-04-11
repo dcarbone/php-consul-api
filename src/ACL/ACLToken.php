@@ -45,7 +45,7 @@ class ACLToken extends AbstractModel
     public string $Rules;
 
     public function __construct(
-        array $data = [], // Deprecated, will be removed.
+        null|array $data = null, // Deprecated, will be removed.
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
         string $AccessorID = '',
@@ -64,10 +64,6 @@ class ACLToken extends AbstractModel
         string $Namespace = '',
         string $Rules = '',
     ) {
-        if ([] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
-            return;
-        }
         $this->CreateIndex = $CreateIndex;
         $this->ModifyIndex = $ModifyIndex;
         $this->AccessorID = $AccessorID;
@@ -85,6 +81,9 @@ class ACLToken extends AbstractModel
         $this->Hash = $Hash;
         $this->Namespace = $Namespace;
         $this->Rules = $Rules;
+        if (null !== $data && [] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+        }
     }
 
     public function getCreateIndex(): int

@@ -42,7 +42,7 @@ class ACLTokenListEntry extends AbstractModel
     public string $Namespace;
 
     public function __construct(
-        array $data = [], // Deprecated, will be removed.
+        null|array $data = null, // Deprecated, will be removed.
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
         string $AccessorID = '',
@@ -59,10 +59,6 @@ class ACLTokenListEntry extends AbstractModel
         bool $Legacy = false,
         string $Namespace = ''
     ) {
-        if ([] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
-            return;
-        }
         $this->CreateIndex = $CreateIndex;
         $this->ModifyIndex = $ModifyIndex;
         $this->AccessorID = $AccessorID;
@@ -78,6 +74,9 @@ class ACLTokenListEntry extends AbstractModel
         $this->Hash = $Hash;
         $this->Legacy = $Legacy;
         $this->Namespace = $Namespace;
+        if (null !== $data && [] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+        }
     }
 
     public function getCreateIndex(): int

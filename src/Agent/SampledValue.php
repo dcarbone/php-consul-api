@@ -24,14 +24,14 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 
 class SampledValue extends AbstractModel
 {
-    public string $Name = '';
-    public int $Count = 0;
-    public float $Sum = 0.0;
-    public float $Min = 0.0;
-    public float $Max = 0.0;
-    public float $Mean = 0.0;
-    public float $Stddev = 0.0;
-    public array $Labels = [];
+    public string $Name;
+    public int $Count;
+    public float $Sum;
+    public float $Min;
+    public float $Max;
+    public float $Mean;
+    public float $Stddev;
+    public array $Labels;
 
     public function getName(): string
     {

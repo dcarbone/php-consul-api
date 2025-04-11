@@ -24,8 +24,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 
 class PointValue extends AbstractModel
 {
-    public string $Name = '';
-    public array $Points = [];
+    public string $Name;
+    public array $Points;
 
     public function getName(): string
     {

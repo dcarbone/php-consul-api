@@ -67,16 +67,16 @@ class AgentServiceConnectProxyConfig extends AbstractModel
     private const FIELD_MESH_GATEWAY             = 'MeshGateway';
     private const FIELD_EXPOSE                   = 'Expose';
 
-    public array $EnvoyExtensions = [];
-    public string $DestinationServiceName = '';
-    public string $DestinationServiceID = '';
-    public string $LocalServiceAddress = '';
-    public int $LocalServicePort = 0;
+    public array $EnvoyExtensions;
+    public string $DestinationServiceName;
+    public string $DestinationServiceID;
+    public string $LocalServiceAddress;
+    public int $LocalServicePort;
     public ?FakeMap $Config = null;
-    public string $LocalServiceSocketPath = '';
-    public string $Mode = '';
+    public string $LocalServiceSocketPath;
+    public string $Mode;
     public ?TransparentProxyConfig $TransparentProxy = null;
-    public array $Upstreams = [];
+    public array $Upstreams;
     public MeshGatewayConfig $MeshGateway;
     public ExposeConfig $Expose;
 

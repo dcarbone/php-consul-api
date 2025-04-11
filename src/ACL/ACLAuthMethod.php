@@ -39,7 +39,7 @@ class ACLAuthMethod extends AbstractModel
     public string $Namespace;
 
     public function __construct(
-        array $data = [], // Deprecated, will be removed.
+        null|array $data = null, // Deprecated, will be removed.
         string $ID = '',
         string $Name = '',
         string $Type = '',
@@ -52,10 +52,6 @@ class ACLAuthMethod extends AbstractModel
         iterable $NamespaceRules = [],
         string $Namespace = ''
     ) {
-        if ([] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
-            return;
-        }
         $this->ID = $ID;
         $this->Name = $Name;
         $this->Type = $Type;
@@ -67,6 +63,9 @@ class ACLAuthMethod extends AbstractModel
         $this->ModifyIndex = $ModifyIndex;
         $this->setNamespaceRules(...$NamespaceRules);
         $this->Namespace = $Namespace;
+        if (null !== $data && [] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+        }
     }
 
     public function getID(): string

@@ -24,9 +24,9 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 
 class GaugeValue extends AbstractModel
 {
-    public string $Name = '';
-    public float $Value = 0.0;
-    public array $Labels = [];
+    public string $Name;
+    public float $Value;
+    public array $Labels;
 
     public function getName(): string
     {

@@ -52,13 +52,13 @@ class Upstream extends AbstractModel
     private const FIELD_CONFIG                = 'Config';
     private const FIELD_MESH_GATEWAY          = 'MeshGateway';
 
-    public string $DestinationType = '';
-    public string $DestinationNamespace = '';
-    public string $DestinationName = '';
-    public string $Datacenter = '';
-    public string $LocalBindAddress = '';
-    public int $LocalBindPort = 0;
-    public array $Config = [];
+    public string $DestinationType;
+    public string $DestinationNamespace;
+    public string $DestinationName;
+    public string $Datacenter;
+    public string $LocalBindAddress;
+    public int $LocalBindPort;
+    public array $Config;
     public MeshGatewayConfig $MeshGatewayConfig;
 
     public function __construct(?array $data = [])

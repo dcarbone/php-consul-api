@@ -20,23 +20,25 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\Transcoding;
-
 class AgentCheckRegistration extends AgentServiceCheck
 {
-    protected const FIELDS = [
-        self::FIELD_ID         => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_SERVICE_ID => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_NAMESPACE  => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
+    public string $ID;
+    public string $ServiceID;
+    public string $Namespace;
 
-    private const FIELD_ID         = 'ID';
-    private const FIELD_SERVICE_ID = 'ServiceID';
-    private const FIELD_NAMESPACE  = 'Namespace';
-
-    public string $ID = '';
-    public string $ServiceID = '';
-    public string $Namespace = '';
+    public function __construct(
+        string $ID = '',
+        string $ServiceID = '',
+        string $Namespace = '',
+        null|array $data = null,
+    ) {
+        $this->ID = $ID;
+        $this->ServiceID = $ServiceID;
+        $this->Namespace = $Namespace;
+        if (null !== $data && [] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+        }
+    }
 
     public function getID(): string
     {
@@ -69,5 +71,32 @@ class AgentCheckRegistration extends AgentServiceCheck
     {
         $this->Namespace = $Namespace;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    {
+        $n = $into ?? new static();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        if ('' !== $this->ID) {
+            $out->ID = $this->ID;
+        }
+        if ('' !== $this->ServiceID) {
+            $out->ServiceID = $this->ServiceID;
+        }
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        return $out;
     }
 }

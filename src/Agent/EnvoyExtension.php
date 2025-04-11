@@ -32,11 +32,11 @@ class EnvoyExtension extends AbstractModel
 
     private const FIELD_ARGUMENTS = 'Arguments';
 
-    public string $Name = '';
-    public bool $Required = false;
+    public string $Name;
+    public bool $Required;
     public FakeMap $Arguments;
-    public string $ConsulVersion = '';
-    public string $EnvoyVersion = '';
+    public string $ConsulVersion;
+    public string $EnvoyVersion;
 
     public function __construct(?array $data = [])
     {

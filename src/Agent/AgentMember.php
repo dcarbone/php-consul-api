@@ -28,16 +28,16 @@ class AgentMember extends AbstractModel
 {
     use HasStringTags;
 
-    public string $Name = '';
-    public string $Addr = '';
-    public int $Port = 0;
-    public string $Status = '';
-    public int $ProtocolMin = 0;
-    public int $ProtocolMax = 0;
-    public int $ProtocolCur = 0;
-    public int $DelegateMin = 0;
-    public int $DelegateMax = 0;
-    public int $DelegateCur = 0;
+    public string $Name;
+    public string $Addr;
+    public int $Port;
+    public string $Status;
+    public int $ProtocolMin;
+    public int $ProtocolMax;
+    public int $ProtocolCur;
+    public int $DelegateMin;
+    public int $DelegateMax;
+    public int $DelegateCur;
 
     public function getName(): string
     {

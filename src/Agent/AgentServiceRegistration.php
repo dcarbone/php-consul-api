@@ -95,14 +95,14 @@ class AgentServiceRegistration extends AbstractModel
     private const FIELD_CONNECT             = 'Connect';
     private const FIELD_NAMESPACE           = 'Namespace';
 
-    public string $Kind = '';
-    public string $ID = '';
-    public string $Name = '';
-    public int $Port = 0;
-    public string $Address = '';
-    public array $TaggedAddresses = [];
-    public bool $EnableTagOverride = false;
-    public array $Meta = [];
+    public string $Kind;
+    public string $ID;
+    public string $Name;
+    public int $Port;
+    public string $Address;
+    public array $TaggedAddresses;
+    public bool $EnableTagOverride;
+    public array $Meta;
     public ?AgentWeights $Weights = null;
     public ?AgentServiceCheck $Check = null;
     public AgentServiceChecks $Checks;

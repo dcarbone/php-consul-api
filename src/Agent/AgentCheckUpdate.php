@@ -24,8 +24,20 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 
 final class AgentCheckUpdate extends AbstractModel
 {
-    public string $Status = '';
-    public string $Output = '';
+    public string $Status;
+    public string $Output;
+
+    public function __construct(
+        null|array $data = null,
+        string $Status = '',
+        string $Output = ''
+    ) {
+        $this->Status = $Status;
+        $this->Output = $Output;
+        if (null !== $data && [] !== $data) {
+            self::jsonUnserialize((object)$data, $this);
+        }
+    }
 
     public function getStatus(): string
     {
@@ -47,6 +59,26 @@ final class AgentCheckUpdate extends AbstractModel
     {
         $this->Output = $output;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    {
+        $n = $into ?? new self();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->Status = $this->Status;
+        $out->Output = $this->Output;
+        return $out;
     }
 
     public function __toString(): string

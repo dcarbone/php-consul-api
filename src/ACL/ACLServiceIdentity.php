@@ -30,16 +30,15 @@ class ACLServiceIdentity extends AbstractModel
     public array $Datacenters;
 
     public function __construct(
-        array $data = [], // Deprecated, will be removed.
+        null|array $data = null, // Deprecated, will be removed.
         string $ServiceName = '',
         iterable $Datacenters = []
     ) {
-        if ([] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
-            return;
-        }
         $this->ServiceName = $ServiceName;
         $this->Datacenters = $Datacenters;
+        if (null !== $data && [] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+        }
     }
 
     public function getServiceName(): string

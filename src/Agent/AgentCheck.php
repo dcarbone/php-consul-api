@@ -22,38 +22,48 @@ namespace DCarbone\PHPConsulAPI\Agent;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Health\HealthCheckDefinition;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class AgentCheck extends AbstractModel
 {
-    protected const FIELDS = [
-        self::FIELD_DEFINITION => [
-            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS => HealthCheckDefinition::class,
-        ],
-        self::FIELD_NAMESPACE               => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
-
-    private const FIELD_DEFINITION = 'Definition';
-    private const FIELD_NAMESPACE  = 'Namespace';
-
-    public string $Node = '';
-    public string $CheckID = '';
-    public string $Name = '';
-    public string $Status = '';
-    public string $Notes = '';
-    public string $Output = '';
-    public string $ServiceID = '';
-    public string $ServiceName = '';
-    public string $Type = '';
+    public string $Node;
+    public string $CheckID;
+    public string $Name;
+    public string $Status;
+    public string $Notes;
+    public string $Output;
+    public string $ServiceID;
+    public string $ServiceName;
+    public string $Type;
     public HealthCheckDefinition $Definition;
-    public string $Namespace = '';
+    public string $Namespace;
 
-    public function __construct(?array $data = null)
-    {
-        parent::__construct($data);
-        if (!isset($this->Definition)) {
-            $this->Definition = new HealthCheckDefinition(null);
+    public function __construct(
+        null|array $data = null,
+        string $Node = '',
+        string $CheckID = '',
+        string $Name = '',
+        string $Status = '',
+        string $Notes = '',
+        string $Output = '',
+        string $ServiceID = '',
+        string $ServiceName = '',
+        string $Type = '',
+        null|HealthCheckDefinition $Definition = null,
+        string $Namespace = ''
+    ) {
+        $this->Node = $Node;
+        $this->CheckID = $CheckID;
+        $this->Name = $Name;
+        $this->Status = $Status;
+        $this->Notes = $Notes;
+        $this->Output = $Output;
+        $this->ServiceID = $ServiceID;
+        $this->ServiceName = $ServiceName;
+        $this->Type = $Type;
+        $this->Definition = $Definition ?? new HealthCheckDefinition();
+        $this->Namespace = $Namespace;
+        if (null !== $data && [] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
         }
     }
 
@@ -177,6 +187,42 @@ class AgentCheck extends AbstractModel
         $this->Namespace = $Namespace;
         return $this;
     }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    {
+        $n = $into ?? new static();
+        foreach ($decoded as $k => $v) {
+            if ('Definition' === $k) {
+                $n->Definition = HealthCheckDefinition::jsonUnserialize($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->Node = $this->Node;
+        $out->CheckID = $this->CheckID;
+        $out->Name = $this->Name;
+        $out->Status = $this->Status;
+        $out->Notes = $this->Notes;
+        $out->Output = $this->Output;
+        $out->ServiceID = $this->ServiceID;
+        $out->ServiceName = $this->ServiceName;
+        $out->Type = $this->Type;
+        $out->Definition = $this->Definition->jsonSerialize();
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        return $out;
+    }
+
     public function __toString(): string
     {
         return $this->CheckID;

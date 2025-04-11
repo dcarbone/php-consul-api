@@ -74,12 +74,12 @@ class AgentService extends AbstractModel
     private const FIELD_NAMESPACE        = 'Namespace';
     private const FIELD_DATACENTER       = 'Datacenter';
 
-    public string $Kind = '';
-    public string $ID = '';
-    public string $Service = '';
+    public string $Kind;
+    public string $ID;
+    public string $Service;
     public FakeMap $Meta;
-    public int $Port = 0;
-    public string $Address = '';
+    public int $Port;
+    public string $Address;
     public array $TaggedAddresses = [];
     public AgentWeights $Weights;
     public bool $EnableTagOverride = false;

@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class AgentChecksResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
-    public ?array $Checks = null;
+    public array $Checks = [];
 
     public function getValue(): ?array
     {
@@ -36,7 +36,7 @@ class AgentChecksResponse extends AbstractValuedResponse implements Unmarshalled
     {
         $this->Checks = [];
         foreach ($decodedData as $k => $v) {
-            $this->Checks[$k] = new AgentCheck($v);
+            $this->Checks[$k] = AgentCheck::jsonUnserialize($v);
         }
     }
 }

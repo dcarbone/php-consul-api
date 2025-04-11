@@ -41,7 +41,7 @@ class AgentServiceChecksInfo extends AbstractModel
     private const FIELD_SERVICE = 'Service';
     private const FIELD_CHECKS  = 'Checks';
 
-    public string $AggregatedStatus = '';
+    public string $AggregatedStatus;
     public ?AgentService $Service = null;
     public HealthChecks $Checks;
 
