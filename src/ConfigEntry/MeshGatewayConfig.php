@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class MeshGatewayConfig extends AbstractModel
 {
-    public const FIELDS = [
+    protected const FIELDS = [
         self::FIELD_MODE => Transcoding::OMITEMPTY_STRING_FIELD,
     ];
 

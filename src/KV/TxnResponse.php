@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class TxnResponse extends AbstractModel
 {
-    public const FIELDS = [
+    protected const FIELDS = [
         self::FIELD_RESULTS => [
             Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
             Transcoding::FIELD_CLASS => TxnResults::class,

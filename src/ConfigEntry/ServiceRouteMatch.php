@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class ServiceRouteMatch extends AbstractModel
 {
-    public const FIELDS = [
+    protected const FIELDS = [
         self::FIELD_HTTP => [
             Transcoding::FIELD_TYPE      => Transcoding::OBJECT,
             Transcoding::FIELD_CLASS     => ServiceRouteHTTPMatch::class,

@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class KVTxnResponse extends AbstractModel
 {
-    public const FIELDS = [
+    protected const FIELDS = [
         self::FIELD_RESULTS => [
             Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
             Transcoding::FIELD_CLASS      => KVPair::class,

@@ -27,7 +27,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class CatalogService extends AbstractModel
 {
-    public const FIELDS = [
+    protected const FIELDS = [
         self::FIELD_SERVICE_TAGGED_ADDRESSES => [
             Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
             Transcoding::FIELD_CLASS      => ServiceAddress::class,

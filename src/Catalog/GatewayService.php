@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class GatewayService extends AbstractModel
 {
-    public const FIELDS = [
+    protected const FIELDS = [
         self::FIELD_GATEWAY  => [
             Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
             Transcoding::FIELD_CLASS => CompoundServiceName::class,

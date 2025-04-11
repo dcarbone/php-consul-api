@@ -26,7 +26,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class AgentServiceChecksInfo extends AbstractModel
 {
-    public const FIELDS = [
+    protected const FIELDS = [
         self::FIELD_SERVICE => [
             Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
             Transcoding::FIELD_CLASS    => AgentService::class,

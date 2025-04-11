@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class ServiceSplit extends AbstractModel
 {
-    public const FIELDS = [
+    protected const FIELDS = [
         self::FIELD_SERVICE        => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_SERVICE_SUBSET => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_NAMESPACE      => Transcoding::OMITEMPTY_STRING_FIELD,

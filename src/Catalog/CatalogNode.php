@@ -26,7 +26,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class CatalogNode extends AbstractModel
 {
-    public const FIELDS = [
+    protected const FIELDS = [
         self::FIELD_NODE     => [
             Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
             Transcoding::FIELD_CLASS => Node::class,

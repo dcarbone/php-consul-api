@@ -24,7 +24,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 
 class ServiceRoute extends AbstractModel
 {
-    public const FIELDS = [];
+    protected const FIELDS = [];
 
     private const FIELD_MATCH       = 'Match';
     private const FIELD_DESTINATION = 'Destination';

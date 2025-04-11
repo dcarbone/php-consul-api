@@ -26,7 +26,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class AgentCheck extends AbstractModel
 {
-    public const FIELDS = [
+    protected const FIELDS = [
         self::FIELD_DEFINITION => [
             Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
             Transcoding::FIELD_CLASS => HealthCheckDefinition::class,

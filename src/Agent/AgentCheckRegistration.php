@@ -24,7 +24,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class AgentCheckRegistration extends AgentServiceCheck
 {
-    public const FIELDS = [
+    protected const FIELDS = [
         self::FIELD_ID         => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_SERVICE_ID => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_NAMESPACE  => Transcoding::OMITEMPTY_STRING_FIELD,

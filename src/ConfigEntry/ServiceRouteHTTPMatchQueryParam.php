@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class ServiceRouteHTTPMatchQueryParam extends AbstractModel
 {
-    public const FIELDS = [
+    protected const FIELDS = [
         self::FIELD_PRESENT => Transcoding::OMITEMPTY_BOOLEAN_FIELD,
         self::FIELD_EXACT   => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_REGEX   => Transcoding::OMITEMPTY_STRING_FIELD,

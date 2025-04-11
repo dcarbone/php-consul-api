@@ -27,7 +27,7 @@ class MeshConfigEntry extends AbstractModel implements ConfigEntry
 {
     use ConfigEntryTrait;
 
-    public const FIELDS = COnfigEntry::INTERFACE_FIELDS + [
+    protected const FIELDS = COnfigEntry::INTERFACE_FIELDS + [
         self::FIELD_TRANSPARENT_PROXY => [
             Transcoding::FIELD_TYPE      => Transcoding::OBJECT,
             Transcoding::FIELD_CLASS     => TransparentProxyConfig::class,

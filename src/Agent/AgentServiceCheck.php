@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class AgentServiceCheck extends AbstractModel
 {
-    public const FIELDS = [
+    protected const FIELDS = [
         self::FIELD_CHECK_ID                          => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_NAME                              => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_SCRIPT_ARGS                       => [

@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class RaftConfiguration extends AbstractModel
 {
-    public const FIELDS = [
+    protected const FIELDS = [
         self::FIELD_SERVERS => [
             Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
             Transcoding::FIELD_CLASS      => RaftServer::class,

@@ -24,7 +24,7 @@ use DCarbone\Go\Time;
 
 class QueryOptions extends AbstractModel implements RequestOptions
 {
-    public const FIELDS = [
+    protected const FIELDS = [
         self::FIELD_MAX_AGE => [
             Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_NULLABLE_DURATION,
         ],

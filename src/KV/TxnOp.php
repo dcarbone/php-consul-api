@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class TxnOp extends AbstractModel
 {
-    public const FIELDS = [
+    protected const FIELDS = [
         self::FIELD_KV      => [
             Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
             Transcoding::FIELD_CLASS    => KVTxnOp::class,

@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class UpstreamLimits extends AbstractModel
 {
-    public const FIELDS = [
+    protected const FIELDS = [
         self::FIELD_MAX_CONNECTIONS         => [
             Transcoding::FIELD_NULLABLE => true,
         ],

@@ -26,7 +26,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class SerfMember extends AbstractModel
 {
-    public const FIELDS = [
+    protected const FIELDS = [
         self::FIELD_RTT => [
             Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_DURATION,
         ],

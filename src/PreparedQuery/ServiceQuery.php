@@ -30,7 +30,7 @@ class ServiceQuery extends AbstractModel
     use HasSettableStringTags;
     use HasStringTags;
 
-    public const FIELDS = [
+    protected const FIELDS = [
         self::FIELD_NAMESPACE => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_FAILOVER  => [
             Transcoding::FIELD_TYPE  => Transcoding::OBJECT,

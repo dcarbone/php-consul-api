@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class TransparentProxyConfig extends AbstractModel
 {
-    public const FIELDS = [
+    protected const FIELDS = [
         self::FIELD_OUTBOUND_LISTENER_PORT => Transcoding::OMITEMPTY_STRING_FIELD,
         self::FIELD_DIALED_DIRECTLY        => Transcoding::OMITEMPTY_BOOLEAN_FIELD,
     ];

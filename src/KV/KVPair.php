@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\Transcoding;
 
 class KVPair extends AbstractModel
 {
-    public const FIELDS = [
+    protected const FIELDS = [
         self::FIELD_NAMESPACE => Transcoding::OMITEMPTY_STRING_FIELD,
     ];
 
