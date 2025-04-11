@@ -35,6 +35,7 @@ class ACLReplicationStatus extends AbstractModel
     public Time\Time $LastError;
 
     public function __construct(
+        array $data = [], // Deprecated, will be removed.
         bool $Enabled = false,
         bool $Running = false,
         string $SourceDatacenter = '',
@@ -44,6 +45,10 @@ class ACLReplicationStatus extends AbstractModel
         null|Time\Time $LastSuccess = null,
         null|Time\Time $LastError = null,
     ) {
+        if ([] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+            return;
+        }
         $this->Enabled = $Enabled;
         $this->Running = $Running;
         $this->SourceDatacenter = $SourceDatacenter;
@@ -94,9 +99,9 @@ class ACLReplicationStatus extends AbstractModel
         return $this->LastError;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded): self
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
     {
-        $n = new static();
+        $n = $into ?? new static();
         foreach ($decoded as $k => $v) {
             if ('LastSuccess' === $k) {
                 $n->LastSuccess = Time\Time::createFromFormat(DATE_RFC3339, $v);

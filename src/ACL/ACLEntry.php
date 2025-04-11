@@ -32,6 +32,7 @@ class ACLEntry extends AbstractModel
     public string $Rules;
 
     public function __construct(
+        array $data = [], // Deprecated, will be removed.
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
         string $ID = '',
@@ -39,6 +40,10 @@ class ACLEntry extends AbstractModel
         string $Type = '',
         string $Rules = ''
     ) {
+        if ([] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+            return;
+        }
         $this->CreateIndex = $CreateIndex;
         $this->ModifyIndex = $ModifyIndex;
         $this->ID = $ID;
@@ -113,9 +118,9 @@ class ACLEntry extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded): self
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
     {
-        $n = new static();
+        $n = $into ?? new static();
         foreach ($decoded as $k => $v) {
             $n->{$k} = $v;
         }

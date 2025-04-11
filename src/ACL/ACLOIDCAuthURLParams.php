@@ -30,11 +30,16 @@ class ACLOIDCAuthURLParams extends AbstractModel
     public null|array $Meta;
 
     public function __construct(
+        array $data = [], // Deprecated, will be removed.
         string $AuthMethod = '',
         string $RedirectURI = '',
         string $ClientNonce = '',
         null|array|\stdClass $Meta = null
     ) {
+        if ([] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+            return;
+        }
         $this->AuthMethod = $AuthMethod;
         $this->RedirectURI = $RedirectURI;
         $this->ClientNonce = $ClientNonce;
@@ -88,9 +93,10 @@ class ACLOIDCAuthURLParams extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded): self
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
     {
-        $n = new static();
+        $n = $into ?? new static();
         foreach ($decoded as $k => $v) {
             if ('Meta' === $k) {
                 $n->setMeta($v);

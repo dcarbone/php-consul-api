@@ -41,6 +41,7 @@ class ACLAuthMethodListEntry extends AbstractModel
     public string $Namespace;
 
     public function __construct(
+        array $data = [], // Deprecated, will be removed.
         string $Name = '',
         string $Type = '',
         string $DisplayName = '',
@@ -51,6 +52,10 @@ class ACLAuthMethodListEntry extends AbstractModel
         int $ModifyIndex = 0,
         string $Namespace = ''
     ) {
+        if ([] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+            return;
+        }
         $this->Name = $Name;
         $this->Type = $Type;
         $this->DisplayName = $DisplayName;
@@ -174,9 +179,9 @@ class ACLAuthMethodListEntry extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded): self
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
     {
-        $n = new static();
+        $n = $into ?? new static();
         foreach ($decoded as $k => $v) {
             if (null === $v) {
                 continue;

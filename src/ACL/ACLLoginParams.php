@@ -28,8 +28,16 @@ class ACLLoginParams extends AbstractModel
     public string $BearerToken;
     public null|array $Meta;
 
-    public function __construct(string $AuthMethod = '', string $BearerToken = '', null|array|\stdClass $Meta = null)
-    {
+    public function __construct(
+        array $data = [], // Deprecated, will be removed.
+        string $AuthMethod = '',
+        string $BearerToken = '',
+        null|array|\stdClass $Meta = null,
+    ) {
+        if ([] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+            return;
+        }
         $this->AuthMethod = $AuthMethod;
         $this->BearerToken = $BearerToken;
         $this->setMeta($Meta);
@@ -71,9 +79,9 @@ class ACLLoginParams extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded): self
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
     {
-        $n = new static();
+        $n = $into ?? new static();
         foreach ($decoded as $k => $v) {
             if ('Meta' === $k) {
                 $n->setMeta($v);

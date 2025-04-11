@@ -29,8 +29,15 @@ class ACLServiceIdentity extends AbstractModel
     public string $ServiceName;
     public array $Datacenters;
 
-    public function __construct(string $ServiceName = '', iterable $Datacenters = [])
-    {
+    public function __construct(
+        array $data = [], // Deprecated, will be removed.
+        string $ServiceName = '',
+        iterable $Datacenters = []
+    ) {
+        if ([] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+            return;
+        }
         $this->ServiceName = $ServiceName;
         $this->Datacenters = $Datacenters;
     }
@@ -51,9 +58,9 @@ class ACLServiceIdentity extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded): self
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
     {
-        $n = new static();
+        $n = $into ?? new static();
         foreach ($decoded as $k => $v) {
             if ('Datacenters' === $k) {
                 $n->setDatacenters(...$v);

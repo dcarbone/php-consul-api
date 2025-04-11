@@ -39,6 +39,7 @@ class ACLAuthMethod extends AbstractModel
     public string $Namespace;
 
     public function __construct(
+        array $data = [], // Deprecated, will be removed.
         string $ID = '',
         string $Name = '',
         string $Type = '',
@@ -51,6 +52,10 @@ class ACLAuthMethod extends AbstractModel
         iterable $NamespaceRules = [],
         string $Namespace = ''
     ) {
+        if ([] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+            return;
+        }
         $this->ID = $ID;
         $this->Name = $Name;
         $this->Type = $Type;
@@ -202,9 +207,9 @@ class ACLAuthMethod extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded): self
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
     {
-        $n = new static();
+        $n = $into ?? new static();
         foreach ($decoded as $k => $v) {
             switch ($k) {
                 case 'MaxTokenTTL':

@@ -35,6 +35,7 @@ class ACLPolicy extends AbstractModel
     public string $Namespace;
 
     public function __construct(
+        array $data = [], // Deprecated, will be removed.
         string $ID = '',
         string $Name = '',
         string $Description = '',
@@ -45,6 +46,10 @@ class ACLPolicy extends AbstractModel
         int $ModifyIndex = 0,
         string $Namespace = ''
     ) {
+        if ([] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+            return;
+        }
         $this->ID = $ID;
         $this->Name = $Name;
         $this->Description = $Description;
@@ -156,9 +161,9 @@ class ACLPolicy extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded): self
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
     {
-        $n = new static();
+        $n = $into ?? new static();
         foreach ($decoded as $k => $v) {
             if ('Datacenters' === $k) {
                 $n->setDatacenters(...$v);

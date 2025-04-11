@@ -27,8 +27,15 @@ class ACLNodeIdentity extends AbstractModel
     public string $NodeName;
     public string $Datacenter;
 
-    public function __construct(string $NodeName = '', string $Datacenter = '')
-    {
+    public function __construct(
+        array $data = [], // Deprecated, will be removed.
+        string $NodeName = '',
+        string $Datacenter = ''
+    ) {
+        if ([] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+            return;
+        }
         $this->NodeName = $NodeName;
         $this->Datacenter = $Datacenter;
     }
@@ -43,9 +50,9 @@ class ACLNodeIdentity extends AbstractModel
         return $this->Datacenter;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded): self
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
     {
-        $n = new static();
+        $n = $into ?? new static();
         foreach ($decoded as $k => $v) {
             $n->{$k} = $v;
         }

@@ -27,8 +27,15 @@ class ACLLink extends AbstractModel
     public string $ID;
     public string $Name;
 
-    public function __construct(string $ID = '', string $Name = '')
-    {
+    public function __construct(
+        array $data = [], // Deprecated, will be removed.
+        string $ID = '',
+        string $Name = '',
+    ) {
+        if ([] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+            return;
+        }
         $this->ID = $ID;
         $this->Name = $Name;
     }
@@ -55,9 +62,9 @@ class ACLLink extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded): self
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
     {
-        $n = new static();
+        $n = $into ?? new static();
         foreach ($decoded as $k => $v) {
             $n->{$k} = $v;
         }
