@@ -27,7 +27,7 @@ class ACLBindingRuleQueryResponse extends AbstractValuedQueryResponse implements
 {
     public null|ACLBindingRule $ACLBindingRule = null;
 
-    public function getValue(): ?ACLBindingRule
+    public function getValue(): null|ACLBindingRule
     {
         return $this->ACLBindingRule;
     }

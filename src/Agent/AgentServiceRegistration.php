@@ -108,7 +108,7 @@ class AgentServiceRegistration extends AbstractModel
     public AgentServiceChecks $Checks;
     public ?AgentServiceConnectProxyConfig $Proxy = null;
     public ?AgentServiceConnect $Connect = null;
-    public string $Namespace = '';
+    public string $Namespace;
 
     public function __construct(?array $data = [])
     {

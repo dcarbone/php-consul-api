@@ -21,68 +21,9 @@ namespace DCarbone\PHPConsulAPI\Agent;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class AgentServiceCheck extends AbstractModel
 {
-    protected const FIELDS = [
-        self::FIELD_CHECK_ID                          => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_NAME                              => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_SCRIPT_ARGS                       => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::STRING,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-        self::FIELD_DOCKER_CONTAINER_ID               => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_SHELL                             => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_INTERVAL                          => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_TIMEOUT                           => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_TTL                               => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_HTTP                              => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_HEADER                            => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::MIXED,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-        self::FIELD_METHOD                            => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_BODY                              => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_TCP                               => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_STATUS                            => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_NOTES                             => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_TLS_SKIP_VERIFY                   => Transcoding::OMITEMPTY_BOOLEAN_FIELD,
-        self::FIELD_GRPC                              => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_GRPC_USE_TLS                      => Transcoding::OMITEMPTY_BOOLEAN_FIELD,
-        self::FIELD_ALIAS_NODE                        => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_ALIAS_SERVICE                     => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_SUCCESS_BEFORE_PASSING            => Transcoding::OMITEMPTY_INTEGER_FIELD,
-        self::FIELD_FAILURES_BEFORE_CRITICAL          => Transcoding::OMITEMPTY_INTEGER_FIELD,
-        self::FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER => Transcoding::OMITEMPTY_BOOLEAN_FIELD,
-    ];
-
-    private const FIELD_CHECK_ID                          = 'CheckID';
-    private const FIELD_NAME                              = 'Name';
-    private const FIELD_SCRIPT_ARGS                       = 'ScriptArgs';
-    private const FIELD_DOCKER_CONTAINER_ID               = 'DockerContainerID';
-    private const FIELD_SHELL                             = 'Shell';
-    private const FIELD_INTERVAL                          = 'Interval';
-    private const FIELD_TIMEOUT                           = 'Timeout';
-    private const FIELD_TTL                               = 'TTL';
-    private const FIELD_HTTP                              = 'HTTP';
-    private const FIELD_HEADER                            = 'Header';
-    private const FIELD_METHOD                            = 'Method';
-    private const FIELD_BODY                              = 'Body';
-    private const FIELD_TCP                               = 'TCP';
-    private const FIELD_STATUS                            = 'Status';
-    private const FIELD_NOTES                             = 'Notes';
-    private const FIELD_TLS_SKIP_VERIFY                   = 'TLSSkipVerify';
-    private const FIELD_GRPC                              = 'GRPC';
-    private const FIELD_GRPC_USE_TLS                      = 'GRPCUseTLS';
-    private const FIELD_ALIAS_NODE                        = 'AliasNode';
-    private const FIELD_ALIAS_SERVICE                     = 'AliasService';
-    private const FIELD_SUCCESS_BEFORE_PASSING            = 'SuccessBeforePassing';
-    private const FIELD_FAILURES_BEFORE_CRITICAL          = 'FailuresBeforeCritical';
-    private const FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER = 'DeregisterCriticalServiceAfter';
-
     public string $CheckID;
     public string $Name;
     public array $ScriptArgs;
@@ -90,22 +31,75 @@ class AgentServiceCheck extends AbstractModel
     public string $Shell;
     public string $Interval;
     public string $Timeout;
-    public string $TTL = '';
-    public string $HTTP = '';
-    public array $Header = [];
-    public string $Method = '';
-    public string $TCP = '';
-    public string $Status = '';
-    public string $Notes = '';
-    public bool $TLSSkipVerify = false;
-    public string $GRPC = '';
-    public bool $GRPCUseTLS = false;
-    public string $AliasNode = '';
-    public string $AliasService = '';
-    public int $SuccessBeforePassing = 0;
-    public int $FailuresBeforeCritical = 0;
+    public string $TTL;
+    public string $HTTP;
+    public array $Header;
+    public string $Method;
+    public string $TCP;
+    public string $Status;
+    public string $Notes;
+    public bool $TLSSkipVerify;
+    public string $GRPC;
+    public bool $GRPCUseTLS;
+    public string $AliasNode;
+    public string $AliasService;
+    public int $SuccessBeforePassing;
+    public int $FailuresBeforeCritical;
 
-    public string $DeregisterCriticalServiceAfter = '';
+    public string $DeregisterCriticalServiceAfter;
+
+    public function __construct(
+        null|array $data = null, // Deprecated, will be removed.
+        string $CheckID = '',
+        string $Name = '',
+        iterable $ScriptArgs = [],
+        string $DockerContainerID = '',
+        string $Shell = '',
+        string $Interval = '',
+        string $Timeout = '',
+        string $TTL = '',
+        string $HTTP = '',
+        iterable $Header = [],
+        string $Method = '',
+        string $TCP = '',
+        string $Status = '',
+        string $Notes = '',
+        bool $TLSSkipVerify = false,
+        string $GRPC = '',
+        bool $GRPCUseTLS = false,
+        string $AliasNode = '',
+        string $AliasService = '',
+        int $SuccessBeforePassing = 0,
+        int $FailuresBeforeCritical = 0,
+        string $DeregisterCriticalServiceAfter = '',
+    ) {
+        $this->CheckID = $CheckID;
+        $this->Name = $Name;
+        $this->ScriptArgs = [];
+        $this->setScriptArgs(...$ScriptArgs);
+        $this->DockerContainerID = $DockerContainerID;
+        $this->Shell = $Shell;
+        $this->Interval = $Interval;
+        $this->Timeout = $Timeout;
+        $this->TTL = $TTL;
+        $this->HTTP = $HTTP;
+        $this->setHeader(...$Header);
+        $this->Method = $Method;
+        $this->TCP = $TCP;
+        $this->Status = $Status;
+        $this->Notes = $Notes;
+        $this->TLSSkipVerify = $TLSSkipVerify;
+        $this->GRPC = $GRPC;
+        $this->GRPCUseTLS = $GRPCUseTLS;
+        $this->AliasNode = $AliasNode;
+        $this->AliasService = $AliasService;
+        $this->SuccessBeforePassing = $SuccessBeforePassing;
+        $this->FailuresBeforeCritical = $FailuresBeforeCritical;
+        $this->DeregisterCriticalServiceAfter = $DeregisterCriticalServiceAfter;
+        if (null !== $data && [] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+        }
+    }
 
     public function getCheckID(): string
     {
@@ -134,7 +128,7 @@ class AgentServiceCheck extends AbstractModel
         return $this->ScriptArgs;
     }
 
-    public function setScriptArgs(array $args): self
+    public function setScriptArgs(string  ...$args): self
     {
         $this->ScriptArgs = $args;
         return $this;
@@ -211,7 +205,7 @@ class AgentServiceCheck extends AbstractModel
         return $this->Header;
     }
 
-    public function setHeader(array $header): self
+    public function setHeader(mixed ...$header): self
     {
         $this->Header = $header;
         return $this;
@@ -347,5 +341,89 @@ class AgentServiceCheck extends AbstractModel
     {
         $this->DeregisterCriticalServiceAfter = $deregisterCriticalServiceAfter;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    {
+        $n = $into ?? new static();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        if ('' !== $this->CheckID) {
+            $out->CheckID = $this->CheckID;
+        }
+        if ('' !== $this->Name) {
+            $out->Name = $this->Name;
+        }
+        if ([] !== $this->ScriptArgs) {
+            $out->ScriptArgs = $this->ScriptArgs;
+        }
+        if ('' !== $this->DockerContainerID) {
+            $out->DockerContainerID = $this->DockerContainerID;
+        }
+        if ('' !== $this->Shell) {
+            $out->Shell = $this->Shell;
+        }
+        if ('' !== $this->Interval) {
+            $out->Interval = $this->Interval;
+        }
+        if ('' !== $this->Timeout) {
+            $out->Timeout = $this->Timeout;
+        }
+        if ('' !== $this->TTL) {
+            $out->TTL = $this->TTL;
+        }
+        if ('' !== $this->HTTP) {
+            $out->HTTP = $this->HTTP;
+        }
+        if ([] !== $this->Header) {
+            $out->Header = $this->Header;
+        }
+        if ('' !== $this->Method) {
+            $out->Method = $this->Method;
+        }
+        if ('' !== $this->TCP) {
+            $out->TCP = $this->TCP;
+        }
+        if ('' !== $this->Status) {
+            $out->Status = $this->Status;
+        }
+        if ('' !== $this->Notes) {
+            $out->Notes = $this->Notes;
+        }
+        if (false !== $this->TLSSkipVerify) {
+            $out->TLSSkipVerify = $this->TLSSkipVerify;
+        }
+        if ('' !== $this->GRPC) {
+            $out->GRPC = $this->GRPC;
+        }
+        if (false !== $this->GRPCUseTLS) {
+            $out->GRPCUseTLS = $this->GRPCUseTLS;
+        }
+        if ('' !== $this->AliasNode) {
+            $out->AliasNode = $this->AliasNode;
+        }
+        if ('' !== $this->AliasService) {
+            $out->AliasService = $this->AliasService;
+        }
+        if (0 !== $this->SuccessBeforePassing) {
+            $out->SuccessBeforePassing = $this->SuccessBeforePassing;
+        }
+        if (0 !== $this->FailuresBeforeCritical) {
+            $out->FailuresBeforeCritical = $this->FailuresBeforeCritical;
+        }
+        if ('' !== $this->DeregisterCriticalServiceAfter) {
+            $out->DeregisterCriticalServiceAfter = $this->DeregisterCriticalServiceAfter;
+        }
+        return $out;
     }
 }

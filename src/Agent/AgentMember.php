@@ -22,15 +22,23 @@ namespace DCarbone\PHPConsulAPI\Agent;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Consul;
-use DCarbone\PHPConsulAPI\HasStringTags;
 
 class AgentMember extends AbstractModel
 {
-    use HasStringTags;
-
     public string $Name;
     public string $Addr;
     public int $Port;
+    public array $Tags;
+    /**
+     * Status of the Member which corresponds to  github.com/hashicorp/serf/serf.MemberStatus
+     * Value is one of:
+     *      AgentMemberNone    = 0
+     *      AgentMemberAlive   = 1
+     *      AgentMemberLeaving = 2
+     *      AgentMemberLeft    = 3
+     *      AgentMemberFailed  = 4
+     * @var string
+     */
     public string $Status;
     public int $ProtocolMin;
     public int $ProtocolMax;
@@ -38,6 +46,36 @@ class AgentMember extends AbstractModel
     public int $DelegateMin;
     public int $DelegateMax;
     public int $DelegateCur;
+
+    public function __construct(
+        null|array $data = null, // Deprecated, will be removed.
+        string $Name = '',
+        string $Addr = '',
+        int $Port = 0,
+        array $Tags = [],
+        string $Status = '',
+        int $ProtocolMin = 0,
+        int $ProtocolMax = 0,
+        int $ProtocolCur = 0,
+        int $DelegateMin = 0,
+        int $DelegateMax = 0,
+        int $DelegateCur = 0,
+    ) {
+        $this->Name = $Name;
+        $this->Addr = $Addr;
+        $this->Port = $Port;
+        $this->Tags = $Tags;
+        $this->Status = $Status;
+        $this->ProtocolMin = $ProtocolMin;
+        $this->ProtocolMax = $ProtocolMax;
+        $this->ProtocolCur = $ProtocolCur;
+        $this->DelegateMin = $DelegateMin;
+        $this->DelegateMax = $DelegateMax;
+        $this->DelegateCur = $DelegateCur;
+        if (null !== $data && [] !== $data) {
+            self::jsonUnserialize((object)$data, $this);
+        }
+    }
 
     public function getName(): string
     {
@@ -89,13 +127,13 @@ class AgentMember extends AbstractModel
         return $this->DelegateCur;
     }
 
-    public function ACLMode(): string
+    public function ACLMode(): MemberACLMode
     {
         return match ($this->Tags[Consul::MemberTagKeyACLMode] ?? null) {
-            Consul::ACLModeDisabled => Consul::ACLModeDisabled,
-            Consul::ACLModeEnabled => Consul::ACLModeEnabled,
-            Consul::ACLModeLegacy => Consul::ACLModeLegacy,
-            default => Consul::ACLModeUnknown,
+            MemberACLMode::Disabled->value => MemberACLMode::Disabled,
+            MemberACLMode::Enabled->value => MemberACLMode::Enabled,
+            MemberACLMode::Legacy->value => MemberACLMode::Legacy,
+            default => MemberACLMode::Unknown,
         };
     }
 
@@ -103,6 +141,35 @@ class AgentMember extends AbstractModel
     {
         return isset($this->Tags[Consul::MemberTagKeyACLMode]) &&
             Consul::MemberTagValueRoleServer === $this->Tags[Consul::MemberTagKeyACLMode];
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    {
+        $n = $into ?? new static();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->Name = $this->Name;
+        $out->Addr = $this->Addr;
+        $out->Port = $this->Port;
+        $out->Tags = $this->Tags;
+        $out->Status = $this->Status;
+        $out->ProtocolMin = $this->ProtocolMin;
+        $out->ProtocolMax = $this->ProtocolMax;
+        $out->ProtocolCur = $this->ProtocolCur;
+        $out->DelegateMin = $this->DelegateMin;
+        $out->DelegateMax = $this->DelegateMax;
+        $out->DelegateCur = $this->DelegateCur;
+        return $out;
     }
 
     public function __toString(): string

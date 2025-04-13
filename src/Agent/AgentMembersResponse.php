@@ -25,9 +25,9 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class AgentMembersResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
-    public ?array $Members = null;
+    public array $Members;
 
-    public function getValue(): ?array
+    public function getValue(): array
     {
         return $this->Members;
     }
@@ -36,7 +36,7 @@ class AgentMembersResponse extends AbstractValuedResponse implements Unmarshalle
     {
         $this->Members = [];
         foreach ($decodedData as $member) {
-            $this->Members[] = new AgentMember($member);
+            $this->Members[] = AgentMember::jsonUnserialize($member);
         }
     }
 }

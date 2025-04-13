@@ -146,16 +146,16 @@ class AgentClient extends AbstractClient
         $resp = $this->_requireOK($this->_do($r));
 
         if (null !== $resp->Err) {
-            return new AgentHealthServicesResponse(Consul::HealthCritical, null, $resp->Err);
+            return new AgentHealthServicesResponse(Consul::HealthCritical, [], $resp->Err);
         }
 
         if (HTTP\StatusNotFound === $resp->Response->getStatusCode()) {
-            return new AgentHealthServicesResponse(Consul::HealthCritical, null, null);
+            return new AgentHealthServicesResponse(Consul::HealthCritical, [], null);
         }
 
         $dec = $this->_decodeBody($resp->Response->getBody());
         if (null !== $dec->Err) {
-            return new AgentHealthServicesResponse(Consul::HealthCritical, null, $dec->Err);
+            return new AgentHealthServicesResponse(Consul::HealthCritical, [], $dec->Err);
         }
 
         $status = match ($resp->Response->getStatusCode()) {

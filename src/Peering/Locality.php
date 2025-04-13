@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI\Agent;
+namespace DCarbone\PHPConsulAPI\Peering;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -22,36 +22,42 @@ namespace DCarbone\PHPConsulAPI\Agent;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
-class AgentWeights extends AbstractModel
+class Locality extends AbstractModel
 {
-    public int $Passing;
-    public int $Warning;
+    public string $Region;
+    public string $Zone;
 
-    public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
-        int $Passing = 0,
-        int $Warning = 0,
-    ) {
-        $this->Passing = $Passing;
-        $this->Warning = $Warning;
-        if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
-        }
+    public function __construct(string $Region = '', string $Zone = '')
+    {
+        $this->Region = $Region;
+        $this->Zone = $Zone;
     }
 
-    public function getPassing(): int
+    public function getRegion(): string
     {
-        return $this->Passing;
+        return $this->Region;
     }
 
-    public function getWarning(): int
+    public function setRegion(string $Region): self
     {
-        return $this->Warning;
+        $this->Region = $Region;
+        return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    public function getZone(): string
     {
-        $n = $into ?? new static();
+        return $this->Zone;
+    }
+
+    public function setZone(string $Zone): self
+    {
+        $this->Zone = $Zone;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new static();
         foreach ($decoded as $k => $v) {
             $n->{$k} = $v;
         }
@@ -64,8 +70,8 @@ class AgentWeights extends AbstractModel
         foreach ($this->_getDynamicFields() as $k => $v) {
             $out->{$k} = $v;
         }
-        $out->Passing = $this->Passing;
-        $out->Warning = $this->Warning;
+        $out->Region = $this->Region;
+        $out->Zone = $this->Zone;
         return $out;
     }
 }

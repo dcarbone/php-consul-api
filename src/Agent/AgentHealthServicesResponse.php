@@ -29,16 +29,14 @@ class AgentHealthServicesResponse extends AbstractResponse
     use ErrorContainer;
 
     public string $AggregatedStatus;
-    public ?array $AgentServiceChecksInfos = null;
+    public array $AgentServiceChecksInfos;
 
-    public function __construct(string $aggregatedStatus, ?array $checkInfos, ?Error $err)
+    public function __construct(string $aggregatedStatus, array $checkInfos, ?Error $err)
     {
         $this->AggregatedStatus = $aggregatedStatus;
-        if (null !== $checkInfos) {
-            $this->AgentServiceChecksInfos = [];
-            foreach ($checkInfos as $checkInfo) {
-                $this->AgentServiceChecksInfos[] = new AgentServiceChecksInfo($checkInfo);
-            }
+        $this->AgentServiceChecksInfos = [];
+        foreach ($checkInfos as $checkInfo) {
+            $this->AgentServiceChecksInfos[] = AgentServiceChecksInfo::jsonUnserialize($checkInfo);
         }
         $this->Err = $err;
     }
@@ -48,17 +46,17 @@ class AgentHealthServicesResponse extends AbstractResponse
         return $this->AggregatedStatus;
     }
 
-    public function getAgentServiceChecksInfos(): ?array
+    public function getAgentServiceChecksInfos(): array
     {
         return $this->AgentServiceChecksInfos;
     }
 
     public function offsetExists(mixed $offset): bool
     {
-        return \is_int($offset) && 0 <= $offset && $offset < 3;
+        return is_int($offset) && 0 <= $offset && $offset < 3;
     }
 
-    public function offsetGet(mixed $offset): mixed
+    public function offsetGet(mixed $offset): string|array|Error|null
     {
         if (0 === $offset) {
             return $this->AggregatedStatus;

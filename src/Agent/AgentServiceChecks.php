@@ -21,14 +21,68 @@ namespace DCarbone\PHPConsulAPI\Agent;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\FakeSlice;
 
-class AgentServiceChecks extends FakeSlice
+class AgentServiceChecks implements \Countable, \ArrayAccess
 {
-    protected string $containedClass = AgentServiceCheck::class;
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck[] */
+    public array $Checks;
 
-    protected function newChild(array $data): AbstractModel
+    public function __construct(
+        iterable $Checks = [],
+    ) {
+        $this->setChecks(...$Checks);
+    }
+
+    public function getChecks(): array
     {
-        return new AgentServiceCheck($data);
+        return $this->Checks;
+    }
+
+    public function setChecks(AgentServiceCheck ...$Checks): self
+    {
+        $this->Checks = $Checks;
+        return $this;
+    }
+
+    public function getIterator(): iterable
+    {
+        if ([] === $this->Checks) {
+            return new \EmptyIterator();
+        }
+        return new \ArrayIterator($this->Checks);
+    }
+
+    public function count(): int
+    {
+        return count($this->Checks);
+    }
+
+    public function offsetExists(mixed $offset): bool
+    {
+        return isset($this->Checks[$offset]);
+    }
+
+    public function offsetGet(mixed $offset): mixed
+    {
+        return $this->Checks[$offset] ?? null;
+    }
+
+    public function offsetSet(mixed $offset, mixed $value): void
+    {
+        if (is_int($offset) && $value instanceof AgentServiceCheck) {
+            $this->Checks[$offset] = $value;
+        } else {
+            throw new \InvalidArgumentException(sprintf(
+                'Invalid offset %s or value %s, expected int and %s.',
+                var_export($offset, true),
+                var_export($value, true),
+                AgentServiceCheck::class
+            ));
+        }
+    }
+
+    public function offsetUnset(mixed $offset): void
+    {
+        unset($this->Checks[$offset]);
     }
 }

@@ -36,6 +36,7 @@ class AgentCheck extends AbstractModel
     public string $Type;
     public HealthCheckDefinition $Definition;
     public string $Namespace;
+    public string $Partition;
 
     public function __construct(
         null|array $data = null, // Deprecated, will be removed.
@@ -49,7 +50,8 @@ class AgentCheck extends AbstractModel
         string $ServiceName = '',
         string $Type = '',
         null|HealthCheckDefinition $Definition = null,
-        string $Namespace = ''
+        string $Namespace = '',
+        string $Partition = '',
     ) {
         $this->Node = $Node;
         $this->CheckID = $CheckID;
@@ -62,6 +64,7 @@ class AgentCheck extends AbstractModel
         $this->Type = $Type;
         $this->Definition = $Definition ?? new HealthCheckDefinition();
         $this->Namespace = $Namespace;
+        $this->Partition = $Partition;
         if (null !== $data && [] !== $data) {
             $this->jsonUnserialize((object)$data, $this);
         }
@@ -216,9 +219,12 @@ class AgentCheck extends AbstractModel
         $out->ServiceID = $this->ServiceID;
         $out->ServiceName = $this->ServiceName;
         $out->Type = $this->Type;
-        $out->Definition = $this->Definition->jsonSerialize();
+        $out->Definition = $this->Definition;
         if ('' !== $this->Namespace) {
             $out->Namespace = $this->Namespace;
+        }
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
         }
         return $out;
     }

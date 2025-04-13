@@ -20,23 +20,10 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-/**
- * Interface ConfigEntry
- *
- * NOTE: I'm being a bit lazy here and relying on the case-insensitive
- *      nature of class methods to make implementations of this interface work.
- */
-interface ConfigEntry
+enum LogSinkType: string
 {
-    public function GetKind(): string;
-
-    public function GetName(): string;
-
-    public function GetNamespace(): string;
-
-    public function GetMeta(): array;
-
-    public function GetCreateIndex(): int;
-
-    public function GetModifyIndex(): int;
+    case Default = '';
+    case File = 'file';
+    case StdErr = 'stderr';
+    case StdOut = 'stdout';
 }

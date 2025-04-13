@@ -73,15 +73,6 @@ class Consul
     public const SessionBehaviorRelease = 'release';
     public const SessionBehaviorDelete  = 'delete';
 
-    public const ServiceKindTypical            = '';
-    public const ServiceKindConnectProxy       = 'connect-proxy';
-    public const ServiceKindMeshGateway        = 'mesh-gateway';
-    public const ServiceKindTerminatingGateway = 'terminating-gateway';
-    public const ServiceKindIngressGateway     = 'ingress-gateway';
-
-    public const UpstreamDestTypeService       = 'service';
-    public const UpstreamDestTypePreparedQuery = 'prepared_query';
-
     public const AutopilotServerNone     = 'none';
     public const AutopilotServerLeader   = 'leader';
     public const AutopilotServerVoter    = 'voter';
@@ -122,15 +113,6 @@ class Consul
     public const MemberTagValueUseTLS        = '1';
     public const MemberTagKeyReadReplica     = 'read_replica';
     public const MemberTagValueReadReplica   = '1';
-
-    public const ACLModeDisabled = '0';
-    public const ACLModeEnabled  = '1';
-    public const ACLModeLegacy   = '2';
-    public const ACLModeUnknown  = '3';
-
-    public const ProxyModeDefault = '';
-    public const ProxyModeTransparent = 'transparent';
-    public const ProxyModeDirect = 'direct';
 
     // "private" constants
 

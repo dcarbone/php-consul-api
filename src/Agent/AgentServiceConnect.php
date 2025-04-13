@@ -21,24 +21,23 @@ namespace DCarbone\PHPConsulAPI\Agent;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class AgentServiceConnect extends AbstractModel
 {
-    protected const FIELDS = [
-        self::FIELD_NATIVE          => Transcoding::OMITEMPTY_BOOLEAN_FIELD,
-        self::FIELD_SIDECAR_SERVICE => [
-            Transcoding::FIELD_TYPE      => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS     => AgentServiceRegistration::class,
-            Transcoding::FIELD_OMITEMPTY => true,
-        ],
-    ];
-
-    private const FIELD_NATIVE          = 'Native';
-    private const FIELD_SIDECAR_SERVICE = 'SidecarService';
-
     public bool $Native;
-    public array $SidecarService;
+    public null|AgentServiceRegistration $SidecarService;
+
+    public function __construct(
+        null|array $data = null, // Deprecated, will be removed.
+        bool $Native = false,
+        null|AgentServiceRegistration $SidecarService = null,
+    ) {
+        $this->Native = $Native;
+        $this->SidecarService = $SidecarService;
+        if (null !== $data && [] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+        }
+    }
 
     public function isNative(): bool
     {
@@ -51,14 +50,38 @@ class AgentServiceConnect extends AbstractModel
         return $this;
     }
 
-    public function getSidecarService(): array
+    public function getSidecarService(): null|AgentServiceRegistration
     {
         return $this->SidecarService;
     }
 
-    public function setSidecarService(array $SidecarService): self
+    public function setSidecarService(AgentServiceRegistration $SidecarService): self
     {
         $this->SidecarService = $SidecarService;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    {
+        $n = $into ?? new static();
+        foreach ($decoded as $k => $v) {
+            if ('SidecarService' === $k) {
+                $n->SidecarService = AgentServiceRegistration::jsonUnserialize($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->Native = $this->Native;
+        $out->SidecarService = $this->SidecarService;
+        return $out;
     }
 }

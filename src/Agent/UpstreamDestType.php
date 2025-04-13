@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI\ConfigEntry;
+namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,23 +20,12 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-/**
- * Interface ConfigEntry
- *
- * NOTE: I'm being a bit lazy here and relying on the case-insensitive
- *      nature of class methods to make implementations of this interface work.
- */
-interface ConfigEntry
+enum UpstreamDestType: string
 {
-    public function GetKind(): string;
+    // Service discovers instances via healthy service lookup.
+    case Service = 'service';
 
-    public function GetName(): string;
-
-    public function GetNamespace(): string;
-
-    public function GetMeta(): array;
-
-    public function GetCreateIndex(): int;
-
-    public function GetModifyIndex(): int;
+    // PreparedQuery discovers instances via prepared query
+    // execution.
+    case PreparedQuery = 'prepared_query';
 }

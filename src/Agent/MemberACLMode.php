@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,12 +20,20 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-trait HasStringTags
+enum MemberACLMode: string
 {
-    public array $Tags = [];
+    // Disabled indicates that ACLs are disabled for this agent
+    case Disabled = "0";
 
-    public function getTags(): array
-    {
-        return $this->Tags;
-    }
+    // Enabled indicates that ACLs are enabled and operating in new ACL
+    // mode (v1.4.0+ ACLs)
+    case Enabled = "1";
+
+    // Legacy has been deprecated, and will be treated as ACLModeUnknown.
+    case Legacy = "2";
+
+    // Unknown is used to indicate that the AgentMember.Tags didn't advertise
+    // an ACL mode at all. This is the case for Consul versions before v1.4.0 and
+    // should be treated the same as ACLModeLegacy.
+    case Unknown = "3";
 }
