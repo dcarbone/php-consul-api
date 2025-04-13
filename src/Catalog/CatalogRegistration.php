@@ -52,16 +52,16 @@ class CatalogRegistration extends AbstractModel
     private const FIELD_CHECK            = 'Check';
     private const FIELD_CHECKS           = 'Checks';
 
-    public string $ID = '';
-    public string $Node = '';
-    public string $Address = '';
+    public string $ID;
+    public string $Node;
+    public string $Address;
     public FakeMap $TaggedAddresses;
     public FakeMap $NodeMeta;
-    public string $Datacenter = '';
+    public string $Datacenter;
     public ?AgentService $Service = null;
     public ?AgentCheck $Check = null;
     public HealthChecks $Checks;
-    public bool $SkipNodeUpdate = false;
+    public bool $SkipNodeUpdate;
 
     public function __construct(?array $data = [])
     {

@@ -32,12 +32,12 @@ class ACLPolicyWriteResponse extends AbstractValuedWriteResponse implements Unma
         return $this->ACLPolicy;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        if (null === $decodedData) {
+        if (null === $decoded) {
             $this->ACLPolicy = null;
             return;
         }
-        $this->ACLPolicy = ACLPolicy::jsonUnserialize($decodedData);
+        $this->ACLPolicy = ACLPolicy::jsonUnserialize($decoded);
     }
 }

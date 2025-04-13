@@ -32,8 +32,8 @@ class PreparedQueryExecuteResponseResponse extends AbstractValuedQueryResponse i
         return $this->PreparedQueryExecuteResponse;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        $this->PreparedQueryExecuteResponse = new PreparedQueryExecuteResponse((array)$decodedData);
+        $this->PreparedQueryExecuteResponse = new PreparedQueryExecuteResponse((array)$decoded);
     }
 }

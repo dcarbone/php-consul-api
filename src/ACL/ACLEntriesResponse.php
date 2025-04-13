@@ -32,9 +32,9 @@ class ACLEntriesResponse extends AbstractValuedQueryResponse implements Unmarsha
         return $this->ACLEntries;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        foreach ($decodedData as $entry) {
+        foreach ($decoded as $entry) {
             $this->ACLEntries[] = ACLEntry::jsonUnserialize($entry);
         }
     }

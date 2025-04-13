@@ -22,5 +22,5 @@ namespace DCarbone\PHPConsulAPI;
 
 interface UnmarshalledResponseInterface
 {
-    public function unmarshalValue(mixed $decodedData): void;
+    public function unmarshalValue(mixed $decoded): void;
 }

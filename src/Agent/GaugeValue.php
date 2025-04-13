@@ -28,6 +28,20 @@ class GaugeValue extends AbstractModel
     public float $Value;
     public array $Labels;
 
+    public function __construct(
+        null|array $data = null, // Deprecated, will be removed.
+        string $Name = '',
+        float $Value = 0.0,
+        array|\stdClass $Labels = [],
+    ) {
+        $this->Name = $Name;
+        $this->Value = $Value;
+        $this->setLabels($Labels);
+        if (null !== $data && [] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+        }
+    }
+
     public function getName(): string
     {
         return $this->Name;
@@ -55,9 +69,34 @@ class GaugeValue extends AbstractModel
         return $this->Labels;
     }
 
-    public function setLabels(array $labels): self
+    public function setLabels(array|\stdClass $labels): self
     {
-        $this->Labels = $labels;
+        $this->Labels = (array)$labels;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    {
+        $n = $into ?? new static();
+        foreach ($decoded as $k => $v) {
+            if ('Labels' === $k) {
+                $n->setLabels($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->Name = $this->Name;
+        $out->Value = $this->Value;
+        $out->Labels = $this->Labels;
+        return $out;
     }
 }

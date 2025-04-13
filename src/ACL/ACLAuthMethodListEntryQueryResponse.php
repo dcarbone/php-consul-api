@@ -32,9 +32,9 @@ class ACLAuthMethodListEntryQueryResponse extends AbstractValuedQueryResponse im
         return $this->ACLAuthMethodListEntries;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        foreach ($decodedData as $datum) {
+        foreach ($decoded as $datum) {
             $this->ACLAuthMethodListEntries[] = ACLAuthMethodListEntry::jsonUnserialize($datum);
         }
     }

@@ -32,8 +32,8 @@ class HealthChecksResponse extends AbstractValuedQueryResponse implements Unmars
         return $this->HealthChecks;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        $this->HealthChecks = new HealthChecks((array)$decodedData);
+        $this->HealthChecks = new HealthChecks((array)$decoded);
     }
 }

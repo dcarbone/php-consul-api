@@ -29,17 +29,17 @@ trait ResponseValueBoolTrait
         return $this->Value;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        if (\is_bool($decodedData)) {
-            $this->Value = $decodedData;
+        if (\is_bool($decoded)) {
+            $this->Value = $decoded;
             return;
         }
-        if (\is_string($decodedData)) {
-            $this->Value = Transcoding::TRUE === strtolower(trim($decodedData));
+        if (\is_string($decoded)) {
+            $this->Value = Transcoding::TRUE === strtolower(trim($decoded));
             return;
         }
-        $this->Value = (bool)$decodedData;
+        $this->Value = (bool)$decoded;
     }
 
     public function __toString(): string

@@ -206,7 +206,7 @@ class ACLAuthMethod extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
     {
         $n = $into ?? new static();
         foreach ($decoded as $k => $v) {

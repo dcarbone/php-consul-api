@@ -32,12 +32,12 @@ class ACLAuthMethodQueryResponse extends AbstractValuedQueryResponse implements 
         return $this->ACLAuthMethod;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        if (null === $decodedData) {
+        if (null === $decoded) {
             $this->ACLAuthMethod = null;
             return;
         }
-        $this->ACLAuthMethod = $this->ACLAuthMethod::jsonUnserialize($decodedData);
+        $this->ACLAuthMethod = $this->ACLAuthMethod::jsonUnserialize($decoded);
     }
 }

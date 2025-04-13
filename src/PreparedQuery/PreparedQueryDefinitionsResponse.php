@@ -32,10 +32,10 @@ class PreparedQueryDefinitionsResponse extends AbstractValuedQueryResponse imple
         return $this->PreparedQueryDefinitions;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
         $this->PreparedQueryDefinitions = [];
-        foreach ($decodedData as $datum) {
+        foreach ($decoded as $datum) {
             $this->PreparedQueryDefinitions[] = new PreparedQueryDefinition($datum);
         }
     }

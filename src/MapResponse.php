@@ -29,12 +29,12 @@ class MapResponse extends AbstractValuedResponse implements UnmarshalledResponse
         return $this->Map;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        if (null === $decodedData) {
+        if (null === $decoded) {
             $this->Map = null;
             return;
         }
-        $this->Map = (array)$decodedData;
+        $this->Map = (array)$decoded;
     }
 }

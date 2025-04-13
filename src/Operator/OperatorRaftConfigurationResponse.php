@@ -32,8 +32,8 @@ class OperatorRaftConfigurationResponse extends AbstractValuedResponse implement
         return $this->RaftConfiguration;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        $this->RaftConfiguration = new RaftConfiguration($decodedData);
+        $this->RaftConfiguration = new RaftConfiguration($decoded);
     }
 }

@@ -32,10 +32,10 @@ class OperatorServerHealthsResponse extends AbstractValuedResponse implements Un
         return $this->ServerHealths;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
         $this->ServerHealths = [];
-        foreach ($decodedData as $datum) {
+        foreach ($decoded as $datum) {
             $this->ServerHealths[] = new ServerHealth($datum);
         }
     }

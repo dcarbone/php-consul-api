@@ -32,8 +32,8 @@ class AutopilotStateResponse extends AbstractValuedResponse implements Unmarshal
         return $this->AutopilotState;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        $this->AutopilotState = new AutopilotState($decodedData);
+        $this->AutopilotState = new AutopilotState($decoded);
     }
 }

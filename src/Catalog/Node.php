@@ -34,14 +34,14 @@ class Node extends AbstractModel
     private const FIELD_TAGGED_ADDRESSES = 'TaggedAddresses';
     private const FIELD_META             = 'Meta';
 
-    public string $ID = '';
-    public string $Node = '';
-    public string $Address = '';
-    public string $Datacenter = '';
+    public string $ID;
+    public string $Node;
+    public string $Address;
+    public string $Datacenter;
     public FakeMap $TaggedAddresses;
     public FakeMap $Meta;
-    public int $CreateIndex = 0;
-    public int $ModifyIndex = 0;
+    public int $CreateIndex;
+    public int $ModifyIndex;
 
     public function __construct(?array $data = [])
     {

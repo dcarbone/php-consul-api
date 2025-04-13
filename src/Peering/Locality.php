@@ -55,7 +55,7 @@ class Locality extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded): self
+    public static function jsonUnserialize(\stdClass $decoded): static
     {
         $n = new static();
         foreach ($decoded as $k => $v) {

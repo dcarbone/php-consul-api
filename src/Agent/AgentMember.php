@@ -143,7 +143,7 @@ class AgentMember extends AbstractModel
             Consul::MemberTagValueRoleServer === $this->Tags[Consul::MemberTagKeyACLMode];
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
     {
         $n = $into ?? new static();
         foreach ($decoded as $k => $v) {

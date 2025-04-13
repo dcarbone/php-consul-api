@@ -49,7 +49,7 @@ class AgentWeights extends AbstractModel
         return $this->Warning;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
     {
         $n = $into ?? new static();
         foreach ($decoded as $k => $v) {

@@ -21,43 +21,36 @@ namespace DCarbone\PHPConsulAPI\Agent;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class MetricsInfo extends AbstractModel
 {
-    protected const FIELDS = [
-        self::FIELD_GAUGES => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => GaugeValue::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-        ],
-        self::FIELD_POINTS => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => PointValue::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-        ],
-        self::FIELD_COUNTERS => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => SampledValue::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-        ],
-        self::FIELD_SAMPLES => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => SampledValue::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-        ],
-    ];
-
-    private const FIELD_GAUGES   = 'Gauges';
-    private const FIELD_POINTS   = 'Points';
-    private const FIELD_COUNTERS = 'Counters';
-    private const FIELD_SAMPLES  = 'Samples';
-
     public string $Timestamp;
+    /** @var \DCarbone\PHPConsulAPI\Agent\GaugeValue[] */
     public array $Gauges;
+    /** @var \DCarbone\PHPConsulAPI\Agent\PointValue[] */
     public array $Points;
+    /** @var \DCarbone\PHPConsulAPI\Agent\SampledValue[] */
     public array $Counters;
+    /** @var \DCarbone\PHPConsulAPI\Agent\SampledValue[] */
     public array $Samples;
+
+    public function __construct(
+        null|array $data = null, // Deprecated, will be removed.
+        string $Timestamp = '',
+        iterable $Gauges = [],
+        iterable $Points = [],
+        iterable $Counters = [],
+        iterable $Samples = [],
+    ) {
+        $this->Timestamp = $Timestamp;
+        $this->setGauges(...$Gauges);
+        $this->setPoints(...$Points);
+        $this->setCounters(...$Counters);
+        $this->setSamples(...$Samples);
+        if (null !== $data && [] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+        }
+    }
 
     public function getTimestamp(): string
     {
@@ -75,7 +68,7 @@ class MetricsInfo extends AbstractModel
         return $this->Gauges;
     }
 
-    public function setGauges(array $gauges): self
+    public function setGauges(GaugeValue ...$gauges): self
     {
         $this->Gauges = $gauges;
         return $this;
@@ -86,7 +79,7 @@ class MetricsInfo extends AbstractModel
         return $this->Points;
     }
 
-    public function setPoints(array $points): self
+    public function setPoints(PointValue ...$points): self
     {
         $this->Points = $points;
         return $this;
@@ -97,7 +90,7 @@ class MetricsInfo extends AbstractModel
         return $this->Counters;
     }
 
-    public function setCounters(array $counters): self
+    public function setCounters(SampledValue ...$counters): self
     {
         $this->Counters = $counters;
         return $this;
@@ -108,9 +101,50 @@ class MetricsInfo extends AbstractModel
         return $this->Samples;
     }
 
-    public function setSamples(array $samples): self
+    public function setSamples(SampledValue ...$samples): self
     {
         $this->Samples = $samples;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    {
+        $n = $into ?? new static();
+        foreach ($decoded as $k => $v) {
+            if ('Gauges' === $k) {
+                foreach ($v as $vv) {
+                    $n->Gauges[] = GaugeValue::jsonUnserialize($vv);
+                }
+            } elseif ('Points' === $k) {
+                foreach ($v as $vv) {
+                    $n->Points[] = PointValue::jsonUnserialize($vv);
+                }
+            } elseif ('Counters' === $k) {
+                foreach ($v as $vv) {
+                    $n->Counters[] = SampledValue::jsonUnserialize($vv);
+                }
+            } elseif ('Samples' === $k) {
+                foreach ($v as $vv) {
+                    $n->Samples[] = SampledValue::jsonUnserialize($vv);
+                }
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->Timestamp = $this->Timestamp;
+        $out->Gauges = $this->Gauges;
+        $out->Points = $this->Points;
+        $out->Counters = $this->Counters;
+        $out->Samples = $this->Samples;
+        return $out;
     }
 }

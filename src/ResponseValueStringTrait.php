@@ -29,9 +29,9 @@ trait ResponseValueStringTrait
         return $this->Value;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        $this->Value = (string)$decodedData;
+        $this->Value = (string)$decoded;
     }
 
     public function __toString(): string

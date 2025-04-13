@@ -32,8 +32,8 @@ class OperatorHealthReplyResponse extends AbstractValuedResponse implements Unma
         return $this->OperatorHealthReply;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        $this->OperatorHealthReply = new OperatorHealthReply((array)$decodedData);
+        $this->OperatorHealthReply = new OperatorHealthReply((array)$decoded);
     }
 }

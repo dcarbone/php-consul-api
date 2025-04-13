@@ -85,4 +85,13 @@ class AgentServiceChecks implements \Countable, \ArrayAccess
     {
         unset($this->Checks[$offset]);
     }
+
+    public static function jsonUnserialize(array $decoded): static
+    {
+        $n = new static();
+        foreach ($decoded as $v) {
+            $n->Checks[] = AgentServiceCheck::jsonUnserialize($v);
+        }
+        return $n;
+    }
 }

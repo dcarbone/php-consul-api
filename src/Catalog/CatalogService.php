@@ -55,25 +55,25 @@ class CatalogService extends AbstractModel
     private const FIELD_HEALTH_CHECKS            = 'HealthChecks';
     private const FIELD_NAMESPACE                = 'Namespace';
 
-    public string $ID = '';
-    public string $Node = '';
-    public string $Address = '';
-    public string $Datacenter = '';
-    public array $TaggedAddresses = [];
-    public array $NodeMeta = [];
-    public string $ServiceID = '';
-    public string $ServiceName = '';
-    public string $ServiceAddress = '';
-    public array $ServiceTaggedAddresses = [];
-    public array $ServiceTags = [];
-    public array $ServiceMeta = [];
-    public int $ServicePort = 0;
+    public string $ID;
+    public string $Node;
+    public string $Address;
+    public string $Datacenter;
+    public array $TaggedAddresses;
+    public array $NodeMeta;
+    public string $ServiceID;
+    public string $ServiceName;
+    public string $ServiceAddress;
+    public array $ServiceTaggedAddresses;
+    public array $ServiceTags;
+    public array $ServiceMeta;
+    public int $ServicePort;
     public Weights $ServiceWeights;
-    public bool $ServiceEnableTagOverride = false;
-    public int $CreateIndex = 0;
+    public bool $ServiceEnableTagOverride;
+    public int $CreateIndex;
     public ?AgentServiceConnectProxyConfig $ServiceProxy = null;
-    public int $ModifyIndex = 0;
-    public string $Namespace = '';
+    public int $ModifyIndex;
+    public string $Namespace;
 
     public function getID(): string
     {

@@ -22,7 +22,7 @@ namespace DCarbone\PHPConsulAPI\Agent;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
-final class AgentCheckUpdate extends AbstractModel
+class AgentCheckUpdate extends AbstractModel
 {
     public string $Status;
     public string $Output;
@@ -61,7 +61,7 @@ final class AgentCheckUpdate extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
     {
         $n = $into ?? new self();
         foreach ($decoded as $k => $v) {

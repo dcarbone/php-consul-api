@@ -32,8 +32,8 @@ class CatalogNodeResponse extends AbstractValuedQueryResponse implements Unmarsh
         return $this->Node;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        $this->Node = new CatalogNode((array)$decodedData);
+        $this->Node = new CatalogNode((array)$decoded);
     }
 }

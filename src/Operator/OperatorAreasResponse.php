@@ -32,10 +32,10 @@ class OperatorAreasResponse extends AbstractValuedQueryResponse implements Unmar
         return $this->Areas;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
         $this->Areas = [];
-        foreach ($decodedData as $area) {
+        foreach ($decoded as $area) {
             $this->Areas[] = new Area($area);
         }
     }

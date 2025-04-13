@@ -32,8 +32,8 @@ class UserEventResponse extends AbstractValuedWriteResponse implements Unmarshal
         return $this->UserEvent;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        $this->UserEvent = new UserEvent((array)$decodedData);
+        $this->UserEvent = new UserEvent((array)$decoded);
     }
 }

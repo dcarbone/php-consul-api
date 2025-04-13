@@ -90,7 +90,7 @@ class KubernetesAuthMethodConfig extends AbstractModel
         ];
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
     {
         $n = $into ?? new static();
         foreach ($decoded as $k => $v) {

@@ -25,6 +25,19 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 class ServiceRegisterOpts extends AbstractModel
 {
     public bool $ReplaceExistingChecks;
+    public string $Token;
+
+    public function __construct(
+        null|array $data = null, // Deprecated, will be removed.
+        bool $ReplaceExistingChecks = false,
+        string $Token = '',
+    ) {
+        $this->ReplaceExistingChecks = $ReplaceExistingChecks;
+        $this->Token = $Token;
+        if (null !== $data && [] !== $data) {
+            self::jsonUnserialize((object)$data, $this);
+        }
+    }
 
     public function isReplaceExistingChecks(): bool
     {
@@ -35,5 +48,36 @@ class ServiceRegisterOpts extends AbstractModel
     {
         $this->ReplaceExistingChecks = $replaceExistingChecks;
         return $this;
+    }
+
+    public function getToken(): string
+    {
+        return $this->Token;
+    }
+
+    public function setToken(string $Token): ServiceRegisterOpts
+    {
+        $this->Token = $Token;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    {
+        $n = $into ?? new static();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->ReplaceExistingChecks = $this->ReplaceExistingChecks;
+        $out->Token = $this->Token;
+        return $out;
     }
 }

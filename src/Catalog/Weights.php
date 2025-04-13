@@ -24,8 +24,8 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 
 class Weights extends AbstractModel
 {
-    public int $Passing = 0;
-    public int $Warning = 0;
+    public int $Passing;
+    public int $Warning;
 
     public function getPassing(): int
     {

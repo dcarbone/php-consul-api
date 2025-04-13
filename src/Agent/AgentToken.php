@@ -26,6 +26,16 @@ class AgentToken extends AbstractModel
 {
     public string $Token;
 
+    public function __construct(
+        null|array $data = null, // Deprecated, will be removed.
+        string $Token = '',
+    ) {
+        $this->Token = $Token;
+        if (null !== $data && [] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+        }
+    }
+
     public function getToken(): string
     {
         return $this->Token;
@@ -35,5 +45,24 @@ class AgentToken extends AbstractModel
     {
         $this->Token = $Token;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    {
+        $n = $into ?? new static();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->Token = $this->Token;
+        return $out;
     }
 }

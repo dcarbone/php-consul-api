@@ -24,8 +24,20 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 
 class ServiceAddress extends AbstractModel
 {
-    public string $Address = '';
-    public int $Port = 0;
+    public string $Address;
+    public int $Port;
+
+    public function __construct(
+        null|array $data = null, // Deprecated, will be removed.
+        string $address = '',
+        int $port = 0,
+    ) {
+        $this->Address = $address;
+        $this->Port = $port;
+        if (null !== $data && [] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+        }
+    }
 
     public function getAddress(): string
     {
@@ -47,5 +59,25 @@ class ServiceAddress extends AbstractModel
     {
         $this->Port = $port;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    {
+        $n = $into ?? new static();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->Address = $this->Address;
+        $out->Port = $this->Port;
+        return $out;
     }
 }

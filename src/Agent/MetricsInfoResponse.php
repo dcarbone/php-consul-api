@@ -25,15 +25,19 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class MetricsInfoResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
-    public ?MetricsInfo $MetricsInfo = null;
+    public null|MetricsInfo $MetricsInfo = null;
 
-    public function getValue(): ?MetricsInfo
+    public function getValue(): null|MetricsInfo
     {
         return $this->MetricsInfo;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        $this->MetricsInfo = new MetricsInfo((array)$decodedData);
+        if (null === $decoded) {
+            $this->MetricsInfo = null;
+            return;
+        }
+        $this->MetricsInfo = MetricsInfo::jsonUnserialize($decoded);
     }
 }

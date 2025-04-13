@@ -32,10 +32,10 @@ class CatalogServicesResponse extends AbstractValuedQueryResponse implements Unm
         return $this->Services;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
         $this->Services = [];
-        foreach ($decodedData as $node) {
+        foreach ($decoded as $node) {
             $this->Services[] = new CatalogService($node);
         }
     }

@@ -32,10 +32,10 @@ class AgentMembersResponse extends AbstractValuedResponse implements Unmarshalle
         return $this->Members;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
         $this->Members = [];
-        foreach ($decodedData as $member) {
+        foreach ($decoded as $member) {
             $this->Members[] = AgentMember::jsonUnserialize($member);
         }
     }

@@ -33,6 +33,30 @@ class SampledValue extends AbstractModel
     public float $Stddev;
     public array $Labels;
 
+    public function __construct(
+        null|array $data = null, // Deprecated, will be removed.
+        string $Name = '',
+        int $Count = 0,
+        float $Sum = 0.0,
+        float $Min = 0.0,
+        float $Max = 0.0,
+        float $Mean = 0.0,
+        float $Stddev = 0.0,
+        array|\stdClass $Labels = [],
+    ) {
+        $this->Name = $Name;
+        $this->Count = $Count;
+        $this->Sum = $Sum;
+        $this->Min = $Min;
+        $this->Max = $Max;
+        $this->Mean = $Mean;
+        $this->Stddev = $Stddev;
+        $this->setLabels($Labels);
+        if (null !== $data && [] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+        }
+    }
+
     public function getName(): string
     {
         return $this->Name;
@@ -115,9 +139,39 @@ class SampledValue extends AbstractModel
         return $this->Labels;
     }
 
-    public function setLabels(array $labels): self
+    public function setLabels(array|\stdClass $labels): self
     {
-        $this->Labels = $labels;
+        $this->Labels = (array)$labels;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    {
+        $n = $into ?? new static();
+        foreach ($decoded as $k => $v) {
+            if ('Labels' === $k) {
+                $n->setLabels($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->Name = $this->Name;
+        $out->Count = $this->Count;
+        $out->Sum = $this->Sum;
+        $out->Min = $this->Min;
+        $out->Max = $this->Max;
+        $out->Mean = $this->Mean;
+        $out->Stddev = $this->Stddev;
+        $out->Labels = $this->Labels;
+        return $out;
     }
 }

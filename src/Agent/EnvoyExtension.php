@@ -21,28 +21,30 @@ namespace DCarbone\PHPConsulAPI\Agent;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\FakeMap;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class EnvoyExtension extends AbstractModel
 {
-    protected const FIELDS = [
-        self::FIELD_ARGUMENTS => Transcoding::MAP_FIELD,
-    ];
-
-    private const FIELD_ARGUMENTS = 'Arguments';
-
     public string $Name;
     public bool $Required;
-    public FakeMap $Arguments;
+    public array $Arguments;
     public string $ConsulVersion;
     public string $EnvoyVersion;
 
-    public function __construct(?array $data = [])
-    {
-        parent::__construct($data);
-        if (!isset($this->Arguments)) {
-            $this->Arguments = new FakeMap(null);
+    public function __construct(
+        null|array $data = null, // Deprecated, will be removed.
+        string $Name = '',
+        bool $Required = false,
+        array|\stdClass $Arguments = [],
+        string $ConsulVersion = '',
+        string $EnvoyVersion = '',
+    ) {
+        $this->Name = $Name;
+        $this->Required = $Required;
+        $this->setArguments($Arguments);
+        $this->ConsulVersion = $ConsulVersion;
+        $this->EnvoyVersion = $EnvoyVersion;
+        if (null !== $data && [] !== $data) {
+            $this->jsonSerialize((object)$data, $this);
         }
     }
 
@@ -68,14 +70,14 @@ class EnvoyExtension extends AbstractModel
         return $this;
     }
 
-    public function getArguments(): ?FakeMap
+    public function getArguments(): array
     {
         return $this->Arguments;
     }
 
-    public function setArguments(array|FakeMap|\stdClass|null $Arguments): self
+    public function setArguments(array|\stdClass $Arguments): self
     {
-        $this->Arguments = FakeMap::parse($Arguments);
+        $this->Arguments = (array)$Arguments;
         return $this;
     }
 
@@ -99,5 +101,32 @@ class EnvoyExtension extends AbstractModel
     {
         $this->EnvoyVersion = $EnvoyVersion;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    {
+        $n = $into ?? new static();
+        foreach ($decoded as $k => $v) {
+            if ('Arguments' === $k) {
+                $n->setArguments($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->Name = $this->Name;
+        $out->Required = $this->Required;
+        $out->Arguments = $this->Arguments;
+        $out->ConsulVersion = $this->ConsulVersion;
+        $out->EnvoyVersion = $this->EnvoyVersion;
+        return $out;
     }
 }

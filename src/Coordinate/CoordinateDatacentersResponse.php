@@ -32,10 +32,10 @@ class CoordinateDatacentersResponse extends AbstractValuedResponse implements Un
         return $this->DatacenterMap;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
         $this->DatacenterMap = [];
-        foreach ($decodedData as $item) {
+        foreach ($decoded as $item) {
             $this->DatacenterMap[] = new CoordinateDatacenterMap($item);
         }
     }

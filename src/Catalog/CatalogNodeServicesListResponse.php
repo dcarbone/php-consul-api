@@ -32,8 +32,8 @@ class CatalogNodeServicesListResponse extends AbstractValuedQueryResponse implem
         return $this->CatalogNodeServiceList;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        $this->CatalogNodeServiceList = new CatalogNodeServiceList((array)$decodedData);
+        $this->CatalogNodeServiceList = new CatalogNodeServiceList((array)$decoded);
     }
 }

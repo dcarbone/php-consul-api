@@ -33,11 +33,11 @@ class CatalogDeregistration extends AbstractModel
     private const FIELD_ADDRESS   = 'Address';
     private const FIELD_NAMESPACE = 'Namespace';
 
-    public string $Node = '';
-    public string $Address = '';
-    public string $Datacenter = '';
-    public string $ServiceID = '';
-    public string $CheckID = '';
+    public string $Node;
+    public string $Address;
+    public string $Datacenter;
+    public string $ServiceID;
+    public string $CheckID;
 
     public function getNode(): string
     {

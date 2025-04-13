@@ -26,6 +26,21 @@ class MemberOpts extends AbstractModel
 {
     public bool $WAN;
     public string $Segment;
+    public string $Filter;
+
+    public function __construct(
+        null|array $data = null,
+        bool $WAN = false,
+        string $Segment = '',
+        string $Filter = '',
+    ) {
+        $this->WAN = $WAN;
+        $this->Segment = $Segment;
+        $this->Filter = $Filter;
+        if (null !== $data && [] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+        }
+    }
 
     public function isWAN(): bool
     {
@@ -47,5 +62,32 @@ class MemberOpts extends AbstractModel
     {
         $this->Segment = $segment;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    {
+        $n = $into ?? new static();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        if ($this->WAN) {
+            $out->WAN = $this->WAN;
+        }
+        if ('' !== $this->Segment) {
+            $out->Segment = $this->Segment;
+        }
+        if ('' !== $this->Filter) {
+            $out->Filter = $this->Filter;
+        }
+        return $out;
     }
 }

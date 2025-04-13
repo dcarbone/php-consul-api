@@ -41,6 +41,8 @@ class AgentServiceCheck extends AbstractModel
     public bool $TLSSkipVerify;
     public string $GRPC;
     public bool $GRPCUseTLS;
+    public string $H2PING;
+    public bool $H2PINGUseTLS;
     public string $AliasNode;
     public string $AliasService;
     public int $SuccessBeforePassing;
@@ -59,7 +61,7 @@ class AgentServiceCheck extends AbstractModel
         string $Timeout = '',
         string $TTL = '',
         string $HTTP = '',
-        iterable $Header = [],
+        array|\stdClass $Header = [],
         string $Method = '',
         string $TCP = '',
         string $Status = '',
@@ -67,6 +69,8 @@ class AgentServiceCheck extends AbstractModel
         bool $TLSSkipVerify = false,
         string $GRPC = '',
         bool $GRPCUseTLS = false,
+        string $H2PING = '',
+        bool $H2PINGUseTLS = false,
         string $AliasNode = '',
         string $AliasService = '',
         int $SuccessBeforePassing = 0,
@@ -83,7 +87,7 @@ class AgentServiceCheck extends AbstractModel
         $this->Timeout = $Timeout;
         $this->TTL = $TTL;
         $this->HTTP = $HTTP;
-        $this->setHeader(...$Header);
+        $this->setHeader($Header);
         $this->Method = $Method;
         $this->TCP = $TCP;
         $this->Status = $Status;
@@ -91,6 +95,8 @@ class AgentServiceCheck extends AbstractModel
         $this->TLSSkipVerify = $TLSSkipVerify;
         $this->GRPC = $GRPC;
         $this->GRPCUseTLS = $GRPCUseTLS;
+        $this->H2PING = $H2PING;
+        $this->H2PINGUseTLS = $H2PINGUseTLS;
         $this->AliasNode = $AliasNode;
         $this->AliasService = $AliasService;
         $this->SuccessBeforePassing = $SuccessBeforePassing;
@@ -128,7 +134,7 @@ class AgentServiceCheck extends AbstractModel
         return $this->ScriptArgs;
     }
 
-    public function setScriptArgs(string  ...$args): self
+    public function setScriptArgs(string ...$args): self
     {
         $this->ScriptArgs = $args;
         return $this;
@@ -205,9 +211,9 @@ class AgentServiceCheck extends AbstractModel
         return $this->Header;
     }
 
-    public function setHeader(mixed ...$header): self
+    public function setHeader(array|\stdClass $Header): self
     {
-        $this->Header = $header;
+        $this->Header = (array)$Header;
         return $this;
     }
 
@@ -282,6 +288,28 @@ class AgentServiceCheck extends AbstractModel
         return $this->GRPCUseTLS;
     }
 
+    public function getH2PING(): string
+    {
+        return $this->H2PING;
+    }
+
+    public function setH2PING(string $H2PING): AgentServiceCheck
+    {
+        $this->H2PING = $H2PING;
+        return $this;
+    }
+
+    public function isH2PINGUseTLS(): bool
+    {
+        return $this->H2PINGUseTLS;
+    }
+
+    public function setH2PINGUseTLS(bool $H2PINGUseTLS): AgentServiceCheck
+    {
+        $this->H2PINGUseTLS = $H2PINGUseTLS;
+        return $this;
+    }
+
     public function setGRPCUseTLS(bool $GRPCUseTLS): self
     {
         $this->GRPCUseTLS = $GRPCUseTLS;
@@ -343,7 +371,7 @@ class AgentServiceCheck extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
     {
         $n = $into ?? new static();
         foreach ($decoded as $k => $v) {
@@ -400,14 +428,20 @@ class AgentServiceCheck extends AbstractModel
         if ('' !== $this->Notes) {
             $out->Notes = $this->Notes;
         }
-        if (false !== $this->TLSSkipVerify) {
+        if ($this->TLSSkipVerify) {
             $out->TLSSkipVerify = $this->TLSSkipVerify;
         }
         if ('' !== $this->GRPC) {
             $out->GRPC = $this->GRPC;
         }
-        if (false !== $this->GRPCUseTLS) {
+        if ($this->GRPCUseTLS) {
             $out->GRPCUseTLS = $this->GRPCUseTLS;
+        }
+        if ('' !== $this->H2PING) {
+            $out->H2PING = $this->H2PING;
+        }
+        if ($this->H2PINGUseTLS) {
+            $out->H2PINGUseTLS = $this->H2PINGUseTLS;
         }
         if ('' !== $this->AliasNode) {
             $out->AliasNode = $this->AliasNode;

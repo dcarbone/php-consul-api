@@ -32,12 +32,12 @@ class ACLTokenWriteResponse extends AbstractValuedWriteResponse implements Unmar
         return $this->ACLToken;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        if (null === $decodedData) {
+        if (null === $decoded) {
             $this->ACLToken = null;
             return;
         }
-        $this->ACLToken = ACLToken::jsonUnserialize($decodedData);
+        $this->ACLToken = ACLToken::jsonUnserialize($decoded);
     }
 }

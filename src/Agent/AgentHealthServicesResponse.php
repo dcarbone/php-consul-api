@@ -31,7 +31,7 @@ class AgentHealthServicesResponse extends AbstractResponse
     public string $AggregatedStatus;
     public array $AgentServiceChecksInfos;
 
-    public function __construct(string $aggregatedStatus, array $checkInfos, ?Error $err)
+    public function __construct(string $aggregatedStatus, array $checkInfos, null|Error $err)
     {
         $this->AggregatedStatus = $aggregatedStatus;
         $this->AgentServiceChecksInfos = [];

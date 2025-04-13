@@ -32,12 +32,12 @@ class ACLBindingRuleQueryResponse extends AbstractValuedQueryResponse implements
         return $this->ACLBindingRule;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        if (null === $decodedData) {
+        if (null === $decoded) {
             $this->ACLBindingRule = null;
             return;
         }
-        $this->ACLBindingRule = ACLBindingRule::jsonUnserialize($decodedData);
+        $this->ACLBindingRule = ACLBindingRule::jsonUnserialize($decoded);
     }
 }

@@ -25,16 +25,69 @@ class AgentCheckRegistration extends AgentServiceCheck
     public string $ID;
     public string $ServiceID;
     public string $Namespace;
+    public string $Partition;
 
     public function __construct(
         null|array $data = null, // Deprecated, will be removed.
         string $ID = '',
         string $ServiceID = '',
+        string $CheckID = '',
+        string $Name = '',
+        iterable $ScriptArgs = [],
+        string $DockerContainerID = '',
+        string $Shell = '',
+        string $Interval = '',
+        string $Timeout = '',
+        string $TTL = '',
+        string $HTTP = '',
+        iterable $Header = [],
+        string $Method = '',
+        string $TCP = '',
+        string $Status = '',
+        string $Notes = '',
+        bool $TLSSkipVerify = false,
+        string $GRPC = '',
+        bool $GRPCUseTLS = false,
+        string $H2PING = '',
+        bool $H2PingUseTLS = false,
+        string $AliasNode = '',
+        string $AliasService = '',
+        int $SuccessBeforePassing = 0,
+        int $FailuresBeforeCritical = 0,
+        string $DeregisterCriticalServiceAfter = '',
         string $Namespace = '',
+        string $Partition = '',
     ) {
+        parent::__construct(
+            CheckID: $CheckID,
+            Name: $Name,
+            ScriptArgs: $ScriptArgs,
+            DockerContainerID: $DockerContainerID,
+            Shell: $Shell,
+            Interval: $Interval,
+            Timeout: $Timeout,
+            TTL: $TTL,
+            HTTP: $HTTP,
+            Header: $Header,
+            Method: $Method,
+            TCP: $TCP,
+            Status: $Status,
+            Notes: $Notes,
+            TLSSkipVerify: $TLSSkipVerify,
+            GRPC: $GRPC,
+            GRPCUseTLS: $GRPCUseTLS,
+            H2PING: $H2PING,
+            H2PINGUseTLS: $H2PingUseTLS,
+            AliasNode: $AliasNode,
+            AliasService: $AliasService,
+            SuccessBeforePassing: $SuccessBeforePassing,
+            FailuresBeforeCritical: $FailuresBeforeCritical,
+            DeregisterCriticalServiceAfter: $DeregisterCriticalServiceAfter,
+        );
         $this->ID = $ID;
         $this->ServiceID = $ServiceID;
         $this->Namespace = $Namespace;
+        $this->Partition = $Partition;
         if (null !== $data && [] !== $data) {
             $this->jsonUnserialize((object)$data, $this);
         }
@@ -73,9 +126,10 @@ class AgentCheckRegistration extends AgentServiceCheck
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    public static function jsonUnserialize(\stdClass $decoded, null|self|AgentServiceCheck $into = null): static
     {
         $n = $into ?? new static();
+        parent::jsonUnserialize($decoded, $n);
         foreach ($decoded as $k => $v) {
             $n->{$k} = $v;
         }
@@ -84,10 +138,7 @@ class AgentCheckRegistration extends AgentServiceCheck
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = parent::jsonSerialize();
         if ('' !== $this->ID) {
             $out->ID = $this->ID;
         }
@@ -96,6 +147,15 @@ class AgentCheckRegistration extends AgentServiceCheck
         }
         if ('' !== $this->Namespace) {
             $out->Namespace = $this->Namespace;
+        }
+        if (isset($out->Name) && $out->Name === '') {
+            unset($out->Name);
+        }
+        if (isset($out->Notes) && $out->Notes === '') {
+            unset($out->Notes);
+        }
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
         }
         return $out;
     }

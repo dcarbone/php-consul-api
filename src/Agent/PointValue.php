@@ -27,6 +27,18 @@ class PointValue extends AbstractModel
     public string $Name;
     public array $Points;
 
+    public function __construct(
+        null|array $data = null, // Deprecated, will be removed.
+        string $Name = '',
+        iterable $Points = [],
+    ) {
+        $this->Name = $Name;
+        $this->setPoints(...$Points);
+        if (null !== $data && [] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+        }
+    }
+
     public function getName(): string
     {
         return $this->Name;
@@ -43,9 +55,29 @@ class PointValue extends AbstractModel
         return $this->Points;
     }
 
-    public function setPoints(array $points): self
+    public function setPoints(float ...$points): self
     {
         $this->Points = $points;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    {
+        $n = $into ?? new static();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->Name = $this->Name;
+        $out->Points = $this->Points;
+        return $out;
     }
 }

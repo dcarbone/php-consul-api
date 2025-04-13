@@ -32,10 +32,10 @@ class ServiceEntriesResponse extends AbstractValuedQueryResponse implements Unma
         return $this->ServiceEntries;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
         $this->ServiceEntries = [];
-        foreach ($decodedData as $entry) {
+        foreach ($decoded as $entry) {
             $this->ServiceEntries[] = new ServiceEntry($entry);
         }
     }

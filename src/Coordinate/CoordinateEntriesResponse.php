@@ -32,10 +32,10 @@ class CoordinateEntriesResponse extends AbstractValuedQueryResponse implements U
         return $this->Nodes;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
         $this->Nodes = [];
-        foreach ($decodedData as $node) {
+        foreach ($decoded as $node) {
             $this->Nodes[] = new CoordinateEntry($node);
         }
     }

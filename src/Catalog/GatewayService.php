@@ -61,15 +61,15 @@ class GatewayService extends AbstractModel
 
     public CompoundServiceName $Gateway;
     public CompoundServiceName $Service;
-    public string $GatewayKind = '';
-    public int $Port = 0;
-    public string $Protocol = '';
-    public array $Hosts = [];
-    public string $CAFile = '';
-    public string $CertFile = '';
-    public string $KeyFile = '';
-    public string $SNI = '';
-    public string $FromWildCard = '';
+    public string $GatewayKind;
+    public int $Port;
+    public string $Protocol;
+    public array $Hosts;
+    public string $CAFile;
+    public string $CertFile;
+    public string $KeyFile;
+    public string $SNI;
+    public string $FromWildCard;
 
     public function __construct(?array $data = [])
     {

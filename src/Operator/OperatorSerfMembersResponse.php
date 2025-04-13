@@ -32,10 +32,10 @@ class OperatorSerfMembersResponse extends AbstractValuedQueryResponse implements
         return $this->SerfMembers;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
         $this->SerfMembers = [];
-        foreach ($decodedData as $datum) {
+        foreach ($decoded as $datum) {
             $this->SerfMembers[] = new SerfMember($datum);
         }
     }

@@ -32,10 +32,10 @@ class AgentServicesResponse extends AbstractValuedResponse implements Unmarshall
         return $this->Services;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
         $this->Services = [];
-        foreach ($decodedData as $k => $service) {
+        foreach ($decoded as $k => $service) {
             $this->Services[$k] = new AgentService($service);
         }
     }

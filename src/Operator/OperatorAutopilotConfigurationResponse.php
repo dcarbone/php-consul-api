@@ -32,8 +32,8 @@ class OperatorAutopilotConfigurationResponse extends AbstractValuedResponse impl
         return $this->AutopilotConfiguration;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        $this->AutopilotConfiguration = new AutopilotConfiguration((array)$decodedData);
+        $this->AutopilotConfiguration = new AutopilotConfiguration((array)$decoded);
     }
 }

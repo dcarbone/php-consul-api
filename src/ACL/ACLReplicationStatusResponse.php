@@ -32,12 +32,12 @@ class ACLReplicationStatusResponse extends AbstractValuedQueryResponse implement
         return $this->ACLReplicationStatus;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        if (null === $decodedData) {
+        if (null === $decoded) {
             $this->ACLReplicationStatus = null;
             return;
         }
-        $this->ACLReplicationStatus = ACLReplicationStatus::jsonUnserialize($decodedData);
+        $this->ACLReplicationStatus = ACLReplicationStatus::jsonUnserialize($decoded);
     }
 }

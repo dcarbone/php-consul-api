@@ -32,10 +32,10 @@ class ACLBindingRulesQueryResponse extends AbstractValuedQueryResponse implement
         return $this->ACLBindingRules;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
         $this->ACLBindingRules = [];
-        foreach ($decodedData as $datum) {
+        foreach ($decoded as $datum) {
             $this->ACLBindingRules[] = ACLBindingRule::jsonUnserialize($datum);
         }
     }

@@ -42,7 +42,7 @@ class CatalogNode extends AbstractModel
     private const FIELD_SERVICES = 'Services';
 
     public ?Node $Node = null;
-    public array $Services = [];
+    public array $Services;
 
     public function getNode(): ?Node
     {

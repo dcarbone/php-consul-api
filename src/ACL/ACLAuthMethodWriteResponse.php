@@ -32,12 +32,12 @@ class ACLAuthMethodWriteResponse extends AbstractValuedWriteResponse implements 
         return $this->ACLAuthMethod;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        if (null === $decodedData) {
+        if (null === $decoded) {
             $this->ACLAuthMethod = null;
             return;
         }
-        $this->ACLAuthMethod = ACLAuthMethod::jsonUnserialize($decodedData);
+        $this->ACLAuthMethod = ACLAuthMethod::jsonUnserialize($decoded);
     }
 }

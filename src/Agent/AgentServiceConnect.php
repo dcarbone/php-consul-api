@@ -61,7 +61,7 @@ class AgentServiceConnect extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
     {
         $n = $into ?? new static();
         foreach ($decoded as $k => $v) {
@@ -80,8 +80,12 @@ class AgentServiceConnect extends AbstractModel
         foreach ($this->_getDynamicFields() as $k => $v) {
             $out->{$k} = $v;
         }
-        $out->Native = $this->Native;
-        $out->SidecarService = $this->SidecarService;
+        if ($this->Native) {
+            $out->Native = $this->Native;
+        }
+        if (null !== $this->SidecarService) {
+            $out->SidecarService = $this->SidecarService;
+        }
         return $out;
     }
 }

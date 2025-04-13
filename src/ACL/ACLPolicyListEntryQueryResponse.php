@@ -32,9 +32,9 @@ class ACLPolicyListEntryQueryResponse extends AbstractValuedQueryResponse implem
         return $this->ACLPolicyListEntries;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        foreach ($decodedData as $datum) {
+        foreach ($decoded as $datum) {
             $this->ACLPolicyListEntries[] = ACLPolicyListEntry::jsonUnserialize($datum);
         }
     }

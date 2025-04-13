@@ -31,8 +31,8 @@ class CompoundServiceName extends AbstractModel
 
     private const FIELD_NAMESPACE = 'Namespace';
 
-    public string $Name = '';
-    public string $Namespace = '';
+    public string $Name;
+    public string $Namespace;
 
     public function getName(): string
     {

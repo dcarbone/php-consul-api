@@ -126,7 +126,7 @@ class WriteOptions implements RequestOptions
      * @return self
      * @deprecated  This is only here to support construction with map.  It will be removed in a future version.
      */
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
     {
         $n = $into ?? new static();
         foreach ($decoded as $k => $v) {
