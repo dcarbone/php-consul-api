@@ -265,12 +265,12 @@ class AgentServiceRegistration extends AbstractModel
         return $this;
     }
 
-    public function getLocality(): ?Locality
+    public function getLocality(): null|Locality
     {
         return $this->Locality;
     }
 
-    public function setLocality(?Locality $Locality): self
+    public function setLocality(null|Locality $Locality): self
     {
         $this->Locality = $Locality;
         return $this;
