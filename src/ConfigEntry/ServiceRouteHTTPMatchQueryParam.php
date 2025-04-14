@@ -35,10 +35,10 @@ class ServiceRouteHTTPMatchQueryParam extends AbstractModel
     private const FIELD_EXACT   = 'Exact';
     private const FIELD_REGEX   = 'Regex';
 
-    public string $Name = '';
-    public bool $Present = false;
-    public string $Exact = '';
-    public string $Regex = '';
+    public string $Name;
+    public bool $Present;
+    public string $Exact;
+    public string $Regex;
 
     public function getName(): string
     {

@@ -7,14 +7,14 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
-   Licensed under the Apache License, Version 2.0 (the "License");
+   Licensed under the Apache License, Version 2.0 (the 'License');
    you may not use this file except in compliance with the License.
    You may obtain a copy of the License at
 
        http://www.apache.org/licenses/LICENSE-2.0
 
    Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
+   distributed under the License is distributed on an 'AS IS' BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
@@ -22,7 +22,22 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 enum ProxyMode: string
 {
-    case Default = "";
-    case Transparent = "transparent";
-    case Direct = "direct";
+    /**
+     * Default represents no specific mode and should
+     * be used to indicate that a different layer of the configuration
+     * chain should take precedence
+     */
+    case Default = '';
+
+    /**
+     * Transparent represents that inbound and outbound application
+     * traffic is being captured and redirected through the proxy.
+     */
+    case Transparent = 'transparent';
+
+    /**
+     * Direct represents that the proxy's listeners must be dialed directly
+     * by the local application and other proxies.
+     */
+    case Direct = 'direct';
 }

@@ -55,7 +55,7 @@ class ProxyConfigEntry extends AbstractModel implements ConfigEntry
     private const FIELD_MESH_GATEWAY      = 'MeshGateway';
     private const FIELD_EXPOSE            = 'Expose';
 
-    public string $Mode = '';
+    public string $Mode;
     public ?TransparentProxyConfig $TransparentProxy = null;
     public ?FakeMap $Config = null;
     public MeshGatewayConfig $MeshGateway;

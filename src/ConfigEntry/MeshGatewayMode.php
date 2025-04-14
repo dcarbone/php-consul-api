@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI\Agent;
+namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,28 +20,27 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-enum MemberACLMode: string
+enum MeshGatewayMode: string
 {
     /**
-     * Disabled indicates that ACLs are disabled for this agent
+     * Default represents no specific mode and should
+     * be used to indicate that a different layer of the configuration
+     * chain should take precedence
      */
-    case Disabled = "0";
-
+    case Default = '';
     /**
-     * Enabled indicates that ACLs are enabled and operating in new ACL
-     * mode (v1.4.0+ ACLs)
+     * None represents that the Upstream Connect connections
+     * should be direct and not flow through a mesh gateway.
      */
-    case Enabled = "1";
-
+    case None = 'none';
     /**
-     * Legacy has been deprecated, and will be treated as ACLModeUnknown.
+     * Local represents that the Upstream Connect connections
+     * should be made to a mesh gateway in the local datacenter.
      */
-    case Legacy = "2";
-
+    case Local = 'local';
     /**
-     * Unknown is used to indicate that the AgentMember.Tags didn't advertise
-     * an ACL mode at all. This is the case for Consul versions before v1.4.0 and
-     * should be treated the same as ACLModeLegacy.
+     * Remote represents that the Upstream Connect connections
+     * should be made to a mesh gateway in a remote datacenter.
      */
-    case Unknown = "3";
+    case Remote = 'remote';
 }

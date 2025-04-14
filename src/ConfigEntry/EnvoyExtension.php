@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI\Agent;
+namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -44,7 +44,7 @@ class EnvoyExtension extends AbstractModel
         $this->ConsulVersion = $ConsulVersion;
         $this->EnvoyVersion = $EnvoyVersion;
         if (null !== $data && [] !== $data) {
-            $this->jsonSerialize((object)$data, $this);
+            $this->jsonUnserialize((object)$data, $this);
         }
     }
 

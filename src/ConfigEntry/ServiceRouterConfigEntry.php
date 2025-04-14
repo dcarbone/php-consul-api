@@ -38,7 +38,7 @@ class ServiceRouterConfigEntry extends AbstractModel implements ConfigEntry
 
     private const FIELD_ROUTES = 'Routes';
 
-    public array $Routes = [];
+    public array $Routes;
 
     public function getRoutes(): array
     {

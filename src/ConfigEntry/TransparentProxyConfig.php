@@ -21,20 +21,23 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class TransparentProxyConfig extends AbstractModel
 {
-    protected const FIELDS = [
-        self::FIELD_OUTBOUND_LISTENER_PORT => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_DIALED_DIRECTLY        => Transcoding::OMITEMPTY_BOOLEAN_FIELD,
-    ];
+    public int $OutboundListenerPort;
+    public bool $DialedDirectly;
 
-    private const FIELD_OUTBOUND_LISTENER_PORT = 'OutboundListenerPort';
-    private const FIELD_DIALED_DIRECTLY        = 'DialedDirectly';
-
-    public int $OutboundListenerPort = 0;
-    public bool $DialedDirectly = false;
+    public function __construct(
+        null|array $data = [], // Deprecated, will be removed.
+        int $OutboundListenerPort = 0,
+        bool $DialedDirectly = false
+    ) {
+        $this->OutboundListenerPort = $OutboundListenerPort;
+        $this->DialedDirectly = $DialedDirectly;
+        if (null !== $data && [] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+        }
+    }
 
     public function getOutboundListenerPort(): int
     {
@@ -56,5 +59,29 @@ class TransparentProxyConfig extends AbstractModel
     {
         $this->DialedDirectly = $DialedDirectly;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    {
+        $n = $into ?? new static();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        if (0 !== $this->OutboundListenerPort) {
+            $out->OutboundListenerPort = $this->OutboundListenerPort;
+        }
+        if ($this->DialedDirectly) {
+            $out->DialedDirectly = $this->DialedDirectly;
+        }
+        return $out;
     }
 }

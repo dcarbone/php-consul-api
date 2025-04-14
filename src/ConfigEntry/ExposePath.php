@@ -37,11 +37,11 @@ class ExposePath extends AbstractModel
     private const FIELD_LOCAL_PORT_PATH = 'LocalPortPath';
     private const FIELD_PROTOCOL        = 'Protocol';
 
-    public int $ListenerPort = 0;
-    public string $Path = '';
-    public int $LocalPathPort = 0;
-    public string $Protocol = '';
-    public bool $ParsedFromCheck = false;
+    public int $ListenerPort;
+    public string $Path;
+    public int $LocalPathPort;
+    public string $Protocol;
+    public bool $ParsedFromCheck;
 
     public function getListenerPort(): int
     {

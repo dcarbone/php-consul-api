@@ -22,33 +22,45 @@ namespace DCarbone\PHPConsulAPI\Agent;
 
 enum ServiceKind: string
 {
-    // Typical is a typical, classic Consul service. This is
-    // represented by the absence of a value. This was chosen for ease of
-    // backwards compatibility: existing services in the catalog would
-    // default to the typical service.
+    /**
+     * Typical is a typical, classic Consul service. This is
+     * represented by the absence of a value. This was chosen for ease of
+     * backwards compatibility: existing services in the catalog would
+     * default to the typical service.
+     */
     case Typical = '';
 
-    // ConnectProxy is a proxy for the Connect feature. This
-    // service proxies another service within Consul and speaks the connect
-    // protocol.
+    /**
+     * ConnectProxy is a proxy for the Connect feature. This
+     * service proxies another service within Consul and speaks the connect
+     * protocol.
+     */
     case ConnectProxy = 'connect-proxy';
 
-    // MeshGateway is a Mesh Gateway for the Connect feature. This
-    // service will proxy connections based off the SNI header set by other
-    // connect proxies
+    /**
+     * MeshGateway is a Mesh Gateway for the Connect feature. This
+     * service will proxy connections based off the SNI header set by other
+     * connect proxies
+     */
     case MeshGateway = 'mesh-gateway';
 
-    // TerminatingGateway is a Terminating Gateway for the Connect
-    // feature. This service will proxy connections to services outside the mesh.
+    /**
+     * TerminatingGateway is a Terminating Gateway for the Connect
+     * feature. This service will proxy connections to services outside the mesh.
+     */
     case TerminatingGateway = 'terminating-gateway';
 
-    // IngressGateway is an Ingress Gateway for the Connect feature.
-    // This service will ingress connections based of configuration defined in
-    // the ingress-gateway config entry.
+    /**
+     * IngressGateway is an Ingress Gateway for the Connect feature.
+     * This service will ingress connections based of configuration defined in
+     * the ingress-gateway config entry.
+     */
     case IngressGateway = 'ingress-gateway';
 
-    // APIGateway is an API Gateway for the Connect feature.
-    // This service will ingress connections based of configuration defined in
-    // the api-gateway config entry.
+    /**
+     * APIGateway is an API Gateway for the Connect feature.
+     * This service will ingress connections based of configuration defined in
+     * the api-gateway config entry.
+     */
     case APIGateway = 'api-gateway';
 }

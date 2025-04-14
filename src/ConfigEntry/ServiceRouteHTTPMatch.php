@@ -51,12 +51,12 @@ class ServiceRouteHTTPMatch extends AbstractModel
     private const FIELD_QUERY_PARAM = 'QueryParam';
     private const FIELD_METHODS     = 'Methods';
 
-    public string $PathExact = '';
-    public string $PathPrefix = '';
-    public string $PathRegex = '';
-    public array $Header = [];
-    public array $QueryParam = [];
-    public array $Methods = [];
+    public string $PathExact;
+    public string $PathPrefix;
+    public string $PathRegex;
+    public array $Header;
+    public array $QueryParam;
+    public array $Methods;
 
     public function getPathExact(): string
     {

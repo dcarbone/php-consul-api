@@ -37,10 +37,10 @@ class ServiceResolverFailover extends AbstractModel
     private const FIELD_NAMESPACE      = 'Namespace';
     private const FIELD_DATACENTERS    = 'Datacenters';
 
-    public string $Service = '';
-    public string $ServiceSubset = '';
-    public string $Namespace = '';
-    public array $Datacenters = [];
+    public string $Service;
+    public string $ServiceSubset;
+    public string $Namespace;
+    public array $Datacenters;
 
     public function getService(): string
     {

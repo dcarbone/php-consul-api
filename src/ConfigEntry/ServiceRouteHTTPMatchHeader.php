@@ -41,13 +41,13 @@ class ServiceRouteHTTPMatchHeader extends AbstractModel
     private const FIELD_REGEX   = 'Regex';
     private const FIELD_INVERT  = 'Invert';
 
-    public string $Name = '';
-    public bool $Present = false;
-    public string $Exact = '';
-    public string $Prefix = '';
-    public string $Suffix = '';
-    public string $Regex = '';
-    public bool $Invert = false;
+    public string $Name;
+    public bool $Present;
+    public string $Exact;
+    public string $Prefix;
+    public string $Suffix;
+    public string $Regex;
+    public bool $Invert;
 
     public function getName(): string
     {

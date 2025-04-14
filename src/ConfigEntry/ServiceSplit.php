@@ -35,10 +35,10 @@ class ServiceSplit extends AbstractModel
     private const FIELD_SERVICE_SUBSET = 'ServiceSubset';
     private const FIELD_NAMESPACE      = 'Namespace';
 
-    public float $Weight = 0.0;
-    public string $Service = '';
-    public string $ServiceSubset = '';
-    public string $Namespace = '';
+    public float $Weight;
+    public string $Service;
+    public string $ServiceSubset;
+    public string $Namespace;
 
     public function getWeight(): float
     {

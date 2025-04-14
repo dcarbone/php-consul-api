@@ -63,12 +63,12 @@ class ServiceConfigEntry extends AbstractModel implements ConfigEntry
     private const FIELD_EXTERNAL_SNI      = 'ExternalSNI';
     private const FIELD_UPSTREAM_CONFIG   = 'UpstreamConfig';
 
-    public string $Protocol = '';
-    public string $Mode = '';
+    public string $Protocol;
+    public string $Mode;
     public ?TransparentProxyConfig $TransparentProxy = null;
     public MeshGatewayConfig $MeshGateway;
     public ExposeConfig $Expose;
-    public string $ExternalSNI = '';
+    public string $ExternalSNI;
     public ?UpstreamConfiguration $UpstreamConfig = null;
 
     public function getProtocol(): string

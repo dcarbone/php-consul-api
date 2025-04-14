@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI\Agent;
+namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,21 +20,20 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-
-class TransparentProxyConfig extends AbstractModel
+enum MutualTLSMode: string
 {
-    public int $OutboundListenerPort;
-    public bool $DialedDirectly;
-
-    public function getOutboundListenerPort(): int
-    {
-        return $this->OutboundListenerPort;
-    }
-
-    public function setOutboundListenerPort(int $OutboundListenerPort): TransparentProxyConfig
-    {
-        $this->OutboundListenerPort = $OutboundListenerPort;
-        return $this;
-    }
+    /**
+     * Default represents no specific mode and should
+     * be used to indicate that a different layer of the configuration
+     * chain should take precedence.
+     */
+    case Default = '';
+    /**
+     * Strict requires mTLS for incoming traffic.
+     */
+    case Strict = 'strict';
+    /**
+     * Permissive allows incoming non-mTLS traffic.
+     */
+    case Permissive = 'permissive';
 }

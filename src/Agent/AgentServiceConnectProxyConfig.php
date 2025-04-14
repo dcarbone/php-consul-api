@@ -22,9 +22,11 @@ namespace DCarbone\PHPConsulAPI\Agent;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\ConfigEntry\AccessLogsConfig;
+use DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension;
 use DCarbone\PHPConsulAPI\ConfigEntry\ExposeConfig;
 use DCarbone\PHPConsulAPI\ConfigEntry\MeshGatewayConfig;
 use DCarbone\PHPConsulAPI\ConfigEntry\ProxyMode;
+use DCarbone\PHPConsulAPI\ConfigEntry\TransparentProxyConfig;
 
 class AgentServiceConnectProxyConfig extends AbstractModel
 {

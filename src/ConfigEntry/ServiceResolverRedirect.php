@@ -37,10 +37,10 @@ class ServiceResolverRedirect extends AbstractModel
     private const FIELD_NAMESPACE      = 'Namespace';
     private const FIELD_DATACENTER     = 'Datacenter';
 
-    public string $Service = '';
-    public string $ServiceSubset = '';
-    public string $Namespace = '';
-    public string $Datacenter = '';
+    public string $Service;
+    public string $ServiceSubset;
+    public string $Namespace;
+    public string $Datacenter;
 
     public function getService(): string
     {

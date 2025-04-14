@@ -20,23 +20,21 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\FakeMap;
-
 trait ConfigEntryTrait
 {
-    public string $Kind = '';
-    public string $Name = '';
-    public string $Namespace = '';
-    public ?FakeMap $Meta = null;
-    public int $CreateIndex = 0;
-    public int $ModifyIndex = 0;
+    public string $Kind;
+    public string $Name;
+    public string $Namespace;
+    public array $Meta;
+    public int $CreateIndex;
+    public int $ModifyIndex;
 
     public function getKind(): string
     {
         return $this->Kind;
     }
 
-    public function setKind(string $Kind): ConfigEntry
+    public function setKind(string $Kind): self
     {
         $this->Kind = $Kind;
         return $this;
@@ -47,7 +45,7 @@ trait ConfigEntryTrait
         return $this->Name;
     }
 
-    public function setName(string $Name): ConfigEntry
+    public function setName(string $Name): self
     {
         $this->Name = $Name;
         return $this;
@@ -58,20 +56,20 @@ trait ConfigEntryTrait
         return $this->Namespace;
     }
 
-    public function setNamespace(string $Namespace): ConfigEntry
+    public function setNamespace(string $Namespace): self
     {
         $this->Namespace = $Namespace;
         return $this;
     }
 
-    public function getMeta(): ?FakeMap
+    public function getMeta(): array
     {
         return $this->Meta;
     }
 
-    public function setMeta(mixed $Meta): ProxyConfigEntry
+    public function setMeta(array|\stdClass $Meta): self
     {
-        $this->Meta = FakeMap::parse($Meta);
+        $this->Meta = (array)$Meta;
         return $this;
     }
 
@@ -80,7 +78,7 @@ trait ConfigEntryTrait
         return $this->CreateIndex;
     }
 
-    public function setCreateIndex(int $CreateIndex): ProxyConfigEntry
+    public function setCreateIndex(int $CreateIndex): self
     {
         $this->CreateIndex = $CreateIndex;
         return $this;
@@ -91,7 +89,7 @@ trait ConfigEntryTrait
         return $this->ModifyIndex;
     }
 
-    public function setModifyIndex(int $ModifyIndex): ProxyConfigEntry
+    public function setModifyIndex(int $ModifyIndex): self
     {
         $this->ModifyIndex = $ModifyIndex;
         return $this;

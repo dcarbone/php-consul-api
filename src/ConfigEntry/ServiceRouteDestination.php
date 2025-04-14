@@ -49,14 +49,14 @@ class ServiceRouteDestination extends AbstractModel
     private const FIELD_RETRY_ON_CONNECT_FAILURE = 'RetryOnConnectFailure';
     private const FIELD_RETRY_ON_STATUS_CODES    = 'RetryOnStatusCodes';
 
-    public string $Service = '';
-    public string $ServiceSubset = '';
-    public string $Namespace = '';
-    public string $PrefixRewrite = '';
+    public string $Service;
+    public string $ServiceSubset;
+    public string $Namespace;
+    public string $PrefixRewrite;
     public Time\Duration $RequestTimeout;
-    public int $NumRetries = 0;
-    public bool $RetryOnConnectFailure = false;
-    public array $RetryOnStatusCodes = [];
+    public int $NumRetries;
+    public bool $RetryOnConnectFailure;
+    public array $RetryOnStatusCodes;
 
     public function getService(): string
     {

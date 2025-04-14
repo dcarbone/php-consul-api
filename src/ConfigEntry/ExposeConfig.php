@@ -38,8 +38,8 @@ class ExposeConfig extends AbstractModel
     private const FIELD_CHECKS = 'Checks';
     private const FIELD_PATHS  = 'Paths';
 
-    public bool $Checks = false;
-    public array $Paths = [];
+    public bool $Checks;
+    public array $Paths;
 
     public function isChecks(): bool
     {

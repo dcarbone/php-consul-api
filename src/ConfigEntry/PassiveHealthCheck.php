@@ -36,7 +36,7 @@ class PassiveHealthCheck extends AbstractModel
     private const FIELD_INTERVAL = 'Interval';
 
     public Time\Duration $Interval;
-    public int $MaxFailures = 0;
+    public int $MaxFailures;
 
     public function __construct(?array $data = [])
     {

@@ -33,8 +33,8 @@ class ServiceResolverSubset extends AbstractModel
     private const FIELD_FILTER       = 'Filter';
     private const FIELD_ONLY_PASSING = 'OnlyPassing';
 
-    public string $Filter = '';
-    public bool $OnlyPassing = false;
+    public string $Filter;
+    public bool $OnlyPassing;
 
     public function getFilter(): string
     {

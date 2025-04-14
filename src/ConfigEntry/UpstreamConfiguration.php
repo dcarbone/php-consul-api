@@ -62,12 +62,12 @@ class UpstreamConfiguration extends AbstractModel
     private const FIELD_PASSIVE_HEALTH_CHECK = 'PassiveHealthCheck';
     private const FIELD_MESH_GATEWAY         = 'MeshGateway';
 
-    public string $Name = '';
-    public string $Namespace = '';
-    public string $EnvoyListenerJSON = '';
-    public string $EnvoyClusterJSON = '';
-    public string $Protocol = '';
-    public int $ConnectTimeoutMs = 0;
+    public string $Name;
+    public string $Namespace;
+    public string $EnvoyListenerJSON;
+    public string $EnvoyClusterJSON;
+    public string $Protocol;
+    public int $ConnectTimeoutMs;
     public ?UpstreamLimits $UpstreamLimits = null;
     public ?PassiveHealthCheck $PassiveHealthCheck = null;
     public ?MeshGatewayConfig $MeshGateway = null;

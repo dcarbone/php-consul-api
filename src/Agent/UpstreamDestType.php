@@ -28,4 +28,7 @@ enum UpstreamDestType: string
     // PreparedQuery discovers instances via prepared query
     // execution.
     case PreparedQuery = 'prepared_query';
+
+    // Default case for when value is not set.
+    case UNDEFINED = '';
 }

@@ -38,7 +38,7 @@ class ServiceSplitterConfigEntry extends AbstractModel implements ConfigEntry
 
     private const FIELD_SPLITS = 'Splits';
 
-    public array $Splits = [];
+    public array $Splits;
 
     public function getSplits(): array
     {
