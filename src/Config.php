@@ -224,9 +224,9 @@ class Config
 
     public function setScheme(bool|string $scheme): self
     {
-        $this->Scheme = match ($scheme) {
-            'true', true => 'https',
-            'false', false => 'http',
+        $this->Scheme = match (is_string($scheme) ? strtolower($scheme) : $scheme) {
+            true, 'true', '1' => 'https',
+            false, 'false', '0' => 'http',
             default => $scheme,
         };
         return $this;
