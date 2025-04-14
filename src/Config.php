@@ -112,12 +112,7 @@ class Config
         int $JSONDecodeOpts = 0,
     ) {
         $this->Address = self::_resolveValue($Address, Consul::HTTPAddrEnvName, self::DEFAULT_ADDRESS);
-        $scheme = strtolower(self::_resolveValue($Scheme, Consul::HTTPSSLEnvName, self::DEFAULT_SCHEME));
-        $this->Scheme = match ($scheme) {
-            'true' => 'https',
-            'false' => 'http',
-            default => $scheme,
-        };
+        $this->setScheme(self::_resolveValue($Scheme, Consul::HTTPSSLEnvName, self::DEFAULT_SCHEME));
         $this->Datacenter = $Datacenter;
         $this->Namespace = $Namespace;
         $this->setHttpAuth(self::_resolveValue($HttpAuth, Consul::HTTPAuthEnvName, null));
@@ -229,7 +224,11 @@ class Config
 
     public function setScheme(bool|string $scheme): self
     {
-        $this->Scheme = $scheme;
+        $this->Scheme = match ($scheme) {
+            'true', true => 'https',
+            'false', false => 'http',
+            default => $scheme,
+        };
         return $this;
     }
 
