@@ -26,6 +26,7 @@ class ACLTemplatedPolicy extends AbstractModel
 {
     public string $TemplateName;
     public null|ACLTemplatedPolicyVariables $TemplateVariables;
+    /** @var string[] */
     public array $Datacenters;
 
     public function __construct(
@@ -60,6 +61,9 @@ class ACLTemplatedPolicy extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return string[]
+     */
     public function getDatacenters(): array
     {
         return $this->Datacenters;

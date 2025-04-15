@@ -25,6 +25,7 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class ACLRolesQueryResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLRole[] */
     public array $ACLRoles = [];
 
     public function getValue(): array

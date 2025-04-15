@@ -100,6 +100,9 @@ class ACLTokenExpanded extends ACLToken
         }
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLPolicy[]
+     */
     public function getExpandedPolicies(): array
     {
         return $this->ExpandedPolicies;
@@ -111,6 +114,9 @@ class ACLTokenExpanded extends ACLToken
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLRole[]
+     */
     public function getExpandedRoles(): array
     {
         return $this->ExpandedRoles;
@@ -122,6 +128,9 @@ class ACLTokenExpanded extends ACLToken
         return $this;
     }
 
+    /**
+     * @return string[]
+     */
     public function getNamespaceDefaultPolicyIDs(): array
     {
         return $this->NamespaceDefaultPolicyIDs;
@@ -133,6 +142,9 @@ class ACLTokenExpanded extends ACLToken
         return $this;
     }
 
+    /**
+     * @return string[]
+     */
     public function getNamespaceDefaultRoleIDs(): array
     {
         return $this->NamespaceDefaultRoleIDs;

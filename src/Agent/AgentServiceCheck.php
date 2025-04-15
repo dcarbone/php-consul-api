@@ -47,7 +47,6 @@ class AgentServiceCheck extends AbstractModel
     public string $AliasService;
     public int $SuccessBeforePassing;
     public int $FailuresBeforeCritical;
-
     public string $DeregisterCriticalServiceAfter;
 
     public function __construct(

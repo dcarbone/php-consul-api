@@ -28,6 +28,7 @@ class ACLPolicy extends AbstractModel
     public string $Name;
     public string $Description;
     public string $Rules;
+    /** @var string[] */
     public array $Datacenters;
     public string $Hash;
     public int $CreateIndex;
@@ -108,6 +109,9 @@ class ACLPolicy extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return string[]
+     */
     public function getDatacenters(): array
     {
         return $this->Datacenters;

@@ -152,6 +152,9 @@ class AgentServiceRegistration extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\Catalog\ServiceAddress[]
+     */
     public function getTaggedAddresses(): array
     {
         return $this->TaggedAddresses;

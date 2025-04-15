@@ -25,6 +25,7 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class ACLEntriesResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLEntry[] */
     public array $ACLEntries = [];
 
     public function getValue(): array

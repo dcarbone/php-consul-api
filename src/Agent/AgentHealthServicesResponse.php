@@ -29,6 +29,7 @@ class AgentHealthServicesResponse extends AbstractResponse
     use ErrorContainer;
 
     public string $AggregatedStatus;
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentServiceChecksInfo[] */
     public array $AgentServiceChecksInfos;
 
     public function __construct(string $aggregatedStatus, array $checkInfos, null|Error $err)
@@ -46,6 +47,9 @@ class AgentHealthServicesResponse extends AbstractResponse
         return $this->AggregatedStatus;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceChecksInfo[]
+     */
     public function getAgentServiceChecksInfos(): array
     {
         return $this->AgentServiceChecksInfos;
@@ -56,6 +60,10 @@ class AgentHealthServicesResponse extends AbstractResponse
         return is_int($offset) && 0 <= $offset && $offset < 3;
     }
 
+    /**
+     * @param mixed $offset
+     * @return string|\DCarbone\PHPConsulAPI\Agent\AgentServiceChecksInfo[]|\DCarbone\PHPConsulAPI\Error|null
+     */
     public function offsetGet(mixed $offset): string|array|Error|null
     {
         if (0 === $offset) {

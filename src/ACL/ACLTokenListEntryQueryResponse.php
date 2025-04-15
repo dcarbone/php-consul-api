@@ -25,6 +25,7 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class ACLTokenListEntryQueryResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLTokenListEntry[] */
     public array $ACLTokenListEntries = [];
 
     public function getValue(): array

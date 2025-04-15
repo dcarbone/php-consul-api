@@ -126,16 +126,6 @@ class AgentCheckRegistration extends AgentServiceCheck
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self|AgentServiceCheck $into = null): static
-    {
-        $n = $into ?? new static();
-        parent::jsonUnserialize($decoded, $n);
-        foreach ($decoded as $k => $v) {
-            $n->{$k} = $v;
-        }
-        return $n;
-    }
-
     public function jsonSerialize(): \stdClass
     {
         $out = parent::jsonSerialize();

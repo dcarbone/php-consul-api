@@ -30,10 +30,15 @@ class ACLTokenListEntry extends AbstractModel
     public string $AccessorID;
     public string $SecretID;
     public string $Description;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLTokenPolicyLink[] */
     public array $Policies;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLRolePolicyLink[] */
     public array $Roles;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity[] */
     public array $ServiceIdentities;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity[] */
     public array $NodeIdentities;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLTemplatedPolicy[] */
     public array $TemplatedPolicies;
     public bool $Local;
     public string $AuthMethod;
@@ -146,6 +151,9 @@ class ACLTokenListEntry extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLTokenPolicyLink[]
+     */
     public function getPolicies(): array
     {
         return $this->Policies;
@@ -157,6 +165,9 @@ class ACLTokenListEntry extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLRolePolicyLink[]
+     */
     public function getRoles(): array
     {
         return $this->Roles;
@@ -168,6 +179,9 @@ class ACLTokenListEntry extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity[]
+     */
     public function getServiceIdentities(): array
     {
         return $this->ServiceIdentities;
@@ -179,6 +193,9 @@ class ACLTokenListEntry extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity[]
+     */
     public function getNodeIdentities(): array
     {
         return $this->NodeIdentities;
@@ -190,6 +207,9 @@ class ACLTokenListEntry extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLTemplatedPolicy[]
+     */
     public function getTemplatedPolicies(): array
     {
         return $this->TemplatedPolicies;

@@ -30,6 +30,7 @@ use DCarbone\PHPConsulAPI\ConfigEntry\TransparentProxyConfig;
 
 class AgentServiceConnectProxyConfig extends AbstractModel
 {
+    /** @var \DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension[] */
     public array $EnvoyExtensions;
     public string $DestinationServiceName;
     public string $DestinationServiceID;
@@ -79,6 +80,9 @@ class AgentServiceConnectProxyConfig extends AbstractModel
         }
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension[]
+     */
     public function getEnvoyExtensions(): array
     {
         return $this->EnvoyExtensions;
@@ -184,6 +188,9 @@ class AgentServiceConnectProxyConfig extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\Agent\Upstream[]
+     */
     public function getUpstreams(): array
     {
         return $this->Upstreams;

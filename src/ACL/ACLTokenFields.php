@@ -106,6 +106,9 @@ trait ACLTokenFields
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLTokenPolicyLink[]
+     */
     public function getPolicies(): array
     {
         return $this->Policies;
@@ -117,6 +120,9 @@ trait ACLTokenFields
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLTokenRoleLink[]
+     */
     public function getRoles(): array
     {
         return $this->Roles;
@@ -128,6 +134,9 @@ trait ACLTokenFields
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity[]
+     */
     public function getServiceIdentities(): array
     {
         return $this->ServiceIdentities;
@@ -139,6 +148,9 @@ trait ACLTokenFields
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity[]
+     */
     public function getNodeIdentities(): array
     {
         return $this->NodeIdentities;
@@ -150,6 +162,9 @@ trait ACLTokenFields
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLTemplatedPolicy[]
+     */
     public function getTemplatePolicies(): array
     {
         return $this->TemplatePolicies;

@@ -63,6 +63,9 @@ class MetricsInfo extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\Agent\GaugeValue[]
+     */
     public function getGauges(): array
     {
         return $this->Gauges;
@@ -74,6 +77,9 @@ class MetricsInfo extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\Agent\PointValue[]
+     */
     public function getPoints(): array
     {
         return $this->Points;
@@ -85,6 +91,9 @@ class MetricsInfo extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\Agent\SampledValue[]
+     */
     public function getCounters(): array
     {
         return $this->Counters;
@@ -96,6 +105,9 @@ class MetricsInfo extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\Agent\SampledValue[]
+     */
     public function getSamples(): array
     {
         return $this->Samples;

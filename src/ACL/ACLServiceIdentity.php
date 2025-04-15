@@ -25,6 +25,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 class ACLServiceIdentity extends AbstractModel
 {
     public string $ServiceName;
+    /** @var string[] */
     public array $Datacenters;
 
     public function __construct(
@@ -44,6 +45,9 @@ class ACLServiceIdentity extends AbstractModel
         return $this->ServiceName;
     }
 
+    /**
+     * @return string[]
+     */
     public function getDatacenters(): array
     {
         return $this->Datacenters;

@@ -25,6 +25,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 class PointValue extends AbstractModel
 {
     public string $Name;
+    /** @var float[] */
     public array $Points;
 
     public function __construct(
@@ -50,6 +51,9 @@ class PointValue extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return float[]
+     */
     public function getPoints(): array
     {
         return $this->Points;

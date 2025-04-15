@@ -22,7 +22,7 @@ namespace DCarbone\PHPConsulAPI\Agent;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
-class AgentServiceChecks implements \Countable, \ArrayAccess
+class AgentServiceChecks implements \JsonSerializable, \Countable, \ArrayAccess
 {
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck[] */
     public array $Checks;
@@ -33,6 +33,9 @@ class AgentServiceChecks implements \Countable, \ArrayAccess
         $this->setChecks(...$Checks);
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck[]
+     */
     public function getChecks(): array
     {
         return $this->Checks;
@@ -62,7 +65,7 @@ class AgentServiceChecks implements \Countable, \ArrayAccess
         return isset($this->Checks[$offset]);
     }
 
-    public function offsetGet(mixed $offset): mixed
+    public function offsetGet(mixed $offset): null|AgentServiceCheck
     {
         return $this->Checks[$offset] ?? null;
     }
@@ -93,5 +96,10 @@ class AgentServiceChecks implements \Countable, \ArrayAccess
             $n->Checks[] = AgentServiceCheck::jsonUnserialize($v);
         }
         return $n;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return $this->Checks;
     }
 }
