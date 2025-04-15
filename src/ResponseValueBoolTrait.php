@@ -31,11 +31,11 @@ trait ResponseValueBoolTrait
 
     public function unmarshalValue(mixed $decoded): void
     {
-        if (\is_bool($decoded)) {
+        if (is_bool($decoded)) {
             $this->Value = $decoded;
             return;
         }
-        if (\is_string($decoded)) {
+        if (is_string($decoded)) {
             $this->Value = Transcoding::TRUE === strtolower(trim($decoded));
             return;
         }

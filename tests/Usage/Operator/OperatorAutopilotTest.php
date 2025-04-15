@@ -39,11 +39,11 @@ final class OperatorAutopilotTest extends AbstractUsageTests
         $client = new OperatorClient(ConsulManager::testConfig());
 
         [$conf, $err] = $client->AutopilotGetConfiguration();
-        self::assertNull($err, \sprintf('Unable to list autopilot configuration: %s', $err));
+        self::assertNull($err, sprintf('Unable to list autopilot configuration: %s', $err));
         self::assertInstanceOf(
             AutopilotConfiguration::class,
             $conf,
-            \sprintf('Expected instance of %s, saw: %s', AutopilotConfiguration::class, \json_encode($conf))
+            sprintf('Expected instance of %s, saw: %s', AutopilotConfiguration::class, json_encode($conf))
         );
     }
 

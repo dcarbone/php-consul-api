@@ -58,14 +58,14 @@ abstract class AbstractClient
             $opts[GuzzleRequestOptions::SSL_KEY] = $this->_config->KeyFile;
         }
 
-        if (null !== $r->timeout && 0 < ($ttl = \intval($r->timeout->Seconds(), 10))) {
+        if (null !== $r->timeout && 0 < ($ttl = intval($r->timeout->Seconds(), 10))) {
             $opts[GuzzleRequestOptions::TIMEOUT] = $ttl;
         }
 
         // todo: per-request content and accept value setting.
         $body = $r->getBody();
         if (null !== $body) {
-            if (\is_scalar($body)) {
+            if (is_scalar($body)) {
                 $opts[GuzzleRequestOptions::BODY] = $body;
             } else {
                 $opts[GuzzleRequestOptions::JSON] = $body;
@@ -132,7 +132,7 @@ abstract class AbstractClient
         }
 
         // calculate execution time
-        $dur = new Time\Duration(\intval((microtime(true) - $start) * Time::Second, 10));
+        $dur = new Time\Duration(intval((microtime(true) - $start) * Time::Second, 10));
 
         return new RequestResponse($r->meta(), $dur, $response, $err);
     }
@@ -155,7 +155,7 @@ abstract class AbstractClient
                 sprintf(
                     '%s - Expected response to be instance of \\Psr\\Message\\ResponseInterface, %s seen.',
                     static::class,
-                    \is_object($r->Response) ? \get_class($r->Response) : \gettype($r->Response)
+                    is_object($r->Response) ? get_class($r->Response) : gettype($r->Response)
                 )
             );
             return $r;
@@ -167,7 +167,7 @@ abstract class AbstractClient
         $actualCode = $r->Response->getStatusCode();
 
         // If response code is in allowed list, move right along
-        if (\in_array($actualCode, $allowed, true)) {
+        if (in_array($actualCode, $allowed, true)) {
             return $r;
         }
 

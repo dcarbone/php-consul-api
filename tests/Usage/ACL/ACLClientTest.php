@@ -59,6 +59,6 @@ final class ACLClientTest extends AbstractUsageTests
         self::assertNull($err, 'ACL::Info() return error: ' . $err);
         self::assertInstanceOf(QueryMeta::class, $qm);
         self::assertIsArray($acls);
-        \var_dump($acls);
+        var_dump($acls);
     }
 }

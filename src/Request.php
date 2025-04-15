@@ -112,7 +112,7 @@ class Request
     public function getUri(): UriInterface
     {
         $uri = "{$this->scheme}://{$this->address}/{$this->path}";
-        if (0 < \count($this->params)) {
+        if (0 < count($this->params)) {
             $uri .= "?{$this->params}";
         }
         return new Uri($uri);

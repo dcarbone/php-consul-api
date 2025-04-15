@@ -98,7 +98,7 @@ class HealthClient extends AbstractClient
     {
         static $validStates = ['any', 'warning', 'critical', 'passing', 'unknown'];
 
-        if (!\in_array($state, $validStates, true)) {
+        if (!in_array($state, $validStates, true)) {
             $ret      = new HealthChecksResponse();
             $ret->Err = new Error(
                 sprintf(

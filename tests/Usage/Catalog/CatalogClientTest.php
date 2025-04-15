@@ -89,7 +89,7 @@ final class CatalogClientTest extends AbstractUsageTests
         self::assertInstanceOf(QueryMeta::class, $qm);
         self::assertIsArray($service);
         self::assertCount(1, $service);
-        self::assertInstanceOf(CatalogService::class, \reset($service));
+        self::assertInstanceOf(CatalogService::class, reset($service));
     }
 
     /**
@@ -132,7 +132,7 @@ final class CatalogClientTest extends AbstractUsageTests
                 self::assertInstanceOf(CatalogService::class, $s);
             }
         } catch (AssertionFailedError $e) {
-            \var_dump($service);
+            var_dump($service);
             throw $e;
         }
     }
@@ -153,7 +153,7 @@ final class CatalogClientTest extends AbstractUsageTests
             self::assertCount(2, $services);
             self::assertContainsOnly('array', $services);
         } catch (AssertionFailedError $e) {
-            \var_dump($services);
+            var_dump($services);
             throw $e;
         }
     }
@@ -176,7 +176,7 @@ final class CatalogClientTest extends AbstractUsageTests
         self::assertNull($err, 'CatalogClient::service returned error: ' . $err);
         self::assertInstanceOf(QueryMeta::class, $qm);
         self::assertCount(1, $service);
-        self::assertInstanceOf(CatalogService::class, \reset($service));
+        self::assertInstanceOf(CatalogService::class, reset($service));
     }
 
     /**
@@ -196,7 +196,7 @@ final class CatalogClientTest extends AbstractUsageTests
             self::assertCount(1, $dcs);
             self::assertSame('dc1', $dcs[0]);
         } catch (AssertionFailedError $e) {
-            \var_dump($dcs);
+            var_dump($dcs);
             throw $e;
         }
     }
@@ -217,7 +217,7 @@ final class CatalogClientTest extends AbstractUsageTests
             self::assertCount(2, $nodes);
             self::assertContainsOnlyInstancesOf(Node::class, $nodes);
         } catch (AssertionFailedError $e) {
-            \var_dump($nodes);
+            var_dump($nodes);
             throw $e;
         }
     }
@@ -245,7 +245,7 @@ final class CatalogClientTest extends AbstractUsageTests
 
             self::assertNotNull($id, 'Unable to get node with ID');
         } catch (AssertionFailedError $e) {
-            \var_dump($nodes);
+            var_dump($nodes);
             throw $e;
         }
 
@@ -255,7 +255,7 @@ final class CatalogClientTest extends AbstractUsageTests
             self::assertInstanceOf(QueryMeta::class, $qm);
             self::assertInstanceOf(CatalogNode::class, $node);
         } catch (AssertionFailedError $e) {
-            \var_dump($node);
+            var_dump($node);
             throw $e;
         }
     }

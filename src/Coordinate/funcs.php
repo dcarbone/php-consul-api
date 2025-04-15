@@ -48,7 +48,7 @@ function unitVectorAt(array $vec1, array $vec2): array
         return [mul($ret, 1.0 / $mag), 0.0];
     }
 
-    $ret    = array_fill(0, \count($ret), 0.0);
+    $ret    = array_fill(0, count($ret), 0.0);
     $ret[0] = 1.0;
     return $ret;
 }

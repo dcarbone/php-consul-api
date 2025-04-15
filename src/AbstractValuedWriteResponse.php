@@ -27,7 +27,7 @@ abstract class AbstractValuedWriteResponse extends AbstractResponse implements V
 
     public function offsetExists(mixed $offset): bool
     {
-        return \is_int($offset) && 0 <= $offset && $offset < 3;
+        return is_int($offset) && 0 <= $offset && $offset < 3;
     }
 
     public function offsetGet(mixed $offset): mixed

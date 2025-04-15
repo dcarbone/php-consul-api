@@ -37,7 +37,7 @@ class Coordinate extends AbstractModel
 
     public function __construct($data = [])
     {
-        if (\is_array($data)) {
+        if (is_array($data)) {
             parent::__construct($data);
         } elseif ($data instanceof CoordinateConfig) {
             $this->Vec        = array_fill(0, $data->Dimensionality, 0.0);
@@ -50,7 +50,7 @@ class Coordinate extends AbstractModel
                     '%s::__construct - Argument 1 must be array of values or instance of %s, %s seen',
                     static::class,
                     CoordinateConfig::class,
-                    \is_object($data) ? \get_class($data) : \gettype($data)
+                    is_object($data) ? get_class($data) : gettype($data)
                 )
             );
         }
@@ -98,7 +98,7 @@ class Coordinate extends AbstractModel
 
     public function IsCompatibleWith(self $other): bool
     {
-        return \count($this->Vec) === \count($other->Vec);
+        return count($this->Vec) === count($other->Vec);
     }
 
     public function ApplyForce(CoordinateConfig $config, float $force, self $other): self

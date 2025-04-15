@@ -31,7 +31,7 @@ final class ReadableDurationTest extends TestCase
 {
     public function testReadableJsonEncoding(): void
     {
-        $rd = new ReadableDuration(\time() * Time::Second);
-        self::assertSame('"' . (string)$rd . '"', \json_encode($rd));
+        $rd = new ReadableDuration(time() * Time::Second);
+        self::assertSame('"' . (string)$rd . '"', json_encode($rd));
     }
 }

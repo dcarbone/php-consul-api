@@ -27,7 +27,7 @@ class WriteResponse extends AbstractResponse implements WriteResponseInterface
 
     public function offsetExists(mixed $offset): bool
     {
-        return \is_int($offset) && 0 <= $offset && $offset < 2;
+        return is_int($offset) && 0 <= $offset && $offset < 2;
     }
 
     public function offsetGet(mixed $offset): Error|null|WriteMeta
