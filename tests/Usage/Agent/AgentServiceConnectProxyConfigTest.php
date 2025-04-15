@@ -20,7 +20,6 @@ namespace DCarbone\PHPConsulAPITests\Usage\Agent;
  */
 
 use DCarbone\PHPConsulAPI\Agent\AgentServiceConnectProxyConfig;
-use DCarbone\PHPConsulAPI\FakeMap;
 use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 
 class AgentServiceConnectProxyConfigTest extends AbstractUsageTests
@@ -37,12 +36,12 @@ class AgentServiceConnectProxyConfigTest extends AbstractUsageTests
             ],
         ]);
 
-        $this->assertEquals(new FakeMap([
+        $this->assertEquals([
             'envoy_prometheus_bind_addr' => '0.0.0.0:12345',
             'handshake_timeout_ms' => 10000,
             'local_connect_timeout_ms' => 1000,
             'local_request_timeout_ms' => 0,
             'protocol' => 'http',
-        ]), $config->Config);
+        ], $config->Config);
     }
 }

@@ -132,9 +132,9 @@ final class AgentClientTest extends AbstractUsageTests
             ->setName(self::Service2Name)
             ->setAddress('127.0.0.1')
             ->setPort(4321)
-            ->setCheck(new AgentServiceCheck([
-                'TTL' => '5s',
-            ]));
+            ->setCheck(new AgentServiceCheck(
+                TTL: '5s',
+            ));
 
         $err = $client->ServiceRegister($svc);
         self::assertNull($err, \sprintf('AgentClient::serviceRegister returned error: %s', $err));
@@ -205,10 +205,10 @@ final class AgentClientTest extends AbstractUsageTests
             ->setName(self::Service1Name)
             ->setPort(1234)
             ->setAddress('127.0.0.1')
-            ->setCheck(new AgentServiceCheck([
-                'TCP'      => '127.0.0.1',
-                'Interval' => '30s',
-            ]));
+            ->setCheck(Check: new AgentServiceCheck(
+                Interval: '30s',
+                TCP: '127.0.0.1',
+            ));
 
         $err = $client->ServiceRegister($svc);
         self::assertNull($err, \sprintf('Error registering service with check: %s', $err));
