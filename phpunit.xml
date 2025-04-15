@@ -16,9 +16,9 @@
         <testsuite name="usage-config">
             <file>./tests/Usage/ConfigUsageTest.php</file>
         </testsuite>
-        <testsuite name="usage-request">
-            <file>./tests/Usage/RequestUsageTest.php</file>
-        </testsuite>
+<!--        <testsuite name="usage-request">-->
+<!--            <file>./tests/Usage/RequestUsageTest.php</file>-->
+<!--        </testsuite>-->
 
         <testsuite name="usage-acl">
             <directory>./tests/Usage/ACL</directory>

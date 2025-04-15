@@ -28,6 +28,9 @@ class ACLAuthMethodListEntryQueryResponse extends AbstractValuedQueryResponse im
     /** @var \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodListEntry[] */
     public array $ACLAuthMethodListEntries = [];
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodListEntry[]
+     */
     public function getValue(): array
     {
         return $this->ACLAuthMethodListEntries;
