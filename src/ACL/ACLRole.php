@@ -27,13 +27,19 @@ class ACLRole extends AbstractModel
     public string $ID;
     public string $Name;
     public string $Description;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLRolePolicyLink[] */
     public array $Policies;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity[] */
     public array $ServiceIdentities;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity[] */
     public array $NodeIdentities;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLTemplatedPolicy[] */
+    public array $TemplatedPolicies;
     public string $Hash;
     public int $CreateIndex;
     public int $ModifyIndex;
     public string $Namespace;
+    public string $Partition;
 
     public function __construct(
         null|array $data = null, // Deprecated, will be removed.
@@ -43,10 +49,12 @@ class ACLRole extends AbstractModel
         iterable $Policies = [],
         iterable $ServiceIdentities = [],
         iterable $NodeIdentities = [],
+        iterable $TemplatedPolicies = [],
         string $Hash = '',
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
-        string $Namespace = ''
+        string $Namespace = '',
+        string $Partition = '',
     ) {
         $this->ID = $ID;
         $this->Name = $Name;
@@ -54,10 +62,12 @@ class ACLRole extends AbstractModel
         $this->setPolicies(...$Policies);
         $this->setServiceIdentities(...$ServiceIdentities);
         $this->setNodeIdentities(...$NodeIdentities);
+        $this->setTemplatedPolicies(...$TemplatedPolicies);
         $this->Hash = $Hash;
         $this->CreateIndex = $CreateIndex;
         $this->ModifyIndex = $ModifyIndex;
         $this->Namespace = $Namespace;
+        $this->Partition = $Partition;
         if (null !== $data && [] !== $data) {
             $this->jsonUnserialize((object)$data, $this);
         }
@@ -96,17 +106,23 @@ class ACLRole extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLRolePolicyLink[]
+     */
     public function getPolicies(): array
     {
         return $this->Policies;
     }
 
-    public function setPolicies(ACLTokenPolicyLink ...$Policies): self
+    public function setPolicies(ACLRolePolicyLink ...$Policies): self
     {
         $this->Policies = $Policies;
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity[]
+     */
     public function getServiceIdentities(): array
     {
         return $this->ServiceIdentities;
@@ -118,6 +134,9 @@ class ACLRole extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity[]
+     */
     public function getNodeIdentities(): array
     {
         return $this->NodeIdentities;
@@ -126,6 +145,20 @@ class ACLRole extends AbstractModel
     public function setNodeIdentities(ACLNodeIdentity ...$NodeIdentities): self
     {
         $this->NodeIdentities = $NodeIdentities;
+        return $this;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLTemplatedPolicy[]
+     */
+    public function getTemplatedPolicies(): array
+    {
+        return $this->TemplatedPolicies;
+    }
+
+    public function setTemplatedPolicies(ACLTemplatedPolicy ...$TemplatedPolicies): self
+    {
+        $this->TemplatedPolicies = $TemplatedPolicies;
         return $this;
     }
 
@@ -173,6 +206,17 @@ class ACLRole extends AbstractModel
         return $this;
     }
 
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
     public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
     {
         $n = $into ?? new static();
@@ -188,6 +232,10 @@ class ACLRole extends AbstractModel
             } elseif ('NodeIdentities' === $k) {
                 foreach ($v as $vv) {
                     $n->NodeIdentities[] = ACLNodeIdentity::jsonUnserialize($vv);
+                }
+            } elseif ('TemplatedPolicies' === $k) {
+                foreach ($v as $vv) {
+                    $n->TemplatedPolicies[] = ACLTemplatedPolicy::jsonUnserialize($vv);
                 }
             } else {
                 $n->{$k} = $v;
@@ -215,10 +263,16 @@ class ACLRole extends AbstractModel
         if ([] !== $this->NodeIdentities) {
             $out->NodeIdentities = $this->NodeIdentities;
         }
+        if ([] !== $this->TemplatedPolicies) {
+            $out->TemplatedPolicies = $this->TemplatedPolicies;
+        }
         $out->CreateIndex = $this->CreateIndex;
         $out->ModifyIndex = $this->ModifyIndex;
         if ('' !== $this->Namespace) {
             $out->Namespace = $this->Namespace;
+        }
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
         }
         return $out;
     }

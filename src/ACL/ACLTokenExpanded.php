@@ -1,0 +1,209 @@
+<?php
+
+declare(strict_types=1);
+
+namespace DCarbone\PHPConsulAPI\ACL;
+
+/*
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ */
+
+use DCarbone\Go\Time;
+
+class ACLTokenExpanded extends ACLToken
+{
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLPolicy[] */
+    public array $ExpandedPolicies;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLRole[] */
+    public array $ExpandedRoles;
+    /** @var string[] */
+    public array $NamespaceDefaultPolicyIDs;
+    /** @var string[] */
+    public array $NamespaceDefaultRoleIDs;
+    public string $AgentACLDefaultPolicy;
+    public string $AgentACLDownPolicy;
+    public string $ResolvedByAgent;
+
+    public function __construct(
+        null|array $data = null,
+        iterable $ExpandedPolicies = [],
+        iterable $ExpandedRoles = [],
+        iterable $NamespaceDefaultPolicyIDs = [],
+        iterable $NamespaceDefaultRoleIDs = [],
+        string $AgentACLDefaultPolicy = '',
+        string $AgentACLDownPolicy = '',
+        string $ResolvedByAgent = '',
+        int $CreateIndex = 0,
+        int $ModifyIndex = 0,
+        string $AccessorID = '',
+        string $SecretID = '',
+        string $Description = '',
+        iterable $Policies = [],
+        iterable $Roles = [],
+        iterable $ServiceIdentities = [],
+        iterable $NodeIdentities = [],
+        iterable $TemplatePolicies = [],
+        bool $Local = false,
+        string $AuthMethod = '',
+        \DateInterval|float|int|string|Time\Duration|null $ExpirationTTL = null,
+        null|Time\Time $ExpirationTime = null,
+        null|Time\Time $CreateTime = null,
+        string $Hash = '',
+        string $Namespace = '',
+        string $Rules = '',
+        string $Partition = '',
+        string $AuthMethodNamespace = ''
+    ) {
+        parent::__construct(
+            CreateIndex: $CreateIndex,
+            ModifyIndex: $ModifyIndex,
+            AccessorID: $AccessorID,
+            SecretID: $SecretID,
+            Description: $Description,
+            Policies: $Policies,
+            Roles: $Roles,
+            ServiceIdentities: $ServiceIdentities,
+            NodeIdentities: $NodeIdentities,
+            TemplatePolicies: $TemplatePolicies,
+            Local: $Local,
+            AuthMethod: $AuthMethod,
+            ExpirationTTL: $ExpirationTTL,
+            ExpirationTime: $ExpirationTime,
+            CreateTime: $CreateTime,
+            Hash: $Hash,
+            Namespace: $Namespace,
+            Rules: $Rules,
+            Partition: $Partition,
+            AuthMethodNamespace: $AuthMethodNamespace
+        );
+        $this->setExpandedPolicies(...$ExpandedPolicies);
+        $this->setExpandedRoles(...$ExpandedRoles);
+        $this->setNamespaceDefaultPolicyIDs(...$NamespaceDefaultPolicyIDs);
+        $this->setNamespaceDefaultRoleIDs(...$NamespaceDefaultRoleIDs);
+        $this->AgentACLDefaultPolicy = $AgentACLDefaultPolicy;
+        $this->AgentACLDownPolicy = $AgentACLDownPolicy;
+        $this->ResolvedByAgent = $ResolvedByAgent;
+        if (null !== $data && [] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+        }
+    }
+
+    public function getExpandedPolicies(): array
+    {
+        return $this->ExpandedPolicies;
+    }
+
+    public function setExpandedPolicies(ACLPolicy ...$ExpandedPolicies): self
+    {
+        $this->ExpandedPolicies = $ExpandedPolicies;
+        return $this;
+    }
+
+    public function getExpandedRoles(): array
+    {
+        return $this->ExpandedRoles;
+    }
+
+    public function setExpandedRoles(ACLRole ...$ExpandedRoles): self
+    {
+        $this->ExpandedRoles = $ExpandedRoles;
+        return $this;
+    }
+
+    public function getNamespaceDefaultPolicyIDs(): array
+    {
+        return $this->NamespaceDefaultPolicyIDs;
+    }
+
+    public function setNamespaceDefaultPolicyIDs(string ...$NamespaceDefaultPolicyIDs): self
+    {
+        $this->NamespaceDefaultPolicyIDs = $NamespaceDefaultPolicyIDs;
+        return $this;
+    }
+
+    public function getNamespaceDefaultRoleIDs(): array
+    {
+        return $this->NamespaceDefaultRoleIDs;
+    }
+
+    public function setNamespaceDefaultRoleIDs(string ...$NamespaceDefaultRoleIDs): self
+    {
+        $this->NamespaceDefaultRoleIDs = $NamespaceDefaultRoleIDs;
+        return $this;
+    }
+
+    public function getAgentACLDefaultPolicy(): string
+    {
+        return $this->AgentACLDefaultPolicy;
+    }
+
+    public function setAgentACLDefaultPolicy(string $AgentACLDefaultPolicy): self
+    {
+        $this->AgentACLDefaultPolicy = $AgentACLDefaultPolicy;
+        return $this;
+    }
+
+    public function getAgentACLDownPolicy(): string
+    {
+        return $this->AgentACLDownPolicy;
+    }
+
+    public function setAgentACLDownPolicy(string $AgentACLDownPolicy): self
+    {
+        $this->AgentACLDownPolicy = $AgentACLDownPolicy;
+        return $this;
+    }
+
+    public function getResolvedByAgent(): string
+    {
+        return $this->ResolvedByAgent;
+    }
+
+    public function setResolvedByAgent(string $ResolvedByAgent): self
+    {
+        $this->ResolvedByAgent = $ResolvedByAgent;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|ACLToken $into = null): static
+    {
+        $n = $into ?? new static();
+        foreach ($decoded as $k => $v) {
+            if ($n->_jsonUnserializeField($k, $v, $n)) {
+                continue;
+            } elseif ('ExpandedPolicies' === $k) {
+                foreach ($v as $vv) {
+                    $n->ExpandedPolicies[] = ACLPolicy::jsonUnserialize($vv);
+                }
+            } elseif ('ExpandedRoles' === $k) {
+                foreach ($v as $vv) {
+                    $n->ExpandedRoles[] = ACLRole::jsonUnserialize($vv);
+                }
+            } elseif ('NamespaceDefaultPolicyIDs' === $k) {
+                $n->setNamespaceDefaultPolicyIDs(...$v);
+            } elseif ('NamespaceDefaultRoleIDs' === $k) {
+                $n->setNamespaceDefaultRoleIDs(...$v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        return parent::jsonSerialize(); // TODO: Change the autogenerated stub
+    }
+}

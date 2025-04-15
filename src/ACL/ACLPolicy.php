@@ -33,6 +33,7 @@ class ACLPolicy extends AbstractModel
     public int $CreateIndex;
     public int $ModifyIndex;
     public string $Namespace;
+    public string $Partition;
 
     public function __construct(
         null|array $data = null, // Deprecated, will be removed.
@@ -44,7 +45,8 @@ class ACLPolicy extends AbstractModel
         string $Hash = '',
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
-        string $Namespace = ''
+        string $Namespace = '',
+        string $Partition = '',
     ) {
         $this->ID = $ID;
         $this->Name = $Name;
@@ -56,6 +58,7 @@ class ACLPolicy extends AbstractModel
         $this->CreateIndex = $CreateIndex;
         $this->ModifyIndex = $ModifyIndex;
         $this->Namespace = $Namespace;
+        $this->Partition = $Partition;
         if (null !== $data && [] !== $data) {
             $this->jsonUnserialize((object)$data, $this);
         }
@@ -160,6 +163,17 @@ class ACLPolicy extends AbstractModel
         return $this;
     }
 
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
     public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
     {
         $n = $into ?? new static();
@@ -189,6 +203,9 @@ class ACLPolicy extends AbstractModel
         $out->ModifyIndex = $this->ModifyIndex;
         if ('' !== $this->Namespace) {
             $out->Namespace = $this->Namespace;
+        }
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
         }
         return $out;
     }

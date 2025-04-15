@@ -21,75 +21,35 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\AbstractModel;
 
-class ACLTokenListEntry extends AbstractModel
+trait ACLTokenFields
 {
     public int $CreateIndex;
     public int $ModifyIndex;
     public string $AccessorID;
     public string $SecretID;
     public string $Description;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLTokenPolicyLink[] */
     public array $Policies;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLTokenRoleLink[] */
     public array $Roles;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity[] */
     public array $ServiceIdentities;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity[] */
     public array $NodeIdentities;
-    public array $TemplatedPolicies;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLTemplatedPolicy[] */
+    public array $TemplatePolicies;
     public bool $Local;
     public string $AuthMethod;
+    public Time\Duration $ExpirationTTL;
     public null|Time\Time $ExpirationTime = null;
     public Time\Time $CreateTime;
     public string $Hash;
-    public bool $Legacy;
     public string $Namespace;
     public string $Partition;
     public string $AuthMethodNamespace;
 
-    public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
-        int $CreateIndex = 0,
-        int $ModifyIndex = 0,
-        string $AccessorID = '',
-        string $SecretID = '',
-        string $Description = '',
-        iterable $Policies = [],
-        iterable $Roles = [],
-        iterable $ServiceIdentities = [],
-        iterable $NodeIdentities = [],
-        iterable $TemplatedPolicies = [],
-        bool $Local = false,
-        string $AuthMethod = '',
-        null|Time\Time $ExpirationTime = null,
-        null|Time\Time $CreateTime = null,
-        string $Hash = '',
-        bool $Legacy = false,
-        string $Namespace = '',
-        string $Partition = '',
-        string $AuthMethodNamespace = '',
-    ) {
-        $this->CreateIndex = $CreateIndex;
-        $this->ModifyIndex = $ModifyIndex;
-        $this->AccessorID = $AccessorID;
-        $this->SecretID = $SecretID;
-        $this->Description = $Description;
-        $this->setPolicies(...$Policies);
-        $this->setRoles(...$Roles);
-        $this->setServiceIdentities(...$ServiceIdentities);
-        $this->setNodeIdentities(...$NodeIdentities);
-        $this->setTemplatedPolicies(...$TemplatedPolicies);
-        $this->Local = $Local;
-        $this->AuthMethod = $AuthMethod;
-        $this->setExpirationTime($ExpirationTime);
-        $this->CreateTime = $CreateTime ?? Time::New();
-        $this->Hash = $Hash;
-        $this->Legacy = $Legacy;
-        $this->Namespace = $Namespace;
-        $this->Partition = $Partition;
-        $this->AuthMethodNamespace = $AuthMethodNamespace;
-        if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
-        }
-    }
+    public string $Rules;
 
     public function getCreateIndex(): int
     {
@@ -190,14 +150,14 @@ class ACLTokenListEntry extends AbstractModel
         return $this;
     }
 
-    public function getTemplatedPolicies(): array
+    public function getTemplatePolicies(): array
     {
-        return $this->TemplatedPolicies;
+        return $this->TemplatePolicies;
     }
 
-    public function setTemplatedPolicies(ACLTemplatedPolicy ...$TemplatedPolicies): self
+    public function setTemplatePolicies(ACLTemplatedPolicy ...$TemplatePolicies): self
     {
-        $this->TemplatedPolicies = $TemplatedPolicies;
+        $this->TemplatePolicies = $TemplatePolicies;
         return $this;
     }
 
@@ -223,7 +183,18 @@ class ACLTokenListEntry extends AbstractModel
         return $this;
     }
 
-    public function getExpirationTime(): null|Time\Time
+    public function getExpirationTTL(): Time\Duration
+    {
+        return $this->ExpirationTTL;
+    }
+
+    public function setExpirationTTL(null|int|float|string|\DateInterval|Time\Duration $ExpirationTTL): self
+    {
+        $this->ExpirationTTL = Time::Duration($ExpirationTTL);
+        return $this;
+    }
+
+    public function getExpirationTime(): Time\Time
     {
         return $this->ExpirationTime;
     }
@@ -256,17 +227,6 @@ class ACLTokenListEntry extends AbstractModel
         return $this;
     }
 
-    public function isLegacy(): bool
-    {
-        return $this->Legacy;
-    }
-
-    public function setLegacy(bool $Legacy): self
-    {
-        $this->Legacy = $Legacy;
-        return $this;
-    }
-
     public function getNamespace(): string
     {
         return $this->Namespace;
@@ -275,6 +235,17 @@ class ACLTokenListEntry extends AbstractModel
     public function setNamespace(string $Namespace): self
     {
         $this->Namespace = $Namespace;
+        return $this;
+    }
+
+    public function getRules(): string
+    {
+        return $this->Rules;
+    }
+
+    public function setRules(string $Rules): self
+    {
+        $this->Rules = $Rules;
         return $this;
     }
 
@@ -300,47 +271,43 @@ class ACLTokenListEntry extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public function _jsonUnserializeField(string $k, mixed $v, object $n): bool
     {
-        $n = $into ?? new static();
-        foreach ($decoded as $k => $v) {
-            if ('Policies' === $k) {
-                foreach ($v as $vv) {
-                    $n->Policies[] = ACLTokenPolicyLink::jsonUnserialize($vv);
-                }
-            } elseif ('Roles' === $k) {
-                foreach ($v as $vv) {
-                    $n->Roles[] = ACLTokenRoleLink::jsonUnserialize($vv);
-                }
-            } elseif ('ServiceIdentities' === $k) {
-                foreach ($v as $vv) {
-                    $n->ServiceIdentities[] = ACLServiceIdentity::jsonUnserialize($vv);
-                }
-            } elseif ('NodeIdentities' === $k) {
-                foreach ($v as $vv) {
-                    $n->NodeIdentities[] = ACLNodeIdentity::jsonUnserialize($vv);
-                }
-            } elseif ('TemplatedPolicies' === $k) {
-                foreach ($v as $vv) {
-                    $n->TemplatedPolicies[] = ACLTemplatedPolicy::jsonUnserialize($vv);
-                }
-            } elseif ('ExpirationTime' === $k) {
-                $n->ExpirationTime = (null === $v ? null : Time\Time::createFromFormat(DATE_RFC3339, $v));
-            } elseif ('CreateTime' === $k) {
-                $n->CreateTime = Time\Time::createFromFormat(DATE_RFC3339, $v);
-            } else {
-                $n->{$k} = $v;
+        if ('Policies' === $k) {
+            foreach ($v as $vv) {
+                $n->Policies[] = ACLTokenPolicyLink::jsonUnserialize($vv);
             }
+        } elseif ('Roles' === $k) {
+            foreach ($v as $vv) {
+                $n->Roles[] = ACLTokenRoleLink::jsonUnserialize($vv);
+            }
+        } elseif ('ServiceIdentities' === $k) {
+            foreach ($v as $vv) {
+                $n->ServiceIdentities[] = ACLServiceIdentity::jsonUnserialize($vv);
+            }
+        } elseif ('NodeIdentities' === $k) {
+            foreach ($v as $vv) {
+                $n->NodeIdentities[] = ACLNodeIdentity::jsonUnserialize($vv);
+            }
+        } elseif ('TemplatePolicies' === $k) {
+            foreach ($v as $vv) {
+                $n->TemplatePolicies[] = ACLTemplatedPolicy::jsonUnserialize($vv);
+            }
+        } elseif ('ExpirationTTL' === $k) {
+            $n->setExpirationTTL($v);
+        } elseif ('ExpirationTime' === $k) {
+            $n->ExpirationTime = (null === $v ? $v : Time\Time::createFromFormat(DATE_RFC3339, $v));
+        } elseif ('CreateTime' === $k) {
+            $n->CreateTime = Time\Time::createFromFormat(DATE_RFC3339, $v);
+        } else {
+            return false;
         }
-        return $n;
+
+        return true;
     }
 
-    public function jsonSerialize(): \stdClass
+    protected function _jsonSerialize(\stdClass $out): void
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
         $out->CreateIndex = $this->CreateIndex;
         $out->ModifyIndex = $this->ModifyIndex;
         $out->AccessorID = $this->AccessorID;
@@ -358,18 +325,26 @@ class ACLTokenListEntry extends AbstractModel
         if ([] !== $this->NodeIdentities) {
             $out->NodeIdentities = $this->NodeIdentities;
         }
-        if ([] !== $this->TemplatedPolicies) {
-            $out->TemplatedPolicies = $this->TemplatedPolicies;
+        if ([] !== $this->TemplatePolicies) {
+            $out->TemplatePolicies = $this->TemplatePolicies;
         }
         $out->Local = $this->Local;
         if ('' !== $this->AuthMethod) {
             $out->AuthMethod = $this->AuthMethod;
         }
+        if (0 !== $this->ExpirationTTL->Nanoseconds()) {
+            $out->ExpirationTTL = $this->ExpirationTTL;
+        }
         if (null !== $this->ExpirationTime) {
             $out->ExpirationTime = $this->ExpirationTime->format(DATE_RFC3339);
         }
-        $out->CreateTime = $this->CreateTime->format(DATE_RFC3339);
+        if (!$this->CreateTime->isZero()) {
+            $out->CreateTime = $this->CreateTime->format(DATE_RFC3339);
+        }
         $out->Hash = $this->Hash;
+        if ('' !== $this->Rules) {
+            $out->Rules = $this->Rules;
+        }
         if ('' !== $this->Namespace) {
             $out->Namespace = $this->Namespace;
         }
@@ -379,6 +354,5 @@ class ACLTokenListEntry extends AbstractModel
         if ('' !== $this->AuthMethodNamespace) {
             $out->AuthMethodNamespace = $this->AuthMethodNamespace;
         }
-        return $out;
     }
 }

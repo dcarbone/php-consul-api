@@ -22,36 +22,23 @@ namespace DCarbone\PHPConsulAPI\ACL;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
-class ACLServiceIdentity extends AbstractModel
+class ACLTemplatedPolicyVariables extends AbstractModel
 {
-    public string $ServiceName;
-    public array $Datacenters;
+    public string $Name;
 
-    public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
-        string $ServiceName = '',
-        iterable $Datacenters = []
-    ) {
-        $this->ServiceName = $ServiceName;
-        $this->setDatacenters(...$Datacenters);
-        if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
-        }
+    public function __construct(string $Name = '')
+    {
+        $this->Name = $Name;
     }
 
-    public function getServiceName(): string
+    public function getName(): string
     {
-        return $this->ServiceName;
+        return $this->Name;
     }
 
-    public function getDatacenters(): array
+    public function setName(string $Name): self
     {
-        return $this->Datacenters;
-    }
-
-    public function setDatacenters(string ...$datacenters): self
-    {
-        $this->Datacenters = $datacenters;
+        $this->Name = $Name;
         return $this;
     }
 
@@ -59,11 +46,7 @@ class ACLServiceIdentity extends AbstractModel
     {
         $n = $into ?? new static();
         foreach ($decoded as $k => $v) {
-            if ('Datacenters' === $k) {
-                $n->setDatacenters(...$v);
-            } else {
-                $n->{$k} = $v;
-            }
+            $n->{$k} = $v;
         }
         return $n;
     }
@@ -74,10 +57,7 @@ class ACLServiceIdentity extends AbstractModel
         foreach ($this->_getDynamicFields() as $k => $v) {
             $out->{$k} = $v;
         }
-        $out->ServiceName = $this->ServiceName;
-        if ([] !== $this->Datacenters) {
-            $out->Datacenters = $this->Datacenters;
-        }
+        $out->Name = $this->Name;
         return $out;
     }
 }

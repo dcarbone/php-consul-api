@@ -98,29 +98,39 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function TokenClone(string $tokenID, string $description, null|WriteOptions $opts = null): ACLTokenWriteResponse
+    public function TokenClone(string $accessorID, string $description, null|WriteOptions $opts = null): ACLTokenWriteResponse
     {
         $ret = new ACLTokenWriteResponse();
-        if ('' === $tokenID) {
+        if ('' === $accessorID) {
             $ret->Err = new Error('must specify tokenID for Token Cloning');
             return $ret;
         }
         $resp = $this->_requireOK(
-            $this->_doPut(sprintf('/v1/acl/token/%s/clone', $tokenID), ['description' => $description], $opts)
+            $this->_doPut(sprintf('/v1/acl/token/%s/clone', $accessorID), ['description' => $description], $opts)
         );
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
-    public function TokenDelete(string $tokenID, null|WriteOptions $opts = null): WriteResponse
+    public function TokenDelete(string $accessorID, null|WriteOptions $opts = null): WriteResponse
     {
-        return $this->_executeDelete(sprintf('/v1/acl/token/%s', $tokenID), $opts);
+        return $this->_executeDelete(sprintf('/v1/acl/token/%s', $accessorID), $opts);
     }
 
-    public function TokenRead(string $tokenID, null|QueryOptions $opts = null): ACLTokenQueryResponse
+    public function TokenRead(string $accessorID, null|QueryOptions $opts = null): ACLTokenQueryResponse
     {
-        $resp = $this->_requireOK($this->_doGet(sprintf('/v1/acl/token/%s', $tokenID), $opts));
+        $resp = $this->_requireOK($this->_doGet(sprintf('/v1/acl/token/%s', $accessorID), $opts));
         $ret  = new ACLTokenQueryResponse();
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    public function TokenReadExpanded(string $accessorID, null|QueryOptions $opts = null): ACLTokenExpandedQueryResponse
+    {
+        $req = $this->_newGetRequest(sprintf('/v1/acl/token/%s', $accessorID), $opts);
+        $req->params->set('expanded', 'true');
+        $resp = $this->_requireOK($this->_do($req));
+        $ret = new ACLTokenExpandedQueryResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
