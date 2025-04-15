@@ -29,12 +29,12 @@ use DCarbone\PHPConsulAPI\WriteResponse;
 
 class CatalogClient extends AbstractClient
 {
-    public function Register(CatalogRegistration $catalogRegistration, ?WriteOptions $opts = null): WriteResponse
+    public function Register(CatalogRegistration $catalogRegistration, null|WriteOptions $opts = null): WriteResponse
     {
         return $this->_executePut('v1/catalog/register', $catalogRegistration, $opts);
     }
 
-    public function Deregister(CatalogDeregistration $catalogDeregistration, ?WriteOptions $opts = null): WriteResponse
+    public function Deregister(CatalogDeregistration $catalogDeregistration, null|WriteOptions $opts = null): WriteResponse
     {
         return $this->_executePut('v1/catalog/deregister', $catalogDeregistration, $opts);
     }
@@ -47,7 +47,7 @@ class CatalogClient extends AbstractClient
         return $ret;
     }
 
-    public function Nodes(?QueryOptions $opts = null): NodesResponse
+    public function Nodes(null|QueryOptions $opts = null): NodesResponse
     {
         $resp = $this->_requireOK($this->_doGet('v1/catalog/nodes', $opts));
         $ret  = new NodesResponse();
@@ -55,7 +55,7 @@ class CatalogClient extends AbstractClient
         return $ret;
     }
 
-    public function Services(?QueryOptions $opts = null): ValuedQueryStringsResponse
+    public function Services(null|QueryOptions $opts = null): ValuedQueryStringsResponse
     {
         $resp = $this->_requireOK($this->_doGet('v1/catalog/services', $opts));
         $ret  = new ValuedQueryStringsResponse();
@@ -63,7 +63,7 @@ class CatalogClient extends AbstractClient
         return $ret;
     }
 
-    public function NodeServicesList(string $node, ?QueryOptions $opts = null): CatalogNodeServicesListResponse
+    public function NodeServicesList(string $node, null|QueryOptions $opts = null): CatalogNodeServicesListResponse
     {
         $resp = $this->_requireOK($this->_doGet(sprintf('v1/catalog/node-services/%s', urlencode($node)), $opts));
         $ret  = new CatalogNodeServicesListResponse();
@@ -74,7 +74,7 @@ class CatalogClient extends AbstractClient
     public function ServiceMultipleTags(
         string $service,
         array $tags,
-        ?QueryOptions $opts = null
+        null|QueryOptions $opts = null
     ): CatalogServicesResponse {
         $r = $this->_newGetRequest(sprintf('v1/catalog/service/%s', $service), $opts);
         if ([] !== $tags) {
@@ -86,12 +86,12 @@ class CatalogClient extends AbstractClient
         return $ret;
     }
 
-    public function Service(string $service, string $tag = '', ?QueryOptions $opts = null): CatalogServicesResponse
+    public function Service(string $service, string $tag = '', null|QueryOptions $opts = null): CatalogServicesResponse
     {
         return $this->ServiceMultipleTags($service, '' !== $tag ? [$tag] : [], $opts);
     }
 
-    public function Node(string $node, ?QueryOptions $opts = null): CatalogNodeResponse
+    public function Node(string $node, null|QueryOptions $opts = null): CatalogNodeResponse
     {
         $resp = $this->_requireOK($this->_doGet(sprintf('v1/catalog/node/%s', $node), $opts));
         $ret  = new CatalogNodeResponse();
@@ -99,7 +99,7 @@ class CatalogClient extends AbstractClient
         return $ret;
     }
 
-    public function GatewayServices(string $gateway, ?QueryOptions $opts = null): GatewayServicesResponse
+    public function GatewayServices(string $gateway, null|QueryOptions $opts = null): GatewayServicesResponse
     {
         $resp = $this->_requireOK($this->_doGet(sprintf('v1/catalog/gateway-services/%s', urlencode($gateway)), $opts));
         $ret  = new GatewayServicesResponse();

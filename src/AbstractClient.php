@@ -92,12 +92,12 @@ abstract class AbstractClient
         return $this->_newRequest(HTTP\MethodPut, $path, $body, $opts);
     }
 
-    protected function _newGetRequest(string $path, ?QueryOptions $opts): Request
+    protected function _newGetRequest(string $path, null|QueryOptions $opts): Request
     {
         return $this->_newRequest(HTTP\MethodGet, $path, null, $opts);
     }
 
-    protected function _newDeleteRequest(string $path, ?WriteOptions $opts): Request
+    protected function _newDeleteRequest(string $path, null|WriteOptions $opts): Request
     {
         return $this->_newRequest(HTTP\MethodDelete, $path, null, $opts);
     }
@@ -195,7 +195,7 @@ abstract class AbstractClient
         return $this->_requireStatus($r, HTTP\StatusOK, HTTP\StatusNotFound);
     }
 
-    protected function _doGet(string $path, ?QueryOptions $opts): RequestResponse
+    protected function _doGet(string $path, null|QueryOptions $opts): RequestResponse
     {
         return $this->_do($this->_newGetRequest($path, $opts));
     }
@@ -210,7 +210,7 @@ abstract class AbstractClient
         return $this->_do($this->_newPutRequest($path, $body, $opts));
     }
 
-    protected function _doDelete(string $path, ?WriteOptions $opts): RequestResponse
+    protected function _doDelete(string $path, null|WriteOptions $opts): RequestResponse
     {
         return $this->_do($this->_newDeleteRequest($path, $opts));
     }
@@ -242,7 +242,7 @@ abstract class AbstractClient
         );
     }
 
-    protected function _executePut(string $path, mixed $body, ?WriteOptions $opts): WriteResponse
+    protected function _executePut(string $path, mixed $body, null|WriteOptions $opts): WriteResponse
     {
         $resp = $this->_requireOK($this->_doPut($path, $body, $opts));
         $ret  = new WriteResponse();
@@ -250,7 +250,7 @@ abstract class AbstractClient
         return $ret;
     }
 
-    protected function _executePost(string $path, mixed $body, ?WriteOptions $opts): WriteResponse
+    protected function _executePost(string $path, mixed $body, null|WriteOptions $opts): WriteResponse
     {
         $resp = $this->_requireOK($this->_doPost($path, $body, $opts));
         $ret  = new WriteResponse();
@@ -258,7 +258,7 @@ abstract class AbstractClient
         return $ret;
     }
 
-    protected function _executeDelete(string $path, ?WriteOptions $opts): WriteResponse
+    protected function _executeDelete(string $path, null|WriteOptions $opts): WriteResponse
     {
         $resp = $this->_requireOK($this->_doDelete($path, $opts));
         $ret  = new WriteResponse();
@@ -266,7 +266,7 @@ abstract class AbstractClient
         return $ret;
     }
 
-    protected function _executePutValuedStr(string $path, mixed $body, ?WriteOptions $opts): ValuedWriteStringResponse
+    protected function _executePutValuedStr(string $path, mixed $body, null|WriteOptions $opts): ValuedWriteStringResponse
     {
         $r    = $this->_newPutRequest($path, $body, $opts);
         $resp = $this->_requireOK($this->_do($r));
@@ -275,7 +275,7 @@ abstract class AbstractClient
         return $ret;
     }
 
-    protected function _executeGetValuedStr(string $path, ?QueryOptions $opts): ValuedQueryStringResponse
+    protected function _executeGetValuedStr(string $path, null|QueryOptions $opts): ValuedQueryStringResponse
     {
         $r    = $this->_newGetRequest($path, $opts);
         $resp = $this->_requireOK($this->_do($r));
@@ -284,7 +284,7 @@ abstract class AbstractClient
         return $ret;
     }
 
-    protected function _executeGetValuedStrs(string $path, ?QueryOptions $opts): ValuedQueryStringsResponse
+    protected function _executeGetValuedStrs(string $path, null|QueryOptions $opts): ValuedQueryStringsResponse
     {
         $r    = $this->_newGetRequest($path, $opts);
         $resp = $this->_requireOK($this->_do($r));

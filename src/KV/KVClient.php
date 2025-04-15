@@ -31,7 +31,7 @@ use DCarbone\PHPConsulAPI\WriteResponse;
 
 class KVClient extends AbstractClient
 {
-    public function Get(string $key, ?QueryOptions $opts = null): KVPairResponse
+    public function Get(string $key, null|QueryOptions $opts = null): KVPairResponse
     {
         $resp     = $this->_doGet(sprintf('v1/kv/%s', $key), $opts);
         $ret      = new KVPairResponse();
@@ -59,7 +59,7 @@ class KVClient extends AbstractClient
         return $ret;
     }
 
-    public function Put(KVPair $p, ?WriteOptions $opts = null): WriteResponse
+    public function Put(KVPair $p, null|WriteOptions $opts = null): WriteResponse
     {
         $r = $this->_newPutRequest(sprintf('v1/kv/%s', $p->Key), $p->Value, $opts);
         if (0 !== $p->Flags) {
@@ -71,12 +71,12 @@ class KVClient extends AbstractClient
         return $ret;
     }
 
-    public function Delete(string $key, ?WriteOptions $opts = null): WriteResponse
+    public function Delete(string $key, null|WriteOptions $opts = null): WriteResponse
     {
         return $this->_executeDelete(sprintf('v1/kv/%s', $key), $opts);
     }
 
-    public function List(string $prefix = '', ?QueryOptions $opts = null): KVPairsResponse
+    public function List(string $prefix = '', null|QueryOptions $opts = null): KVPairsResponse
     {
         $r = $this->_newGetRequest(sprintf('v1/kv/%s', $prefix), $opts);
         $r->params->set('recurse', '');
@@ -86,7 +86,7 @@ class KVClient extends AbstractClient
         return $ret;
     }
 
-    public function Keys(string $prefix = '', ?QueryOptions $opts = null): ValuedQueryStringsResponse
+    public function Keys(string $prefix = '', null|QueryOptions $opts = null): ValuedQueryStringsResponse
     {
         $r = $this->_newGetRequest(sprintf('v1/kv/%s', $prefix), $opts);
         $r->params->set('keys', '');
@@ -96,7 +96,7 @@ class KVClient extends AbstractClient
         return $ret;
     }
 
-    public function CAS(KVPair $p, ?WriteOptions $opts = null): ValuedWriteBoolResponse
+    public function CAS(KVPair $p, null|WriteOptions $opts = null): ValuedWriteBoolResponse
     {
         $r = $this->_newPutRequest(sprintf('v1/kv/%s', $p->Key), $p->Value, $opts);
         $r->params->set('cas', (string)$p->ModifyIndex);
@@ -109,7 +109,7 @@ class KVClient extends AbstractClient
         return $ret;
     }
 
-    public function Acquire(KVPair $p, ?WriteOptions $opts = null): WriteResponse
+    public function Acquire(KVPair $p, null|WriteOptions $opts = null): WriteResponse
     {
         $r = $this->_newPutRequest(sprintf('v1/kv/%s', $p->Key), $p->Value, $opts);
         $r->params->set('acquire', $p->Session);
@@ -122,7 +122,7 @@ class KVClient extends AbstractClient
         return $ret;
     }
 
-    public function DeleteCAS(KVPair $p, ?WriteOptions $opts = null): ValuedWriteBoolResponse
+    public function DeleteCAS(KVPair $p, null|WriteOptions $opts = null): ValuedWriteBoolResponse
     {
         $r                = $this->_newDeleteRequest(sprintf('v1/kv/%s', ltrim($p->Key, '/')), $opts);
         $r->params['cas'] = (string)$p->ModifyIndex;
@@ -132,7 +132,7 @@ class KVClient extends AbstractClient
         return $ret;
     }
 
-    public function Release(KVPair $p, ?WriteOptions $opts = null): WriteResponse
+    public function Release(KVPair $p, null|WriteOptions $opts = null): WriteResponse
     {
         $r = $this->_newPutRequest(sprintf('v1/kv/%s', $p->Key), $p->Value, $opts);
         $r->params->set('release', $p->Session);
@@ -145,7 +145,7 @@ class KVClient extends AbstractClient
         return $ret;
     }
 
-    public function DeleteTree(string $prefix, ?WriteOptions $opts = null): WriteResponse
+    public function DeleteTree(string $prefix, null|WriteOptions $opts = null): WriteResponse
     {
         $r                    = $this->_newDeleteRequest(sprintf('v1/kv/%s', $prefix), $opts);
         $r->params['recurse'] = '';
@@ -155,7 +155,7 @@ class KVClient extends AbstractClient
         return $ret;
     }
 
-    public function Txn(KVTxnOps $txn, ?QueryOptions $opts = null): KVTxnAPIResponse
+    public function Txn(KVTxnOps $txn, null|QueryOptions $opts = null): KVTxnAPIResponse
     {
         $txnOps = new KVTxnOps();
         foreach ($txn as $op) {
@@ -206,7 +206,7 @@ class KVClient extends AbstractClient
      *  @var \DCarbone\PHPConsulAPI\Error|null error, if any
      * )
      */
-    public function Tree(string $prefix = '', ?QueryOptions $opts = null): array
+    public function Tree(string $prefix = '', null|QueryOptions $opts = null): array
     {
         [$valueList, $_, $err] = $this->List($prefix, $opts);
 

@@ -22,9 +22,9 @@ namespace DCarbone\PHPConsulAPI;
 
 trait QueryMetaContainer
 {
-    public ?QueryMeta $QueryMeta = null;
+    public null|QueryMeta $QueryMeta = null;
 
-    public function getQueryMeta(): ?QueryMeta
+    public function getQueryMeta(): null|QueryMeta
     {
         return $this->QueryMeta;
     }

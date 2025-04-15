@@ -26,7 +26,7 @@ use DCarbone\PHPConsulAPI\WriteOptions;
 
 class EventClient extends AbstractClient
 {
-    public function Fire(UserEvent $event, ?WriteOptions $opts = null): UserEventResponse
+    public function Fire(UserEvent $event, null|WriteOptions $opts = null): UserEventResponse
     {
         $r = $this->_newPutRequest(sprintf('v1/event/fire/%s', $event->Name), '' !== $event->Payload ? $event->Payload : null, $opts);
         if ('' !== ($nf = $event->NodeFilter)) {
@@ -44,7 +44,7 @@ class EventClient extends AbstractClient
         return $ret;
     }
 
-    public function List(string $name = '', ?QueryOptions $opts = null): UserEventsResponse
+    public function List(string $name = '', null|QueryOptions $opts = null): UserEventsResponse
     {
         $r = $this->_newGetRequest('v1/event/list', $opts);
         if ('' !== $name) {

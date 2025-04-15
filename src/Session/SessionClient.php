@@ -30,7 +30,7 @@ use DCarbone\PHPConsulAPI\WriteResponse;
 
 class SessionClient extends AbstractClient
 {
-    public function CreateNoChecks(?SessionEntry $sessionEntry = null, ?WriteOptions $opts = null): ValuedWriteStringResponse
+    public function CreateNoChecks(?SessionEntry $sessionEntry = null, null|WriteOptions $opts = null): ValuedWriteStringResponse
     {
         if (null === $sessionEntry) {
             $body = new SessionEntry();
@@ -45,17 +45,17 @@ class SessionClient extends AbstractClient
         return $this->_create('v1/session/create', $body, $opts);
     }
 
-    public function Create(?SessionEntry $sessionEntry = null, ?WriteOptions $opts = null): ValuedWriteStringResponse
+    public function Create(?SessionEntry $sessionEntry = null, null|WriteOptions $opts = null): ValuedWriteStringResponse
     {
         return $this->_create('v1/session/create', $sessionEntry, $opts);
     }
 
-    public function Destroy(string $id, ?WriteOptions $opts = null): WriteResponse
+    public function Destroy(string $id, null|WriteOptions $opts = null): WriteResponse
     {
         return $this->_executePut(sprintf('v1/session/destroy/%s', $id), null, $opts);
     }
 
-    public function Renew(string $id, ?WriteOptions $opts = null): SessionEntriesWriteResponse
+    public function Renew(string $id, null|WriteOptions $opts = null): SessionEntriesWriteResponse
     {
         $ret = new SessionEntriesWriteResponse();
 
@@ -87,22 +87,22 @@ class SessionClient extends AbstractClient
         return $ret;
     }
 
-    public function Info(string $id, ?QueryOptions $opts = null): SessionEntriesQueryResponse
+    public function Info(string $id, null|QueryOptions $opts = null): SessionEntriesQueryResponse
     {
         return $this->_get(sprintf('v1/session/info/%s', $id), $opts);
     }
 
-    public function Node(string $node, ?QueryOptions $opts = null): SessionEntriesQueryResponse
+    public function Node(string $node, null|QueryOptions $opts = null): SessionEntriesQueryResponse
     {
         return $this->_get(sprintf('v1/session/node/%s', $node), $opts);
     }
 
-    public function List(?QueryOptions $opts = null): SessionEntriesQueryResponse
+    public function List(null|QueryOptions $opts = null): SessionEntriesQueryResponse
     {
         return $this->_get('v1/session/list', $opts);
     }
 
-    private function _get(string $path, ?QueryOptions $opts): SessionEntriesQueryResponse
+    private function _get(string $path, null|QueryOptions $opts): SessionEntriesQueryResponse
     {
         $resp = $this->_requireOK($this->_doGet($path, $opts));
         $ret  = new SessionEntriesQueryResponse();
@@ -110,7 +110,7 @@ class SessionClient extends AbstractClient
         return $ret;
     }
 
-    private function _create(string $path, SessionEntry $entry, ?WriteOptions $opts): ValuedWriteStringResponse
+    private function _create(string $path, SessionEntry $entry, null|WriteOptions $opts): ValuedWriteStringResponse
     {
         $resp = $this->_requireOK($this->_doPut($path, $entry->_toAPIPayload(), $opts));
         $ret  = new ValuedWriteStringResponse();

@@ -22,9 +22,9 @@ namespace DCarbone\PHPConsulAPI;
 
 trait WriteMetaContainer
 {
-    public ?WriteMeta $WriteMeta = null;
+    public null|WriteMeta $WriteMeta = null;
 
-    public function getWriteMeta(): ?WriteMeta
+    public function getWriteMeta(): null|WriteMeta
     {
         return $this->WriteMeta;
     }

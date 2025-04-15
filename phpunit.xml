@@ -20,31 +20,31 @@
             <file>./tests/Usage/RequestUsageTest.php</file>
         </testsuite>
 
-        <!--<testsuite name="usage-acl">-->
-            <!--<directory>./tests/Usage/ACL</directory>-->
-        <!--</testsuite>-->
+        <testsuite name="usage-acl">
+            <directory>./tests/Usage/ACL</directory>
+        </testsuite>
 
         <testsuite name="usage-agent">
             <directory>./tests/Usage/Agent</directory>
         </testsuite>
-        <testsuite name="usage-catalog">
-            <directory>./tests/Usage/Catalog</directory>
-        </testsuite>
-        <testsuite name="usage-coordinate">
-            <directory>./tests/Usage/Coordinate</directory>
-        </testsuite>
-        <testsuite name="usage-kv">
-            <directory>./tests/Usage/KV</directory>
-        </testsuite>
-        <testsuite name="usage-operator">
-            <directory>./tests/Usage/Operator</directory>
-        </testsuite>
-        <testsuite name="usage-session">
-            <directory>./tests/Usage/Session</directory>
-        </testsuite>
+<!--        <testsuite name="usage-catalog">-->
+<!--            <directory>./tests/Usage/Catalog</directory>-->
+<!--        </testsuite>-->
+<!--        <testsuite name="usage-coordinate">-->
+<!--            <directory>./tests/Usage/Coordinate</directory>-->
+<!--        </testsuite>-->
+<!--        <testsuite name="usage-kv">-->
+<!--            <directory>./tests/Usage/KV</directory>-->
+<!--        </testsuite>-->
+<!--        <testsuite name="usage-operator">-->
+<!--            <directory>./tests/Usage/Operator</directory>-->
+<!--        </testsuite>-->
+<!--        <testsuite name="usage-session">-->
+<!--            <directory>./tests/Usage/Session</directory>-->
+<!--        </testsuite>-->
 
-        <testsuite name="usage-random">
-            <directory>./tests/Usage/Random</directory>
-        </testsuite>
+<!--        <testsuite name="usage-random">-->
+<!--            <directory>./tests/Usage/Random</directory>-->
+<!--        </testsuite>-->
     </testsuites>
 </phpunit>

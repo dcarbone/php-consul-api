@@ -30,12 +30,12 @@ class HealthClient extends AbstractClient
     private const connectHealth = 'connect';
     private const ingressHealth = 'ingress';
 
-    public function Node(string $node, ?QueryOptions $opts = null): HealthChecksResponse
+    public function Node(string $node, null|QueryOptions $opts = null): HealthChecksResponse
     {
         return $this->_getHealthChecks(sprintf('v1/health/node/%s', $node), $opts);
     }
 
-    public function Checks(string $service, ?QueryOptions $opts = null): HealthChecksResponse
+    public function Checks(string $service, null|QueryOptions $opts = null): HealthChecksResponse
     {
         return $this->_getHealthChecks(sprintf('v1/health/checks/%s', $service), $opts);
     }
@@ -44,7 +44,7 @@ class HealthClient extends AbstractClient
         string $service,
         array $tags = [],
         bool $passingOnly = false,
-        ?QueryOptions $opts = null
+        null|QueryOptions $opts = null
     ): ServiceEntriesResponse {
         return $this->_getServiceEntries($service, $tags, $passingOnly, $opts, self::serviceHealth);
     }
@@ -53,7 +53,7 @@ class HealthClient extends AbstractClient
         string $service,
         string $tag = '',
         bool $passingOnly = false,
-        ?QueryOptions $opts = null
+        null|QueryOptions $opts = null
     ): ServiceEntriesResponse {
         return $this->ServiceMultipleTags($service, '' !== $tag ? [$tag] : [], $passingOnly, $opts);
     }
@@ -62,7 +62,7 @@ class HealthClient extends AbstractClient
         string $service,
         array $tags = [],
         bool $passingOnly = false,
-        ?QueryOptions $opts = null
+        null|QueryOptions $opts = null
     ): ServiceEntriesResponse {
         return $this->_getServiceEntries($service, $tags, $passingOnly, $opts, self::ingressHealth);
     }
@@ -71,7 +71,7 @@ class HealthClient extends AbstractClient
         string $service,
         string $tag = '',
         bool $passingOnly = false,
-        ?QueryOptions $opts = null
+        null|QueryOptions $opts = null
     ): ServiceEntriesResponse {
         return $this->IngressMultipleTags($service, '' !== $tag ? [$tag] : [], $passingOnly, $opts);
     }
@@ -80,7 +80,7 @@ class HealthClient extends AbstractClient
         string $service,
         array $tags = [],
         bool $passingOnly = false,
-        ?QueryOptions $opts = null
+        null|QueryOptions $opts = null
     ): ServiceEntriesResponse {
         return $this->_getServiceEntries($service, $tags, $passingOnly, $opts, self::connectHealth);
     }
@@ -89,12 +89,12 @@ class HealthClient extends AbstractClient
         string $service,
         string $tag = '',
         bool $passingOnly = false,
-        ?QueryOptions $opts = null
+        null|QueryOptions $opts = null
     ): ServiceEntriesResponse {
         return $this->ConnectMultipleTags($service, '' !== $tag ? [$tag] : [], $passingOnly, $opts);
     }
 
-    public function State(string $state, ?QueryOptions $opts = null): HealthChecksResponse
+    public function State(string $state, null|QueryOptions $opts = null): HealthChecksResponse
     {
         static $validStates = ['any', 'warning', 'critical', 'passing', 'unknown'];
 
@@ -114,7 +114,7 @@ class HealthClient extends AbstractClient
         return $this->_getHealthChecks(sprintf('v1/health/state/%s', $state), $opts);
     }
 
-    protected function _getHealthChecks(string $path, ?QueryOptions $opts): HealthChecksResponse
+    protected function _getHealthChecks(string $path, null|QueryOptions $opts): HealthChecksResponse
     {
         $resp = $this->_requireOK($this->_doGet($path, $opts));
         $ret  = new HealthChecksResponse();
@@ -126,7 +126,7 @@ class HealthClient extends AbstractClient
         string $service,
         array $tags,
         bool $passingOnly,
-        ?QueryOptions $opts,
+        null|QueryOptions $opts,
         string $healthType
     ): ServiceEntriesResponse {
         $uri = match ($healthType) {

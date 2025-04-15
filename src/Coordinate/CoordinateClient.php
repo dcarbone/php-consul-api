@@ -36,7 +36,7 @@ class CoordinateClient extends AbstractClient
         return $ret;
     }
 
-    public function Nodes(?QueryOptions $opts = null): CoordinateEntriesResponse
+    public function Nodes(null|QueryOptions $opts = null): CoordinateEntriesResponse
     {
         $resp = $this->_requireOK($this->_doGet('v1/coordinate/nodes', $opts));
         $ret  = new CoordinateEntriesResponse();
@@ -44,12 +44,12 @@ class CoordinateClient extends AbstractClient
         return $ret;
     }
 
-    public function Update(CoordinateEntry $coordinateEntry, ?WriteOptions $opts = null): WriteResponse
+    public function Update(CoordinateEntry $coordinateEntry, null|WriteOptions $opts = null): WriteResponse
     {
         return $this->_executePut('v1/coordinate/update', $coordinateEntry, $opts);
     }
 
-    public function Node(string $node, ?QueryOptions $opts = null): CoordinateEntriesResponse
+    public function Node(string $node, null|QueryOptions $opts = null): CoordinateEntriesResponse
     {
         $resp = $this->_requireOK($this->_doGet(sprintf('v1/coordinate/node/%s', $node), $opts));
         $ret  = new CoordinateEntriesResponse();
