@@ -63,7 +63,7 @@ class AgentServiceConnect extends AbstractModel
 
     public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
     {
-        $n = $into ?? new static();
+        $n = $into ?? new self();
         foreach ($decoded as $k => $v) {
             if ('SidecarService' === $k) {
                 $n->SidecarService = AgentServiceRegistration::jsonUnserialize($v);

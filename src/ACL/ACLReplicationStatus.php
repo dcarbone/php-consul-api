@@ -100,7 +100,7 @@ class ACLReplicationStatus extends AbstractModel
 
     public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
     {
-        $n = $into ?? new static();
+        $n = $into ?? new self();
         foreach ($decoded as $k => $v) {
             if ('LastSuccess' === $k) {
                 $n->LastSuccess = Time\Time::createFromFormat(DATE_RFC3339, $v);

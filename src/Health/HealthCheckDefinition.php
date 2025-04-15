@@ -165,7 +165,7 @@ class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
 
     public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
     {
-        $n = $into ?? new static();
+        $n = $into ?? new self();
         foreach ($decoded as $k => $v) {
             if ('Interval' === $k || 'IntervalDuration' === $k) {
                 $n->IntervalDuration = Time::Duration($v);

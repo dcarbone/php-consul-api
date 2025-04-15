@@ -105,7 +105,7 @@ class EnvoyExtension extends AbstractModel
 
     public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
     {
-        $n = $into ?? new static();
+        $n = $into ?? new self();
         foreach ($decoded as $k => $v) {
             if ('Arguments' === $k) {
                 $n->setArguments($v);

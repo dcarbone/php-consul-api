@@ -32,21 +32,39 @@ class ACLAuthMethod extends AbstractModel
     public string $Description;
     public Time\Duration $MaxTokenTTL;
     public string $TokenLocality;
+    /** @var array<string, mixed> */
     public array $config;
     public int $CreateIndex;
     public int $ModifyIndex;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodNamespaceRule[] */
     public array $NamespaceRules;
     public string $Namespace;
 
+    /**
+     * @param array<string, mixed>|null $data
+     * @param string $ID
+     * @param string $Name
+     * @param string $Type
+     * @param string $DisplayName
+     * @param string $Description
+     * @param int|float|string|\DateInterval|\DCarbone\Go\Time\Duration|null $MaxTokenTTL
+     * @param string $TokenLocality
+     * @param array<string, mixed>|\stdClass $Config
+     * @param int $CreateIndex
+     * @param int $ModifyIndex
+     * @param iterable<\DCarbone\PHPConsulAPI\ACL\ACLAuthMethodNamespaceRule> $NamespaceRules
+     * @param string $Namespace
+     */
     public function __construct(
         null|array $data = null, // Deprecated, will be removed.
         string $ID = '',
         string $Name = '',
         string $Type = '',
         string $DisplayName = '',
-        string $Description = '',
+        string  $Description = '',
         null|int|float|string|\DateInterval|Time\Duration $MaxTokenTTL = null,
         string $TokenLocality = '',
+        array|\stdClass $Config = [],
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
         iterable $NamespaceRules = [],
@@ -59,6 +77,7 @@ class ACLAuthMethod extends AbstractModel
         $this->Description = $Description;
         $this->setMaxTokenTTL($MaxTokenTTL);
         $this->TokenLocality = $TokenLocality;
+        $this->setConfig($Config);
         $this->CreateIndex = $CreateIndex;
         $this->ModifyIndex = $ModifyIndex;
         $this->setNamespaceRules(...$NamespaceRules);
@@ -145,14 +164,20 @@ class ACLAuthMethod extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function getConfig(): array
     {
         return $this->config;
     }
 
-    public function setConfig(array $config): self
+    /**
+     * @param array<string,mixed>|\stdClass $Config
+     */
+    public function setConfig(array|\stdClass $Config): self
     {
-        $this->config = $config;
+        $this->config = (array)$Config;
         return $this;
     }
 
@@ -178,6 +203,9 @@ class ACLAuthMethod extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodNamespaceRule[]
+     */
     public function getNamespaceRules(): array
     {
         return $this->NamespaceRules;
@@ -208,7 +236,7 @@ class ACLAuthMethod extends AbstractModel
 
     public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
     {
-        $n = $into ?? new static();
+        $n = $into ?? new self();
         foreach ($decoded as $k => $v) {
             switch ($k) {
                 case 'MaxTokenTTL':
