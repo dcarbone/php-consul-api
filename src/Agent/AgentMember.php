@@ -37,9 +37,9 @@ class AgentMember extends AbstractModel
      *      AgentMemberLeaving = 2
      *      AgentMemberLeft    = 3
      *      AgentMemberFailed  = 4
-     * @var string
+     * @var int
      */
-    public string $Status;
+    public int $Status;
     public int $ProtocolMin;
     public int $ProtocolMax;
     public int $ProtocolCur;
@@ -53,7 +53,7 @@ class AgentMember extends AbstractModel
      * @param string $Addr
      * @param int $Port
      * @param \stdClass|null $Tags
-     * @param string $Status
+     * @param int $Status
      * @param int $ProtocolMin
      * @param int $ProtocolMax
      * @param int $ProtocolCur
@@ -67,7 +67,7 @@ class AgentMember extends AbstractModel
         string $Addr = '',
         int $Port = 0,
         null|\stdClass $Tags = null,
-        string $Status = '',
+        int $Status = 0,
         int $ProtocolMin = 0,
         int $ProtocolMax = 0,
         int $ProtocolCur = 0,
@@ -106,7 +106,7 @@ class AgentMember extends AbstractModel
         return $this->Port;
     }
 
-    public function getStatus(): string
+    public function getStatus(): int
     {
         return $this->Status;
     }
