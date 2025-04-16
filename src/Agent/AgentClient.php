@@ -76,8 +76,8 @@ class AgentClient extends AbstractClient
         if (null !== $self->Err) {
             return $ret;
         }
-        if (isset($self->Map['Config'], $self->Map['Config']['NodeName'])) {
-            $ret->Value = $self->Map['Config']['NodeName'];
+        if (isset($self->Map->Config, $self->Map->Config->NodeName)) {
+            $ret->Value = $self->Map->Config->NodeName;
         }
         return $ret;
     }
