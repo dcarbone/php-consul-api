@@ -54,7 +54,7 @@ final class AgentClientTest extends AbstractUsageTests
 
         [$self, $err] = $client->Self();
         self::assertNull($err);
-        self::assertIsArray(
+        self::assertIsObject(
             $self,
             sprintf(
                 'Expected AgentClient::self to return array, saw "%s"',

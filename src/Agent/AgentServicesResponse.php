@@ -25,18 +25,22 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class AgentServicesResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
-    public ?array $Services = null;
+    public null|\stdClass $Services = null;
 
-    public function getValue(): ?array
+    public function getValue(): null|\stdClass
     {
         return $this->Services;
     }
 
     public function unmarshalValue(mixed $decoded): void
     {
-        $this->Services = [];
-        foreach ($decoded as $k => $service) {
-            $this->Services[$k] = new AgentService($service);
+        if (null === $decoded) {
+            $this->Services = null;
+            return;
+        }
+        $this->Services = new \stdClass();
+        foreach ($decoded as $k => $v) {
+            $this->Services->{$k} = AgentService::jsonUnserialize($v);
         }
     }
 }
