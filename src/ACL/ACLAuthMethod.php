@@ -25,77 +25,65 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 
 class ACLAuthMethod extends AbstractModel
 {
-    public string $ID;
     public string $Name;
     public string $Type;
     public string $DisplayName;
     public string $Description;
     public Time\Duration $MaxTokenTTL;
     public string $TokenLocality;
-    /** @var array<string, mixed> */
-    public array $config;
+    public null|\stdClass $Config;
     public int $CreateIndex;
     public int $ModifyIndex;
     /** @var \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodNamespaceRule[] */
     public array $NamespaceRules;
     public string $Namespace;
+    public string $Partition;
 
     /**
-     * @param array<string, mixed>|null $data
-     * @param string $ID
+     * @param array<string, mixed>|null $data Deprecated, will be removed.
      * @param string $Name
      * @param string $Type
      * @param string $DisplayName
      * @param string $Description
      * @param int|float|string|\DateInterval|\DCarbone\Go\Time\Duration|null $MaxTokenTTL
      * @param string $TokenLocality
-     * @param array<string, mixed>|\stdClass $Config
+     * @param null|\stdClass $Config
      * @param int $CreateIndex
      * @param int $ModifyIndex
      * @param iterable<\DCarbone\PHPConsulAPI\ACL\ACLAuthMethodNamespaceRule> $NamespaceRules
      * @param string $Namespace
+     * @param string $Partition
      */
     public function __construct(
         null|array $data = null, // Deprecated, will be removed.
-        string $ID = '',
         string $Name = '',
         string $Type = '',
         string $DisplayName = '',
         string  $Description = '',
         null|int|float|string|\DateInterval|Time\Duration $MaxTokenTTL = null,
         string $TokenLocality = '',
-        array|\stdClass $Config = [],
+        null|\stdClass $Config = null,
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
         iterable $NamespaceRules = [],
-        string $Namespace = ''
+        string $Namespace = '',
+        string $Partition = '',
     ) {
-        $this->ID = $ID;
         $this->Name = $Name;
         $this->Type = $Type;
         $this->DisplayName = $DisplayName;
         $this->Description = $Description;
         $this->setMaxTokenTTL($MaxTokenTTL);
         $this->TokenLocality = $TokenLocality;
-        $this->setConfig($Config);
+        $this->Config = $Config;
         $this->CreateIndex = $CreateIndex;
         $this->ModifyIndex = $ModifyIndex;
         $this->setNamespaceRules(...$NamespaceRules);
         $this->Namespace = $Namespace;
+        $this->Partition = $Partition;
         if (null !== $data && [] !== $data) {
             $this->jsonUnserialize((object)$data, $this);
         }
-    }
-
-    public function getID(): string
-    {
-        return $this->ID;
-    }
-
-    public function setID(string $ID): ACLAuthMethod
-    {
-        $this->ID = $ID;
-        return $this;
     }
 
     public function getName(): string
@@ -164,20 +152,14 @@ class ACLAuthMethod extends AbstractModel
         return $this;
     }
 
-    /**
-     * @return array<string,mixed>
-     */
-    public function getConfig(): array
+    public function getConfig(): null|\stdClass
     {
-        return $this->config;
+        return $this->Config;
     }
 
-    /**
-     * @param array<string,mixed>|\stdClass $Config
-     */
-    public function setConfig(array|\stdClass $Config): self
+    public function setConfig(null|\stdClass $Config): self
     {
-        $this->config = (array)$Config;
+        $this->Config = $Config;
         return $this;
     }
 
@@ -234,22 +216,30 @@ class ACLAuthMethod extends AbstractModel
         return $this;
     }
 
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
     public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
     {
         $n = $into ?? new self();
         foreach ($decoded as $k => $v) {
-            switch ($k) {
-                case 'MaxTokenTTL':
-                    $n->setMaxTokenTTL($v);
-                    break;
-                case 'NamespaceRules':
-                    foreach ($v as $vv) {
-                        $n->addNamespaceRule(ACLAuthMethodNamespaceRule::jsonUnserialize($vv));
-                    }
-                    break;
-
-                default:
-                    $n->{$k} = $v;
+            if ('MaxTokenTTL' === $k) {
+                $n->setMaxTokenTTL($v);
+            } elseif ('NamespaceRules' === $k) {
+                $n->NamespaceRules = [];
+                foreach ($v as $vv) {
+                    $n->NamespaceRules[] = ACLAuthMethodNamespaceRule::jsonUnserialize($vv);
+                }
+            } else {
+                $n->{$k} = $v;
             }
         }
         return $n;
@@ -261,7 +251,6 @@ class ACLAuthMethod extends AbstractModel
         foreach ($this->_getDynamicFields() as $k => $v) {
             $out->{$k} = $v;
         }
-        $out->ID = $this->ID;
         $out->Name = $this->Name;
         if ('' !== $this->DisplayName) {
             $out->DisplayName = $this->DisplayName;
@@ -275,6 +264,7 @@ class ACLAuthMethod extends AbstractModel
         if ('' !== $this->TokenLocality) {
             $out->TokenLocality = $this->TokenLocality;
         }
+        $out->Config = $this->Config;
         $out->CreateIndex = $this->CreateIndex;
         $out->ModifyIndex = $this->ModifyIndex;
         if ([] !== $this->NamespaceRules) {
@@ -282,6 +272,9 @@ class ACLAuthMethod extends AbstractModel
         }
         if ('' !== $this->Namespace) {
             $out->Namespace = $this->Namespace;
+        }
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
         }
         return $out;
     }

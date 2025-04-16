@@ -26,6 +26,7 @@ class AgentServiceCheck extends AbstractModel
 {
     public string $CheckID;
     public string $Name;
+    /** @var string[] */
     public array $ScriptArgs;
     public string $DockerContainerID;
     public string $Shell;
@@ -33,7 +34,7 @@ class AgentServiceCheck extends AbstractModel
     public string $Timeout;
     public string $TTL;
     public string $HTTP;
-    public array $Header;
+    public null|\stdClass $Header;
     public string $Method;
     public string $TCP;
     public string $Status;
@@ -49,6 +50,33 @@ class AgentServiceCheck extends AbstractModel
     public int $FailuresBeforeCritical;
     public string $DeregisterCriticalServiceAfter;
 
+    /**
+     * @param array<string, mixed>|null $data // Deprecated, will be removed.
+     * @param string $CheckID
+     * @param string $Name
+     * @param iterable<string> $ScriptArgs
+     * @param string $DockerContainerID
+     * @param string $Shell
+     * @param string $Interval
+     * @param string $Timeout
+     * @param string $TTL
+     * @param string $HTTP
+     * @param \stdClass|null $Header
+     * @param string $Method
+     * @param string $TCP
+     * @param string $Status
+     * @param string $Notes
+     * @param bool $TLSSkipVerify
+     * @param string $GRPC
+     * @param bool $GRPCUseTLS
+     * @param string $H2PING
+     * @param bool $H2PINGUseTLS
+     * @param string $AliasNode
+     * @param string $AliasService
+     * @param int $SuccessBeforePassing
+     * @param int $FailuresBeforeCritical
+     * @param string $DeregisterCriticalServiceAfter
+     */
     public function __construct(
         null|array $data = null, // Deprecated, will be removed.
         string $CheckID = '',
@@ -60,7 +88,7 @@ class AgentServiceCheck extends AbstractModel
         string $Timeout = '',
         string $TTL = '',
         string $HTTP = '',
-        array|\stdClass $Header = [],
+        null|\stdClass $Header = null,
         string $Method = '',
         string $TCP = '',
         string $Status = '',
@@ -86,7 +114,7 @@ class AgentServiceCheck extends AbstractModel
         $this->Timeout = $Timeout;
         $this->TTL = $TTL;
         $this->HTTP = $HTTP;
-        $this->setHeader($Header);
+        $this->Header = $Header;
         $this->Method = $Method;
         $this->TCP = $TCP;
         $this->Status = $Status;
@@ -128,6 +156,9 @@ class AgentServiceCheck extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getScriptArgs(): array
     {
         return $this->ScriptArgs;
@@ -205,14 +236,14 @@ class AgentServiceCheck extends AbstractModel
         return $this;
     }
 
-    public function getHeader(): array
+    public function getHeader(): null|\stdClass
     {
         return $this->Header;
     }
 
-    public function setHeader(array|\stdClass $Header): self
+    public function setHeader(null|\stdClass $Header): self
     {
-        $this->Header = (array)$Header;
+        $this->Header = $Header;
         return $this;
     }
 
@@ -412,7 +443,7 @@ class AgentServiceCheck extends AbstractModel
         if ('' !== $this->HTTP) {
             $out->HTTP = $this->HTTP;
         }
-        if ([] !== $this->Header) {
+        if (null !== $this->Header) {
             $out->Header = $this->Header;
         }
         if ('' !== $this->Method) {

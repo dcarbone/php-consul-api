@@ -28,7 +28,7 @@ class AgentMember extends AbstractModel
     public string $Name;
     public string $Addr;
     public int $Port;
-    public array $Tags;
+    public null|\stdClass $Tags;
     /**
      * Status of the Member which corresponds to  github.com/hashicorp/serf/serf.MemberStatus
      * Value is one of:
@@ -47,12 +47,26 @@ class AgentMember extends AbstractModel
     public int $DelegateMax;
     public int $DelegateCur;
 
+    /**
+     * @param array<string, mixed>|null $data // Deprecated, will be removed.
+     * @param string $Name
+     * @param string $Addr
+     * @param int $Port
+     * @param \stdClass|null $Tags
+     * @param string $Status
+     * @param int $ProtocolMin
+     * @param int $ProtocolMax
+     * @param int $ProtocolCur
+     * @param int $DelegateMin
+     * @param int $DelegateMax
+     * @param int $DelegateCur
+     */
     public function __construct(
         null|array $data = null, // Deprecated, will be removed.
         string $Name = '',
         string $Addr = '',
         int $Port = 0,
-        array $Tags = [],
+        null|\stdClass $Tags = null,
         string $Status = '',
         int $ProtocolMin = 0,
         int $ProtocolMax = 0,

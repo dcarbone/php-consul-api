@@ -35,7 +35,7 @@ class Upstream extends AbstractModel
     public int $LocalBindPort;
     public string $LocalBindSocketPath;
     public string $LocalBindSocketMode;
-    public array $Config;
+    public null|\stdClass $Config;
     public null|MeshGatewayConfig $MeshGateway;
     public bool $CentrallyConfigured;
 
@@ -51,7 +51,7 @@ class Upstream extends AbstractModel
         int $LocalBindPort = 0,
         string $LocalBindSocketPath = '',
         string $LocalBindSocketMode = '',
-        array|\stdClass $Config = [],
+        null|\stdClass $Config = null,
         null|MeshGatewayConfig $MeshGateway = null,
         bool $CentrallyConfigured = false,
     ) {
@@ -65,7 +65,7 @@ class Upstream extends AbstractModel
         $this->LocalBindPort = $LocalBindPort;
         $this->LocalBindSocketPath = $LocalBindSocketPath;
         $this->LocalBindSocketMode = $LocalBindSocketMode;
-        $this->setConfig($Config);
+        $this->Config = $Config;
         $this->MeshGateway = $MeshGateway;
         $this->CentrallyConfigured = $CentrallyConfigured;
         if (null !== $data && [] !== $data) {
@@ -183,12 +183,12 @@ class Upstream extends AbstractModel
         return $this;
     }
 
-    public function getConfig(): array
+    public function getConfig(): null|\stdClass
     {
         return $this->Config;
     }
 
-    public function setConfig(array $Config): self
+    public function setConfig(null|\stdClass $Config): self
     {
         $this->Config = $Config;
         return $this;
@@ -265,7 +265,7 @@ class Upstream extends AbstractModel
         if ('' !== $this->LocalBindSocketMode) {
             $out->LocalBindSocketMode = $this->LocalBindSocketMode;
         }
-        if ([] !== $this->Config) {
+        if (null !== $this->Config) {
             $out->Config = $this->Config;
         }
         if (null !== $this->MeshGateway) {

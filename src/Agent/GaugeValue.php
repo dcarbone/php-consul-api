@@ -26,17 +26,23 @@ class GaugeValue extends AbstractModel
 {
     public string $Name;
     public float $Value;
-    public array $Labels;
+    public null|\stdClass $Labels;
 
+    /**
+     * @param array<string, mixed>|null $data
+     * @param string $Name
+     * @param float $Value
+     * @param \stdClass|null $Labels
+     */
     public function __construct(
         null|array $data = null, // Deprecated, will be removed.
         string $Name = '',
         float $Value = 0.0,
-        array|\stdClass $Labels = [],
+        null|\stdClass $Labels = null,
     ) {
         $this->Name = $Name;
         $this->Value = $Value;
-        $this->setLabels($Labels);
+        $this->Labels = $Labels;
         if (null !== $data && [] !== $data) {
             $this->jsonUnserialize((object)$data, $this);
         }
@@ -64,14 +70,14 @@ class GaugeValue extends AbstractModel
         return $this;
     }
 
-    public function getLabels(): array
+    public function getLabels(): null|\stdClass
     {
         return $this->Labels;
     }
 
-    public function setLabels(array|\stdClass $labels): self
+    public function setLabels(null|\stdClass $Labels): self
     {
-        $this->Labels = (array)$labels;
+        $this->Labels = $Labels;
         return $this;
     }
 
@@ -79,11 +85,7 @@ class GaugeValue extends AbstractModel
     {
         $n = $into ?? new self();
         foreach ($decoded as $k => $v) {
-            if ('Labels' === $k) {
-                $n->setLabels($v);
-            } else {
-                $n->{$k} = $v;
-            }
+            $n->{$k} = $v;
         }
         return $n;
     }

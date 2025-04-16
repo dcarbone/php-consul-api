@@ -31,8 +31,19 @@ class SampledValue extends AbstractModel
     public float $Max;
     public float $Mean;
     public float $Stddev;
-    public array $Labels;
+    public null|\stdClass $Labels;
 
+    /**
+     * @param array<string, mixed>|null $data Deprecated, will be removed.
+     * @param string $Name
+     * @param int $Count
+     * @param float $Sum
+     * @param float $Min
+     * @param float $Max
+     * @param float $Mean
+     * @param float $Stddev
+     * @param \stdClass|null $Labels
+     */
     public function __construct(
         null|array $data = null, // Deprecated, will be removed.
         string $Name = '',
@@ -42,7 +53,7 @@ class SampledValue extends AbstractModel
         float $Max = 0.0,
         float $Mean = 0.0,
         float $Stddev = 0.0,
-        array|\stdClass $Labels = [],
+        null|\stdClass $Labels = null,
     ) {
         $this->Name = $Name;
         $this->Count = $Count;
@@ -51,7 +62,7 @@ class SampledValue extends AbstractModel
         $this->Max = $Max;
         $this->Mean = $Mean;
         $this->Stddev = $Stddev;
-        $this->setLabels($Labels);
+        $this->Labels = $Labels ?? new \stdClass();
         if (null !== $data && [] !== $data) {
             $this->jsonUnserialize((object)$data, $this);
         }
@@ -128,20 +139,20 @@ class SampledValue extends AbstractModel
         return $this->Stddev;
     }
 
-    public function setStddev(float $Stddev): self
+    public function setStddev(float $stddev): self
     {
-        $this->Stddev = $Stddev;
+        $this->Stddev = $stddev;
         return $this;
     }
 
-    public function getLabels(): array
+    public function getLabels(): null|\stdClass
     {
         return $this->Labels;
     }
 
-    public function setLabels(array|\stdClass $labels): self
+    public function setLabels(null|\stdClass $labels): self
     {
-        $this->Labels = (array)$labels;
+        $this->Labels = $labels ?? new \stdClass();
         return $this;
     }
 
@@ -149,11 +160,7 @@ class SampledValue extends AbstractModel
     {
         $n = $into ?? new self();
         foreach ($decoded as $k => $v) {
-            if ('Labels' === $k) {
-                $n->setLabels($v);
-            } else {
-                $n->{$k} = $v;
-            }
+            $n->{$k} = $v;
         }
         return $n;
     }

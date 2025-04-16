@@ -29,13 +29,13 @@ class AgentService extends AbstractModel
     public string $Kind;
     public string $ID;
     public string $Service;
+    /** @var array<string> */
     public array $Tags;
-    public array $Meta;
+    public null|\stdClass $Meta;
     public int $Port;
     public string $Address;
     public string $SocketPath;
-    /** @var \DCarbone\PHPConsulAPI\Catalog\ServiceAddress[] */
-    public array $TaggedAddresses;
+    public null|\stdClass $TaggedAddresses;
     public AgentWeights $Weights;
     public bool $EnableTagOverride;
     public int $CreateIndex;
@@ -49,6 +49,30 @@ class AgentService extends AbstractModel
     public string $Datacenter;
     public null|Locality $Locality;
 
+    /**
+     * @param array<string, mixed> |null $data Deprecated, will be removed.
+     * @param string $Kind
+     * @param string $ID
+     * @param string $Service
+     * @param string $SocketPath
+     * @param iterable<string> $Tags
+     * @param \stdClass|null $Meta
+     * @param int $Port
+     * @param string $Address
+     * @param \stdClass|null $TaggedAddresses
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentWeights|null $Weights
+     * @param bool $EnableTagOverride
+     * @param int $CreateIndex
+     * @param int $ModifyIndex
+     * @param string $ContentHash
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceConnectProxyConfig|null $Proxy
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceConnect|null $Connect
+     * @param string $PeerName
+     * @param string $Namespace
+     * @param string $Partition
+     * @param string $Datacenter
+     * @param \DCarbone\PHPConsulAPI\Peering\Locality|null $Locality
+     */
     public function __construct(
         null|array $data = null, // Deprecated, will be removed.
         string $Kind = '',
@@ -56,10 +80,10 @@ class AgentService extends AbstractModel
         string $Service = '',
         string $SocketPath = '',
         iterable $Tags = [],
-        array|\stdClass $Meta = [],
+        null|\stdClass $Meta = null,
         int $Port = 0,
         string $Address = '',
-        iterable $TaggedAddresses = [],
+        null|\stdClass $TaggedAddresses = null,
         null|AgentWeights $Weights = null,
         bool $EnableTagOverride = false,
         int $CreateIndex = 0,
@@ -76,12 +100,12 @@ class AgentService extends AbstractModel
         $this->Kind = $Kind;
         $this->ID = $ID;
         $this->Service = $Service;
-        $this->Meta = $Meta instanceof \stdClass ? (array)$Meta : $Meta;
+        $this->Meta = $Meta;
         $this->Port = $Port;
         $this->setTags(...$Tags);
         $this->Address = $Address;
         $this->SocketPath = $SocketPath;
-        $this->setTaggedAddresses(...$TaggedAddresses);
+        $this->setTaggedAddresses($TaggedAddresses);
         $this->Weights = $Weights ?? new AgentWeights();
         $this->EnableTagOverride = $EnableTagOverride;
         $this->CreateIndex = $CreateIndex;
@@ -132,6 +156,9 @@ class AgentService extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getTags(): array
     {
         return $this->Tags;
@@ -143,14 +170,14 @@ class AgentService extends AbstractModel
         return $this;
     }
 
-    public function getMeta(): array
+    public function getMeta(): null|\stdClass
     {
         return $this->Meta;
     }
 
-    public function setMeta(array|\stdClass $Meta): self
+    public function setMeta(null|\stdClass $Meta): self
     {
-        $this->Meta = (array)$Meta;
+        $this->Meta = $Meta;
         return $this;
     }
 
@@ -176,17 +203,21 @@ class AgentService extends AbstractModel
         return $this;
     }
 
-    /**
-     * @return \DCarbone\PHPConsulAPI\Catalog\ServiceAddress[]
-     */
-    public function getTaggedAddresses(): array
+    public function getTaggedAddresses(): null|\stdClass
     {
         return $this->TaggedAddresses;
     }
 
-    public function setTaggedAddresses(ServiceAddress ...$TaggedAddresses): self
+    public function setTaggedAddresses(null|\stdClass $TaggedAddresses): self
     {
-        $this->TaggedAddresses = $TaggedAddresses;
+        if (null === $TaggedAddresses) {
+            $this->TaggedAddresses = null;
+            return $this;
+        }
+        $this->TaggedAddresses = new \stdClass();
+        foreacH($TaggedAddresses as $k => $v) {
+            $this->TaggedAddresses->{$k} = $v instanceof ServiceAddress ? $v : ServiceAddress::jsonUnserialize($v);
+        }
         return $this;
     }
 
@@ -335,9 +366,7 @@ class AgentService extends AbstractModel
             } elseif ('Weights' === $k) {
                 $n->Weights = AgentWeights::jsonUnserialize($v);
             } elseif ('TaggedAddresses' === $k) {
-                foreach ($v as $vv) {
-                    $n->TaggedAddresses[] = ServiceAddress::jsonUnserialize($vv);
-                }
+                $n->settaggedAddresses($v);
             } elseif ('Connect' === $k) {
                 $n->Connect = null === $v ? null : AgentServiceConnect::jsonUnserialize($v);
             } elseif ('Locality' === $k) {
@@ -367,7 +396,7 @@ class AgentService extends AbstractModel
         if ('' !== $this->SocketPath) {
             $out->SocketPath = $this->SocketPath;
         }
-        if ([] !== $this->TaggedAddresses) {
+        if (null !== $this->TaggedAddresses) {
             $out->TaggedAddresses = $this->TaggedAddresses;
         }
         $out->Weights = $this->Weights;
