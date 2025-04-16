@@ -26,17 +26,17 @@ class AgentServiceConnectProxyConfigTest extends AbstractUsageTests
 {
     public function test_construct_givenConfig_willUnmarshalConfigValuesSuccessfully()
     {
-        $config = new AgentServiceConnectProxyConfig([
-            'Config' => [
+        $config = new AgentServiceConnectProxyConfig(
+            Config: (object)[
                 'envoy_prometheus_bind_addr' => '0.0.0.0:12345',
                 'handshake_timeout_ms' => 10000,
                 'local_connect_timeout_ms' => 1000,
                 'local_request_timeout_ms' => 0,
                 'protocol' => 'http',
             ],
-        ]);
+        );
 
-        $this->assertEquals([
+        $this->assertEquals((object)[
             'envoy_prometheus_bind_addr' => '0.0.0.0:12345',
             'handshake_timeout_ms' => 10000,
             'local_connect_timeout_ms' => 1000,
