@@ -73,34 +73,6 @@ class Consul
     public const SessionBehaviorRelease = 'release';
     public const SessionBehaviorDelete  = 'delete';
 
-    public const AutopilotServerNone     = 'none';
-    public const AutopilotServerLeader   = 'leader';
-    public const AutopilotServerVoter    = 'voter';
-    public const AutopilotServerNonVoter = 'non-voter';
-    public const AutopilotServerStaging  = 'staging';
-
-    public const AutopilotTypeVoter          = 'voter';
-    public const AutopilotTypeReadReplica    = 'read-replica';
-    public const AutopilotTypeZoneVoter      = 'zone-voter';
-    public const AutopilotTypeZoneExtraVoter = 'zone-extra-voter';
-    public const AutopilotTypeZoneStandby    = 'zone-standby';
-
-    public const AutopilotUpgradeIdle               = 'idle';
-    public const AutopilotUpgradeAwaitNewVoters     = 'await-new-voters';
-    public const AutopilotUpgradePromoting          = 'promoting';
-    public const AutopilotUpgradeDemoting           = 'demoting';
-    public const AutopilotUpgradeLeaderTransfer     = 'leader-transfer';
-    public const AutopilotUpgradeAwaitNewServers    = 'await-new-servers';
-    public const AutopilotUpgradeAwaitServerRemoval = 'await-server-removal';
-    public const AutopilotUpgradeDisabled           = 'disabled';
-
-    public const BindingRuleBindTypeService = 'service';
-    public const BindingRuleBindTypeRole    = 'role';
-
-    public const MeshGatewayModeDefault = '';
-    public const MeshGatewayModeNone    = 'none';
-    public const MeshGatewayModeLocal   = 'local';
-    public const MeshGatewayModeRemote  = 'remote';
 
     public const MemberTagKeyACLMode         = 'acls';
     public const MemberTagKeyRole            = 'role';

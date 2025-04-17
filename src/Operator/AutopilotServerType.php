@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\Operator;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,20 +20,11 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-final class DecodedBody
+enum AutopilotServerType: string
 {
-    use ErrorContainer;
-
-    public mixed $Decoded = null;
-
-    public function __construct(mixed $decoded, null|Error $err)
-    {
-        $this->Decoded = $decoded;
-        $this->Err     = $err;
-    }
-
-    public function getDecoded(): mixed
-    {
-        return $this->Decoded;
-    }
+    case Voter = 'voter';
+    case ReadReplica = 'read-replica';
+    case ZoneVoter = 'zone-voter';
+    case ZoneExtraVoter = 'zone-extra-voter';
+    case ZoneStandby = 'zone-standby';
 }

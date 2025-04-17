@@ -29,9 +29,6 @@ use DCarbone\Go\Time;
  */
 class Error implements \JsonSerializable
 {
-    private const FIELD_MESSAGE   = 'message';
-    private const FIELD_TIMESTAMP = 'timestamp';
-
     private Time\Time $time;
 
     private string $message;
@@ -67,8 +64,8 @@ class Error implements \JsonSerializable
     public function jsonSerialize(): array
     {
         return [
-            self::FIELD_MESSAGE   => $this->message,
-            self::FIELD_TIMESTAMP => $this->time,
+            'message'   => $this->message,
+            'timestamp' => $this->time,
         ];
     }
 
