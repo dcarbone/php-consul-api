@@ -120,7 +120,7 @@ class Values implements \ArrayAccess, \Countable, \JsonSerializable
                 if ('' === $v) {
                     $str .= $k;
                 } else {
-                    $str .= sprintf('%s=%s', $k, $this->encode($v));
+                    $str .= "{$k}={$this->encode($v)}";
                 }
             }
         }

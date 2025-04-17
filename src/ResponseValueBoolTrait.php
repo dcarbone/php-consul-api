@@ -36,7 +36,7 @@ trait ResponseValueBoolTrait
             return;
         }
         if (is_string($decoded)) {
-            $this->Value = Transcoding::TRUE === strtolower(trim($decoded));
+            $this->Value = 'true' === strtolower(trim($decoded));
             return;
         }
         $this->Value = (bool)$decoded;
@@ -44,6 +44,6 @@ trait ResponseValueBoolTrait
 
     public function __toString(): string
     {
-        return $this->Value ? Transcoding::TRUE : Transcoding::FALSE;
+        return $this->Value ? 'true' : 'false';
     }
 }

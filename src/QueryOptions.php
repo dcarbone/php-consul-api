@@ -47,7 +47,7 @@ class QueryOptions implements RequestOptions
     public bool $Pretty;
 
     public function __construct(
-        array $data = [], // Deprecated do not use.
+        null|array $data = null, // Deprecated do not use.
         string $Namespace = '',
         string $Datacenter = '',
         bool $AllowStale = false,
@@ -68,10 +68,6 @@ class QueryOptions implements RequestOptions
         null|int|float|string|\DateInterval|Time\Duration $Timeout = null,
         bool $Pretty = false,
     ) {
-        if ([] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
-            return;
-        }
         $this->Namespace = $Namespace;
         $this->Datacenter = $Datacenter;
         $this->AllowStale = $AllowStale;
@@ -91,6 +87,9 @@ class QueryOptions implements RequestOptions
         $this->Connect = $Connect;
         $this->Timeout = Time::Duration($Timeout);
         $this->Pretty = $Pretty;
+        if (null !== $data && [] !== $data) {
+            $this->_fromMap((object)$data);
+        }
     }
 
     public function getNamespace(): string
@@ -355,27 +354,23 @@ class QueryOptions implements RequestOptions
     }
 
     /**
-     * @param \stdClass $decoded
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $into
-     * @return self
+     * @param \stdClass $data
      * @deprecated  This is only here to support construction with map.  It will be removed in a future version.
      */
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    private function _fromMap(\stdClass $data): void
     {
-        $n = $into ?? new self();
-        foreach ($decoded as $k => $v) {
+        foreach ($data as $k => $v) {
             if ('MaxAge' === $k) {
-                $n->MaxAge = Time::Duration($v);
+                $this->MaxAge = Time::Duration($v);
             } elseif ('StaleIfError' === $k) {
-                $n->StaleIfError = Time::Duration($v);
+                $this->StaleIfError = Time::Duration($v);
             } elseif ('WaitTime' === $k) {
-                $n->WaitTime = Time::Duration($v);
+                $this->WaitTime = Time::Duration($v);
             } elseif ('Timeout' === $k) {
-                $n->Timeout = Time::Duration($v);
+                $this->Timeout = Time::Duration($v);
             } else {
-                $n->{$k} = $v;
+                $this->{$k} = $v;
             }
         }
-        return $n;
     }
 }
