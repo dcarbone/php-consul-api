@@ -37,7 +37,7 @@ class QueryOptions implements RequestOptions
     public string $Token;
     public string $Near;
     public string $Filter;
-    public array $NodeMeta;
+    public null|\stdClass $NodeMeta;
     public int $RelayFactor;
     public bool $LocalOnly;
     public bool $Connect;
@@ -61,7 +61,7 @@ class QueryOptions implements RequestOptions
         string $Token = '',
         string $Near = '',
         string $Filter = '',
-        array $NodeMeta = [],
+        null|\stdClass $NodeMeta = null,
         int $RelayFactor = 0,
         bool $LocalOnly = false,
         bool $Connect = false,
@@ -222,12 +222,12 @@ class QueryOptions implements RequestOptions
         $this->Filter = $filter;
     }
 
-    public function getNodeMeta(): array
+    public function getNodeMeta(): null|\stdClass
     {
         return $this->NodeMeta;
     }
 
-    public function setNodeMeta(array $nodeMeta): void
+    public function setNodeMeta(null|\stdClass $nodeMeta): void
     {
         $this->NodeMeta = $nodeMeta;
     }
@@ -314,7 +314,7 @@ class QueryOptions implements RequestOptions
         if ('' !== $this->Filter) {
             $r->params->set('filter', $this->Filter);
         }
-        if ([] !== $this->NodeMeta) {
+        if (null !== $this->NodeMeta) {
             foreach ($this->NodeMeta as $k => $v) {
                 $r->params->add('node-meta', "{$k}:{$v}");
             }

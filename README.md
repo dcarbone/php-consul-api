@@ -32,7 +32,9 @@ There are a couple breaking changes between v2 and v3:
       constructors are the preferred method of construction.
     * Construction via associative array will be removed entirely in V4 (whenever I get around to that).
 5. All of that `Transcoding` nonsense has been removed.
-6. The `Config` class may no longer be constructed with a map.  You must use constructor parameters.
+6. The root `Config` class may no longer be constructed with a map.  You must use constructor parameters.
+7. All "map" fields are now defined as `\stdClass` objects.
+
 ## Composer
 
 This lib is designed to be used with [Composer](https://getcomposer.org)

@@ -32,22 +32,21 @@ class WriteOptions implements RequestOptions
     public Time\Duration $Timeout;
 
     public function __construct(
-        array $data = [], // Deprecated do not use.
+        null|array $data = null, // Deprecated do not use.
         string $Namespace = '',
         string $Datacenter = '',
         string $Token = '',
         int $RelayFactor = 0,
         null|int|float|string|\DateInterval|Time\Duration $Timeout = null,
     ) {
-        if ([] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
-            return;
-        }
         $this->Namespace = $Namespace;
         $this->Datacenter = $Datacenter;
         $this->Token = $Token;
         $this->RelayFactor = $RelayFactor;
         $this->Timeout = Time::Duration($Timeout);
+        if (null !== $data && [] !== $data) {
+            $this->_fromMap((object)$data);
+        }
     }
 
     public function getNamespace(): string
@@ -112,7 +111,7 @@ class WriteOptions implements RequestOptions
             $r->header->set('X-Consul-Token', $this->Token);
         }
         if (0 !== $this->RelayFactor) {
-            $r->params->set('relay-factor', (string) $this->RelayFactor);
+            $r->params->set('relay-factor', (string)$this->RelayFactor);
         }
 
         if (0 < $this->Timeout->Nanoseconds()) {
@@ -121,21 +120,17 @@ class WriteOptions implements RequestOptions
     }
 
     /**
-     * @param \stdClass $decoded
-     * @param \DCarbone\PHPConsulAPI\WriteOptions|null $into
-     * @return self
+     * @param \stdClass $data
      * @deprecated  This is only here to support construction with map.  It will be removed in a future version.
      */
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    private function _fromMap(\stdClass $data): void
     {
-        $n = $into ?? new self();
-        foreach ($decoded as $k => $v) {
+        foreach ($data as $k => $v) {
             if ('Timeout' === $k) {
-                $n->Timeout = Time::Duration($v);
+                $this->Timeout = Time::Duration($v);
             } else {
-                $n->{$k} = $v;
+                $this->{$k} = $v;
             }
         }
-        return $n;
     }
 }

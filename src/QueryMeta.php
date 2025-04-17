@@ -36,14 +36,14 @@ class QueryMeta
 
     public function __construct(
         string $RequestUrl,
-        null|int|float|string|\DateInterval|Time\Duration $RequestTime,
+        null|Time\Duration $RequestTime,
         int $LastIndex = 0,
         string $LastContentHash = '',
         int $LastContact = 0,
         bool $KnownLeader = false,
         bool $AddressTranslationEnabled = false,
         bool $CacheHit = false,
-        null|int|float|string|\DateInterval|Time\Duration $CacheAge = null
+        null|Time\Duration $CacheAge = null
     ) {
         $this->RequestUrl = $RequestUrl;
         $this->RequestTime = Time::Duration($RequestTime);

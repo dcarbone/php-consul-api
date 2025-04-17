@@ -79,7 +79,7 @@ final class RequestUsageTest extends TestCase
     public function testCanSetQueryOptions(): void
     {
         $r = new Request('GET', 'kv', ConsulManager::testConfig(), null);
-        $r->applyOptions(new QueryOptions(['Pretty' => true]));
+        $r->applyOptions(new QueryOptions(Pretty: true));
 
         $psr7 = $r->toPsrRequest();
         $uri  = $psr7->getUri();
@@ -92,7 +92,7 @@ final class RequestUsageTest extends TestCase
     public function testCanSetWriteOptions(): void
     {
         $r = new Request('GET', 'kv', ConsulManager::testConfig(), null);
-        $r->applyOptions(new WriteOptions(['Datacenter' => 'dc1']));
+        $r->applyOptions(new WriteOptions(Datacenter: 'dc1'));
 
         $psr7 = $r->toPsrRequest();
         $uri  = $psr7->getUri();
