@@ -22,29 +22,30 @@ namespace DCarbone\PHPConsulAPI\Catalog;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class CatalogNode extends AbstractModel
 {
-    protected const FIELDS = [
-        self::FIELD_NODE     => [
-            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS => Node::class,
-        ],
-        self::FIELD_SERVICES => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => AgentService::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-        ],
-    ];
+    public null|Node $Node;
+    public null|\stdClass $Services;
 
-    private const FIELD_NODE     = 'Node';
-    private const FIELD_SERVICES = 'Services';
+    /**
+     * @param array<string, mixed>|null $data
+     * @param \DCarbone\PHPConsulAPI\Catalog\Node|null $Node
+     * @param null|\stdClass $Services
+     */
+    public function __construct(
+        null|array $data = null, // Deprecated, do not use,
+        null|Node $Node = null,
+        null|\stdClass $Services = null
+    ) {
+        $this->Node = $Node;
+        $this->setServices($Services);
+        if (null !== $data && [] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+        }
+    }
 
-    public ?Node $Node = null;
-    public array $Services;
-
-    public function getNode(): ?Node
+    public function getNode(): null|Node
     {
         return $this->Node;
     }
@@ -55,14 +56,47 @@ class CatalogNode extends AbstractModel
         return $this;
     }
 
-    public function getServices(): array
+    public function getServices(): null|\stdClass
     {
         return $this->Services;
     }
 
-    public function setServices(array $Services): self
+    public function setServices(null|\stdClass $Services): self
     {
-        $this->Services = $Services;
+        if (null === $Services) {
+            $this->Services = null;
+            return $this;
+        }
+        $this->Services = new \stdClass();
+        foreach ($Services as $k => $v) {
+            $this->Services->{$k} = $v instanceof AgentService ? $v : AgentService::jsonUnserialize($v);
+        }
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    {
+        $n = $into ?? new self();
+        foreach ($decoded as $k => $v) {
+            if ('Node' === $k) {
+                $n->Node = null === $v ? null : Node::jsonUnserialize($v);
+            } elseif ('Services' === $k) {
+                $n->setServices($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->Node = $this->Node;
+        $out->Services = $this->Services;
+        return $out;
     }
 }
