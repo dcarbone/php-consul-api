@@ -28,6 +28,9 @@ class ACLTokenListEntryQueryResponse extends AbstractValuedQueryResponse impleme
     /** @var \DCarbone\PHPConsulAPI\ACL\ACLTokenListEntry[] */
     public array $ACLTokenListEntries = [];
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLTokenListEntry[]
+     */
     public function getValue(): array
     {
         return $this->ACLTokenListEntries;
@@ -35,6 +38,7 @@ class ACLTokenListEntryQueryResponse extends AbstractValuedQueryResponse impleme
 
     public function unmarshalValue(mixed $decoded): void
     {
+        $this->ACLTokenListEntries = [];
         foreach ($decoded as $datum) {
             $this->ACLTokenListEntries[] = ACLTokenListEntry::jsonUnserialize($datum);
         }

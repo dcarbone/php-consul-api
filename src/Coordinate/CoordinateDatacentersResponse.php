@@ -25,9 +25,13 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class CoordinateDatacentersResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
-    public ?array $DatacenterMap = null;
+    /** @var \DCarbone\PHPConsulAPI\Coordinate\CoordinateDatacenterMap[] */
+    public array $DatacenterMap = [];
 
-    public function getValue(): ?array
+    /**
+     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateDatacenterMap[]
+     */
+    public function getValue(): array
     {
         return $this->DatacenterMap;
     }
@@ -36,7 +40,7 @@ class CoordinateDatacentersResponse extends AbstractValuedResponse implements Un
     {
         $this->DatacenterMap = [];
         foreach ($decoded as $item) {
-            $this->DatacenterMap[] = new CoordinateDatacenterMap($item);
+            $this->DatacenterMap[] = CoordinateDatacenterMap::jsonUnserialize($item);
         }
     }
 }

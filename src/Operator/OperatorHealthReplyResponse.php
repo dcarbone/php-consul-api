@@ -25,15 +25,15 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class OperatorHealthReplyResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
-    public ?OperatorHealthReply $OperatorHealthReply = null;
+    public null|OperatorHealthReply $OperatorHealthReply = null;
 
-    public function getValue(): mixed
+    public function getValue(): null|OperatorHealthReply
     {
         return $this->OperatorHealthReply;
     }
 
     public function unmarshalValue(mixed $decoded): void
     {
-        $this->OperatorHealthReply = new OperatorHealthReply((array)$decoded);
+        $this->OperatorHealthReply = OperatorHealthReply::jsonUnserialize($decoded);
     }
 }

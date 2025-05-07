@@ -28,6 +28,9 @@ class ACLRolesQueryResponse extends AbstractValuedQueryResponse implements Unmar
     /** @var \DCarbone\PHPConsulAPI\ACL\ACLRole[] */
     public array $ACLRoles = [];
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLRole[]
+     */
     public function getValue(): array
     {
         return $this->ACLRoles;
@@ -35,6 +38,7 @@ class ACLRolesQueryResponse extends AbstractValuedQueryResponse implements Unmar
 
     public function unmarshalValue(mixed $decoded): void
     {
+        $this->ACLRoles = [];
         foreach ($decoded as $datum) {
             $this->ACLRoles[] = ACLRole::jsonUnserialize($datum);
         }

@@ -32,6 +32,11 @@ class AgentHealthServicesResponse extends AbstractResponse
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentServiceChecksInfo[] */
     public array $AgentServiceChecksInfos;
 
+    /**
+     * @param string $aggregatedStatus
+     * @param \stdClass[] $checkInfos
+     * @param \DCarbone\PHPConsulAPI\Error|null $err
+     */
     public function __construct(string $aggregatedStatus, array $checkInfos, null|Error $err)
     {
         $this->AggregatedStatus = $aggregatedStatus;

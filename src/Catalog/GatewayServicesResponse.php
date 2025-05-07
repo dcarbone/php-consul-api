@@ -25,9 +25,13 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class GatewayServicesResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?array $GatewayServices = null;
+    /** @var \DCarbone\PHPConsulAPI\Catalog\GatewayService[] */
+    public array $GatewayServices = [];
 
-    public function getValue(): mixed
+    /**
+     * @return \DCarbone\PHPConsulAPI\Catalog\GatewayService[]
+     */
+    public function getValue(): array
     {
         return $this->GatewayServices;
     }

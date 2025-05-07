@@ -25,9 +25,13 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class SessionEntriesWriteResponse extends AbstractValuedWriteResponse implements UnmarshalledResponseInterface
 {
-    public ?array $SessionEntries = null;
+    /** @var \DCarbone\PHPConsulAPI\Session\SessionEntry[] */
+    public array $SessionEntries = [];
 
-    public function getValue(): ?array
+    /**
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntry[]
+     */
+    public function getValue(): array
     {
         return $this->SessionEntries;
     }
@@ -36,7 +40,7 @@ class SessionEntriesWriteResponse extends AbstractValuedWriteResponse implements
     {
         $this->SessionEntries = [];
         foreach ($decoded as $datum) {
-            $this->SessionEntries[] = new SessionEntry($datum);
+            $this->SessionEntries[] = SessionEntry::jsonUnserialize($datum);
         }
     }
 }

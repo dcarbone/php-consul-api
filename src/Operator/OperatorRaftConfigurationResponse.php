@@ -25,15 +25,15 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class OperatorRaftConfigurationResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
-    public ?RaftConfiguration $RaftConfiguration = null;
+    public null|RaftConfiguration $RaftConfiguration = null;
 
-    public function getValue(): ?RaftConfiguration
+    public function getValue(): null|RaftConfiguration
     {
         return $this->RaftConfiguration;
     }
 
     public function unmarshalValue(mixed $decoded): void
     {
-        $this->RaftConfiguration = new RaftConfiguration($decoded);
+        $this->RaftConfiguration = RaftConfiguration::jsonUnserialize($decoded);
     }
 }

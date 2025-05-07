@@ -28,6 +28,9 @@ class ACLBindingRulesQueryResponse extends AbstractValuedQueryResponse implement
     /** @var \DCarbone\PHPConsulAPI\ACL\ACLBindingRule[] */
     public array $ACLBindingRules = [];
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLBindingRule[]
+     */
     public function getValue(): array
     {
         return $this->ACLBindingRules;

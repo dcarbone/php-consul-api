@@ -25,15 +25,15 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class AutopilotStateResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
-    public ?AutopilotState $AutopilotState = null;
+    public null|AutopilotState $AutopilotState = null;
 
-    public function getValue(): ?AutopilotState
+    public function getValue(): null|AutopilotState
     {
         return $this->AutopilotState;
     }
 
     public function unmarshalValue(mixed $decoded): void
     {
-        $this->AutopilotState = new AutopilotState($decoded);
+        $this->AutopilotState = AutopilotState::jsonUnserialize($decoded);
     }
 }

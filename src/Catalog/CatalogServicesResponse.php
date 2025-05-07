@@ -25,9 +25,13 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class CatalogServicesResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?array $Services = null;
+    /** @var array<\DCarbone\PHPConsulAPI\Catalog\CatalogService> */
+    public array $Services;
 
-    public function getValue(): ?array
+    /**
+     * @return array<\DCarbone\PHPConsulAPI\Catalog\CatalogService>
+     */
+    public function getValue(): array
     {
         return $this->Services;
     }
@@ -36,7 +40,7 @@ class CatalogServicesResponse extends AbstractValuedQueryResponse implements Unm
     {
         $this->Services = [];
         foreach ($decoded as $node) {
-            $this->Services[] = new CatalogService($node);
+            $this->Services[] = CatalogService::jsonUnserialize($node);
         }
     }
 }

@@ -28,6 +28,9 @@ class ACLEntriesResponse extends AbstractValuedQueryResponse implements Unmarsha
     /** @var \DCarbone\PHPConsulAPI\ACL\ACLEntry[] */
     public array $ACLEntries = [];
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLEntry[]
+     */
     public function getValue(): array
     {
         return $this->ACLEntries;
@@ -35,6 +38,7 @@ class ACLEntriesResponse extends AbstractValuedQueryResponse implements Unmarsha
 
     public function unmarshalValue(mixed $decoded): void
     {
+        $this->ACLEntries = [];
         foreach ($decoded as $entry) {
             $this->ACLEntries[] = ACLEntry::jsonUnserialize($entry);
         }

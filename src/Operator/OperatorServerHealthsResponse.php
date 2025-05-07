@@ -25,9 +25,13 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class OperatorServerHealthsResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
-    public ?array $ServerHealths = null;
+    /** @var \DCarbone\PHPConsulAPI\Operator\ServerHealth[] */
+    public array $ServerHealths = [];
 
-    public function getValue(): ?array
+    /**
+     * @return \DCarbone\PHPConsulAPI\Operator\ServerHealth[]
+     */
+    public function getValue(): array
     {
         return $this->ServerHealths;
     }
@@ -36,7 +40,7 @@ class OperatorServerHealthsResponse extends AbstractValuedResponse implements Un
     {
         $this->ServerHealths = [];
         foreach ($decoded as $datum) {
-            $this->ServerHealths[] = new ServerHealth($datum);
+            $this->ServerHealths[] = ServerHealth::jsonUnserialize($datum);
         }
     }
 }

@@ -25,9 +25,13 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class PreparedQueryDefinitionsResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?array $PreparedQueryDefinitions = null;
+    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition[] */
+    public array $PreparedQueryDefinitions = [];
 
-    public function getValue(): ?array
+    /**
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition[]
+     */
+    public function getValue(): array
     {
         return $this->PreparedQueryDefinitions;
     }
@@ -36,7 +40,7 @@ class PreparedQueryDefinitionsResponse extends AbstractValuedQueryResponse imple
     {
         $this->PreparedQueryDefinitions = [];
         foreach ($decoded as $datum) {
-            $this->PreparedQueryDefinitions[] = new PreparedQueryDefinition($datum);
+            $this->PreparedQueryDefinitions[] = PreparedQueryDefinition::jsonUnserialize($datum);
         }
     }
 }

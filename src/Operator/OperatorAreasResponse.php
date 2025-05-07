@@ -25,9 +25,13 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class OperatorAreasResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?array $Areas = null;
+    /** @var \DCarbone\PHPConsulAPI\Operator\Area[] */
+    public array $Areas = [];
 
-    public function getValue(): ?array
+    /**
+     * @return \DCarbone\PHPConsulAPI\Operator\Area[]
+     */
+    public function getValue(): array
     {
         return $this->Areas;
     }
@@ -36,7 +40,7 @@ class OperatorAreasResponse extends AbstractValuedQueryResponse implements Unmar
     {
         $this->Areas = [];
         foreach ($decoded as $area) {
-            $this->Areas[] = new Area($area);
+            $this->Areas[] = Area::jsonUnserialize($area);
         }
     }
 }

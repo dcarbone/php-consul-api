@@ -25,15 +25,24 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class HealthChecksResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?HealthChecks $HealthChecks = null;
+    public HealthChecks $HealthChecks;
 
-    public function getValue(): ?HealthChecks
+    public function __construct()
+    {
+        $this->HealthChecks = new HealthChecks();
+    }
+
+    public function getValue(): HealthChecks
     {
         return $this->HealthChecks;
     }
 
     public function unmarshalValue(mixed $decoded): void
     {
-        $this->HealthChecks = new HealthChecks((array)$decoded);
+        if (null === $decoded) {
+            $this->HealthChecks = new HealthChecks();
+            return;
+        }
+        $this->HealthChecks = HealthChecks::jsonUnserialize($decoded);
     }
 }

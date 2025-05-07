@@ -23,57 +23,90 @@ namespace DCarbone\PHPConsulAPI\Catalog;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Agent\AgentServiceConnectProxyConfig;
 use DCarbone\PHPConsulAPI\Health\HealthChecks;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\Peering\Locality;
 
 class CatalogService extends AbstractModel
 {
-    protected const FIELDS = [
-        self::FIELD_SERVICE_TAGGED_ADDRESSES => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => ServiceAddress::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-        ],
-        self::FIELD_SERVICE_WEIGHTS          => [
-            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS => Weights::class,
-        ],
-        self::FIELD_SERVICE_PROXY            => [
-            Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS    => AgentServiceConnectProxyConfig::class,
-            Transcoding::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_HEALTH_CHECKS            => [
-            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS => HealthChecks::class,
-        ],
-        self::FIELD_NAMESPACE                => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
-
-    private const FIELD_SERVICE_TAGGED_ADDRESSES = 'ServiceTaggedAddresses';
-    private const FIELD_SERVICE_WEIGHTS          = 'ServiceWeights';
-    private const FIELD_SERVICE_PROXY            = 'ServiceProxy';
-    private const FIELD_HEALTH_CHECKS            = 'HealthChecks';
-    private const FIELD_NAMESPACE                = 'Namespace';
-
     public string $ID;
     public string $Node;
     public string $Address;
     public string $Datacenter;
-    public array $TaggedAddresses;
-    public array $NodeMeta;
+    public null|\stdClass $TaggedAddresses;
+    public null|\stdClass $NodeMeta;
     public string $ServiceID;
     public string $ServiceName;
     public string $ServiceAddress;
-    public array $ServiceTaggedAddresses;
+    public null|\stdClass $ServiceTaggedAddresses;
+    /** @var array<string> */
     public array $ServiceTags;
-    public array $ServiceMeta;
+    public null|\stdClass $ServiceMeta;
     public int $ServicePort;
     public Weights $ServiceWeights;
     public bool $ServiceEnableTagOverride;
+    public null|AgentServiceConnectProxyConfig $ServiceProxy;
+    public null|Locality $ServiceLocality;
     public int $CreateIndex;
-    public ?AgentServiceConnectProxyConfig $ServiceProxy = null;
+    public HealthChecks $Checks;
     public int $ModifyIndex;
     public string $Namespace;
+    public string $Partition;
+
+    /**
+     * @param array<mixed>|null $data
+     * @param array<string> $ServiceTags
+     */
+    public function __construct(
+        null|array $data = null, // Deprecated, do not use.
+        string $ID = '',
+        string $Node = '',
+        string $Address = '',
+        string $Datacenter = '',
+        null|\stdclass $TaggedAddresses = null,
+        null|\stdclass $NodeMeta = null,
+        string $ServiceID = '',
+        string $ServiceName = '',
+        string $ServiceAddress = '',
+        null|\stdclass $ServiceTaggedAddresses = null,
+        array $ServiceTags = [],
+        null|\stdclass $ServiceMeta = null,
+        int $ServicePort = 0,
+        null|Weights $ServiceWeights = null,
+        bool $ServiceEnableTagOverride = false,
+        null|AgentServiceConnectProxyConfig $ServiceProxy = null,
+        null|Locality $ServiceLocality = null,
+        int $CreateIndex = 0,
+        int $ModifyIndex = 0,
+        null|HealthChecks $Checks = null,
+        string $Namespace = '',
+        string $Partition = ''
+    ) {
+        $this->ID = $ID;
+        $this->Node = $Node;
+        $this->Address = $Address;
+        $this->Datacenter = $Datacenter;
+        $this->TaggedAddresses = $TaggedAddresses;
+        $this->NodeMeta = $NodeMeta;
+        $this->ServiceID = $ServiceID;
+        $this->ServiceName = $ServiceName;
+        $this->ServiceAddress = $ServiceAddress;
+        $this->ServiceTaggedAddresses = $ServiceTaggedAddresses;
+        $this->setServiceTags(...$ServiceTags);
+        $this->setServiceTaggedAddresses($ServiceTaggedAddresses);
+        $this->ServiceMeta = $ServiceMeta;
+        $this->ServicePort = $ServicePort;
+        $this->ServiceWeights = $ServiceWeights ?? new Weights();
+        $this->ServiceEnableTagOverride = $ServiceEnableTagOverride;
+        $this->ServiceProxy = $ServiceProxy;
+        $this->ServiceLocality = $ServiceLocality;
+        $this->CreateIndex = $CreateIndex;
+        $this->Checks = $Checks ?? new HealthChecks();
+        $this->ModifyIndex = $ModifyIndex;
+        $this->Namespace = $Namespace;
+        $this->Partition = $Partition;
+        if (null !== $data && [] !== $data) {
+            $this->jsonUnserialize((object)$data, $this);
+        }
+    }
 
     public function getID(): string
     {
@@ -119,23 +152,23 @@ class CatalogService extends AbstractModel
         return $this;
     }
 
-    public function getTaggedAddresses(): array
+    public function getTaggedAddresses(): null|\stdClass
     {
         return $this->TaggedAddresses;
     }
 
-    public function setTaggedAddresses(array $TaggedAddresses): self
+    public function setTaggedAddresses(null|\stdClass $TaggedAddresses): self
     {
         $this->TaggedAddresses = $TaggedAddresses;
         return $this;
     }
 
-    public function getNodeMeta(): array
+    public function getNodeMeta(): \stdClass
     {
         return $this->NodeMeta;
     }
 
-    public function setNodeMeta(array $NodeMeta): self
+    public function setNodeMeta(null|\stdClass $NodeMeta): self
     {
         $this->NodeMeta = $NodeMeta;
         return $this;
@@ -174,34 +207,48 @@ class CatalogService extends AbstractModel
         return $this;
     }
 
-    public function getServiceTaggedAddresses(): array
+    public function getServiceTaggedAddresses(): \stdClass
     {
         return $this->ServiceTaggedAddresses;
     }
 
-    public function setServiceTaggedAddresses(array $ServiceTaggedAddresses): self
+    public function setServiceTaggedAddresses(null|\stdClass $ServiceTaggedAddresses): self
     {
-        $this->ServiceTaggedAddresses = $ServiceTaggedAddresses;
+        if (null === $ServiceTaggedAddresses) {
+            $this->ServiceTaggedAddresses = null;
+            return $this;
+        }
+        $this->ServiceTaggedAddresses = new \stdClass();
+        foreach ($ServiceTaggedAddresses as $k => $v) {
+            if ($v instanceof ServiceAddress) {
+                $this->ServiceTaggedAddresses->{$k} = $v;
+            } else {
+                $this->ServiceTaggedAddresses->{$k} = ServiceAddress::jsonUnserialize((object)$v);
+            }
+        }
         return $this;
     }
 
+    /**
+     * @return string[]
+     */
     public function getServiceTags(): array
     {
         return $this->ServiceTags;
     }
 
-    public function setServiceTags(array $ServiceTags): self
+    public function setServiceTags(string ...$ServiceTags): self
     {
         $this->ServiceTags = $ServiceTags;
         return $this;
     }
 
-    public function getServiceMeta(): array
+    public function getServiceMeta(): \stdClass
     {
         return $this->ServiceMeta;
     }
 
-    public function setServiceMeta(array $ServiceMeta): self
+    public function setServiceMeta(null|\stdClass $ServiceMeta): self
     {
         $this->ServiceMeta = $ServiceMeta;
         return $this;
@@ -240,6 +287,28 @@ class CatalogService extends AbstractModel
         return $this;
     }
 
+    public function getServiceProxy(): null|AgentServiceConnectProxyConfig
+    {
+        return $this->ServiceProxy;
+    }
+
+    public function setServiceProxy(null|AgentServiceConnectProxyConfig $ServiceProxy): self
+    {
+        $this->ServiceProxy = $ServiceProxy;
+        return $this;
+    }
+
+    public function getServiceLocality(): null|Locality
+    {
+        return $this->ServiceLocality;
+    }
+
+    public function setServiceLocality(null|Locality $ServiceLocality): self
+    {
+        $this->ServiceLocality = $ServiceLocality;
+        return $this;
+    }
+
     public function getCreateIndex(): int
     {
         return $this->CreateIndex;
@@ -251,14 +320,14 @@ class CatalogService extends AbstractModel
         return $this;
     }
 
-    public function getServiceProxy(): ?AgentServiceConnectProxyConfig
+    public function getChecks(): HealthChecks
     {
-        return $this->ServiceProxy;
+        return $this->Checks;
     }
 
-    public function setServiceProxy(?AgentServiceConnectProxyConfig $ServiceProxy): self
+    public function setChecks(HealthChecks $Checks): self
     {
-        $this->ServiceProxy = $ServiceProxy;
+        $this->Checks = $Checks;
         return $this;
     }
 
@@ -273,14 +342,93 @@ class CatalogService extends AbstractModel
         return $this;
     }
 
-    public function getNamespace(): ?string
+    public function getNamespace(): string
     {
         return $this->Namespace;
     }
 
-    public function setNamespace(?string $Namespace): self
+    public function setNamespace(string $Namespace): self
     {
         $this->Namespace = $Namespace;
         return $this;
+    }
+
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    {
+        $n = $into ?? new self();
+        foreach ($decoded as $k => $v) {
+            if ('TaggedAddresses' === $k) {
+                $n->settaggedAddresses($v);
+            } elseif ('NodeMeta' === $k) {
+                $n->setnodemeta($v);
+            } elseif ('ServiceTaggedAddresses' === $k) {
+                $n->setservicetaggedaddresses($v);
+            } elseif ('Weights' === $k) {
+                $n->ServiceWeights = Weights::jsonUnserialize($v);
+            } elseif ('ServiceProxy' === $k) {
+                if (null !== $v) {
+                    $n->ServiceProxy = AgentServiceConnectProxyConfig::jsonUnserialize($v);
+                }
+            } elseif ('ServiceLocality' === $k) {
+                if (null !== $v) {
+                    $n->ServiceLocality = Locality::jsonUnserialize($v);
+                }
+            } elseif ('Checks' === $k) {
+                if (null !== $v) {
+                    $n->Checks = HealthChecks::jsonUnserialize($v);
+                }
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->ID = $this->ID;
+        $out->Node = $this->Node;
+        $out->Address = $this->Address;
+        $out->Datacenter = $this->Datacenter;
+        $out->TaggedAddresses = $this->TaggedAddresses;
+        $out->NodeMeta = $this->NodeMeta;
+        $out->ServiceID = $this->ServiceID;
+        $out->ServiceName = $this->ServiceName;
+        $out->ServiceAddress = $this->ServiceAddress;
+        $out->ServiceTaggedAddresses = $this->ServiceTaggedAddresses;
+        $out->ServiceTags = $this->ServiceTags;
+        $out->ServiceMeta = $this->ServiceMeta;
+        $out->ServicePort = $this->ServicePort;
+        $out->ServiceWeights = $this->ServiceWeights;
+        $out->ServiceEnableTagOverride = $this->ServiceEnableTagOverride;
+        $out->ServiceProxy = $this->ServiceProxy;
+        if (null !== $this->ServiceLocality) {
+            $out->ServiceLocality = $this->ServiceLocality;
+        }
+        $out->CreateIndex = $this->CreateIndex;
+        $out->Checks = $this->Checks;
+        $out->ModifyIndex = $this->ModifyIndex;
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
+        }
+        return $out;
     }
 }

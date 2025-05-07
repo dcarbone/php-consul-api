@@ -25,9 +25,13 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class NodesResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?array $Nodes = null;
+    /** @var \DCarbone\PHPConsulAPI\Catalog\Node[] */
+    public array $Nodes = [];
 
-    public function getValue(): mixed
+    /**
+     * @return \DCarbone\PHPConsulAPI\Catalog\Node[]
+     */
+    public function getValue(): array
     {
         return $this->Nodes;
     }
@@ -36,7 +40,7 @@ class NodesResponse extends AbstractValuedQueryResponse implements UnmarshalledR
     {
         $this->Nodes = [];
         foreach ($decoded as $node) {
-            $this->Nodes[] = new Node($node);
+            $this->Nodes[] = Node::jsonUnserialize($node);
         }
     }
 }

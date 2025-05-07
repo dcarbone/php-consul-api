@@ -25,9 +25,13 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class OperatorSerfMembersResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?array $SerfMembers = null;
+    /** @var \DCarbone\PHPConsulAPI\Operator\SerfMember[] */
+    public array $SerfMembers = [];
 
-    public function getValue(): ?array
+    /**
+     * @return \DCarbone\PHPConsulAPI\Operator\SerfMember[]
+     */
+    public function getValue(): array
     {
         return $this->SerfMembers;
     }
@@ -36,7 +40,7 @@ class OperatorSerfMembersResponse extends AbstractValuedQueryResponse implements
     {
         $this->SerfMembers = [];
         foreach ($decoded as $datum) {
-            $this->SerfMembers[] = new SerfMember($datum);
+            $this->SerfMembers[] = SerfMember::jsonUnserialize($datum);
         }
     }
 }

@@ -25,9 +25,13 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class UserEventsResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?array $UserEvents = null;
+    /** @var \DCarbone\PHPConsulAPI\Event\UserEvent[] */
+    public array $UserEvents = [];
 
-    public function getValue(): ?array
+    /**
+     * @return \DCarbone\PHPConsulAPI\Event\UserEvent[]
+     */
+    public function getValue(): array
     {
         return $this->UserEvents;
     }
@@ -36,7 +40,7 @@ class UserEventsResponse extends AbstractValuedQueryResponse implements Unmarsha
     {
         $this->UserEvents = [];
         foreach ($decoded as $datum) {
-            $this->UserEvents[] = new UserEvent($datum);
+            $this->UserEvents[] = UserEvent::jsonUnserialize($datum);
         }
     }
 }

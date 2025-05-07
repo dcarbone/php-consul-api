@@ -25,15 +25,19 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class UserEventResponse extends AbstractValuedWriteResponse implements UnmarshalledResponseInterface
 {
-    public ?UserEvent $UserEvent = null;
+    public null|UserEvent $UserEvent = null;
 
-    public function getValue(): ?UserEvent
+    public function getValue(): null|UserEvent
     {
         return $this->UserEvent;
     }
 
     public function unmarshalValue(mixed $decoded): void
     {
-        $this->UserEvent = new UserEvent((array)$decoded);
+        if (null === $decoded) {
+            $this->UserEvent = null;
+            return;
+        }
+        $this->UserEvent = UserEvent::jsonUnserialize($decoded);
     }
 }

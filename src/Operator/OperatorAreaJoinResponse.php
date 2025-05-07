@@ -25,9 +25,13 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class OperatorAreaJoinResponse extends AbstractValuedWriteResponse implements UnmarshalledResponseInterface
 {
-    public ?array $AreaJoinResponses = null;
+    /** @var \DCarbone\PHPConsulAPI\Operator\AreaJoinResponse[] */
+    public array $AreaJoinResponses = [];
 
-    public function getValue(): ?array
+    /**
+     * @return \DCarbone\PHPConsulAPI\Operator\AreaJoinResponse[]
+     */
+    public function getValue(): array
     {
         return $this->AreaJoinResponses;
     }
@@ -36,7 +40,7 @@ class OperatorAreaJoinResponse extends AbstractValuedWriteResponse implements Un
     {
         $this->AreaJoinResponses = [];
         foreach ($decoded as $area) {
-            $this->AreaJoinResponses[] = new AreaJoinResponse($area);
+            $this->AreaJoinResponses[] = AreaJoinResponse::jsonUnserialize($area);
         }
     }
 }

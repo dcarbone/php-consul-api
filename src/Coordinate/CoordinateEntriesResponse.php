@@ -25,9 +25,13 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class CoordinateEntriesResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?array $Nodes = null;
+    /** @var \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry[] */
+    public array $Nodes = [];
 
-    public function getValue(): ?array
+    /**
+     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry[]
+     */
+    public function getValue(): array
     {
         return $this->Nodes;
     }
@@ -36,7 +40,7 @@ class CoordinateEntriesResponse extends AbstractValuedQueryResponse implements U
     {
         $this->Nodes = [];
         foreach ($decoded as $node) {
-            $this->Nodes[] = new CoordinateEntry($node);
+            $this->Nodes[] = CoordinateEntry::jsonUnserialize($node);
         }
     }
 }

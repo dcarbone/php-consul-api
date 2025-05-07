@@ -25,15 +25,24 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class KVPairsResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?KVPairs $KVPairs = null;
+    public KVPairs $KVPairs;
 
-    public function getValue(): ?KVPairs
+    public function __construct()
+    {
+        $this->KVPairs = new KVPairs();
+    }
+
+    public function getValue(): null|KVPairs
     {
         return $this->KVPairs;
     }
 
     public function unmarshalValue(mixed $decoded): void
     {
-        $this->KVPairs = new KVPairs((array)$decoded);
+        if (null === $decoded) {
+            $this->KVPairs = new KVPairs();
+            return;
+        }
+        $this->KVPairs = KVPairs::jsonUnserialize($decoded);
     }
 }

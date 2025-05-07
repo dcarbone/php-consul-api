@@ -29,14 +29,14 @@ class KVTxnAPIResponse
     use ErrorContainer;
 
     public bool $OK = false;
-    public ?KVTxnResponse $KVTxnResponse = null;
+    public null|KVTxnResponse $KVTxnResponse = null;
 
     public function isOK(): bool
     {
         return $this->OK;
     }
 
-    public function getKVTxnResponse(): ?KVTxnResponse
+    public function getKVTxnResponse(): null|KVTxnResponse
     {
         return $this->KVTxnResponse;
     }

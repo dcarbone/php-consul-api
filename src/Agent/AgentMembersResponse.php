@@ -26,7 +26,7 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 class AgentMembersResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentMember[] */
-    public array $Members;
+    public array $Members = [];
 
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentMember[]

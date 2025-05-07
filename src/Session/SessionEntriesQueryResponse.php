@@ -25,9 +25,13 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class SessionEntriesQueryResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?array $SessionEntries = [];
+    /** @var \DCarbone\PHPConsulAPI\Session\SessionEntry[] */
+    public array $SessionEntries = [];
 
-    public function getValue(): ?array
+    /**
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntry[]
+     */
+    public function getValue(): array
     {
         return $this->SessionEntries;
     }
@@ -36,7 +40,7 @@ class SessionEntriesQueryResponse extends AbstractValuedQueryResponse implements
     {
         $this->SessionEntries = [];
         foreach ($decoded as $datum) {
-            $this->SessionEntries[] = new SessionEntry($datum);
+            $this->SessionEntries[] = SessionEntry::jsonUnserialize($datum);
         }
     }
 }

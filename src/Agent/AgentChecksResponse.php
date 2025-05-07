@@ -25,8 +25,12 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class AgentChecksResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
-    public array $Checks;
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentCheck[] */
+    public array $Checks = [];
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentCheck[]|null
+     */
     public function getValue(): ?array
     {
         return $this->Checks;

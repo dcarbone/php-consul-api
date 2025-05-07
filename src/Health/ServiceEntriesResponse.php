@@ -25,9 +25,13 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class ServiceEntriesResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?array $ServiceEntries = null;
+    /** @var \DCarbone\PHPConsulAPI\Health\ServiceEntry[] */
+    public array $ServiceEntries = [];
 
-    public function getValue(): ?array
+    /**
+     * @return \DCarbone\PHPConsulAPI\Health\ServiceEntry[]
+     */
+    public function getValue(): array
     {
         return $this->ServiceEntries;
     }
@@ -36,7 +40,7 @@ class ServiceEntriesResponse extends AbstractValuedQueryResponse implements Unma
     {
         $this->ServiceEntries = [];
         foreach ($decoded as $entry) {
-            $this->ServiceEntries[] = new ServiceEntry($entry);
+            $this->ServiceEntries[] = ServiceEntry::jsonUnserialize($entry);
         }
     }
 }

@@ -28,6 +28,9 @@ class ACLPolicyListEntryQueryResponse extends AbstractValuedQueryResponse implem
     /** @var \DCarbone\PHPConsulAPI\ACL\ACLPolicyListEntry[] */
     public array $ACLPolicyListEntries = [];
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLPolicyListEntry[]
+     */
     public function getValue(): array
     {
         return $this->ACLPolicyListEntries;
@@ -35,6 +38,7 @@ class ACLPolicyListEntryQueryResponse extends AbstractValuedQueryResponse implem
 
     public function unmarshalValue(mixed $decoded): void
     {
+        $this->ACLPolicyListEntries = [];
         foreach ($decoded as $datum) {
             $this->ACLPolicyListEntries[] = ACLPolicyListEntry::jsonUnserialize($datum);
         }
