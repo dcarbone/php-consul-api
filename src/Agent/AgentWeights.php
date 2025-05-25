@@ -35,7 +35,7 @@ class AgentWeights extends AbstractModel
         $this->Passing = $Passing;
         $this->Warning = $Warning;
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

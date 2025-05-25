@@ -40,7 +40,7 @@ class GatewayServicesResponse extends AbstractValuedQueryResponse implements Unm
     {
         $this->GatewayServices = [];
         foreach ($decoded as $service) {
-            $this->GatewayServices[] = new GatewayService($service);
+            $this->GatewayServices[] = GatewayService::jsonUnserialize($service);
         }
     }
 }

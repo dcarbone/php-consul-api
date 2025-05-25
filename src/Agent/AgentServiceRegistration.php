@@ -103,7 +103,7 @@ class AgentServiceRegistration extends AbstractModel
         $this->Partition = $Partition;
         $this->Locality = $Locality;
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

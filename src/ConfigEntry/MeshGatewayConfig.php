@@ -32,7 +32,7 @@ class MeshGatewayConfig extends AbstractModel
     ) {
         $this->setMode($mode);
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

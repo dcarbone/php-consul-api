@@ -71,7 +71,7 @@ class ACLToken extends AbstractModel
         $this->Partition = $Partition;
         $this->AuthMethodNamespace = $AuthMethodNamespace;
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

@@ -38,7 +38,7 @@ class MemberOpts extends AbstractModel
         $this->Segment = $Segment;
         $this->Filter = $Filter;
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

@@ -36,7 +36,7 @@ class PointValue extends AbstractModel
         $this->Name = $Name;
         $this->setPoints(...$Points);
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

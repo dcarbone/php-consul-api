@@ -47,7 +47,7 @@ class ACLEntry extends AbstractModel
         $this->Type = $Type;
         $this->Rules = $Rules;
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

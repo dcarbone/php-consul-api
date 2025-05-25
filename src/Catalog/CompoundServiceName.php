@@ -21,18 +21,27 @@ namespace DCarbone\PHPConsulAPI\Catalog;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class CompoundServiceName extends AbstractModel
 {
-    protected const FIELDS = [
-        self::FIELD_NAMESPACE => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
-
-    private const FIELD_NAMESPACE = 'Namespace';
-
     public string $Name;
     public string $Namespace;
+    public string $Partition;
+
+    public function __construct(
+        null|array $data = null, // Deprecated, will be removed.
+        string $Name = '',
+        string $Namespace = '',
+        string $Partition = '',
+    )
+    {
+        $this->Name = $Name;
+        $this->Namespace = $Namespace;
+        $this->Partition = $Partition;
+        if (null !== $data && [] !== $data) {
+            self::jsonUnserialize((object)$data, $this);
+        }
+    }
 
     public function getName(): string
     {
@@ -54,5 +63,42 @@ class CompoundServiceName extends AbstractModel
     {
         $this->Namespace = $Namespace;
         return $this;
+    }
+
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    {
+        $n = $into ?? new self();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->Name = $this->Name;
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
+        }
+        return $out;
     }
 }

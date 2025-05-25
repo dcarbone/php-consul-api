@@ -69,7 +69,7 @@ class ACLRole extends AbstractModel
         $this->Namespace = $Namespace;
         $this->Partition = $Partition;
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

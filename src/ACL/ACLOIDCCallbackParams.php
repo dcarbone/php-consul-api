@@ -41,7 +41,7 @@ class ACLOIDCCallbackParams extends AbstractModel
         $this->Code = $Code;
         $this->ClientNonce = $ClientNonce;
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

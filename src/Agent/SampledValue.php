@@ -64,7 +64,7 @@ class SampledValue extends AbstractModel
         $this->Stddev = $Stddev;
         $this->Labels = $Labels ?? new \stdClass();
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

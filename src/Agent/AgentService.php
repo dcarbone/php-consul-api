@@ -119,7 +119,7 @@ class AgentService extends AbstractModel
         $this->Datacenter = $Datacenter;
         $this->Locality = $Locality;
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

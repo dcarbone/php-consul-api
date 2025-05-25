@@ -35,7 +35,7 @@ class ServiceAddress extends AbstractModel
         $this->Address = $address;
         $this->Port = $port;
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

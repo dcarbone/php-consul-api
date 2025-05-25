@@ -62,7 +62,7 @@ class ACLAuthMethodListEntry extends AbstractModel
         $this->ModifyIndex = $ModifyIndex;
         $this->Namespace = $Namespace;
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

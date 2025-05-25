@@ -38,7 +38,7 @@ class KubernetesAuthMethodConfig extends AbstractModel
         $this->CACert = $CACert;
         $this->ServiceAccountJWT = $ServiceAccountJWT;
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

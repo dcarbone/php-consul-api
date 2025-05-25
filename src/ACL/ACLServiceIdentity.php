@@ -36,7 +36,7 @@ class ACLServiceIdentity extends AbstractModel
         $this->ServiceName = $ServiceName;
         $this->setDatacenters(...$Datacenters);
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

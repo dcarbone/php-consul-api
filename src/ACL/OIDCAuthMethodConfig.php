@@ -28,7 +28,7 @@ class OIDCAuthMethodConfig extends AbstractModel
         null|array $data = null, // Deprecated, will be removed.
     ) {
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

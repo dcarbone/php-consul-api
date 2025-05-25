@@ -44,7 +44,7 @@ class EnvoyExtension extends AbstractModel
         $this->ConsulVersion = $ConsulVersion;
         $this->EnvoyVersion = $EnvoyVersion;
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

@@ -69,7 +69,7 @@ class Upstream extends AbstractModel
         $this->MeshGateway = $MeshGateway;
         $this->CentrallyConfigured = $CentrallyConfigured;
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

@@ -48,7 +48,7 @@ class MetricsInfo extends AbstractModel
         $this->setCounters(...$Counters);
         $this->setSamples(...$Samples);
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

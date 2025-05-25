@@ -35,7 +35,7 @@ class ACLAuthMethodNamespaceRule extends AbstractModel
         $this->Selector = $Selector;
         $this->BindNamespace = $BindNamespace;
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

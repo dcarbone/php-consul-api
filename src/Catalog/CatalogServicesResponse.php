@@ -26,7 +26,7 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 class CatalogServicesResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
     /** @var array<\DCarbone\PHPConsulAPI\Catalog\CatalogService> */
-    public array $Services;
+    public array $Services = [];
 
     /**
      * @return array<\DCarbone\PHPConsulAPI\Catalog\CatalogService>

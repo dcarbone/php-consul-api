@@ -92,7 +92,7 @@ class AgentServiceConnectProxyConfig extends AbstractModel
         $this->Expose = $Expose;
         $this->AccessLogs = $AccessLogs;
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

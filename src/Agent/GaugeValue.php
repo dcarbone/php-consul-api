@@ -44,7 +44,7 @@ class GaugeValue extends AbstractModel
         $this->Value = $Value;
         $this->Labels = $Labels;
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

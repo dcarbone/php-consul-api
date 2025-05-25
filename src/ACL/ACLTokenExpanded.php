@@ -96,7 +96,7 @@ class ACLTokenExpanded extends ACLToken
         $this->AgentACLDownPolicy = $AgentACLDownPolicy;
         $this->ResolvedByAgent = $ResolvedByAgent;
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

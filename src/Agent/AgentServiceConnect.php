@@ -35,7 +35,7 @@ class AgentServiceConnect extends AbstractModel
         $this->Native = $Native;
         $this->SidecarService = $SidecarService;
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

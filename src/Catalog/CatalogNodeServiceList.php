@@ -42,7 +42,7 @@ class CatalogNodeServiceList extends AbstractModel
         $this->Node = $Node;
         $this->setServices(...$Services);
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

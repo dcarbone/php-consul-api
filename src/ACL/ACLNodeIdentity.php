@@ -35,7 +35,7 @@ class ACLNodeIdentity extends AbstractModel
         $this->NodeName = $NodeName;
         $this->Datacenter = $Datacenter;
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

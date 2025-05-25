@@ -130,7 +130,7 @@ class AgentServiceCheck extends AbstractModel
         $this->FailuresBeforeCritical = $FailuresBeforeCritical;
         $this->DeregisterCriticalServiceAfter = $DeregisterCriticalServiceAfter;
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

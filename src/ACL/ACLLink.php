@@ -35,7 +35,7 @@ class ACLLink extends AbstractModel
         $this->ID = $ID;
         $this->Name = $Name;
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

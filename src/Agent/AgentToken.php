@@ -32,7 +32,7 @@ class AgentToken extends AbstractModel
     ) {
         $this->Token = $Token;
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

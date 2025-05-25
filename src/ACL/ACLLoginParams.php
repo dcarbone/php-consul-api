@@ -38,7 +38,7 @@ class ACLLoginParams extends AbstractModel
         $this->BearerToken = $BearerToken;
         $this->setMeta($Meta);
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

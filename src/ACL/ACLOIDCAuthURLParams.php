@@ -41,7 +41,7 @@ class ACLOIDCAuthURLParams extends AbstractModel
         $this->ClientNonce = $ClientNonce;
         $this->setMeta($Meta);
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

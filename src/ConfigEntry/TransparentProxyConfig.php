@@ -35,7 +35,7 @@ class TransparentProxyConfig extends AbstractModel
         $this->OutboundListenerPort = $OutboundListenerPort;
         $this->DialedDirectly = $DialedDirectly;
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 

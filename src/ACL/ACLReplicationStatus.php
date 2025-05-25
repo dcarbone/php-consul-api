@@ -54,7 +54,7 @@ class ACLReplicationStatus extends AbstractModel
         $this->LastSuccess = $LastSuccess ?? Time::New();
         $this->LastError = $LastError ?? Time::New();
         if (null !== $data && [] !== $data) {
-            $this->jsonUnserialize((object)$data, $this);
+            self::jsonUnserialize((object)$data, $this);
         }
     }
 
