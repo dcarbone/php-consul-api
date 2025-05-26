@@ -27,6 +27,21 @@ class Weights extends AbstractModel
     public int $Passing;
     public int $Warning;
 
+    /**
+     * @param array<string,mixed>|null $data
+     */
+    public function __construct(
+        null|array $data = null, // Deprecated, will be removed.
+        int $Passing = 0,
+        int $Warning = 0
+    ) {
+        $this->Passing = $Passing;
+        $this->Warning = $Warning;
+        if (null !== $data && [] !== $data) {
+            self::jsonUnserialize((object)$data, $this);
+        }
+    }
+
     public function getPassing(): int
     {
         return $this->Passing;
@@ -47,5 +62,25 @@ class Weights extends AbstractModel
     {
         $this->Warning = $Warning;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    {
+        $n = $into ?? new self();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->Passing = $this->Passing;
+        $out->Warning = $this->Warning;
+        return $out;
     }
 }

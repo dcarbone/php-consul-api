@@ -85,7 +85,6 @@ class CompoundServiceName extends AbstractModel
         return $n;
     }
 
-
     public function jsonSerialize(): \stdClass
     {
         $out = new \stdClass();

@@ -34,7 +34,7 @@ interface ConfigEntry
 
     public function GetNamespace(): string;
 
-    public function GetMeta(): array;
+    public function GetMeta(): \stdClass;
 
     public function GetCreateIndex(): int;
 

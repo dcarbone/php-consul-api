@@ -52,7 +52,7 @@ class CatalogService extends AbstractModel
     public string $Partition;
 
     /**
-     * @param array<mixed>|null $data
+     * @param array<string,mixed>|null $data
      * @param array<string> $ServiceTags
      */
     public function __construct(

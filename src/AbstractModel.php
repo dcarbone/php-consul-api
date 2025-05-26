@@ -22,14 +22,15 @@ namespace DCarbone\PHPConsulAPI;
 
 abstract class AbstractModel implements \JsonSerializable
 {
+    /** @var array<string,mixed> */
     private array $_dyn = [];
 
-    public function __set(string $field, $value): void
+    public function __set(string $field, mixed $value): void
     {
         $this->_dyn[$field] = $value;
     }
 
-    public function &__get(string $field)
+    public function &__get(string $field): mixed
     {
         if (!array_key_exists($field, $this->_dyn)) {
             $this->_dyn[$field] = null;
@@ -42,6 +43,9 @@ abstract class AbstractModel implements \JsonSerializable
         unset($this->_dyn[$field]);
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function _getDynamicFields(): array
     {
         return $this->_dyn;

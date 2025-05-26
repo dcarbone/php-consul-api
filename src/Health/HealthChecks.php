@@ -22,17 +22,26 @@ namespace DCarbone\PHPConsulAPI\Health;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Consul;
-use DCarbone\PHPConsulAPI\FakeSlice;
 
-class HealthChecks extends FakeSlice
+/**
+ * @implements \ArrayAccess<int, HealthCheck>
+ * @implements \IteratorAggregate<int, HealthCheck>
+ */
+class HealthChecks extends AbstractModel implements \IteratorAggregate, \Countable, \ArrayAccess
 {
-    protected string $containedClass = HealthCheck::class;
+    /** @var \DCarbone\PHPConsulAPI\Health\HealthCheck[] */
+    protected array $Checks = [];
+
+    public function __construct(HealthCheck ...$Checks)
+    {
+        $this->Checks = $Checks;
+    }
 
     public function AggregatedStatus(): string
     {
         $passing = $warning = $critical = $maintenance = false;
-        foreach ($this as $check) {
-            if (Consul::NodeMaint === $check->CheckID || 0 === strpos($check->CheckID, Consul::ServiceMaintPrefix)) {
+        foreach ($this->Checks as $check) {
+            if (Consul::NodeMaint === $check->CheckID || str_starts_with($check->CheckID, Consul::ServiceMaintPrefix)) {
                 // TODO: Maybe just return maintenance right now...?
                 $maintenance = true;
                 continue;
@@ -68,8 +77,66 @@ class HealthChecks extends FakeSlice
         return Consul::HealthPassing;
     }
 
-    protected function newChild(array $data): AbstractModel
+    public function getIterator(): \Traversable
     {
-        return new HealthCheck($data);
+        return new \ArrayIterator($this->Checks);
+    }
+
+    public function count(): int
+    {
+        return count($this->Checks);
+    }
+
+    public function offsetExists($offset): bool
+    {
+        return is_int($offset) && isset($this->Checks[$offset]);
+    }
+
+    public function offsetGet($offset): null|HealthCheck
+    {
+        if (!isset($this->Checks[$offset])) {
+            throw new \OutOfRangeException("Offset $offset does not exist");
+        }
+        return $this->Checks[$offset];
+    }
+
+    public function offsetSet($offset, $value): void
+    {
+        if (!$value instanceof HealthCheck) {
+            throw new \InvalidArgumentException(sprintf("Value must be an instance of %s", HealthCheck::class));
+        }
+        if (null === $offset) {
+            $this->Checks[] = $value;
+        } else {
+            if (!is_int($offset)) {
+                throw new \InvalidArgumentException('Offset must be an integer');
+            }
+            $this->Checks[$offset] = $value;
+        }
+    }
+
+    public function offsetUnset($offset): void
+    {
+        unset($this->Checks[$offset]);
+    }
+
+    /**
+     * @param array<\stdClass> $decoded
+     */
+    public static function jsonUnserialize(array $decoded, null|self $into = null): static
+    {
+        $n = $into ?? new self();
+        foreach ($decoded as $d) {
+            $n->Checks[] = HealthCheck::jsonUnserialize($d);
+        }
+        return $n;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Health\HealthCheck[]
+     */
+    public function jsonSerialize(): array
+    {
+        return $this->Checks;
     }
 }

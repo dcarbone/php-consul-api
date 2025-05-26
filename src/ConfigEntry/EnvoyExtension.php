@@ -26,7 +26,7 @@ class EnvoyExtension extends AbstractModel
 {
     public string $Name;
     public bool $Required;
-    public array $Arguments;
+    public null|\stdClass $Arguments;
     public string $ConsulVersion;
     public string $EnvoyVersion;
 
@@ -34,13 +34,13 @@ class EnvoyExtension extends AbstractModel
         null|array $data = null, // Deprecated, will be removed.
         string $Name = '',
         bool $Required = false,
-        array|\stdClass $Arguments = [],
+        null|\stdClass $Arguments = null,
         string $ConsulVersion = '',
         string $EnvoyVersion = '',
     ) {
         $this->Name = $Name;
         $this->Required = $Required;
-        $this->setArguments($Arguments);
+        $this->Arguments = $Arguments;
         $this->ConsulVersion = $ConsulVersion;
         $this->EnvoyVersion = $EnvoyVersion;
         if (null !== $data && [] !== $data) {
@@ -70,14 +70,14 @@ class EnvoyExtension extends AbstractModel
         return $this;
     }
 
-    public function getArguments(): array
+    public function getArguments(): null|\stdClass
     {
         return $this->Arguments;
     }
 
-    public function setArguments(array|\stdClass $Arguments): self
+    public function setArguments(null|\stdClass $Arguments): self
     {
-        $this->Arguments = (array)$Arguments;
+        $this->Arguments = $Arguments;
         return $this;
     }
 
@@ -107,11 +107,7 @@ class EnvoyExtension extends AbstractModel
     {
         $n = $into ?? new self();
         foreach ($decoded as $k => $v) {
-            if ('Arguments' === $k) {
-                $n->setArguments($v);
-            } else {
-                $n->{$k} = $v;
-            }
+            $n->{$k} = $v;
         }
         return $n;
     }

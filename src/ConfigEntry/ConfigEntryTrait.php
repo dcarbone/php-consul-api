@@ -25,7 +25,7 @@ trait ConfigEntryTrait
     public string $Kind;
     public string $Name;
     public string $Namespace;
-    public array $Meta;
+    public null|\stdClass $Meta;
     public int $CreateIndex;
     public int $ModifyIndex;
 
@@ -62,14 +62,14 @@ trait ConfigEntryTrait
         return $this;
     }
 
-    public function getMeta(): array
+    public function getMeta(): null|\stdClass
     {
         return $this->Meta;
     }
 
-    public function setMeta(array|\stdClass $Meta): self
+    public function setMeta(null|\stdClass $Meta): self
     {
-        $this->Meta = (array)$Meta;
+        $this->Meta = $Meta;
         return $this;
     }
 
