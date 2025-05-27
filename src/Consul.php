@@ -86,6 +86,28 @@ class Consul
     public const MemberTagKeyReadReplica     = 'read_replica';
     public const MemberTagValueReadReplica   = '1';
 
+    // config_entry.go
+    public const ServiceDefaults = 'service-defaults';
+    public const ProxyDefaults   = 'proxy-defaults';
+    public const ServiceRouter = 'service-router';
+    public const ServiceSplitter = 'service-splitter';
+    public const ServiceResolver = 'service-resolver';
+    public const IngressGateway = 'ingress-gateway';
+    public const TerminatingGateway = 'terminating-gateway';
+    public const ServiceIntentions = 'service-intentions';
+    public const MeshConfig = 'mesh';
+    public const ExportedServices = 'exported-services';
+    public const SamenessGroup = 'sameness-group';
+    public const RateLimitIPConfig = 'control-plane-request-limit';
+    
+    public const ProxyConfigGlobal = 'global';
+    public const MeshConfigMesh = 'mesh';
+    public const APIGateway = "api-gateway";
+    public const TCPRoute = "tcp-route";
+    public const InlineCertificate = 'inline-certificate';
+    public const HTTPRoute = 'http-route';
+    public const JWTProvider = 'jwt-provider';
+
     // "private" constants
 
     public const _headerConsulPrefix             = 'X-Consul-';

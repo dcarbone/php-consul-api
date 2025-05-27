@@ -22,34 +22,10 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 trait ConfigEntryTrait
 {
-    public string $Kind;
-    public string $Name;
     public string $Namespace;
     public null|\stdClass $Meta;
     public int $CreateIndex;
     public int $ModifyIndex;
-
-    public function getKind(): string
-    {
-        return $this->Kind;
-    }
-
-    public function setKind(string $Kind): self
-    {
-        $this->Kind = $Kind;
-        return $this;
-    }
-
-    public function getName(): string
-    {
-        return $this->Name;
-    }
-
-    public function setName(string $Name): self
-    {
-        $this->Name = $Name;
-        return $this;
-    }
 
     public function getNamespace(): string
     {

@@ -21,25 +21,27 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class ExposeConfig extends AbstractModel
 {
-    protected const FIELDS = [
-        self::FIELD_CHECKS => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_PATHS  => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => ExposePath::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-    ];
-
-    private const FIELD_CHECKS = 'Checks';
-    private const FIELD_PATHS  = 'Paths';
-
     public bool $Checks;
+    /** @var array<\DCarbone\PHPConsulAPI\ConfigEntry\ExposePath> */
     public array $Paths;
+
+    /**
+     * @param array<string,mixed>|null $data
+     */
+    public function __construct(
+        null|array $data = null, // Deprecated, will be removed.
+        bool $Checks = false,
+        array $Paths = [],
+    ) {
+        $this->Checks = $Checks;
+        $this->setPaths(...$Paths);
+        if (null !== $data && [] !== $data) {
+            self::jsonUnserialize((object)$data, $this);
+        }
+    }
 
     public function isChecks(): bool
     {
@@ -52,14 +54,47 @@ class ExposeConfig extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ConfigEntry\ExposePath[]
+     */
     public function getPaths(): array
     {
         return $this->Paths;
     }
 
-    public function setPaths(array $Paths): self
+    public function setPaths(ExposePath ...$Paths): self
     {
         $this->Paths = $Paths;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $n = null): static
+    {
+        $n = $n ?? new self();
+        foreach ($decoded as $k => $v) {
+            if ('Paths' === $k) {
+                foreach ($v as $vv) {
+                    $n->Paths[] = ExposePath::jsonUnserialize($vv);
+                }
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        if ($this->Checks) {
+            $out->Checks = true;
+        }
+        if ([] !== $this->Paths) {
+            $out->Paths = $this->Paths;
+        }
+        return $out;
     }
 }

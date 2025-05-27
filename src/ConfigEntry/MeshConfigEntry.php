@@ -21,24 +21,57 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\Consul;
 
 class MeshConfigEntry extends AbstractModel implements ConfigEntry
 {
     use ConfigEntryTrait;
 
-    protected const FIELDS = COnfigEntry::INTERFACE_FIELDS + [
-        self::FIELD_TRANSPARENT_PROXY => [
-            Transcoding::FIELD_TYPE      => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS     => TransparentProxyConfig::class,
-            Transcoding::FIELD_NULLABLE  => false,
-            Transcoding::FIELD_OMITEMPTY => false,
-        ],
-    ];
-
-    private const FIELD_TRANSPARENT_PROXY = 'TransparentProxy';
-
+    public string $Partition;
     public TransparentProxyConfig $TransparentProxy;
+    public bool $AllowEnablingPermissiveMutualTLS;
+    public null|MeshTLSConfig $TLS;
+    public null|MeshHTTPConfig $HTTP;
+    public null|PeeringMeshConfig $Peering;
+
+    public function __construct(
+        null|array $data = null, // Deprecated, will be removed.
+        string $Partition = '',
+        string $Namespace = '',
+        null|TransparentProxyConfig $TransparentProxy = null,
+        bool $AllowEnablingPermissiveMutualTLS = false,
+        null|MeshTLSConfig $TLS = null,
+        null|MeshHTTPConfig $HTTP = null,
+        null|PeeringMeshConfig $Peering = null,
+        null|\stdClass $Meta = null,
+        int $CreateIndex = 0,
+        int $ModifyIndex = 0
+    ) {
+        $this->Partition         = $Partition;
+        $this->Namespace = $Namespace;
+        $this->Meta = $Meta;
+        $this->CreateIndex = $CreateIndex;
+        $this->ModifyIndex = $ModifyIndex;
+        $this->TransparentProxy = $TransparentProxy;
+        $this->AllowEnablingPermissiveMutualTLS = $AllowEnablingPermissiveMutualTLS;
+        $this->TLS = $TLS;
+        $this->HTTP = $HTTP;
+        $this->Peering = $Peering;
+
+        if (null !== $data && [] !== $data) {
+            self::jsonUnserialize((object)$data, $this);
+        }
+    }
+
+    public function getKind(): string
+    {
+        return Consul::MeshConfig;
+    }
+
+    public function getName(): string
+    {
+        return Consul::MeshConfigMesh;
+    }
 
     public function getTransparentProxy(): TransparentProxyConfig
     {

@@ -30,6 +30,9 @@ class EnvoyExtension extends AbstractModel
     public string $ConsulVersion;
     public string $EnvoyVersion;
 
+    /**
+     * @param array<string,mixed>|null $data
+     */
     public function __construct(
         null|array $data = null, // Deprecated, will be removed.
         string $Name = '',
