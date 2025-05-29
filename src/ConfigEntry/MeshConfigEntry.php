@@ -28,7 +28,7 @@ class MeshConfigEntry extends AbstractModel implements ConfigEntry
     use ConfigEntryTrait;
 
     public string $Partition;
-    public TransparentProxyConfig $TransparentProxy;
+    public TransparentProxyMeshConfig $TransparentProxy;
     public bool $AllowEnablingPermissiveMutualTLS;
     public null|MeshTLSConfig $TLS;
     public null|MeshHTTPConfig $HTTP;
@@ -38,7 +38,7 @@ class MeshConfigEntry extends AbstractModel implements ConfigEntry
         null|array $data = null, // Deprecated, will be removed.
         string $Partition = '',
         string $Namespace = '',
-        null|TransparentProxyConfig $TransparentProxy = null,
+        null|TransparentProxyMeshConfig $TransparentProxy = null,
         bool $AllowEnablingPermissiveMutualTLS = false,
         null|MeshTLSConfig $TLS = null,
         null|MeshHTTPConfig $HTTP = null,
@@ -73,14 +73,110 @@ class MeshConfigEntry extends AbstractModel implements ConfigEntry
         return Consul::MeshConfigMesh;
     }
 
-    public function getTransparentProxy(): TransparentProxyConfig
+    public function getTransparentProxy(): TransparentProxyMeshConfig
     {
         return $this->TransparentProxy;
     }
 
-    public function setTransparentProxy(TransparentProxyConfig $TransparentProxy): self
+    public function setTransparentProxy(TransparentProxyMeshConfig $TransparentProxy): self
     {
         $this->TransparentProxy = $TransparentProxy;
         return $this;
+    }
+
+    public function isAllowEnablingPermissiveMutualTLS(): bool
+    {
+        return $this->AllowEnablingPermissiveMutualTLS;
+    }
+
+    public function setAllowEnablingPermissiveMutualTLS(bool $AllowEnablingPermissiveMutualTLS): self
+    {
+        $this->AllowEnablingPermissiveMutualTLS = $AllowEnablingPermissiveMutualTLS;
+        return $this;
+    }
+
+    public function getTLS(): null|MeshTLSConfig
+    {
+        return $this->TLS;
+    }
+
+    public function setTLS(null|MeshTLSConfig $TLS): self
+    {
+        $this->TLS = $TLS;
+        return $this;
+    }
+
+    public function getHTTP(): null|MeshHTTPConfig
+    {
+        return $this->HTTP;
+    }
+
+    public function setHTTP(null|MeshHTTPConfig $HTTP): self
+    {
+        $this->HTTP = $HTTP;
+        return $this;
+    }
+
+    public function getPeering(): null|PeeringMeshConfig
+    {
+        return $this->Peering;
+    }
+
+    public function setPeering(null|PeeringMeshConfig $Peering): self
+    {
+        $this->Peering = $Peering;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $n = null): self
+    {
+        $n = $n ?? new self();
+        foreach ($decoded as $k => $v) {
+            if ('TransparentProxy' === $k || 'transparent_proxy' === $k) {
+                $n->TransparentProxy = null === $v ? new TransparentProxyMeshConfig() : TransparentProxyMeshConfig::jsonUnserialize($v);
+            } elseif ('TLS' === $k) {
+                $n->TLS = null === $v ? null : MeshTLSConfig::jsonUnserialize($v);
+            } elseif ('HTTP' === $k) {
+                $n->HTTP = null === $v ? null : MeshHTTPConfig::jsonUnserialize($v);
+            } elseif ('Peering' === $k) {
+                $n->Peering = null === $v ? null : PeeringMeshConfig::jsonUnserialize($v);
+            } elseif ('allow_enabling_permissive_mutual_tls' === $k) {
+                $n->AllowEnablingPermissiveMutualTLS = $v;
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->Kind = Consul::MeshConfigMesh;
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
+        }
+        $out->TransparentProxy = $this->TransparentProxy;
+        if ($this->AllowEnablingPermissiveMutualTLS) {
+            $out->allow_enabling_permissive_mutual_tls = true;
+        }
+        if (null !== $this->TLS) {
+            $out->TLS = $this->TLS;
+        }
+        if (null !== $this->HTTP) {
+            $out->HTTP = $this->HTTP;
+        }
+        if (null !== $this->Peering) {
+            $out->Peering = $this->Peering;
+        }
+        if (null !== $this->Meta) {
+            $out->Meta = $this->Meta;
+        }
+        $out->CreateIndex = $this->CreateIndex;
+        $out->ModifyIndex = $this->ModifyIndex;
+        return $out;
     }
 }
