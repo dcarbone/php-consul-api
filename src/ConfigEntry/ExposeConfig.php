@@ -30,6 +30,7 @@ class ExposeConfig extends AbstractModel
 
     /**
      * @param array<string,mixed>|null $data
+     * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\ExposePath> $Paths
      */
     public function __construct(
         null|array $data = null, // Deprecated, will be removed.
