@@ -75,7 +75,7 @@ class ProxyConfigEntry extends AbstractModel implements ConfigEntry
             $this->MeshGateway = $MeshGateway ?? new MeshGatewayConfig();
             $this->Expose = $Expose ?? new ExposeConfig();
             $this->AccessLogs = $AccessLogs;
-            $this->EnvoyExtensions = $this->setEnvoyExtensions(...$EnvoyExtensions);
+            $this->setEnvoyExtensions(...$EnvoyExtensions);
             $this->FailoverPolicy = $FailoverPolicy;
             $this->PrioritizeByLocality = $PrioritizeByLocality;
             $this->Meta = $Meta;
@@ -241,7 +241,29 @@ class ProxyConfigEntry extends AbstractModel implements ConfigEntry
     {
         $n = $into ?? new self();
         foreach ($decoded as $k => $v) {
-            $n->{$k} = $v;
+            if ('ProxyMode' === $k) {
+                $n->Mode = ProxyMode::from($v);
+            } elseif ('TransparentProxy' === $k || 'transparent_proxy' === $k) {
+                $n->TransparentProxy = TransparentProxyConfig::jsonUnserialize($v);
+            } elseif ('MutualTLSMode' === $k || 'mutual_tls_mode' === $k) {
+                $n->MutualTLSMode = MutualTLSMode::from($v);
+            } elseif ('MeshGateway' === $k || 'mesh_gateway' === $k) {
+                $n->MeshGateway = MeshGatewayConfig::jsonUnserialize($v);
+            } elseif ('Expose' === $k) {
+                $n->Expose = ExposeConfig::jsonUnserialize($v);
+            } elseif ('AccessLogs' === $k || 'access_logs' === $k) {
+                $n->AccessLogs = AccessLogsConfig::jsonUnserialize($v);
+            } elseif ('EnvoyExtensions' === $k || 'envoy_extensions' === $k) {
+                foreach ($v as $ext) {
+                    $n->EnvoyExtensions[] = EnvoyExtension::jsonUnserialize($ext);
+                }
+            } elseif ('FailoverPolicy' === $k || 'failover_policy' === $k) {
+                $n->FailoverPolicy = ServiceResolverFailoverPolicy::jsonUnserialize($v);
+            } elseif ('PrioritizeByLocality' === $k || 'prioritize_by_locality' === $k) {
+                $n->PrioritizeByLocality = ServiceResolverPrioritizeByLocality::jsonUnserialize($v);
+            } else {
+                $n->{$k} = $v;
+            }
         }
         return $n;
     }
@@ -252,4 +274,45 @@ class ProxyConfigEntry extends AbstractModel implements ConfigEntry
         foreach ($this->_getDynamicFields() as $k => $v) {
             $out->{$k} = $v;
         }
+        $out->Kind = $this->Kind;
+        $out->Name = $this->Name;
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
+        }
+        if (ProxyMode::Default !== $this->Mode) {
+            $out->ProxyMode = $this->Mode->value;
+        }
+        if (null !== $this->TransparentProxy) {
+            $out->TransparentProxy = $this->TransparentProxy->jsonSerialize();
+        }
+        if (MutualTLSMode::Default !== $this->MutualTLSMode) {
+            $out->MutualTLSMode = $this->MutualTLSMode->value;
+        }
+        if (null !== $this->Config) {
+            $out->Config = $this->Config;
+        }
+        $out->MeshGateway = $this->MeshGateway;
+        $out->Expose = $this->Expose;
+        if (null !== $this->AccessLogs) {
+            $out->AccessLogs = $this->AccessLogs->jsonSerialize();
+        }
+        if ([] !== $this->EnvoyExtensions) {
+            $out->EnvoyExtensions = $this->EnvoyExtensions;
+        }
+        if (null !== $this->FailoverPolicy) {
+            $out->FailoverPolicy = $this->FailoverPolicy->jsonSerialize();
+        }
+        if (null !== $this->PrioritizeByLocality) {
+            $out->PrioritizeByLocality = $this->PrioritizeByLocality->jsonSerialize();
+        }
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        if (null !== $this->Meta) {
+            $out->Meta = $this->Meta;
+        }
+        $out->CreateIndex = $this->CreateIndex;
+        $out->ModifyIndex = $this->ModifyIndex;
+        return $out;
+    }
 }
