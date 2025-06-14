@@ -31,5 +31,18 @@ function dur_to_millisecond(Time\Duration $dur): string
         $ms = 1;
     }
 
-    return sprintf('%dms', $ms);
+    return "${ms}ms";
+}
+
+$_zeroObject = new \stdclass();
+
+function _enc_obj_if_valued(\stdClass &$out, string $field, \stdClass | \JsonSerializable $obj): void
+{
+    global $_zeroObject;
+    if ($obj instanceof \JsonSerializable) {
+        $obj = $obj->jsonSerialize();
+    }
+    if ($obj != $_zeroObject) {
+        $out->{$field} = $obj;
+    }
 }

@@ -21,23 +21,12 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\Go\Time;
 
-class ServiceResolverConfigEntry extends AbstractModel implements ConfigEntry
+class LoadBalancer extends AbstractModel
 {
-    use ConfigEntryTrait;
+    public string $Policy;
+    public null|RingHashConfig $RingHashConfig;
+    public null|LeastRequestConfig $LeastRequestConfig;
 
-    public string $Kind;
-    public string $Name;
-    public string $Partition;
-    public string $DefaultSubnet;
-    public \stdClass $Subsets;
-    public null|ServiceResolverRedirect $Redirect;
-    public \stdClass $Failover;
-    public Time\Duration $ConnectTimeout;
-    public Time\Duration $RequestTimeout;
-    public null|ServiceResolverPrioritizeByLocality $PrioritizeByLocality;
-    public null|LoadBalancer $LoadBalancer;
-
-
+    public array $HashPolicies;
 }

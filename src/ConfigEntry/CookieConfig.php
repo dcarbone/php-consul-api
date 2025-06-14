@@ -20,38 +20,55 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
+use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\AbstractModel;
 
-class RingHashConfig extends AbstractModel
+class CookieConfig extends AbstractModel
 {
-    public int $MinimumRingSize = 0;
-    public int $MaximumRingSize = 0;
+    public bool $Session;
+    public Time\Duration $TTL;
+    public string $Path;
 
-    public function __construct(int $MinimumRingSize = 0, int $MaximumRingSize = 0)
-    {
-        $this->MinimumRingSize = $MinimumRingSize;
-        $this->MaximumRingSize = $MaximumRingSize;
+    public function __construct(
+        bool $Session = false,
+        null|Time\Duration $TTL = null,
+        string $Path = ''
+    ) {
+        $this->Session = $Session;
+        $this->TTL = $TTL ?? new Time\Duration();
+        $this->Path = $Path;
     }
 
-    public function getMinimumRingSize(): int
+    public function getSession(): bool
     {
-        return $this->MinimumRingSize;
+        return $this->Session;
     }
 
-    public function setMinimumRingSize(int $MinimumRingSize): self
+    public function setSession(bool $Session): self
     {
-        $this->MinimumRingSize = $MinimumRingSize;
+        $this->Session = $Session;
         return $this;
     }
 
-    public function getMaximumRingSize(): int
+    public function getTTL(): Time\Duration
     {
-        return $this->MaximumRingSize;
+        return $this->TTL;
     }
 
-    public function setMaximumRingSize(int $MaximumRingSize): self
+    public function setTTL(Time\Duration $TTL): self
     {
-        $this->MaximumRingSize = $MaximumRingSize;
+        $this->TTL = $TTL;
+        return $this;
+    }
+
+    public function getPath(): string
+    {
+        return $this->Path;
+    }
+
+    public function setPath(string $Path): self
+    {
+        $this->Path = $Path;
         return $this;
     }
 
@@ -59,10 +76,8 @@ class RingHashConfig extends AbstractModel
     {
         $n = $into ?? new self();
         foreach ($decoded as $k => $v) {
-            if ('minimum_ring_size' === $k) {
-                $n->MinimumRingSize = $v;
-            } elseif ('maximum_ring_size' === $k) {
-                $n->MaximumRingSize = $v;
+            if ('TTL' === $k) {
+                $n->TTL = Time::Duration($v);
             } else {
                 $n->{$k} = $v;
             }
@@ -76,11 +91,14 @@ class RingHashConfig extends AbstractModel
         foreach ($this->_getDynamicFields() as $k => $v) {
             $out->{$k} = $v;
         }
-        if (0 !== $this->MinimumRingSize) {
-            $out->MinimumRingSize = $this->MinimumRingSize;
+        if ($this->Session) {
+            $out->Session = $this->Session;
         }
-        if (0 !== $this->MaximumRingSize) {
-            $out->MaximumRingSize = $this->MaximumRingSize;
+        if (($v = $this->TTL->Nanoseconds()) && 0 !== $v) {
+            $out->TTL = $v;
+        }
+        if ('' !== $this->Path) {
+            $out->Path = $this->Path;
         }
         return $out;
     }

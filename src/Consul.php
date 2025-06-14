@@ -99,7 +99,7 @@ class Consul
     public const ExportedServices = 'exported-services';
     public const SamenessGroup = 'sameness-group';
     public const RateLimitIPConfig = 'control-plane-request-limit';
-    
+
     public const ProxyConfigGlobal = 'global';
     public const MeshConfigMesh = 'mesh';
     public const APIGateway = "api-gateway";

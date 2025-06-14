@@ -22,6 +22,7 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Consul;
+use function DCarbone\PHPConsulAPI\_enc_obj_if_valued;
 
 class ProxyConfigEntry extends AbstractModel implements ConfigEntry
 {
@@ -43,6 +44,10 @@ class ProxyConfigEntry extends AbstractModel implements ConfigEntry
     public null|ServiceResolverFailoverPolicy $FailoverPolicy;
     public null|ServiceResolverPrioritizeByLocality $PrioritizeByLocality;
 
+    /**
+     * @param array<string,mixed>|null $data
+     * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension> $EnvoyExtensions
+     */
     public function __construct(
         array|null $data = null, // Deprecated, will be removed.
         string $Kind = '',
@@ -283,7 +288,7 @@ class ProxyConfigEntry extends AbstractModel implements ConfigEntry
             $out->ProxyMode = $this->Mode->value;
         }
         if (null !== $this->TransparentProxy) {
-            $out->TransparentProxy = $this->TransparentProxy->jsonSerialize();
+            $out->TransparentProxy = $this->TransparentProxy;
         }
         if (MutualTLSMode::Default !== $this->MutualTLSMode) {
             $out->MutualTLSMode = $this->MutualTLSMode->value;
@@ -291,19 +296,18 @@ class ProxyConfigEntry extends AbstractModel implements ConfigEntry
         if (null !== $this->Config) {
             $out->Config = $this->Config;
         }
-        $out->MeshGateway = $this->MeshGateway;
-        $out->Expose = $this->Expose;
+        _enc_obj_if_valued($out, 'MeshGateway', $this->MeshGateway);
+        _enc_obj_if_valued($out, 'Expose', $this->Expose);
         if (null !== $this->AccessLogs) {
-            $out->AccessLogs = $this->AccessLogs->jsonSerialize();
-        }
-        if ([] !== $this->EnvoyExtensions) {
+            $out->AccessLogs = $this->AccessLogs;
+        }        if ([] !== $this->EnvoyExtensions) {
             $out->EnvoyExtensions = $this->EnvoyExtensions;
         }
         if (null !== $this->FailoverPolicy) {
-            $out->FailoverPolicy = $this->FailoverPolicy->jsonSerialize();
+            $out->FailoverPolicy = $this->FailoverPolicy;
         }
         if (null !== $this->PrioritizeByLocality) {
-            $out->PrioritizeByLocality = $this->PrioritizeByLocality->jsonSerialize();
+            $out->PrioritizeByLocality = $this->PrioritizeByLocality;
         }
         if ('' !== $this->Namespace) {
             $out->Namespace = $this->Namespace;
