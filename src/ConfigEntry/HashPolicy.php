@@ -105,10 +105,10 @@ class HashPolicy extends AbstractModel
         foreach ($decoded as $k => $v) {
             if ('field_value' === $k) {
                 $n->FieldValue = $v;
-            } elseif ('cookie_config' === $k) {
+            } elseif ('CookieConfig' === $k || 'cookie_config' === $k) {
                 $n->CookieConfig = CookieConfig::jsonUnserialize($v);
             } elseif ('source_ip' === $k) {
-                $n->SourceIP = (bool)$v;
+                $n->SourceIP = $v;
             } else {
                 $n->{$k} = $v;
             }
