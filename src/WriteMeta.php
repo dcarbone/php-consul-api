@@ -26,9 +26,9 @@ class WriteMeta
 {
     public Time\Duration $RequestTime;
 
-    public function __construct(Time\Duration $RequestTime)
+    public function __construct(null|string|int|float|\DateInterval|Time\Duration $RequestTime)
     {
-        $this->RequestTime = $RequestTime;
+        $this->RequestTime = Time::Duration($RequestTime);
     }
 
     public function getRequestTime(): Time\Duration

@@ -107,9 +107,9 @@ class ServiceRouteDestination extends AbstractModel
         return $this->RequestTimeout;
     }
 
-    public function setRequestTimeout(Time\Duration $RequestTimeout): self
+    public function setRequestTimeout(null|string|int|float|\DateInterval|Time\Duration $RequestTimeout): self
     {
-        $this->RequestTimeout = $RequestTimeout;
+        $this->RequestTimeout = Time::Duration($RequestTimeout);
         return $this;
     }
 

@@ -31,11 +31,11 @@ class CookieConfig extends AbstractModel
 
     public function __construct(
         bool $Session = false,
-        null|Time\Duration $TTL = null,
+        null|string|int|float|\DateInterval|Time\Duration $TTL = null,
         string $Path = ''
     ) {
         $this->Session = $Session;
-        $this->TTL = $TTL ?? new Time\Duration();
+        $this->TTL = Time::Duration($TTL);
         $this->Path = $Path;
     }
 

@@ -31,7 +31,7 @@ class Request
     public Values $header;
     public Params $params;
 
-    public ?Time\Duration $timeout = null;
+    public null|Time\Duration $timeout = null;
 
     private string $scheme;
     private string $address;
@@ -93,7 +93,7 @@ class Request
         return $this->body;
     }
 
-    public function applyOptions(?RequestOptions $opts): void
+    public function applyOptions(null|RequestOptions $opts): void
     {
         if (null === $opts) {
             return;

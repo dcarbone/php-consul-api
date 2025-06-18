@@ -30,10 +30,10 @@ final class RequestResponse
     public null|ResponseInterface $Response;
     public null|Error $Err;
 
-    public function __construct(RequestMeta $meta, Time\Duration $dur, null|ResponseInterface $resp, null|Error $err)
+    public function __construct(RequestMeta $meta, null|string|int|float|\DateInterval|Time\Duration $dur, null|ResponseInterface $resp, null|Error $err)
     {
         $this->RequestMeta = $meta;
-        $this->Duration    = $dur;
+        $this->Duration    = Time::Duration($dur);
         $this->Response    = $resp;
         $this->Err         = $err;
     }

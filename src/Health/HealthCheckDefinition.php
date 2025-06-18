@@ -53,9 +53,9 @@ class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
         $this->Body = $Body;
         $this->TLSSkipVerify = $TLSSkipVerify;
         $this->TCP = $TCP;
-        $this->setIntervalDuration($IntervalDuration);
-        $this->setTimeoutDuration($TimeoutDuration);
-        $this->setDeregisterCriticalServiceAfterDuration($DeregisterCriticalServiceAfterDuration);
+        $this->IntervalDuration = Time::Duration($IntervalDuration);
+        $this->TimeoutDuration = Time::Duration($TimeoutDuration);
+        $this->DeregisterCriticalServiceAfterDuration = Time::Duration($DeregisterCriticalServiceAfterDuration);
         if (null !== $data && [] !== $data) {
             static::jsonUnserialize((object)$data, $this);
         }

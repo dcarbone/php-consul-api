@@ -157,9 +157,9 @@ class SerfMember extends AbstractModel
         return $this->RTT;
     }
 
-    public function setRTT(Time\Duration $RTT): self
+    public function setRTT(null|string|int|float|\DateInterval|Time\Duration $RTT): self
     {
-        $this->RTT = $RTT;
+        $this->RTT = Time::Duration($RTT);
         return $this;
     }
 }

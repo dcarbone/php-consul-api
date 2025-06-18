@@ -119,9 +119,9 @@ class SessionEntry extends AbstractModel
         return $this->LockDelay;
     }
 
-    public function setLockDelay(Time\Duration $LockDelay): self
+    public function setLockDelay(null|string|int|float|\DateInterval|Time\Duration $LockDelay): self
     {
-        $this->LockDelay = $LockDelay;
+        $this->LockDelay = Time::Duration($LockDelay);
         return $this;
     }
 

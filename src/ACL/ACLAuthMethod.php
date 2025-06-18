@@ -41,18 +41,7 @@ class ACLAuthMethod extends AbstractModel
 
     /**
      * @param array<string, mixed>|null $data Deprecated, will be removed.
-     * @param string $Name
-     * @param string $Type
-     * @param string $DisplayName
-     * @param string $Description
-     * @param int|float|string|\DateInterval|\DCarbone\Go\Time\Duration|null $MaxTokenTTL
-     * @param string $TokenLocality
-     * @param null|\stdClass $Config
-     * @param int $CreateIndex
-     * @param int $ModifyIndex
      * @param iterable<\DCarbone\PHPConsulAPI\ACL\ACLAuthMethodNamespaceRule> $NamespaceRules
-     * @param string $Namespace
-     * @param string $Partition
      */
     public function __construct(
         null|array $data = null, // Deprecated, will be removed.
@@ -73,7 +62,7 @@ class ACLAuthMethod extends AbstractModel
         $this->Type = $Type;
         $this->DisplayName = $DisplayName;
         $this->Description = $Description;
-        $this->setMaxTokenTTL($MaxTokenTTL);
+        $this->MaxTokenTTL = Time::Duration($MaxTokenTTL);
         $this->TokenLocality = $TokenLocality;
         $this->Config = $Config;
         $this->CreateIndex = $CreateIndex;

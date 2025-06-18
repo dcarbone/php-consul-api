@@ -50,8 +50,8 @@ class ServiceResolverConfigEntry extends AbstractModel implements ConfigEntry
         null|\stdClass $Subsets = null,
         null|ServiceResolverRedirect $Redirect = null,
         null|\stdClass $Failover = null,
-        null|Time\Duration $ConnectTimeout = null,
-        null|Time\Duration $RequestTimeout = null,
+        null|string|int|float|\DateInterval|Time\Duration $ConnectTimeout = null,
+        null|string|int|float|\DateInterval|Time\Duration $RequestTimeout = null,
         null|ServiceResolverPrioritizeByLocality $PrioritizeByLocality = null,
         null|LoadBalancer $LoadBalancer = null,
         null|\stdClass $Meta = null,
@@ -66,8 +66,8 @@ class ServiceResolverConfigEntry extends AbstractModel implements ConfigEntry
         $this->setSubsets($Subsets);
         $this->Redirect = $Redirect;
         $this->setFailover($Failover);
-        $this->ConnectTimeout = $ConnectTimeout ?? new Time\Duration(0);
-        $this->RequestTimeout = $RequestTimeout ?? new Time\Duration(0);
+        $this->ConnectTimeout = Time::Duration($ConnectTimeout);
+        $this->RequestTimeout = Time::Duration($RequestTimeout);
         $this->PrioritizeByLocality = $PrioritizeByLocality;
         $this->LoadBalancer = $LoadBalancer;
         $this->Meta = $Meta;

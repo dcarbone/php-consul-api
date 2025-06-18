@@ -31,6 +31,9 @@ class WriteOptions implements RequestOptions
 
     public Time\Duration $Timeout;
 
+    /**
+     * @param array<string,mixed>|null $data
+     */
     public function __construct(
         null|array $data = null, // Deprecated do not use.
         string $Namespace = '',
@@ -89,7 +92,7 @@ class WriteOptions implements RequestOptions
         $this->RelayFactor = $relayFactor;
     }
 
-    public function getTimeout(): ?Time\Duration
+    public function getTimeout(): null|Time\Duration
     {
         return $this->Timeout;
     }

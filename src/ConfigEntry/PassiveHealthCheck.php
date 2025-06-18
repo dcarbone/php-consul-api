@@ -34,19 +34,22 @@ class PassiveHealthCheck extends AbstractModel
 
     public null|Time\Duration $BaseEjectionTime;
 
+    /**
+     * @param array<string,mixed>|null $data
+     */
     public function __construct(
         null|array $data = [],  // Deprecated, will be removed.
-        null|Time\Duration $Interval = null,
+        null|string|int|float|\DateInterval|Time\Duration $Interval = null,
         int $MaxFailures = 0,
         null|int $EnforcingConsecutive5xx = null,
         null|int $MaxEjectionPercent = null,
-        null|Time\Duration $BaseEjectionTime = null,
+        null|string|int|float|\DateInterval|Time\Duration $BaseEjectionTime = null,
     ) {
-        $this->Interval = $Interval ?? Time::Duration(0);
+        $this->Interval = Time::Duration($Interval);
         $this->MaxFailures = $MaxFailures;
         $this->EnforcingConsecutive5xx = $EnforcingConsecutive5xx;
         $this->MaxEjectionPercent = $MaxEjectionPercent;
-        $this->BaseEjectionTime = $BaseEjectionTime;
+        $this->BaseEjectionTime = Time::Duration($BaseEjectionTime);
         if (null !== $data && [] !== $data) {
             self::jsonUnserialize((object)$data, $this);
         }
@@ -57,9 +60,9 @@ class PassiveHealthCheck extends AbstractModel
         return $this->Interval;
     }
 
-    public function setInterval(Time\Duration $Interval): self
+    public function setInterval(null|string|int|float|\DateInterval|Time\Duration $Interval): self
     {
-        $this->Interval = $Interval;
+        $this->Interval = Time::Duration($Interval);
         return $this;
     }
 
@@ -96,12 +99,12 @@ class PassiveHealthCheck extends AbstractModel
         return $this;
     }
 
-    public function getBaseEjectionTime(): ?Time\Duration
+    public function getBaseEjectionTime(): null|Time\Duration
     {
         return $this->BaseEjectionTime;
     }
 
-    public function setBaseEjectionTime(?Time\Duration $BaseEjectionTime): self
+    public function setBaseEjectionTime(null|Time\Duration $BaseEjectionTime): self
     {
         $this->BaseEjectionTime = $BaseEjectionTime;
         return $this;
