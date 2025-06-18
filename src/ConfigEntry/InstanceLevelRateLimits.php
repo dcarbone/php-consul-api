@@ -29,6 +29,9 @@ class InstanceLevelRateLimits extends AbstractModel
     /** @var array<\DCarbone\PHPConsulAPI\ConfigEntry\InstanceLevelRouteRateLimits> */
     public array $Routes;
 
+    /**
+     * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\InstanceLevelRouteRateLimits> $Routes
+     */
     public function __construct(
         int $RequestsPerSecond = 0,
         int $RequestsMaxBurst = 0,
