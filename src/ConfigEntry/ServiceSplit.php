@@ -21,24 +21,34 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class ServiceSplit extends AbstractModel
 {
-    protected const FIELDS = [
-        self::FIELD_SERVICE        => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_SERVICE_SUBSET => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_NAMESPACE      => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
-
-    private const FIELD_SERVICE        = 'Service';
-    private const FIELD_SERVICE_SUBSET = 'ServiceSubset';
-    private const FIELD_NAMESPACE      = 'Namespace';
-
     public float $Weight;
     public string $Service;
     public string $ServiceSubset;
     public string $Namespace;
+    public string $Partition;
+    public null|HTTPHeaderModifiers $RequestHeaders;
+    public null|HTTPHeaderModifiers $ResponseHeaders;
+
+    public function __construct(
+        float $Weight = 0.0,
+        string $Service = '',
+        string $ServiceSubset = '',
+        string $Namespace = '',
+        string $Partition = '',
+        null|HTTPHeaderModifiers $RequestHeaders = null,
+        null|HTTPHeaderModifiers $ResponseHeaders = null
+    ) {
+        $this->Weight = $Weight;
+        $this->Service = $Service;
+        $this->ServiceSubset = $ServiceSubset;
+        $this->Namespace = $Namespace;
+        $this->Partition = $Partition;
+        $this->RequestHeaders = $RequestHeaders;
+        $this->ResponseHeaders = $ResponseHeaders;
+    }
 
     public function getWeight(): float
     {
@@ -82,5 +92,83 @@ class ServiceSplit extends AbstractModel
     {
         $this->Namespace = $Namespace;
         return $this;
+    }
+
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
+    public function getRequestHeaders(): ?HTTPHeaderModifiers
+    {
+        return $this->RequestHeaders;
+    }
+
+    public function setRequestHeaders(null|HTTPHeaderModifiers $RequestHeaders): self
+    {
+        $this->RequestHeaders = $RequestHeaders;
+        return $this;
+    }
+
+    public function getResponseHeaders(): null|HTTPHeaderModifiers
+    {
+        return $this->ResponseHeaders;
+    }
+
+    public function setResponseHeaders(null|HTTPHeaderModifiers $ResponseHeaders): self
+    {
+        $this->ResponseHeaders = $ResponseHeaders;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    {
+        $n = $into ?? new self();
+        foreach ($decoded as $k => $v) {
+            if ('service_subset' === $k) {
+                $n->ServiceSubset = $v;
+            } elseif ('RequestHeaders' === $k || 'request_headers' === $k) {
+                $n->RequestHeaders = HTTPHeaderModifiers::jsonUnserialize($v);
+            } elseif ('ResponseHeaders' === $k || 'response_headers' === $k) {
+                $n->ResponseHeaders = HTTPHeaderModifiers::jsonUnserialize($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->Weight = $this->Weight;
+        if ('' !== $this->Service) {
+            $out->Service = $this->Service;
+        }
+        if ('' !== $this->ServiceSubset) {
+            $out->ServiceSubset = $this->ServiceSubset;
+        }
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
+        }
+        if (null !== $this->RequestHeaders) {
+            $out->RequestHeaders = $this->RequestHeaders;
+        }
+        if (null !== $this->ResponseHeaders) {
+            $out->ResponseHeaders = $this->ResponseHeaders;
+        }
+        return $out;
     }
 }

@@ -22,34 +22,38 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
-class ServiceRouterConfigEntry extends AbstractModel implements ConfigEntry
+class ServiceIntentionsConfigEntry extends AbstractModel implements ConfigEntry
 {
     use ConfigEntryTrait;
 
     public string $Kind;
-    public string $Name;
+    public string $name;
     public string $Partition;
-    /** @var array<\DCarbone\PHPConsulAPI\ConfigEntry\ServiceRoute> */
-    public array $Routes;
+    public string $Namespace;
+    /** @var array<null|\DCarbone\PHPConsulAPI\ConfigEntry\SourceIntention> */
+    public array $Sources;
+    public null|IntentionJWTRequirement $JWT;
 
     /**
-     * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\ServiceRoute> $Routes
+     * @param array<null|\DCarbone\PHPConsulAPI\ConfigEntry\SourceIntention> $Sources
      */
     public function __construct(
         string $Kind = '',
-        string $Name = '',
+        string $name = '',
         string $Partition = '',
         string $Namespace = '',
-        array $Routes = [],
+        array $Sources = [],
+        null|IntentionJWTRequirement $JWT = null,
         null|\stdClass $Meta = null,
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
     ) {
         $this->Kind = $Kind;
-        $this->Name = $Name;
+        $this->name = $name;
         $this->Partition = $Partition;
         $this->Namespace = $Namespace;
-        $this->setRoutes(...$Routes);
+        $this->setSources(...$Sources);
+        $this->JWT = $JWT;
         $this->Meta = $Meta;
         $this->CreateIndex = $CreateIndex;
         $this->ModifyIndex = $ModifyIndex;
@@ -60,20 +64,14 @@ class ServiceRouterConfigEntry extends AbstractModel implements ConfigEntry
         return $this->Kind;
     }
 
-    public function setKind(string $Kind): self
-    {
-        $this->Kind = $Kind;
-        return $this;
-    }
-
     public function getName(): string
     {
-        return $this->Name;
+        return $this->name;
     }
 
-    public function setName(string $Name): self
+    public function setName(string $name): self
     {
-        $this->Name = $Name;
+        $this->name = $name;
         return $this;
     }
 
@@ -89,16 +87,27 @@ class ServiceRouterConfigEntry extends AbstractModel implements ConfigEntry
     }
 
     /**
-     * @return array<\DCarbone\PHPConsulAPI\ConfigEntry\ServiceRoute>
+     * @return array<null|\DCarbone\PHPConsulAPI\ConfigEntry\SourceIntention>
      */
-    public function getRoutes(): array
+    public function getSources(): array
     {
-        return $this->Routes;
+        return $this->Sources;
     }
 
-    public function setRoutes(ServiceRoute ...$Routes): self
+    public function setSources(null|SourceIntention ...$Sources): self
     {
-        $this->Routes = $Routes;
+        $this->Sources = $Sources;
+        return $this;
+    }
+
+    public function getJWT(): null|IntentionJWTRequirement
+    {
+        return $this->JWT;
+    }
+
+    public function setJWT(null|IntentionJWTRequirement $JWT): self
+    {
+        $this->JWT = $JWT;
         return $this;
     }
 
@@ -106,11 +115,13 @@ class ServiceRouterConfigEntry extends AbstractModel implements ConfigEntry
     {
         $n = $into ?? new self();
         foreach ($decoded as $k => $v) {
-            if ('Routes' === $k) {
-                $n->Routes = [];
+            if ('Sources' === $k) {
+                $n->Sources = [];
                 foreach ($v as $vv) {
-                    $n->Routes[] = ServiceRoute::jsonUnserialize($vv);
+                    $n->Sources[] = null === $vv ? null : SourceIntention::jsonUnserialize($vv);
                 }
+            } elseif ('JWT' === $k) {
+                $n->JWT = null === $v ? null : IntentionJWTRequirement::jsonUnserialize($v);
             } else {
                 $n->{$k} = $v;
             }
@@ -125,15 +136,18 @@ class ServiceRouterConfigEntry extends AbstractModel implements ConfigEntry
             $out->{$k} = $v;
         }
         $out->Kind = $this->Kind;
-        $out->Name = $this->Name;
+        $out->Name = $this->name;
         if ('' !== $this->Partition) {
             $out->Partition = $this->Partition;
         }
         if ('' !== $this->Namespace) {
             $out->Namespace = $this->Namespace;
         }
-        if ([] !== $this->Routes) {
-            $out->Routes = $this->Routes;
+        if ([] !== $this->Sources) {
+            $out->Sources = $this->Sources;
+        }
+        if (null !== $this->JWT) {
+            $out->JWT = $this->JWT;
         }
         if (null !== $this->Meta) {
             $out->Meta = $this->Meta;

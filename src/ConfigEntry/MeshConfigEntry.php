@@ -161,7 +161,7 @@ class MeshConfigEntry extends AbstractModel implements ConfigEntry
         }
         $out->TransparentProxy = $this->TransparentProxy;
         if ($this->AllowEnablingPermissiveMutualTLS) {
-            $out->allow_enabling_permissive_mutual_tls = true;
+            $out->AllowEnablingPermissiveMutualTLS = true;
         }
         if (null !== $this->TLS) {
             $out->TLS = $this->TLS;

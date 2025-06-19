@@ -375,7 +375,7 @@ class ServiceConfigEntry extends AbstractModel implements ConfigEntry
         _enc_obj_if_valued($out, 'MeshGateway', $this->MeshGateway);
         _enc_obj_if_valued($out, 'Expose', $this->Expose);
         if ('' !== $this->ExternalSNI) {
-            $out->external_sni = $this->ExternalSNI;
+            $out->ExternalSNI = $this->ExternalSNI;
         }
         if (null !== $this->UpstreamConfig) {
             $out->UpstreamConfig = $this->UpstreamConfig;

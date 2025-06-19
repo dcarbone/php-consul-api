@@ -106,7 +106,7 @@ class ExposePath extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $n = null): static
+    public static function jsonUnserialize(\stdClass $decoded, null|self $n = null): self
     {
         $n = $n ?? new self();
         foreach ($decoded as $k => $v) {
@@ -128,13 +128,13 @@ class ExposePath extends AbstractModel
             $out->{$k} = $v;
         }
         if (0 !== $this->ListenerPort) {
-            $out->listener_port = $this->ListenerPort;
+            $out->ListenerPort = $this->ListenerPort;
         }
         if ('' !== $this->Path) {
             $out->Path = $this->Path;
         }
         if (0 !== $this->LocalPathPort) {
-            $out->local_path_port = $this->LocalPathPort;
+            $out->LocalPathPort = $this->LocalPathPort;
         }
         if ('' !== $this->Protocol) {
             $out->Protocol = $this->Protocol;

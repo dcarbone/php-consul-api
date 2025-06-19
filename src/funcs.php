@@ -21,7 +21,6 @@ namespace DCarbone\PHPConsulAPI;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\ConfigEntry;
 
 function dur_to_millisecond(Time\Duration $dur): string
 {
@@ -65,7 +64,8 @@ function MakeConfigEntry(string $kind, string $name): ConfigEntry\ConfigEntry
             return new ConfigEntry\IngressGatewayConfigEntry(kind: $kind, name: $name);
         case Consul::TerminatingGateway:
             return new ConfigEntry\TerminatingGatewayConfigEntry(kind: $kind, name: $name);
-
+        case Consul::ServiceIntentions:
+            return new ConfigEntry\ServiceIntentionsConfigEntry(kind: $kind, name: $name);
 
         default:
             throw new \InvalidArgumentException(sprintf('Unknown kind "%s"', $kind));

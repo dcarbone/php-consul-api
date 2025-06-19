@@ -22,39 +22,31 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
-class ServiceRouteHTTPMatch extends AbstractModel
+class IntentionHTTPPermission extends AbstractModel
 {
     public string $PathExact;
     public string $PathPrefix;
     public string $PathRegex;
-    public bool $CaseInsensitive;
-    /** @var array<\DCarbone\PHPConsulAPI\ConfigEntry\ServiceRouteHTTPMatchHeader> */
+    /** @var array<\DCarbone\PHPConsulAPI\ConfigEntry\IntentionHTTPHeaderPermission> */
     public array $Header;
-    /** @var array<\DCarbone\PHPConsulAPI\ConfigEntry\ServiceRouteHTTPMatchQueryParam> */
-    public array $QueryParam;
     /** @var array<string> */
     public array $Methods;
 
     /**
-     * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\ServiceRouteHTTPMatchHeader> $Header
-     * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\ServiceRouteHTTPMatchQueryParam> $QueryParam
+     * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\IntentionHTTPHeaderPermission> $Header
      * @param array<string> $Methods
      */
     public function __construct(
         string $PathExact = '',
         string $PathPrefix = '',
         string $PathRegex = '',
-        bool $CaseInsensitive = false,
         array $Header = [],
-        array $QueryParam = [],
-        array $Methods = [],
+        array $Methods = []
     ) {
         $this->PathExact = $PathExact;
         $this->PathPrefix = $PathPrefix;
         $this->PathRegex = $PathRegex;
-        $this->CaseInsensitive = $CaseInsensitive;
         $this->setHeader(...$Header);
-        $this->setQueryParam(...$QueryParam);
         $this->setMethods(...$Methods);
     }
 
@@ -92,35 +84,21 @@ class ServiceRouteHTTPMatch extends AbstractModel
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\ConfigEntry\ServiceRouteHTTPMatchHeader[]
+     * @return array<\DCarbone\PHPConsulAPI\ConfigEntry\IntentionHTTPHeaderPermission>
      */
     public function getHeader(): array
     {
         return $this->Header;
     }
 
-    public function setHeader(ServiceRouteHTTPMatchHeader ...$Header): self
+    public function setHeader(IntentionHTTPHeaderPermission ...$Header): self
     {
         $this->Header = $Header;
         return $this;
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\ConfigEntry\ServiceRouteHTTPMatchQueryParam[]
-     */
-    public function getQueryParam(): array
-    {
-        return $this->QueryParam;
-    }
-
-    public function setQueryParam(ServiceRouteHTTPMatchQueryParam ...$QueryParam): self
-    {
-        $this->QueryParam = $QueryParam;
-        return $this;
-    }
-
-    /**
-     * @return string[]
+     * @return array<string>
      */
     public function getMethods(): array
     {
@@ -143,17 +121,10 @@ class ServiceRouteHTTPMatch extends AbstractModel
                 $n->PathPrefix = $v;
             } elseif ('path_regex' === $k) {
                 $n->PathRegex = $v;
-            } elseif ('case_insensitive' === $k) {
-                $n->CaseInsensitive = $v;
             } elseif ('Header' === $k) {
                 $n->Header = [];
                 foreach ($v as $vv) {
-                    $n->Header[] = ServiceRouteHTTPMatchHeader::jsonUnserialize($vv);
-                }
-            } elseif ('QueryParam' === $k || 'query_param' === $k) {
-                $n->QueryParam = [];
-                foreach ($v as $vv) {
-                    $n->QueryParam[] = ServiceRouteHTTPMatchQueryParam::jsonUnserialize($vv);
+                    $n->Header[] = IntentionHTTPHeaderPermission::jsonUnserialize($vv);
                 }
             } else {
                 $n->{$k} = $v;
@@ -177,14 +148,8 @@ class ServiceRouteHTTPMatch extends AbstractModel
         if ('' !== $this->PathRegex) {
             $out->PathRegex = $this->PathRegex;
         }
-        if ($this->CaseInsensitive) {
-            $out->CaseInsensitive = $this->CaseInsensitive;
-        }
-        if ([] !== $this->Header) {
+        if ([] === $this->Header) {
             $out->Header = $this->Header;
-        }
-        if ([] !== $this->QueryParam) {
-            $out->QueryParam = $this->QueryParam;
         }
         if ([] !== $this->Methods) {
             $out->Methods = $this->Methods;

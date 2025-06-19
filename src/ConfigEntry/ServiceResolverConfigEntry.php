@@ -268,7 +268,7 @@ class ServiceResolverConfigEntry extends AbstractModel implements ConfigEntry
             $out->Namespace = $this->Namespace;
         }
         if ('' !== $this->DefaultSubset) {
-            $out->default_subset = $this->DefaultSubset;
+            $out->DefaultSubset = $this->DefaultSubset;
         }
         _enc_obj_if_valued($out, 'Subsets', $this->Subsets);
         if (null !== $this->Redirect) {

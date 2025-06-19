@@ -22,23 +22,19 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
-class ServiceRouteHTTPMatchQueryParam extends AbstractModel
+class IntentionJWTRequirement extends AbstractModel
 {
     public string $Name;
-    public bool $Present;
-    public string $Exact;
-    public string $Regex;
+    /** @var array<\DCarbone\PHPConsulAPI\ConfigEntry\IntentionJWTClaimVerification> */
+    public array $VerifyClaims;
 
-    public function __construct(
-        string $Name = '',
-        bool $Present = false,
-        string $Exact = '',
-        string $Regex = '',
-    ) {
+    /**
+     * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\IntentionJWTClaimVerification> $VerifyClaims
+     */
+    public function __construct(string $Name = '', array $VerifyClaims = [])
+    {
         $this->Name = $Name;
-        $this->Present = $Present;
-        $this->Exact = $Exact;
-        $this->Regex = $Regex;
+        $this->setVerifyClaims(...$VerifyClaims);
     }
 
     public function getName(): string
@@ -52,36 +48,17 @@ class ServiceRouteHTTPMatchQueryParam extends AbstractModel
         return $this;
     }
 
-    public function isPresent(): bool
+    /**
+     * @return array<\DCarbone\PHPConsulAPI\ConfigEntry\IntentionJWTClaimVerification>
+     */
+    public function getVerifyClaims(): array
     {
-        return $this->Present;
+        return $this->VerifyClaims;
     }
 
-    public function setPresent(bool $Present): self
+    public function setVerifyClaims(IntentionJWTClaimVerification ...$VerifyClaims): self
     {
-        $this->Present = $Present;
-        return $this;
-    }
-
-    public function getExact(): string
-    {
-        return $this->Exact;
-    }
-
-    public function setExact(string $Exact): self
-    {
-        $this->Exact = $Exact;
-        return $this;
-    }
-
-    public function getRegex(): string
-    {
-        return $this->Regex;
-    }
-
-    public function setRegex(string $Regex): self
-    {
-        $this->Regex = $Regex;
+        $this->VerifyClaims = $VerifyClaims;
         return $this;
     }
 
@@ -89,7 +66,14 @@ class ServiceRouteHTTPMatchQueryParam extends AbstractModel
     {
         $n = $into ?? new self();
         foreach ($decoded as $k => $v) {
-            $n->{$k} = $v;
+            if ('VerifyClaims' === $k || 'verify_claims' === $k) {
+                $n->VerifyClaims = [];
+                foreach ($v as $vv) {
+                    $n->VerifyClaims[] = IntentionJWTClaimVerification::jsonUnserialize($vv);
+                }
+            } else {
+                $n->{$k} = $v;
+            }
         }
         return $n;
     }
@@ -100,15 +84,11 @@ class ServiceRouteHTTPMatchQueryParam extends AbstractModel
         foreach ($this->_getDynamicFields() as $k => $v) {
             $out->{$k} = $v;
         }
-        $out->Name = $this->Name;
-        if ($this->Present) {
-            $out->Present = $this->Present;
+        if ('' !== $this->Name) {
+            $out->Name = $this->Name;
         }
-        if ('' !== $this->Exact) {
-            $out->Exact = $this->Exact;
-        }
-        if ('' !== $this->Regex) {
-            $out->Regex = $this->Regex;
+        if ([] !== $this->VerifyClaims) {
+            $out->VerifyClaims = $this->VerifyClaims;
         }
         return $out;
     }

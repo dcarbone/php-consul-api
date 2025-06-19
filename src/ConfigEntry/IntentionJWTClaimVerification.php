@@ -21,38 +21,48 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\SimpleJsonUnserializeTrait;
 
-class ServiceRouteMatch extends AbstractModel
+class IntentionJWTClaimVerification extends AbstractModel
 {
-    public null|ServiceRouteHTTPMatch $HTTP = null;
+    use SimpleJsonUnserializeTrait;
 
-    public function __construct(null|ServiceRouteHTTPMatch $HTTP)
+    /** @var array<string> */
+    public array $Path;
+    public string $Value;
+
+    /**
+     * @param array<string> $Path
+     */
+    public function __construct(array $Path = [], string $Value = '')
     {
-        $this->HTTP = $HTTP;
+        $this->setPath(...$Path);
+        $this->Value = $Value;
     }
 
-    public function getHTTP(): null|ServiceRouteHTTPMatch
+    /**
+     * @return array<string>
+     */
+    public function getPath(): array
     {
-        return $this->HTTP;
+        return $this->Path;
     }
 
-    public function setHTTP(null|ServiceRouteHTTPMatch $HTTP): self
+    public function setPath(string ...$Path): self
     {
-        $this->HTTP = $HTTP;
+        $this->Path = $Path;
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    public function getValue(): string
     {
-        $n = $into ?? new self(null);
-        foreach ($decoded as $k => $v) {
-            if ('HTTP' === $k) {
-                $n->HTTP = ServiceRouteHTTPMatch::jsonUnserialize($v);
-            } else {
-                $n->{$k} = $v;
-            }
-        }
-        return $n;
+        return $this->Value;
+    }
+
+    public function setValue(string $Value): self
+    {
+        $this->Value = $Value;
+        return $this;
     }
 
     public function jsonSerialize(): \stdClass
@@ -61,8 +71,11 @@ class ServiceRouteMatch extends AbstractModel
         foreach ($this->_getDynamicFields() as $k => $v) {
             $out->{$k} = $v;
         }
-        if (null !== $this->HTTP) {
-            $out->HTTP = $this->HTTP;
+        if ([] !== $this->Path) {
+            $out->Path = $this->Path;
+        }
+        if ('' !== $this->Value) {
+            $out->Value = $this->Value;
         }
         return $out;
     }

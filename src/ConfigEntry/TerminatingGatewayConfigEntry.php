@@ -146,7 +146,7 @@ class TerminatingGatewayConfigEntry extends AbstractModel implements ConfigEntry
             $out->Services = $this->Services;
         }
         if (null !== $this->Meta) {
-            $out->meta = $this->Meta;
+            $out->Meta = $this->Meta;
         }
         $out->CreateIndex = $this->CreateIndex;
         $out->ModifyIndex = $this->ModifyIndex;

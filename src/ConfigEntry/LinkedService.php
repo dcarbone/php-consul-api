@@ -143,16 +143,16 @@ class LinkedService extends AbstractModel
             $out->Name = $this->Name;
         }
         if ('' !== $this->CAFile) {
-            $out->ca_file = $this->CAFile;
+            $out->CAFile = $this->CAFile;
         }
         if ('' !== $this->CertFile) {
-            $out->cert_file = $this->CertFile;
+            $out->CertFile = $this->CertFile;
         }
         if ('' !== $this->KeyFile) {
-            $out->key_file = $this->KeyFile;
+            $out->KeyFile = $this->KeyFile;
         }
         if ('' !== $this->SNI) {
-            $out->sni = $this->SNI;
+            $out->SNI = $this->SNI;
         }
         return $out;
     }
