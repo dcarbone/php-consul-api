@@ -23,6 +23,7 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\Go\Time;
 use stdClass;
+
 use function DCarbone\PHPConsulAPI\_enc_obj_if_valued;
 
 class ServiceResolverConfigEntry extends AbstractModel implements ConfigEntry
@@ -224,18 +225,18 @@ class ServiceResolverConfigEntry extends AbstractModel implements ConfigEntry
     public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
     {
         $n = $into ?? new self();
-        foreach($decoded as $k => $v) {
+        foreach ($decoded as $k => $v) {
             if ('default_subset' === $k) {
                 $n->DefaultSubset = $v;
             } elseif ('Subsets' === $k) {
-                foreach($v as $k => $ss) {
-                    $n->setSubsetKey($k, ServiceResolverSubset::jsonUnserialize($ss));
+                foreach ($v as $kk => $vv) {
+                    $n->setSubsetKey($kk, ServiceResolverSubset::jsonUnserialize($vv));
                 }
-            } else if ('Redirect' === $k) {
+            } elseif ('Redirect' === $k) {
                 $n->Redirect = ServiceResolverRedirect::jsonUnserialize($v);
             } elseif ('Failover' === $k) {
-                foreach($v as $k => $fo) {
-                    $n->setFailoverKey($k, ServiceResolverFailover::jsonUnserialize($fo));
+                foreach ($v as $kk => $vv) {
+                    $n->setFailoverKey($kk, ServiceResolverFailover::jsonUnserialize($vv));
                 }
             } elseif ('ConnectTimeout' === $k || 'connect_timeout' === $k) {
                 $n->ConnectTimeout = Time::ParseDuration($v);
@@ -255,7 +256,7 @@ class ServiceResolverConfigEntry extends AbstractModel implements ConfigEntry
     public function jsonSerialize(): \stdClass
     {
         $out = new stdClass();
-        foreach($this->_getDynamicFields() as $k => $v) {
+        foreach ($this->_getDynamicFields() as $k => $v) {
             $out->{$k} = $v;
         }
         $out->Kind = $this->Kind;
@@ -286,7 +287,9 @@ class ServiceResolverConfigEntry extends AbstractModel implements ConfigEntry
         if (null !== $this->LoadBalancer) {
             $out->LoadBalancer = $this->LoadBalancer;
         }
-        _enc_obj_if_valued($out, 'Meta', $this->Meta);
+        if (null !== $this->Meta) {
+            $out->Meta = $this->Meta;
+        }
         $out->CreateIndex = $this->CreateIndex;
         $out->ModifyIndex = $this->ModifyIndex;
         return $out;

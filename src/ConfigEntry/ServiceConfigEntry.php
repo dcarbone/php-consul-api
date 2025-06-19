@@ -21,6 +21,7 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+
 use function DCarbone\PHPConsulAPI\_enc_obj_if_valued;
 
 class ServiceConfigEntry extends AbstractModel implements ConfigEntry
@@ -400,7 +401,9 @@ class ServiceConfigEntry extends AbstractModel implements ConfigEntry
         if ([] !== $this->EnvoyExtensions) {
             $out->EnvoyExtensions = $this->EnvoyExtensions;
         }
-        _enc_obj_if_valued($out, 'Meta', $this->Meta);
+        if (null !== $this->Meta) {
+            $out->Meta = $this->Meta;
+        }
         $out->CreateIndex = $this->CreateIndex;
         $out->ModifyIndex = $this->ModifyIndex;
         return $out;

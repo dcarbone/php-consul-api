@@ -21,45 +21,40 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+
 use function DCarbone\PHPConsulAPI\_enc_obj_if_valued;
 
-class IngressGatewayConfigEntry extends AbstractModel implements ConfigEntry
+class TerminatingGatewayConfigEntry extends AbstractModel implements ConfigEntry
 {
     use ConfigEntryTrait;
 
     public string $Kind;
     public string $Name;
+    /** @var array<\DCarbone\PHPConsulAPI\ConfigEntry\LinkedService> */
+    public array $Services;
     public string $Partition;
-    public GatewayTLSConfig $TLS;
-    /** @var array<\DCarbone\PHPConsulAPI\ConfigEntry\IngressListener> */
-    public array $Listeners;
-    public null|IngressServiceConfig $Defaults;
 
     /**
-     * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\IngressListener> $Listeners
+     * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\LinkedService> $Services
      */
     public function __construct(
         string $Kind = '',
         string $Name = '',
-        string $Partition = '',
-        string $Namespace = '',
-        null|GatewayTLSConfig $TLS = null,
-        array $Listeners = [],
+        array $Services = [],
         null|\stdClass $Meta = null,
-        null|IngressServiceConfig $Defaults = null,
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
+        string $Partition = '',
+        string $Namespace = '',
     ) {
         $this->Kind = $Kind;
         $this->Name = $Name;
-        $this->Partition = $Partition;
-        $this->Namespace = $Namespace;
-        $this->TLS = $TLS ?? new GatewayTLSConfig();
-        $this->setListeners(...$Listeners);
+        $this->setServices(...$Services);
         $this->Meta = $Meta;
-        $this->Defaults = $Defaults;
         $this->CreateIndex = $CreateIndex;
         $this->ModifyIndex = $ModifyIndex;
+        $this->Partition = $Partition;
+        $this->Namespace = $Namespace;
     }
 
     public function getKind(): string
@@ -84,6 +79,23 @@ class IngressGatewayConfigEntry extends AbstractModel implements ConfigEntry
         return $this;
     }
 
+    /**
+     * @return array<\DCarbone\PHPConsulAPI\ConfigEntry\LinkedService>
+     */
+    public function getServices(): array
+    {
+        return $this->Services;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\ConfigEntry\LinkedService ...$Services
+     */
+    public function setServices(LinkedService ...$Services): self
+    {
+        $this->Services = $Services;
+        return $this;
+    }
+
     public function getPartition(): string
     {
         return $this->Partition;
@@ -95,42 +107,14 @@ class IngressGatewayConfigEntry extends AbstractModel implements ConfigEntry
         return $this;
     }
 
-    public function getTLS(): GatewayTLSConfig
+    public function getNamespace(): string
     {
-        return $this->TLS;
+        return $this->Namespace;
     }
 
-    public function setTLS(GatewayTLSConfig $TLS): self
+    public function setNamespace(string $Namespace): self
     {
-        $this->TLS = $TLS;
-        return $this;
-    }
-
-    /**
-     * @return array<\DCarbone\PHPConsulAPI\ConfigEntry\IngressListener>
-     */
-    public function getListeners(): array
-    {
-        return $this->Listeners;
-    }
-
-    /**
-     * @param \DCarbone\PHPConsulAPI\ConfigEntry\IngressListener ...$Listeners
-     */
-    public function setListeners(IngressListener ...$Listeners): self
-    {
-        $this->Listeners = $Listeners;
-        return $this;
-    }
-
-    public function getDefaults(): null|IngressServiceConfig
-    {
-        return $this->Defaults;
-    }
-
-    public function setDefaults(null|IngressServiceConfig $Defaults): self
-    {
-        $this->Defaults = $Defaults;
+        $this->Namespace = $Namespace;
         return $this;
     }
 
@@ -138,15 +122,11 @@ class IngressGatewayConfigEntry extends AbstractModel implements ConfigEntry
     {
         $n = $into ?? new self();
         foreach ($decoded as $k => $v) {
-            if ('TLS' === $k) {
-                $n->TLS = GatewayTLSConfig::jsonUnserialize($v);
-            } elseif ('Listeners' === $k) {
-                $n->Listeners = [];
+            if ('Services' === $k) {
+                $n->Services = [];
                 foreach ($v as $vv) {
-                    $n->Listeners[] = IngressListener::jsonUnserialize($vv);
+                    $n->Services[] = LinkedService::jsonUnserialize($vv);
                 }
-            } elseif ('Defaults' === $k) {
-                $n->Defaults = null === $v ? null : IngressServiceConfig::jsonUnserialize($v);
             } else {
                 $n->{$k} = $v;
             }
@@ -162,22 +142,20 @@ class IngressGatewayConfigEntry extends AbstractModel implements ConfigEntry
         }
         $out->Kind = $this->Kind;
         $out->Name = $this->Name;
+        if ([] !== $this->Services) {
+            $out->Services = $this->Services;
+        }
+        if (null !== $this->Meta) {
+            $out->meta = $this->Meta;
+        }
+        $out->CreateIndex = $this->CreateIndex;
+        $out->ModifyIndex = $this->ModifyIndex;
         if ('' !== $this->Partition) {
             $out->Partition = $this->Partition;
         }
         if ('' !== $this->Namespace) {
             $out->Namespace = $this->Namespace;
         }
-        $out->TLS = $this->TLS;
-        $out->Listeners = $this->Listeners;
-        if (null !== $this->Meta) {
-            $out->Meta = $this->Meta;
-        }
-        if (null !== $this->Defaults) {
-            $out->Defaults = $this->Defaults->jsonSerialize();
-        }
-        $out->CreateIndex = $this->CreateIndex;
-        $out->ModifyIndex = $this->ModifyIndex;
         return $out;
     }
 }

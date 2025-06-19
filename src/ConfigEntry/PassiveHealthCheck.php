@@ -22,7 +22,6 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class PassiveHealthCheck extends AbstractModel
 {

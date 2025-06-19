@@ -63,6 +63,8 @@ function MakeConfigEntry(string $kind, string $name): ConfigEntry\ConfigEntry
             return new ConfigEntry\ServiceResolverConfigEntry(kind: $kind, name: $name);
         case Consul::IngressGateway:
             return new ConfigEntry\IngressGatewayConfigEntry(kind: $kind, name: $name);
+        case Consul::TerminatingGateway:
+            return new ConfigEntry\TerminatingGatewayConfigEntry(kind: $kind, name: $name);
 
 
         default:
