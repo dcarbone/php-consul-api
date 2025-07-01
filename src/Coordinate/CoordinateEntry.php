@@ -21,23 +21,32 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class CoordinateEntry extends AbstractModel
 {
-    protected const FIELDS = [
-        self::FIELD_COORDINATE => [
-            Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS    => Coordinate::class,
-            Transcoding::FIELD_NULLABLE => true,
-        ],
-    ];
+    public string $Node;
+    public string $Segment;
+    public string $Partition;
+    public null|Coordinate $Coord;
 
-    private const FIELD_COORDINATE = 'Coord';
-
-    public string $Node = '';
-    public string $Segment = '';
-    public ?Coordinate $Coord = null;
+    /**
+     * @param array<string,mixed>|null $data
+     */
+    public function __construct(
+        null|array $data = null, // Deprecated, will be removed.
+        string $Node = '',
+        string $Segment = '',
+        string $Partition = '',
+        null|Coordinate $Coord = null,
+    ) {
+        $this->Node = $Node;
+        $this->Segment = $Segment;
+        $this->Partition = $Partition;
+        $this->Coord = $Coord;
+        if (null !== $data && [] !== $data) {
+            self::jsonUnserialize((object)($data), $this);
+        }
+    }
 
     public function getNode(): string
     {
@@ -61,14 +70,53 @@ class CoordinateEntry extends AbstractModel
         return $this;
     }
 
-    public function getCoord(): ?Coordinate
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
+    public function getCoord(): null|Coordinate
     {
         return $this->Coord;
     }
 
-    public function setCoord(?Coordinate $Coord): self
+    public function setCoord(null|Coordinate $Coord): self
     {
         $this->Coord = $Coord;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null | self $into = null): self
+    {
+        $n = $into ?? new self();
+        foreach($decoded as $k => $v) {
+            if ('Coord' === $k) {
+                $n->Coord = Coordinate::jsonUnserialize($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->Node = $this->Node;
+        $out->Segment = $this->Segment;
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
+        }
+        $out->Coord = $this->Coord;
+        return $out;
     }
 }

@@ -21,23 +21,31 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class CoordinateDatacenterMap extends AbstractModel
 {
-    protected const FIELDS = [
-        self::FIELD_COORDINATES => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => Coordinate::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-        ],
-    ];
-
-    private const FIELD_COORDINATES = 'Coordinates';
-
     public string $Datacenter = '';
     public string $AreaID = '';
-    public array $Coordinates = [];
+    /** @var array<\DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry> */
+    public array $Coordinates;
+
+    /**
+     * @param array<string,mixed>|null $data
+     * @param array<\DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry> $Coordinates
+     */
+    public function __construct(
+        null|array $data = null, // Deprecated, will be removed.
+        string $Datacenter = '',
+        string $AreaID = '',
+        array $Coordinates = [],
+    ) {
+        $this->Datacenter = $Datacenter;
+        $this->AreaID = $AreaID;
+        $this->setCoordinates(...$Coordinates);
+        if (null !== $data && [] !== $data) {
+            self::jsonUnserialize((object)($data), $this);
+        }
+    }
 
     public function getDatacenter(): string
     {
@@ -49,8 +57,45 @@ class CoordinateDatacenterMap extends AbstractModel
         return $this->AreaID;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry[]
+     */
     public function getCoordinates(): array
     {
         return $this->Coordinates;
+    }
+
+    public function setCoordinates(CoordinateEntry ...$Coordinates): self
+    {
+        $this->Coordinates = $Coordinates;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    {
+        $n = $into ?? new self();
+        foreach ($decoded as $k => $v) {
+            if ('Coordinates' === $k) {
+                $n->Coordinates = [];
+                foreach ($v as $vv) {
+                    $n->Coordinates[] = CoordinateEntry::jsonUnserialize($vv);
+                }
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        $out->Datacenter = $this->Datacenter;
+        $out->AreaID = $this->AreaID;
+        $out->Coordinates = $this->Coordinates;
+        return $out;
     }
 }
