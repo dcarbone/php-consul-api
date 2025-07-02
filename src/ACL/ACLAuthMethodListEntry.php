@@ -41,7 +41,6 @@ class ACLAuthMethodListEntry extends AbstractModel
     public string $Namespace;
 
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         string $Name = '',
         string $Type = '',
         string $DisplayName = '',
@@ -61,10 +60,7 @@ class ACLAuthMethodListEntry extends AbstractModel
         $this->CreateIndex = $CreateIndex;
         $this->ModifyIndex = $ModifyIndex;
         $this->Namespace = $Namespace;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getName(): string
     {
@@ -178,9 +174,9 @@ class ACLAuthMethodListEntry extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if (null === $v) {
                 continue;
@@ -196,10 +192,7 @@ class ACLAuthMethodListEntry extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->Name = $this->Name;
         $out->Type = $this->Type;
         if ('' !== $this->DisplayName) {

@@ -28,16 +28,12 @@ class ACLAuthMethodNamespaceRule extends AbstractModel
     public string $BindNamespace;
 
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         string $Selector = '',
         string $BindNamespace = '',
     ) {
         $this->Selector = $Selector;
         $this->BindNamespace = $BindNamespace;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getSelector(): string
     {
@@ -61,9 +57,9 @@ class ACLAuthMethodNamespaceRule extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             $n->{$k} = $v;
         }
@@ -72,10 +68,7 @@ class ACLAuthMethodNamespaceRule extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         if ('' !== $this->Selector) {
             $out->Selector = $this->Selector;
         }

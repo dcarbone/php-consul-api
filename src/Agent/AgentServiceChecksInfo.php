@@ -30,7 +30,6 @@ class AgentServiceChecksInfo extends AbstractModel
     public HealthChecks $Checks;
 
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         string $AggregatedStatus = '',
         null|AgentService $Service = null,
         null|HealthChecks $Checks = null,
@@ -38,10 +37,7 @@ class AgentServiceChecksInfo extends AbstractModel
         $this->AggregatedStatus = $AggregatedStatus;
         $this->Service = $Service;
         $this->Checks = $Checks ?? new HealthChecks();
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getAggregatedStatus(): string
     {
@@ -76,9 +72,9 @@ class AgentServiceChecksInfo extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('Checks' === $k) {
                 $n->Checks = HealthChecks::jsonUnserialize($v);
@@ -93,10 +89,7 @@ class AgentServiceChecksInfo extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->AggregatedStatus = $this->AggregatedStatus;
         $out->Service = $this->Service;
         $out->Checks = $this->Checks;

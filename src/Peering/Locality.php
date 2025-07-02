@@ -66,10 +66,7 @@ class Locality extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->Region = $this->Region;
         $out->Zone = $this->Zone;
         return $out;

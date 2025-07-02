@@ -49,10 +49,7 @@ class PassiveHealthCheck extends AbstractModel
         $this->EnforcingConsecutive5xx = $EnforcingConsecutive5xx;
         $this->MaxEjectionPercent = $MaxEjectionPercent;
         $this->BaseEjectionTime = Time::Duration($BaseEjectionTime);
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getInterval(): Time\Duration
     {
@@ -109,9 +106,9 @@ class PassiveHealthCheck extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('Interval' === $k) {
                 $n->Interval = Time::ParseDuration($v);
@@ -132,10 +129,7 @@ class PassiveHealthCheck extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         if ($this->Interval->Nanoseconds() !== 0) {
             $out->Interval = $this->Interval;
         }

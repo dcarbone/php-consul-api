@@ -30,21 +30,16 @@ class CatalogNodeServiceList extends AbstractModel
     public array $Services;
 
     /**
-     * @param array<string, mixed>|null $data
      * @param \DCarbone\PHPConsulAPI\Catalog\Node|null $Node
      * @param array<\DCarbone\PHPConsulAPI\Agent\AgentService> $Services
      */
     public function __construct(
-        null|array $data = null,
         null|Node $Node = null,
         array $Services = []
     ) {
         $this->Node = $Node;
         $this->setServices(...$Services);
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getNode(): null|Node
     {
@@ -71,9 +66,9 @@ class CatalogNodeServiceList extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('Node' === $k) {
                 $n->Node = null === $v ? null : Node::jsonUnserialize($v);
@@ -91,10 +86,7 @@ class CatalogNodeServiceList extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->Node = $this->Node;
         $out->Services = $this->Services;
         return $out;

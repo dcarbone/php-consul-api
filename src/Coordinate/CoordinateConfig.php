@@ -203,10 +203,7 @@ class CoordinateConfig extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->Dimensionality = $this->Dimensionality;
         $out->VivaldiErrorMax = $this->VivaldiErrorMax;
         $out->VivaldiCE = $this->VivaldiCE;

@@ -36,7 +36,6 @@ class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
     public Time\Duration $DeregisterCriticalServiceAfterDuration;
 
     public function __construct(
-        null|array $data = null,
         string $HTTP = '',
         iterable $Header = [],
         string $Method = '',
@@ -163,9 +162,9 @@ class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('Interval' === $k || 'IntervalDuration' === $k) {
                 $n->IntervalDuration = Time::Duration($v);
@@ -182,10 +181,7 @@ class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->HTTP = $this->HTTP;
         $out->Header = $this->Header;
         $out->Method = $this->Method;

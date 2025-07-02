@@ -34,10 +34,7 @@ class TransparentProxyConfig extends AbstractModel
     ) {
         $this->OutboundListenerPort = $OutboundListenerPort;
         $this->DialedDirectly = $DialedDirectly;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getOutboundListenerPort(): int
     {
@@ -61,9 +58,9 @@ class TransparentProxyConfig extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             $n->{$k} = $v;
         }
@@ -72,10 +69,7 @@ class TransparentProxyConfig extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         if (0 !== $this->OutboundListenerPort) {
             $out->OutboundListenerPort = $this->OutboundListenerPort;
         }

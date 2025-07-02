@@ -55,9 +55,9 @@ class RingHashConfig extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('minimum_ring_size' === $k) {
                 $n->MinimumRingSize = $v;
@@ -72,10 +72,7 @@ class RingHashConfig extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         if (0 !== $this->MinimumRingSize) {
             $out->MinimumRingSize = $this->MinimumRingSize;
         }

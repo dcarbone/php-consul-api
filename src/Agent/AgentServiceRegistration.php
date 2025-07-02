@@ -46,7 +46,6 @@ class AgentServiceRegistration extends AbstractModel
     public null|Locality $Locality;
 
     /**
-     * @param array<string, mixed>|null $data
      * @param string|\DCarbone\PHPConsulAPI\Agent\ServiceKind $Kind
      * @param string $ID
      * @param string $Name
@@ -66,7 +65,6 @@ class AgentServiceRegistration extends AbstractModel
      * @param \DCarbone\PHPConsulAPI\Peering\Locality|null $Locality
      */
     public function __construct(
-        null|array $data = null,
         string|ServiceKind $Kind = ServiceKind::Typical,
         string $ID = '',
         string $Name = '',
@@ -102,10 +100,7 @@ class AgentServiceRegistration extends AbstractModel
         $this->Namespace = $Namespace;
         $this->Partition = $Partition;
         $this->Locality = $Locality;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getKind(): ServiceKind
     {
@@ -304,9 +299,9 @@ class AgentServiceRegistration extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('Kind' === $k) {
                 $n->setKind($v);
@@ -335,10 +330,7 @@ class AgentServiceRegistration extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         if ($this->Kind !== ServiceKind::Typical) {
             $out->Kind = $this->Kind;
         }

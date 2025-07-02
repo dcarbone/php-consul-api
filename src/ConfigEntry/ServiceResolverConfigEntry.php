@@ -222,9 +222,9 @@ class ServiceResolverConfigEntry extends AbstractModel implements ConfigEntry
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('default_subset' === $k) {
                 $n->DefaultSubset = $v;

@@ -51,7 +51,6 @@ class ACLTokenListEntry extends AbstractModel
     public string $AuthMethodNamespace;
 
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
         string $AccessorID = '',
@@ -91,10 +90,7 @@ class ACLTokenListEntry extends AbstractModel
         $this->Namespace = $Namespace;
         $this->Partition = $Partition;
         $this->AuthMethodNamespace = $AuthMethodNamespace;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getCreateIndex(): int
     {
@@ -320,9 +316,9 @@ class ACLTokenListEntry extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('Policies' === $k) {
                 foreach ($v as $vv) {
@@ -357,10 +353,7 @@ class ACLTokenListEntry extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->CreateIndex = $this->CreateIndex;
         $out->ModifyIndex = $this->ModifyIndex;
         $out->AccessorID = $this->AccessorID;

@@ -42,9 +42,9 @@ class LeastRequestConfig extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('choice_count' === $k) {
                 $n->ChoiceCount = $v;

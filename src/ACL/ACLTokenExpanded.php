@@ -36,8 +36,36 @@ class ACLTokenExpanded extends ACLToken
     public string $AgentACLDownPolicy;
     public string $ResolvedByAgent;
 
+    /**
+     * @param iterable $ExpandedPolicies
+     * @param iterable $ExpandedRoles
+     * @param iterable $NamespaceDefaultPolicyIDs
+     * @param iterable $NamespaceDefaultRoleIDs
+     * @param string $AgentACLDefaultPolicy
+     * @param string $AgentACLDownPolicy
+     * @param string $ResolvedByAgent
+     * @param int $CreateIndex
+     * @param int $ModifyIndex
+     * @param string $AccessorID
+     * @param string $SecretID
+     * @param string $Description
+     * @param iterable $Policies
+     * @param iterable $Roles
+     * @param iterable $ServiceIdentities
+     * @param iterable $NodeIdentities
+     * @param iterable $TemplatePolicies
+     * @param bool $Local
+     * @param string $AuthMethod
+     * @param \DateInterval|float|int|string|\DCarbone\Go\Time\Duration|null $ExpirationTTL
+     * @param \DCarbone\Go\Time\Time|null $ExpirationTime
+     * @param \DCarbone\Go\Time\Time|null $CreateTime
+     * @param string $Hash
+     * @param string $Namespace
+     * @param string $Rules
+     * @param string $Partition
+     * @param string $AuthMethodNamespace
+     */
     public function __construct(
-        null|array $data = null,
         iterable $ExpandedPolicies = [],
         iterable $ExpandedRoles = [],
         iterable $NamespaceDefaultPolicyIDs = [],
@@ -95,10 +123,7 @@ class ACLTokenExpanded extends ACLToken
         $this->AgentACLDefaultPolicy = $AgentACLDefaultPolicy;
         $this->AgentACLDownPolicy = $AgentACLDownPolicy;
         $this->ResolvedByAgent = $ResolvedByAgent;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     /**
      * @return \DCarbone\PHPConsulAPI\ACL\ACLPolicy[]
@@ -191,7 +216,7 @@ class ACLTokenExpanded extends ACLToken
 
     public static function jsonUnserialize(\stdClass $decoded, null|ACLToken $into = null): static
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ($n->_jsonUnserializeField($k, $v, $n)) {
                 continue;

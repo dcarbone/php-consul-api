@@ -29,20 +29,15 @@ class ExposeConfig extends AbstractModel
     public array $Paths;
 
     /**
-     * @param array<string,mixed>|null $data
      * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\ExposePath> $Paths
      */
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         bool $Checks = false,
         array $Paths = [],
     ) {
         $this->Checks = $Checks;
         $this->setPaths(...$Paths);
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function isChecks(): bool
     {
@@ -86,10 +81,7 @@ class ExposeConfig extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         if ($this->Checks) {
             $out->Checks = true;
         }

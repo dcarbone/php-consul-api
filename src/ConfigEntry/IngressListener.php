@@ -93,9 +93,9 @@ class IngressListener extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('Services' === $k) {
                 $n->Services = [];
@@ -113,10 +113,7 @@ class IngressListener extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->Port = $this->Port;
         $out->Protocol = $this->Protocol;
         $out->Services = $this->Services;

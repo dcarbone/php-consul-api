@@ -28,16 +28,12 @@ class AgentCheckUpdate extends AbstractModel
     public string $Output;
 
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         string $Status = '',
         string $Output = ''
     ) {
         $this->Status = $Status;
         $this->Output = $Output;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getStatus(): string
     {
@@ -61,9 +57,9 @@ class AgentCheckUpdate extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             $n->{$k} = $v;
         }
@@ -72,10 +68,7 @@ class AgentCheckUpdate extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->Status = $this->Status;
         $out->Output = $this->Output;
         return $out;

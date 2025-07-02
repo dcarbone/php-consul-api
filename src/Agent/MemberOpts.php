@@ -29,7 +29,6 @@ class MemberOpts extends AbstractModel
     public string $Filter;
 
     public function __construct(
-        null|array $data = null,
         bool $WAN = false,
         string $Segment = '',
         string $Filter = '',
@@ -37,10 +36,7 @@ class MemberOpts extends AbstractModel
         $this->WAN = $WAN;
         $this->Segment = $Segment;
         $this->Filter = $Filter;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function isWAN(): bool
     {
@@ -64,9 +60,9 @@ class MemberOpts extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             $n->{$k} = $v;
         }
@@ -75,10 +71,7 @@ class MemberOpts extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         if ($this->WAN) {
             $out->WAN = $this->WAN;
         }

@@ -57,9 +57,9 @@ class ServiceRoute extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('Match' === $k) {
                 $n->Match = null === $v ? null : ServiceRouteMatch::jsonUnserialize($v);
@@ -74,10 +74,7 @@ class ServiceRoute extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         if (null !== $this->Match) {
             $out->Match = $this->Match;
         }

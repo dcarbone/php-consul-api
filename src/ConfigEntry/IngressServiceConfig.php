@@ -85,9 +85,9 @@ class IngressServiceConfig extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('PassiveHealthCheck' === $k || 'passive_health_check' === $k) {
                 $n->PassiveHealthCheck = null === $v ? null : PassiveHealthCheck::jsonUnserialize($v);
@@ -100,10 +100,7 @@ class IngressServiceConfig extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->MaxConnections = $this->MaxConnections;
         $out->MaxPendingRequests = $this->MaxPendingRequests;
         $out->MaxConcurrentRequests = $this->MaxConcurrentRequests;

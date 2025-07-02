@@ -42,7 +42,7 @@ class ServiceRouteMatch extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = $into ?? new self(null);
         foreach ($decoded as $k => $v) {
@@ -57,10 +57,7 @@ class ServiceRouteMatch extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         if (null !== $this->HTTP) {
             $out->HTTP = $this->HTTP;
         }

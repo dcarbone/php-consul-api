@@ -34,7 +34,6 @@ class EnvoyExtension extends AbstractModel
      * @param array<string,mixed>|null $data
      */
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         string $Name = '',
         bool $Required = false,
         null|\stdClass $Arguments = null,
@@ -46,10 +45,7 @@ class EnvoyExtension extends AbstractModel
         $this->Arguments = $Arguments;
         $this->ConsulVersion = $ConsulVersion;
         $this->EnvoyVersion = $EnvoyVersion;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getName(): string
     {
@@ -106,9 +102,9 @@ class EnvoyExtension extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             $n->{$k} = $v;
         }
@@ -117,10 +113,7 @@ class EnvoyExtension extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->Name = $this->Name;
         $out->Required = $this->Required;
         $out->Arguments = $this->Arguments;

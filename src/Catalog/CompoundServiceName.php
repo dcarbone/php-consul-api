@@ -29,7 +29,6 @@ class CompoundServiceName extends AbstractModel
     public string $Partition;
 
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         string $Name = '',
         string $Namespace = '',
         string $Partition = '',
@@ -38,10 +37,7 @@ class CompoundServiceName extends AbstractModel
         $this->Name = $Name;
         $this->Namespace = $Namespace;
         $this->Partition = $Partition;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getName(): string
     {
@@ -76,9 +72,9 @@ class CompoundServiceName extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             $n->{$k} = $v;
         }
@@ -87,10 +83,7 @@ class CompoundServiceName extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->Name = $this->Name;
         if ('' !== $this->Namespace) {
             $out->Namespace = $this->Namespace;

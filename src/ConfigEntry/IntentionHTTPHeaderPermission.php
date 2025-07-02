@@ -132,10 +132,7 @@ class IntentionHTTPHeaderPermission extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->Name = $this->Name;
         if ($this->Present) {
             $out->Present = $this->Present;

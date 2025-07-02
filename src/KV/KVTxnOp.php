@@ -33,7 +33,6 @@ class KVTxnOp extends AbstractModel
 
     /**
      * KVTxnOp constructor.
-     * @param array $data
      * @param bool $_decodeValue
      */
     public function __construct(array $data = [], bool $_decodeValue = false)

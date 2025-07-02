@@ -123,9 +123,9 @@ class HealthChecks extends AbstractModel implements \IteratorAggregate, \Countab
     /**
      * @param array<\stdClass> $decoded
      */
-    public static function jsonUnserialize(array $decoded, null|self $into = null): static
+    public static function jsonUnserialize(array $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $d) {
             $n->Checks[] = HealthCheck::jsonUnserialize($d);
         }

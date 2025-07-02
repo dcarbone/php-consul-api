@@ -35,7 +35,6 @@ class ACLReplicationStatus extends AbstractModel
     public Time\Time $LastError;
 
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         bool $Enabled = false,
         bool $Running = false,
         string $SourceDatacenter = '',
@@ -53,10 +52,7 @@ class ACLReplicationStatus extends AbstractModel
         $this->ReplicatedTokenIndex = $ReplicatedTokenIndex;
         $this->LastSuccess = $LastSuccess ?? Time::New();
         $this->LastError = $LastError ?? Time::New();
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function isEnabled(): bool
     {
@@ -98,9 +94,9 @@ class ACLReplicationStatus extends AbstractModel
         return $this->LastError;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('LastSuccess' === $k) {
                 $n->LastSuccess = Time\Time::createFromFormat(DATE_RFC3339, $v);
@@ -115,10 +111,7 @@ class ACLReplicationStatus extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->Enabled = $this->Enabled;
         $out->Running = $this->Running;
         $out->SourceDatacenter = $this->SourceDatacenter;

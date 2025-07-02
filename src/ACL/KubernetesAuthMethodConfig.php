@@ -29,7 +29,6 @@ class KubernetesAuthMethodConfig extends AbstractModel
     public string $ServiceAccountJWT;
 
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         string $Host = '',
         string $CACert = '',
         string $ServiceAccountJWT = ''
@@ -37,10 +36,7 @@ class KubernetesAuthMethodConfig extends AbstractModel
         $this->Host = $Host;
         $this->CACert = $CACert;
         $this->ServiceAccountJWT = $ServiceAccountJWT;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getHost(): string
     {
@@ -90,9 +86,9 @@ class KubernetesAuthMethodConfig extends AbstractModel
         ];
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             $n->{$k} = $v;
         }
@@ -101,10 +97,7 @@ class KubernetesAuthMethodConfig extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         if ('' !== $this->Host) {
             $out->Host = $this->Host;
         }

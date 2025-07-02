@@ -51,7 +51,6 @@ class AgentServiceCheck extends AbstractModel
     public string $DeregisterCriticalServiceAfter;
 
     /**
-     * @param array<string, mixed>|null $data // Deprecated, will be removed.
      * @param string $CheckID
      * @param string $Name
      * @param iterable<string> $ScriptArgs
@@ -78,7 +77,6 @@ class AgentServiceCheck extends AbstractModel
      * @param string $DeregisterCriticalServiceAfter
      */
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         string $CheckID = '',
         string $Name = '',
         iterable $ScriptArgs = [],
@@ -129,10 +127,7 @@ class AgentServiceCheck extends AbstractModel
         $this->SuccessBeforePassing = $SuccessBeforePassing;
         $this->FailuresBeforeCritical = $FailuresBeforeCritical;
         $this->DeregisterCriticalServiceAfter = $DeregisterCriticalServiceAfter;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getCheckID(): string
     {
@@ -401,9 +396,9 @@ class AgentServiceCheck extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             $n->{$k} = $v;
         }
@@ -412,10 +407,7 @@ class AgentServiceCheck extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         if ('' !== $this->CheckID) {
             $out->CheckID = $this->CheckID;
         }

@@ -28,7 +28,6 @@ class ACLToken extends AbstractModel
     use ACLTokenFields;
 
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
         string $AccessorID = '',
@@ -70,14 +69,11 @@ class ACLToken extends AbstractModel
         $this->Rules = $Rules;
         $this->Partition = $Partition;
         $this->AuthMethodNamespace = $AuthMethodNamespace;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if (!$n->_jsonUnserializeField($k, $v, $n)) {
                 $n->{$k} = $v;
@@ -88,10 +84,7 @@ class ACLToken extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $this->_jsonSerialize($out);
         return $out;
     }

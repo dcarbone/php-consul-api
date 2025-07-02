@@ -55,4 +55,13 @@ abstract class AbstractModel implements \JsonSerializable
     {
         return static::class;
     }
+
+    protected function _startJsonSerialize(): \stdClass
+    {
+        $out = new \stdClass();
+        foreach ($this->_getDynamicFields() as $k => $v) {
+            $out->{$k} = $v;
+        }
+        return $out;
+    }
 }

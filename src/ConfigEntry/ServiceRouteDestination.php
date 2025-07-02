@@ -224,9 +224,9 @@ class ServiceRouteDestination extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('service_subset' === $k) {
                 $n->ServiceSubset = $v;
@@ -257,10 +257,7 @@ class ServiceRouteDestination extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         if ('' !== $this->Service) {
             $out->Service = $this->Service;
         }

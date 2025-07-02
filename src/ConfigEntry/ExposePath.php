@@ -34,7 +34,6 @@ class ExposePath extends AbstractModel
      * @param array<string,mixed>|null $data
      */
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         int $ListenerPort = 0,
         string $Path = '',
         int $LocalPathPort = 0,
@@ -46,10 +45,7 @@ class ExposePath extends AbstractModel
         $this->LocalPathPort = $LocalPathPort;
         $this->Protocol = $Protocol;
         $this->ParsedFromCheck = $ParsedFromCheck;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getListenerPort(): int
     {
@@ -123,10 +119,7 @@ class ExposePath extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         if (0 !== $this->ListenerPort) {
             $out->ListenerPort = $this->ListenerPort;
         }

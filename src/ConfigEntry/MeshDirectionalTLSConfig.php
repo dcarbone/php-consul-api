@@ -97,10 +97,7 @@ class MeshDirectionalTLSConfig extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         if ('' !== $this->TLSMinVersion) {
             $out->TLSMinVersion = $this->TLSMinVersion;
         }

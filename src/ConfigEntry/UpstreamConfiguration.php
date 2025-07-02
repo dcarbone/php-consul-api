@@ -21,153 +21,76 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class UpstreamConfiguration extends AbstractModel
 {
-    protected const FIELDS = [
-        self::FIELD_NAME                 => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_NAMESPACE            => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_ENJOY_LISTENER_JSON  => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_ENVOY_CLUSTER_JSON   => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_PROTOCOL             => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_CONNECT_TIMEOUT_MS   => Transcoding::OMITEMPTY_INTEGER_FIELD,
-        self::FIELD_LIMITS               => [
-            Transcoding::FIELD_TYPE      => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS     => UpstreamLimits::class,
-            Transcoding::FIELD_OMITEMPTY => true,
-            Transcoding::FIELD_NULLABLE  => true,
-        ],
-        self::FIELD_PASSIVE_HEALTH_CHECK => [
-            Transcoding::FIELD_TYPE      => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS     => PassiveHealthCheck::class,
-            Transcoding::FIELD_OMITEMPTY => true,
-            Transcoding::FIELD_NULLABLE  => true,
-        ],
-        self::FIELD_MESH_GATEWAY         => [
-            Transcoding::FIELD_TYPE      => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS     => MeshGatewayConfig::class,
-            Transcoding::FIELD_OMITEMPTY => true,
-            Transcoding::FIELD_NULLABLE  => true,
-        ],
-    ];
+    /** @var array<null|\DCarbone\PHPConsulAPI\ConfigEntry\UpstreamConfig> */
+    public array $Overrides;
+    public null|UpstreamConfig $Defaults;
 
-    private const FIELD_NAME                 = 'Name';
-    private const FIELD_NAMESPACE            = 'Namespace';
-    private const FIELD_ENJOY_LISTENER_JSON  = 'EnvoyListenerJSON';
-    private const FIELD_ENVOY_CLUSTER_JSON   = 'EnvoyClusterJSON';
-    private const FIELD_PROTOCOL             = 'Protocol';
-    private const FIELD_CONNECT_TIMEOUT_MS   = 'ConnectTimeoutMs';
-    private const FIELD_LIMITS               = 'Limits';
-    private const FIELD_PASSIVE_HEALTH_CHECK = 'PassiveHealthCheck';
-    private const FIELD_MESH_GATEWAY         = 'MeshGateway';
-
-    public string $Name;
-    public string $Namespace;
-    public string $EnvoyListenerJSON;
-    public string $EnvoyClusterJSON;
-    public string $Protocol;
-    public int $ConnectTimeoutMs;
-    public ?UpstreamLimits $UpstreamLimits = null;
-    public ?PassiveHealthCheck $PassiveHealthCheck = null;
-    public ?MeshGatewayConfig $MeshGateway = null;
-
-    public function getName(): string
-    {
-        return $this->Name;
+    /**
+     * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\UpstreamConfig> $Overrides
+     */
+    public function __construct(
+        array $Overrides = [],
+        null|UpstreamConfig $Defaults = null
+    ) {
+        $this->setOverrides(...$Overrides);
+        $this->Defaults = $Defaults;
     }
 
-    public function setName(string $Name): self
+    /**
+     * @return array<null|\DCarbone\PHPConsulAPI\ConfigEntry\UpstreamConfig>
+     */
+    public function getOverrides(): array
     {
-        $this->Name = $Name;
+        return $this->Overrides;
+    }
+
+    public function setOverrides(null|UpstreamConfig ...$Overrides): self
+    {
+        $this->Overrides = $Overrides;
         return $this;
     }
 
-    public function getNamespace(): string
+    public function getDefaults(): null|UpstreamConfig
     {
-        return $this->Namespace;
+        return $this->Defaults;
     }
 
-    public function setNamespace(string $Namespace): self
+    public function setDefaults(null|UpstreamConfig $Defaults): self
     {
-        $this->Namespace = $Namespace;
+        $this->Defaults = $Defaults;
         return $this;
     }
 
-    public function getEnvoyListenerJSON(): string
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        return $this->EnvoyListenerJSON;
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('Overrides' === $k) {
+                $n->Overrides = [];
+                foreach ($v as $vv) {
+                    $n->Overrides[] = UpstreamConfig::jsonUnserialize($vv);
+                }
+            } elseif ('Defaults' === $k) {
+                $n->Defaults = null === $v ? null : UpstreamConfig::jsonUnserialize($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
     }
 
-    public function setEnvoyListenerJSON(string $EnvoyListenerJSON): self
+    public function jsonSerialize(): \stdClass
     {
-        $this->EnvoyListenerJSON = $EnvoyListenerJSON;
-        return $this;
-    }
-
-    public function getEnvoyClusterJSON(): string
-    {
-        return $this->EnvoyClusterJSON;
-    }
-
-    public function setEnvoyClusterJSON(string $EnvoyClusterJSON): self
-    {
-        $this->EnvoyClusterJSON = $EnvoyClusterJSON;
-        return $this;
-    }
-
-    public function getProtocol(): string
-    {
-        return $this->Protocol;
-    }
-
-    public function setProtocol(string $Protocol): self
-    {
-        $this->Protocol = $Protocol;
-        return $this;
-    }
-
-    public function getConnectTimeoutMs(): int
-    {
-        return $this->ConnectTimeoutMs;
-    }
-
-    public function setConnectTimeoutMs(int $ConnectTimeoutMs): self
-    {
-        $this->ConnectTimeoutMs = $ConnectTimeoutMs;
-        return $this;
-    }
-
-    public function getUpstreamLimits(): ?UpstreamLimits
-    {
-        return $this->UpstreamLimits;
-    }
-
-    public function setUpstreamLimits(?UpstreamLimits $UpstreamLimits): self
-    {
-        $this->UpstreamLimits = $UpstreamLimits;
-        return $this;
-    }
-
-    public function getPassiveHealthCheck(): ?PassiveHealthCheck
-    {
-        return $this->PassiveHealthCheck;
-    }
-
-    public function setPassiveHealthCheck(?PassiveHealthCheck $PassiveHealthCheck): self
-    {
-        $this->PassiveHealthCheck = $PassiveHealthCheck;
-        return $this;
-    }
-
-    public function getMeshGateway(): ?MeshGatewayConfig
-    {
-        return $this->MeshGateway;
-    }
-
-    public function setMeshGateway(?MeshGatewayConfig $MeshGateway): self
-    {
-        $this->MeshGateway = $MeshGateway;
-        return $this;
+        $out = $this->_startJsonSerialize();
+        if ([] !== $this->Overrides) {
+            $out->Overrides = $this->Overrides;
+        }
+        if (null !== $this->Defaults) {
+            $out->Defaults = $this->Defaults;
+        }
+        return $out;
     }
 }

@@ -31,11 +31,7 @@ class WriteOptions implements RequestOptions
 
     public Time\Duration $Timeout;
 
-    /**
-     * @param array<string,mixed>|null $data
-     */
     public function __construct(
-        null|array $data = null, // Deprecated do not use.
         string $Namespace = '',
         string $Datacenter = '',
         string $Token = '',
@@ -47,9 +43,6 @@ class WriteOptions implements RequestOptions
         $this->Token = $Token;
         $this->RelayFactor = $RelayFactor;
         $this->Timeout = Time::Duration($Timeout);
-        if (null !== $data && [] !== $data) {
-            $this->_fromMap((object)$data);
-        }
     }
 
     public function getNamespace(): string
@@ -116,24 +109,8 @@ class WriteOptions implements RequestOptions
         if (0 !== $this->RelayFactor) {
             $r->params->set('relay-factor', (string)$this->RelayFactor);
         }
-
         if (0 < $this->Timeout->Nanoseconds()) {
             $r->timeout = $this->Timeout;
-        }
-    }
-
-    /**
-     * @param \stdClass $data
-     * @deprecated  This is only here to support construction with map.  It will be removed in a future version.
-     */
-    private function _fromMap(\stdClass $data): void
-    {
-        foreach ($data as $k => $v) {
-            if ('Timeout' === $k) {
-                $this->Timeout = Time::Duration($v);
-            } else {
-                $this->{$k} = $v;
-            }
         }
     }
 }

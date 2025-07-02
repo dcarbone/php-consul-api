@@ -42,9 +42,9 @@ class GatewayServiceTLSConfig extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach($decoded as $k => $v) {
             if ('SDS' === $k) {
                 $n->SDS = GatewayTLSSDSConfig::jsonUnserialize($v);

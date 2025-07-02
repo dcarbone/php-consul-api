@@ -33,7 +33,6 @@ class ConnectProxyConfig extends AbstractModel
     public array $Upstreams;
 
     /**
-     * @param array<string, mixed>|null $data // Deprecated, will be removed.
      * @param string $ProxyServiceID
      * @param string $TargetServiceID
      * @param string $TargetServiceName
@@ -42,7 +41,6 @@ class ConnectProxyConfig extends AbstractModel
      * @param array<\DCarbone\PHPConsulAPI\Agent\Upstream> $Upstreams
      */
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         string $ProxyServiceID = '',
         string $TargetServiceID = '',
         string $TargetServiceName = '',
@@ -56,11 +54,7 @@ class ConnectProxyConfig extends AbstractModel
         $this->ContentHash = $ContentHash;
         $this->Config = $Config;
         $this->setUpstreams(...$Upstreams);
-
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getProxyServiceID(): string
     {
@@ -131,9 +125,9 @@ class ConnectProxyConfig extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('Upstreams' === $k) {
                 $n->Upstreams = [];
@@ -149,10 +143,7 @@ class ConnectProxyConfig extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->ProxyServiceID = $this->ProxyServiceID;
         $out->TargetServiceID = $this->TargetServiceID;
         $out->TargetServiceName = $this->TargetServiceName;

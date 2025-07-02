@@ -28,16 +28,12 @@ class ACLNodeIdentity extends AbstractModel
     public string $Datacenter;
 
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         string $NodeName = '',
         string $Datacenter = ''
     ) {
         $this->NodeName = $NodeName;
         $this->Datacenter = $Datacenter;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getNodeName(): string
     {
@@ -49,9 +45,9 @@ class ACLNodeIdentity extends AbstractModel
         return $this->Datacenter;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             $n->{$k} = $v;
         }
@@ -60,10 +56,7 @@ class ACLNodeIdentity extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->NodeName = $this->NodeName;
         $out->Datacenter = $this->Datacenter;
         return $out;

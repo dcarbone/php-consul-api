@@ -30,7 +30,6 @@ class ACLOIDCCallbackParams extends AbstractModel
     public string $ClientNonce;
 
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         string $AuthMethod = '',
         string $State = '',
         string $Code = '',
@@ -40,10 +39,7 @@ class ACLOIDCCallbackParams extends AbstractModel
         $this->State = $State;
         $this->Code = $Code;
         $this->ClientNonce = $ClientNonce;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getAuthMethod(): string
     {
@@ -89,9 +85,9 @@ class ACLOIDCCallbackParams extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             $n->{$k} = $v;
         }
@@ -100,10 +96,7 @@ class ACLOIDCCallbackParams extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->AuthMethod = $this->AuthMethod;
         $out->State = $this->State;
         $out->Code = $this->Code;

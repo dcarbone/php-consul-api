@@ -68,10 +68,7 @@ class Upstream extends AbstractModel
         $this->Config = $Config;
         $this->MeshGateway = $MeshGateway;
         $this->CentrallyConfigured = $CentrallyConfigured;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getDestinationType(): UpstreamDestType
     {
@@ -216,9 +213,9 @@ class Upstream extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('DestinationType' === $k) {
                 $n->setDestinationType($v);
@@ -233,10 +230,7 @@ class Upstream extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         if ($this->DestinationType !== UpstreamDestType::UNDEFINED) {
             $out->DestinationType = $this->DestinationType;
         }

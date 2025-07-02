@@ -64,10 +64,7 @@ class GatewayService extends AbstractModel
         $this->KeyFile = $KeyFile;
         $this->SNI = $SNI;
         $this->FromWildCard = $FromWildCard;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getGateway(): CompoundServiceName
     {
@@ -193,9 +190,9 @@ class GatewayService extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('Gateway' === $k) {
                 $n->Gateway = CompoundServiceName::jsonUnserialize($v);
@@ -215,10 +212,7 @@ class GatewayService extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->Gateway = $this->Gateway;
         $out->Service = $this->Service;
         $out->GatewayKind = $this->GatewayKind->value;

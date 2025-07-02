@@ -111,9 +111,9 @@ class ServiceIntentionsConfigEntry extends AbstractModel implements ConfigEntry
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('Sources' === $k) {
                 $n->Sources = [];
@@ -131,10 +131,7 @@ class ServiceIntentionsConfigEntry extends AbstractModel implements ConfigEntry
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->Kind = $this->Kind;
         $out->Name = $this->name;
         if ('' !== $this->Partition) {

@@ -47,7 +47,6 @@ class AgentServiceConnectProxyConfig extends AbstractModel
     public null|AccessLogsConfig $AccessLogs;
 
     /**
-     * @param array<string, mixed>|null $data
      * @param iterable<\DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension> $EnvoyExtensions
      * @param string $DestinationServiceName
      * @param string $DestinationServiceID
@@ -91,10 +90,7 @@ class AgentServiceConnectProxyConfig extends AbstractModel
         $this->MeshGateway = $MeshGateway;
         $this->Expose = $Expose;
         $this->AccessLogs = $AccessLogs;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     /**
      * @return \DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension[]
@@ -251,9 +247,9 @@ class AgentServiceConnectProxyConfig extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('EnvoyExtensions' === $k) {
                 foreach ($v as $vv) {
@@ -282,10 +278,7 @@ class AgentServiceConnectProxyConfig extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         if ([] !== $this->EnvoyExtensions) {
             $out->EnvoyExtensions = $this->EnvoyExtensions;
         }

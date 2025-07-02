@@ -27,23 +27,19 @@ class ACLOIDCAuthURLParams extends AbstractModel
     public string $AuthMethod;
     public string $RedirectURI;
     public string $ClientNonce;
-    public null|array $Meta;
+    public null|\stdClass $Meta;
 
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         string $AuthMethod = '',
         string $RedirectURI = '',
         string $ClientNonce = '',
-        null|array|\stdClass $Meta = null
+        null|\stdClass $Meta = null
     ) {
         $this->AuthMethod = $AuthMethod;
         $this->RedirectURI = $RedirectURI;
         $this->ClientNonce = $ClientNonce;
-        $this->setMeta($Meta);
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+        $this->Meta = $Meta;
+}
 
     public function getAuthMethod(): string
     {
@@ -78,24 +74,21 @@ class ACLOIDCAuthURLParams extends AbstractModel
         return $this;
     }
 
-    public function getMeta(): null|array
+    public function getMeta(): null|\stdClass
     {
         return $this->Meta;
     }
 
-    public function setMeta(null|array|\stdClass $Meta): self
+    public function setMeta(null|\stdClass $Meta): self
     {
-        $this->Meta = match($Meta) {
-            null => null,
-            default => (array)$Meta,
-        };
+        $this->Meta = $Meta;
         return $this;
     }
 
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('Meta' === $k) {
                 $n->setMeta($v);
@@ -108,14 +101,11 @@ class ACLOIDCAuthURLParams extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->AuthMethod = $this->AuthMethod;
         $out->RedirectURI = $this->RedirectURI;
         $out->ClientNonce = $this->ClientNonce;
-        if (null !== $this->Meta && [] !== $this->Meta) {
+        if (null !== $this->Meta) {
             $out->Meta = $this->Meta;
         }
         return $out;

@@ -46,28 +46,3 @@ function _enc_obj_if_valued(\stdClass &$out, string $field, \stdClass | \JsonSer
         $out->{$field} = $obj;
     }
 }
-
-function MakeConfigEntry(string $kind, string $name): ConfigEntry\ConfigEntry
-{
-    switch ($kind) {
-        case Consul::ServiceDefaults:
-            return new ConfigEntry\ServiceConfigEntry(kind: $kind, name: $name);
-        case Consul::ProxyDefaults:
-            return new ConfigEntry\ProxyConfigEntry(kind: $kind, name: $name);
-        case Consul::ServiceRouter:
-            return new ConfigEntry\ServiceRouterConfigEntry(kind: $kind, name: $name);
-        case Consul::ServiceSplitter:
-            return new ConfigEntry\ServiceSplitterConfigEntry(kind: $kind, name: $name);
-        case Consul::ServiceResolver:
-            return new ConfigEntry\ServiceResolverConfigEntry(kind: $kind, name: $name);
-        case Consul::IngressGateway:
-            return new ConfigEntry\IngressGatewayConfigEntry(kind: $kind, name: $name);
-        case Consul::TerminatingGateway:
-            return new ConfigEntry\TerminatingGatewayConfigEntry(kind: $kind, name: $name);
-        case Consul::ServiceIntentions:
-            return new ConfigEntry\ServiceIntentionsConfigEntry(kind: $kind, name: $name);
-
-        default:
-            throw new \InvalidArgumentException(sprintf('Unknown kind "%s"', $kind));
-    }
-}

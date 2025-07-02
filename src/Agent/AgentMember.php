@@ -48,7 +48,6 @@ class AgentMember extends AbstractModel
     public int $DelegateCur;
 
     /**
-     * @param array<string, mixed>|null $data // Deprecated, will be removed.
      * @param string $Name
      * @param string $Addr
      * @param int $Port
@@ -62,7 +61,6 @@ class AgentMember extends AbstractModel
      * @param int $DelegateCur
      */
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         string $Name = '',
         string $Addr = '',
         int $Port = 0,
@@ -86,10 +84,7 @@ class AgentMember extends AbstractModel
         $this->DelegateMin = $DelegateMin;
         $this->DelegateMax = $DelegateMax;
         $this->DelegateCur = $DelegateCur;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getName(): string
     {
@@ -157,9 +152,9 @@ class AgentMember extends AbstractModel
             Consul::MemberTagValueRoleServer === $this->Tags[Consul::MemberTagKeyACLMode];
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             $n->{$k} = $v;
         }
@@ -168,10 +163,7 @@ class AgentMember extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->Name = $this->Name;
         $out->Addr = $this->Addr;
         $out->Port = $this->Port;

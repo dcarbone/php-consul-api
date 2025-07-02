@@ -188,9 +188,9 @@ class IngressService extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach($decoded as $k => $v) {
             if ('RequestHeaders' === $k || 'request_headers' === $k) {
                 $n->RequestHeaders = HTTPHeaderModifiers::jsonUnserialize($v, $n->RequestHeaders);
@@ -209,10 +209,7 @@ class IngressService extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->Name = $this->Name;
         $out->Hosts = $this->Hosts;
         if ('' !== $this->Namespace) {

@@ -50,7 +50,6 @@ class QueryOptions implements RequestOptions
      * @param array<string,mixed>|null $data
      */
     public function __construct(
-        null|array $data = null, // Deprecated do not use.
         string $Namespace = '',
         string $Datacenter = '',
         bool $AllowStale = false,

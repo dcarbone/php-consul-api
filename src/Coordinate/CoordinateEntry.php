@@ -33,7 +33,6 @@ class CoordinateEntry extends AbstractModel
      * @param array<string,mixed>|null $data
      */
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         string $Node = '',
         string $Segment = '',
         string $Partition = '',
@@ -94,7 +93,7 @@ class CoordinateEntry extends AbstractModel
 
     public static function jsonUnserialize(\stdClass $decoded, null | self $into = null): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach($decoded as $k => $v) {
             if ('Coord' === $k) {
                 $n->Coord = Coordinate::jsonUnserialize($v);
@@ -107,10 +106,7 @@ class CoordinateEntry extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->Node = $this->Node;
         $out->Segment = $this->Segment;
         if ('' !== $this->Partition) {

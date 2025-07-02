@@ -45,7 +45,6 @@ class ProxyConfigEntry extends AbstractModel implements ConfigEntry
     public null|ServiceResolverPrioritizeByLocality $PrioritizeByLocality;
 
     /**
-     * @param array<string,mixed>|null $data
      * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension> $EnvoyExtensions
      */
     public function __construct(
@@ -86,11 +85,7 @@ class ProxyConfigEntry extends AbstractModel implements ConfigEntry
             $this->Meta = $Meta;
             $this->CreateIndex = $CreateIndex;
             $this->ModifyIndex = $ModifyIndex;
-
-            if (null !== $data && [] !== $data) {
-                self::jsonUnserialize((object)$data, $this);
-            }
-        }
+}
     }
 
     public function getKind(): string
@@ -242,9 +237,9 @@ class ProxyConfigEntry extends AbstractModel implements ConfigEntry
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('ProxyMode' === $k) {
                 $n->Mode = ProxyMode::from($v);
@@ -275,10 +270,7 @@ class ProxyConfigEntry extends AbstractModel implements ConfigEntry
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->Kind = $this->Kind;
         $out->Name = $this->Name;
         if ('' !== $this->Partition) {

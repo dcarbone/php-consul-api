@@ -71,9 +71,9 @@ class IntentionPermission extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ($k === 'Action') {
                 $n->{$k} = IntentionAction::from($v);
@@ -90,10 +90,7 @@ class IntentionPermission extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->Action = $this->Action->value;
         if (null !== $this->HTTP) {
             $out->HTTP = $this->HTTP;

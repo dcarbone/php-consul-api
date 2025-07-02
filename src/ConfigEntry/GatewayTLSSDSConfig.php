@@ -57,9 +57,9 @@ class GatewayTLSSDSConfig extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('cluster_name' === $k) {
                 $n->ClusterName = (string)$v;
@@ -74,10 +74,7 @@ class GatewayTLSSDSConfig extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         if ('' !== $this->ClusterName) {
             $out->ClusterName = $this->ClusterName;
         }

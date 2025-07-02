@@ -42,9 +42,9 @@ class RateLimits extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('InstanceLevel' === $k || 'instance_level' === $k) {
                 $n->InstanceLevel = InstanceLevelRateLimits::jsonUnserialize($v);
@@ -57,10 +57,7 @@ class RateLimits extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->InstanceLevel = $this->InstanceLevel;
         return $out;
     }

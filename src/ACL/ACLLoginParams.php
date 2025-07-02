@@ -29,7 +29,6 @@ class ACLLoginParams extends AbstractModel
     public null|array $Meta;
 
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         string $AuthMethod = '',
         string $BearerToken = '',
         null|array|\stdClass $Meta = null,
@@ -37,10 +36,7 @@ class ACLLoginParams extends AbstractModel
         $this->AuthMethod = $AuthMethod;
         $this->BearerToken = $BearerToken;
         $this->setMeta($Meta);
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getAuthMethod(): string
     {
@@ -78,9 +74,9 @@ class ACLLoginParams extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('Meta' === $k) {
                 $n->setMeta($v);
@@ -93,10 +89,7 @@ class ACLLoginParams extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->AuthMethod = $this->AuthMethod;
         $out->BearerToken = $this->BearerToken;
         if (null !== $this->Meta && [] !== $this->Meta) {

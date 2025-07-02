@@ -67,10 +67,7 @@ class IntentionJWTClaimVerification extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         if ([] !== $this->Path) {
             $out->Path = $this->Path;
         }

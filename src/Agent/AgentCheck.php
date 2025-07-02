@@ -39,7 +39,6 @@ class AgentCheck extends AbstractModel
     public string $Partition;
 
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         string $Node = '',
         string $CheckID = '',
         string $Name = '',
@@ -65,10 +64,7 @@ class AgentCheck extends AbstractModel
         $this->Definition = $Definition ?? new HealthCheckDefinition();
         $this->Namespace = $Namespace;
         $this->Partition = $Partition;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getNode(): string
     {
@@ -191,9 +187,9 @@ class AgentCheck extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('Definition' === $k) {
                 $n->Definition = HealthCheckDefinition::jsonUnserialize($v);
@@ -206,10 +202,7 @@ class AgentCheck extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->Node = $this->Node;
         $out->CheckID = $this->CheckID;
         $out->Name = $this->Name;

@@ -28,16 +28,12 @@ class AgentWeights extends AbstractModel
     public int $Warning;
 
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         int $Passing = 0,
         int $Warning = 0,
     ) {
         $this->Passing = $Passing;
         $this->Warning = $Warning;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getPassing(): int
     {
@@ -49,9 +45,9 @@ class AgentWeights extends AbstractModel
         return $this->Warning;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             $n->{$k} = $v;
         }
@@ -60,10 +56,7 @@ class AgentWeights extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->Passing = $this->Passing;
         $out->Warning = $this->Warning;
         return $out;

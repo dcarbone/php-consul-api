@@ -42,7 +42,6 @@ class ACLRole extends AbstractModel
     public string $Partition;
 
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         string $ID = '',
         string $Name = '',
         string $Description = '',
@@ -68,10 +67,7 @@ class ACLRole extends AbstractModel
         $this->ModifyIndex = $ModifyIndex;
         $this->Namespace = $Namespace;
         $this->Partition = $Partition;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getID(): string
     {
@@ -217,9 +213,9 @@ class ACLRole extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('Policies' === $k) {
                 foreach ($v as $vv) {
@@ -246,10 +242,7 @@ class ACLRole extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->ID = $this->ID;
         $out->Name = $this->Name;
         $out->Description = $this->Description;

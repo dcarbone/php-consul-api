@@ -28,16 +28,12 @@ class AgentServiceConnect extends AbstractModel
     public null|AgentServiceRegistration $SidecarService;
 
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         bool $Native = false,
         null|AgentServiceRegistration $SidecarService = null,
     ) {
         $this->Native = $Native;
         $this->SidecarService = $SidecarService;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function isNative(): bool
     {
@@ -61,9 +57,9 @@ class AgentServiceConnect extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('SidecarService' === $k) {
                 $n->SidecarService = AgentServiceRegistration::jsonUnserialize($v);
@@ -76,10 +72,7 @@ class AgentServiceConnect extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         if ($this->Native) {
             $out->Native = $this->Native;
         }

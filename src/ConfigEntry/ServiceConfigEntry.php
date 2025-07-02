@@ -46,36 +46,35 @@ class ServiceConfigEntry extends AbstractModel implements ConfigEntry
     public int $LocalRequestTimeoutMs;
     public string $BalanceInboundConnections;
     public null|RateLimits $RateLimits;
+    /** @var array<\DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension> */
     public array $EnvoyExtensions;
 
     /**
-     * @param array<string,mixed>|null $data
      * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension> $EnvoyExtensions
      */
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         string $Kind = '',
-        string $Name = '',
-        string $Partition = '',
-        string $Namespace = '',
-        string $Protocol = '',
-        string|ProxyMode $Mode = ProxyMode::Default,
+        string                      $Name = '',
+        string                      $Partition = '',
+        string                      $Namespace = '',
+        string                      $Protocol = '',
+        string|ProxyMode            $Mode = ProxyMode::Default,
         null|TransparentProxyConfig $TransparentProxy = null,
-        string|MutualTLSMode $MutualTLSMode = MutualTLSMode::Default,
-        null|MeshGatewayConfig $MeshGateway = null,
-        null|ExposeConfig $Expose = null,
-        string $ExternalSNI = '',
-        null|UpstreamConfiguration $UpstreamConfig = null,
-        null|DestinationConfig $Destination = null,
-        int $MaxInboundConnections = 0,
-        int $LocalConnectTimeoutMs = 0,
-        int $LocalRequestTimeoutMs = 0,
-        string $BalanceInboundConnections = '',
-        null|RateLimits $RateLimits = null,
-        array $EnvoyExtensions = [],
-        null|\stdClass $Meta = null,
-        int $CreateIndex = 0,
-        int $ModifyIndex = 0,
+        string|MutualTLSMode        $MutualTLSMode = MutualTLSMode::Default,
+        null|MeshGatewayConfig      $MeshGateway = null,
+        null|ExposeConfig           $Expose = null,
+        string                      $ExternalSNI = '',
+        null|UpstreamConfiguration         $UpstreamConfig = null,
+        null|DestinationConfig      $Destination = null,
+        int                         $MaxInboundConnections = 0,
+        int                         $LocalConnectTimeoutMs = 0,
+        int                         $LocalRequestTimeoutMs = 0,
+        string                      $BalanceInboundConnections = '',
+        null|RateLimits             $RateLimits = null,
+        array                       $EnvoyExtensions = [],
+        null|\stdClass              $Meta = null,
+        int                         $CreateIndex = 0,
+        int                         $ModifyIndex = 0,
     ) {
         $this->Kind = $Kind;
         $this->Name = $Name;
@@ -99,10 +98,7 @@ class ServiceConfigEntry extends AbstractModel implements ConfigEntry
         $this->Meta = $Meta;
         $this->CreateIndex = $CreateIndex;
         $this->ModifyIndex = $ModifyIndex;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getKind(): string
     {
@@ -305,9 +301,9 @@ class ServiceConfigEntry extends AbstractModel implements ConfigEntry
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('Mode' === $k) {
                 $n->Mode = ProxyMode::from($v);
@@ -348,10 +344,7 @@ class ServiceConfigEntry extends AbstractModel implements ConfigEntry
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->Kind = $this->Kind;
         $out->Name = $this->Name;
         if ('' !== $this->Partition) {

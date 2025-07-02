@@ -35,7 +35,6 @@ class MeshConfigEntry extends AbstractModel implements ConfigEntry
     public null|PeeringMeshConfig $Peering;
 
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         string $Partition = '',
         string $Namespace = '',
         null|TransparentProxyMeshConfig $TransparentProxy = null,
@@ -57,11 +56,7 @@ class MeshConfigEntry extends AbstractModel implements ConfigEntry
         $this->TLS = $TLS;
         $this->HTTP = $HTTP;
         $this->Peering = $Peering;
-
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getKind(): string
     {
@@ -151,10 +146,7 @@ class MeshConfigEntry extends AbstractModel implements ConfigEntry
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->Kind = Consul::MeshConfigMesh;
         if ('' !== $this->Partition) {
             $out->Partition = $this->Partition;

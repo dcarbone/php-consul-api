@@ -40,11 +40,9 @@ class Coordinate extends AbstractModel
     public float $Height;
 
     /**
-     * @param array<string,mixed>|null $data
      * @param array<float> $Vec
      */
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         null|CoordinateConfig $config = null,
         array $Vec = [],
         float $Error = 0.0,
@@ -237,9 +235,9 @@ class Coordinate extends AbstractModel
         return new CoordinateUnitVectorAt(vec: $ret, mag: 0.0);
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('Vec' === $k) {
                 $n->Vec = (array)$v;
@@ -252,10 +250,7 @@ class Coordinate extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->Vec = $this->Vec;
         $out->Error = $this->Error;
         $out->Adjustment = $this->Adjustment;

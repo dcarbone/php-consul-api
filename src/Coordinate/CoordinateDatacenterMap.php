@@ -30,11 +30,9 @@ class CoordinateDatacenterMap extends AbstractModel
     public array $Coordinates;
 
     /**
-     * @param array<string,mixed>|null $data
      * @param array<\DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry> $Coordinates
      */
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         string $Datacenter = '',
         string $AreaID = '',
         array $Coordinates = [],
@@ -71,9 +69,9 @@ class CoordinateDatacenterMap extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): self
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('Coordinates' === $k) {
                 $n->Coordinates = [];
@@ -89,10 +87,7 @@ class CoordinateDatacenterMap extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->Datacenter = $this->Datacenter;
         $out->AreaID = $this->AreaID;
         $out->Coordinates = $this->Coordinates;

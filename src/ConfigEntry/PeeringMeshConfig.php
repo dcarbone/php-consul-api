@@ -53,10 +53,7 @@ class PeeringMeshConfig extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->PeerThroughMeshGateways = $this->PeerThroughMeshGateways;
         return $out;
     }

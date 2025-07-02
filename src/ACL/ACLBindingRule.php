@@ -35,7 +35,6 @@ class ACLBindingRule extends AbstractModel
     public string $Namespace;
 
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         string $ID = '',
         string $Description = '',
         string $AuthMethod = '',
@@ -55,10 +54,7 @@ class ACLBindingRule extends AbstractModel
         $this->CreateIndex = $CreateIndex;
         $this->ModifyIndex = $ModifyIndex;
         $this->Namespace = $Namespace;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getID(): string
     {
@@ -159,9 +155,9 @@ class ACLBindingRule extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             $n->{$k} = $v;
         }
@@ -170,10 +166,7 @@ class ACLBindingRule extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->ID = $this->ID;
         $out->Description = $this->Description;
         $out->AuthMethod = $this->AuthMethod;

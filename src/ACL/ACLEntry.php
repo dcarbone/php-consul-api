@@ -32,7 +32,6 @@ class ACLEntry extends AbstractModel
     public string $Rules;
 
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
         string $ID = '',
@@ -46,10 +45,7 @@ class ACLEntry extends AbstractModel
         $this->Name = $Name;
         $this->Type = $Type;
         $this->Rules = $Rules;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getCreateIndex(): int
     {
@@ -117,9 +113,9 @@ class ACLEntry extends AbstractModel
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self();
+        $n = new self();
         foreach ($decoded as $k => $v) {
             $n->{$k} = $v;
         }
@@ -128,10 +124,7 @@ class ACLEntry extends AbstractModel
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new \stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->CreateIndex = $this->CreateIndex;
         $out->ModifyIndex = $this->ModifyIndex;
         $out->ID = $this->ID;

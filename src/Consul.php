@@ -216,4 +216,20 @@ class Consul
     {
         return $this->Status;
     }
+
+    public static function MakeConfigEntry(string $kind, string $name): ConfigEntry\ConfigEntry
+    {
+        return match ($kind) {
+            Consul::ServiceDefaults => new ConfigEntry\ServiceConfigEntry(kind: $kind, name: $name),
+            Consul::ProxyDefaults => new ConfigEntry\ProxyConfigEntry(kind: $kind, name: $name),
+            Consul::ServiceRouter => new ConfigEntry\ServiceRouterConfigEntry(kind: $kind, name: $name),
+            Consul::ServiceSplitter => new ConfigEntry\ServiceSplitterConfigEntry(kind: $kind, name: $name),
+            Consul::ServiceResolver => new ConfigEntry\ServiceResolverConfigEntry(kind: $kind, name: $name),
+            Consul::IngressGateway => new ConfigEntry\IngressGatewayConfigEntry(kind: $kind, name: $name),
+            Consul::TerminatingGateway => new ConfigEntry\TerminatingGatewayConfigEntry(kind: $kind, name: $name),
+            Consul::ServiceIntentions =>  new ConfigEntry\ServiceIntentionsConfigEntry(kind: $kind, name: $name),
+
+            default => throw new \InvalidArgumentException(sprintf('Unknown kind "%s"', $kind)),
+        };
+    }
 }

@@ -28,7 +28,6 @@ class AgentCheckRegistration extends AgentServiceCheck
     public string $Partition;
 
     public function __construct(
-        null|array $data = null, // Deprecated, will be removed.
         string $ID = '',
         string $ServiceID = '',
         string $CheckID = '',
@@ -88,10 +87,7 @@ class AgentCheckRegistration extends AgentServiceCheck
         $this->ServiceID = $ServiceID;
         $this->Namespace = $Namespace;
         $this->Partition = $Partition;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)$data, $this);
-        }
-    }
+}
 
     public function getID(): string
     {
