@@ -20,10 +20,13 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
+use DCarbone\PHPConsulAPI\MetaContainer;
+
 trait ConfigEntryTrait
 {
+    use MetaContainer;
+
     public string $Namespace;
-    public null|\stdClass $Meta;
     public int $CreateIndex;
     public int $ModifyIndex;
 
@@ -35,17 +38,6 @@ trait ConfigEntryTrait
     public function setNamespace(string $Namespace): self
     {
         $this->Namespace = $Namespace;
-        return $this;
-    }
-
-    public function getMeta(): null|\stdClass
-    {
-        return $this->Meta;
-    }
-
-    public function setMeta(null|\stdClass $Meta): self
-    {
-        $this->Meta = $Meta;
         return $this;
     }
 

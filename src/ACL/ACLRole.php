@@ -41,14 +41,20 @@ class ACLRole extends AbstractModel
     public string $Namespace;
     public string $Partition;
 
+    /**
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLRolePolicyLink> $Policies
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity> $ServiceIdentities
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity> $NodeIdentities
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLTemplatedPolicy> $TemplatedPolicies
+     */
     public function __construct(
         string $ID = '',
         string $Name = '',
         string $Description = '',
-        iterable $Policies = [],
-        iterable $ServiceIdentities = [],
-        iterable $NodeIdentities = [],
-        iterable $TemplatedPolicies = [],
+        array $Policies = [],
+        array $ServiceIdentities = [],
+        array $NodeIdentities = [],
+        array $TemplatedPolicies = [],
         string $Hash = '',
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
@@ -218,18 +224,22 @@ class ACLRole extends AbstractModel
         $n = new self();
         foreach ($decoded as $k => $v) {
             if ('Policies' === $k) {
+                $n->Policies = [];
                 foreach ($v as $vv) {
-                    $n->Policies[] = ACLTokenPolicyLink::jsonUnserialize($vv);
+                    $n->Policies[] = ACLRolePolicyLink::jsonUnserialize($vv);
                 }
             } elseif ('ServiceIdentities' === $k) {
+                $n->ServiceIdentities = [];
                 foreach ($v as $vv) {
                     $n->ServiceIdentities[] = ACLServiceIdentity::jsonUnserialize($vv);
                 }
             } elseif ('NodeIdentities' === $k) {
+                $n->NodeIdentities = [];
                 foreach ($v as $vv) {
                     $n->NodeIdentities[] = ACLNodeIdentity::jsonUnserialize($vv);
                 }
             } elseif ('TemplatedPolicies' === $k) {
+                $n->TemplatedPolicies = [];
                 foreach ($v as $vv) {
                     $n->TemplatedPolicies[] = ACLTemplatedPolicy::jsonUnserialize($vv);
                 }

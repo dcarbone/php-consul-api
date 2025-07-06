@@ -21,25 +21,24 @@ namespace DCarbone\PHPConsulAPI\Catalog;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\MetaContainer;
 use DCarbone\PHPConsulAPI\Peering\Locality;
 
 class Node extends AbstractModel
 {
+    use MetaContainer;
+
     public string $ID;
     public string $Node;
     public string $Address;
     public string $Datacenter;
     public null|\stdClass $TaggedAddresses;
-    public null|\stdClass $Meta;
     public int $CreateIndex;
     public int $ModifyIndex;
     public string $Partition;
     public string $PeerName;
     public null|Locality $Locality;
 
-    /**
-     * @param array<string,mixed>|null $data
-     */
     public function __construct(
         string $ID = '',
         string $Node = '',
@@ -118,17 +117,6 @@ class Node extends AbstractModel
     public function setTaggedAddresses(null|\stdClass $TaggedAddresses): self
     {
         $this->TaggedAddresses = $TaggedAddresses;
-        return $this;
-    }
-
-    public function getMeta(): null|\stdClass
-    {
-        return $this->Meta;
-    }
-
-    public function setMeta(null|\stdClass $Meta): self
-    {
-        $this->Meta = $Meta;
         return $this;
     }
 

@@ -57,7 +57,7 @@ class AutopilotServer extends AbstractModel implements \JsonSerializable
     public string $UpgradeVersion = '';
     public bool $ReadReplica = false;
     public string $Status = '';
-    public array $Meta = [];
+    public null|\stdClass $Meta;
     public string $NodeType = '';
 
     public function __construct(?array $data = [])

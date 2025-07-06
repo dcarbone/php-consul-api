@@ -22,10 +22,13 @@ namespace DCarbone\PHPConsulAPI\Agent;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Catalog\ServiceAddress;
+use DCarbone\PHPConsulAPI\MetaContainer;
 use DCarbone\PHPConsulAPI\Peering\Locality;
 
 class AgentServiceRegistration extends AbstractModel
 {
+    use MetaContainer;
+
     public ServiceKind $Kind;
     public string $ID;
     public string $Name;
@@ -35,7 +38,6 @@ class AgentServiceRegistration extends AbstractModel
     public string $Address;
     public null|\stdClass $TaggedAddresses;
     public bool $EnableTagOverride;
-    public null|\stdClass $Meta;
     public null|AgentWeights $Weights;
     public null|AgentServiceCheck $Check;
     public AgentServiceChecks $Checks;
@@ -46,29 +48,13 @@ class AgentServiceRegistration extends AbstractModel
     public null|Locality $Locality;
 
     /**
-     * @param string|\DCarbone\PHPConsulAPI\Agent\ServiceKind $Kind
-     * @param string $ID
-     * @param string $Name
-     * @param iterable $Tags
-     * @param int $Port
-     * @param string $Address
-     * @param \stdClass|null $TaggedAddresses
-     * @param bool $EnableTagOverride
-     * @param \stdClass|null $Meta
-     * @param \DCarbone\PHPConsulAPI\Agent\AgentWeights|null $Weights
-     * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck|null $Check
-     * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceChecks|null $Checks
-     * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceConnectProxyConfig|null $Proxy
-     * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceConnect|null $Connect
-     * @param string $Namespace
-     * @param string $Partition
-     * @param \DCarbone\PHPConsulAPI\Peering\Locality|null $Locality
+     * @param array<string> $Tags
      */
     public function __construct(
         string|ServiceKind $Kind = ServiceKind::Typical,
         string $ID = '',
         string $Name = '',
-        iterable $Tags = [],
+        array $Tags = [],
         int $Port = 0,
         string $Address = '',
         null|\stdClass $TaggedAddresses = null,
@@ -83,7 +69,7 @@ class AgentServiceRegistration extends AbstractModel
         string $Partition = '',
         null|Locality $Locality = null,
     ) {
-        $this->setKind($Kind);
+        $this->Kind = is_string($Kind) ? ServiceKind::from($Kind) : $Kind;
         $this->ID = $ID;
         $this->Name = $Name;
         $this->setTags(...$Tags);
@@ -197,17 +183,6 @@ class AgentServiceRegistration extends AbstractModel
     public function setEnableTagOverride(bool $EnableTagOverride): self
     {
         $this->EnableTagOverride = $EnableTagOverride;
-        return $this;
-    }
-
-    public function getMeta(): null|\stdClass
-    {
-        return $this->Meta;
-    }
-
-    public function setMeta(null|\stdClass $Meta): self
-    {
-        $this->Meta = $Meta;
         return $this;
     }
 

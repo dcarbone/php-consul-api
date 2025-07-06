@@ -21,13 +21,15 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\MetaContainer;
 
 class ACLOIDCAuthURLParams extends AbstractModel
 {
+    use MetaContainer;
+
     public string $AuthMethod;
     public string $RedirectURI;
     public string $ClientNonce;
-    public null|\stdClass $Meta;
 
     public function __construct(
         string $AuthMethod = '',
@@ -74,27 +76,11 @@ class ACLOIDCAuthURLParams extends AbstractModel
         return $this;
     }
 
-    public function getMeta(): null|\stdClass
-    {
-        return $this->Meta;
-    }
-
-    public function setMeta(null|\stdClass $Meta): self
-    {
-        $this->Meta = $Meta;
-        return $this;
-    }
-
-
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
         foreach ($decoded as $k => $v) {
-            if ('Meta' === $k) {
-                $n->setMeta($v);
-            } else {
-                $n->{$k} = $v;
-            }
+            $n->{$k} = $v;
         }
         return $n;
     }

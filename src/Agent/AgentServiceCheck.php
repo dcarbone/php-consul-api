@@ -27,7 +27,7 @@ class AgentServiceCheck extends AbstractModel
     public string $CheckID;
     public string $Name;
     /** @var string[] */
-    public array $ScriptArgs;
+    public array $Args;
     public string $DockerContainerID;
     public string $Shell;
     public string $Interval;
@@ -51,45 +51,22 @@ class AgentServiceCheck extends AbstractModel
     public string $DeregisterCriticalServiceAfter;
 
     /**
-     * @param string $CheckID
-     * @param string $Name
-     * @param iterable<string> $ScriptArgs
-     * @param string $DockerContainerID
-     * @param string $Shell
-     * @param string $Interval
-     * @param string $Timeout
-     * @param string $TTL
-     * @param string $HTTP
-     * @param \stdClass|null $Header
-     * @param string $Method
-     * @param string $TCP
-     * @param string $Status
-     * @param string $Notes
-     * @param bool $TLSSkipVerify
-     * @param string $GRPC
-     * @param bool $GRPCUseTLS
-     * @param string $H2PING
-     * @param bool $H2PINGUseTLS
-     * @param string $AliasNode
-     * @param string $AliasService
-     * @param int $SuccessBeforePassing
-     * @param int $FailuresBeforeCritical
-     * @param string $DeregisterCriticalServiceAfter
+     * @param array<string> $Args
      */
     public function __construct(
-        string $CheckID = '',
-        string $Name = '',
-        iterable $ScriptArgs = [],
-        string $DockerContainerID = '',
-        string $Shell = '',
-        string $Interval = '',
-        string $Timeout = '',
-        string $TTL = '',
-        string $HTTP = '',
+        string         $CheckID = '',
+        string         $Name = '',
+        array          $Args = [],
+        string         $DockerContainerID = '',
+        string         $Shell = '',
+        string         $Interval = '',
+        string         $Timeout = '',
+        string         $TTL = '',
+        string         $HTTP = '',
         null|\stdClass $Header = null,
-        string $Method = '',
-        string $TCP = '',
-        string $Status = '',
+        string         $Method = '',
+        string         $TCP = '',
+        string         $Status = '',
         string $Notes = '',
         bool $TLSSkipVerify = false,
         string $GRPC = '',
@@ -104,8 +81,8 @@ class AgentServiceCheck extends AbstractModel
     ) {
         $this->CheckID = $CheckID;
         $this->Name = $Name;
-        $this->ScriptArgs = [];
-        $this->setScriptArgs(...$ScriptArgs);
+        $this->Args = [];
+        $this->setArgs(...$Args);
         $this->DockerContainerID = $DockerContainerID;
         $this->Shell = $Shell;
         $this->Interval = $Interval;
@@ -154,14 +131,14 @@ class AgentServiceCheck extends AbstractModel
     /**
      * @return array<string>
      */
-    public function getScriptArgs(): array
+    public function getArgs(): array
     {
-        return $this->ScriptArgs;
+        return $this->Args;
     }
 
-    public function setScriptArgs(string ...$args): self
+    public function setArgs(string ...$args): self
     {
-        $this->ScriptArgs = $args;
+        $this->Args = $args;
         return $this;
     }
 
@@ -400,7 +377,11 @@ class AgentServiceCheck extends AbstractModel
     {
         $n = new self();
         foreach ($decoded as $k => $v) {
-            $n->{$k} = $v;
+            if ('ScriptArgs' === $k) {
+                $n->Args = $v;
+            } else {
+                $n->{$k} = $v;
+            }
         }
         return $n;
     }
@@ -414,8 +395,8 @@ class AgentServiceCheck extends AbstractModel
         if ('' !== $this->Name) {
             $out->Name = $this->Name;
         }
-        if ([] !== $this->ScriptArgs) {
-            $out->ScriptArgs = $this->ScriptArgs;
+        if ([] !== $this->Args) {
+            $out->ScriptArgs = $this->Args;
         }
         if ('' !== $this->DockerContainerID) {
             $out->DockerContainerID = $this->DockerContainerID;

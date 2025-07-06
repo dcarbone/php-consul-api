@@ -40,7 +40,7 @@ class ACLAuthMethod extends AbstractModel
     public string $Partition;
 
     /**
-     * @param iterable<\DCarbone\PHPConsulAPI\ACL\ACLAuthMethodNamespaceRule> $NamespaceRules
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLAuthMethodNamespaceRule> $NamespaceRules
      */
     public function __construct(
         string $Name = '',
@@ -52,7 +52,7 @@ class ACLAuthMethod extends AbstractModel
         null|\stdClass $Config = null,
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
-        iterable $NamespaceRules = [],
+        array $NamespaceRules = [],
         string $Namespace = '',
         string $Partition = '',
     ) {

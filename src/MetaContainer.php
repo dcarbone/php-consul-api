@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI\ACL;
+namespace DCarbone\PHPConsulAPI;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,14 +20,18 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-class ACLRolePolicyLink extends ACLLink
+trait MetaContainer
 {
-    public static function jsonUnserialize(\stdClass $decoded): self
+    public null|\stdClass $Meta;
+
+    public function getMeta(): null|\stdClass
     {
-        $n = new self();
-        foreach ($decoded as $k => $v) {
-            $n->{$k} = $v;
-        }
-        return $n;
+        return $this->Meta;
+    }
+
+    public function setMeta(null|\stdClass $Meta): self
+    {
+        $this->Meta = $Meta;
+        return $this;
     }
 }

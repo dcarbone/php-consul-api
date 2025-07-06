@@ -27,19 +27,22 @@ class AgentCheckRegistration extends AgentServiceCheck
     public string $Namespace;
     public string $Partition;
 
+    /**
+     * @param array<string> $Args
+     */
     public function __construct(
         string $ID = '',
         string $ServiceID = '',
         string $CheckID = '',
         string $Name = '',
-        iterable $ScriptArgs = [],
+        array  $Args = [],
         string $DockerContainerID = '',
         string $Shell = '',
         string $Interval = '',
         string $Timeout = '',
         string $TTL = '',
         string $HTTP = '',
-        iterable $Header = [],
+        null|\stdClass  $Header = null,
         string $Method = '',
         string $TCP = '',
         string $Status = '',
@@ -60,7 +63,7 @@ class AgentCheckRegistration extends AgentServiceCheck
         parent::__construct(
             CheckID: $CheckID,
             Name: $Name,
-            ScriptArgs: $ScriptArgs,
+            Args: $Args,
             DockerContainerID: $DockerContainerID,
             Shell: $Shell,
             Interval: $Interval,

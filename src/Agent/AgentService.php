@@ -22,16 +22,18 @@ namespace DCarbone\PHPConsulAPI\Agent;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Catalog\ServiceAddress;
+use DCarbone\PHPConsulAPI\MetaContainer;
 use DCarbone\PHPConsulAPI\Peering\Locality;
 
 class AgentService extends AbstractModel
 {
-    public string $Kind;
+    use MetaContainer;
+
+    public ServiceKind $Kind;
     public string $ID;
     public string $Service;
     /** @var array<string> */
     public array $Tags;
-    public null|\stdClass $Meta;
     public int $Port;
     public string $Address;
     public string $SocketPath;
@@ -50,34 +52,14 @@ class AgentService extends AbstractModel
     public null|Locality $Locality;
 
     /**
-     * @param string $Kind
-     * @param string $ID
-     * @param string $Service
-     * @param string $SocketPath
-     * @param iterable<string> $Tags
-     * @param \stdClass|null $Meta
-     * @param int $Port
-     * @param string $Address
-     * @param \stdClass|null $TaggedAddresses
-     * @param \DCarbone\PHPConsulAPI\Agent\AgentWeights|null $Weights
-     * @param bool $EnableTagOverride
-     * @param int $CreateIndex
-     * @param int $ModifyIndex
-     * @param string $ContentHash
-     * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceConnectProxyConfig|null $Proxy
-     * @param \DCarbone\PHPConsulAPI\Agent\AgentServiceConnect|null $Connect
-     * @param string $PeerName
-     * @param string $Namespace
-     * @param string $Partition
-     * @param string $Datacenter
-     * @param \DCarbone\PHPConsulAPI\Peering\Locality|null $Locality
+     * @param array<string> $Tags
      */
     public function __construct(
-        string $Kind = '',
+        string|ServiceKind $Kind = '',
         string $ID = '',
         string $Service = '',
         string $SocketPath = '',
-        iterable $Tags = [],
+        array $Tags = [],
         null|\stdClass $Meta = null,
         int $Port = 0,
         string $Address = '',
@@ -95,7 +77,7 @@ class AgentService extends AbstractModel
         string $Datacenter = '',
         null|Locality $Locality = null,
     ) {
-        $this->Kind = $Kind;
+        $this->Kind = is_string($Kind) ? ServiceKind::from($Kind) : $Kind;
         $this->ID = $ID;
         $this->Service = $Service;
         $this->Meta = $Meta;
@@ -118,14 +100,14 @@ class AgentService extends AbstractModel
         $this->Locality = $Locality;
 }
 
-    public function getKind(): string
+    public function getKind(): ServiceKind
     {
         return $this->Kind;
     }
 
-    public function setKind(string $Kind): self
+    public function setKind(string|ServiceKind $Kind): self
     {
-        $this->Kind = $Kind;
+        $this->Kind = is_string($Kind) ? ServiceKind::from($Kind) : $Kind;
         return $this;
     }
 
@@ -162,17 +144,6 @@ class AgentService extends AbstractModel
     public function setTags(string ...$Tags): self
     {
         $this->Tags = $Tags;
-        return $this;
-    }
-
-    public function getMeta(): null|\stdClass
-    {
-        return $this->Meta;
-    }
-
-    public function setMeta(null|\stdClass $Meta): self
-    {
-        $this->Meta = $Meta;
         return $this;
     }
 
@@ -352,10 +323,10 @@ class AgentService extends AbstractModel
     {
         $n = new self();
         foreach ($decoded as $k => $v) {
-            if ('Tags' === $k) {
+            if ('Kind' === $k) {
+                $n->Kind = ServiceKind::from($v);
+            } elseif ('Tags' === $k) {
                 $n->setTags(...$v);
-            } elseif ('Meta' === $k) {
-                $n->setMeta($v);
             } elseif ('Proxy' === $k) {
                 $n->Proxy = null === $v ? null : AgentServiceConnectProxyConfig::jsonUnserialize($v);
             } elseif ('Weights' === $k) {
@@ -376,7 +347,7 @@ class AgentService extends AbstractModel
     public function jsonSerialize(): \stdClass
     {
         $out = $this->_startJsonSerialize();
-        if ('' !== $this->Kind) {
+        if (ServiceKind::Typical !== $this->Kind) {
             $out->Kind = $this->Kind;
         }
         $out->ID = $this->ID;

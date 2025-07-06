@@ -34,11 +34,14 @@ class ACLPolicyListEntry extends AbstractModel
     public string $Namespace;
     public string $Partition;
 
+    /**
+     * @param array<string> $Datacenters
+     */
     public function __construct(
         string $ID = '',
         string $Name = '',
         string $Description = '',
-        iterable $Datacenters = [],
+        array $Datacenters = [],
         string $Hash = '',
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
@@ -89,6 +92,9 @@ class ACLPolicyListEntry extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getDatacenters(): array
     {
         return $this->Datacenters;

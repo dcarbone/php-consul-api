@@ -34,12 +34,19 @@ class MetricsInfo extends AbstractModel
     /** @var \DCarbone\PHPConsulAPI\Agent\SampledValue[] */
     public array $Samples;
 
+    /**
+     * @param string $Timestamp
+     * @param array<\DCarbone\PHPConsulAPI\Agent\GaugeValue> $Gauges
+     * @param array<\DCarbone\PHPConsulAPI\Agent\PointValue> $Points
+     * @param array<\DCarbone\PHPConsulAPI\Agent\SampledValue> $Counters
+     * @param array<\DCarbone\PHPConsulAPI\Agent\SampledValue> $Samples
+     */
     public function __construct(
         string $Timestamp = '',
-        iterable $Gauges = [],
-        iterable $Points = [],
-        iterable $Counters = [],
-        iterable $Samples = [],
+        array $Gauges = [],
+        array $Points = [],
+        array $Counters = [],
+        array $Samples = [],
     ) {
         $this->Timestamp = $Timestamp;
         $this->setGauges(...$Gauges);
@@ -120,18 +127,22 @@ class MetricsInfo extends AbstractModel
         $n = new self();
         foreach ($decoded as $k => $v) {
             if ('Gauges' === $k) {
+                $n->Gauges = [];
                 foreach ($v as $vv) {
                     $n->Gauges[] = GaugeValue::jsonUnserialize($vv);
                 }
             } elseif ('Points' === $k) {
+                $n->Points = [];
                 foreach ($v as $vv) {
                     $n->Points[] = PointValue::jsonUnserialize($vv);
                 }
             } elseif ('Counters' === $k) {
+                $n->Counters = [];
                 foreach ($v as $vv) {
                     $n->Counters[] = SampledValue::jsonUnserialize($vv);
                 }
             } elseif ('Samples' === $k) {
+                $n->Samples = [];
                 foreach ($v as $vv) {
                     $n->Samples[] = SampledValue::jsonUnserialize($vv);
                 }

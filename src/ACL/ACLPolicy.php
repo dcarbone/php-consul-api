@@ -36,12 +36,15 @@ class ACLPolicy extends AbstractModel
     public string $Namespace;
     public string $Partition;
 
+    /**
+     * @param array<string> $Datacenters
+     */
     public function __construct(
         string $ID = '',
         string $Name = '',
         string $Description = '',
         string $Rules = '',
-        iterable $Datacenters = [],
+        array $Datacenters = [],
         string $Hash = '',
         int $CreateIndex = 0,
         int $ModifyIndex = 0,

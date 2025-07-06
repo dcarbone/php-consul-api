@@ -21,22 +21,24 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\MetaContainer;
 
 class ACLLoginParams extends AbstractModel
 {
+    use MetaContainer;
+
     public string $AuthMethod;
     public string $BearerToken;
-    public null|array $Meta;
 
     public function __construct(
         string $AuthMethod = '',
         string $BearerToken = '',
-        null|array|\stdClass $Meta = null,
+        null|\stdClass $Meta = null,
     ) {
         $this->AuthMethod = $AuthMethod;
         $this->BearerToken = $BearerToken;
-        $this->setMeta($Meta);
-}
+        $this->Meta = $Meta;
+    }
 
     public function getAuthMethod(): string
     {
@@ -60,29 +62,11 @@ class ACLLoginParams extends AbstractModel
         return $this;
     }
 
-    public function getMeta(): array
-    {
-        return $this->Meta;
-    }
-
-    public function setMeta(null|array|\stdClass $Meta): self
-    {
-        $this->Meta = match($Meta) {
-            null => null,
-            default => (array)$Meta,
-        };
-        return $this;
-    }
-
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
         foreach ($decoded as $k => $v) {
-            if ('Meta' === $k) {
-                $n->setMeta($v);
-            } else {
-                $n->{$k} = $v;
-            }
+            $n->{$k} = $v;
         }
         return $n;
     }
@@ -92,7 +76,7 @@ class ACLLoginParams extends AbstractModel
         $out = $this->_startJsonSerialize();
         $out->AuthMethod = $this->AuthMethod;
         $out->BearerToken = $this->BearerToken;
-        if (null !== $this->Meta && [] !== $this->Meta) {
+        if (null !== $this->Meta) {
             $out->Meta = $this->Meta;
         }
         return $out;
