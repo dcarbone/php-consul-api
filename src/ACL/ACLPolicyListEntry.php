@@ -27,6 +27,7 @@ class ACLPolicyListEntry extends AbstractModel
     public string $ID;
     public string $Name;
     public string $Description;
+    /** @var array<string> */
     public array $Datacenters;
     public string $Hash;
     public int $CreateIndex;

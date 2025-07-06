@@ -112,24 +112,11 @@ class ACLAuthMethodListEntry extends AbstractModel
         return $this;
     }
 
-    /**
-     * TokenLocality defines the kind of token that this auth method produces.
-     * This can be either 'local' or 'global'. If empty 'local' is assumed.
-     *
-     * @return string
-     */
     public function getTokenLocality(): string
     {
         return $this->TokenLocality;
     }
 
-    /**
-     * TokenLocality defines the kind of token that this auth method produces.
-     * This can be either 'local' or 'global'. If empty 'local' is assumed.
-     *
-     * @param string $TokenLocality
-     * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodListEntry
-     */
     public function setTokenLocality(string $TokenLocality): self
     {
         $this->TokenLocality = $TokenLocality;
