@@ -30,11 +30,6 @@ class ACLAuthMethodListEntry extends AbstractModel
     public string $DisplayName;
     public string $Description;
     public Time\Duration $MaxTokenTTL;
-    /**
-     * TokenLocality defines the kind of token that this auth method produces.
-     * This can be either 'local' or 'global'. If empty 'local' is assumed.
-     * @var string
-     */
     public string $TokenLocality;
     public int $CreateIndex;
     public int $ModifyIndex;
@@ -178,9 +173,6 @@ class ACLAuthMethodListEntry extends AbstractModel
     {
         $n = new self();
         foreach ($decoded as $k => $v) {
-            if (null === $v) {
-                continue;
-            }
             if ('MaxTokenTTL' === $k) {
                 $n->setMaxTokenTTL($v);
             } else {
