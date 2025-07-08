@@ -21,6 +21,7 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use function DCarbone\PHPConsulAPI\_enc_obj_if_valued;
 
 class UpstreamConfig extends AbstractModel
 {
@@ -224,5 +225,40 @@ class UpstreamConfig extends AbstractModel
     public function jsonSerialize(): \stdClass
     {
         $out = $this->_startJsonSerialize();
+        if ('' !== $this->Name) {
+            $out->Name = $this->Name;
+        }
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
+        }
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        if ('' !== $this->Peer) {
+            $out->Peer = $this->Peer;
+        }
+        if ('' !== $this->EnvoyListenerJSON) {
+            $out->EnvoyListenerJSON = $this->EnvoyListenerJSON;
+        }
+        if ('' !== $this->EnvoyClusterJSON) {
+            $out->EnvoyClusterJSON = $this->EnvoyClusterJSON;
+        }
+        if ('' !== $this->Protocol) {
+            $out->Protocol = $this->Protocol;
+        }
+        if (0 !== $this->ConnectTimeoutMs) {
+            $out->ConnectTimeoutMs = $this->ConnectTimeoutMs;
+        }
+        if (null !== $this->Limits) {
+            $out->Limits = $this->Limits;
+        }
+        if (null !== $this->PassiveHealthCheck) {
+            $out->PassiveHealthCheck = $this->PassiveHealthCheck;
+        }
+        _enc_obj_if_valued($out, 'MeshGateway', $this->MeshGateway);
+        if ('' !== $this->BalanceOutboundConnections) {
+            $out->BalanceOutboundConnections = $this->BalanceOutboundConnections;
+        }
+        return $out;
     }
 }

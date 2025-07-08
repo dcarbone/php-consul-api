@@ -22,8 +22,6 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
-use function DCarbone\PHPConsulAPI\_enc_obj_if_valued;
-
 class TerminatingGatewayConfigEntry extends AbstractModel implements ConfigEntry
 {
     use ConfigEntryTrait;

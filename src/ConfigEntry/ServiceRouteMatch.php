@@ -26,7 +26,7 @@ class ServiceRouteMatch extends AbstractModel
 {
     public null|ServiceRouteHTTPMatch $HTTP = null;
 
-    public function __construct(null|ServiceRouteHTTPMatch $HTTP)
+    public function __construct(null|ServiceRouteHTTPMatch $HTTP = null)
     {
         $this->HTTP = $HTTP;
     }
@@ -44,7 +44,7 @@ class ServiceRouteMatch extends AbstractModel
 
     public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $into ?? new self(null);
+        $n = new self();
         foreach ($decoded as $k => $v) {
             if ('HTTP' === $k) {
                 $n->HTTP = ServiceRouteHTTPMatch::jsonUnserialize($v);

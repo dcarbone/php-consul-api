@@ -21,26 +21,34 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class ServiceResolverRedirect extends AbstractModel
 {
-    protected const FIELDS = [
-        self::FIELD_SERVICE        => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_SERVICE_SUBSET => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_NAMESPACE      => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_DATACENTER     => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
-
-    private const FIELD_SERVICE        = 'Service';
-    private const FIELD_SERVICE_SUBSET = 'ServiceSubset';
-    private const FIELD_NAMESPACE      = 'Namespace';
-    private const FIELD_DATACENTER     = 'Datacenter';
-
     public string $Service;
     public string $ServiceSubset;
     public string $Namespace;
+    public string $Partition;
     public string $Datacenter;
+    public string $Peer;
+    public string $SamenessGroup;
+
+    public function __construct(
+        string $Service = '',
+        string $ServiceSubset = '',
+        string $Namespace = '',
+        string $Partition = '',
+        string $Datacenter = '',
+        string $Peer = '',
+        string $SamenessGroup = ''
+    ) {
+        $this->Service = $Service;
+        $this->ServiceSubset = $ServiceSubset;
+        $this->Namespace = $Namespace;
+        $this->Partition = $Partition;
+        $this->Datacenter = $Datacenter;
+        $this->Peer = $Peer;
+        $this->SamenessGroup = $SamenessGroup;
+    }
 
     public function getService(): string
     {
@@ -75,6 +83,17 @@ class ServiceResolverRedirect extends AbstractModel
         return $this;
     }
 
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
     public function getDatacenter(): string
     {
         return $this->Datacenter;
@@ -84,5 +103,69 @@ class ServiceResolverRedirect extends AbstractModel
     {
         $this->Datacenter = $Datacenter;
         return $this;
+    }
+
+    public function getPeer(): string
+    {
+        return $this->Peer;
+    }
+
+    public function setPeer(string $Peer): self
+    {
+        $this->Peer = $Peer;
+        return $this;
+    }
+
+    public function getSamenessGroup(): string
+    {
+        return $this->SamenessGroup;
+    }
+
+    public function setSamenessGroup(string $SamenessGroup): self
+    {
+        $this->SamenessGroup = $SamenessGroup;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('service_subset' === $k) {
+                $n->ServiceSubset = $v;
+            } elseif ('sameness_group' === $k) {
+                $n->SamenessGroup = $v;
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        if ('' !== $this->Service) {
+            $out->Service = $this->Service;
+        }
+        if ('' !== $this->ServiceSubset) {
+            $out->service_subset = $this->ServiceSubset;
+        }
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
+        }
+        if ('' !== $this->Datacenter) {
+            $out->Datacenter = $this->Datacenter;
+        }
+        if ('' !== $this->Peer) {
+            $out->Peer = $this->Peer;
+        }
+        if ('' !== $this->SamenessGroup) {
+            $out->sameness_group = $this->SamenessGroup;
+        }
+        return $out;
     }
 }
