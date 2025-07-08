@@ -29,9 +29,6 @@ class CoordinateEntry extends AbstractModel
     public string $Partition;
     public null|Coordinate $Coord;
 
-    /**
-     * @param array<string,mixed>|null $data
-     */
     public function __construct(
         string $Node = '',
         string $Segment = '',
@@ -42,9 +39,6 @@ class CoordinateEntry extends AbstractModel
         $this->Segment = $Segment;
         $this->Partition = $Partition;
         $this->Coord = $Coord;
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)($data), $this);
-        }
     }
 
     public function getNode(): string

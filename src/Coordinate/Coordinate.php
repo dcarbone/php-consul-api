@@ -60,9 +60,6 @@ class Coordinate extends AbstractModel
             $this->Adjustment = $Adjustment;
             $this->Height = $Height;
         }
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)($data), $this);
-        }
     }
 
     /**

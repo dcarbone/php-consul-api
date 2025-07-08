@@ -20,7 +20,6 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
    limitations under the License.
  */
 
-use DCarbone\Go\HTTP;
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\WriteOptions;

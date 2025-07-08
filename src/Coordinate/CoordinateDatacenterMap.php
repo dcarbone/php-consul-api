@@ -40,9 +40,6 @@ class CoordinateDatacenterMap extends AbstractModel
         $this->Datacenter = $Datacenter;
         $this->AreaID = $AreaID;
         $this->setCoordinates(...$Coordinates);
-        if (null !== $data && [] !== $data) {
-            self::jsonUnserialize((object)($data), $this);
-        }
     }
 
     public function getDatacenter(): string

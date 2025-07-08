@@ -24,30 +24,33 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 
 class UserEvent extends AbstractModel
 {
-    public string $ID = '';
-    public string $Name = '';
-    public string $Payload = '';
-    public string $NodeFilter = '';
-    public string $ServiceFilter = '';
-    public string $TagFilter = '';
-    public int $Version = 0;
-    public int $LTime = 0;
+    public string $ID;
+    public string $Name;
+    public string $Payload;
+    public string $NodeFilter;
+    public string $ServiceFilter;
+    public string $TagFilter;
+    public int $Version;
+    public int $LTime;
 
-    /**
-     * UserEvent constructor.
-     *
-     * @param bool $_decodeValue
-     */
-    public function __construct(array $data = [], bool $_decodeValue = false)
-    {
-        parent::__construct($data);
-        if ($_decodeValue) {
-            $dec = base64_decode($this->Payload, true);
-            if (false === $dec) {
-                throw new \InvalidArgumentException(sprintf('Could not base64 decode payload "%s"', $this->Payload));
-            }
-            $this->Payload = $dec;
-        }
+    public function __construct(
+        string $ID = '',
+        string $Name = '',
+        string $Payload = '',
+        string $NodeFilter = '',
+        string $ServiceFilter = '',
+        string $TagFilter = '',
+        int $Version = 0,
+        int $LTime = 0
+    ) {
+        $this->ID = $ID;
+        $this->Name = $Name;
+        $this->Payload = $Payload;
+        $this->NodeFilter = $NodeFilter;
+        $this->ServiceFilter = $ServiceFilter;
+        $this->TagFilter = $TagFilter;
+        $this->Version = $Version;
+        $this->LTime = $LTime;
     }
 
     public function getID(): string
@@ -88,5 +91,28 @@ class UserEvent extends AbstractModel
     public function getLTime(): int
     {
         return $this->LTime;
+    }
+
+    public static function jsonUnserialize(\stdclass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->ID = $this->ID;
+        $out->Name = $this->Name;
+        $out->Payload = $this->Payload;
+        $out->NodeFilter = $this->NodeFilter;
+        $out->ServiceFilter = $this->ServiceFilter;
+        $out->TagFilter = $this->TagFilter;
+        $out->Version = $this->Version;
+        $out->LTime = $this->LTime;
+        return $out;
     }
 }
