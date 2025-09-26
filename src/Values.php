@@ -20,9 +20,31 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-class Values implements \ArrayAccess, \Countable, \JsonSerializable
+/**
+ * @implements \IteratorAggregate<string,array<string>>
+ * @implements \ArrayAccess<string,array<string>>
+ */
+class Values implements \IteratorAggregate, \ArrayAccess, \Countable, \JsonSerializable
 {
+    /** @var array<string,array<string>> */
     private array $values = [];
+
+    /**
+     * @param array<string,array<string>> $values
+     * @return self
+     */
+    public static function fromArray(array $values): self
+    {
+        $out = new self();
+        foreach ($values as $hdr => $vals) {
+            if (is_array($vals)) {
+                $out->add($hdr, ...$vals);
+            } else {
+                $out->add($hdr, $vals);
+            }
+        }
+        return $out;
+    }
 
     public function get(string $key): string
     {
@@ -33,6 +55,10 @@ class Values implements \ArrayAccess, \Countable, \JsonSerializable
         return '';
     }
 
+    /**
+     * @param string $key
+     * @return array<string>
+     */
     public function getAll(string $key): array
     {
         if (isset($this->values[$key])) {
@@ -66,12 +92,18 @@ class Values implements \ArrayAccess, \Countable, \JsonSerializable
         return count($this->values);
     }
 
+    /**
+     * @return array<string,array<string>>
+     */
     public function toPsr7Array(): array
     {
         return $this->values;
     }
 
-    public function getIterator(): iterable
+    /**
+     * @return \Traversable<string,array<string>>
+     */
+    public function getIterator(): \Traversable
     {
         if ([] === $this->values) {
             return new \EmptyIterator();
@@ -79,19 +111,33 @@ class Values implements \ArrayAccess, \Countable, \JsonSerializable
         return new \ArrayIterator($this->values);
     }
 
+
     public function offsetExists(mixed $offset): bool
     {
         return array_key_exists($offset, $this->values);
     }
 
-    public function offsetGet(mixed $offset): string
+    /**
+     * @param mixed $offset
+     * @return array<string>
+     */
+    public function offsetGet(mixed $offset): array
     {
-        return $this->get($offset);
+        return $this->values[$offset] ?? [];
     }
 
+    /**
+     * @param string $offset
+     * @param array<string> $value
+     * @return void
+     */
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        $this->set($offset, $value);
+        if (is_array($value)) {
+            $this->set($offset, ...$value);
+        } else {
+            $this->set($offset, $value);
+        }
     }
 
     public function offsetUnset(mixed $offset): void
@@ -99,6 +145,9 @@ class Values implements \ArrayAccess, \Countable, \JsonSerializable
         $this->delete($offset);
     }
 
+    /**
+     * @return array<string,array<string>>
+     */
     public function jsonSerialize(): array
     {
         return $this->values;

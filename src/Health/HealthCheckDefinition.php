@@ -22,42 +22,56 @@ namespace DCarbone\PHPConsulAPI\Health;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Values;
 
 class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
 {
     public string $HTTP;
-    public array $Header;
+    public Values $Header;
     public string $Method;
     public string $Body;
     public bool $TLSSkipVerify;
     public string $TCP;
+    public bool $TCPUseTLS;
+    public string $UDP;
+    public string $GRPC;
+    public string $OSService;
+    public bool $GRPCUseTLS;
     public Time\Duration $IntervalDuration;
     public Time\Duration $TimeoutDuration;
     public Time\Duration $DeregisterCriticalServiceAfterDuration;
 
+    /**
+     * @param array<string,array<string>>|\DCarbone\PHPConsulAPI\Values|null $Header
+     */
     public function __construct(
         string $HTTP = '',
-        iterable $Header = [],
+        null|array|\stdClass|Values $Header = null,
         string $Method = '',
         string $Body = '',
         bool $TLSSkipVerify = false,
         string $TCP = '',
+        string $UDP = '',
+        string $GRPC = '',
+        string $OSService = '',
+        bool $GRPCUseTLS = false,
         null|int|float|string|\DateInterval|Time\Duration $IntervalDuration = null,
         null|int|float|string|\DateInterval|Time\Duration $TimeoutDuration = null,
         null|int|float|string|\DateInterval|Time\Duration $DeregisterCriticalServiceAfterDuration = null,
     ) {
         $this->HTTP = $HTTP;
-        $this->setHeader(...$Header);
+        $this->setHeader($Header);
         $this->Method = $Method;
         $this->Body = $Body;
         $this->TLSSkipVerify = $TLSSkipVerify;
         $this->TCP = $TCP;
+        $this->UDP = $UDP;
+        $this->GRPC = $GRPC;
+        $this->OSService = $OSService;
+        $this->GRPCUseTLS = $GRPCUseTLS;
         $this->IntervalDuration = Time::Duration($IntervalDuration);
         $this->TimeoutDuration = Time::Duration($TimeoutDuration);
         $this->DeregisterCriticalServiceAfterDuration = Time::Duration($DeregisterCriticalServiceAfterDuration);
-        if (null !== $data && [] !== $data) {
-            static::jsonUnserialize((object)$data, $this);
-        }
     }
 
     public function getHTTP(): string
@@ -71,13 +85,24 @@ class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
         return $this;
     }
 
-    public function getHeader(): array
+    public function getHeader(): Values
     {
         return $this->Header;
     }
 
-    public function setHeader(string ...$Header): self
+    /**
+     * @param array<string,array<string>>|\DCarbone\PHPConsulAPI\Values|null $Header
+     * @return $this
+     */
+    public function setHeader(null|array|\stdClass|Values $Header = []): self
     {
+        if (null === $Header) {
+            $this->Header = new Values();
+            return $this;
+        }
+        if (!$Header instanceof Values) {
+            $Header = Values::fromArray((array)$Header);
+        }
         $this->Header = $Header;
         return $this;
     }
@@ -126,14 +151,68 @@ class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
         return $this;
     }
 
+    public function isTCPUseTLS(): bool
+    {
+        return $this->TCPUseTLS;
+    }
+
+    public function setTCPUseTLS(bool $TCPUseTLS): HealthCheckDefinition
+    {
+        $this->TCPUseTLS = $TCPUseTLS;
+        return $this;
+    }
+
+    public function getUDP(): string
+    {
+        return $this->UDP;
+    }
+
+    public function setUDP(string $UDP): HealthCheckDefinition
+    {
+        $this->UDP = $UDP;
+        return $this;
+    }
+
+    public function getGRPC(): string
+    {
+        return $this->GRPC;
+    }
+
+    public function setGRPC(string $GRPC): HealthCheckDefinition
+    {
+        $this->GRPC = $GRPC;
+        return $this;
+    }
+
+    public function getOSService(): string
+    {
+        return $this->OSService;
+    }
+
+    public function setOSService(string $OSService): HealthCheckDefinition
+    {
+        $this->OSService = $OSService;
+        return $this;
+    }
+
+    public function isGRPCUseTLS(): bool
+    {
+        return $this->GRPCUseTLS;
+    }
+
+    public function setGRPCUseTLS(bool $GRPCUseTLS): HealthCheckDefinition
+    {
+        $this->GRPCUseTLS = $GRPCUseTLS;
+        return $this;
+    }
+
     public function getIntervalDuration(): Time\Duration
     {
         return $this->IntervalDuration;
     }
 
-    public function setIntervalDuration(
-        null|int|float|string|\DateInterval|Time\Duration $IntervalDuration
-    ): self {
+    public function setIntervalDuration(null|int|float|string|\DateInterval|Time\Duration $IntervalDuration): self
+    {
         $this->IntervalDuration = Time::Duration($IntervalDuration);
         return $this;
     }
@@ -143,9 +222,8 @@ class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
         return $this->TimeoutDuration;
     }
 
-    public function setTimeoutDuration(
-        null|int|float|string|\DateInterval|Time\Duration $TimeoutDuration
-    ): self {
+    public function setTimeoutDuration(null|int|float|string|\DateInterval|Time\Duration $TimeoutDuration): self
+    {
         $this->TimeoutDuration = Time::Duration($TimeoutDuration);
         return $this;
     }
@@ -172,6 +250,8 @@ class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
                 $n->TimeoutDuration = Time::Duration($v);
             } elseif ('DeregisterCriticalServiceAfter' === $k || 'DeregisterCriticalServiceAfterDuration' === $k) {
                 $n->DeregisterCriticalServiceAfterDuration = Time::Duration($v);
+            } elseif ('Header' === $k) {
+                $n->setHeader($v);
             } else {
                 $n->{$k} = $v;
             }
@@ -188,6 +268,11 @@ class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
         $out->Body = $this->Body;
         $out->TLSSkipVerify = $this->TLSSkipVerify;
         $out->TCP = $this->TCP;
+        $out->TCPUseTLS = $this->TCPUseTLS;
+        $out->UDP = $this->UDP;
+        $out->GRPC = $this->GRPC;
+        $out->OSService = $this->OSService;
+        $out->GRPCUseTLS = $this->GRPCUseTLS;
         $out->Interval = (string)$this->IntervalDuration;
         $out->Timeout = (string)$this->TimeoutDuration;
         $out->DeregisterCriticalServiceAfter = (string)$this->DeregisterCriticalServiceAfterDuration;
