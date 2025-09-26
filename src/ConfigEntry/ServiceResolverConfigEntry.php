@@ -34,28 +34,35 @@ class ServiceResolverConfigEntry extends AbstractModel implements ConfigEntry
     public string $Name;
     public string $Partition;
     public string $DefaultSubset;
-    public null|\stdClass $Subsets;
+    /** @var array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverSubset> */
+    public array $Subsets;
     public null|ServiceResolverRedirect $Redirect;
-    public null|\stdClass $Failover;
+    /** @var array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverFailover> */
+    public array $Failover;
     public Time\Duration $ConnectTimeout;
     public Time\Duration $RequestTimeout;
     public null|ServiceResolverPrioritizeByLocality $PrioritizeByLocality;
     public null|LoadBalancer $LoadBalancer;
 
+    /**
+     * @param null|\stdClass|array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverSubset> $Subsets
+     * @param null|\stdClass|array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverFailover> $Failover
+     * @param null|\stdClass|array<string,mixed> $Meta
+     */
     public function __construct(
         string $Kind = '',
         string $Name = '',
         string $Partition = '',
         string $Namespace = '',
         string $DefaultSubnet = '',
-        null|\stdClass $Subsets = null,
+        null|\stdClass|array $Subsets = null,
         null|ServiceResolverRedirect $Redirect = null,
-        null|\stdClass $Failover = null,
+        null|\stdClass|array $Failover = null,
         null|string|int|float|\DateInterval|Time\Duration $ConnectTimeout = null,
         null|string|int|float|\DateInterval|Time\Duration $RequestTimeout = null,
         null|ServiceResolverPrioritizeByLocality $PrioritizeByLocality = null,
         null|LoadBalancer $LoadBalancer = null,
-        null|\stdClass $Meta = null,
+        null|\stdClass|array $Meta = null,
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
     ) {
@@ -71,7 +78,7 @@ class ServiceResolverConfigEntry extends AbstractModel implements ConfigEntry
         $this->RequestTimeout = Time::Duration($RequestTimeout);
         $this->PrioritizeByLocality = $PrioritizeByLocality;
         $this->LoadBalancer = $LoadBalancer;
-        $this->Meta = $Meta;
+        $this->setMeta($Meta);
         $this->CreateIndex = $CreateIndex;
         $this->ModifyIndex = $ModifyIndex;
     }
@@ -121,25 +128,31 @@ class ServiceResolverConfigEntry extends AbstractModel implements ConfigEntry
         return $this;
     }
 
-    public function getSubsets(): null|\stdClass
+    /**
+     * @return array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverSubset>
+     */
+    public function getSubsets(): array
     {
         return $this->Subsets;
     }
 
     public function setSubsetKey(string $key, ServiceResolverSubset $subset): self
     {
-        if (!isset($this->Subsets)) {
-            $this->Subsets = new \stdClass();
-        }
-        $this->Subsets->{$key} = $subset;
+        $this->Subsets[$key] = $subset;
         return $this;
     }
 
-    public function setSubsets(\stdClass $subsets): self
+    /**
+     * @param null|\stdClass|array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverSubset> $Subsets
+     * @return $this
+     */
+    public function setSubsets(null|\stdClass|array $Subsets): self
     {
-        unset($this->Subsets);
-        foreach ($subsets as $k => $v) {
-            $this->setSubsetKey($k, $v);
+        $this->Subsets = [];
+        if (null !== $Subsets) {
+            foreach ($Subsets as $k => $v) {
+                $this->setSubsetKey($k, $v);
+            }
         }
         return $this;
     }
@@ -155,25 +168,31 @@ class ServiceResolverConfigEntry extends AbstractModel implements ConfigEntry
         return $this;
     }
 
-    public function getFailover(): null|\stdClass
+    /**
+     * @return array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverFailover>
+     */
+    public function getFailover(): array
     {
         return $this->Failover;
     }
 
     public function setFailoverKey(string $key, ServiceResolverFailover $failover): self
     {
-        if (!isset($this->Failover)) {
-            $this->Failover = new \stdClass();
-        }
-        $this->Failover->{$key} = $failover;
+        $this->Failover[$key] = $failover;
         return $this;
     }
 
-    public function setFailover(\stdClass $failover): self
+    /**
+     * @param null|\stdClass|array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverFailover> $Failover
+     * @return $this
+     */
+    public function setFailover(null|\stdClass|array $Failover): self
     {
-        unset($this->Failover);
-        foreach ($failover as $k => $v) {
-            $this->setFailoverKey($k, $v);
+        $this->Failover = [];
+        if (null !== $Failover) {
+            foreach ($Failover as $k => $v) {
+                $this->setFailoverKey($k, $v);
+            }
         }
         return $this;
     }
@@ -246,6 +265,8 @@ class ServiceResolverConfigEntry extends AbstractModel implements ConfigEntry
                 $n->PrioritizeByLocality = ServiceResolverPrioritizeByLocality::jsonUnserialize($v);
             } elseif ('LoadBalancer' === $k || 'load_balancer' === $k) {
                 $n->LoadBalancer = LoadBalancer::jsonUnserialize($v);
+            } elseif ('Meta' === $k) {
+                $n->setMeta($v);
             } else {
                 $n->{$k} = $v;
             }
@@ -270,11 +291,15 @@ class ServiceResolverConfigEntry extends AbstractModel implements ConfigEntry
         if ('' !== $this->DefaultSubset) {
             $out->DefaultSubset = $this->DefaultSubset;
         }
-        _enc_obj_if_valued($out, 'Subsets', $this->Subsets);
+        if ([] !== $this->Subsets) {
+            $out->Subsets = $this->Subsets;
+        }
         if (null !== $this->Redirect) {
             $out->Redirect = $this->Redirect;
         }
-        _enc_obj_if_valued($out, 'Failover', $this->Failover);
+        if ([] !== $this->Failover) {
+            $out->Failover = $this->Failover;
+        }
         if (0 !== $this->ConnectTimeout->Nanoseconds()) {
             $out->ConnectTimeout = (string)$this->ConnectTimeout;
         }
@@ -287,7 +312,7 @@ class ServiceResolverConfigEntry extends AbstractModel implements ConfigEntry
         if (null !== $this->LoadBalancer) {
             $out->LoadBalancer = $this->LoadBalancer;
         }
-        if (null !== $this->Meta) {
+        if ([] !== $this->Meta) {
             $out->Meta = $this->Meta;
         }
         $out->CreateIndex = $this->CreateIndex;
