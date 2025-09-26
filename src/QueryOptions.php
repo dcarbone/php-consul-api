@@ -37,7 +37,8 @@ class QueryOptions implements RequestOptions
     public string $Token;
     public string $Near;
     public string $Filter;
-    public null|\stdClass $NodeMeta;
+    /** @var array<string,string> */
+    public array $NodeMeta;
     public int $RelayFactor;
     public bool $LocalOnly;
     public bool $Connect;
@@ -47,7 +48,7 @@ class QueryOptions implements RequestOptions
     public bool $Pretty;
 
     /**
-     * @param array<string,mixed>|null $data
+     * @param null|\stdClass|array<string,string> $NodeMeta
      */
     public function __construct(
         string $Namespace = '',
@@ -63,7 +64,7 @@ class QueryOptions implements RequestOptions
         string $Token = '',
         string $Near = '',
         string $Filter = '',
-        null|\stdClass $NodeMeta = null,
+        null|\stdClass|array $NodeMeta = null,
         int $RelayFactor = 0,
         bool $LocalOnly = false,
         bool $Connect = false,
@@ -83,15 +84,12 @@ class QueryOptions implements RequestOptions
         $this->Token = $Token;
         $this->Near = $Near;
         $this->Filter = $Filter;
-        $this->NodeMeta = $NodeMeta;
+        $this->setNodeMeta($NodeMeta);
         $this->RelayFactor = $RelayFactor;
         $this->LocalOnly = $LocalOnly;
         $this->Connect = $Connect;
         $this->Timeout = Time::Duration($Timeout);
         $this->Pretty = $Pretty;
-        if (null !== $data && [] !== $data) {
-            $this->_fromMap((object)$data);
-        }
     }
 
     public function getNamespace(): string
@@ -224,14 +222,26 @@ class QueryOptions implements RequestOptions
         $this->Filter = $filter;
     }
 
-    public function getNodeMeta(): null|\stdClass
+    /**
+     * @return array<string,string>
+     */
+    public function getNodeMeta(): array
     {
         return $this->NodeMeta;
     }
 
-    public function setNodeMeta(null|\stdClass $nodeMeta): void
+    /**
+     * @param null|\stdClass|array<string,string> $nodeMeta
+     * @return void
+     */
+    public function setNodeMeta(null|\stdClass|array $nodeMeta): void
     {
-        $this->NodeMeta = $nodeMeta;
+        $this->NodeMeta = [];
+        if (null !== $nodeMeta) {
+            foreach ($nodeMeta as $k => $v) {
+                $this->NodeMeta[$k] = $v;
+            }
+        }
     }
 
     public function getRelayFactor(): int
@@ -316,7 +326,7 @@ class QueryOptions implements RequestOptions
         if ('' !== $this->Filter) {
             $r->params->set('filter', $this->Filter);
         }
-        if (null !== $this->NodeMeta) {
+        if ([] !== $this->NodeMeta) {
             foreach ($this->NodeMeta as $k => $v) {
                 $r->params->add('node-meta', "{$k}:{$v}");
             }
@@ -352,27 +362,6 @@ class QueryOptions implements RequestOptions
 
         if ($this->Pretty) {
             $r->params->set('pretty', '');
-        }
-    }
-
-    /**
-     * @param \stdClass $data
-     * @deprecated  This is only here to support construction with map.  It will be removed in a future version.
-     */
-    private function _fromMap(\stdClass $data): void
-    {
-        foreach ($data as $k => $v) {
-            if ('MaxAge' === $k) {
-                $this->MaxAge = Time::Duration($v);
-            } elseif ('StaleIfError' === $k) {
-                $this->StaleIfError = Time::Duration($v);
-            } elseif ('WaitTime' === $k) {
-                $this->WaitTime = Time::Duration($v);
-            } elseif ('Timeout' === $k) {
-                $this->Timeout = Time::Duration($v);
-            } else {
-                $this->{$k} = $v;
-            }
         }
     }
 }

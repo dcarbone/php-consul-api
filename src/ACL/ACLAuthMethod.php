@@ -31,7 +31,8 @@ class ACLAuthMethod extends AbstractModel
     public string $Description;
     public Time\Duration $MaxTokenTTL;
     public string $TokenLocality;
-    public null|\stdClass $Config;
+    /** @var array<string,mixed> */
+    public array $Config;
     public int $CreateIndex;
     public int $ModifyIndex;
     /** @var \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodNamespaceRule[] */
@@ -40,6 +41,7 @@ class ACLAuthMethod extends AbstractModel
     public string $Partition;
 
     /**
+     * @param null|\stdClass|array<string,mixed> $Config
      * @param array<\DCarbone\PHPConsulAPI\ACL\ACLAuthMethodNamespaceRule> $NamespaceRules
      */
     public function __construct(
@@ -49,7 +51,7 @@ class ACLAuthMethod extends AbstractModel
         string  $Description = '',
         null|int|float|string|\DateInterval|Time\Duration $MaxTokenTTL = null,
         string $TokenLocality = '',
-        null|\stdClass $Config = null,
+        null|\stdClass|array $Config = null,
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
         array $NamespaceRules = [],
@@ -62,7 +64,7 @@ class ACLAuthMethod extends AbstractModel
         $this->Description = $Description;
         $this->MaxTokenTTL = Time::Duration($MaxTokenTTL);
         $this->TokenLocality = $TokenLocality;
-        $this->Config = $Config;
+        $this->setConfig($Config);
         $this->CreateIndex = $CreateIndex;
         $this->ModifyIndex = $ModifyIndex;
         $this->setNamespaceRules(...$NamespaceRules);
@@ -136,14 +138,26 @@ class ACLAuthMethod extends AbstractModel
         return $this;
     }
 
-    public function getConfig(): null|\stdClass
+    /**
+     * @return array<string,mixed>
+     */
+    public function getConfig(): array
     {
         return $this->Config;
     }
 
-    public function setConfig(null|\stdClass $Config): self
+    /**
+     * @param null|\stdClass|array<string,mixed> $Config
+     * @return $this
+     */
+    public function setConfig(null|\stdClass|array $Config): self
     {
-        $this->Config = $Config;
+        $this->Config = [];
+        if (null !== $Config) {
+            foreach ($Config as $k => $v) {
+                $this->Config[$k] = $v;
+            }
+        }
         return $this;
     }
 
@@ -222,6 +236,8 @@ class ACLAuthMethod extends AbstractModel
                 foreach ($v as $vv) {
                     $n->NamespaceRules[] = ACLAuthMethodNamespaceRule::jsonUnserialize($vv);
                 }
+            } elseif ('Config' === $k) {
+                $n->setConfig($v);
             } else {
                 $n->{$k} = $v;
             }

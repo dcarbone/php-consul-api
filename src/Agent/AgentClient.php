@@ -255,7 +255,7 @@ class AgentClient extends AbstractClient
             HTTP\MethodPut,
             sprintf('v1/agent/check/update/%s', $checkID),
             $this->_config,
-            new AgentCheckUpdate(['Output' => $output, 'Status' => $status])
+            new AgentCheckUpdate(Status: $status, Output: $output)
         );
 
         return $this->_requireOK($this->_do($r))->Err;
