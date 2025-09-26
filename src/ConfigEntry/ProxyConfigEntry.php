@@ -34,7 +34,8 @@ class ProxyConfigEntry extends AbstractModel implements ConfigEntry
     public null|ProxyMode $Mode;
     public null|TransparentProxyConfig $TransparentProxy;
     public MutualTLSMode $MutualTLSMode;
-    public null|\stdClass $Config;
+    /** @var array<string,mixed> */
+    public array $Config;
 
     public MeshGatewayConfig $MeshGateway;
     public ExposeConfig $Expose;
@@ -45,17 +46,18 @@ class ProxyConfigEntry extends AbstractModel implements ConfigEntry
     public null|ServiceResolverPrioritizeByLocality $PrioritizeByLocality;
 
     /**
+     * @param null|\stdClass|array<string,mixed> $Config
      * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension> $EnvoyExtensions
+     * @param null|\stdClass|array<string,string> $Meta
      */
     public function __construct(
-        array|null $data = null, // Deprecated, will be removed.
         string $Kind = '',
         string $Name = '',
         string $Partition = '',
         string|ProxyMode $Mode = ProxyMode::Default,
         null|TransparentProxyConfig $TransparentProxy = null,
         string|MutualTLSMode $MutualTLSMode = MutualTLSMode::Default,
-        null|\stdClass $Config = null,
+        null|\stdClass|array $Config = null,
         null|MeshGatewayConfig $MeshGateway = null,
         null|ExposeConfig $Expose = null,
         null|AccessLogsConfig $AccessLogs = null,
@@ -63,7 +65,7 @@ class ProxyConfigEntry extends AbstractModel implements ConfigEntry
         null|ServiceResolverFailoverPolicy $FailoverPolicy = null,
         null|ServiceResolverPrioritizeByLocality $PrioritizeByLocality = null,
         string $Namespace = '',
-        null|\stdClass $Meta = null,
+        null|\stdClass|array $Meta = null,
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
     ) {
@@ -75,14 +77,14 @@ class ProxyConfigEntry extends AbstractModel implements ConfigEntry
             $this->Mode = $Mode instanceof ProxyMode ? $Mode : ProxyMode::from($Mode);
             $this->TransparentProxy = $TransparentProxy;
             $this->MutualTLSMode = $MutualTLSMode instanceof MutualTLSMode ? $MutualTLSMode : MutualTLSMode::from($MutualTLSMode);
-            $this->Config = $Config;
+            $this->setConfig($Config);
             $this->MeshGateway = $MeshGateway ?? new MeshGatewayConfig();
             $this->Expose = $Expose ?? new ExposeConfig();
             $this->AccessLogs = $AccessLogs;
             $this->setEnvoyExtensions(...$EnvoyExtensions);
             $this->FailoverPolicy = $FailoverPolicy;
             $this->PrioritizeByLocality = $PrioritizeByLocality;
-            $this->Meta = $Meta;
+            $this->setMeta($Meta);
             $this->CreateIndex = $CreateIndex;
             $this->ModifyIndex = $ModifyIndex;
 }
@@ -154,14 +156,26 @@ class ProxyConfigEntry extends AbstractModel implements ConfigEntry
         return $this;
     }
 
-    public function getConfig(): null|\stdClass
+    /**
+     * @return array<string,mixed>
+     */
+    public function getConfig(): array
     {
         return $this->Config;
     }
 
-    public function setConfig(null|\stdClass $Config): self
+    /**
+     * @param null|\stdClass|array<string,mixed> $Config
+     * @return $this
+     */
+    public function setConfig(null|\stdClass|array $Config): self
     {
-        $this->Config = $Config;
+        $this->Config = [];
+        if (null !== $Config) {
+            foreach ($Config as $k => $v) {
+                $this->Config[$k] = $v;
+            }
+        }
         return $this;
     }
 
@@ -261,6 +275,10 @@ class ProxyConfigEntry extends AbstractModel implements ConfigEntry
                 $n->FailoverPolicy = ServiceResolverFailoverPolicy::jsonUnserialize($v);
             } elseif ('PrioritizeByLocality' === $k || 'prioritize_by_locality' === $k) {
                 $n->PrioritizeByLocality = ServiceResolverPrioritizeByLocality::jsonUnserialize($v);
+            } elseif ('Config' === $k) {
+                $n->setConfig($v);
+            } elseif ('Meta' === $k) {
+                $n->setMeta($v);
             } else {
                 $n->{$k} = $v;
             }
@@ -285,7 +303,7 @@ class ProxyConfigEntry extends AbstractModel implements ConfigEntry
         if (MutualTLSMode::Default !== $this->MutualTLSMode) {
             $out->MutualTLSMode = $this->MutualTLSMode->value;
         }
-        if (null !== $this->Config) {
+        if ([] !== $this->Config) {
             $out->Config = $this->Config;
         }
         _enc_obj_if_valued($out, 'MeshGateway', $this->MeshGateway);
@@ -304,7 +322,7 @@ class ProxyConfigEntry extends AbstractModel implements ConfigEntry
         if ('' !== $this->Namespace) {
             $out->Namespace = $this->Namespace;
         }
-        if (null !== $this->Meta) {
+        if ([] !== $this->Meta) {
             $out->Meta = $this->Meta;
         }
         $out->CreateIndex = $this->CreateIndex;

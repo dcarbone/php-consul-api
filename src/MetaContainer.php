@@ -22,16 +22,29 @@ namespace DCarbone\PHPConsulAPI;
 
 trait MetaContainer
 {
-    public null|\stdClass $Meta;
+    /** @var array<string,mixed> */
+    public array $Meta;
 
-    public function getMeta(): null|\stdClass
+    /**
+     * @return array<string,mixed>
+     */
+    public function getMeta(): array
     {
         return $this->Meta;
     }
 
-    public function setMeta(null|\stdClass $Meta): self
+    /**
+     * @param null|\stdClass|array<string,mixed> $Meta
+     * @return self
+     */
+    public function setMeta(null|\stdClass|array $Meta): self
     {
-        $this->Meta = $Meta;
+        $this->Meta = [];
+        if (null !== $Meta) {
+            foreach ($Meta as $k => $v) {
+                $this->Meta[$k] = $v;
+            }
+        }
         return $this;
     }
 }

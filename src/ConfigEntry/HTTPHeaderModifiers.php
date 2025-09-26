@@ -22,62 +22,72 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
-use function DCarbone\PHPConsulAPI\_enc_obj_if_valued;
-
 class HTTPHeaderModifiers extends AbstractModel
 {
-    public \stdClass $Add;
-    public \stdClass $Set;
+    /** @var array<string,string> */
+    public array $Add;
+    /** @var array<string,string> */
+    public array $Set;
     /** @var array<string> */
     public array $Remove;
 
     /**
+     * @param array<string,string> $Add
+     * @param array<string,string> $Set
      * @param array<string> $Remove
      */
     public function __construct(
-        null|\stdClass $Add = null,
-        null|\stdClass $Set = null,
+        null|array|\stdClass $Add = null,
+        null|array|\stdClass $Set = null,
         array $Remove = []
     ) {
-        $this->Add = $Add ?? new \stdClass();
-        $this->Set = $Set ?? new \stdClass();
+        $this->setAdd($Add);
+        $this->setSet($Set);
         $this->setRemove(...$Remove);
     }
 
-    public function getAdd(): \stdClass
+    /**
+     * @return array<string,string>
+     */
+    public function getAdd(): array
     {
         return $this->Add;
     }
 
-    public function setAddKey(string $key, string $value): self
+    /**
+     * @param null|\stdClass|array<string,string> $Add
+     * @return $this
+     */
+    public function setAdd(null|\stdClass|array $Add): self
     {
-        $this->Add->{$key} = $value;
-        return $this;
-    }
-
-    public function setAdd(\stdClass $Add): self
-    {
-        foreach ($Add as $k => $v) {
-            $this->setaddKey($k, $v);
+        $this->Add = [];
+        if (null !== $Add) {
+            foreach ($Add as $k => $v) {
+                $this->Add[$k] = $v;
+            }
         }
         return $this;
     }
 
-    public function getSet(): \stdClass
+    /**
+     * @return array<string,string>
+     */
+    public function getSet(): array
     {
         return $this->Set;
     }
 
-    public function setSetKey(string $key, string $value): self
+    /**
+     * @param null|\stdClass|array<string,string> $Set
+     * @return $this
+     */
+    public function setSet(null|\stdClass|array $Set): self
     {
-        $this->Set->{$key} = $value;
-        return $this;
-    }
-
-    public function setSet(\stdClass $Set): self
-    {
-        foreach ($Set as $k => $v) {
-            $this->setSetKey($k, $v);
+        $this->Set = [];
+        if (null !== $Set) {
+            foreach ($Set as $k => $v) {
+                $this->Set[$k] = $v;
+            }
         }
         return $this;
     }
@@ -100,7 +110,13 @@ class HTTPHeaderModifiers extends AbstractModel
     {
         $n = new self();
         foreach ($decoded as $k => $v) {
-            $n->{$k} = $v;
+            if ('Set' === $k) {
+                $n->setSet($v);
+            } elseif ('Add' === $k) {
+                $n->setAdd($v);
+            } else {
+                $n->{$k} = $v;
+            }
         }
         return $n;
     }
@@ -108,8 +124,12 @@ class HTTPHeaderModifiers extends AbstractModel
     public function jsonSerialize(): \stdClass
     {
         $out = $this->_startJsonSerialize();
-        _enc_obj_if_valued($out, 'Add', $this->Add);
-        _enc_obj_if_valued($out, 'Set', $this->Set);
+        if ([] !== $this->Add) {
+            $out->Add = $this->Add;
+        }
+        if ([] !== $this->Set) {
+            $out->Set = $this->Set;
+        }
         if ([] !== $this->Remove) {
             $out->Remove = $this->Remove;
         }

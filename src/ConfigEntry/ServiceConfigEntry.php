@@ -51,30 +51,31 @@ class ServiceConfigEntry extends AbstractModel implements ConfigEntry
 
     /**
      * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension> $EnvoyExtensions
+     * @param array<string,mixed> $Meta
      */
     public function __construct(
         string $Kind = '',
-        string                      $Name = '',
-        string                      $Partition = '',
-        string                      $Namespace = '',
-        string                      $Protocol = '',
-        string|ProxyMode            $Mode = ProxyMode::Default,
+        string $Name = '',
+        string $Partition = '',
+        string $Namespace = '',
+        string $Protocol = '',
+        string|ProxyMode $Mode = ProxyMode::Default,
         null|TransparentProxyConfig $TransparentProxy = null,
-        string|MutualTLSMode        $MutualTLSMode = MutualTLSMode::Default,
-        null|MeshGatewayConfig      $MeshGateway = null,
-        null|ExposeConfig           $Expose = null,
-        string                      $ExternalSNI = '',
-        null|UpstreamConfiguration         $UpstreamConfig = null,
-        null|DestinationConfig      $Destination = null,
-        int                         $MaxInboundConnections = 0,
-        int                         $LocalConnectTimeoutMs = 0,
-        int                         $LocalRequestTimeoutMs = 0,
-        string                      $BalanceInboundConnections = '',
-        null|RateLimits             $RateLimits = null,
-        array                       $EnvoyExtensions = [],
-        null|\stdClass              $Meta = null,
-        int                         $CreateIndex = 0,
-        int                         $ModifyIndex = 0,
+        string|MutualTLSMode $MutualTLSMode = MutualTLSMode::Default,
+        null|MeshGatewayConfig $MeshGateway = null,
+        null|ExposeConfig $Expose = null,
+        string $ExternalSNI = '',
+        null|UpstreamConfiguration $UpstreamConfig = null,
+        null|DestinationConfig $Destination = null,
+        int $MaxInboundConnections = 0,
+        int $LocalConnectTimeoutMs = 0,
+        int $LocalRequestTimeoutMs = 0,
+        string $BalanceInboundConnections = '',
+        null|RateLimits $RateLimits = null,
+        array $EnvoyExtensions = [],
+        null|\stdClass|array $Meta = null,
+        int $CreateIndex = 0,
+        int $ModifyIndex = 0,
     ) {
         $this->Kind = $Kind;
         $this->Name = $Name;
@@ -95,10 +96,10 @@ class ServiceConfigEntry extends AbstractModel implements ConfigEntry
         $this->BalanceInboundConnections = $BalanceInboundConnections;
         $this->RateLimits = $RateLimits;
         $this->setEnvoyExtensions(...$EnvoyExtensions);
-        $this->Meta = $Meta;
+        $this->setMeta($Meta);
         $this->CreateIndex = $CreateIndex;
         $this->ModifyIndex = $ModifyIndex;
-}
+    }
 
     public function getKind(): string
     {
@@ -394,7 +395,7 @@ class ServiceConfigEntry extends AbstractModel implements ConfigEntry
         if ([] !== $this->EnvoyExtensions) {
             $out->EnvoyExtensions = $this->EnvoyExtensions;
         }
-        if (null !== $this->Meta) {
+        if ([] !== $this->Meta) {
             $out->Meta = $this->Meta;
         }
         $out->CreateIndex = $this->CreateIndex;

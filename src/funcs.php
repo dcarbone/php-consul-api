@@ -36,13 +36,11 @@ function dur_to_millisecond(Time\Duration $dur): string
 
 $_zeroObject = new \stdclass();
 
-function _enc_obj_if_valued(\stdClass &$out, string $field, \stdClass | \JsonSerializable $obj): void
+function _enc_obj_if_valued(\stdClass &$out, string $field, \JsonSerializable $obj): void
 {
     global $_zeroObject;
-    if ($obj instanceof \JsonSerializable) {
-        $obj = $obj->jsonSerialize();
-    }
-    if ($obj != $_zeroObject) {
-        $out->{$field} = $obj;
+    $val = $obj->jsonSerialize();
+    if ($val != $_zeroObject) {
+        $out->{$field} = $val;
     }
 }
