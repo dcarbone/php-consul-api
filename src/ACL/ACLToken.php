@@ -27,6 +27,13 @@ class ACLToken extends AbstractModel
 {
     use ACLTokenFields;
 
+    /**
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLTokenPolicyLink> $Policies
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLTokenRoleLink> $Roles
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity> $ServiceIdentities
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity> $NodeIdentities
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLTemplatedPolicy> $TemplatePolicies
+     */
     public function __construct(
         int $CreateIndex = 0,
         int $ModifyIndex = 0,

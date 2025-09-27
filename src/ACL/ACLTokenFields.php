@@ -29,15 +29,15 @@ trait ACLTokenFields
     public string $AccessorID;
     public string $SecretID;
     public string $Description;
-    /** @var \DCarbone\PHPConsulAPI\ACL\ACLTokenPolicyLink[] */
+    /** @var array<\DCarbone\PHPConsulAPI\ACL\ACLTokenPolicyLink> */
     public array $Policies;
-    /** @var \DCarbone\PHPConsulAPI\ACL\ACLTokenRoleLink[] */
+    /** @var array<\DCarbone\PHPConsulAPI\ACL\ACLTokenRoleLink> */
     public array $Roles;
-    /** @var \DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity[] */
+    /** @var array<\DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity> */
     public array $ServiceIdentities;
-    /** @var \DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity[] */
+    /** @var array<\DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity> */
     public array $NodeIdentities;
-    /** @var \DCarbone\PHPConsulAPI\ACL\ACLTemplatedPolicy[] */
+    /** @var array>\DCarbone\PHPConsulAPI\ACL\ACLTemplatedPolicy> */
     public array $TemplatePolicies;
     public bool $Local;
     public string $AuthMethod;
@@ -286,7 +286,7 @@ trait ACLTokenFields
         return $this;
     }
 
-    public function _jsonUnserializeField(string $k, mixed $v, object $n): bool
+    protected function _jsonUnserializeField(string $k, mixed $v, object $n): bool
     {
         if ('Policies' === $k) {
             foreach ($v as $vv) {
