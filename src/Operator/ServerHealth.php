@@ -39,17 +39,17 @@ class ServerHealth extends AbstractModel
     private const FIELD_LAST_CONTACT = 'LastContact';
     private const FIELD_STABLE_SINCE = 'StableSince';
 
-    public string $ID = '';
-    public string $Name = '';
-    public string $Address = '';
-    public string $SerfStatus = '';
-    public string $Version = '';
-    public bool $Leader = false;
-    public ?ReadableDuration $LastContact = null;
-    public int $LastTerm = 0;
-    public int $LastIndex = 0;
-    public bool $Healthy = false;
-    public bool $Voter = false;
+    public string $ID;
+    public string $Name;
+    public string $Address;
+    public string $SerfStatus;
+    public string $Version;
+    public bool $Leader;
+    public ?ReadableDuration $LastContact;
+    public int $LastTerm;
+    public int $LastIndex;
+    public bool $Healthy;
+    public bool $Voter;
     public Time\Time $StableSince;
 
     public function __construct(?array $data = [])

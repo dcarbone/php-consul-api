@@ -24,9 +24,9 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 
 class AutopilotZone extends AbstractModel
 {
-    public array $Servers = [];
-    public array $Voters = [];
-    public int $FailureTolerance = 0;
+    public array $Servers;
+    public array $Voters;
+    public int $FailureTolerance;
 
     public function getServers(): array
     {

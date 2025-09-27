@@ -26,7 +26,7 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 class OperatorAreaJoinResponse extends AbstractValuedWriteResponse implements UnmarshalledResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Operator\AreaJoinResponse[] */
-    public array $AreaJoinResponses = [];
+    public array $AreaJoinResponses;
 
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\AreaJoinResponse[]

@@ -24,9 +24,9 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 
 class AreaJoinResponse extends AbstractModel
 {
-    public string $Address = '';
-    public bool $Joined = false;
-    public string $Error = '';
+    public string $Address;
+    public bool $Joined;
+    public string $Error;
 
     public function getAddress(): string
     {

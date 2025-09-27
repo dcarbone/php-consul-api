@@ -27,4 +27,6 @@ enum AutopilotServerStatus: string
     case Voter = 'voter';
     case NonVoter = 'non-voter';
     case Staging = 'staging';
+
+    case UNDEFINED = '';
 }

@@ -24,10 +24,10 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 
 class Area extends AbstractModel
 {
-    public string $ID = '';
-    public string $PeerDatacenter = '';
-    public array $RetryJoin = [];
-    public bool $UseTLS = false;
+    public string $ID;
+    public string $PeerDatacenter;
+    public array $RetryJoin;
+    public bool $UseTLS;
 
     public function getID(): string
     {

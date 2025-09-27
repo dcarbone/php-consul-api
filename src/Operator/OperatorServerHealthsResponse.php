@@ -26,7 +26,7 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 class OperatorServerHealthsResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Operator\ServerHealth[] */
-    public array $ServerHealths = [];
+    public array $ServerHealths;
 
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\ServerHealth[]

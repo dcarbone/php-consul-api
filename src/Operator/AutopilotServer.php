@@ -22,50 +22,65 @@ namespace DCarbone\PHPConsulAPI\Operator;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\MetaContainer;
 
 class AutopilotServer extends AbstractModel implements \JsonSerializable
 {
-    protected const FIELDS = [
-        self::FIELD_LAST_CONTACT    => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => [ReadableDuration::class, 'unmarshalJSON'],
-            Transcoding::FIELD_NULLABLE           => true,
-        ],
-        self::FIELD_STABLE_SINCE    => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_TIME,
-        ],
-        self::FIELD_REDUNDANCY_ZONE => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_UPGRADE_VERSION => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
+    use MetaContainer;
 
-    private const FIELD_LAST_CONTACT    = 'LastContact';
-    private const FIELD_STABLE_SINCE    = 'StableSince';
-    private const FIELD_REDUNDANCY_ZONE = 'RedundancyZone';
-    private const FIELD_UPGRADE_VERSION = 'UpgradeVersion';
-
-    public string $ID = '';
-    public string $Name = '';
-    public string $Address = '';
-    public string $NodeStatus = '';
-    public string $Version = '';
-    public ?ReadableDuration $LastContact = null;
-    public int $LastTerm = 0;
-    public int $LastIndex = 0;
-    public bool $Healthy = false;
+    public string $ID;
+    public string $Name;
+    public string $Address;
+    public string $NodeStatus;
+    public string $Version;
+    public null|Time\Duration $LastContact;
+    public int $LastTerm;
+    public int $LastIndex;
+    public bool $Healthy;
     public Time\Time $StableSince;
-    public string $RedundancyZone = '';
-    public string $UpgradeVersion = '';
-    public bool $ReadReplica = false;
-    public string $Status = '';
-    public null|\stdClass $Meta;
-    public string $NodeType = '';
+    public string $RedundancyZone;
+    public string $UpgradeVersion;
+    public bool $ReadReplica;
+    public AutopilotServerStatus $Status;
+    public AutopilotServerType $NodeType;
 
-    public function __construct(?array $data = [])
-    {
-        parent::__construct($data);
-        if (!isset($this->StableSince)) {
-            $this->StableSince = Time::New();
-        }
+    /**
+     * @param \stdClass|array<string,string>|null $Meta
+     */
+    public function __construct(
+        string $ID = '',
+        string $Name = '',
+        string $Address = '',
+        string $NodeStatus = '',
+        string $Version = '',
+        null|string|int|float|\DateInterval|Time\Duration $LastContact = null,
+        int $LastTerm = 0,
+        int $LastIndex = 0,
+        bool $Healthy = false,
+        null|Time\Time $StableSince = null,
+        string $RedundancyZone = '',
+        string $UpgradeVersion = '',
+        bool $readReplica = false,
+        string|AutopilotServerStatus $status = AutopilotServerStatus::UNDEFINED,
+        null|\stdClass|array $Meta = null,
+        string|AutopilotServerType $NodeType = AutopilotServerType::UNDEFINED,
+    ) {
+        $this->ID = $ID;
+        $this->Name = $Name;
+        $this->Address = $Address;
+        $this->NodeStatus = $NodeStatus;
+        $this->Version = $Version;
+        $this->setLastContact($LastContact);
+        $this->LastTerm = $LastTerm;
+        $this->LastIndex = $LastIndex;
+        $this->Healthy = $Healthy;
+        $this->StableSince = $StableSince ?? new TIme\Time();
+        $this->RedundancyZone = $RedundancyZone;
+        $this->UpgradeVersion = $UpgradeVersion;
+        $this->ReadReplica = $readReplica;
+        $this->setStatus($status);
+        $this->setMeta($Meta);
+        $this->setNodeType($NodeType);
     }
 
     public function getID(): string
@@ -123,14 +138,18 @@ class AutopilotServer extends AbstractModel implements \JsonSerializable
         return $this;
     }
 
-    public function getLastContact(): ?ReadableDuration
+    public function getLastContact(): null|Time\Duration
     {
-        return $this->LastContact;
+        return $this->LastContact ?? null;
     }
 
-    public function setLastContact(?ReadableDuration $LastContact): self
+    public function setLastContact(null|string|int|float|\DateInterval|Time\Duration $LastContact): self
     {
-        $this->LastContact = $LastContact;
+        if (null === $LastContact) {
+            unset($this->LastContact);
+            return $this;
+        }
+        $this->LastContact = Time::Duration($LastContact);
         return $this;
     }
 
@@ -211,45 +230,71 @@ class AutopilotServer extends AbstractModel implements \JsonSerializable
         return $this;
     }
 
-    public function getStatus(): string
+    public function getStatus(): AutopilotServerStatus
     {
         return $this->Status;
     }
 
-    public function setStatus(string $Status): self
+    public function setStatus(string|AutopilotServerStatus $Status): self
     {
-        $this->Status = $Status;
+        $this->Status = is_string($Status) ? AutopilotServerStatus::from($Status) : $Status;
         return $this;
     }
 
-    public function getMeta(): array
-    {
-        return $this->Meta;
-    }
-
-    public function setMeta(array $Meta): self
-    {
-        $this->Meta = $Meta;
-        return $this;
-    }
-
-    public function getNodeType(): string
+    public function getNodeType(): AutopilotServerType
     {
         return $this->NodeType;
     }
 
-    public function setNodeType(string $NodeType): self
+    public function setNodeType(string|AutopilotServerType $NodeType): self
     {
-        $this->NodeType = $NodeType;
+        $this->NodeType = is_string($NodeType) ? AutopilotServerType::from($NodeType) : $NodeType;
         return $this;
     }
 
-    public function jsonSerialize(): array
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $arr = parent::jsonSerialize();
-        if (isset($this->StableSince)) {
-            $arr[self::FIELD_STABLE_SINCE] = $this->StableSince->format(Time\Time::DefaultFormat);
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('lastContact' === $k) {
+                $n->setLastContact($v);
+            } elseif ('StableSince' === $k) {
+                $n->StableSince = Time\Time::createFromFormat(DATE_RFC3339, $v);
+            } elseif ('Meta' === $k) {
+                $n->setMeta($v);
+            } elseif ('Status' === $k) {
+                $n->setStatus($v);
+            } elseif ('NodeType' === $k) {
+                $n->setNodeType($v);
+            } else {
+                $n->{$k} = $v;
+            }
         }
-        return $arr;
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->ID = $this->ID;
+        $out->Name = $this->Name;
+        $out->Address = $this->Address;
+        $out->NodeStatus = $this->NodeStatus;
+        $out->Version = $this->Version;
+        $out->lastContact = isset($this->LastContact) ? (string)$this->LastContact : null;
+        $out->LastTerm = $this->LastTerm;
+        $out->LastIndex = $this->LastIndex;
+        $out->Healthy = $this->Healthy;
+        $out->StableSince = $this->StableSince;
+        if ('' !== $this->RedundancyZone) {
+            $out->RedundancyZone = $this->RedundancyZone;
+        }
+        if ('' !== $this->UpgradeVersion) {
+            $out->UpgradeVersion = $this->UpgradeVersion;
+        }
+        $out->ReadReplica = $this->ReadReplica;
+        $out->Meta = $this->getMeta();
+        $out->NodeType = $this->NodeType;
+        return $out;
     }
 }

@@ -49,15 +49,15 @@ class AutopilotUpgrade extends AbstractModel
     private const FIELD_OTHER_VERSION_READ_REPLICAS  = 'OtherVersionReadReplicas';
     private const FIELD_REDUNDANCY_ZONES             = 'RedundancyZones';
 
-    public string $Status = '';
-    public string $TargetVersion = '';
-    public array $TargetVersionVoters = [];
-    public array $TargetVersionNonVoters = [];
-    public array $TargetVersionReadReplicas = [];
-    public array $OtherVersionVoters = [];
-    public array $OtherVersionNonVoters = [];
-    public array $OtherVersionReadReplicas = [];
-    public array $RedundancyZones = [];
+    public string $Status;
+    public string $TargetVersion;
+    public array $TargetVersionVoters;
+    public array $TargetVersionNonVoters;
+    public array $TargetVersionReadReplicas;
+    public array $OtherVersionVoters;
+    public array $OtherVersionNonVoters;
+    public array $OtherVersionReadReplicas;
+    public array $RedundancyZones;
 
     public function getStatus(): string
     {

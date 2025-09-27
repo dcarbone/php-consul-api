@@ -52,15 +52,15 @@ class AutopilotState extends AbstractModel
     private const FIELD_REDUNDANCY_ZONE = 'RedundancyZone';
     private const FIELD_UPGRADE         = 'Upgrade';
 
-    public bool $Healthy = false;
-    public int $FailureTolerance = 0;
-    public int $OptimisticFailureTolerance = 0;
-    public array $Servers = [];
-    public string $Leader = '';
-    public array $Voters = [];
-    public array $ReadReplicas = [];
-    public array $RedundancyZone = [];
-    public ?AutopilotUpgrade $Upgrade = null;
+    public bool $Healthy;
+    public int $FailureTolerance;
+    public int $OptimisticFailureTolerance;
+    public array $Servers;
+    public string $Leader;
+    public array $Voters;
+    public array $ReadReplicas;
+    public array $RedundancyZone;
+    public ?AutopilotUpgrade $Upgrade;
 
     public function isHealthy(): bool
     {

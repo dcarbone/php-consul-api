@@ -35,9 +35,9 @@ class OperatorHealthReply extends AbstractModel
 
     private const FIELD_SERVERS = 'Servers';
 
-    public bool $Healthy = false;
-    public int $FailureTolerance = 0;
-    public array $Servers = [];
+    public bool $Healthy;
+    public int $FailureTolerance;
+    public array $Servers;
 
     public function isHealthy(): bool
     {

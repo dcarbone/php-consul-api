@@ -26,7 +26,7 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 class OperatorSerfMembersResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Operator\SerfMember[] */
-    public array $SerfMembers = [];
+    public array $SerfMembers;
 
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\SerfMember[]

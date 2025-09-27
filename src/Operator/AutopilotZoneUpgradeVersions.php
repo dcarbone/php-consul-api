@@ -37,10 +37,10 @@ class AutopilotZoneUpgradeVersions extends AbstractModel
     private const FIELD_OTHER_VERSION_VOTERS      = 'OtherVersionVoters';
     private const FIELD_OTHER_VERSION_NON_VOTERS  = 'OtherVersionNonVoters';
 
-    public array $TargetVersionVoters = [];
-    public array $TargetVersionNonVoters = [];
-    public array $OtherVersionVoters = [];
-    public array $OtherVersionNonVoters = [];
+    public array $TargetVersionVoters;
+    public array $TargetVersionNonVoters;
+    public array $OtherVersionVoters;
+    public array $OtherVersionNonVoters;
 
     public function getTargetVersionVoters(): array
     {

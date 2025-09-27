@@ -36,6 +36,7 @@ class IngressGatewayConfigEntry extends AbstractModel implements ConfigEntry
 
     /**
      * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\IngressListener> $Listeners
+     * @param null|\stdClass|array<string,string> $Meta
      */
     public function __construct(
         string $Kind = '',
@@ -44,7 +45,7 @@ class IngressGatewayConfigEntry extends AbstractModel implements ConfigEntry
         string $Namespace = '',
         null|GatewayTLSConfig $TLS = null,
         array $Listeners = [],
-        null|\stdClass $Meta = null,
+        null|\stdClass|array $Meta = null,
         null|IngressServiceConfig $Defaults = null,
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
@@ -55,7 +56,7 @@ class IngressGatewayConfigEntry extends AbstractModel implements ConfigEntry
         $this->Namespace = $Namespace;
         $this->TLS = $TLS ?? new GatewayTLSConfig();
         $this->setListeners(...$Listeners);
-        $this->Meta = $Meta;
+        $this->setMeta($Meta);
         $this->Defaults = $Defaults;
         $this->CreateIndex = $CreateIndex;
         $this->ModifyIndex = $ModifyIndex;
@@ -146,6 +147,8 @@ class IngressGatewayConfigEntry extends AbstractModel implements ConfigEntry
                 }
             } elseif ('Defaults' === $k) {
                 $n->Defaults = null === $v ? null : IngressServiceConfig::jsonUnserialize($v);
+            } elseif ('Meta' === $k) {
+                $n->setMeta($v);
             } else {
                 $n->{$k} = $v;
             }
@@ -166,11 +169,11 @@ class IngressGatewayConfigEntry extends AbstractModel implements ConfigEntry
         }
         $out->TLS = $this->TLS;
         $out->Listeners = $this->Listeners;
-        if (null !== $this->Meta) {
+        if (isset($this->Meta)) {
             $out->Meta = $this->Meta;
         }
         if (null !== $this->Defaults) {
-            $out->Defaults = $this->Defaults->jsonSerialize();
+            $out->Defaults = $this->Defaults;
         }
         $out->CreateIndex = $this->CreateIndex;
         $out->ModifyIndex = $this->ModifyIndex;

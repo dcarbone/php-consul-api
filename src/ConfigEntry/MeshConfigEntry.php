@@ -34,6 +34,9 @@ class MeshConfigEntry extends AbstractModel implements ConfigEntry
     public null|MeshHTTPConfig $HTTP;
     public null|PeeringMeshConfig $Peering;
 
+    /**
+     * @param \stdClass|array<string,string>|null $Meta
+     */
     public function __construct(
         string $Partition = '',
         string $Namespace = '',
@@ -42,13 +45,13 @@ class MeshConfigEntry extends AbstractModel implements ConfigEntry
         null|MeshTLSConfig $TLS = null,
         null|MeshHTTPConfig $HTTP = null,
         null|PeeringMeshConfig $Peering = null,
-        null|\stdClass $Meta = null,
+        null|\stdClass|array $Meta = null,
         int $CreateIndex = 0,
         int $ModifyIndex = 0
     ) {
-        $this->Partition         = $Partition;
+        $this->Partition = $Partition;
         $this->Namespace = $Namespace;
-        $this->Meta = $Meta;
+        $this->setMeta($Meta);
         $this->CreateIndex = $CreateIndex;
         $this->ModifyIndex = $ModifyIndex;
         $this->TransparentProxy = $TransparentProxy;
@@ -137,6 +140,8 @@ class MeshConfigEntry extends AbstractModel implements ConfigEntry
                 $n->Peering = null === $v ? null : PeeringMeshConfig::jsonUnserialize($v);
             } elseif ('allow_enabling_permissive_mutual_tls' === $k) {
                 $n->AllowEnablingPermissiveMutualTLS = $v;
+            } elseif ('Meta' === $k) {
+                $n->setMeta($v);
             } else {
                 $n->{$k} = $v;
             }
@@ -164,7 +169,7 @@ class MeshConfigEntry extends AbstractModel implements ConfigEntry
         if (null !== $this->Peering) {
             $out->Peering = $this->Peering;
         }
-        if (null !== $this->Meta) {
+        if (isset($this->Meta)) {
             $out->Meta = $this->Meta;
         }
         $out->CreateIndex = $this->CreateIndex;

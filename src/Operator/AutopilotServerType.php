@@ -27,4 +27,6 @@ enum AutopilotServerType: string
     case ZoneVoter = 'zone-voter';
     case ZoneExtraVoter = 'zone-extra-voter';
     case ZoneStandby = 'zone-standby';
+
+    case UNDEFINED = '';
 }

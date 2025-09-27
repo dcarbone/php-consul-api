@@ -26,7 +26,7 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 class OperatorAreasResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Operator\Area[] */
-    public array $Areas = [];
+    public array $Areas;
 
     /**
      * @return \DCarbone\PHPConsulAPI\Operator\Area[]

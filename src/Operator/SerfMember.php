@@ -34,15 +34,15 @@ class SerfMember extends AbstractModel
 
     private const FIELD_RTT = 'RTT';
 
-    public string $ID = '';
-    public string $Name = '';
-    public string $Addr = '';
-    public int $Port = 0;
-    public string $Datacenter = '';
-    public string $Role = '';
-    public string $Build = '';
-    public int $Protocol = 0;
-    public string $Status = '';
+    public string $ID;
+    public string $Name;
+    public string $Addr;
+    public int $Port;
+    public string $Datacenter;
+    public string $Role;
+    public string $Build;
+    public int $Protocol;
+    public string $Status;
     public Time\Duration $RTT;
 
     public function __construct(?array $data = [])

@@ -32,20 +32,25 @@ class Node extends AbstractModel
     public string $Node;
     public string $Address;
     public string $Datacenter;
-    public null|\stdClass $TaggedAddresses;
+    /** @var array<string,string> */
+    public array $TaggedAddresses;
     public int $CreateIndex;
     public int $ModifyIndex;
     public string $Partition;
     public string $PeerName;
     public null|Locality $Locality;
 
+    /**
+     * @param \stdClass|array<string,string>|null $TaggedAddresses
+     * @param \stdClass|array<string,string>|null $Meta
+     */
     public function __construct(
         string $ID = '',
         string $Node = '',
         string $Address = '',
         string $Datacenter = '',
-        null|\stdClass $TaggedAddresses = null,
-        null|\stdClass $Meta = null,
+        null|\stdClass|array $TaggedAddresses = null,
+        null|\stdClass|array $Meta = null,
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
         string $Partition = '',
@@ -56,14 +61,14 @@ class Node extends AbstractModel
         $this->Node = $Node;
         $this->Address = $Address;
         $this->Datacenter = $Datacenter;
-        $this->TaggedAddresses = $TaggedAddresses ?? new \stdClass();
-        $this->Meta = $Meta ?? new \stdClass();
+        $this->setTaggedAddresses($TaggedAddresses);
+        $this->setMeta($Meta);
         $this->CreateIndex = $CreateIndex;
         $this->ModifyIndex = $ModifyIndex;
         $this->Partition = $Partition;
         $this->PeerName = $PeerName;
         $this->Locality = $Locality;
-}
+    }
 
     public function getID(): string
     {
@@ -109,14 +114,28 @@ class Node extends AbstractModel
         return $this;
     }
 
-    public function getTaggedAddresses(): null|\stdClass
+    /**
+     * @return array<string,string>|null
+     */
+    public function getTaggedAddresses(): null|array
     {
         return $this->TaggedAddresses;
     }
 
-    public function setTaggedAddresses(null|\stdClass $TaggedAddresses): self
+    /**
+     * @param \stdClass|array<string,string>|null $TaggedAddresses
+     * @return $this
+     */
+    public function setTaggedAddresses(null|\stdClass|array $TaggedAddresses): self
     {
-        $this->TaggedAddresses = $TaggedAddresses;
+        if (null === $TaggedAddresses) {
+            unset($this->TaggedAddresses);
+            return $this;
+        }
+        $this->TaggedAddresses = [];
+        foreach ($TaggedAddresses as $k => $v) {
+            $this->TaggedAddresses[$k] = $v;
+        }
         return $this;
     }
 
@@ -181,6 +200,10 @@ class Node extends AbstractModel
         foreach ($decoded as $k => $v) {
             if ('Locality' === $k) {
                 $n->Locality = Locality::jsonUnserialize($v);
+            } elseif ('Meta' === $k) {
+                $n->setMeta($v);
+            } elseif ('TaggedAddresses' === $k) {
+                $n->setTaggedAddresses($v);
             } else {
                 $n->{$k} = $v;
             }
@@ -195,8 +218,8 @@ class Node extends AbstractModel
         $out->Node = $this->Node;
         $out->Address = $this->Address;
         $out->Datacenter = $this->Datacenter;
-        $out->TaggedAddresses = $this->TaggedAddresses;
-        $out->Meta = $this->Meta;
+        $out->TaggedAddresses = $this->getTaggedAddresses();
+        $out->Meta = $this->getMeta();
         $out->CreateIndex = $this->CreateIndex;
         $out->ModifyIndex = $this->ModifyIndex;
         if ('' !== $this->Partition) {

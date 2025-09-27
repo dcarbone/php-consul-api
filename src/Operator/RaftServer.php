@@ -24,12 +24,12 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 
 class RaftServer extends AbstractModel
 {
-    public string $ID = '';
-    public string $Node = '';
-    public string $Address = '';
-    public bool $Leader = false;
-    public string $ProtocolVersion = '';
-    public bool $Voter = false;
+    public string $ID;
+    public string $Node;
+    public string $Address;
+    public bool $Leader;
+    public string $ProtocolVersion;
+    public bool $Voter;
 
     public function getID(): string
     {

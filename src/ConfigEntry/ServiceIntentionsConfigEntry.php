@@ -36,6 +36,7 @@ class ServiceIntentionsConfigEntry extends AbstractModel implements ConfigEntry
 
     /**
      * @param array<null|\DCarbone\PHPConsulAPI\ConfigEntry\SourceIntention> $Sources
+     * @param null|\stdClass|array<string,string> $Meta
      */
     public function __construct(
         string $Kind = '',
@@ -44,7 +45,7 @@ class ServiceIntentionsConfigEntry extends AbstractModel implements ConfigEntry
         string $Namespace = '',
         array $Sources = [],
         null|IntentionJWTRequirement $JWT = null,
-        null|\stdClass $Meta = null,
+        null|\stdClass|array $Meta = null,
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
     ) {
@@ -54,7 +55,7 @@ class ServiceIntentionsConfigEntry extends AbstractModel implements ConfigEntry
         $this->Namespace = $Namespace;
         $this->setSources(...$Sources);
         $this->JWT = $JWT;
-        $this->Meta = $Meta;
+        $this->setMeta($Meta);
         $this->CreateIndex = $CreateIndex;
         $this->ModifyIndex = $ModifyIndex;
     }
@@ -122,6 +123,8 @@ class ServiceIntentionsConfigEntry extends AbstractModel implements ConfigEntry
                 }
             } elseif ('JWT' === $k) {
                 $n->JWT = null === $v ? null : IntentionJWTRequirement::jsonUnserialize($v);
+            } elseif ('Meta' === $k) {
+                $n->setMeta($v);
             } else {
                 $n->{$k} = $v;
             }
@@ -146,7 +149,7 @@ class ServiceIntentionsConfigEntry extends AbstractModel implements ConfigEntry
         if (null !== $this->JWT) {
             $out->JWT = $this->JWT;
         }
-        if (null !== $this->Meta) {
+        if (isset($this->Meta)) {
             $out->Meta = $this->Meta;
         }
         $out->CreateIndex = $this->CreateIndex;

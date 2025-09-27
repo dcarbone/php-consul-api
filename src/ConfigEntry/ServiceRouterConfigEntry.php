@@ -34,6 +34,7 @@ class ServiceRouterConfigEntry extends AbstractModel implements ConfigEntry
 
     /**
      * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\ServiceRoute> $Routes
+     * @param null|\stdClass|array<string,string> $Meta
      */
     public function __construct(
         string $Kind = '',
@@ -41,7 +42,7 @@ class ServiceRouterConfigEntry extends AbstractModel implements ConfigEntry
         string $Partition = '',
         string $Namespace = '',
         array $Routes = [],
-        null|\stdClass $Meta = null,
+        null|\stdClass|array $Meta = null,
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
     ) {
@@ -50,7 +51,7 @@ class ServiceRouterConfigEntry extends AbstractModel implements ConfigEntry
         $this->Partition = $Partition;
         $this->Namespace = $Namespace;
         $this->setRoutes(...$Routes);
-        $this->Meta = $Meta;
+        $this->setMeta($Meta);
         $this->CreateIndex = $CreateIndex;
         $this->ModifyIndex = $ModifyIndex;
     }
@@ -111,6 +112,8 @@ class ServiceRouterConfigEntry extends AbstractModel implements ConfigEntry
                 foreach ($v as $vv) {
                     $n->Routes[] = ServiceRoute::jsonUnserialize($vv);
                 }
+            } elseif ('Meta' === $k) {
+                $n->setMeta($v);
             } else {
                 $n->{$k} = $v;
             }
@@ -132,7 +135,7 @@ class ServiceRouterConfigEntry extends AbstractModel implements ConfigEntry
         if ([] !== $this->Routes) {
             $out->Routes = $this->Routes;
         }
-        if (null !== $this->Meta) {
+        if (isset($this->Meta)) {
             $out->Meta = $this->Meta;
         }
         $out->CreateIndex = $this->CreateIndex;
