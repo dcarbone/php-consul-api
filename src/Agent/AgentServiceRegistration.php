@@ -36,7 +36,8 @@ class AgentServiceRegistration extends AbstractModel
     public array $Tags;
     public int $Port;
     public string $Address;
-    public null|\stdClass $TaggedAddresses;
+    /** @var array<\DCarbone\PHPConsulAPI\Catalog\ServiceAddress> */
+    public array $TaggedAddresses;
     public bool $EnableTagOverride;
     public null|AgentWeights $Weights;
     public null|AgentServiceCheck $Check;
@@ -49,6 +50,8 @@ class AgentServiceRegistration extends AbstractModel
 
     /**
      * @param array<string> $Tags
+     * @param null|\stdClass|array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress> $TaggedAddresses
+     * @param null|\stdClass|array<string,string> $Meta
      */
     public function __construct(
         string|ServiceKind $Kind = ServiceKind::Typical,
@@ -57,9 +60,9 @@ class AgentServiceRegistration extends AbstractModel
         array $Tags = [],
         int $Port = 0,
         string $Address = '',
-        null|\stdClass $TaggedAddresses = null,
+        null|\stdClass|array $TaggedAddresses = null,
         bool $EnableTagOverride = false,
-        null|\stdClass $Meta = null,
+        null|\stdClass|array $Meta = null,
         null|AgentWeights $Weights = null,
         null|AgentServiceCheck $Check = null,
         null|AgentServiceChecks $Checks = null,
@@ -77,7 +80,7 @@ class AgentServiceRegistration extends AbstractModel
         $this->Address = $Address;
         $this->setTaggedAddresses($TaggedAddresses);
         $this->EnableTagOverride = $EnableTagOverride;
-        $this->Meta = $Meta;
+        $this->setMeta($Meta);
         $this->Weights = $Weights;
         $this->Check = $Check;
         $this->Checks = $Checks ?? new AgentServiceChecks();
@@ -86,7 +89,7 @@ class AgentServiceRegistration extends AbstractModel
         $this->Namespace = $Namespace;
         $this->Partition = $Partition;
         $this->Locality = $Locality;
-}
+    }
 
     public function getKind(): ServiceKind
     {
@@ -157,20 +160,27 @@ class AgentServiceRegistration extends AbstractModel
         return $this;
     }
 
-    public function getTaggedAddresses(): \stdClass
+    /**
+     * @return array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress>|null
+     */
+    public function getTaggedAddresses(): null|array
     {
-        return $this->TaggedAddresses;
+        return $this->TaggedAddresses ?? null;
     }
 
-    public function setTaggedAddresses(null|\stdClass $TaggedAddresses): self
+    /**
+     * @param \stdClass|array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress>|null $TaggedAddresses
+     * @return $this
+     */
+    public function setTaggedAddresses(null|\stdClass|array $TaggedAddresses): self
     {
         if (null === $TaggedAddresses) {
-            $this->TaggedAddresses = null;
+            unset($this->TaggedAddresses);
             return $this;
         }
-        $this->TaggedAddresses = new \stdClass();
+        $this->TaggedAddresses = [];
         foreach ($TaggedAddresses as $k => $v) {
-            $this->TaggedAddresses->{$k} = $v instanceof ServiceAddress ? $v : ServiceAddress::jsonUnserialize((object)$v);
+            $this->TaggedAddresses[$k] = $v;
         }
         return $this;
     }
@@ -296,6 +306,8 @@ class AgentServiceRegistration extends AbstractModel
                 $n->Connect = AgentServiceConnect::jsonUnserialize($v);
             } elseif ('Locality' === $k) {
                 $n->Locality = Locality::jsonUnserialize($v);
+            } elseif ('Meta' === $k) {
+                $n->setMeta($v);
             } else {
                 $n->{$k} = $v;
             }
@@ -324,13 +336,13 @@ class AgentServiceRegistration extends AbstractModel
         if ('' !== $this->Address) {
             $out->Address = $this->Address;
         }
-        if (null !== $this->TaggedAddresses) {
+        if (isset($this->TaggedAddresses)) {
             $out->TaggedAddresses = $this->TaggedAddresses;
         }
         if ($this->EnableTagOverride) {
             $out->EnableTagOverride = $this->EnableTagOverride;
         }
-        if (null !== $this->Meta) {
+        if (isset($this->Meta)) {
             $out->Meta = $this->Meta;
         }
         if (null !== $this->Weights) {

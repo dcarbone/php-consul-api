@@ -34,7 +34,10 @@ interface ConfigEntry
 
     public function GetNamespace(): string;
 
-    public function GetMeta(): \stdClass;
+    /**
+     * @return array<string,mixed>|null
+     */
+    public function GetMeta(): null|array;
 
     public function GetCreateIndex(): int;
 

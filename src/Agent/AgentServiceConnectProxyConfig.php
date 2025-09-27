@@ -30,7 +30,7 @@ use DCarbone\PHPConsulAPI\ConfigEntry\TransparentProxyConfig;
 
 class AgentServiceConnectProxyConfig extends AbstractModel
 {
-    /** @var \DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension[] */
+    /** @var array<\DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension> */
     public array $EnvoyExtensions;
     public string $DestinationServiceName;
     public string $DestinationServiceID;
@@ -39,7 +39,7 @@ class AgentServiceConnectProxyConfig extends AbstractModel
     public string $LocalServiceSocketPath;
     public ProxyMode $Mode;
     public null|TransparentProxyConfig $TransparentProxy;
-    public null|\stdClass $Config;
+    public array $Config;
     /** @var \DCarbone\PHPConsulAPI\Agent\Upstream[] */
     public array $Upstreams;
     public null|MeshGatewayConfig $MeshGateway;
@@ -47,22 +47,11 @@ class AgentServiceConnectProxyConfig extends AbstractModel
     public null|AccessLogsConfig $AccessLogs;
 
     /**
-     * @param iterable<\DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension> $EnvoyExtensions
-     * @param string $DestinationServiceName
-     * @param string $DestinationServiceID
-     * @param string $LocalServiceAddress
-     * @param int $LocalServicePort
-     * @param string $LocalServiceSocketPath
-     * @param string|\DCarbone\PHPConsulAPI\ConfigEntry\ProxyMode $Mode
-     * @param \DCarbone\PHPConsulAPI\ConfigEntry\TransparentProxyConfig|null $TransparentProxy
-     * @param null|\stdClass $Config
-     * @param iterable<\DCarbone\PHPConsulAPI\Agent\Upstream> $Upstreams
-     * @param \DCarbone\PHPConsulAPI\ConfigEntry\MeshGatewayConfig|null $MeshGateway
-     * @param \DCarbone\PHPConsulAPI\ConfigEntry\ExposeConfig|null $Expose
-     * @param \DCarbone\PHPConsulAPI\ConfigEntry\AccessLogsConfig|null $AccessLogs
+     * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension> $EnvoyExtensions
+     * @param null|\stdClass|array<string,mixed> $Config
+     * @param array<\DCarbone\PHPConsulAPI\Agent\Upstream> $Upstreams
      */
     public function __construct(
-        null|array $data = [], // Deprecated, will be removed.
         iterable $EnvoyExtensions = [],
         string $DestinationServiceName = '',
         string $DestinationServiceID = '',
@@ -71,7 +60,7 @@ class AgentServiceConnectProxyConfig extends AbstractModel
         string $LocalServiceSocketPath = '',
         string|ProxyMode $Mode = ProxyMode::Default,
         null|TransparentProxyConfig $TransparentProxy = null,
-        null|\stdClass $Config = null,
+        null|\stdClass|array $Config = null,
         iterable $Upstreams = [],
         null|MeshGatewayConfig $MeshGateway = null,
         null|ExposeConfig $Expose = null,
@@ -82,7 +71,7 @@ class AgentServiceConnectProxyConfig extends AbstractModel
         $this->DestinationServiceID = $DestinationServiceID;
         $this->LocalServiceAddress = $LocalServiceAddress;
         $this->LocalServicePort = $LocalServicePort;
-        $this->Config = $Config;
+        $this->setConfig($Config);
         $this->LocalServiceSocketPath = $LocalServiceSocketPath;
         $this->Mode = $Mode instanceof ProxyMode ? $Mode : ProxyMode::from($Mode);
         $this->TransparentProxy = $TransparentProxy;
@@ -90,7 +79,7 @@ class AgentServiceConnectProxyConfig extends AbstractModel
         $this->MeshGateway = $MeshGateway;
         $this->Expose = $Expose;
         $this->AccessLogs = $AccessLogs;
-}
+    }
 
     /**
      * @return \DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension[]
@@ -189,14 +178,28 @@ class AgentServiceConnectProxyConfig extends AbstractModel
         return $this;
     }
 
-    public function getConfig(): null|\stdClass
+    /**
+     * @return array<string,mixed>|null
+     */
+    public function getConfig(): null|array
     {
-        return $this->Config;
+        return $this->Config ?? null;
     }
 
-    public function setConfig(null|\stdClass $Config): self
+    /**
+     * @param \stdClass|array<string,mixed>|null $Config
+     * @return $this
+     */
+    public function setConfig(null|\stdClass|array $Config): self
     {
-        $this->Config = $Config;
+        if (null === $Config) {
+            unset($this->Config);
+            return $this;
+        }
+        $this->Config = [];
+        foreach ($Config as $k => $v) {
+            $this->Config[$k] = $v;
+        }
         return $this;
     }
 
@@ -269,6 +272,8 @@ class AgentServiceConnectProxyConfig extends AbstractModel
                 $n->Expose = ExposeConfig::jsonUnserialize($v);
             } elseif ('AccessLogs' === $k) {
                 $n->AccessLogs = null === $v ? null : AccessLogsConfig::jsonUnserialize($v);
+            } elseif ('Config' === $k) {
+                $n->setConfig($v);
             } else {
                 $n->{$k} = $v;
             }
@@ -294,7 +299,7 @@ class AgentServiceConnectProxyConfig extends AbstractModel
         if (0 !== $this->LocalServicePort) {
             $out->LocalServicePort = $this->LocalServicePort;
         }
-        if (null !== $this->Config) {
+        if (isset($this->Config)) {
             $out->Config = $this->Config;
         }
         if ('' !== $this->LocalServiceSocketPath) {

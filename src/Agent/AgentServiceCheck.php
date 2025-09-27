@@ -21,6 +21,7 @@ namespace DCarbone\PHPConsulAPI\Agent;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Values;
 
 class AgentServiceCheck extends AbstractModel
 {
@@ -34,7 +35,7 @@ class AgentServiceCheck extends AbstractModel
     public string $Timeout;
     public string $TTL;
     public string $HTTP;
-    public null|\stdClass $Header;
+    public Values $Header;
     public string $Method;
     public string $TCP;
     public string $Status;
@@ -52,21 +53,22 @@ class AgentServiceCheck extends AbstractModel
 
     /**
      * @param array<string> $Args
+     * @param null|\stdClass|array<string,array<string>>|\DCarbone\PHPConsulAPI\Values $Header
      */
     public function __construct(
-        string         $CheckID = '',
-        string         $Name = '',
-        array          $Args = [],
-        string         $DockerContainerID = '',
-        string         $Shell = '',
-        string         $Interval = '',
-        string         $Timeout = '',
-        string         $TTL = '',
-        string         $HTTP = '',
-        null|\stdClass $Header = null,
-        string         $Method = '',
-        string         $TCP = '',
-        string         $Status = '',
+        string $CheckID = '',
+        string $Name = '',
+        array $Args = [],
+        string $DockerContainerID = '',
+        string $Shell = '',
+        string $Interval = '',
+        string $Timeout = '',
+        string $TTL = '',
+        string $HTTP = '',
+        null|array|\stdClass|Values $Header = null,
+        string $Method = '',
+        string $TCP = '',
+        string $Status = '',
         string $Notes = '',
         bool $TLSSkipVerify = false,
         string $GRPC = '',
@@ -89,7 +91,7 @@ class AgentServiceCheck extends AbstractModel
         $this->Timeout = $Timeout;
         $this->TTL = $TTL;
         $this->HTTP = $HTTP;
-        $this->Header = $Header;
+        $this->setHeader($Header);
         $this->Method = $Method;
         $this->TCP = $TCP;
         $this->Status = $Status;
@@ -208,13 +210,24 @@ class AgentServiceCheck extends AbstractModel
         return $this;
     }
 
-    public function getHeader(): null|\stdClass
+    public function getHeader(): null|Values
     {
-        return $this->Header;
+        return $this->Header ?? null;
     }
 
-    public function setHeader(null|\stdClass $Header): self
+    /**
+     * @param \stdClass|array<string,array<string>>|\DCarbone\PHPConsulAPI\Values|null $Header
+     * @return $this
+     */
+    public function setHeader(null|\stdClass|array|Values $Header): self
     {
+        if (null === $Header) {
+            unset($this->Header);
+            return $this;
+        }
+        if (!$Header instanceof Values) {
+            $Header = Values::fromArray((array)$Header);
+        }
         $this->Header = $Header;
         return $this;
     }
@@ -379,6 +392,8 @@ class AgentServiceCheck extends AbstractModel
         foreach ($decoded as $k => $v) {
             if ('ScriptArgs' === $k) {
                 $n->Args = $v;
+            } elseif ('Header' === $k) {
+                $n->setHeader($v);
             } else {
                 $n->{$k} = $v;
             }
@@ -416,7 +431,7 @@ class AgentServiceCheck extends AbstractModel
         if ('' !== $this->HTTP) {
             $out->HTTP = $this->HTTP;
         }
-        if (null !== $this->Header) {
+        if (isset($this->Header)) {
             $out->Header = $this->Header;
         }
         if ('' !== $this->Method) {

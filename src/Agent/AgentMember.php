@@ -28,7 +28,8 @@ class AgentMember extends AbstractModel
     public string $Name;
     public string $Addr;
     public int $Port;
-    public null|\stdClass $Tags;
+    /** @var array<string,string> */
+    public array $Tags;
     /**
      * Status of the Member which corresponds to  github.com/hashicorp/serf/serf.MemberStatus
      * Value is one of:
@@ -48,23 +49,13 @@ class AgentMember extends AbstractModel
     public int $DelegateCur;
 
     /**
-     * @param string $Name
-     * @param string $Addr
-     * @param int $Port
-     * @param \stdClass|null $Tags
-     * @param int $Status
-     * @param int $ProtocolMin
-     * @param int $ProtocolMax
-     * @param int $ProtocolCur
-     * @param int $DelegateMin
-     * @param int $DelegateMax
-     * @param int $DelegateCur
+     * @param null|\stdClass|array<string,string> $Tags
      */
     public function __construct(
         string $Name = '',
         string $Addr = '',
         int $Port = 0,
-        null|\stdClass $Tags = null,
+        null|\stdClass|array $Tags = null,
         int $Status = 0,
         int $ProtocolMin = 0,
         int $ProtocolMax = 0,
@@ -76,7 +67,12 @@ class AgentMember extends AbstractModel
         $this->Name = $Name;
         $this->Addr = $Addr;
         $this->Port = $Port;
-        $this->Tags = $Tags;
+        $this->Tags = [];
+        if (null !== $Tags) {
+            foreach ($Tags as $k => $v) {
+                $this->Tags[$k]  = $v;
+            }
+        }
         $this->Status = $Status;
         $this->ProtocolMin = $ProtocolMin;
         $this->ProtocolMax = $ProtocolMax;
@@ -84,7 +80,7 @@ class AgentMember extends AbstractModel
         $this->DelegateMin = $DelegateMin;
         $this->DelegateMax = $DelegateMax;
         $this->DelegateCur = $DelegateCur;
-}
+    }
 
     public function getName(): string
     {
@@ -156,6 +152,13 @@ class AgentMember extends AbstractModel
     {
         $n = new self();
         foreach ($decoded as $k => $v) {
+            if ('Tags' === $k) {
+                if (null !== $v) {
+                    foreach ($v as $k => $vv) {
+                        $n->Tags[$k] = $vv;
+                    }
+                }
+            }
             $n->{$k} = $v;
         }
         return $n;

@@ -31,16 +31,19 @@ class ACLOIDCAuthURLParams extends AbstractModel
     public string $RedirectURI;
     public string $ClientNonce;
 
+    /**
+     * @param \stdClass|array<string,string>|null $Meta
+     */
     public function __construct(
         string $AuthMethod = '',
         string $RedirectURI = '',
         string $ClientNonce = '',
-        null|\stdClass $Meta = null
+        null|\stdClass|array $Meta = null
     ) {
         $this->AuthMethod = $AuthMethod;
         $this->RedirectURI = $RedirectURI;
         $this->ClientNonce = $ClientNonce;
-        $this->Meta = $Meta;
+        $this->setMeta($Meta);
 }
 
     public function getAuthMethod(): string
@@ -80,7 +83,11 @@ class ACLOIDCAuthURLParams extends AbstractModel
     {
         $n = new self();
         foreach ($decoded as $k => $v) {
-            $n->{$k} = $v;
+            if ('Meta' === $k) {
+                $n->setMeta($v);
+            } else {
+                $n->{$k} = $v;
+            }
         }
         return $n;
     }
@@ -91,7 +98,7 @@ class ACLOIDCAuthURLParams extends AbstractModel
         $out->AuthMethod = $this->AuthMethod;
         $out->RedirectURI = $this->RedirectURI;
         $out->ClientNonce = $this->ClientNonce;
-        if (null !== $this->Meta) {
+        if (isset($this->Meta)) {
             $out->Meta = $this->Meta;
         }
         return $out;

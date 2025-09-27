@@ -21,7 +21,6 @@ namespace DCarbone\PHPConsulAPI\Agent;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Catalog\ServiceAddress;
 use DCarbone\PHPConsulAPI\MetaContainer;
 use DCarbone\PHPConsulAPI\Peering\Locality;
 
@@ -37,7 +36,8 @@ class AgentService extends AbstractModel
     public int $Port;
     public string $Address;
     public string $SocketPath;
-    public null|\stdClass $TaggedAddresses;
+    /** @var array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress> */
+    public null|array $TaggedAddresses;
     public AgentWeights $Weights;
     public bool $EnableTagOverride;
     public int $CreateIndex;
@@ -53,6 +53,8 @@ class AgentService extends AbstractModel
 
     /**
      * @param array<string> $Tags
+     * @param null|\stdClass|array<string,string> $Meta
+     * @param null|\stdClass|array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress> $TaggedAddresses
      */
     public function __construct(
         string|ServiceKind $Kind = '',
@@ -60,10 +62,10 @@ class AgentService extends AbstractModel
         string $Service = '',
         string $SocketPath = '',
         array $Tags = [],
-        null|\stdClass $Meta = null,
+        null|\stdClass|array $Meta = null,
         int $Port = 0,
         string $Address = '',
-        null|\stdClass $TaggedAddresses = null,
+        null|\stdClass|array $TaggedAddresses = null,
         null|AgentWeights $Weights = null,
         bool $EnableTagOverride = false,
         int $CreateIndex = 0,
@@ -80,7 +82,7 @@ class AgentService extends AbstractModel
         $this->Kind = is_string($Kind) ? ServiceKind::from($Kind) : $Kind;
         $this->ID = $ID;
         $this->Service = $Service;
-        $this->Meta = $Meta;
+        $this->setMeta($Meta);
         $this->Port = $Port;
         $this->setTags(...$Tags);
         $this->Address = $Address;
@@ -98,7 +100,7 @@ class AgentService extends AbstractModel
         $this->Partition = $Partition;
         $this->Datacenter = $Datacenter;
         $this->Locality = $Locality;
-}
+    }
 
     public function getKind(): ServiceKind
     {
@@ -169,20 +171,27 @@ class AgentService extends AbstractModel
         return $this;
     }
 
-    public function getTaggedAddresses(): null|\stdClass
+    /**
+     * @return null|array<\DCarbone\PHPConsulAPI\Catalog\ServiceAddress>
+     */
+    public function getTaggedAddresses(): null|array
     {
         return $this->TaggedAddresses;
     }
 
-    public function setTaggedAddresses(null|\stdClass $TaggedAddresses): self
+    /**
+     * @param null|\stdClass|array<\DCarbone\PHPConsulAPI\Catalog\ServiceAddress> $TaggedAddresses
+     * @return $this
+     */
+    public function setTaggedAddresses(null|\stdClass|array $TaggedAddresses): self
     {
         if (null === $TaggedAddresses) {
             $this->TaggedAddresses = null;
             return $this;
         }
-        $this->TaggedAddresses = new \stdClass();
-        foreacH($TaggedAddresses as $k => $v) {
-            $this->TaggedAddresses->{$k} = $v instanceof ServiceAddress ? $v : ServiceAddress::jsonUnserialize($v);
+        $this->TaggedAddresses = [];
+        foreach ($TaggedAddresses as $k => $v) {
+            $this->TaggedAddresses[] = $v;
         }
         return $this;
     }
@@ -332,11 +341,13 @@ class AgentService extends AbstractModel
             } elseif ('Weights' === $k) {
                 $n->Weights = AgentWeights::jsonUnserialize($v);
             } elseif ('TaggedAddresses' === $k) {
-                $n->settaggedAddresses($v);
+                $n->setTaggedAddresses($v);
             } elseif ('Connect' === $k) {
                 $n->Connect = null === $v ? null : AgentServiceConnect::jsonUnserialize($v);
             } elseif ('Locality' === $k) {
                 $n->Locality = null === $v ? null : Locality::jsonUnserialize($v);
+            } elseif ('Meta' === $k) {
+                $n->setMeta($v);
             } else {
                 $n->{$k} = $v;
             }
@@ -353,7 +364,7 @@ class AgentService extends AbstractModel
         $out->ID = $this->ID;
         $out->Service = $this->Service;
         $out->Tags = $this->Tags;
-        $out->Meta = $this->Meta;
+        $out->Meta = $this->getMeta();
         $out->Port = $this->Port;
         $out->Address = $this->Address;
         if ('' !== $this->SocketPath) {
