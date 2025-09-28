@@ -25,9 +25,13 @@ use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
 
 class AgentServicesResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
-    public null|\stdClass $Services = null;
+    /** @var null|array<string,\DCarbone\PHPConsulAPI\Agent\AgentService> */
+    public null|array $Services = null;
 
-    public function getValue(): null|\stdClass
+    /**
+     * @return array<string,\DCarbone\PHPConsulAPI\Agent\AgentService>|null
+     */
+    public function getValue(): null|array
     {
         return $this->Services;
     }
@@ -38,9 +42,9 @@ class AgentServicesResponse extends AbstractValuedResponse implements Unmarshall
             $this->Services = null;
             return;
         }
-        $this->Services = new \stdClass();
+        $this->Services = [];
         foreach ($decoded as $k => $v) {
-            $this->Services->{$k} = AgentService::jsonUnserialize($v);
+            $this->Services[$k] = AgentService::jsonUnserialize($v);
         }
     }
 }

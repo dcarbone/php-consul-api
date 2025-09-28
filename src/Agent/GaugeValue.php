@@ -26,21 +26,20 @@ class GaugeValue extends AbstractModel
 {
     public string $Name;
     public float $Value;
-    public null|\stdClass $Labels;
+    /** @var array<string,string> */
+    public array $Labels;
 
     /**
-     * @param string $Name
-     * @param float $Value
-     * @param \stdClass|null $Labels
+     * @param array<string,string>|\stdClass|null $Labels
      */
     public function __construct(
         string $Name = '',
         float $Value = 0.0,
-        null|\stdClass $Labels = null,
+        null|\stdClass|array $Labels = null,
     ) {
         $this->Name = $Name;
         $this->Value = $Value;
-        $this->Labels = $Labels;
+        $this->setLabels($Labels);
 }
 
     public function getName(): string
@@ -65,14 +64,28 @@ class GaugeValue extends AbstractModel
         return $this;
     }
 
-    public function getLabels(): null|\stdClass
+    /**
+     * @return null|array<string,string>
+     */
+    public function getLabels(): null|array
     {
         return $this->Labels;
     }
 
-    public function setLabels(null|\stdClass $Labels): self
+    /**
+     * @param \stdClass|array<string,string>|null $Labels
+     * @return $this
+     */
+    public function setLabels(null|\stdClass|array $Labels): self
     {
-        $this->Labels = $Labels;
+        if (null === $Labels) {
+            unset($this->Labels);
+            return $this;
+        }
+        $this->Labels = [];
+        foreach ($Labels as $k => $v) {
+            $this->Labels[$k] = $v;
+        }
         return $this;
     }
 
@@ -80,7 +93,11 @@ class GaugeValue extends AbstractModel
     {
         $n = new self();
         foreach ($decoded as $k => $v) {
-            $n->{$k} = $v;
+            if ('Labels' === $k) {
+                $n->setLabels($v);
+            } else {
+                $n->{$k} = $v;
+            }
         }
         return $n;
     }
@@ -90,7 +107,7 @@ class GaugeValue extends AbstractModel
         $out = $this->_startJsonSerialize();
         $out->Name = $this->Name;
         $out->Value = $this->Value;
-        $out->Labels = $this->Labels;
+        $out->Labels = $this->getLabels();
         return $out;
     }
 }

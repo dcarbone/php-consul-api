@@ -35,7 +35,6 @@ class MetricsInfo extends AbstractModel
     public array $Samples;
 
     /**
-     * @param string $Timestamp
      * @param array<\DCarbone\PHPConsulAPI\Agent\GaugeValue> $Gauges
      * @param array<\DCarbone\PHPConsulAPI\Agent\PointValue> $Points
      * @param array<\DCarbone\PHPConsulAPI\Agent\SampledValue> $Counters

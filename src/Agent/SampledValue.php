@@ -31,17 +31,11 @@ class SampledValue extends AbstractModel
     public float $Max;
     public float $Mean;
     public float $Stddev;
-    public null|\stdClass $Labels;
+    /** @var array<string,string> */
+    public array $Labels;
 
     /**
-     * @param string $Name
-     * @param int $Count
-     * @param float $Sum
-     * @param float $Min
-     * @param float $Max
-     * @param float $Mean
-     * @param float $Stddev
-     * @param \stdClass|null $Labels
+     * @param \stdClass|array<string,string>|null $Labels
      */
     public function __construct(
         string $Name = '',
@@ -51,7 +45,7 @@ class SampledValue extends AbstractModel
         float $Max = 0.0,
         float $Mean = 0.0,
         float $Stddev = 0.0,
-        null|\stdClass $Labels = null,
+        null|\stdClass|array $Labels = null,
     ) {
         $this->Name = $Name;
         $this->Count = $Count;
@@ -60,8 +54,8 @@ class SampledValue extends AbstractModel
         $this->Max = $Max;
         $this->Mean = $Mean;
         $this->Stddev = $Stddev;
-        $this->Labels = $Labels ?? new \stdClass();
-}
+        $this->setLabels($Labels);
+    }
 
     public function getName(): string
     {
@@ -140,14 +134,28 @@ class SampledValue extends AbstractModel
         return $this;
     }
 
-    public function getLabels(): null|\stdClass
+    /**
+     * @return array<string,string>|null
+     */
+    public function getLabels(): null|array
     {
         return $this->Labels;
     }
 
-    public function setLabels(null|\stdClass $labels): self
+    /**
+     * @param \stdClass|array<string,string>|null $Labels
+     * @return $this
+     */
+    public function setLabels(null|\stdClass|array $Labels): self
     {
-        $this->Labels = $labels ?? new \stdClass();
+        if (null === $Labels) {
+            unset($this->Labels);
+            return $this;
+        }
+        $this->Labels = [];
+        foreach ($Labels as $k => $v) {
+            $this->Labels[$k] = $v;
+        }
         return $this;
     }
 
@@ -155,7 +163,11 @@ class SampledValue extends AbstractModel
     {
         $n = new self();
         foreach ($decoded as $k => $v) {
-            $n->{$k} = $v;
+            if ('Labels' === $k) {
+                $n->setLabels($v);
+            } else {
+                $n->{$k} = $v;
+            }
         }
         return $n;
     }
@@ -170,7 +182,7 @@ class SampledValue extends AbstractModel
         $out->Max = $this->Max;
         $out->Mean = $this->Mean;
         $out->Stddev = $this->Stddev;
-        $out->Labels = $this->Labels;
+        $out->Labels = $this->getLabels();
         return $out;
     }
 }

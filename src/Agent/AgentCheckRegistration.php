@@ -20,6 +20,8 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
+use DCarbone\PHPConsulAPI\Values;
+
 class AgentCheckRegistration extends AgentServiceCheck
 {
     public string $ID;
@@ -42,7 +44,7 @@ class AgentCheckRegistration extends AgentServiceCheck
         string $Timeout = '',
         string $TTL = '',
         string $HTTP = '',
-        null|\stdClass  $Header = null,
+        null|\stdClass|array|Values $Header = null,
         string $Method = '',
         string $TCP = '',
         string $Status = '',
@@ -90,7 +92,7 @@ class AgentCheckRegistration extends AgentServiceCheck
         $this->ServiceID = $ServiceID;
         $this->Namespace = $Namespace;
         $this->Partition = $Partition;
-}
+    }
 
     public function getID(): string
     {

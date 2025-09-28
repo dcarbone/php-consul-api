@@ -154,12 +154,13 @@ class AgentMember extends AbstractModel
         foreach ($decoded as $k => $v) {
             if ('Tags' === $k) {
                 if (null !== $v) {
-                    foreach ($v as $k => $vv) {
-                        $n->Tags[$k] = $vv;
+                    foreach ($v as $kk => $vv) {
+                        $n->Tags[$kk] = $vv;
                     }
                 }
+            } else {
+                $n->{$k} = $v;
             }
-            $n->{$k} = $v;
         }
         return $n;
     }

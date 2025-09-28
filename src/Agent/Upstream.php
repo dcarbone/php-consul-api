@@ -35,12 +35,15 @@ class Upstream extends AbstractModel
     public int $LocalBindPort;
     public string $LocalBindSocketPath;
     public string $LocalBindSocketMode;
-    public null|\stdClass $Config;
+    /** @var array<string,mixed> */
+    public null|array $Config;
     public null|MeshGatewayConfig $MeshGateway;
     public bool $CentrallyConfigured;
 
+    /**
+     * @param \stdClass|array<string,mixed>|null $Config
+     */
     public function __construct(
-        null|array $data = [], // Deprecated, will be removed.
         string|UpstreamDestType $DestinationType = UpstreamDestType::UNDEFINED,
         string $DestinationPartition = '',
         string $DestinationNamespace = '',
@@ -51,7 +54,7 @@ class Upstream extends AbstractModel
         int $LocalBindPort = 0,
         string $LocalBindSocketPath = '',
         string $LocalBindSocketMode = '',
-        null|\stdClass $Config = null,
+        null|\stdClass|array $Config = null,
         null|MeshGatewayConfig $MeshGateway = null,
         bool $CentrallyConfigured = false,
     ) {
@@ -65,10 +68,10 @@ class Upstream extends AbstractModel
         $this->LocalBindPort = $LocalBindPort;
         $this->LocalBindSocketPath = $LocalBindSocketPath;
         $this->LocalBindSocketMode = $LocalBindSocketMode;
-        $this->Config = $Config;
+        $this->setConfig($Config);
         $this->MeshGateway = $MeshGateway;
         $this->CentrallyConfigured = $CentrallyConfigured;
-}
+    }
 
     public function getDestinationType(): UpstreamDestType
     {
@@ -180,14 +183,28 @@ class Upstream extends AbstractModel
         return $this;
     }
 
-    public function getConfig(): null|\stdClass
+    /**
+     * @return null|array<string,mixed>
+     */
+    public function getConfig(): null|array
     {
         return $this->Config;
     }
 
-    public function setConfig(null|\stdClass $Config): self
+    /**
+     * @param \stdClass|array<string,mixed>|null $Config
+     * @return $this
+     */
+    public function setConfig(null|\stdClass|array $Config): self
     {
-        $this->Config = $Config;
+        if (null == $Config) {
+            $this->Config = null;
+            return $this;
+        }
+        $this->Config = [];
+        foreach ($Config as $k => $v) {
+            $this->Config[$k] = $v;
+        }
         return $this;
     }
 
@@ -221,6 +238,8 @@ class Upstream extends AbstractModel
                 $n->setDestinationType($v);
             } elseif ('MeshGateway' === $k) {
                 $n->MeshGateway = MeshGatewayConfig::jsonUnserialize($v);
+            } elseif ('Config' === $k) {
+                $n->setConfig($v);
             } else {
                 $n->{$k} = $v;
             }

@@ -28,16 +28,13 @@ class ConnectProxyConfig extends AbstractModel
     public string $TargetServiceID;
     public string $TargetServiceName;
     public string $ContentHash;
-    public null|\stdClass $Config;
+    /** @var array<string,mixed> */
+    public array $Config;
     /** @var array<\DCarbone\PHPConsulAPI\Agent\Upstream> */
     public array $Upstreams;
 
     /**
-     * @param string $ProxyServiceID
-     * @param string $TargetServiceID
-     * @param string $TargetServiceName
-     * @param string $ContentHash
-     * @param \stdClass|null $Config
+     * @param array<string,mixed>|\stdClass|null $Config
      * @param array<\DCarbone\PHPConsulAPI\Agent\Upstream> $Upstreams
      */
     public function __construct(
@@ -45,14 +42,14 @@ class ConnectProxyConfig extends AbstractModel
         string $TargetServiceID = '',
         string $TargetServiceName = '',
         string $ContentHash = '',
-        null|\stdClass $Config = null,
+        null|\stdClass|array $Config = null,
         array $Upstreams = [],
     ) {
         $this->ProxyServiceID = $ProxyServiceID;
         $this->TargetServiceID = $TargetServiceID;
         $this->TargetServiceName = $TargetServiceName;
         $this->ContentHash = $ContentHash;
-        $this->Config = $Config;
+        $this->setConfig($Config);
         $this->setUpstreams(...$Upstreams);
 }
 
@@ -100,14 +97,28 @@ class ConnectProxyConfig extends AbstractModel
         return $this;
     }
 
-    public function getConfig(): null|\stdClass
+    /**
+     * @return null|array<string,mixed>
+     */
+    public function getConfig(): null|array
     {
         return $this->Config;
     }
 
-    public function setConfig(?\stdClass $Config): self
+    /**
+     * @param \stdClass|array<string,mixed>|null $Config
+     * @return $this
+     */
+    public function setConfig(null|\stdClass|array $Config): self
     {
-        $this->Config = $Config;
+        if (null === $Config) {
+            unset($this->Config);
+            return $this;
+        }
+        $this->Config = [];
+        foreach ($Config as $k => $v) {
+            $this->Config[$k] = $v;
+        }
         return $this;
     }
 
@@ -134,6 +145,8 @@ class ConnectProxyConfig extends AbstractModel
                 foreach ($v as $vv) {
                     $n->Upstreams[] = Upstream::jsonUnserialize($vv);
                 }
+            } elseif ('Config' === $k) {
+                $n->setConfig($v);
             } else {
                 $n->{$k} = $v;
             }
@@ -148,7 +161,7 @@ class ConnectProxyConfig extends AbstractModel
         $out->TargetServiceID = $this->TargetServiceID;
         $out->TargetServiceName = $this->TargetServiceName;
         $out->ContentHash = $this->ContentHash;
-        $out->Config = $this->Config;
+        $out->Config = $this->getConfig();
         $out->Upstreams = $this->Upstreams;
         return $out;
     }
