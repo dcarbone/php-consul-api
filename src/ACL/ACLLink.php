@@ -27,13 +27,11 @@ class ACLLink extends AbstractModel
     public string $ID;
     public string $Name;
 
-    public function __construct(
-        string $ID = '',
-        string $Name = '',
-    ) {
+    public function __construct(string $ID = '', string $Name = '')
+    {
         $this->ID = $ID;
         $this->Name = $Name;
-}
+    }
 
     public function getID(): string
     {

@@ -31,12 +31,12 @@ class ACLLoginParams extends AbstractModel
     public string $BearerToken;
 
     /**
-     * @param \stdClass|array<string,string>|null $Meta
+     * @param array<string,string> $Meta
      */
     public function __construct(
         string $AuthMethod = '',
         string $BearerToken = '',
-        null|\stdClass|array $Meta = null,
+        array $Meta = [],
     ) {
         $this->AuthMethod = $AuthMethod;
         $this->BearerToken = $BearerToken;

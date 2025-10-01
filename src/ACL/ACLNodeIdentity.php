@@ -27,13 +27,11 @@ class ACLNodeIdentity extends AbstractModel
     public string $NodeName;
     public string $Datacenter;
 
-    public function __construct(
-        string $NodeName = '',
-        string $Datacenter = ''
-    ) {
+    public function __construct(string $NodeName = '', string $Datacenter = '')
+    {
         $this->NodeName = $NodeName;
         $this->Datacenter = $Datacenter;
-}
+    }
 
     public function getNodeName(): string
     {

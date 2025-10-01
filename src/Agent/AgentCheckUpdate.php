@@ -27,13 +27,11 @@ class AgentCheckUpdate extends AbstractModel
     public string $Status;
     public string $Output;
 
-    public function __construct(
-        string $Status = '',
-        string $Output = ''
-    ) {
+    public function __construct(string $Status = '', string $Output = '')
+    {
         $this->Status = $Status;
         $this->Output = $Output;
-}
+    }
 
     public function getStatus(): string
     {

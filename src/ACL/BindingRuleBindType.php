@@ -27,4 +27,6 @@ enum BindingRuleBindType: string
     case Node = 'node';
     case Policy = 'policy';
     case TemplatedPolicy = 'templated-policy';
+
+    case UNDEFINED = '';
 }

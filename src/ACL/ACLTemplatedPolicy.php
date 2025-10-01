@@ -29,6 +29,9 @@ class ACLTemplatedPolicy extends AbstractModel
     /** @var string[] */
     public array $Datacenters;
 
+    /**
+     * @param array<string> $Datacenters
+     */
     public function __construct(
         string $TemplateName = '',
         null|ACLTemplatedPolicyVariables $TemplateVariables = null,

@@ -28,15 +28,12 @@ class KubernetesAuthMethodConfig extends AbstractModel
     public string $CACert;
     public string $ServiceAccountJWT;
 
-    public function __construct(
-        string $Host = '',
-        string $CACert = '',
-        string $ServiceAccountJWT = ''
-    ) {
+    public function __construct(string $Host = '', string $CACert = '', string $ServiceAccountJWT = '')
+    {
         $this->Host = $Host;
         $this->CACert = $CACert;
         $this->ServiceAccountJWT = $ServiceAccountJWT;
-}
+    }
 
     public function getHost(): string
     {
@@ -75,7 +72,7 @@ class KubernetesAuthMethodConfig extends AbstractModel
      * RenderToConfig converts this into a map[string]interface{} suitable for use
      * in the ACLAuthMethod.Config field.
      *
-     * @return array
+     * @return array<string,string>
      */
     public function RenderToConfig(): array
     {

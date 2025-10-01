@@ -28,7 +28,7 @@ class ACLBindingRule extends AbstractModel
     public string $Description;
     public string $AuthMethod;
     public string $Selector;
-    public string $BindType;
+    public BindingRuleBindType $BindType;
     public string $BindName;
     public int $CreateIndex;
     public int $ModifyIndex;
@@ -39,7 +39,7 @@ class ACLBindingRule extends AbstractModel
         string $Description = '',
         string $AuthMethod = '',
         string $Selector = '',
-        string $BindType = '',
+        string|BindingRuleBindType $BindType = BindingRuleBindType::UNDEFINED,
         string $BindName = '',
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
@@ -49,7 +49,7 @@ class ACLBindingRule extends AbstractModel
         $this->Description = $Description;
         $this->AuthMethod = $AuthMethod;
         $this->Selector = $Selector;
-        $this->BindType = $BindType;
+        $this->BindType = ($BindType instanceof BindingRuleBindType) ? $BindType : BindingRuleBindType::from($BindType);
         $this->BindName = $BindName;
         $this->CreateIndex = $CreateIndex;
         $this->ModifyIndex = $ModifyIndex;
@@ -100,12 +100,12 @@ class ACLBindingRule extends AbstractModel
         return $this;
     }
 
-    public function getBindType(): string
+    public function getBindType(): BindingRuleBindType
     {
         return $this->BindType;
     }
 
-    public function setBindType(string $BindType): self
+    public function setBindType(BindingRuleBindType $BindType): self
     {
         $this->BindType = $BindType;
         return $this;

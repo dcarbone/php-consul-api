@@ -41,7 +41,7 @@ class ACLAuthMethod extends AbstractModel
     public string $Partition;
 
     /**
-     * @param null|\stdClass|array<string,mixed> $Config
+     * @param array<string,mixed> $Config
      * @param array<\DCarbone\PHPConsulAPI\ACL\ACLAuthMethodNamespaceRule> $NamespaceRules
      */
     public function __construct(
@@ -51,7 +51,7 @@ class ACLAuthMethod extends AbstractModel
         string  $Description = '',
         null|int|float|string|\DateInterval|Time\Duration $MaxTokenTTL = null,
         string $TokenLocality = '',
-        null|\stdClass|array $Config = null,
+        array $Config = [],
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
         array $NamespaceRules = [],
@@ -184,7 +184,7 @@ class ACLAuthMethod extends AbstractModel
     }
 
     /**
-     * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodNamespaceRule[]
+     * @return array<\DCarbone\PHPConsulAPI\ACL\ACLAuthMethodNamespaceRule>
      */
     public function getNamespaceRules(): array
     {

@@ -32,12 +32,11 @@ class CompoundServiceName extends AbstractModel
         string $Name = '',
         string $Namespace = '',
         string $Partition = '',
-    )
-    {
+    ) {
         $this->Name = $Name;
         $this->Namespace = $Namespace;
         $this->Partition = $Partition;
-}
+    }
 
     public function getName(): string
     {

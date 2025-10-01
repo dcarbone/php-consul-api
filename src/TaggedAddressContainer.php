@@ -20,40 +20,40 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-trait MetaContainer
+trait TaggedAddressContainer
 {
     /** @var array<string,string> */
-    public array $Meta;
+    public array $TaggedAddresses;
 
     /**
-     * @return array<string,string>|null
+     * @return null|array<string,string>
      */
-    public function getMeta(): null|array
+    public function getTaggedAddresses(): null|array
     {
-        return $this->Meta ?? null;
+        return $this->TaggedAddresses ?? null;
     }
 
-    public function setMetaValue(string $k, string $v): self
+    public function setTaggedAddress(string $k, string $v): self
     {
-        if (!isset($this->Meta)) {
-            $this->Meta = [];
+        if (!isset($this->TaggedAddresses)) {
+            $this->TaggedAddresses = [];
         }
-        $this->Meta[$k] = $v;
+        $this->TaggedAddresses[$k] = $v;
         return $this;
     }
 
     /**
-     * @param null|\stdClass|array<string,string> $Meta
+     * @param \stdClass|array<string,string>|null $TaggedAddresses
      */
-    public function setMeta(null|\stdClass|array $Meta): self
+    public function setTaggedAddresses(null|\stdClass|array $TaggedAddresses): self
     {
-        if (null === $Meta) {
-            unset($this->Meta);
+        if (null === $TaggedAddresses) {
+            unset($this->TaggedAddresses);
             return $this;
         }
-        $this->Meta = [];
-        foreach ($Meta as $k => $v) {
-            $this->setMetaValue($k, $v);
+        $this->TaggedAddresses = [];
+        foreach ($TaggedAddresses as $k => $v) {
+            $this->setTaggedAddress($k, $v);
         }
         return $this;
     }

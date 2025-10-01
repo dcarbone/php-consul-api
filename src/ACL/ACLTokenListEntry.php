@@ -30,15 +30,15 @@ class ACLTokenListEntry extends AbstractModel
     public string $AccessorID;
     public string $SecretID;
     public string $Description;
-    /** @var \DCarbone\PHPConsulAPI\ACL\ACLTokenPolicyLink[] */
+    /** @var array<\DCarbone\PHPConsulAPI\ACL\ACLTokenPolicyLink> */
     public array $Policies;
-    /** @var \DCarbone\PHPConsulAPI\ACL\ACLRolePolicyLink[] */
+    /** @var array<\DCarbone\PHPConsulAPI\ACL\ACLTokenRoleLink> */
     public array $Roles;
-    /** @var \DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity[] */
+    /** @var array<\DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity> */
     public array $ServiceIdentities;
-    /** @var \DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity[] */
+    /** @var array<\DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity> */
     public array $NodeIdentities;
-    /** @var \DCarbone\PHPConsulAPI\ACL\ACLTemplatedPolicy[] */
+    /** @var array<\DCarbone\PHPConsulAPI\ACL\ACLTemplatedPolicy> */
     public array $TemplatedPolicies;
     public bool $Local;
     public string $AuthMethod;
@@ -50,17 +50,24 @@ class ACLTokenListEntry extends AbstractModel
     public string $Partition;
     public string $AuthMethodNamespace;
 
+    /**
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLTokenPolicyLink> $Policies
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLTokenRoleLink> $Roles
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity> $ServiceIdentities
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity> $NodeIdentities
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLTemplatedPolicy> $TemplatedPolicies
+     */
     public function __construct(
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
         string $AccessorID = '',
         string $SecretID = '',
         string $Description = '',
-        iterable $Policies = [],
-        iterable $Roles = [],
-        iterable $ServiceIdentities = [],
-        iterable $NodeIdentities = [],
-        iterable $TemplatedPolicies = [],
+        array $Policies = [],
+        array $Roles = [],
+        array $ServiceIdentities = [],
+        array $NodeIdentities = [],
+        array $TemplatedPolicies = [],
         bool $Local = false,
         string $AuthMethod = '',
         null|Time\Time $ExpirationTime = null,

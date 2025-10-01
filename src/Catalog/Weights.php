@@ -27,16 +27,11 @@ class Weights extends AbstractModel
     public int $Passing;
     public int $Warning;
 
-    /**
-     * @param array<string,mixed>|null $data
-     */
-    public function __construct(
-        int $Passing = 0,
-        int $Warning = 0
-    ) {
+    public function __construct(int $Passing = 0, int $Warning = 0)
+    {
         $this->Passing = $Passing;
         $this->Warning = $Warning;
-}
+    }
 
     public function getPassing(): int
     {

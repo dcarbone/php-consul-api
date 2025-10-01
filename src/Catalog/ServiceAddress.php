@@ -27,16 +27,11 @@ class ServiceAddress extends AbstractModel
     public string $Address;
     public int $Port;
 
-    /**
-     * @param array<string,mixed>|null $data
-     */
-    public function __construct(
-        string $address = '',
-        int $port = 0,
-    ) {
+    public function __construct(string $address = '', int $port = 0)
+    {
         $this->Address = $address;
         $this->Port = $port;
-}
+    }
 
     public function getAddress(): string
     {

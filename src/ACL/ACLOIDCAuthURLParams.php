@@ -32,13 +32,13 @@ class ACLOIDCAuthURLParams extends AbstractModel
     public string $ClientNonce;
 
     /**
-     * @param \stdClass|array<string,string>|null $Meta
+     * @param array<string,string> $Meta
      */
     public function __construct(
         string $AuthMethod = '',
         string $RedirectURI = '',
         string $ClientNonce = '',
-        null|\stdClass|array $Meta = null
+        array $Meta = [],
     ) {
         $this->AuthMethod = $AuthMethod;
         $this->RedirectURI = $RedirectURI;

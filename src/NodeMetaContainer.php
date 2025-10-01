@@ -20,40 +20,41 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-trait MetaContainer
+trait NodeMetaContainer
 {
     /** @var array<string,string> */
-    public array $Meta;
+    public array $NodeMeta;
 
     /**
-     * @return array<string,string>|null
+     * @return null|array<string,string>
      */
-    public function getMeta(): null|array
+    public function getNodeMeta(): null|array
     {
-        return $this->Meta ?? null;
+        return $this->NodeMeta ?? null;
     }
 
-    public function setMetaValue(string $k, string $v): self
+    public function setNodeMetaValue(string $k, string $v): self
     {
-        if (!isset($this->Meta)) {
-            $this->Meta = [];
+        if (!isset($this->NodeMeta)) {
+            $this->NodeMeta = [];
         }
-        $this->Meta[$k] = $v;
+        $this->NodeMeta[$k] = $v;
         return $this;
     }
 
     /**
-     * @param null|\stdClass|array<string,string> $Meta
+     * @param \stdClass|array<string,string>|null $NodeMeta
+     * @return $this
      */
-    public function setMeta(null|\stdClass|array $Meta): self
+    public function setNodeMeta(null|\stdClass|array $NodeMeta): self
     {
-        if (null === $Meta) {
-            unset($this->Meta);
+        if (null === $NodeMeta) {
+            unset($this->NodeMeta);
             return $this;
         }
-        $this->Meta = [];
-        foreach ($Meta as $k => $v) {
-            $this->setMetaValue($k, $v);
+        $this->NodeMeta = [];
+        foreach ($NodeMeta as $k => $v) {
+            $this->setNodeMetaValue($k, $v);
         }
         return $this;
     }

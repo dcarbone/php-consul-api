@@ -27,13 +27,11 @@ class ACLAuthMethodNamespaceRule extends AbstractModel
     public string $Selector;
     public string $BindNamespace;
 
-    public function __construct(
-        string $Selector = '',
-        string $BindNamespace = '',
-    ) {
+    public function __construct(string $Selector = '', string $BindNamespace = '')
+    {
         $this->Selector = $Selector;
         $this->BindNamespace = $BindNamespace;
-}
+    }
 
     public function getSelector(): string
     {

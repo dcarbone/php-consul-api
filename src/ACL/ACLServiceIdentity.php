@@ -28,13 +28,14 @@ class ACLServiceIdentity extends AbstractModel
     /** @var string[] */
     public array $Datacenters;
 
-    public function __construct(
-        string $ServiceName = '',
-        iterable $Datacenters = []
-    ) {
+    /**
+     * @param array<string> $Datacenters
+     */
+    public function __construct(string $ServiceName = '', array $Datacenters = [])
+    {
         $this->ServiceName = $ServiceName;
         $this->setDatacenters(...$Datacenters);
-}
+    }
 
     public function getServiceName(): string
     {

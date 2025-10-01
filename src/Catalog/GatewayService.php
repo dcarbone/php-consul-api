@@ -39,7 +39,6 @@ class GatewayService extends AbstractModel
     public string $FromWildCard;
 
     public function __construct(
-        null|array $data = [], // Deprecated, will be removed.
         null|CompoundServiceName $Gateway = null,
         null|CompoundServiceName $Service = null,
         string|ServiceKind $GatewayKind = '',
@@ -51,8 +50,7 @@ class GatewayService extends AbstractModel
         string $KeyFile = '',
         string $SNI = '',
         string $FromWildCard = ''
-    )
-    {
+    ) {
         $this->Gateway = $Gateway ?? new CompoundServiceName();
         $this->Service = $Service ?? new CompoundServiceName();
         $this->GatewayKind = $GatewayKind instanceof ServiceKind ? $GatewayKind : ServiceKind::from($GatewayKind);
@@ -64,7 +62,7 @@ class GatewayService extends AbstractModel
         $this->KeyFile = $KeyFile;
         $this->SNI = $SNI;
         $this->FromWildCard = $FromWildCard;
-}
+    }
 
     public function getGateway(): CompoundServiceName
     {
@@ -196,11 +194,11 @@ class GatewayService extends AbstractModel
         foreach ($decoded as $k => $v) {
             if ('Gateway' === $k) {
                 $n->Gateway = CompoundServiceName::jsonUnserialize($v);
-            } else if ('Service' === $k) {
+            } elseif ('Service' === $k) {
                 $n->Service = CompoundServiceName::jsonUnserialize($v);
-            } else if ('GatewayKind' === $k) {
+            } elseif ('GatewayKind' === $k) {
                 $n->GatewayKind = ServiceKind::from($v);
-            } else if ('Hosts' === $k) {
+            } elseif ('Hosts' === $k) {
                 $n->setHosts(...$v);
             } else {
                 $n->{$k} = $v;

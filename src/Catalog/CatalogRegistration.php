@@ -24,15 +24,18 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Agent\AgentCheck;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
 use DCarbone\PHPConsulAPI\Health\HealthChecks;
+use DCarbone\PHPConsulAPI\NodeMetaContainer;
 use DCarbone\PHPConsulAPI\Peering\Locality;
+use DCarbone\PHPConsulAPI\TaggedAddressContainer;
 
 class CatalogRegistration extends AbstractModel
 {
+    use TaggedAddressContainer;
+    use NodeMetaContainer;
+
     public string $ID;
     public string $Node;
     public string $Address;
-    public null|\stdClass $TaggedAddresses;
-    public null|\stdClass $NodeMeta;
     public string $Datacenter;
     public null|AgentService $Service;
     public null|AgentCheck $Check;
@@ -45,8 +48,8 @@ class CatalogRegistration extends AbstractModel
      * @param string $ID
      * @param string $Node
      * @param string $Address
-     * @param \stdClass|null $TaggedAddresses
-     * @param \stdClass|null $NodeMeta
+     * @param array<string,string> $TaggedAddresses
+     * @param array<string,string> $NodeMeta
      * @param string $Datacenter
      * @param \DCarbone\PHPConsulAPI\Agent\AgentService|null $Service
      * @param \DCarbone\PHPConsulAPI\Agent\AgentCheck|null $Check
@@ -59,8 +62,8 @@ class CatalogRegistration extends AbstractModel
         string $ID = '',
         string $Node = '',
         string $Address = '',
-        null|\stdClass $TaggedAddresses = null,
-        null|\stdClass $NodeMeta = null,
+        array $TaggedAddresses = [],
+        array $NodeMeta = [],
         string $Datacenter = '',
         null|AgentService $Service = null,
         null|AgentCheck $Check = null,
@@ -72,8 +75,8 @@ class CatalogRegistration extends AbstractModel
         $this->ID = $ID;
         $this->Node = $Node;
         $this->Address = $Address;
-        $this->TaggedAddresses = $TaggedAddresses;
-        $this->NodeMeta = $NodeMeta;
+        $this->setTaggedAddresses($TaggedAddresses);
+        $this->setNodeMeta($NodeMeta);
         $this->Datacenter = $Datacenter;
         $this->Service = $Service;
         $this->Check = $Check;
@@ -81,7 +84,7 @@ class CatalogRegistration extends AbstractModel
         $this->SkipNodeUpdate = $SkipNodeUpdate;
         $this->Partition = $Partition;
         $this->Locality = $Locality;
-}
+    }
 
     public function getID(): string
     {
@@ -116,28 +119,6 @@ class CatalogRegistration extends AbstractModel
         return $this;
     }
 
-    public function getTaggedAddresses(): null|\stdClass
-    {
-        return $this->TaggedAddresses;
-    }
-
-    public function setTaggedAddresses(null|\stdClass $TaggedAddresses): self
-    {
-        $this->TaggedAddresses = $TaggedAddresses;
-        return $this;
-    }
-
-    public function getNodeMeta(): null|\stdClass
-    {
-        return $this->NodeMeta;
-    }
-
-    public function setNodeMeta(null|\stdClass $NodeMeta): self
-    {
-        $this->NodeMeta = $NodeMeta;
-        return $this;
-    }
-
     public function getDatacenter(): string
     {
         return $this->Datacenter;
@@ -149,23 +130,23 @@ class CatalogRegistration extends AbstractModel
         return $this;
     }
 
-    public function getService(): ?AgentService
+    public function getService(): null|AgentService
     {
         return $this->Service;
     }
 
-    public function setService(?AgentService $Service): self
+    public function setService(null|AgentService $Service): self
     {
         $this->Service = $Service;
         return $this;
     }
 
-    public function getCheck(): ?AgentCheck
+    public function getCheck(): null|AgentCheck
     {
         return $this->Check;
     }
 
-    public function setCheck(?AgentCheck $Check): self
+    public function setCheck(null|AgentCheck $Check): self
     {
         $this->Check = $Check;
         return $this;
@@ -220,9 +201,9 @@ class CatalogRegistration extends AbstractModel
         $n = new self();
         foreach ($decoded as $k => $v) {
             if ('TaggedAddresses' === $k) {
-                $n->TaggedAddresses = null === $v ? null : (object)$v;
+                $n->setTaggedAddresses($v);
             } elseif ('NodeMeta' === $k) {
-                $n->NodeMeta = null === $v ? null : (object)$v;
+                $n->setNodeMeta($v);
             } elseif ('Service' === $k) {
                 $n->Service = null === $v ? null : AgentService::jsonUnserialize($v);
             } elseif ('Check' === $k) {
@@ -244,15 +225,19 @@ class CatalogRegistration extends AbstractModel
         $out->ID = $this->ID;
         $out->Node = $this->Node;
         $out->Address = $this->Address;
-        $out->TaggedAddresses = $this->TaggedAddresses;
-        $out->NodeMeta = $this->NodeMeta;
+        $out->TaggedAddresses = $this->getTaggedAddresses();
+        $out->NodeMeta = $this->getNodeMeta();
         $out->Datacenter = $this->Datacenter;
         $out->Service = $this->Service;
         $out->Check = $this->Check;
         $out->Checks = $this->Checks;
         $out->SkipNodeUpdate = $this->SkipNodeUpdate;
-        $out->Partition = $this->Partition;
-        $out->Locality = $this->Locality;
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
+        }
+        if (null !== $this->Locality) {
+            $out->Locality = $this->Locality;
+        }
         return $out;
     }
 }

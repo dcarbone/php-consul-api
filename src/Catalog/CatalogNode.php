@@ -26,47 +26,20 @@ use DCarbone\PHPConsulAPI\Agent\AgentService;
 class CatalogNode extends AbstractModel
 {
     public null|Node $Node;
-    public null|\stdClass $Services;
-
-    /**
-     * @param \DCarbone\PHPConsulAPI\Catalog\Node|null $Node
-     * @param null|\stdClass $Services
-     */
-    public function __construct(
-        null|Node $Node = null,
-        null|\stdClass $Services = null
-    ) {
-        $this->Node = $Node;
-        $this->setServices($Services);
-}
+    /** @var array<string,\DCarbone\PHPConsulAPI\Agent\AgentService> */
+    public array $Services;
 
     public function getNode(): null|Node
     {
-        return $this->Node;
+        return $this->Node ?? null;
     }
 
-    public function setNode(?Node $Node): self
+    /**
+     * @return null|array<string,\DCarbone\PHPConsulAPI\Agent\AgentService>
+     */
+    public function getServices(): null|array
     {
-        $this->Node = $Node;
-        return $this;
-    }
-
-    public function getServices(): null|\stdClass
-    {
-        return $this->Services;
-    }
-
-    public function setServices(null|\stdClass $Services): self
-    {
-        if (null === $Services) {
-            $this->Services = null;
-            return $this;
-        }
-        $this->Services = new \stdClass();
-        foreach ($Services as $k => $v) {
-            $this->Services->{$k} = $v instanceof AgentService ? $v : AgentService::jsonUnserialize($v);
-        }
-        return $this;
+        return $this->Services ?? null;
     }
 
     public static function jsonUnserialize(\stdClass $decoded): self
@@ -76,7 +49,10 @@ class CatalogNode extends AbstractModel
             if ('Node' === $k) {
                 $n->Node = null === $v ? null : Node::jsonUnserialize($v);
             } elseif ('Services' === $k) {
-                $n->setServices($v);
+                $n->Services = [];
+                foreach ($v as $kk => $vv) {
+                    $n->Services[$kk] = AgentService::jsonUnserialize($vv);
+                }
             } else {
                 $n->{$k} = $v;
             }
@@ -87,8 +63,8 @@ class CatalogNode extends AbstractModel
     public function jsonSerialize(): \stdClass
     {
         $out = $this->_startJsonSerialize();
-        $out->Node = $this->Node;
-        $out->Services = $this->Services;
+        $out->Node = $this->getNode();
+        $out->Services = $this->getServices();
         return $out;
     }
 }

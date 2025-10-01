@@ -23,17 +23,17 @@ namespace DCarbone\PHPConsulAPI\Catalog;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\MetaContainer;
 use DCarbone\PHPConsulAPI\Peering\Locality;
+use DCarbone\PHPConsulAPI\TaggedAddressContainer;
 
 class Node extends AbstractModel
 {
     use MetaContainer;
+    use TaggedAddressContainer;
 
     public string $ID;
     public string $Node;
     public string $Address;
     public string $Datacenter;
-    /** @var array<string,string> */
-    public array $TaggedAddresses;
     public int $CreateIndex;
     public int $ModifyIndex;
     public string $Partition;
@@ -41,16 +41,16 @@ class Node extends AbstractModel
     public null|Locality $Locality;
 
     /**
-     * @param \stdClass|array<string,string>|null $TaggedAddresses
-     * @param \stdClass|array<string,string>|null $Meta
+     * @param array<string,string> $TaggedAddresses
+     * @param array<string,string> $Meta
      */
     public function __construct(
         string $ID = '',
         string $Node = '',
         string $Address = '',
         string $Datacenter = '',
-        null|\stdClass|array $TaggedAddresses = null,
-        null|\stdClass|array $Meta = null,
+        array $TaggedAddresses = [],
+        array $Meta = [],
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
         string $Partition = '',
@@ -111,31 +111,6 @@ class Node extends AbstractModel
     public function setDatacenter(string $Datacenter): self
     {
         $this->Datacenter = $Datacenter;
-        return $this;
-    }
-
-    /**
-     * @return array<string,string>|null
-     */
-    public function getTaggedAddresses(): null|array
-    {
-        return $this->TaggedAddresses;
-    }
-
-    /**
-     * @param \stdClass|array<string,string>|null $TaggedAddresses
-     * @return $this
-     */
-    public function setTaggedAddresses(null|\stdClass|array $TaggedAddresses): self
-    {
-        if (null === $TaggedAddresses) {
-            unset($this->TaggedAddresses);
-            return $this;
-        }
-        $this->TaggedAddresses = [];
-        foreach ($TaggedAddresses as $k => $v) {
-            $this->TaggedAddresses[$k] = $v;
-        }
         return $this;
     }
 

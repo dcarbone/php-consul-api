@@ -20,40 +20,40 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-trait MetaContainer
+trait ServiceMetaContainer
 {
     /** @var array<string,string> */
-    public array $Meta;
+    public array $ServiceMeta;
 
     /**
-     * @return array<string,string>|null
+     * @return null|array<string,string>
      */
-    public function getMeta(): null|array
+    public function getServiceMeta(): null|array
     {
-        return $this->Meta ?? null;
+        return $this->ServiceMeta ?? null;
     }
 
-    public function setMetaValue(string $k, string $v): self
+    public function setServiceMetaValue(string $k, string $v): self
     {
-        if (!isset($this->Meta)) {
-            $this->Meta = [];
+        if (!isset($this->ServiceMeta)) {
+            $this->ServiceMeta = [];
         }
-        $this->Meta[$k] = $v;
+        $this->ServiceMeta[$k] = $v;
         return $this;
     }
 
     /**
-     * @param null|\stdClass|array<string,string> $Meta
+     * @param \stdClass|array<string,string>|null $ServiceMeta
      */
-    public function setMeta(null|\stdClass|array $Meta): self
+    public function setServiceMeta(null|\stdClass|array $ServiceMeta): self
     {
-        if (null === $Meta) {
-            unset($this->Meta);
+        if (null === $ServiceMeta) {
+            unset($this->ServiceMeta);
             return $this;
         }
-        $this->Meta = [];
-        foreach ($Meta as $k => $v) {
-            $this->setMetaValue($k, $v);
+        $this->ServiceMeta = [];
+        foreach ($ServiceMeta as $k => $v) {
+            $this->setServiceMetaValue($k, $v);
         }
         return $this;
     }
