@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\PHPLib\Types;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,39 +20,39 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-trait MetaContainer
+trait TaggedAddressField
 {
     /** @var array<string,string> */
-    public array $Meta;
+    public array $TaggedAddresses;
 
     /**
-     * @return array<string,string>|null
+     * @return null|array<string,string>
      */
-    public function getMeta(): null|array
+    public function getTaggedAddresses(): null|array
     {
-        return $this->Meta ?? null;
+        return $this->TaggedAddresses ?? null;
     }
 
-    public function setMetaKey(string $k, string $v): self
+    public function setTaggedAddress(string $k, string $v): self
     {
-        if (!isset($this->Meta)) {
-            $this->Meta = [];
+        if (!isset($this->TaggedAddresses)) {
+            $this->TaggedAddresses = [];
         }
-        $this->Meta[$k] = $v;
+        $this->TaggedAddresses[$k] = $v;
         return $this;
     }
 
     /**
-     * @param null|\stdClass|array<string,string> $Meta
+     * @param \stdClass|array<string,string>|null $TaggedAddresses
      */
-    public function setMeta(null|\stdClass|array $Meta): self
+    public function setTaggedAddresses(null|\stdClass|array $TaggedAddresses): self
     {
-        unset($this->Meta);
-        if (null === $Meta) {
+        unset($this->TaggedAddresses);
+        if (null === $TaggedAddresses) {
             return $this;
         }
-        foreach ($Meta as $k => $v) {
-            $this->setMetaKey($k, $v);
+        foreach ($TaggedAddresses as $k => $v) {
+            $this->setTaggedAddress($k, $v);
         }
         return $this;
     }

@@ -24,14 +24,14 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Agent\AgentCheck;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
 use DCarbone\PHPConsulAPI\Health\HealthChecks;
-use DCarbone\PHPConsulAPI\NodeMetaContainer;
+use DCarbone\PHPConsulAPI\PHPLib\Types\NodeMetaField;
 use DCarbone\PHPConsulAPI\Peering\Locality;
-use DCarbone\PHPConsulAPI\TaggedAddressContainer;
+use DCarbone\PHPConsulAPI\PHPLib\Types\TaggedAddressField;
 
 class CatalogRegistration extends AbstractModel
 {
-    use TaggedAddressContainer;
-    use NodeMetaContainer;
+    use TaggedAddressField;
+    use NodeMetaField;
 
     public string $ID;
     public string $Node;

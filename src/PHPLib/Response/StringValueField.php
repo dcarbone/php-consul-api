@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\PHPLib\Response;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,7 +20,22 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-class ValuedStringsResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
+trait StringValueField
 {
-    use ResponseValueStringsTrait;
+    public string $Value = '';
+
+    public function getValue(): string
+    {
+        return $this->Value;
+    }
+
+    public function unmarshalValue(mixed $decoded): void
+    {
+        $this->Value = (string)$decoded;
+    }
+
+    public function __toString(): string
+    {
+        return $this->Value;
+    }
 }

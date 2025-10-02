@@ -22,11 +22,11 @@ namespace DCarbone\PHPConsulAPI\Operator;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\MetaContainer;
+use DCarbone\PHPConsulAPI\PHPLib\Types\MetaField;
 
 class AutopilotServer extends AbstractModel implements \JsonSerializable
 {
-    use MetaContainer;
+    use MetaField;
 
     public string $ID;
     public string $Name;

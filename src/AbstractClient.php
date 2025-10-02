@@ -22,6 +22,14 @@ namespace DCarbone\PHPConsulAPI;
 
 use DCarbone\Go\HTTP;
 use DCarbone\Go\Time;
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\QueryResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\ValuedQueryStringResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\ValuedQueryStringsResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\ValuedWriteStringResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\WriteResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\WriteResponseInterface;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\RequestOptions as GuzzleRequestOptions;
 use Psr\Http\Message\ResponseInterface;
@@ -297,7 +305,7 @@ abstract class AbstractClient
      * todo: move into Unmarshaller?
      *
      * @param \DCarbone\PHPConsulAPI\RequestResponse $resp
-     * @param \DCarbone\PHPConsulAPI\AbstractResponse $ret
+     * @param \DCarbone\PHPConsulAPI\PHPLib\Response\AbstractResponse $ret
      * @throws \Exception
      */
     protected function _unmarshalResponse(RequestResponse $resp, AbstractResponse $ret): void

@@ -24,10 +24,10 @@ use DCarbone\Go\HTTP;
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\QueryOptions;
-use DCarbone\PHPConsulAPI\ValuedQueryStringsResponse;
-use DCarbone\PHPConsulAPI\ValuedWriteBoolResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\ValuedQueryStringsResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\ValuedWriteBoolResponse;
 use DCarbone\PHPConsulAPI\WriteOptions;
-use DCarbone\PHPConsulAPI\WriteResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\WriteResponse;
 
 class KVClient extends AbstractClient
 {

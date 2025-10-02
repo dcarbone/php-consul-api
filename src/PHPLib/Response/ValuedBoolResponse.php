@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\PHPLib\Response;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,27 +20,7 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-use DCarbone\Go\Time;
-
-function dur_to_millisecond(Time\Duration $dur): string
+class ValuedBoolResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
-    $ns = $dur->Nanoseconds();
-    $ms = $dur->Milliseconds();
-
-    if (0 < $ns && 0 === (int)$ms) {
-        $ms = 1;
-    }
-
-    return "${ms}ms";
-}
-
-$_zeroObject = new \stdClass();
-
-function _enc_obj_if_valued(\stdClass &$out, string $field, \JsonSerializable $obj): void
-{
-    global $_zeroObject;
-    $val = $obj->jsonSerialize();
-    if ($val != $_zeroObject) {
-        $out->{$field} = $val;
-    }
+    use BoolValueField;
 }

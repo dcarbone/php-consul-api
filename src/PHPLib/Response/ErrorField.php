@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\PHPLib\Response;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,20 +20,14 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-abstract class AbstractResponse implements \ArrayAccess
+use DCarbone\PHPConsulAPI\Error;
+
+trait ErrorField
 {
-    public function offsetUnset(mixed $offset): void
-    {
-        throw new \BadMethodCallException(sprintf('Calling %s on class %s is forbidden', __METHOD__, static::class));
-    }
+    public null|Error $Err = null;
 
-    public function offsetSet(mixed $offset, mixed $value): void
+    public function getErr(): null|Error
     {
-        throw new \BadMethodCallException(sprintf('Calling %s on class %s is forbidden', __METHOD__, static::class));
-    }
-
-    protected function _newOutOfRangeException(mixed $offset): \OutOfRangeException
-    {
-        return new \OutOfRangeException(sprintf('Offset %s does not exist', $offset));
+        return $this->Err;
     }
 }

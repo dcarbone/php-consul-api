@@ -23,7 +23,7 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\WriteOptions;
-use DCarbone\PHPConsulAPI\WriteResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\WriteResponse;
 
 class CoordinateClient extends AbstractClient
 {

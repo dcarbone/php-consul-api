@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\PHPLib\Response;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,7 +20,14 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-class ValuedWriteBoolResponse extends AbstractValuedWriteResponse implements UnmarshalledResponseInterface
+use DCarbone\PHPConsulAPI\WriteMeta;
+
+trait WriteMetaField
 {
-    use ResponseValueBoolTrait;
+    public null|WriteMeta $WriteMeta = null;
+
+    public function getWriteMeta(): null|WriteMeta
+    {
+        return $this->WriteMeta;
+    }
 }

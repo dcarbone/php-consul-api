@@ -23,16 +23,16 @@ namespace DCarbone\PHPConsulAPI\Catalog;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Agent\AgentServiceConnectProxyConfig;
 use DCarbone\PHPConsulAPI\Health\HealthChecks;
-use DCarbone\PHPConsulAPI\NodeMetaContainer;
+use DCarbone\PHPConsulAPI\PHPLib\Types\NodeMetaField;
 use DCarbone\PHPConsulAPI\Peering\Locality;
-use DCarbone\PHPConsulAPI\ServiceMetaContainer;
-use DCarbone\PHPConsulAPI\TaggedAddressContainer;
+use DCarbone\PHPConsulAPI\PHPLib\Types\ServiceMetaField;
+use DCarbone\PHPConsulAPI\PHPLib\Types\TaggedAddressField;
 
 class CatalogService extends AbstractModel
 {
-    use TaggedAddressContainer;
-    use NodeMetaContainer;
-    use ServiceMetaContainer;
+    use TaggedAddressField;
+    use NodeMetaField;
+    use ServiceMetaField;
 
     public string $ID;
     public string $Node;

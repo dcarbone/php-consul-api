@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\PHPLib\Response;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,27 +20,7 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-abstract class AbstractValuedWriteResponse extends AbstractResponse implements ValuedResponseInterface
+class ValuedQueryStringResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    use WriteMetaContainer;
-    use ErrorContainer;
-
-    public function offsetExists(mixed $offset): bool
-    {
-        return is_int($offset) && 0 <= $offset && $offset < 3;
-    }
-
-    public function offsetGet(mixed $offset): mixed
-    {
-        if (0 === $offset) {
-            return $this->getValue();
-        }
-        if (1 === $offset) {
-            return $this->WriteMeta;
-        }
-        if (2 === $offset) {
-            return $this->Err;
-        }
-        throw $this->_newOutOfRangeException($offset);
-    }
+    use StringValueField;
 }

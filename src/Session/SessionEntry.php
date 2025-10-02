@@ -24,8 +24,6 @@ use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-use function DCarbone\PHPConsulAPI\dur_to_millisecond;
-
 class SessionEntry extends AbstractModel
 {
     protected const FIELDS = [

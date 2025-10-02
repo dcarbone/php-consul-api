@@ -20,6 +20,9 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
+
 /**
  * @template T
  */

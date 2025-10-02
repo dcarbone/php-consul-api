@@ -24,7 +24,7 @@ use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\Go\Time;
 use stdClass;
 
-use function DCarbone\PHPConsulAPI\_enc_obj_if_valued;
+use function DCarbone\PHPConsulAPI\PHPLib\_enc_obj_if_valued;
 
 class ServiceResolverConfigEntry extends AbstractModel implements ConfigEntry
 {

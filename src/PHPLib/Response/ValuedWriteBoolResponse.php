@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\PHPLib\Response;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,17 +20,7 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-trait ResponseValueStringsTrait
+class ValuedWriteBoolResponse extends AbstractValuedWriteResponse implements UnmarshalledResponseInterface
 {
-    public array $Value = [];
-
-    public function getValue(): ?array
-    {
-        return $this->Value;
-    }
-
-    public function unmarshalValue(mixed $decoded): void
-    {
-        $this->Value = (array)$decoded;
-    }
+    use BoolValueField;
 }

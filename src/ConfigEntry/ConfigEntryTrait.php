@@ -20,11 +20,11 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\MetaContainer;
+use DCarbone\PHPConsulAPI\PHPLib\Types\MetaField;
 
 trait ConfigEntryTrait
 {
-    use MetaContainer;
+    use MetaField;
 
     public string $Namespace;
     public int $CreateIndex;

@@ -23,9 +23,9 @@ namespace DCarbone\PHPConsulAPI\ACL;
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\QueryOptions;
-use DCarbone\PHPConsulAPI\ValuedWriteStringResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\ValuedWriteStringResponse;
 use DCarbone\PHPConsulAPI\WriteOptions;
-use DCarbone\PHPConsulAPI\WriteResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\WriteResponse;
 
 class ACLClient extends AbstractClient
 {

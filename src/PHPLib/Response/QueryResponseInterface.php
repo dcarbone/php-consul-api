@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\PHPLib\Response;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -19,6 +19,8 @@ namespace DCarbone\PHPConsulAPI;
    See the License for the specific language governing permissions and
    limitations under the License.
  */
+
+use DCarbone\PHPConsulAPI\QueryMeta;
 
 interface QueryResponseInterface
 {

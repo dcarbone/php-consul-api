@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\PHPLib\Response;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,7 +20,30 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-class ValuedBoolResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
+trait BoolValueField
 {
-    use ResponseValueBoolTrait;
+    public bool $Value = false;
+
+    public function getValue(): bool
+    {
+        return $this->Value;
+    }
+
+    public function unmarshalValue(mixed $decoded): void
+    {
+        if (is_bool($decoded)) {
+            $this->Value = $decoded;
+            return;
+        }
+        if (is_string($decoded)) {
+            $this->Value = 'true' === strtolower(trim($decoded));
+            return;
+        }
+        $this->Value = (bool)$decoded;
+    }
+
+    public function __toString(): string
+    {
+        return $this->Value ? 'true' : 'false';
+    }
 }

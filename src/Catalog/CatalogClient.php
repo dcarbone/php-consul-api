@@ -22,10 +22,10 @@ namespace DCarbone\PHPConsulAPI\Catalog;
 
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\QueryOptions;
-use DCarbone\PHPConsulAPI\ValuedQueryStringsResponse;
-use DCarbone\PHPConsulAPI\ValuedStringsResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\ValuedQueryStringsResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\ValuedStringsResponse;
 use DCarbone\PHPConsulAPI\WriteOptions;
-use DCarbone\PHPConsulAPI\WriteResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\WriteResponse;
 
 class CatalogClient extends AbstractClient
 {

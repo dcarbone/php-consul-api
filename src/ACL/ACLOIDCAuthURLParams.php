@@ -21,11 +21,11 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\MetaContainer;
+use DCarbone\PHPConsulAPI\PHPLib\Types\MetaField;
 
 class ACLOIDCAuthURLParams extends AbstractModel
 {
-    use MetaContainer;
+    use MetaField;
 
     public string $AuthMethod;
     public string $RedirectURI;

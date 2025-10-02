@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\PHPLib\Types;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,40 +20,39 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-trait ServiceMetaContainer
+trait NodeMetaField
 {
     /** @var array<string,string> */
-    public array $ServiceMeta;
+    public array $NodeMeta;
 
     /**
      * @return null|array<string,string>
      */
-    public function getServiceMeta(): null|array
+    public function getNodeMeta(): null|array
     {
-        return $this->ServiceMeta ?? null;
+        return $this->NodeMeta ?? null;
     }
 
-    public function setServiceMetaValue(string $k, string $v): self
+    public function setNodeMetaKey(string $k, string $v): self
     {
-        if (!isset($this->ServiceMeta)) {
-            $this->ServiceMeta = [];
+        if (!isset($this->NodeMeta)) {
+            $this->NodeMeta = [];
         }
-        $this->ServiceMeta[$k] = $v;
+        $this->NodeMeta[$k] = $v;
         return $this;
     }
 
     /**
-     * @param \stdClass|array<string,string>|null $ServiceMeta
+     * @param \stdClass|array<string,string>|null $NodeMeta
      */
-    public function setServiceMeta(null|\stdClass|array $ServiceMeta): self
+    public function setNodeMeta(null|\stdClass|array $NodeMeta): self
     {
-        if (null === $ServiceMeta) {
-            unset($this->ServiceMeta);
+        unset($this->NodeMeta);
+        if (null === $NodeMeta) {
             return $this;
         }
-        $this->ServiceMeta = [];
-        foreach ($ServiceMeta as $k => $v) {
-            $this->setServiceMetaValue($k, $v);
+        foreach ($NodeMeta as $k => $v) {
+            $this->setNodeMetaKey($k, $v);
         }
         return $this;
     }

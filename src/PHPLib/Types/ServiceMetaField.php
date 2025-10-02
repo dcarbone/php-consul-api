@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\PHPLib\Types;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,39 +20,39 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-trait TaggedAddressContainer
+trait ServiceMetaField
 {
     /** @var array<string,string> */
-    public array $TaggedAddresses;
+    public array $ServiceMeta;
 
     /**
      * @return null|array<string,string>
      */
-    public function getTaggedAddresses(): null|array
+    public function getServiceMeta(): null|array
     {
-        return $this->TaggedAddresses ?? null;
+        return $this->ServiceMeta ?? null;
     }
 
-    public function setTaggedAddress(string $k, string $v): self
+    public function setServiceMetaValue(string $k, string $v): self
     {
-        if (!isset($this->TaggedAddresses)) {
-            $this->TaggedAddresses = [];
+        if (!isset($this->ServiceMeta)) {
+            $this->ServiceMeta = [];
         }
-        $this->TaggedAddresses[$k] = $v;
+        $this->ServiceMeta[$k] = $v;
         return $this;
     }
 
     /**
-     * @param \stdClass|array<string,string>|null $TaggedAddresses
+     * @param \stdClass|array<string,string>|null $ServiceMeta
      */
-    public function setTaggedAddresses(null|\stdClass|array $TaggedAddresses): self
+    public function setServiceMeta(null|\stdClass|array $ServiceMeta): self
     {
-        unset($this->TaggedAddresses);
-        if (null === $TaggedAddresses) {
+        unset($this->ServiceMeta);
+        if (null === $ServiceMeta) {
             return $this;
         }
-        foreach ($TaggedAddresses as $k => $v) {
-            $this->setTaggedAddress($k, $v);
+        foreach ($ServiceMeta as $k => $v) {
+            $this->setServiceMetaValue($k, $v);
         }
         return $this;
     }

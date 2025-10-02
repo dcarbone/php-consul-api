@@ -21,14 +21,14 @@ namespace DCarbone\PHPConsulAPI\Catalog;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\MetaContainer;
+use DCarbone\PHPConsulAPI\PHPLib\Types\MetaField;
 use DCarbone\PHPConsulAPI\Peering\Locality;
-use DCarbone\PHPConsulAPI\TaggedAddressContainer;
+use DCarbone\PHPConsulAPI\PHPLib\Types\TaggedAddressField;
 
 class Node extends AbstractModel
 {
-    use MetaContainer;
-    use TaggedAddressContainer;
+    use MetaField;
+    use TaggedAddressField;
 
     public string $ID;
     public string $Node;

@@ -25,6 +25,7 @@ use GuzzleHttp\Psr7\Request as Psr7Request;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
+use function DCarbone\PHPConsulAPI\PHPLib\dur_to_millisecond;
 
 class Request
 {

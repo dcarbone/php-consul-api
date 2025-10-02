@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\PHPLib\Response;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -22,8 +22,8 @@ namespace DCarbone\PHPConsulAPI;
 
 abstract class AbstractValuedQueryResponse extends AbstractResponse implements QueryResponseInterface, ValuedResponseInterface
 {
-    use QueryMetaContainer;
-    use ErrorContainer;
+    use QueryMetaField;
+    use ErrorField;
 
     public function offsetExists(mixed $offset): bool
     {

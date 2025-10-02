@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\PHPLib\Response;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-interface WriteResponseInterface
+class ValuedQueryStringsResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public function getWriteMeta(): null|WriteMeta;
+    use StringsValueField;
 }

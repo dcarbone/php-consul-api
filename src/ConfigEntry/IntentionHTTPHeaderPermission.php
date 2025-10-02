@@ -21,7 +21,7 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
  */
 
 use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\SimpleJsonUnserializeTrait;
+use DCarbone\PHPConsulAPI\PHPLib\Encoding\SimpleJsonUnserializeTrait;
 
 class IntentionHTTPHeaderPermission extends AbstractModel
 {

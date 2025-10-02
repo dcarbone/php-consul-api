@@ -27,7 +27,7 @@ use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\MapResponse;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Request;
-use DCarbone\PHPConsulAPI\ValuedStringResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\ValuedStringResponse;
 
 class AgentClient extends AbstractClient
 {

@@ -22,12 +22,12 @@ namespace DCarbone\PHPConsulAPI\Agent;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 use DCarbone\PHPConsulAPI\Catalog\ServiceAddress;
-use DCarbone\PHPConsulAPI\MetaContainer;
+use DCarbone\PHPConsulAPI\PHPLib\Types\MetaField;
 use DCarbone\PHPConsulAPI\Peering\Locality;
 
 class AgentServiceRegistration extends AbstractModel
 {
-    use MetaContainer;
+    use MetaField;
 
     public ServiceKind $Kind;
     public string $ID;

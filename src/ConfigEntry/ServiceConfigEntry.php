@@ -22,7 +22,7 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 use DCarbone\PHPConsulAPI\AbstractModel;
 
-use function DCarbone\PHPConsulAPI\_enc_obj_if_valued;
+use function DCarbone\PHPConsulAPI\PHPLib\_enc_obj_if_valued;
 
 class ServiceConfigEntry extends AbstractModel implements ConfigEntry
 {

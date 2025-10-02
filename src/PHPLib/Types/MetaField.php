@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\PHPLib\Types;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,39 +20,39 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-trait NodeMetaContainer
+trait MetaField
 {
     /** @var array<string,string> */
-    public array $NodeMeta;
+    public array $Meta;
 
     /**
-     * @return null|array<string,string>
+     * @return array<string,string>|null
      */
-    public function getNodeMeta(): null|array
+    public function getMeta(): null|array
     {
-        return $this->NodeMeta ?? null;
+        return $this->Meta ?? null;
     }
 
-    public function setNodeMetaKey(string $k, string $v): self
+    public function setMetaKey(string $k, string $v): self
     {
-        if (!isset($this->NodeMeta)) {
-            $this->NodeMeta = [];
+        if (!isset($this->Meta)) {
+            $this->Meta = [];
         }
-        $this->NodeMeta[$k] = $v;
+        $this->Meta[$k] = $v;
         return $this;
     }
 
     /**
-     * @param \stdClass|array<string,string>|null $NodeMeta
+     * @param null|\stdClass|array<string,string> $Meta
      */
-    public function setNodeMeta(null|\stdClass|array $NodeMeta): self
+    public function setMeta(null|\stdClass|array $Meta): self
     {
-        unset($this->NodeMeta);
-        if (null === $NodeMeta) {
+        unset($this->Meta);
+        if (null === $Meta) {
             return $this;
         }
-        foreach ($NodeMeta as $k => $v) {
-            $this->setNodeMetaKey($k, $v);
+        foreach ($Meta as $k => $v) {
+            $this->setMetaKey($k, $v);
         }
         return $this;
     }

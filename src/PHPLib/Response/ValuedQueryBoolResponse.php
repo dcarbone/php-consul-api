@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\PHPLib\Response;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,12 +20,7 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-trait QueryMetaContainer
+class ValuedQueryBoolResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public null|QueryMeta $QueryMeta = null;
-
-    public function getQueryMeta(): null|QueryMeta
-    {
-        return $this->QueryMeta;
-    }
+    use BoolValueField;
 }

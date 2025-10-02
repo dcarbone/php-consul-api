@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\PHPLib\Encoding;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,30 +20,14 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-trait ResponseValueBoolTrait
+trait SimpleJsonUnserializeTrait
 {
-    public bool $Value = false;
-
-    public function getValue(): bool
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        return $this->Value;
-    }
-
-    public function unmarshalValue(mixed $decoded): void
-    {
-        if (is_bool($decoded)) {
-            $this->Value = $decoded;
-            return;
+        $n = new self();
+        foreach($decoded as $k => $v) {
+            $n->{$k} = $v;
         }
-        if (is_string($decoded)) {
-            $this->Value = 'true' === strtolower(trim($decoded));
-            return;
-        }
-        $this->Value = (bool)$decoded;
-    }
-
-    public function __toString(): string
-    {
-        return $this->Value ? 'true' : 'false';
+        return $n;
     }
 }

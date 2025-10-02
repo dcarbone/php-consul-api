@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\PHPLib\Response;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,14 +20,27 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-trait SimpleJsonUnserializeTrait
+abstract class AbstractValuedWriteResponse extends AbstractResponse implements ValuedResponseInterface
 {
-    public static function jsonUnserialize(\stdClass $decoded): self
+    use WriteMetaField;
+    use ErrorField;
+
+    public function offsetExists(mixed $offset): bool
     {
-        $n = new self();
-        foreach($decoded as $k => $v) {
-            $n->{$k} = $v;
+        return is_int($offset) && 0 <= $offset && $offset < 3;
+    }
+
+    public function offsetGet(mixed $offset): mixed
+    {
+        if (0 === $offset) {
+            return $this->getValue();
         }
-        return $n;
+        if (1 === $offset) {
+            return $this->WriteMeta;
+        }
+        if (2 === $offset) {
+            return $this->Err;
+        }
+        throw $this->_newOutOfRangeException($offset);
     }
 }
