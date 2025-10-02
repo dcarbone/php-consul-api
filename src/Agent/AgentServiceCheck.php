@@ -53,7 +53,7 @@ class AgentServiceCheck extends AbstractModel
 
     /**
      * @param array<string> $Args
-     * @param null|\stdClass|array<string,array<string>>|\DCarbone\PHPConsulAPI\Values $Header
+     * @param null|array<string,array<string>>|\DCarbone\PHPConsulAPI\Values $Header
      */
     public function __construct(
         string $CheckID = '',
@@ -65,7 +65,7 @@ class AgentServiceCheck extends AbstractModel
         string $Timeout = '',
         string $TTL = '',
         string $HTTP = '',
-        null|array|\stdClass|Values $Header = null,
+        null|array|Values $Header = null,
         string $Method = '',
         string $TCP = '',
         string $Status = '',

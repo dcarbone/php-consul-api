@@ -33,7 +33,7 @@ trait NodeMetaContainer
         return $this->NodeMeta ?? null;
     }
 
-    public function setNodeMetaValue(string $k, string $v): self
+    public function setNodeMetaKey(string $k, string $v): self
     {
         if (!isset($this->NodeMeta)) {
             $this->NodeMeta = [];
@@ -44,17 +44,15 @@ trait NodeMetaContainer
 
     /**
      * @param \stdClass|array<string,string>|null $NodeMeta
-     * @return $this
      */
     public function setNodeMeta(null|\stdClass|array $NodeMeta): self
     {
+        unset($this->NodeMeta);
         if (null === $NodeMeta) {
-            unset($this->NodeMeta);
             return $this;
         }
-        $this->NodeMeta = [];
         foreach ($NodeMeta as $k => $v) {
-            $this->setNodeMetaValue($k, $v);
+            $this->setNodeMetaKey($k, $v);
         }
         return $this;
     }

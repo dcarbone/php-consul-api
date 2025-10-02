@@ -35,7 +35,7 @@ class SampledValue extends AbstractModel
     public array $Labels;
 
     /**
-     * @param \stdClass|array<string,string>|null $Labels
+     * @param array<string,string> $Labels
      */
     public function __construct(
         string $Name = '',
@@ -45,7 +45,7 @@ class SampledValue extends AbstractModel
         float $Max = 0.0,
         float $Mean = 0.0,
         float $Stddev = 0.0,
-        null|\stdClass|array $Labels = null,
+        array $Labels = [],
     ) {
         $this->Name = $Name;
         $this->Count = $Count;

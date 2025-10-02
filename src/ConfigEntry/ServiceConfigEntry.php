@@ -73,7 +73,7 @@ class ServiceConfigEntry extends AbstractModel implements ConfigEntry
         string $BalanceInboundConnections = '',
         null|RateLimits $RateLimits = null,
         array $EnvoyExtensions = [],
-        null|\stdClass|array $Meta = null,
+        array $Meta = [],
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
     ) {
@@ -336,6 +336,8 @@ class ServiceConfigEntry extends AbstractModel implements ConfigEntry
                 foreach ($v as $ext) {
                     $n->EnvoyExtensions[] = EnvoyExtension::jsonUnserialize($ext);
                 }
+            } elseif ('Meta' === $k) {
+                $n->setMeta($v);
             } else {
                 $n->{$k} = $v;
             }

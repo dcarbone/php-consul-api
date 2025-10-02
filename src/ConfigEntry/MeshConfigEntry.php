@@ -35,7 +35,7 @@ class MeshConfigEntry extends AbstractModel implements ConfigEntry
     public null|PeeringMeshConfig $Peering;
 
     /**
-     * @param \stdClass|array<string,string>|null $Meta
+     * @param array<string,string> $Meta
      */
     public function __construct(
         string $Partition = '',
@@ -45,7 +45,7 @@ class MeshConfigEntry extends AbstractModel implements ConfigEntry
         null|MeshTLSConfig $TLS = null,
         null|MeshHTTPConfig $HTTP = null,
         null|PeeringMeshConfig $Peering = null,
-        null|\stdClass|array $Meta = null,
+        array $Meta = [],
         int $CreateIndex = 0,
         int $ModifyIndex = 0
     ) {

@@ -93,7 +93,7 @@ class UserEvent extends AbstractModel
         return $this->LTime;
     }
 
-    public static function jsonUnserialize(\stdclass $decoded): self
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
         foreach ($decoded as $k => $v) {

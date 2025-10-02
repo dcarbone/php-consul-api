@@ -46,9 +46,9 @@ class ProxyConfigEntry extends AbstractModel implements ConfigEntry
     public null|ServiceResolverPrioritizeByLocality $PrioritizeByLocality;
 
     /**
-     * @param null|\stdClass|array<string,mixed> $Config
+     * @param array<string,mixed> $Config
      * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension> $EnvoyExtensions
-     * @param null|\stdClass|array<string,string> $Meta
+     * @param array<string,string> $Meta
      */
     public function __construct(
         string $Kind = '',
@@ -57,7 +57,7 @@ class ProxyConfigEntry extends AbstractModel implements ConfigEntry
         string|ProxyMode $Mode = ProxyMode::Default,
         null|TransparentProxyConfig $TransparentProxy = null,
         string|MutualTLSMode $MutualTLSMode = MutualTLSMode::Default,
-        null|\stdClass|array $Config = null,
+        array $Config = [],
         null|MeshGatewayConfig $MeshGateway = null,
         null|ExposeConfig $Expose = null,
         null|AccessLogsConfig $AccessLogs = null,
@@ -65,7 +65,7 @@ class ProxyConfigEntry extends AbstractModel implements ConfigEntry
         null|ServiceResolverFailoverPolicy $FailoverPolicy = null,
         null|ServiceResolverPrioritizeByLocality $PrioritizeByLocality = null,
         string $Namespace = '',
-        null|\stdClass|array $Meta = null,
+        array $Meta = [],
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
     ) {

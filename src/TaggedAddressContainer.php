@@ -47,11 +47,10 @@ trait TaggedAddressContainer
      */
     public function setTaggedAddresses(null|\stdClass|array $TaggedAddresses): self
     {
+        unset($this->TaggedAddresses);
         if (null === $TaggedAddresses) {
-            unset($this->TaggedAddresses);
             return $this;
         }
-        $this->TaggedAddresses = [];
         foreach ($TaggedAddresses as $k => $v) {
             $this->setTaggedAddress($k, $v);
         }

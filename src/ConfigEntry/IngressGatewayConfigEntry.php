@@ -36,7 +36,7 @@ class IngressGatewayConfigEntry extends AbstractModel implements ConfigEntry
 
     /**
      * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\IngressListener> $Listeners
-     * @param null|\stdClass|array<string,string> $Meta
+     * @param array<string,string> $Meta
      */
     public function __construct(
         string $Kind = '',
@@ -45,7 +45,7 @@ class IngressGatewayConfigEntry extends AbstractModel implements ConfigEntry
         string $Namespace = '',
         null|GatewayTLSConfig $TLS = null,
         array $Listeners = [],
-        null|\stdClass|array $Meta = null,
+        array $Meta = [],
         null|IngressServiceConfig $Defaults = null,
         int $CreateIndex = 0,
         int $ModifyIndex = 0,

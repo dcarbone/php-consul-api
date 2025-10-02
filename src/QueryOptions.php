@@ -48,7 +48,7 @@ class QueryOptions implements RequestOptions
     public bool $Pretty;
 
     /**
-     * @param null|\stdClass|array<string,string> $NodeMeta
+     * @param array<string,string> $NodeMeta
      */
     public function __construct(
         string $Namespace = '',
@@ -64,7 +64,7 @@ class QueryOptions implements RequestOptions
         string $Token = '',
         string $Near = '',
         string $Filter = '',
-        null|\stdClass|array $NodeMeta = null,
+        array $NodeMeta = [],
         int $RelayFactor = 0,
         bool $LocalOnly = false,
         bool $Connect = false,
@@ -97,9 +97,10 @@ class QueryOptions implements RequestOptions
         return $this->Namespace;
     }
 
-    public function setNamespace(string $namespace): void
+    public function setNamespace(string $namespace): self
     {
         $this->Namespace = $namespace;
+        return $this;
     }
 
     public function getDatacenter(): string
@@ -107,9 +108,10 @@ class QueryOptions implements RequestOptions
         return $this->Datacenter;
     }
 
-    public function setDatacenter(string $datacenter): void
+    public function setDatacenter(string $datacenter): self
     {
         $this->Datacenter = $datacenter;
+        return $this;
     }
 
     public function isAllowStale(): bool
@@ -117,9 +119,10 @@ class QueryOptions implements RequestOptions
         return $this->AllowStale;
     }
 
-    public function setAllowStale(bool $allowStale): void
+    public function setAllowStale(bool $allowStale): self
     {
         $this->AllowStale = $allowStale;
+        return $this;
     }
 
     public function isRequireConsistent(): bool
@@ -127,9 +130,10 @@ class QueryOptions implements RequestOptions
         return $this->RequireConsistent;
     }
 
-    public function setRequireConsistent(bool $requireConsistent): void
+    public function setRequireConsistent(bool $requireConsistent): self
     {
         $this->RequireConsistent = $requireConsistent;
+        return $this;
     }
 
     public function isUseCache(): bool
@@ -137,9 +141,10 @@ class QueryOptions implements RequestOptions
         return $this->UseCache;
     }
 
-    public function setUseCache(bool $useCache): void
+    public function setUseCache(bool $useCache): self
     {
         $this->UseCache = $useCache;
+        return $this;
     }
 
     public function getMaxAge(): Time\Duration
@@ -147,9 +152,10 @@ class QueryOptions implements RequestOptions
         return $this->MaxAge;
     }
 
-    public function setMaxAge(null|int|float|string|\DateInterval|Time\Duration $maxAge): void
+    public function setMaxAge(null|int|float|string|\DateInterval|Time\Duration $maxAge): self
     {
         $this->MaxAge = Time::Duration($maxAge);
+        return $this;
     }
 
     public function getStaleIfError(): Time\Duration
@@ -157,9 +163,10 @@ class QueryOptions implements RequestOptions
         return $this->StaleIfError;
     }
 
-    public function setStaleIfError(null|int|float|string|\DateInterval|Time\Duration $staleIfError): void
+    public function setStaleIfError(null|int|float|string|\DateInterval|Time\Duration $staleIfError): self
     {
         $this->StaleIfError = Time::Duration($staleIfError);
+        return $this;
     }
 
     public function getWaitIndex(): int
@@ -167,9 +174,10 @@ class QueryOptions implements RequestOptions
         return $this->WaitIndex;
     }
 
-    public function setWaitIndex(int $waitIndex): void
+    public function setWaitIndex(int $waitIndex): self
     {
         $this->WaitIndex = $waitIndex;
+        return $this;
     }
 
     public function getWaitTime(): Time\Duration
@@ -177,9 +185,10 @@ class QueryOptions implements RequestOptions
         return $this->WaitTime;
     }
 
-    public function setWaitTime(null|int|float|string|\DateInterval|Time\Duration $waitTime): void
+    public function setWaitTime(null|int|float|string|\DateInterval|Time\Duration $waitTime): self
     {
         $this->WaitTime = Time::Duration($waitTime);
+        return $this;
     }
 
     public function getWaitHash(): string
@@ -187,9 +196,10 @@ class QueryOptions implements RequestOptions
         return $this->WaitHash;
     }
 
-    public function setWaitHash(string $waitHash): void
+    public function setWaitHash(string $waitHash): self
     {
         $this->WaitHash = $waitHash;
+        return $this;
     }
 
     public function getToken(): string
@@ -197,9 +207,10 @@ class QueryOptions implements RequestOptions
         return $this->Token;
     }
 
-    public function setToken(string $token): void
+    public function setToken(string $token): self
     {
         $this->Token = $token;
+        return $this;
     }
 
     public function getNear(): string
@@ -207,9 +218,10 @@ class QueryOptions implements RequestOptions
         return $this->Near;
     }
 
-    public function setNear(string $near): void
+    public function setNear(string $near): self
     {
         $this->Near = $near;
+        return $this;
     }
 
     public function getFilter(): string
@@ -217,9 +229,10 @@ class QueryOptions implements RequestOptions
         return $this->Filter;
     }
 
-    public function setFilter(string $filter): void
+    public function setFilter(string $filter): self
     {
         $this->Filter = $filter;
+        return $this;
     }
 
     /**
@@ -231,17 +244,12 @@ class QueryOptions implements RequestOptions
     }
 
     /**
-     * @param null|\stdClass|array<string,string> $nodeMeta
-     * @return void
+     * @param array<string,string> $nodeMeta
      */
-    public function setNodeMeta(null|\stdClass|array $nodeMeta): void
+    public function setNodeMeta(array $nodeMeta): self
     {
-        $this->NodeMeta = [];
-        if (null !== $nodeMeta) {
-            foreach ($nodeMeta as $k => $v) {
-                $this->NodeMeta[$k] = $v;
-            }
-        }
+        $this->NodeMeta = $nodeMeta;
+        return $this;
     }
 
     public function getRelayFactor(): int
@@ -249,9 +257,10 @@ class QueryOptions implements RequestOptions
         return $this->RelayFactor;
     }
 
-    public function setRelayFactor(int $relayFactor): void
+    public function setRelayFactor(int $relayFactor): self
     {
         $this->RelayFactor = $relayFactor;
+        return $this;
     }
 
     public function isLocalOnly(): bool
@@ -259,9 +268,10 @@ class QueryOptions implements RequestOptions
         return $this->LocalOnly;
     }
 
-    public function setLocalOnly(bool $localOnly): void
+    public function setLocalOnly(bool $localOnly): self
     {
         $this->LocalOnly = $localOnly;
+        return $this;
     }
 
     public function isConnect(): bool
@@ -269,9 +279,10 @@ class QueryOptions implements RequestOptions
         return $this->Connect;
     }
 
-    public function setConnect(bool $connect): void
+    public function setConnect(bool $connect): self
     {
         $this->Connect = $connect;
+        return $this;
     }
 
     public function getTimeout(): Time\Duration
@@ -279,9 +290,10 @@ class QueryOptions implements RequestOptions
         return $this->Timeout;
     }
 
-    public function setTimeout(null|int|float|string|\DateInterval|Time\Duration $timeout): void
+    public function setTimeout(null|int|float|string|\DateInterval|Time\Duration $timeout): self
     {
         $this->Timeout = Time::Duration($timeout);
+        return $this;
     }
 
     public function isPretty(): bool
@@ -289,9 +301,10 @@ class QueryOptions implements RequestOptions
         return $this->Pretty;
     }
 
-    public function setPretty(bool $pretty): void
+    public function setPretty(bool $pretty): self
     {
         $this->Pretty = $pretty;
+        return $this;
     }
 
     public function apply(Request $r): void

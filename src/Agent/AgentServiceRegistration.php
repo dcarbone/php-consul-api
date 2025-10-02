@@ -50,8 +50,8 @@ class AgentServiceRegistration extends AbstractModel
 
     /**
      * @param array<string> $Tags
-     * @param null|\stdClass|array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress> $TaggedAddresses
-     * @param null|\stdClass|array<string,string> $Meta
+     * @param array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress> $TaggedAddresses
+     * @param array<string,string> $Meta
      */
     public function __construct(
         string|ServiceKind $Kind = ServiceKind::Typical,
@@ -60,9 +60,9 @@ class AgentServiceRegistration extends AbstractModel
         array $Tags = [],
         int $Port = 0,
         string $Address = '',
-        null|\stdClass|array $TaggedAddresses = null,
+        array $TaggedAddresses = [],
         bool $EnableTagOverride = false,
-        null|\stdClass|array $Meta = null,
+        array $Meta = [],
         null|AgentWeights $Weights = null,
         null|AgentServiceCheck $Check = null,
         null|AgentServiceChecks $Checks = null,
@@ -168,11 +168,20 @@ class AgentServiceRegistration extends AbstractModel
         return $this->TaggedAddresses ?? null;
     }
 
+    public function setTaggedAddress(string $Tag, ServiceAddress $Address): self
+    {
+        if (!isset($this->TaggedAddresses)) {
+            $this->TaggedAddresses = [];
+        }
+        $this->TaggedAddresses[$Tag] = $Address;
+        return $this;
+    }
+
     /**
-     * @param \stdClass|array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress>|null $TaggedAddresses
+     * @param array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress>|null $TaggedAddresses
      * @return $this
      */
-    public function setTaggedAddresses(null|\stdClass|array $TaggedAddresses): self
+    public function setTaggedAddresses(null|array $TaggedAddresses): self
     {
         if (null === $TaggedAddresses) {
             unset($this->TaggedAddresses);
@@ -180,7 +189,7 @@ class AgentServiceRegistration extends AbstractModel
         }
         $this->TaggedAddresses = [];
         foreach ($TaggedAddresses as $k => $v) {
-            $this->TaggedAddresses[$k] = $v;
+            $this->setTaggedAddress($k, $v);
         }
         return $this;
     }
@@ -293,7 +302,10 @@ class AgentServiceRegistration extends AbstractModel
             } elseif ('Tags' === $k) {
                 $n->setTags(...$v);
             } elseif ('TaggedAddresses' === $k) {
-                $n->setTaggedAddresses($v);
+                $n->TaggedAddresses = [];
+                foreach ($v as $kk => $vv) {
+                    $n->TaggedAddresses[$kk] = ServiceAddress::jsonUnserialize($vv);
+                }
             } elseif ('Weights' === $k) {
                 $n->Weights = AgentWeights::jsonUnserialize($v);
             } elseif ('Check' === $k) {

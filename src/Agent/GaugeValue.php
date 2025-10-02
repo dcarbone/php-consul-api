@@ -30,12 +30,12 @@ class GaugeValue extends AbstractModel
     public array $Labels;
 
     /**
-     * @param array<string,string>|\stdClass|null $Labels
+     * @param array<string,string> $Labels
      */
     public function __construct(
         string $Name = '',
         float $Value = 0.0,
-        null|\stdClass|array $Labels = null,
+        array $Labels = [],
     ) {
         $this->Name = $Name;
         $this->Value = $Value;

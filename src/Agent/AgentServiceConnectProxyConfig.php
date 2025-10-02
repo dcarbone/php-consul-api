@@ -39,6 +39,7 @@ class AgentServiceConnectProxyConfig extends AbstractModel
     public string $LocalServiceSocketPath;
     public ProxyMode $Mode;
     public null|TransparentProxyConfig $TransparentProxy;
+    /** @var array<string,mixed> */
     public array $Config;
     /** @var \DCarbone\PHPConsulAPI\Agent\Upstream[] */
     public array $Upstreams;
@@ -48,7 +49,7 @@ class AgentServiceConnectProxyConfig extends AbstractModel
 
     /**
      * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension> $EnvoyExtensions
-     * @param null|\stdClass|array<string,mixed> $Config
+     * @param array<string,mixed> $Config
      * @param array<\DCarbone\PHPConsulAPI\Agent\Upstream> $Upstreams
      */
     public function __construct(
@@ -60,7 +61,7 @@ class AgentServiceConnectProxyConfig extends AbstractModel
         string $LocalServiceSocketPath = '',
         string|ProxyMode $Mode = ProxyMode::Default,
         null|TransparentProxyConfig $TransparentProxy = null,
-        null|\stdClass|array $Config = null,
+        array $Config = [],
         iterable $Upstreams = [],
         null|MeshGatewayConfig $MeshGateway = null,
         null|ExposeConfig $Expose = null,

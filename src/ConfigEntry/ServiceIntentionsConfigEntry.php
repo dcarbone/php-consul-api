@@ -36,7 +36,7 @@ class ServiceIntentionsConfigEntry extends AbstractModel implements ConfigEntry
 
     /**
      * @param array<null|\DCarbone\PHPConsulAPI\ConfigEntry\SourceIntention> $Sources
-     * @param null|\stdClass|array<string,string> $Meta
+     * @param array<string,string> $Meta
      */
     public function __construct(
         string $Kind = '',
@@ -45,7 +45,7 @@ class ServiceIntentionsConfigEntry extends AbstractModel implements ConfigEntry
         string $Namespace = '',
         array $Sources = [],
         null|IntentionJWTRequirement $JWT = null,
-        null|\stdClass|array $Meta = null,
+        array $Meta = null,
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
     ) {

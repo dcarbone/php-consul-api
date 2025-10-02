@@ -53,8 +53,8 @@ class AgentService extends AbstractModel
 
     /**
      * @param array<string> $Tags
-     * @param null|\stdClass|array<string,string> $Meta
-     * @param null|\stdClass|array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress> $TaggedAddresses
+     * @param array<string,string> $Meta
+     * @param array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress> $TaggedAddresses
      */
     public function __construct(
         string|ServiceKind $Kind = '',
@@ -62,10 +62,10 @@ class AgentService extends AbstractModel
         string $Service = '',
         string $SocketPath = '',
         array $Tags = [],
-        null|\stdClass|array $Meta = null,
+        array $Meta = [],
         int $Port = 0,
         string $Address = '',
-        null|\stdClass|array $TaggedAddresses = null,
+        array $TaggedAddresses = [],
         null|AgentWeights $Weights = null,
         bool $EnableTagOverride = false,
         int $CreateIndex = 0,

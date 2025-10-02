@@ -45,9 +45,9 @@ class ServiceResolverConfigEntry extends AbstractModel implements ConfigEntry
     public null|LoadBalancer $LoadBalancer;
 
     /**
-     * @param null|\stdClass|array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverSubset> $Subsets
-     * @param null|\stdClass|array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverFailover> $Failover
-     * @param null|\stdClass|array<string,mixed> $Meta
+     * @param null|array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverSubset> $Subsets
+     * @param null|array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverFailover> $Failover
+     * @param null|array<string,mixed> $Meta
      */
     public function __construct(
         string $Kind = '',
@@ -55,14 +55,14 @@ class ServiceResolverConfigEntry extends AbstractModel implements ConfigEntry
         string $Partition = '',
         string $Namespace = '',
         string $DefaultSubnet = '',
-        null|\stdClass|array $Subsets = null,
+        null|array $Subsets = null,
         null|ServiceResolverRedirect $Redirect = null,
-        null|\stdClass|array $Failover = null,
+        null|array $Failover = null,
         null|string|int|float|\DateInterval|Time\Duration $ConnectTimeout = null,
         null|string|int|float|\DateInterval|Time\Duration $RequestTimeout = null,
         null|ServiceResolverPrioritizeByLocality $PrioritizeByLocality = null,
         null|LoadBalancer $LoadBalancer = null,
-        null|\stdClass|array $Meta = null,
+        null|array $Meta = null,
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
     ) {
@@ -138,21 +138,24 @@ class ServiceResolverConfigEntry extends AbstractModel implements ConfigEntry
 
     public function setSubsetKey(string $key, ServiceResolverSubset $subset): self
     {
+        if (!isset($this->Subsets)) {
+            $this->Subsets = [];
+        }
         $this->Subsets[$key] = $subset;
         return $this;
     }
 
     /**
-     * @param null|\stdClass|array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverSubset> $Subsets
-     * @return $this
+     * @param null|array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverSubset> $Subsets
      */
-    public function setSubsets(null|\stdClass|array $Subsets): self
+    public function setSubsets(null|array $Subsets): self
     {
-        $this->Subsets = [];
-        if (null !== $Subsets) {
-            foreach ($Subsets as $k => $v) {
-                $this->setSubsetKey($k, $v);
-            }
+        unset($this->Subsets);
+        if (null === $Subsets) {
+            return $this;
+        }
+        foreach ($Subsets as $k => $v) {
+            $this->setSubsetKey($k, $v);
         }
         return $this;
     }
@@ -183,16 +186,16 @@ class ServiceResolverConfigEntry extends AbstractModel implements ConfigEntry
     }
 
     /**
-     * @param null|\stdClass|array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverFailover> $Failover
-     * @return $this
+     * @param null|array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverFailover> $Failover
      */
-    public function setFailover(null|\stdClass|array $Failover): self
+    public function setFailover(null|array $Failover): self
     {
-        $this->Failover = [];
-        if (null !== $Failover) {
-            foreach ($Failover as $k => $v) {
-                $this->setFailoverKey($k, $v);
-            }
+        unset($this->Failover);
+        if (null === $Failover) {
+            return $this;
+        }
+        foreach ($Failover as $k => $v) {
+            $this->setFailoverKey($k, $v);
         }
         return $this;
     }
@@ -276,10 +279,7 @@ class ServiceResolverConfigEntry extends AbstractModel implements ConfigEntry
 
     public function jsonSerialize(): \stdClass
     {
-        $out = new stdClass();
-        foreach ($this->_getDynamicFields() as $k => $v) {
-            $out->{$k} = $v;
-        }
+        $out = $this->_startJsonSerialize();
         $out->Kind = $this->Kind;
         $out->Name = $this->Name;
         if ('' !== $this->Partition) {
@@ -291,13 +291,13 @@ class ServiceResolverConfigEntry extends AbstractModel implements ConfigEntry
         if ('' !== $this->DefaultSubset) {
             $out->DefaultSubset = $this->DefaultSubset;
         }
-        if ([] !== $this->Subsets) {
+        if (isset($this->Subsets)) {
             $out->Subsets = $this->Subsets;
         }
         if (null !== $this->Redirect) {
             $out->Redirect = $this->Redirect;
         }
-        if ([] !== $this->Failover) {
+        if (isset($this->Failover)) {
             $out->Failover = $this->Failover;
         }
         if (0 !== $this->ConnectTimeout->Nanoseconds()) {
@@ -312,7 +312,7 @@ class ServiceResolverConfigEntry extends AbstractModel implements ConfigEntry
         if (null !== $this->LoadBalancer) {
             $out->LoadBalancer = $this->LoadBalancer;
         }
-        if ([] !== $this->Meta) {
+        if (isset($this->Meta)) {
             $out->Meta = $this->Meta;
         }
         $out->CreateIndex = $this->CreateIndex;

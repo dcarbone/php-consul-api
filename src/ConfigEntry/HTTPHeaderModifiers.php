@@ -37,8 +37,8 @@ class HTTPHeaderModifiers extends AbstractModel
      * @param array<string> $Remove
      */
     public function __construct(
-        null|array|\stdClass $Add = null,
-        null|array|\stdClass $Set = null,
+        array $Add = [],
+        array $Set = [],
         array $Remove = []
     ) {
         $this->setAdd($Add);
@@ -56,15 +56,16 @@ class HTTPHeaderModifiers extends AbstractModel
 
     /**
      * @param null|\stdClass|array<string,string> $Add
-     * @return $this
      */
     public function setAdd(null|\stdClass|array $Add): self
     {
+        if (null === $Add) {
+            unset($this->Add);
+            return $this;
+        }
         $this->Add = [];
-        if (null !== $Add) {
-            foreach ($Add as $k => $v) {
-                $this->Add[$k] = $v;
-            }
+        foreach ($Add as $k => $v) {
+            $this->Add[$k] = $v;
         }
         return $this;
     }
@@ -79,15 +80,16 @@ class HTTPHeaderModifiers extends AbstractModel
 
     /**
      * @param null|\stdClass|array<string,string> $Set
-     * @return $this
      */
     public function setSet(null|\stdClass|array $Set): self
     {
+        if (null === $Set) {
+            unset($this->Set);
+            return $this;
+        }
         $this->Set = [];
-        if (null !== $Set) {
-            foreach ($Set as $k => $v) {
-                $this->Set[$k] = $v;
-            }
+        foreach ($Set as $k => $v) {
+            $this->Set[$k] = $v;
         }
         return $this;
     }
@@ -114,6 +116,8 @@ class HTTPHeaderModifiers extends AbstractModel
                 $n->setSet($v);
             } elseif ('Add' === $k) {
                 $n->setAdd($v);
+            } elseif ('Remove' === $k) {
+                $n->setRemove(...$v);
             } else {
                 $n->{$k} = $v;
             }
@@ -124,10 +128,10 @@ class HTTPHeaderModifiers extends AbstractModel
     public function jsonSerialize(): \stdClass
     {
         $out = $this->_startJsonSerialize();
-        if ([] !== $this->Add) {
+        if (isset($this->Add)) {
             $out->Add = $this->Add;
         }
-        if ([] !== $this->Set) {
+        if (isset($this->Set)) {
             $out->Set = $this->Set;
         }
         if ([] !== $this->Remove) {

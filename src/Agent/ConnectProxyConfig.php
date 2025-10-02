@@ -34,7 +34,7 @@ class ConnectProxyConfig extends AbstractModel
     public array $Upstreams;
 
     /**
-     * @param array<string,mixed>|\stdClass|null $Config
+     * @param array<string,mixed> $Config
      * @param array<\DCarbone\PHPConsulAPI\Agent\Upstream> $Upstreams
      */
     public function __construct(
@@ -42,7 +42,7 @@ class ConnectProxyConfig extends AbstractModel
         string $TargetServiceID = '',
         string $TargetServiceName = '',
         string $ContentHash = '',
-        null|\stdClass|array $Config = null,
+        array $Config = [],
         array $Upstreams = [],
     ) {
         $this->ProxyServiceID = $ProxyServiceID;

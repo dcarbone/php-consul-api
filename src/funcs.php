@@ -34,7 +34,7 @@ function dur_to_millisecond(Time\Duration $dur): string
     return "${ms}ms";
 }
 
-$_zeroObject = new \stdclass();
+$_zeroObject = new \stdClass();
 
 function _enc_obj_if_valued(\stdClass &$out, string $field, \JsonSerializable $obj): void
 {

@@ -34,7 +34,7 @@ class ServiceRouterConfigEntry extends AbstractModel implements ConfigEntry
 
     /**
      * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\ServiceRoute> $Routes
-     * @param null|\stdClass|array<string,string> $Meta
+     * @param null|array<string,string> $Meta
      */
     public function __construct(
         string $Kind = '',
@@ -42,7 +42,7 @@ class ServiceRouterConfigEntry extends AbstractModel implements ConfigEntry
         string $Partition = '',
         string $Namespace = '',
         array $Routes = [],
-        null|\stdClass|array $Meta = null,
+        null|array $Meta = null,
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
     ) {

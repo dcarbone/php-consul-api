@@ -41,7 +41,7 @@ class Upstream extends AbstractModel
     public bool $CentrallyConfigured;
 
     /**
-     * @param \stdClass|array<string,mixed>|null $Config
+     * @param array<string,mixed> $Config
      */
     public function __construct(
         string|UpstreamDestType $DestinationType = UpstreamDestType::UNDEFINED,
@@ -54,7 +54,7 @@ class Upstream extends AbstractModel
         int $LocalBindPort = 0,
         string $LocalBindSocketPath = '',
         string $LocalBindSocketMode = '',
-        null|\stdClass|array $Config = null,
+        array $Config = [],
         null|MeshGatewayConfig $MeshGateway = null,
         bool $CentrallyConfigured = false,
     ) {

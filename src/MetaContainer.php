@@ -33,7 +33,7 @@ trait MetaContainer
         return $this->Meta ?? null;
     }
 
-    public function setMetaValue(string $k, string $v): self
+    public function setMetaKey(string $k, string $v): self
     {
         if (!isset($this->Meta)) {
             $this->Meta = [];
@@ -47,13 +47,12 @@ trait MetaContainer
      */
     public function setMeta(null|\stdClass|array $Meta): self
     {
+        unset($this->Meta);
         if (null === $Meta) {
-            unset($this->Meta);
             return $this;
         }
-        $this->Meta = [];
         foreach ($Meta as $k => $v) {
-            $this->setMetaValue($k, $v);
+            $this->setMetaKey($k, $v);
         }
         return $this;
     }

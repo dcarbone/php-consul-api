@@ -26,23 +26,24 @@ class EnvoyExtension extends AbstractModel
 {
     public string $Name;
     public bool $Required;
-    public null|\stdClass $Arguments;
+    /** @var array<string,mixed> */
+    public array $Arguments;
     public string $ConsulVersion;
     public string $EnvoyVersion;
 
     /**
-     * @param array<string,mixed>|null $data
+     * @param array<string,mixed> $Arguments
      */
     public function __construct(
         string $Name = '',
         bool $Required = false,
-        null|\stdClass $Arguments = null,
+        array $Arguments = [],
         string $ConsulVersion = '',
         string $EnvoyVersion = '',
     ) {
         $this->Name = $Name;
         $this->Required = $Required;
-        $this->Arguments = $Arguments;
+        $this->setArguments($Arguments);
         $this->ConsulVersion = $ConsulVersion;
         $this->EnvoyVersion = $EnvoyVersion;
 }
@@ -69,14 +70,36 @@ class EnvoyExtension extends AbstractModel
         return $this;
     }
 
-    public function getArguments(): null|\stdClass
+    /**
+     * @return null|array<string,mixed>
+     */
+    public function getArguments(): null|array
     {
-        return $this->Arguments;
+        return $this->Arguments ?? null;
     }
 
-    public function setArguments(null|\stdClass $Arguments): self
+    public function setArgument(string $k, mixed $v): self
     {
-        $this->Arguments = $Arguments;
+        if (!isset($this->Arguments)) {
+            $this->Arguments = [];
+        }
+        $this->Arguments[$k] = $v;
+        return $this;
+    }
+
+    /**
+     * @param \stdClass|array<string,mixed>|null $Arguments
+     */
+    public function setArguments(null|\stdClass|array $Arguments): self
+    {
+        if (null === $Arguments) {
+            unset($this->Arguments);
+            return $this;
+        }
+        $this->Arguments = [];
+        foreach ($Arguments as $k => $v) {
+            $this->setArgument($k, $v);
+        }
         return $this;
     }
 
@@ -106,7 +129,11 @@ class EnvoyExtension extends AbstractModel
     {
         $n = new self();
         foreach ($decoded as $k => $v) {
-            $n->{$k} = $v;
+            if ('Arguments' === $k) {
+                $n->setArguments($v);
+            } else {
+                $n->{$k} = $v;
+            }
         }
         return $n;
     }
@@ -116,7 +143,7 @@ class EnvoyExtension extends AbstractModel
         $out = $this->_startJsonSerialize();
         $out->Name = $this->Name;
         $out->Required = $this->Required;
-        $out->Arguments = $this->Arguments;
+        $out->Arguments = $this->getArguments();
         $out->ConsulVersion = $this->ConsulVersion;
         $out->EnvoyVersion = $this->EnvoyVersion;
         return $out;
