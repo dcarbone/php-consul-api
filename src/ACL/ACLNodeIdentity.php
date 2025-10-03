@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ACLNodeIdentity extends AbstractModel
+class ACLNodeIdentity extends AbstractType
 {
     public string $NodeName;
     public string $Datacenter;

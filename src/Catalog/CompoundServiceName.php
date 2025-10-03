@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\Catalog;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class CompoundServiceName extends AbstractModel
+class CompoundServiceName extends AbstractType
 {
     public string $Name;
     public string $Namespace;

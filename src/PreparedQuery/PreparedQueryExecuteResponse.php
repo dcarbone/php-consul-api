@@ -20,11 +20,11 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Health\ServiceEntry;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-class PreparedQueryExecuteResponse extends AbstractModel
+class PreparedQueryExecuteResponse extends AbstractType
 {
     protected const FIELDS = [
         self::FIELD_NODES     => [

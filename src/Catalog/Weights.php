@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\Catalog;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class Weights extends AbstractModel
+class Weights extends AbstractType
 {
     public int $Passing;
     public int $Warning;

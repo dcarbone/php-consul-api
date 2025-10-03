@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ExposeConfig extends AbstractModel
+class ExposeConfig extends AbstractType
 {
     public bool $Checks;
     /** @var array<\DCarbone\PHPConsulAPI\ConfigEntry\ExposePath> */

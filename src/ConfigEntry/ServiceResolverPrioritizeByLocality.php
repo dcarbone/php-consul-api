@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ServiceResolverPrioritizeByLocality extends AbstractModel
+class ServiceResolverPrioritizeByLocality extends AbstractType
 {
     public string $Mode;
 

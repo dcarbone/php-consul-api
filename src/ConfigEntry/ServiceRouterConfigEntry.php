@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ServiceRouterConfigEntry extends AbstractModel implements ConfigEntry
+class ServiceRouterConfigEntry extends AbstractType implements ConfigEntry
 {
     use ConfigEntryTrait;
 

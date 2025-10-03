@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class DestinationConfig extends AbstractModel
+class DestinationConfig extends AbstractType
 {
     /** @var array<string> */
     public array $Addresses;

@@ -21,14 +21,14 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
 /**
  * Class Coordinate
  *
  * From github.com/hashicorp/serf/coordinate/coordinate.go
  */
-class Coordinate extends AbstractModel
+class Coordinate extends AbstractType
 {
     public const ZeroThreshold = 1.0e-6;
     private const secondsToNanoseconds = 1.0e9;

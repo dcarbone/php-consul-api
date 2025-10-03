@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class AutopilotZone extends AbstractModel
+class AutopilotZone extends AbstractType
 {
     public array $Servers;
     public array $Voters;

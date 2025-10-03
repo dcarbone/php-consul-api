@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class RingHashConfig extends AbstractModel
+class RingHashConfig extends AbstractType
 {
     public int $MinimumRingSize = 0;
     public int $MaximumRingSize = 0;

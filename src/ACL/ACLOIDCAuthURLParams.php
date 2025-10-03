@@ -20,10 +20,10 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\PHPLib\Types\MetaField;
 
-class ACLOIDCAuthURLParams extends AbstractModel
+class ACLOIDCAuthURLParams extends AbstractType
 {
     use MetaField;
 

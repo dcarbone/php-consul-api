@@ -21,9 +21,9 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ACLTokenListEntry extends AbstractModel
+class ACLTokenListEntry extends AbstractType
 {
     public int $CreateIndex;
     public int $ModifyIndex;

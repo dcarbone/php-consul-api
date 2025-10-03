@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class UpstreamConfiguration extends AbstractModel
+class UpstreamConfiguration extends AbstractType
 {
     /** @var array<null|\DCarbone\PHPConsulAPI\ConfigEntry\UpstreamConfig> */
     public array $Overrides;

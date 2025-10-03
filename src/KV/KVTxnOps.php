@@ -20,14 +20,14 @@ namespace DCarbone\PHPConsulAPI\KV;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\FakeSlice;
 
 class KVTxnOps extends FakeSlice
 {
     protected string $containedClass = KVTxnOp::class;
 
-    protected function newChild(array $data): AbstractModel
+    protected function newChild(array $data): AbstractType
     {
         return new KVTxnOp($data);
     }

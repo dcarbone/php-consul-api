@@ -20,12 +20,12 @@ namespace DCarbone\PHPConsulAPI\Catalog;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\PHPLib\Types\MetaField;
 use DCarbone\PHPConsulAPI\Peering\Locality;
 use DCarbone\PHPConsulAPI\PHPLib\Types\TaggedAddressField;
 
-class Node extends AbstractModel
+class Node extends AbstractType
 {
     use MetaField;
     use TaggedAddressField;

@@ -21,9 +21,9 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ServiceRouteDestination extends AbstractModel
+class ServiceRouteDestination extends AbstractType
 {
     public string $Service;
     public string $ServiceSubset;

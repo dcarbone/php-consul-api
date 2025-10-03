@@ -21,10 +21,10 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-class ServerHealth extends AbstractModel
+class ServerHealth extends AbstractType
 {
     protected const FIELDS = [
         self::FIELD_LAST_CONTACT => [

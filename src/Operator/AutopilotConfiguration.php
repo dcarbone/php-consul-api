@@ -20,10 +20,10 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-class AutopilotConfiguration extends AbstractModel
+class AutopilotConfiguration extends AbstractType
 {
     protected const FIELDS = [
         self::FIELD_LAST_CONTACT_THRESHOLD    => [

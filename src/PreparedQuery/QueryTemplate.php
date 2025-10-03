@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class QueryTemplate extends AbstractModel
+class QueryTemplate extends AbstractType
 {
     public string $Type = '';
     public string $Regexp = '';

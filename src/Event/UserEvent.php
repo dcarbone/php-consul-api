@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\Event;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class UserEvent extends AbstractModel
+class UserEvent extends AbstractType
 {
     public string $ID;
     public string $Name;

@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class LoadBalancer extends AbstractModel
+class LoadBalancer extends AbstractType
 {
     public string $Policy;
     public null|RingHashConfig $RingHashConfig;
@@ -37,12 +37,14 @@ class LoadBalancer extends AbstractModel
         string $Policy = '',
         null|RingHashConfig $RingHashConfig = null,
         null|LeastRequestConfig $LeastRequestConfig = null,
-        array $HashPolicies = []
+        null|array $HashPolicies = null
     ) {
         $this->Policy = $Policy;
         $this->RingHashConfig = $RingHashConfig;
         $this->LeastRequestConfig = $LeastRequestConfig;
-        $this->setHashPolicies(...$HashPolicies);
+        if (null !== $HashPolicies) {
+            $this->setHashPolicies(...$HashPolicies);
+        }
     }
 
     public function getPolicy(): string
@@ -98,14 +100,16 @@ class LoadBalancer extends AbstractModel
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach($decoded as $k => $v) {
+        foreach ($decoded as $k => $v) {
             if ('RingHashConfig' === $k || 'ring_hash_config' === $k) {
                 $n->RingHashConfig = RingHashConfig::jsonUnserialize($v);
             } elseif ('LeastRequestConfig' === $k || 'least_request_config' === $k) {
                 $n->LeastRequestConfig = LeastRequestConfig::jsonUnserialize($v);
             } elseif ('HashPolicies' === $k || 'hash_policies' === $k) {
-                foreach ($v as $hp) {
-                    $n->HashPolicies[] = HashPolicy::jsonUnserialize($hp);
+                if (null !== $v) {
+                    foreach ($v as $hp) {
+                        $n->HashPolicies[] = HashPolicy::jsonUnserialize($hp);
+                    }
                 }
             } else {
                 $n->{$k} = $v;
@@ -126,7 +130,7 @@ class LoadBalancer extends AbstractModel
         if (null !== $this->LeastRequestConfig) {
             $out->LeastRequestConfig = $this->LeastRequestConfig;
         }
-        if ([] !== $this->HashPolicies) {
+        if (isset($this->HashPolicies)) {
             $out->HashPolicies = $this->HashPolicies;
         }
         return $out;

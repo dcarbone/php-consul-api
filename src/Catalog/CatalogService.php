@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\Catalog;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Agent\AgentServiceConnectProxyConfig;
 use DCarbone\PHPConsulAPI\Health\HealthChecks;
 use DCarbone\PHPConsulAPI\PHPLib\Types\NodeMetaField;
@@ -28,7 +28,7 @@ use DCarbone\PHPConsulAPI\Peering\Locality;
 use DCarbone\PHPConsulAPI\PHPLib\Types\ServiceMetaField;
 use DCarbone\PHPConsulAPI\PHPLib\Types\TaggedAddressField;
 
-class CatalogService extends AbstractModel
+class CatalogService extends AbstractType
 {
     use TaggedAddressField;
     use NodeMetaField;

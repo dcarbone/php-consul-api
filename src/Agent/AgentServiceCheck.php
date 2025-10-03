@@ -20,10 +20,10 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Values;
 
-class AgentServiceCheck extends AbstractModel
+class AgentServiceCheck extends AbstractType
 {
     public string $CheckID;
     public string $Name;

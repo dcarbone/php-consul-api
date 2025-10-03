@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class InstanceLevelRouteRateLimits extends AbstractModel
+class InstanceLevelRouteRateLimits extends AbstractType
 {
     public string $PathExact;
     public string $PathPrefix;

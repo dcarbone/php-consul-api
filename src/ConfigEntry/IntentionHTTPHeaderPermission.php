@@ -20,10 +20,10 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\PHPLib\Encoding\SimpleJsonUnserializeTrait;
 
-class IntentionHTTPHeaderPermission extends AbstractModel
+class IntentionHTTPHeaderPermission extends AbstractType
 {
     use SimpleJsonUnserializeTrait;
 

@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\Peering;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class Locality extends AbstractModel
+class Locality extends AbstractType
 {
     public string $Region;
     public string $Zone;

@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class CoordinateEntry extends AbstractModel
+class CoordinateEntry extends AbstractType
 {
     public string $Node;
     public string $Segment;

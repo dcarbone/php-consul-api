@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\Catalog;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ServiceAddress extends AbstractModel
+class ServiceAddress extends AbstractType
 {
     public string $Address;
     public int $Port;

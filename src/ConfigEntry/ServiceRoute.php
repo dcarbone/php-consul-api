@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ServiceRoute extends AbstractModel
+class ServiceRoute extends AbstractType
 {
     public null|ServiceRouteMatch $Match;
     public null|ServiceRouteDestination $Destination;

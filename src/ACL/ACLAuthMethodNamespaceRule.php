@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ACLAuthMethodNamespaceRule extends AbstractModel
+class ACLAuthMethodNamespaceRule extends AbstractType
 {
     public string $Selector;
     public string $BindNamespace;

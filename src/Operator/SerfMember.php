@@ -21,10 +21,10 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-class SerfMember extends AbstractModel
+class SerfMember extends AbstractType
 {
     protected const FIELDS = [
         self::FIELD_RTT => [

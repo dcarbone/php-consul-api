@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class MeshDirectionalTLSConfig extends AbstractModel
+class MeshDirectionalTLSConfig extends AbstractType
 {
     public string $TLSMinVersion;
     public string $TLSMaxVersion;

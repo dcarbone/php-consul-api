@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class GatewayServiceTLSConfig extends AbstractModel
+class GatewayServiceTLSConfig extends AbstractType
 {
     public null|GatewayTLSSDSConfig $SDS;
 

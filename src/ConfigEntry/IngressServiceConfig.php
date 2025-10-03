@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class IngressServiceConfig extends AbstractModel
+class IngressServiceConfig extends AbstractType
 {
     public null|int $MaxConnections;
     public null|int $MaxPendingRequests;

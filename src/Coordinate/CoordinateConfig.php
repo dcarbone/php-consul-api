@@ -20,10 +20,10 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Metrics\Label;
 
-class CoordinateConfig extends AbstractModel
+class CoordinateConfig extends AbstractType
 {
     public const DefaultDimensionality       = 8;
     public const DefaultVivaldiErrorMax      = 1.5;

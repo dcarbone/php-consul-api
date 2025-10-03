@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class IntentionPermission extends AbstractModel
+class IntentionPermission extends AbstractType
 {
     public IntentionAction $Action;
     public null|IntentionHTTPPermission $HTTP;

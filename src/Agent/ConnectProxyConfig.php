@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ConnectProxyConfig extends AbstractModel
+class ConnectProxyConfig extends AbstractType
 {
     public string $ProxyServiceID;
     public string $TargetServiceID;

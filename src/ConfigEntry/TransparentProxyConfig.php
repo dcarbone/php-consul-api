@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class TransparentProxyConfig extends AbstractModel
+class TransparentProxyConfig extends AbstractType
 {
     public int $OutboundListenerPort;
     public bool $DialedDirectly;

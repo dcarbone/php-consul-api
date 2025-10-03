@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class TerminatingGatewayConfigEntry extends AbstractModel implements ConfigEntry
+class TerminatingGatewayConfigEntry extends AbstractType implements ConfigEntry
 {
     use ConfigEntryTrait;
 

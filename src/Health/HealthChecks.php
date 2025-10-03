@@ -20,14 +20,14 @@ namespace DCarbone\PHPConsulAPI\Health;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Consul;
 
 /**
  * @implements \ArrayAccess<int, HealthCheck>
  * @implements \IteratorAggregate<int, HealthCheck>
  */
-class HealthChecks extends AbstractModel implements \IteratorAggregate, \Countable, \ArrayAccess
+class HealthChecks extends AbstractType implements \IteratorAggregate, \Countable, \ArrayAccess
 {
     /** @var \DCarbone\PHPConsulAPI\Health\HealthCheck[] */
     protected array $Checks = [];

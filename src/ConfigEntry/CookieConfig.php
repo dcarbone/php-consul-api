@@ -21,9 +21,9 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class CookieConfig extends AbstractModel
+class CookieConfig extends AbstractType
 {
     public bool $Session;
     public Time\Duration $TTL;

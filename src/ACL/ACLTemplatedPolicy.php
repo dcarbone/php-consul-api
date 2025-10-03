@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ACLTemplatedPolicy extends AbstractModel
+class ACLTemplatedPolicy extends AbstractType
 {
     public string $TemplateName;
     public null|ACLTemplatedPolicyVariables $TemplateVariables;

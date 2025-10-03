@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class IntentionJWTRequirement extends AbstractModel
+class IntentionJWTRequirement extends AbstractType
 {
     public string $Name;
     /** @var array<\DCarbone\PHPConsulAPI\ConfigEntry\IntentionJWTClaimVerification> */

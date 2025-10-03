@@ -20,10 +20,10 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\ConfigEntry\MeshGatewayConfig;
 
-class Upstream extends AbstractModel
+class Upstream extends AbstractType
 {
     public UpstreamDestType $DestinationType;
     public string $DestinationPartition;

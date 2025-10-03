@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class AgentServiceConnect extends AbstractModel
+class AgentServiceConnect extends AbstractType
 {
     public bool $Native;
     public null|AgentServiceRegistration $SidecarService;

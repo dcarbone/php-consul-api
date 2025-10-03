@@ -21,9 +21,9 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ACLReplicationStatus extends AbstractModel
+class ACLReplicationStatus extends AbstractType
 {
     public bool $Enabled;
     public bool $Running;

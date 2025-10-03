@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class PeeringMeshConfig extends AbstractModel
+class PeeringMeshConfig extends AbstractType
 {
     public bool $PeerThroughMeshGateways;
 

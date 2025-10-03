@@ -20,11 +20,11 @@ namespace DCarbone\PHPConsulAPI\KV;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-class ServiceTxnOp extends AbstractModel
+class ServiceTxnOp extends AbstractType
 {
     protected const FIELDS = [
         self::FIELD_SERVICE => [

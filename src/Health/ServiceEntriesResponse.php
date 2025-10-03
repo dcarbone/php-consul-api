@@ -26,7 +26,7 @@ use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
 class ServiceEntriesResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
     /** @var \DCarbone\PHPConsulAPI\Health\ServiceEntry[] */
-    public array $ServiceEntries = [];
+    public array $ServiceEntries;
 
     /**
      * @return \DCarbone\PHPConsulAPI\Health\ServiceEntry[]

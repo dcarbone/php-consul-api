@@ -21,9 +21,9 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class OIDCAuthMethodConfig extends AbstractModel
+class OIDCAuthMethodConfig extends AbstractType
 {
     /** @var array<string> */
     public array $JWTSupportedAlgs;

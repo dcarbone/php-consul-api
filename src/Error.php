@@ -22,11 +22,6 @@ namespace DCarbone\PHPConsulAPI;
 
 use DCarbone\Go\Time;
 
-/**
- * TODO: Make this better...
- *
- * Class Error
- */
 class Error implements \JsonSerializable
 {
     private Time\Time $time;
@@ -35,19 +30,18 @@ class Error implements \JsonSerializable
 
     public function __construct(string $message)
     {
-        $this->time    = Time::Now();
+        $this->time = Time::Now();
         $this->message = $message;
     }
 
     public static function unexpectedResponseCodeError(RequestResponse $resp): self
     {
-        return new static(
+        return new self(
             sprintf(
                 'unexpected response code: %d (%s)',
                 $resp->Response->getStatusCode(),
                 $resp->Response->getBody()->getContents(),
             )
-
         );
     }
 
@@ -61,12 +55,12 @@ class Error implements \JsonSerializable
         return $this->message;
     }
 
-    public function jsonSerialize(): array
+    public function jsonSerialize(): \stdClass
     {
-        return [
-            'message'   => $this->message,
-            'timestamp' => $this->time,
-        ];
+        $out = new \stdClass();
+        $out->message = $this->message;
+        $out->timestamp = $this->time;
+        return $out;
     }
 
     public function __toString(): string

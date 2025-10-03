@@ -20,10 +20,10 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\PHPLib\Encoding\SimpleJsonUnserializeTrait;
 
-class IntentionJWTClaimVerification extends AbstractModel
+class IntentionJWTClaimVerification extends AbstractType
 {
     use SimpleJsonUnserializeTrait;
 

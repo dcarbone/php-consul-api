@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ServiceResolverFailover extends AbstractModel
+class ServiceResolverFailover extends AbstractType
 {
     public string $Service;
     public string $ServiceSubset;

@@ -20,10 +20,10 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use function DCarbone\PHPConsulAPI\PHPLib\_enc_obj_if_valued;
 
-class UpstreamConfig extends AbstractModel
+class UpstreamConfig extends AbstractType
 {
     public string $Name;
     public string $Partition;

@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class MetricsInfo extends AbstractModel
+class MetricsInfo extends AbstractType
 {
     public string $Timestamp;
     /** @var \DCarbone\PHPConsulAPI\Agent\GaugeValue[] */

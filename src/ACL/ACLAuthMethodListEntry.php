@@ -21,9 +21,9 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ACLAuthMethodListEntry extends AbstractModel
+class ACLAuthMethodListEntry extends AbstractType
 {
     public string $Name;
     public string $Type;

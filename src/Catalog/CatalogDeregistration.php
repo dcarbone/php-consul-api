@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\Catalog;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class CatalogDeregistration extends AbstractModel
+class CatalogDeregistration extends AbstractType
 {
     public string $Node;
     public string $Address;

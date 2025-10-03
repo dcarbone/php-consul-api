@@ -20,10 +20,10 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-class AutopilotUpgrade extends AbstractModel
+class AutopilotUpgrade extends AbstractType
 {
     protected const FIELDS = [
         self::FIELD_TARGET_VERSION               => Transcoding::OMITEMPTY_STRING_FIELD,

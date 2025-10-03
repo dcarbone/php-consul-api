@@ -20,12 +20,11 @@ namespace DCarbone\PHPConsulAPI\Health;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
 use DCarbone\PHPConsulAPI\Catalog\Node;
-use DCarbone\PHPConsulAPI\Transcoding;
 
-class ServiceEntry extends AbstractModel
+class ServiceEntry extends AbstractType
 {
     protected const FIELDS = [
         self::FIELD_NODE    => [
@@ -48,8 +47,8 @@ class ServiceEntry extends AbstractModel
     private const FIELD_SERVICE = 'Service';
     private const FIELD_CHECKS  = 'Checks';
 
-    public ?Node $Node = null;
-    public ?AgentService $Service = null;
+    public ?Node $Node;
+    public ?AgentService $Service;
     public HealthChecks $Checks;
 
     public function __construct(?array $data = [])

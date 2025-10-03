@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class UpstreamLimits extends AbstractModel
+class UpstreamLimits extends AbstractType
 {
     public null|int $MaxConnections = null;
     public null|int $MaxPendingRequests = null;

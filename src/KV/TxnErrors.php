@@ -20,14 +20,14 @@ namespace DCarbone\PHPConsulAPI\KV;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\FakeSlice;
 
 class TxnErrors extends FakeSlice
 {
     protected string $containedClass = TxnError::class;
 
-    protected function newChild(array $data): AbstractModel
+    protected function newChild(array $data): AbstractType
     {
         return new TxnError($data);
     }

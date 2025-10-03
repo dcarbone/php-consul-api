@@ -20,10 +20,10 @@ namespace DCarbone\PHPConsulAPI\Catalog;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
 
-class CatalogNodeServiceList extends AbstractModel
+class CatalogNodeServiceList extends AbstractType
 {
     public null|Node $Node;
     /** @var array<\DCarbone\PHPConsulAPI\Agent\AgentService> */

@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class EnvoyExtension extends AbstractModel
+class EnvoyExtension extends AbstractType
 {
     public string $Name;
     public bool $Required;

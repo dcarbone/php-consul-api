@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class CoordinateDatacenterMap extends AbstractModel
+class CoordinateDatacenterMap extends AbstractType
 {
     public string $Datacenter = '';
     public string $AreaID = '';

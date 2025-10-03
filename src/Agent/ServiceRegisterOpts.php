@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ServiceRegisterOpts extends AbstractModel
+class ServiceRegisterOpts extends AbstractType
 {
     public bool $ReplaceExistingChecks;
     public string $Token;

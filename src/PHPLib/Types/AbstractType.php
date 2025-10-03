@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\PHPLib\Types;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-abstract class AbstractModel implements \JsonSerializable
+abstract class AbstractType implements \JsonSerializable
 {
     /** @var array<string,mixed> */
     private array $_dyn = [];

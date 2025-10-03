@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
 class AgentServiceChecks implements \JsonSerializable, \Countable, \ArrayAccess
 {

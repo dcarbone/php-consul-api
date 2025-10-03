@@ -20,10 +20,10 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Health\HealthChecks;
 
-class AgentServiceChecksInfo extends AbstractModel
+class AgentServiceChecksInfo extends AbstractType
 {
     public string $AggregatedStatus;
     public null|AgentService $Service;

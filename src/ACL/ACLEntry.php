@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ACLEntry extends AbstractModel
+class ACLEntry extends AbstractType
 {
     public int $CreateIndex;
     public int $ModifyIndex;

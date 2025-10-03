@@ -21,9 +21,9 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class PassiveHealthCheck extends AbstractModel
+class PassiveHealthCheck extends AbstractType
 {
     public Time\Duration $Interval;
     public int $MaxFailures;

@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ACLOIDCCallbackParams extends AbstractModel
+class ACLOIDCCallbackParams extends AbstractType
 {
     public string $AuthMethod;
     public string $State;

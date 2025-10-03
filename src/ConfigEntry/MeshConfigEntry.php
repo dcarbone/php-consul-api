@@ -20,10 +20,10 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Consul;
 
-class MeshConfigEntry extends AbstractModel implements ConfigEntry
+class MeshConfigEntry extends AbstractType implements ConfigEntry
 {
     use ConfigEntryTrait;
 

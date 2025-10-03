@@ -21,9 +21,9 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class SourceIntention extends AbstractModel
+class SourceIntention extends AbstractType
 {
     public string $Name;
     public string $Peer;

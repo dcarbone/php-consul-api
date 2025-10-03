@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\Metrics;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class Label extends AbstractModel
+class Label extends AbstractType
 {
     public string $Name;
     public string $Value;
