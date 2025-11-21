@@ -21,66 +21,76 @@ namespace DCarbone\PHPConsulAPI;
  */
 
 use DCarbone\Go\Time;
+use function DCarbone\PHPConsulAPI\PHPLib\dur_to_millisecond;
 
-class QueryOptions extends AbstractModel implements RequestOptions
+class QueryOptions implements RequestOptions
 {
-    protected const FIELDS = [
-        self::FIELD_MAX_AGE => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_NULLABLE_DURATION,
-        ],
-        self::FIELD_STALE_IF_ERROR => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_NULLABLE_DURATION,
-        ],
-        self::FIELD_WAIT_TIME => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_NULLABLE_DURATION,
-        ],
-        self::FIELD_TIMEOUT => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_NULLABLE_DURATION,
-        ],
-    ];
+    public string $Namespace;
+    public string $Datacenter;
+    public bool $AllowStale;
+    public bool $RequireConsistent;
+    public bool $UseCache;
+    public Time\Duration $MaxAge;
+    public Time\Duration $StaleIfError;
+    public int $WaitIndex;
+    public string $WaitHash;
+    public Time\Duration $WaitTime;
+    public string $Token;
+    public string $Near;
+    public string $Filter;
+    /** @var array<string,string> */
+    public array $NodeMeta;
+    public int $RelayFactor;
+    public bool $LocalOnly;
+    public bool $Connect;
 
-    private const FIELD_MAX_AGE        = 'MaxAge';
-    private const FIELD_STALE_IF_ERROR = 'StaleIfError';
-    private const FIELD_WAIT_TIME      = 'WaitTime';
-    private const FIELD_TIMEOUT        = 'Timeout';
+    public Time\Duration $Timeout;
 
-    public string $Namespace = '';
-    public string $Datacenter = '';
-    public bool $AllowStale = false;
-    public bool $RequireConsistent = false;
-    public bool $UseCache = false;
-    public ?Time\Duration $MaxAge = null;
-    public ?Time\Duration $StaleIfError = null;
-    public int $WaitIndex = 0;
-    public string $WaitHash = '';
-    public ?Time\Duration $WaitTime = null;
-    public string $Token = '';
-    public string $Near = '';
-    public string $Filter = '';
-    public array $NodeMeta = [];
-    public int $RelayFactor = 0;
-    public bool $LocalOnly = false;
-    public bool $Connect = false;
+    public bool $Pretty;
 
-    public ?Time\Duration $Timeout = null;
-
-    public bool $Pretty = false;
-
-    public function __construct(?array $data = null)
-    {
-        parent::__construct($data);
-        if (!($this->MaxAge instanceof Time\Duration)) {
-            $this->MaxAge = Time::Duration($this->MaxAge);
-        }
-        if (!($this->StaleIfError instanceof Time\Duration)) {
-            $this->StaleIfError = Time::Duration($this->StaleIfError);
-        }
-        if (!($this->WaitTime instanceof Time\Duration)) {
-            $this->WaitTime = Time::Duration($this->WaitTime);
-        }
-        if (!($this->Timeout instanceof Time\Duration)) {
-            $this->Timeout = Time::Duration($this->Timeout);
-        }
+    /**
+     * @param array<string,string> $NodeMeta
+     */
+    public function __construct(
+        string $Namespace = '',
+        string $Datacenter = '',
+        bool $AllowStale = false,
+        bool $RequireConsistent = false,
+        bool $UseCache = false,
+        null|int|float|string|\DateInterval|Time\Duration $MaxAge = null,
+        null|int|float|string|\DateInterval|Time\Duration $StaleIfError = null,
+        int $WaitIndex = 0,
+        string $WaitHash = '',
+        null|int|float|string|\DateInterval|Time\Duration $WaitTime = null,
+        string $Token = '',
+        string $Near = '',
+        string $Filter = '',
+        array $NodeMeta = [],
+        int $RelayFactor = 0,
+        bool $LocalOnly = false,
+        bool $Connect = false,
+        null|int|float|string|\DateInterval|Time\Duration $Timeout = null,
+        bool $Pretty = false,
+    ) {
+        $this->Namespace = $Namespace;
+        $this->Datacenter = $Datacenter;
+        $this->AllowStale = $AllowStale;
+        $this->RequireConsistent = $RequireConsistent;
+        $this->UseCache = $UseCache;
+        $this->MaxAge = Time::Duration($MaxAge);
+        $this->StaleIfError = Time::Duration($StaleIfError);
+        $this->WaitIndex = $WaitIndex;
+        $this->WaitHash = $WaitHash;
+        $this->WaitTime = Time::Duration($WaitTime);
+        $this->Token = $Token;
+        $this->Near = $Near;
+        $this->Filter = $Filter;
+        $this->setNodeMeta($NodeMeta);
+        $this->RelayFactor = $RelayFactor;
+        $this->LocalOnly = $LocalOnly;
+        $this->Connect = $Connect;
+        $this->Timeout = Time::Duration($Timeout);
+        $this->Pretty = $Pretty;
     }
 
     public function getNamespace(): string
@@ -88,9 +98,10 @@ class QueryOptions extends AbstractModel implements RequestOptions
         return $this->Namespace;
     }
 
-    public function setNamespace(string $namespace): void
+    public function setNamespace(string $namespace): self
     {
         $this->Namespace = $namespace;
+        return $this;
     }
 
     public function getDatacenter(): string
@@ -98,9 +109,10 @@ class QueryOptions extends AbstractModel implements RequestOptions
         return $this->Datacenter;
     }
 
-    public function setDatacenter(string $datacenter): void
+    public function setDatacenter(string $datacenter): self
     {
         $this->Datacenter = $datacenter;
+        return $this;
     }
 
     public function isAllowStale(): bool
@@ -108,9 +120,10 @@ class QueryOptions extends AbstractModel implements RequestOptions
         return $this->AllowStale;
     }
 
-    public function setAllowStale(bool $allowStale): void
+    public function setAllowStale(bool $allowStale): self
     {
         $this->AllowStale = $allowStale;
+        return $this;
     }
 
     public function isRequireConsistent(): bool
@@ -118,9 +131,10 @@ class QueryOptions extends AbstractModel implements RequestOptions
         return $this->RequireConsistent;
     }
 
-    public function setRequireConsistent(bool $requireConsistent): void
+    public function setRequireConsistent(bool $requireConsistent): self
     {
         $this->RequireConsistent = $requireConsistent;
+        return $this;
     }
 
     public function isUseCache(): bool
@@ -128,9 +142,10 @@ class QueryOptions extends AbstractModel implements RequestOptions
         return $this->UseCache;
     }
 
-    public function setUseCache(bool $useCache): void
+    public function setUseCache(bool $useCache): self
     {
         $this->UseCache = $useCache;
+        return $this;
     }
 
     public function getMaxAge(): Time\Duration
@@ -138,9 +153,10 @@ class QueryOptions extends AbstractModel implements RequestOptions
         return $this->MaxAge;
     }
 
-    public function setMaxAge(float|int|string|Time\Duration|null $maxAge): void
+    public function setMaxAge(null|int|float|string|\DateInterval|Time\Duration $maxAge): self
     {
         $this->MaxAge = Time::Duration($maxAge);
+        return $this;
     }
 
     public function getStaleIfError(): Time\Duration
@@ -148,9 +164,10 @@ class QueryOptions extends AbstractModel implements RequestOptions
         return $this->StaleIfError;
     }
 
-    public function setStaleIfError(float|int|string|Time\Duration|null $staleIfError): void
+    public function setStaleIfError(null|int|float|string|\DateInterval|Time\Duration $staleIfError): self
     {
         $this->StaleIfError = Time::Duration($staleIfError);
+        return $this;
     }
 
     public function getWaitIndex(): int
@@ -158,9 +175,10 @@ class QueryOptions extends AbstractModel implements RequestOptions
         return $this->WaitIndex;
     }
 
-    public function setWaitIndex(int $waitIndex): void
+    public function setWaitIndex(int $waitIndex): self
     {
         $this->WaitIndex = $waitIndex;
+        return $this;
     }
 
     public function getWaitTime(): Time\Duration
@@ -168,9 +186,10 @@ class QueryOptions extends AbstractModel implements RequestOptions
         return $this->WaitTime;
     }
 
-    public function setWaitTime(mixed $waitTime): void
+    public function setWaitTime(null|int|float|string|\DateInterval|Time\Duration $waitTime): self
     {
         $this->WaitTime = Time::Duration($waitTime);
+        return $this;
     }
 
     public function getWaitHash(): string
@@ -178,9 +197,10 @@ class QueryOptions extends AbstractModel implements RequestOptions
         return $this->WaitHash;
     }
 
-    public function setWaitHash(string $waitHash): void
+    public function setWaitHash(string $waitHash): self
     {
         $this->WaitHash = $waitHash;
+        return $this;
     }
 
     public function getToken(): string
@@ -188,9 +208,10 @@ class QueryOptions extends AbstractModel implements RequestOptions
         return $this->Token;
     }
 
-    public function setToken(string $token): void
+    public function setToken(string $token): self
     {
         $this->Token = $token;
+        return $this;
     }
 
     public function getNear(): string
@@ -198,9 +219,10 @@ class QueryOptions extends AbstractModel implements RequestOptions
         return $this->Near;
     }
 
-    public function setNear(string $near): void
+    public function setNear(string $near): self
     {
         $this->Near = $near;
+        return $this;
     }
 
     public function getFilter(): string
@@ -208,19 +230,27 @@ class QueryOptions extends AbstractModel implements RequestOptions
         return $this->Filter;
     }
 
-    public function setFilter(string $filter): void
+    public function setFilter(string $filter): self
     {
         $this->Filter = $filter;
+        return $this;
     }
 
+    /**
+     * @return array<string,string>
+     */
     public function getNodeMeta(): array
     {
         return $this->NodeMeta;
     }
 
-    public function setNodeMeta(array $nodeMeta): void
+    /**
+     * @param array<string,string> $nodeMeta
+     */
+    public function setNodeMeta(array $nodeMeta): self
     {
         $this->NodeMeta = $nodeMeta;
+        return $this;
     }
 
     public function getRelayFactor(): int
@@ -228,9 +258,10 @@ class QueryOptions extends AbstractModel implements RequestOptions
         return $this->RelayFactor;
     }
 
-    public function setRelayFactor(int $relayFactor): void
+    public function setRelayFactor(int $relayFactor): self
     {
         $this->RelayFactor = $relayFactor;
+        return $this;
     }
 
     public function isLocalOnly(): bool
@@ -238,9 +269,10 @@ class QueryOptions extends AbstractModel implements RequestOptions
         return $this->LocalOnly;
     }
 
-    public function setLocalOnly(bool $localOnly): void
+    public function setLocalOnly(bool $localOnly): self
     {
         $this->LocalOnly = $localOnly;
+        return $this;
     }
 
     public function isConnect(): bool
@@ -248,19 +280,21 @@ class QueryOptions extends AbstractModel implements RequestOptions
         return $this->Connect;
     }
 
-    public function setConnect(bool $connect): void
+    public function setConnect(bool $connect): self
     {
         $this->Connect = $connect;
+        return $this;
     }
 
-    public function getTimeout(): ?Time\Duration
+    public function getTimeout(): Time\Duration
     {
         return $this->Timeout;
     }
 
-    public function setTimeout(float|int|string|Time\Duration|null $timeout): void
+    public function setTimeout(null|int|float|string|\DateInterval|Time\Duration $timeout): self
     {
         $this->Timeout = Time::Duration($timeout);
+        return $this;
     }
 
     public function isPretty(): bool
@@ -268,9 +302,10 @@ class QueryOptions extends AbstractModel implements RequestOptions
         return $this->Pretty;
     }
 
-    public function setPretty(bool $pretty): void
+    public function setPretty(bool $pretty): self
     {
         $this->Pretty = $pretty;
+        return $this;
     }
 
     public function apply(Request $r): void
@@ -288,9 +323,9 @@ class QueryOptions extends AbstractModel implements RequestOptions
             $r->params->set('consistent', '');
         }
         if (0 !== $this->WaitIndex) {
-            $r->params->set('index', (string) $this->WaitIndex);
+            $r->params->set('index', (string)$this->WaitIndex);
         }
-        if (isset($this->WaitTime) && 0 < $this->WaitTime->Microseconds()) {
+        if (0 < $this->WaitTime->Microseconds()) {
             $r->params->set('wait', dur_to_millisecond($this->WaitTime));
         }
         if ('' !== $this->WaitHash) {
@@ -305,13 +340,13 @@ class QueryOptions extends AbstractModel implements RequestOptions
         if ('' !== $this->Filter) {
             $r->params->set('filter', $this->Filter);
         }
-        if (isset($this->NodeMeta) && [] !== $this->NodeMeta) {
+        if ([] !== $this->NodeMeta) {
             foreach ($this->NodeMeta as $k => $v) {
                 $r->params->add('node-meta', "{$k}:{$v}");
             }
         }
         if (0 !== $this->RelayFactor) {
-            $r->params->set('relay-factor', (string) $this->RelayFactor);
+            $r->params->set('relay-factor', (string)$this->RelayFactor);
         }
         if ($this->LocalOnly) {
             $r->params->set('local-only', 'true');
@@ -335,7 +370,7 @@ class QueryOptions extends AbstractModel implements RequestOptions
             }
         }
 
-        if (null !== $this->Timeout) {
+        if (0 < $this->Timeout->Nanoseconds()) {
             $r->timeout = $this->Timeout;
         }
 

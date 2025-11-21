@@ -73,43 +73,6 @@ class Consul
     public const SessionBehaviorRelease = 'release';
     public const SessionBehaviorDelete  = 'delete';
 
-    public const ServiceKindTypical            = '';
-    public const ServiceKindConnectProxy       = 'connect-proxy';
-    public const ServiceKindMeshGateway        = 'mesh-gateway';
-    public const ServiceKindTerminatingGateway = 'terminating-gateway';
-    public const ServiceKindIngressGateway     = 'ingress-gateway';
-
-    public const UpstreamDestTypeService       = 'service';
-    public const UpstreamDestTypePreparedQuery = 'prepared_query';
-
-    public const AutopilotServerNone     = 'none';
-    public const AutopilotServerLeader   = 'leader';
-    public const AutopilotServerVoter    = 'voter';
-    public const AutopilotServerNonVoter = 'non-voter';
-    public const AutopilotServerStaging  = 'staging';
-
-    public const AutopilotTypeVoter          = 'voter';
-    public const AutopilotTypeReadReplica    = 'read-replica';
-    public const AutopilotTypeZoneVoter      = 'zone-voter';
-    public const AutopilotTypeZoneExtraVoter = 'zone-extra-voter';
-    public const AutopilotTypeZoneStandby    = 'zone-standby';
-
-    public const AutopilotUpgradeIdle               = 'idle';
-    public const AutopilotUpgradeAwaitNewVoters     = 'await-new-voters';
-    public const AutopilotUpgradePromoting          = 'promoting';
-    public const AutopilotUpgradeDemoting           = 'demoting';
-    public const AutopilotUpgradeLeaderTransfer     = 'leader-transfer';
-    public const AutopilotUpgradeAwaitNewServers    = 'await-new-servers';
-    public const AutopilotUpgradeAwaitServerRemoval = 'await-server-removal';
-    public const AutopilotUpgradeDisabled           = 'disabled';
-
-    public const BindingRuleBindTypeService = 'service';
-    public const BindingRuleBindTypeRole    = 'role';
-
-    public const MeshGatewayModeDefault = '';
-    public const MeshGatewayModeNone    = 'none';
-    public const MeshGatewayModeLocal   = 'local';
-    public const MeshGatewayModeRemote  = 'remote';
 
     public const MemberTagKeyACLMode         = 'acls';
     public const MemberTagKeyRole            = 'role';
@@ -123,14 +86,27 @@ class Consul
     public const MemberTagKeyReadReplica     = 'read_replica';
     public const MemberTagValueReadReplica   = '1';
 
-    public const ACLModeDisabled = '0';
-    public const ACLModeEnabled  = '1';
-    public const ACLModeLegacy   = '2';
-    public const ACLModeUnknown  = '3';
+    // config_entry.go
+    public const ServiceDefaults = 'service-defaults';
+    public const ProxyDefaults   = 'proxy-defaults';
+    public const ServiceRouter = 'service-router';
+    public const ServiceSplitter = 'service-splitter';
+    public const ServiceResolver = 'service-resolver';
+    public const IngressGateway = 'ingress-gateway';
+    public const TerminatingGateway = 'terminating-gateway';
+    public const ServiceIntentions = 'service-intentions';
+    public const MeshConfig = 'mesh';
+    public const ExportedServices = 'exported-services';
+    public const SamenessGroup = 'sameness-group';
+    public const RateLimitIPConfig = 'control-plane-request-limit';
 
-    public const ProxyModeDefault = '';
-    public const ProxyModeTransparent = 'transparent';
-    public const ProxyModeDirect = 'direct';
+    public const ProxyConfigGlobal = 'global';
+    public const MeshConfigMesh = 'mesh';
+    public const APIGateway = "api-gateway";
+    public const TCPRoute = "tcp-route";
+    public const InlineCertificate = 'inline-certificate';
+    public const HTTPRoute = 'http-route';
+    public const JWTProvider = 'jwt-provider';
 
     // "private" constants
 
@@ -239,5 +215,21 @@ class Consul
     public function Status(): StatusClient
     {
         return $this->Status;
+    }
+
+    public static function MakeConfigEntry(string $kind, string $name): ConfigEntry\ConfigEntry
+    {
+        return match ($kind) {
+            Consul::ServiceDefaults => new ConfigEntry\ServiceConfigEntry(kind: $kind, name: $name),
+            Consul::ProxyDefaults => new ConfigEntry\ProxyConfigEntry(kind: $kind, name: $name),
+            Consul::ServiceRouter => new ConfigEntry\ServiceRouterConfigEntry(kind: $kind, name: $name),
+            Consul::ServiceSplitter => new ConfigEntry\ServiceSplitterConfigEntry(kind: $kind, name: $name),
+            Consul::ServiceResolver => new ConfigEntry\ServiceResolverConfigEntry(kind: $kind, name: $name),
+            Consul::IngressGateway => new ConfigEntry\IngressGatewayConfigEntry(kind: $kind, name: $name),
+            Consul::TerminatingGateway => new ConfigEntry\TerminatingGatewayConfigEntry(kind: $kind, name: $name),
+            Consul::ServiceIntentions =>  new ConfigEntry\ServiceIntentionsConfigEntry(kind: $kind, name: $name),
+
+            default => throw new \InvalidArgumentException(sprintf('Unknown kind "%s"', $kind)),
+        };
     }
 }

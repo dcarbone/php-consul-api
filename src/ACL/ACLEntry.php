@@ -20,16 +20,32 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ACLEntry extends AbstractModel
+class ACLEntry extends AbstractType
 {
-    public int $CreateIndex = 0;
-    public int $ModifyIndex = 0;
-    public string $ID = '';
-    public string $Name = '';
-    public string $Type = '';
-    public string $Rules = '';
+    public int $CreateIndex;
+    public int $ModifyIndex;
+    public string $ID;
+    public string $Name;
+    public string $Type;
+    public string $Rules;
+
+    public function __construct(
+        int $CreateIndex = 0,
+        int $ModifyIndex = 0,
+        string $ID = '',
+        string $Name = '',
+        string $Type = '',
+        string $Rules = ''
+    ) {
+        $this->CreateIndex = $CreateIndex;
+        $this->ModifyIndex = $ModifyIndex;
+        $this->ID = $ID;
+        $this->Name = $Name;
+        $this->Type = $Type;
+        $this->Rules = $Rules;
+}
 
     public function getCreateIndex(): int
     {
@@ -95,5 +111,26 @@ class ACLEntry extends AbstractModel
     {
         $this->Rules = $rules;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->CreateIndex = $this->CreateIndex;
+        $out->ModifyIndex = $this->ModifyIndex;
+        $out->ID = $this->ID;
+        $out->Name = $this->Name;
+        $out->Type = $this->Type;
+        $out->Rules = $this->Rules;
+        return $out;
     }
 }

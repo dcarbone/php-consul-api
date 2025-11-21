@@ -20,20 +20,24 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedWriteResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedWriteResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
 
 class ACLRoleWriteResponse extends AbstractValuedWriteResponse implements UnmarshalledResponseInterface
 {
-    public ?ACLRole $ACLRole = null;
+    public null|ACLRole $ACLRole = null;
 
-    public function getValue(): ?ACLRole
+    public function getValue(): null|ACLRole
     {
         return $this->ACLRole;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        $this->ACLRole = new ACLRole((array)$decodedData);
+        if (null === $decoded) {
+            $this->ACLRole = null;
+            return;
+        }
+        $this->ACLRole = ACLRole::jsonUnserialize($decoded);
     }
 }

@@ -21,80 +21,83 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ACLTokenListEntry extends AbstractModel
+class ACLTokenListEntry extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_POLICIES           => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => ACLTokenPolicyLink::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-        self::FIELD_ROLES              => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => ACLTokenRoleLink::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-        self::FIELD_SERVICE_IDENTITIES => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => ACLServiceIdentity::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-        self::FIELD_NODE_IDENTITIES    => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => ACLNodeIdentity::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-        self::FIELD_AUTH_METHOD        => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_EXPIRATION_TIME    => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_NULLABLE_TIME,
-            Transcoding::FIELD_NULLABLE           => true,
-            Transcoding::FIELD_OMITEMPTY          => true,
-        ],
-        self::FIELD_CREATE_TIME        => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_TIME,
-        ],
-        self::FIELD_NAMESPACE          => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
-
-    private const FIELD_POLICIES           = 'Policies';
-    private const FIELD_ROLES              = 'Roles';
-    private const FIELD_SERVICE_IDENTITIES = 'ServiceIdentities';
-    private const FIELD_NODE_IDENTITIES    = 'NodeIdentities';
-    private const FIELD_AUTH_METHOD        = 'AuthMethod';
-    private const FIELD_EXPIRATION_TIME    = 'ExpirationTime';
-    private const FIELD_CREATE_TIME        = 'CreateTime';
-    private const FIELD_NAMESPACE          = 'Namespace';
-
-    public int $CreateIndex = 0;
-    public int $ModifyIndex = 0;
-    public string $AccessorID = '';
-    public string $Description = '';
-    public array $Policies = [];
-    public array $Roles = [];
-    public array $ServiceIdentities = [];
-    public array $NodeIdentities = [];
-    public bool $Local = false;
-    public string $AuthMethod = '';
-    public ?Time\Time $ExpirationTime = null;
+    public int $CreateIndex;
+    public int $ModifyIndex;
+    public string $AccessorID;
+    public string $SecretID;
+    public string $Description;
+    /** @var array<\DCarbone\PHPConsulAPI\ACL\ACLTokenPolicyLink> */
+    public array $Policies;
+    /** @var array<\DCarbone\PHPConsulAPI\ACL\ACLTokenRoleLink> */
+    public array $Roles;
+    /** @var array<\DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity> */
+    public array $ServiceIdentities;
+    /** @var array<\DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity> */
+    public array $NodeIdentities;
+    /** @var array<\DCarbone\PHPConsulAPI\ACL\ACLTemplatedPolicy> */
+    public array $TemplatedPolicies;
+    public bool $Local;
+    public string $AuthMethod;
+    public null|Time\Time $ExpirationTime = null;
     public Time\Time $CreateTime;
-    public string $Hash = '';
-    public bool $Legacy = false;
-    public string $Namespace = '';
+    public string $Hash;
+    public bool $Legacy;
+    public string $Namespace;
+    public string $Partition;
+    public string $AuthMethodNamespace;
 
-    public function __construct(?array $data = null)
-    {
-        parent::__construct($data);
-        if (!isset($this->CreateTime)) {
-            $this->CreateTime = Time::New();
-        }
-    }
+    /**
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLTokenPolicyLink> $Policies
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLTokenRoleLink> $Roles
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity> $ServiceIdentities
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity> $NodeIdentities
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLTemplatedPolicy> $TemplatedPolicies
+     */
+    public function __construct(
+        int $CreateIndex = 0,
+        int $ModifyIndex = 0,
+        string $AccessorID = '',
+        string $SecretID = '',
+        string $Description = '',
+        array $Policies = [],
+        array $Roles = [],
+        array $ServiceIdentities = [],
+        array $NodeIdentities = [],
+        array $TemplatedPolicies = [],
+        bool $Local = false,
+        string $AuthMethod = '',
+        null|Time\Time $ExpirationTime = null,
+        null|Time\Time $CreateTime = null,
+        string $Hash = '',
+        bool $Legacy = false,
+        string $Namespace = '',
+        string $Partition = '',
+        string $AuthMethodNamespace = '',
+    ) {
+        $this->CreateIndex = $CreateIndex;
+        $this->ModifyIndex = $ModifyIndex;
+        $this->AccessorID = $AccessorID;
+        $this->SecretID = $SecretID;
+        $this->Description = $Description;
+        $this->setPolicies(...$Policies);
+        $this->setRoles(...$Roles);
+        $this->setServiceIdentities(...$ServiceIdentities);
+        $this->setNodeIdentities(...$NodeIdentities);
+        $this->setTemplatedPolicies(...$TemplatedPolicies);
+        $this->Local = $Local;
+        $this->AuthMethod = $AuthMethod;
+        $this->setExpirationTime($ExpirationTime);
+        $this->CreateTime = $CreateTime ?? Time::New();
+        $this->Hash = $Hash;
+        $this->Legacy = $Legacy;
+        $this->Namespace = $Namespace;
+        $this->Partition = $Partition;
+        $this->AuthMethodNamespace = $AuthMethodNamespace;
+}
 
     public function getCreateIndex(): int
     {
@@ -129,6 +132,17 @@ class ACLTokenListEntry extends AbstractModel
         return $this;
     }
 
+    public function getSecretID(): string
+    {
+        return $this->SecretID;
+    }
+
+    public function setSecretID(string $SecretID): self
+    {
+        $this->SecretID = $SecretID;
+        return $this;
+    }
+
     public function getDescription(): string
     {
         return $this->Description;
@@ -140,47 +154,73 @@ class ACLTokenListEntry extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLTokenPolicyLink[]
+     */
     public function getPolicies(): array
     {
         return $this->Policies;
     }
 
-    public function setPolicies(array $Policies): self
+    public function setPolicies(ACLTokenPolicyLink ...$Policies): self
     {
         $this->Policies = $Policies;
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLRolePolicyLink[]
+     */
     public function getRoles(): array
     {
         return $this->Roles;
     }
 
-    public function setRoles(array $Roles): self
+    public function setRoles(ACLTokenRoleLink ...$Roles): self
     {
         $this->Roles = $Roles;
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity[]
+     */
     public function getServiceIdentities(): array
     {
         return $this->ServiceIdentities;
     }
 
-    public function setServiceIdentities(array $ServiceIdentities): self
+    public function setServiceIdentities(ACLServiceIdentity ...$ServiceIdentities): self
     {
         $this->ServiceIdentities = $ServiceIdentities;
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity[]
+     */
     public function getNodeIdentities(): array
     {
         return $this->NodeIdentities;
     }
 
-    public function setNodeIdentities(array $NodeIdentities): self
+    public function setNodeIdentities(ACLNodeIdentity ...$NodeIdentities): self
     {
         $this->NodeIdentities = $NodeIdentities;
+        return $this;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLTemplatedPolicy[]
+     */
+    public function getTemplatedPolicies(): array
+    {
+        return $this->TemplatedPolicies;
+    }
+
+    public function setTemplatedPolicies(ACLTemplatedPolicy ...$TemplatedPolicies): self
+    {
+        $this->TemplatedPolicies = $TemplatedPolicies;
         return $this;
     }
 
@@ -206,12 +246,12 @@ class ACLTokenListEntry extends AbstractModel
         return $this;
     }
 
-    public function getExpirationTime(): ?Time\Time
+    public function getExpirationTime(): null|Time\Time
     {
         return $this->ExpirationTime;
     }
 
-    public function setExpirationTime(?Time\Time $ExpirationTime): self
+    public function setExpirationTime(null|Time\Time $ExpirationTime): self
     {
         $this->ExpirationTime = $ExpirationTime;
         return $this;
@@ -259,5 +299,106 @@ class ACLTokenListEntry extends AbstractModel
     {
         $this->Namespace = $Namespace;
         return $this;
+    }
+
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
+    public function getAuthMethodNamespace(): string
+    {
+        return $this->AuthMethodNamespace;
+    }
+
+    public function setAuthMethodNamespace(string $AuthMethodNamespace): self
+    {
+        $this->AuthMethodNamespace = $AuthMethodNamespace;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('Policies' === $k) {
+                foreach ($v as $vv) {
+                    $n->Policies[] = ACLTokenPolicyLink::jsonUnserialize($vv);
+                }
+            } elseif ('Roles' === $k) {
+                foreach ($v as $vv) {
+                    $n->Roles[] = ACLTokenRoleLink::jsonUnserialize($vv);
+                }
+            } elseif ('ServiceIdentities' === $k) {
+                foreach ($v as $vv) {
+                    $n->ServiceIdentities[] = ACLServiceIdentity::jsonUnserialize($vv);
+                }
+            } elseif ('NodeIdentities' === $k) {
+                foreach ($v as $vv) {
+                    $n->NodeIdentities[] = ACLNodeIdentity::jsonUnserialize($vv);
+                }
+            } elseif ('TemplatedPolicies' === $k) {
+                foreach ($v as $vv) {
+                    $n->TemplatedPolicies[] = ACLTemplatedPolicy::jsonUnserialize($vv);
+                }
+            } elseif ('ExpirationTime' === $k) {
+                $n->ExpirationTime = (null === $v ? null : Time\Time::createFromFormat(DATE_RFC3339, $v));
+            } elseif ('CreateTime' === $k) {
+                $n->CreateTime = Time\Time::createFromFormat(DATE_RFC3339, $v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->CreateIndex = $this->CreateIndex;
+        $out->ModifyIndex = $this->ModifyIndex;
+        $out->AccessorID = $this->AccessorID;
+        $out->SecretID = $this->SecretID;
+        $out->Description = $this->Description;
+        if ([] !== $this->Policies) {
+            $out->Policies = $this->Policies;
+        }
+        if ([] !== $this->Roles) {
+            $out->Roles = $this->Roles;
+        }
+        if ([] !== $this->ServiceIdentities) {
+            $out->ServiceIdentities = $this->ServiceIdentities;
+        }
+        if ([] !== $this->NodeIdentities) {
+            $out->NodeIdentities = $this->NodeIdentities;
+        }
+        if ([] !== $this->TemplatedPolicies) {
+            $out->TemplatedPolicies = $this->TemplatedPolicies;
+        }
+        $out->Local = $this->Local;
+        if ('' !== $this->AuthMethod) {
+            $out->AuthMethod = $this->AuthMethod;
+        }
+        if (null !== $this->ExpirationTime) {
+            $out->ExpirationTime = $this->ExpirationTime->format(DATE_RFC3339);
+        }
+        $out->CreateTime = $this->CreateTime->format(DATE_RFC3339);
+        $out->Hash = $this->Hash;
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
+        }
+        if ('' !== $this->AuthMethodNamespace) {
+            $out->AuthMethodNamespace = $this->AuthMethodNamespace;
+        }
+        return $out;
     }
 }

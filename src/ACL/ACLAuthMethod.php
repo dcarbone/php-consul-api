@@ -21,67 +21,56 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ACLAuthMethod extends AbstractModel
+class ACLAuthMethod extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_DISPLAY_NAME    => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_DESCRIPTION     => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_MAX_TOKEN_TTL   => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_DURATION,
-            Transcoding::FIELD_MARSHAL_AS         => Transcoding::STRING,
-            Transcoding::FIELD_OMITEMPTY          => true,
-        ],
-        self::FIELD_TOKEN_LOCALITY  => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_NAMESPACE_RULES => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => ACLAuthMethodNamespaceRule::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::class,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-        self::FIELD_NAMESPACE       => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
-
-    private const FIELD_DISPLAY_NAME    = 'DisplayName';
-    private const FIELD_DESCRIPTION     = 'Description';
-    private const FIELD_MAX_TOKEN_TTL   = 'MaxTokenTTL';
-    private const FIELD_TOKEN_LOCALITY  = 'TokenLocality';
-    private const FIELD_NAMESPACE_RULES = 'NamespaceRules';
-    private const FIELD_NAMESPACE       = 'Namespace';
-
-    public string $ID = '';
-    public string $Name = '';
-    public string $Type = '';
-    public string $DisplayName = '';
-    public string $Description = '';
+    public string $Name;
+    public string $Type;
+    public string $DisplayName;
+    public string $Description;
     public Time\Duration $MaxTokenTTL;
-    public string $TokenLocality = '';
-    public array $config = [];
-    public int $CreateIndex = 0;
-    public int $ModifyIndex = 0;
-    public array $NamespaceRules = [];
-    public string $Namespace = '';
+    public string $TokenLocality;
+    /** @var array<string,mixed> */
+    public array $Config;
+    public int $CreateIndex;
+    public int $ModifyIndex;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodNamespaceRule[] */
+    public array $NamespaceRules;
+    public string $Namespace;
+    public string $Partition;
 
-    public function __construct(?array $data = null)
-    {
-        parent::__construct($data);
-        if (!isset($this->MaxTokenTTL)) {
-            $this->MaxTokenTTL = new Time\Duration();
-        }
-    }
-
-    public function getID(): string
-    {
-        return $this->ID;
-    }
-
-    public function setID(string $ID): ACLAuthMethod
-    {
-        $this->ID = $ID;
-        return $this;
-    }
+    /**
+     * @param array<string,mixed> $Config
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLAuthMethodNamespaceRule> $NamespaceRules
+     */
+    public function __construct(
+        string $Name = '',
+        string $Type = '',
+        string $DisplayName = '',
+        string  $Description = '',
+        null|int|float|string|\DateInterval|Time\Duration $MaxTokenTTL = null,
+        string $TokenLocality = '',
+        array $Config = [],
+        int $CreateIndex = 0,
+        int $ModifyIndex = 0,
+        array $NamespaceRules = [],
+        string $Namespace = '',
+        string $Partition = '',
+    ) {
+        $this->Name = $Name;
+        $this->Type = $Type;
+        $this->DisplayName = $DisplayName;
+        $this->Description = $Description;
+        $this->MaxTokenTTL = Time::Duration($MaxTokenTTL);
+        $this->TokenLocality = $TokenLocality;
+        $this->setConfig($Config);
+        $this->CreateIndex = $CreateIndex;
+        $this->ModifyIndex = $ModifyIndex;
+        $this->setNamespaceRules(...$NamespaceRules);
+        $this->Namespace = $Namespace;
+        $this->Partition = $Partition;
+}
 
     public function getName(): string
     {
@@ -132,9 +121,9 @@ class ACLAuthMethod extends AbstractModel
         return $this->MaxTokenTTL;
     }
 
-    public function setMaxTokenTTL(int|string|Time\Duration $MaxTokenTTL): self
+    public function setMaxTokenTTL(null|int|float|string|\DateInterval|Time\Duration $MaxTokenTTL): self
     {
-        $this->MaxTokenTTL = Time::ParseDuration($MaxTokenTTL);
+        $this->MaxTokenTTL = Time::Duration($MaxTokenTTL);
         return $this;
     }
 
@@ -149,14 +138,26 @@ class ACLAuthMethod extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return array<string,mixed>
+     */
     public function getConfig(): array
     {
-        return $this->config;
+        return $this->Config;
     }
 
-    public function setConfig(array $config): self
+    /**
+     * @param null|\stdClass|array<string,mixed> $Config
+     * @return $this
+     */
+    public function setConfig(null|\stdClass|array $Config): self
     {
-        $this->config = $config;
+        $this->Config = [];
+        if (null !== $Config) {
+            foreach ($Config as $k => $v) {
+                $this->Config[$k] = $v;
+            }
+        }
         return $this;
     }
 
@@ -182,14 +183,23 @@ class ACLAuthMethod extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return array<\DCarbone\PHPConsulAPI\ACL\ACLAuthMethodNamespaceRule>
+     */
     public function getNamespaceRules(): array
     {
         return $this->NamespaceRules;
     }
 
-    public function setNamespaceRules(array $NamespaceRules): self
+    public function addNamespaceRule(ACLAuthMethodNamespaceRule $rule): self
     {
-        $this->NamespaceRules = $NamespaceRules;
+        $this->NamespaceRules[] = $rule;
+        return $this;
+    }
+
+    public function setNamespaceRules(ACLAuthMethodNamespaceRule ...$rules): self
+    {
+        $this->NamespaceRules = $rules;
         return $this;
     }
 
@@ -202,5 +212,67 @@ class ACLAuthMethod extends AbstractModel
     {
         $this->Namespace = $Namespace;
         return $this;
+    }
+
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('MaxTokenTTL' === $k) {
+                $n->setMaxTokenTTL($v);
+            } elseif ('NamespaceRules' === $k) {
+                $n->NamespaceRules = [];
+                foreach ($v as $vv) {
+                    $n->NamespaceRules[] = ACLAuthMethodNamespaceRule::jsonUnserialize($vv);
+                }
+            } elseif ('Config' === $k) {
+                $n->setConfig($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Name = $this->Name;
+        if ('' !== $this->DisplayName) {
+            $out->DisplayName = $this->DisplayName;
+        }
+        if ('' !== $this->Description) {
+            $out->Description = $this->Description;
+        }
+        if (0 !== $this->MaxTokenTTL->Nanoseconds()) {
+            $out->MaxTokenTTL = (string)$this->MaxTokenTTL;
+        }
+        if ('' !== $this->TokenLocality) {
+            $out->TokenLocality = $this->TokenLocality;
+        }
+        $out->Config = $this->Config;
+        $out->CreateIndex = $this->CreateIndex;
+        $out->ModifyIndex = $this->ModifyIndex;
+        if ([] !== $this->NamespaceRules) {
+            $out->NamespaceRules = $this->NamespaceRules;
+        }
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
+        }
+        return $out;
     }
 }

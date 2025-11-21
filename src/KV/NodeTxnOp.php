@@ -20,11 +20,11 @@ namespace DCarbone\PHPConsulAPI\KV;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Catalog\Node;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-class NodeTxnOp extends AbstractModel
+class NodeTxnOp extends AbstractType
 {
     protected const FIELDS = [
         self::FIELD_NODE => [

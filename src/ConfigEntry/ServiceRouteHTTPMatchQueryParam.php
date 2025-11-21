@@ -20,25 +20,26 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ServiceRouteHTTPMatchQueryParam extends AbstractModel
+class ServiceRouteHTTPMatchQueryParam extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_PRESENT => Transcoding::OMITEMPTY_BOOLEAN_FIELD,
-        self::FIELD_EXACT   => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_REGEX   => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
+    public string $Name;
+    public bool $Present;
+    public string $Exact;
+    public string $Regex;
 
-    private const FIELD_PRESENT = 'Present';
-    private const FIELD_EXACT   = 'Exact';
-    private const FIELD_REGEX   = 'Regex';
-
-    public string $Name = '';
-    public bool $Present = false;
-    public string $Exact = '';
-    public string $Regex = '';
+    public function __construct(
+        string $Name = '',
+        bool $Present = false,
+        string $Exact = '',
+        string $Regex = '',
+    ) {
+        $this->Name = $Name;
+        $this->Present = $Present;
+        $this->Exact = $Exact;
+        $this->Regex = $Regex;
+    }
 
     public function getName(): string
     {
@@ -82,5 +83,30 @@ class ServiceRouteHTTPMatchQueryParam extends AbstractModel
     {
         $this->Regex = $Regex;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Name = $this->Name;
+        if ($this->Present) {
+            $out->Present = $this->Present;
+        }
+        if ('' !== $this->Exact) {
+            $out->Exact = $this->Exact;
+        }
+        if ('' !== $this->Regex) {
+            $out->Regex = $this->Regex;
+        }
+        return $out;
     }
 }

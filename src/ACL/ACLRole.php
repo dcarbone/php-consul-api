@@ -20,48 +20,60 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ACLRole extends AbstractModel
+class ACLRole extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_POLICIES           => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => ACLTokenPolicyLink::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-        self::FIELD_SERVICE_IDENTITIES => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => ACLServiceIdentity::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-        self::FIELD_NODE_IDENTITIES    => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => ACLNodeIdentity::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-        self::FIELD_NAMESPACE          => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
+    public string $ID;
+    public string $Name;
+    public string $Description;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLRolePolicyLink[] */
+    public array $Policies;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity[] */
+    public array $ServiceIdentities;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity[] */
+    public array $NodeIdentities;
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLTemplatedPolicy[] */
+    public array $TemplatedPolicies;
+    public string $Hash;
+    public int $CreateIndex;
+    public int $ModifyIndex;
+    public string $Namespace;
+    public string $Partition;
 
-    private const FIELD_POLICIES           = 'Policies';
-    private const FIELD_SERVICE_IDENTITIES = 'ServiceIdentities';
-    private const FIELD_NODE_IDENTITIES    = 'NodeIdentities';
-    private const FIELD_NAMESPACE          = 'Namespace';
-
-    public string $ID = '';
-    public string $Name = '';
-    public string $Description = '';
-    public array $Policies = [];
-    public array $ServiceIdentities = [];
-    public array $NodeIdentities = [];
-    public string $Hash = '';
-    public int $CreateIndex = 0;
-    public int $ModifyIndex = 0;
-    public string $Namespace = '';
+    /**
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLRolePolicyLink> $Policies
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity> $ServiceIdentities
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity> $NodeIdentities
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLTemplatedPolicy> $TemplatedPolicies
+     */
+    public function __construct(
+        string $ID = '',
+        string $Name = '',
+        string $Description = '',
+        array $Policies = [],
+        array $ServiceIdentities = [],
+        array $NodeIdentities = [],
+        array $TemplatedPolicies = [],
+        string $Hash = '',
+        int $CreateIndex = 0,
+        int $ModifyIndex = 0,
+        string $Namespace = '',
+        string $Partition = '',
+    ) {
+        $this->ID = $ID;
+        $this->Name = $Name;
+        $this->Description = $Description;
+        $this->setPolicies(...$Policies);
+        $this->setServiceIdentities(...$ServiceIdentities);
+        $this->setNodeIdentities(...$NodeIdentities);
+        $this->setTemplatedPolicies(...$TemplatedPolicies);
+        $this->Hash = $Hash;
+        $this->CreateIndex = $CreateIndex;
+        $this->ModifyIndex = $ModifyIndex;
+        $this->Namespace = $Namespace;
+        $this->Partition = $Partition;
+}
 
     public function getID(): string
     {
@@ -96,36 +108,59 @@ class ACLRole extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLRolePolicyLink[]
+     */
     public function getPolicies(): array
     {
         return $this->Policies;
     }
 
-    public function setPolicies(array $Policies): self
+    public function setPolicies(ACLRolePolicyLink ...$Policies): self
     {
         $this->Policies = $Policies;
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity[]
+     */
     public function getServiceIdentities(): array
     {
         return $this->ServiceIdentities;
     }
 
-    public function setServiceIdentities(array $ServiceIdentities): self
+    public function setServiceIdentities(ACLServiceIdentity ...$ServiceIdentities): self
     {
         $this->ServiceIdentities = $ServiceIdentities;
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity[]
+     */
     public function getNodeIdentities(): array
     {
         return $this->NodeIdentities;
     }
 
-    public function setNodeIdentities(array $NodeIdentities): self
+    public function setNodeIdentities(ACLNodeIdentity ...$NodeIdentities): self
     {
         $this->NodeIdentities = $NodeIdentities;
+        return $this;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLTemplatedPolicy[]
+     */
+    public function getTemplatedPolicies(): array
+    {
+        return $this->TemplatedPolicies;
+    }
+
+    public function setTemplatedPolicies(ACLTemplatedPolicy ...$TemplatedPolicies): self
+    {
+        $this->TemplatedPolicies = $TemplatedPolicies;
         return $this;
     }
 
@@ -171,5 +206,77 @@ class ACLRole extends AbstractModel
     {
         $this->Namespace = $Namespace;
         return $this;
+    }
+
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('Policies' === $k) {
+                $n->Policies = [];
+                foreach ($v as $vv) {
+                    $n->Policies[] = ACLRolePolicyLink::jsonUnserialize($vv);
+                }
+            } elseif ('ServiceIdentities' === $k) {
+                $n->ServiceIdentities = [];
+                foreach ($v as $vv) {
+                    $n->ServiceIdentities[] = ACLServiceIdentity::jsonUnserialize($vv);
+                }
+            } elseif ('NodeIdentities' === $k) {
+                $n->NodeIdentities = [];
+                foreach ($v as $vv) {
+                    $n->NodeIdentities[] = ACLNodeIdentity::jsonUnserialize($vv);
+                }
+            } elseif ('TemplatedPolicies' === $k) {
+                $n->TemplatedPolicies = [];
+                foreach ($v as $vv) {
+                    $n->TemplatedPolicies[] = ACLTemplatedPolicy::jsonUnserialize($vv);
+                }
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->ID = $this->ID;
+        $out->Name = $this->Name;
+        $out->Description = $this->Description;
+        $out->Hash = $this->Hash;
+        if ([] !== $this->Policies) {
+            $out->Policies = $this->Policies;
+        }
+        if ([] !== $this->ServiceIdentities) {
+            $out->ServiceIdentities = $this->ServiceIdentities;
+        }
+        if ([] !== $this->NodeIdentities) {
+            $out->NodeIdentities = $this->NodeIdentities;
+        }
+        if ([] !== $this->TemplatedPolicies) {
+            $out->TemplatedPolicies = $this->TemplatedPolicies;
+        }
+        $out->CreateIndex = $this->CreateIndex;
+        $out->ModifyIndex = $this->ModifyIndex;
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
+        }
+        return $out;
     }
 }

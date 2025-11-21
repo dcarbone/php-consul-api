@@ -20,23 +20,79 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\Values;
 
 class AgentCheckRegistration extends AgentServiceCheck
 {
-    protected const FIELDS = [
-        self::FIELD_ID         => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_SERVICE_ID => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_NAMESPACE  => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
+    public string $ID;
+    public string $ServiceID;
+    public string $Namespace;
+    public string $Partition;
 
-    private const FIELD_ID         = 'ID';
-    private const FIELD_SERVICE_ID = 'ServiceID';
-    private const FIELD_NAMESPACE  = 'Namespace';
-
-    public string $ID = '';
-    public string $ServiceID = '';
-    public string $Namespace = '';
+    /**
+     * @param array<string> $Args
+     */
+    public function __construct(
+        string $ID = '',
+        string $ServiceID = '',
+        string $CheckID = '',
+        string $Name = '',
+        array  $Args = [],
+        string $DockerContainerID = '',
+        string $Shell = '',
+        string $Interval = '',
+        string $Timeout = '',
+        string $TTL = '',
+        string $HTTP = '',
+        null|\stdClass|array|Values $Header = null,
+        string $Method = '',
+        string $TCP = '',
+        string $Status = '',
+        string $Notes = '',
+        bool $TLSSkipVerify = false,
+        string $GRPC = '',
+        bool $GRPCUseTLS = false,
+        string $H2PING = '',
+        bool $H2PingUseTLS = false,
+        string $AliasNode = '',
+        string $AliasService = '',
+        int $SuccessBeforePassing = 0,
+        int $FailuresBeforeCritical = 0,
+        string $DeregisterCriticalServiceAfter = '',
+        string $Namespace = '',
+        string $Partition = '',
+    ) {
+        parent::__construct(
+            CheckID: $CheckID,
+            Name: $Name,
+            Args: $Args,
+            DockerContainerID: $DockerContainerID,
+            Shell: $Shell,
+            Interval: $Interval,
+            Timeout: $Timeout,
+            TTL: $TTL,
+            HTTP: $HTTP,
+            Header: $Header,
+            Method: $Method,
+            TCP: $TCP,
+            Status: $Status,
+            Notes: $Notes,
+            TLSSkipVerify: $TLSSkipVerify,
+            GRPC: $GRPC,
+            GRPCUseTLS: $GRPCUseTLS,
+            H2PING: $H2PING,
+            H2PINGUseTLS: $H2PingUseTLS,
+            AliasNode: $AliasNode,
+            AliasService: $AliasService,
+            SuccessBeforePassing: $SuccessBeforePassing,
+            FailuresBeforeCritical: $FailuresBeforeCritical,
+            DeregisterCriticalServiceAfter: $DeregisterCriticalServiceAfter,
+        );
+        $this->ID = $ID;
+        $this->ServiceID = $ServiceID;
+        $this->Namespace = $Namespace;
+        $this->Partition = $Partition;
+    }
 
     public function getID(): string
     {
@@ -69,5 +125,29 @@ class AgentCheckRegistration extends AgentServiceCheck
     {
         $this->Namespace = $Namespace;
         return $this;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = parent::jsonSerialize();
+        if ('' !== $this->ID) {
+            $out->ID = $this->ID;
+        }
+        if ('' !== $this->ServiceID) {
+            $out->ServiceID = $this->ServiceID;
+        }
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        if (isset($out->Name) && $out->Name === '') {
+            unset($out->Name);
+        }
+        if (isset($out->Notes) && $out->Notes === '') {
+            unset($out->Notes);
+        }
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
+        }
+        return $out;
     }
 }

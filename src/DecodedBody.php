@@ -20,13 +20,15 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
+use DCarbone\PHPConsulAPI\PHPLib\Response\ErrorField;
+
 final class DecodedBody
 {
-    use ErrorContainer;
+    use ErrorField;
 
     public mixed $Decoded = null;
 
-    public function __construct(mixed $decoded, ?Error $err)
+    public function __construct(mixed $decoded, null|Error $err)
     {
         $this->Decoded = $decoded;
         $this->Err     = $err;

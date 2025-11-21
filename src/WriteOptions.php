@@ -22,21 +22,27 @@ namespace DCarbone\PHPConsulAPI;
 
 use DCarbone\Go\Time;
 
-class WriteOptions extends AbstractModel implements RequestOptions
+class WriteOptions implements RequestOptions
 {
-    public string $Namespace = '';
-    public string $Datacenter = '';
-    public string $Token = '';
-    public int $RelayFactor = 0;
+    public string $Namespace;
+    public string $Datacenter;
+    public string $Token;
+    public int $RelayFactor;
 
-    public ?Time\Duration $Timeout = null;
+    public Time\Duration $Timeout;
 
-    public function __construct(?array $data = null)
-    {
-        parent::__construct($data);
-        if (!($this->Timeout instanceof Time\Duration)) {
-            $this->Timeout = Time::Duration($this->Timeout);
-        }
+    public function __construct(
+        string $Namespace = '',
+        string $Datacenter = '',
+        string $Token = '',
+        int $RelayFactor = 0,
+        null|int|float|string|\DateInterval|Time\Duration $Timeout = null,
+    ) {
+        $this->Namespace = $Namespace;
+        $this->Datacenter = $Datacenter;
+        $this->Token = $Token;
+        $this->RelayFactor = $RelayFactor;
+        $this->Timeout = Time::Duration($Timeout);
     }
 
     public function getNamespace(): string
@@ -79,12 +85,12 @@ class WriteOptions extends AbstractModel implements RequestOptions
         $this->RelayFactor = $relayFactor;
     }
 
-    public function getTimeout(): ?Time\Duration
+    public function getTimeout(): null|Time\Duration
     {
         return $this->Timeout;
     }
 
-    public function setTimeout(float|int|string|Time\Duration|null $timeout): void
+    public function setTimeout(null|int|float|string|\DateInterval|Time\Duration $timeout): void
     {
         $this->Timeout = Time::Duration($timeout);
     }
@@ -101,10 +107,9 @@ class WriteOptions extends AbstractModel implements RequestOptions
             $r->header->set('X-Consul-Token', $this->Token);
         }
         if (0 !== $this->RelayFactor) {
-            $r->params->set('relay-factor', (string) $this->RelayFactor);
+            $r->params->set('relay-factor', (string)$this->RelayFactor);
         }
-
-        if (null !== $this->Timeout) {
+        if (0 < $this->Timeout->Nanoseconds()) {
             $r->timeout = $this->Timeout;
         }
     }

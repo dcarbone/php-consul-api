@@ -20,12 +20,23 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class MemberOpts extends AbstractModel
+class MemberOpts extends AbstractType
 {
-    public bool $WAN = false;
-    public string $Segment = '';
+    public bool $WAN;
+    public string $Segment;
+    public string $Filter;
+
+    public function __construct(
+        bool $WAN = false,
+        string $Segment = '',
+        string $Filter = '',
+    ) {
+        $this->WAN = $WAN;
+        $this->Segment = $Segment;
+        $this->Filter = $Filter;
+}
 
     public function isWAN(): bool
     {
@@ -47,5 +58,29 @@ class MemberOpts extends AbstractModel
     {
         $this->Segment = $segment;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        if ($this->WAN) {
+            $out->WAN = $this->WAN;
+        }
+        if ('' !== $this->Segment) {
+            $out->Segment = $this->Segment;
+        }
+        if ('' !== $this->Filter) {
+            $out->Filter = $this->Filter;
+        }
+        return $out;
     }
 }

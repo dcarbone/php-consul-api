@@ -20,23 +20,27 @@ namespace DCarbone\PHPConsulAPI\Session;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedWriteResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedWriteResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
 
 class SessionEntriesWriteResponse extends AbstractValuedWriteResponse implements UnmarshalledResponseInterface
 {
-    public ?array $SessionEntries = null;
+    /** @var \DCarbone\PHPConsulAPI\Session\SessionEntry[] */
+    public array $SessionEntries = [];
 
-    public function getValue(): ?array
+    /**
+     * @return \DCarbone\PHPConsulAPI\Session\SessionEntry[]
+     */
+    public function getValue(): array
     {
         return $this->SessionEntries;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
         $this->SessionEntries = [];
-        foreach ($decodedData as $datum) {
-            $this->SessionEntries[] = new SessionEntry($datum);
+        foreach ($decoded as $datum) {
+            $this->SessionEntries[] = SessionEntry::jsonUnserialize($datum);
         }
     }
 }
