@@ -20,25 +20,20 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class AgentServiceConnect extends AbstractModel
+class AgentServiceConnect extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_NATIVE          => Transcoding::OMITEMPTY_BOOLEAN_FIELD,
-        self::FIELD_SIDECAR_SERVICE => [
-            Transcoding::FIELD_TYPE      => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS     => AgentServiceRegistration::class,
-            Transcoding::FIELD_OMITEMPTY => true,
-        ],
-    ];
+    public bool $Native;
+    public null|AgentServiceRegistration $SidecarService;
 
-    private const FIELD_NATIVE          = 'Native';
-    private const FIELD_SIDECAR_SERVICE = 'SidecarService';
-
-    public bool $Native = false;
-    public array $SidecarService = [];
+    public function __construct(
+        bool $Native = false,
+        null|AgentServiceRegistration $SidecarService = null,
+    ) {
+        $this->Native = $Native;
+        $this->SidecarService = $SidecarService;
+}
 
     public function isNative(): bool
     {
@@ -51,14 +46,39 @@ class AgentServiceConnect extends AbstractModel
         return $this;
     }
 
-    public function getSidecarService(): array
+    public function getSidecarService(): null|AgentServiceRegistration
     {
         return $this->SidecarService;
     }
 
-    public function setSidecarService(array $SidecarService): self
+    public function setSidecarService(AgentServiceRegistration $SidecarService): self
     {
         $this->SidecarService = $SidecarService;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('SidecarService' === $k) {
+                $n->SidecarService = AgentServiceRegistration::jsonUnserialize($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        if ($this->Native) {
+            $out->Native = $this->Native;
+        }
+        if (null !== $this->SidecarService) {
+            $out->SidecarService = $this->SidecarService;
+        }
+        return $out;
     }
 }

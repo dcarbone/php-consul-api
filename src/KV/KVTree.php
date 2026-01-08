@@ -79,12 +79,12 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
 
     public function count(): int
     {
-        return \count($this->_children);
+        return count($this->_children);
     }
 
     public function offsetExists(mixed $offset): bool
     {
-        if (\is_string($offset)) {
+        if (is_string($offset)) {
             $subPath = str_replace($this->_prefix, '', $offset);
             $cnt     = substr_count($subPath, '/');
 
@@ -96,12 +96,12 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
             }
         }
 
-        return isset($this->_children[$offset]) || \array_key_exists($offset, $this->_children);
+        return isset($this->_children[$offset]) || array_key_exists($offset, $this->_children);
     }
 
     public function offsetGet(mixed $offset): KVTree|KVPair|null
     {
-        if (\is_string($offset)) {
+        if (is_string($offset)) {
             $subPath = str_replace($this->_prefix, '', $offset);
             $cnt     = substr_count($subPath, '/');
             if (1 < $cnt || (1 === $cnt && '/' !== substr($subPath, -1))) {
@@ -130,7 +130,7 @@ class KVTree implements \RecursiveIterator, \Countable, \JsonSerializable, \Arra
 
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        if ('string' === \gettype($offset)) {
+        if ('string' === gettype($offset)) {
             $subPath = str_replace($this->_prefix, '', $offset);
             $cnt     = substr_count($subPath, '/');
 

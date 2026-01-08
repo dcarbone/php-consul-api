@@ -20,23 +20,27 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedWriteResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedWriteResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
 
 class OperatorAreaJoinResponse extends AbstractValuedWriteResponse implements UnmarshalledResponseInterface
 {
-    public ?array $AreaJoinResponses = null;
+    /** @var \DCarbone\PHPConsulAPI\Operator\AreaJoinResponse[] */
+    public array $AreaJoinResponses;
 
-    public function getValue(): ?array
+    /**
+     * @return \DCarbone\PHPConsulAPI\Operator\AreaJoinResponse[]
+     */
+    public function getValue(): array
     {
         return $this->AreaJoinResponses;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
         $this->AreaJoinResponses = [];
-        foreach ($decodedData as $area) {
-            $this->AreaJoinResponses[] = new AreaJoinResponse($area);
+        foreach ($decoded as $area) {
+            $this->AreaJoinResponses[] = AreaJoinResponse::jsonUnserialize($area);
         }
     }
 }

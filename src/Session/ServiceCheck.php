@@ -20,9 +20,9 @@ declare(strict_types=1);
 
 namespace DCarbone\PHPConsulAPI\Session;
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ServiceCheck extends AbstractModel
+class ServiceCheck extends AbstractType
 {
     public string $ID = '';
     public string $Namespace = '';

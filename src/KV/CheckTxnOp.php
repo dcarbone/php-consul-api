@@ -20,22 +20,12 @@ namespace DCarbone\PHPConsulAPI\KV;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Health\HealthCheck;
-use DCarbone\PHPConsulAPI\Transcoding;
 
-class CheckTxnOp extends AbstractModel
+class CheckTxnOp extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_CHECK => [
-            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS => HealthCheck::class,
-        ],
-    ];
-
-    private const FIELD_CHECK = 'Check';
-
-    public string $Verb = '';
+       public string $Verb = '';
     public HealthCheck $Check;
 
     public function __construct(?array $data = [])
@@ -66,5 +56,23 @@ class CheckTxnOp extends AbstractModel
     {
         $this->Check = $Check;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('Check' === $k) {
+                $n->Check = HealthCheck::jsonUnserialize($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        // TODO: Implement jsonSerialize() method.
     }
 }

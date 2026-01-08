@@ -20,77 +20,162 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\FakeMap;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
+use DCarbone\PHPConsulAPI\Consul;
+use function DCarbone\PHPConsulAPI\PHPLib\_enc_obj_if_valued;
 
-class ProxyConfigEntry extends AbstractModel implements ConfigEntry
+class ProxyConfigEntry extends AbstractType implements ConfigEntry
 {
     use ConfigEntryTrait;
 
-    protected const FIELDS = ConfigEntry::INTERFACE_FIELDS + [
-        self::FIELD_MODE              => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_CONFIG            => Transcoding::MAP_FIELD,
-        self::FIELD_TRANSPARENT_PROXY => [
-            Transcoding::FIELD_TYPE      => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS     => TransparentProxyConfig::class,
-            Transcoding::FIELD_NULLABLE  => true,
-            Transcoding::FIELD_OMITEMPTY => true,
-        ],
-        self::FIELD_MESH_GATEWAY      => [
-            Transcoding::FIELD_TYPE      => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS     => MeshGatewayConfig::class,
-            Transcoding::FIELD_OMITEMPTY => true, // todo: does nothing as field is not nullable..
-        ],
-        self::FIELD_EXPOSE            => [
-            Transcoding::FIELD_TYPE      => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS     => ExposeConfig::class,
-            Transcoding::FIELD_OMITEMPTY => true, // todo: does nothing as field is not nullable,
-        ],
-    ];
+    public string $Kind;
+    public string $Name;
+    public string $Partition;
+    public null|ProxyMode $Mode;
+    public null|TransparentProxyConfig $TransparentProxy;
+    public MutualTLSMode $MutualTLSMode;
+    /** @var array<string,mixed> */
+    public array $Config;
 
-    private const FIELD_MODE              = 'Mode';
-    private const FIELD_TRANSPARENT_PROXY = 'TransparentProxy';
-    private const FIELD_CONFIG            = 'Config';
-    private const FIELD_MESH_GATEWAY      = 'MeshGateway';
-    private const FIELD_EXPOSE            = 'Expose';
-
-    public string $Mode = '';
-    public ?TransparentProxyConfig $TransparentProxy = null;
-    public ?FakeMap $Config = null;
     public MeshGatewayConfig $MeshGateway;
     public ExposeConfig $Expose;
+    public null|AccessLogsConfig $AccessLogs;
+    /** @var array<\DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension> */
+    public array $EnvoyExtensions;
+    public null|ServiceResolverFailoverPolicy $FailoverPolicy;
+    public null|ServiceResolverPrioritizeByLocality $PrioritizeByLocality;
 
-    public function getMode(): string
+    /**
+     * @param array<string,mixed> $Config
+     * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension> $EnvoyExtensions
+     * @param array<string,string> $Meta
+     */
+    public function __construct(
+        string $Kind = '',
+        string $Name = '',
+        string $Partition = '',
+        string|ProxyMode $Mode = ProxyMode::Default,
+        null|TransparentProxyConfig $TransparentProxy = null,
+        string|MutualTLSMode $MutualTLSMode = MutualTLSMode::Default,
+        array $Config = [],
+        null|MeshGatewayConfig $MeshGateway = null,
+        null|ExposeConfig $Expose = null,
+        null|AccessLogsConfig $AccessLogs = null,
+        array $EnvoyExtensions = [],
+        null|ServiceResolverFailoverPolicy $FailoverPolicy = null,
+        null|ServiceResolverPrioritizeByLocality $PrioritizeByLocality = null,
+        string $Namespace = '',
+        array $Meta = [],
+        int $CreateIndex = 0,
+        int $ModifyIndex = 0,
+    ) {
+        {
+            $this->Kind = $Kind;
+            $this->Name = $Name;
+            $this->Partition = $Partition;
+            $this->Namespace = $Namespace;
+            $this->Mode = $Mode instanceof ProxyMode ? $Mode : ProxyMode::from($Mode);
+            $this->TransparentProxy = $TransparentProxy;
+            $this->MutualTLSMode = $MutualTLSMode instanceof MutualTLSMode ? $MutualTLSMode : MutualTLSMode::from($MutualTLSMode);
+            $this->setConfig($Config);
+            $this->MeshGateway = $MeshGateway ?? new MeshGatewayConfig();
+            $this->Expose = $Expose ?? new ExposeConfig();
+            $this->AccessLogs = $AccessLogs;
+            $this->setEnvoyExtensions(...$EnvoyExtensions);
+            $this->FailoverPolicy = $FailoverPolicy;
+            $this->PrioritizeByLocality = $PrioritizeByLocality;
+            $this->setMeta($Meta);
+            $this->CreateIndex = $CreateIndex;
+            $this->ModifyIndex = $ModifyIndex;
+}
+    }
+
+    public function getKind(): string
+    {
+        return $this->Kind;
+    }
+
+    public function setKind(string $Kind): self
+    {
+        $this->Kind = $Kind;
+        return $this;
+    }
+
+    public function getName(): string
+    {
+        return Consul::ProxyConfigGlobal;
+    }
+
+    public function setName(string $Name): self
+    {
+        $this->Name = $Name;
+        return $this;
+    }
+
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
+    public function getMode(): ProxyMode
     {
         return $this->Mode;
     }
 
-    public function setMode(string $Mode): self
+    public function setMode(ProxyMode $Mode): self
     {
         $this->Mode = $Mode;
         return $this;
     }
 
-    public function getTransparentProxy(): ?TransparentProxyConfig
+    public function getTransparentProxy(): null|TransparentProxyConfig
     {
         return $this->TransparentProxy;
     }
 
-    public function setTransparentProxy(?TransparentProxyConfig $TransparentProxy): self
+    public function setTransparentProxy(null|TransparentProxyConfig $TransparentProxy): self
     {
         $this->TransparentProxy = $TransparentProxy;
         return $this;
     }
 
-    public function getConfig(): ?FakeMap
+    public function getMutualTLSMode(): MutualTLSMode
+    {
+        return $this->MutualTLSMode;
+    }
+
+    public function setMutualTLSMode(MutualTLSMode $MutualTLSMode): self
+    {
+        $this->MutualTLSMode = $MutualTLSMode;
+        return $this;
+    }
+
+    /**
+     * @return array<string,mixed>
+     */
+    public function getConfig(): array
     {
         return $this->Config;
     }
 
-    public function setConfig(mixed $Config): self
+    /**
+     * @param null|\stdClass|array<string,mixed> $Config
+     * @return $this
+     */
+    public function setConfig(null|\stdClass|array $Config): self
     {
-        $this->Config = FakeMap::parse($Config);
+        $this->Config = [];
+        if (null !== $Config) {
+            foreach ($Config as $k => $v) {
+                $this->Config[$k] = $v;
+            }
+        }
         return $this;
     }
 
@@ -114,5 +199,134 @@ class ProxyConfigEntry extends AbstractModel implements ConfigEntry
     {
         $this->Expose = $Expose;
         return $this;
+    }
+
+    public function getAccessLogs(): null|AccessLogsConfig
+    {
+        return $this->AccessLogs;
+    }
+
+    public function setAccessLogs(null|AccessLogsConfig $AccessLogs): self
+    {
+        $this->AccessLogs = $AccessLogs;
+        return $this;
+    }
+
+    /**
+     * @return array<\DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension>
+     */
+    public function getEnvoyExtensions(): array
+    {
+        return $this->EnvoyExtensions;
+    }
+
+    /**
+     * @param \DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension ...$EnvoyExtensions
+     */
+    public function setEnvoyExtensions(EnvoyExtension ...$EnvoyExtensions): self
+    {
+        $this->EnvoyExtensions = $EnvoyExtensions;
+        return $this;
+    }
+
+    public function getFailoverPolicy(): null|ServiceResolverFailoverPolicy
+    {
+        return $this->FailoverPolicy;
+    }
+
+    public function setFailoverPolicy(null|ServiceResolverFailoverPolicy $FailoverPolicy): self
+    {
+        $this->FailoverPolicy = $FailoverPolicy;
+        return $this;
+    }
+
+    public function getPrioritizeByLocality(): null|ServiceResolverPrioritizeByLocality
+    {
+        return $this->PrioritizeByLocality;
+    }
+
+    public function setPrioritizeByLocality(null|ServiceResolverPrioritizeByLocality $PrioritizeByLocality): self
+    {
+        $this->PrioritizeByLocality = $PrioritizeByLocality;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('ProxyMode' === $k) {
+                $n->Mode = ProxyMode::from($v);
+            } elseif ('TransparentProxy' === $k || 'transparent_proxy' === $k) {
+                $n->TransparentProxy = TransparentProxyConfig::jsonUnserialize($v);
+            } elseif ('MutualTLSMode' === $k || 'mutual_tls_mode' === $k) {
+                $n->MutualTLSMode = MutualTLSMode::from($v);
+            } elseif ('MeshGateway' === $k || 'mesh_gateway' === $k) {
+                $n->MeshGateway = MeshGatewayConfig::jsonUnserialize($v);
+            } elseif ('Expose' === $k) {
+                $n->Expose = ExposeConfig::jsonUnserialize($v);
+            } elseif ('AccessLogs' === $k || 'access_logs' === $k) {
+                $n->AccessLogs = AccessLogsConfig::jsonUnserialize($v);
+            } elseif ('EnvoyExtensions' === $k || 'envoy_extensions' === $k) {
+                foreach ($v as $ext) {
+                    $n->EnvoyExtensions[] = EnvoyExtension::jsonUnserialize($ext);
+                }
+            } elseif ('FailoverPolicy' === $k || 'failover_policy' === $k) {
+                $n->FailoverPolicy = ServiceResolverFailoverPolicy::jsonUnserialize($v);
+            } elseif ('PrioritizeByLocality' === $k || 'prioritize_by_locality' === $k) {
+                $n->PrioritizeByLocality = ServiceResolverPrioritizeByLocality::jsonUnserialize($v);
+            } elseif ('Config' === $k) {
+                $n->setConfig($v);
+            } elseif ('Meta' === $k) {
+                $n->setMeta($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Kind = $this->Kind;
+        $out->Name = $this->Name;
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
+        }
+        if (ProxyMode::Default !== $this->Mode) {
+            $out->ProxyMode = $this->Mode->value;
+        }
+        if (null !== $this->TransparentProxy) {
+            $out->TransparentProxy = $this->TransparentProxy;
+        }
+        if (MutualTLSMode::Default !== $this->MutualTLSMode) {
+            $out->MutualTLSMode = $this->MutualTLSMode->value;
+        }
+        if ([] !== $this->Config) {
+            $out->Config = $this->Config;
+        }
+        _enc_obj_if_valued($out, 'MeshGateway', $this->MeshGateway);
+        _enc_obj_if_valued($out, 'Expose', $this->Expose);
+        if (null !== $this->AccessLogs) {
+            $out->AccessLogs = $this->AccessLogs;
+        }        if ([] !== $this->EnvoyExtensions) {
+            $out->EnvoyExtensions = $this->EnvoyExtensions;
+        }
+        if (null !== $this->FailoverPolicy) {
+            $out->FailoverPolicy = $this->FailoverPolicy;
+        }
+        if (null !== $this->PrioritizeByLocality) {
+            $out->PrioritizeByLocality = $this->PrioritizeByLocality;
+        }
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        if ([] !== $this->Meta) {
+            $out->Meta = $this->Meta;
+        }
+        $out->CreateIndex = $this->CreateIndex;
+        $out->ModifyIndex = $this->ModifyIndex;
+        return $out;
     }
 }

@@ -20,20 +20,20 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
 
 class OperatorRaftConfigurationResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
-    public ?RaftConfiguration $RaftConfiguration = null;
+    public null|RaftConfiguration $RaftConfiguration;
 
-    public function getValue(): ?RaftConfiguration
+    public function getValue(): null|RaftConfiguration
     {
         return $this->RaftConfiguration;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        $this->RaftConfiguration = new RaftConfiguration($decodedData);
+        $this->RaftConfiguration = RaftConfiguration::jsonUnserialize($decoded);
     }
 }

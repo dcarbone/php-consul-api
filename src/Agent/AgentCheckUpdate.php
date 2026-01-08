@@ -20,12 +20,18 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-final class AgentCheckUpdate extends AbstractModel
+class AgentCheckUpdate extends AbstractType
 {
-    public string $Status = '';
-    public string $Output = '';
+    public string $Status;
+    public string $Output;
+
+    public function __construct(string $Status = '', string $Output = '')
+    {
+        $this->Status = $Status;
+        $this->Output = $Output;
+    }
 
     public function getStatus(): string
     {
@@ -47,6 +53,23 @@ final class AgentCheckUpdate extends AbstractModel
     {
         $this->Output = $output;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Status = $this->Status;
+        $out->Output = $this->Output;
+        return $out;
     }
 
     public function __toString(): string

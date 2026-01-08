@@ -20,16 +20,65 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class RingHashConfig extends AbstractModel
+class RingHashConfig extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_MINIMUM_RING_SIZE => Transcoding::OMITEMPTY_INTEGER_FIELD,
-        self::FIELD_MAXIMUM_RING_SIZE => Transcoding::OMITEMPTY_INTEGER_FIELD,
-    ];
+    public int $MinimumRingSize = 0;
+    public int $MaximumRingSize = 0;
 
-    private const FIELD_MINIMUM_RING_SIZE = 'MinimumRingSize';
-    private const FIELD_MAXIMUM_RING_SIZE = 'MaximumRingSize';
+    public function __construct(int $MinimumRingSize = 0, int $MaximumRingSize = 0)
+    {
+        $this->MinimumRingSize = $MinimumRingSize;
+        $this->MaximumRingSize = $MaximumRingSize;
+    }
+
+    public function getMinimumRingSize(): int
+    {
+        return $this->MinimumRingSize;
+    }
+
+    public function setMinimumRingSize(int $MinimumRingSize): self
+    {
+        $this->MinimumRingSize = $MinimumRingSize;
+        return $this;
+    }
+
+    public function getMaximumRingSize(): int
+    {
+        return $this->MaximumRingSize;
+    }
+
+    public function setMaximumRingSize(int $MaximumRingSize): self
+    {
+        $this->MaximumRingSize = $MaximumRingSize;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('minimum_ring_size' === $k) {
+                $n->MinimumRingSize = $v;
+            } elseif ('maximum_ring_size' === $k) {
+                $n->MaximumRingSize = $v;
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        if (0 !== $this->MinimumRingSize) {
+            $out->MinimumRingSize = $this->MinimumRingSize;
+        }
+        if (0 !== $this->MaximumRingSize) {
+            $out->MaximumRingSize = $this->MaximumRingSize;
+        }
+        return $out;
+    }
 }

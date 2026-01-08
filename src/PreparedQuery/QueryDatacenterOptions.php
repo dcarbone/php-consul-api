@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class QueryDatacenterOptions extends AbstractModel
+class QueryDatacenterOptions extends AbstractType
 {
     public int $NearestN = 0;
     public array $Datacenters = [];

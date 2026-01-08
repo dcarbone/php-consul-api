@@ -20,10 +20,10 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-class AutopilotState extends AbstractModel
+class AutopilotState extends AbstractType
 {
     protected const FIELDS = [
         self::FIELD_SERVERS         => [
@@ -52,15 +52,15 @@ class AutopilotState extends AbstractModel
     private const FIELD_REDUNDANCY_ZONE = 'RedundancyZone';
     private const FIELD_UPGRADE         = 'Upgrade';
 
-    public bool $Healthy = false;
-    public int $FailureTolerance = 0;
-    public int $OptimisticFailureTolerance = 0;
-    public array $Servers = [];
-    public string $Leader = '';
-    public array $Voters = [];
-    public array $ReadReplicas = [];
-    public array $RedundancyZone = [];
-    public ?AutopilotUpgrade $Upgrade = null;
+    public bool $Healthy;
+    public int $FailureTolerance;
+    public int $OptimisticFailureTolerance;
+    public array $Servers;
+    public string $Leader;
+    public array $Voters;
+    public array $ReadReplicas;
+    public array $RedundancyZone;
+    public ?AutopilotUpgrade $Upgrade;
 
     public function isHealthy(): bool
     {

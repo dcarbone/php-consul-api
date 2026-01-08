@@ -20,11 +20,20 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ServiceRegisterOpts extends AbstractModel
+class ServiceRegisterOpts extends AbstractType
 {
-    public bool $ReplaceExistingChecks = false;
+    public bool $ReplaceExistingChecks;
+    public string $Token;
+
+    public function __construct(
+        bool $ReplaceExistingChecks = false,
+        string $Token = '',
+    ) {
+        $this->ReplaceExistingChecks = $ReplaceExistingChecks;
+        $this->Token = $Token;
+}
 
     public function isReplaceExistingChecks(): bool
     {
@@ -35,5 +44,33 @@ class ServiceRegisterOpts extends AbstractModel
     {
         $this->ReplaceExistingChecks = $replaceExistingChecks;
         return $this;
+    }
+
+    public function getToken(): string
+    {
+        return $this->Token;
+    }
+
+    public function setToken(string $Token): ServiceRegisterOpts
+    {
+        $this->Token = $Token;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->ReplaceExistingChecks = $this->ReplaceExistingChecks;
+        $out->Token = $this->Token;
+        return $out;
     }
 }

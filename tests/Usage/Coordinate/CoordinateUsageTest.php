@@ -178,7 +178,7 @@ final class CoordinateUsageTest extends AbstractUsageTests
         $this->verifyEqualFloats($c->Height, $config->HeightMin);
 
         $bad      = clone $c;
-        $bad->Vec = \array_fill(0, \count($c->Vec) + 1, 0.0);
+        $bad->Vec = array_fill(0, count($c->Vec) + 1, 0.0);
         $c->ApplyForce($config, 1.0, $bad);
     }
 
@@ -212,7 +212,7 @@ final class CoordinateUsageTest extends AbstractUsageTests
         $this->verifyEqualFloats($c1->DistanceTo($c2)->Seconds(), 4.104875150354758 + 0.3 + 0.8);
 
         $bad      = clone $c1;
-        $bad->Vec = \array_fill(0, \count($c1->Vec) + 1, 0.0);
+        $bad->Vec = array_fill(0, count($c1->Vec) + 1, 0.0);
         $c1->DistanceTo($bad);
     }
 
@@ -224,8 +224,8 @@ final class CoordinateUsageTest extends AbstractUsageTests
     {
         self::assertLessThanOrEqual(
             self::ZeroThreshold,
-            \abs($f1 - $f2),
-            \sprintf('equal assertion fail, %.6f != %.6f', $f1, $f2)
+            abs($f1 - $f2),
+            sprintf('equal assertion fail, %.6f != %.6f', $f1, $f2)
         );
     }
 
@@ -241,7 +241,7 @@ final class CoordinateUsageTest extends AbstractUsageTests
                 $this->verifyEqualFloats($v, $vec2[$k]);
             }
         } catch (AssertionFailedError $e) {
-            \var_dump($vec1, $vec2);
+            var_dump($vec1, $vec2);
             throw $e;
         }
     }

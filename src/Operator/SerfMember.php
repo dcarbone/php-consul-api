@@ -21,10 +21,10 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-class SerfMember extends AbstractModel
+class SerfMember extends AbstractType
 {
     protected const FIELDS = [
         self::FIELD_RTT => [
@@ -34,15 +34,15 @@ class SerfMember extends AbstractModel
 
     private const FIELD_RTT = 'RTT';
 
-    public string $ID = '';
-    public string $Name = '';
-    public string $Addr = '';
-    public int $Port = 0;
-    public string $Datacenter = '';
-    public string $Role = '';
-    public string $Build = '';
-    public int $Protocol = 0;
-    public string $Status = '';
+    public string $ID;
+    public string $Name;
+    public string $Addr;
+    public int $Port;
+    public string $Datacenter;
+    public string $Role;
+    public string $Build;
+    public int $Protocol;
+    public string $Status;
     public Time\Duration $RTT;
 
     public function __construct(?array $data = [])
@@ -157,9 +157,9 @@ class SerfMember extends AbstractModel
         return $this->RTT;
     }
 
-    public function setRTT(Time\Duration $RTT): self
+    public function setRTT(null|string|int|float|\DateInterval|Time\Duration $RTT): self
     {
-        $this->RTT = $RTT;
+        $this->RTT = Time::Duration($RTT);
         return $this;
     }
 }

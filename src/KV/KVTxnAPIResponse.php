@@ -20,23 +20,23 @@ namespace DCarbone\PHPConsulAPI\KV;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\ErrorContainer;
-use DCarbone\PHPConsulAPI\QueryMetaContainer;
+use DCarbone\PHPConsulAPI\PHPLib\Response\ErrorField;
+use DCarbone\PHPConsulAPI\PHPLib\Response\QueryMetaField;
 
 class KVTxnAPIResponse
 {
-    use QueryMetaContainer;
-    use ErrorContainer;
+    use QueryMetaField;
+    use ErrorField;
 
     public bool $OK = false;
-    public ?KVTxnResponse $KVTxnResponse = null;
+    public null|KVTxnResponse $KVTxnResponse = null;
 
     public function isOK(): bool
     {
         return $this->OK;
     }
 
-    public function getKVTxnResponse(): ?KVTxnResponse
+    public function getKVTxnResponse(): null|KVTxnResponse
     {
         return $this->KVTxnResponse;
     }

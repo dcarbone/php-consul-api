@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\KV;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class KVTxnOp extends AbstractModel
+class KVTxnOp extends AbstractType
 {
     public string $Verb = '';
     public string $Key = '';
@@ -33,7 +33,6 @@ class KVTxnOp extends AbstractModel
 
     /**
      * KVTxnOp constructor.
-     * @param array $data
      * @param bool $_decodeValue
      */
     public function __construct(array $data = [], bool $_decodeValue = false)
