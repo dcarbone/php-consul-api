@@ -71,6 +71,9 @@ class CatalogClient extends AbstractClient
         return $ret;
     }
 
+    /**
+     * @param array<string> $tags
+     */
     public function ServiceMultipleTags(
         string $service,
         array $tags,
