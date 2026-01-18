@@ -100,7 +100,7 @@ jobs:
 
       - name: 'Init composer dep cache'
         id: cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: "composer-${{ runner.os }}-${{ matrix.php-version }}-${{ steps.vars.outputs.phpunit-version }}-${{ hashFiles('composer.lock') }}"
@@ -114,14 +114,14 @@ jobs:
 
       - name: 'Save composer dep cache'
         if: steps.cache.outputs.cache-hit != 'true' && steps.cache.outputs.cache-hit != true
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: "composer-${{ runner.os }}-${{ matrix.php-version }}-${{ steps.vars.outputs.phpunit-version }}-${{ hashFiles('composer.lock') }}"
 
       - name: 'Restore consul ${{ env.CONSUL_VERSION }}'
         id: consul-cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@v5
         with:
           path: '${{ runner.tool_cache }}/consul'
           key: 'consul-${{ env.CONSUL_VERSION }}'
@@ -145,7 +145,7 @@ jobs:
 
       - name: 'Save consul ${{ env.CONSUL_VERSION }} cache'
         if: '! steps.consul-cache.outputs.cache-hit'
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@v5
         with:
           path: '${{ runner.tool_cache }}/consul'
           key: 'consul-${{ env.CONSUL_VERSION }}'

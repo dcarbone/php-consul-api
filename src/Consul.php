@@ -130,7 +130,7 @@ class Consul
     public SessionClient $Session;
     public StatusClient $Status;
 
-    public function __construct(Config $config = null)
+    public function __construct(?Config $config = null)
     {
         $config = Config::merge($config);
 
