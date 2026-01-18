@@ -14,10 +14,26 @@ This library is loosely based upon the [official GO client](https://github.com/h
 | 0.6.x                | 0.7-0.8        |
 | v1.x                 | 0.9-current    |
 | v2.x                 | 0.9-current    |
+| v3.x                 | 0.9-current    |
 | dev-main             | current        |
 
 Newer versions of the api lib will probably work in a limited capacity with older versions of Consul, but no guarantee
 is made and backwards compatibility issues will not be addressed.
+
+### V3 Breaking Changes
+
+There are a couple breaking changes between v2 and v3:
+
+1. The `FakeMap` class has been removed.
+2. The `FakeSlice` class has been removed.
+3. The `ReadableDuration` class has been removed.
+4. All models now have parameterized constructors. 
+    * For the life of V3 I will continue to support construction from associative arrays, but the parameterized 
+      constructors are the preferred method of construction.
+    * Construction via associative array will be removed entirely in V4 (whenever I get around to that).
+5. All of that `Transcoding` nonsense has been removed.
+6. The root `Config` class may no longer be constructed with a map.  You must use constructor parameters.
+7. All "map" fields are now defined as `\stdClass` objects.
 
 ## Composer
 
@@ -28,7 +44,7 @@ Require Entry:
 ```json
 {
     "require": {
-        "dcarbone/php-consul-api": "^v2.0"
+        "dcarbone/php-consul-api": "^v3.0"
     }
 }
 ```
@@ -53,22 +69,28 @@ $config = \DCarbone\PHPConsulAPI\Config::newDefaultConfig();
 You may alternatively define values yourself:
 
 ```php
-$config = new \DCarbone\PHPConsulAPI\Config([
-    'HttpClient' => $client,            // [required] Client conforming to GuzzleHttp\ClientInterface
-    'Address' => 'address of server',   // [required]
+$config = new \DCarbone\PHPConsulAPI\Config(
+    // required fields
+    HttpClient: $client,            // [required] Client conforming to GuzzleHttp\ClientInterface
+    Address: 'address of server',   // [required]
 
-    'Scheme' => 'http or https',            // [optional] defaults to "http"
-    'Datacenter' => 'name of datacenter',   // [optional]
-    'HttpAuth' => 'user:pass',              // [optional]
-    'WaitTime' => '0s',                     // [optional] amount of time to wait on certain blockable endpoints.  go time duration string format. 
-    'Token' => 'auth token',                // [optional] default auth token to use
-    'TokenFile' => 'file with auth token',  // [optional] file containing auth token string
-    'InsecureSkipVerify' => false,          // [optional] if set to true, ignores all SSL validation
-    'CAFile' => '',                         // [optional] path to ca cert file, see http://docs.guzzlephp.org/en/latest/request-options.html#verify
-    'CertFile' => '',                       // [optional] path to client public key.  if set, requires KeyFile also be set
-    'KeyFile' => '',                        // [optional] path to client private key.  if set, requires CertFile also be set
-    'JSONEncodeOpts'=> 0,                   // [optional] php json encode opt value to use when serializing requests
-]);
+    // optional fields
+    Scheme: 'http or https',            // [optional] defaults to "http"
+    Datacenter: 'name of datacenter',   // [optional]
+    HttpAuth: 'user:pass',              // [optional]
+    WaitTime: '0s',                     // [optional] amount of time to wait on certain blockable endpoints.  go time duration string format. 
+    Token: 'auth token',                // [optional] default auth token to use
+    TokenFile: 'file with auth token',  // [optional] file containing auth token string
+    InsecureSkipVerify: false,          // [optional] if set to true, ignores all SSL validation
+    CAFile: '',                         // [optional] path to ca cert file, see http://docs.guzzlephp.org/en/latest/request-options.html#verify
+    CertFile: '',                       // [optional] path to client public key.  if set, requires KeyFile also be set
+    KeyFile: '',                        // [optional] path to client private key.  if set, requires CertFile also be set
+    
+    // php specific options
+    JSONEncodeOpts: JSON_UNESCAPED_SLASHES,
+    JSONDecodeMaxDepth: 512,
+    JSONDecodeOpts: 0,
+);
 ```
 
 #### Configuration Note:
@@ -83,11 +105,11 @@ prior to constructing a PHPConsulAPI Config object.
 As an example:
 
 ```php
-$proxyClient = new \GuzzleHttp\Client(['proxy' => 'whatever proxy you want']]);
-$config = new \DCarbone\PHPConsulAPI\Config([
-    'HttpClient' => $proxyClient,
-    'Address' => 'address of server',
-]);
+$proxyClient = new \GuzzleHttp\Client(['proxy' => 'whatever proxy you want']);
+$config = new \DCarbone\PHPConsulAPI\Config(
+    HttpClient: $proxyClient,
+    Address: 'address of server',
+);
 ```
 
 When constructing your client, if you are using the `GuzzleHttp\Client` object directly or derivative thereof, you may

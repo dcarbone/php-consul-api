@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class QueryDNSOptions extends AbstractModel
+class QueryDNSOptions extends AbstractType
 {
     public string $TTL = '';
 

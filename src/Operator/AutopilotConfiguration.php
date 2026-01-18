@@ -20,10 +20,10 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-class AutopilotConfiguration extends AbstractModel
+class AutopilotConfiguration extends AbstractType
 {
     protected const FIELDS = [
         self::FIELD_LAST_CONTACT_THRESHOLD    => [
@@ -39,16 +39,16 @@ class AutopilotConfiguration extends AbstractModel
     private const FIELD_LAST_CONTACT_THRESHOLD    = 'LastContactThreshold';
     private const FIELD_SERVER_STABILIZATION_TIME = 'ServerStabilizationTime';
 
-    public bool $CleanupDeadServers = false;
-    public ?ReadableDuration $LastContactThreshold = null;
-    public int $MaxTrailingLogs = 0;
-    public int $MinQuorum = 0;
-    public ?ReadableDuration $ServerStabilizationTime = null;
-    public string $RedundancyZoneTag = '';
-    public bool $DisableUpgradeMigration = false;
-    public string $UpgradeVersionTag = '';
-    public int $CreateIndex = 0;
-    public int $ModifyIndex = 0;
+    public bool $CleanupDeadServers;
+    public ?ReadableDuration $LastContactThreshold;
+    public int $MaxTrailingLogs;
+    public int $MinQuorum;
+    public ?ReadableDuration $ServerStabilizationTime;
+    public string $RedundancyZoneTag;
+    public bool $DisableUpgradeMigration;
+    public string $UpgradeVersionTag;
+    public int $CreateIndex;
+    public int $ModifyIndex;
 
     public function isCleanupDeadServers(): bool
     {

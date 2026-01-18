@@ -20,10 +20,9 @@ namespace DCarbone\PHPConsulAPI\KV;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class KVPair extends AbstractModel
+class KVPair extends AbstractType
 {
     protected const FIELDS = [
         self::FIELD_NAMESPACE => Transcoding::OMITEMPTY_STRING_FIELD,
@@ -42,7 +41,6 @@ class KVPair extends AbstractModel
 
     /**
      * KVPair constructor.
-     * @param array $data
      * @param bool $_decodeValue
      */
     public function __construct(array $data = [], bool $_decodeValue = false)

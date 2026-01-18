@@ -20,58 +20,24 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\FakeMap;
+use DCarbone\PHPConsulAPI\PHPLib\Types\MetaField;
 
 trait ConfigEntryTrait
 {
-    public string $Kind = '';
-    public string $Name = '';
-    public string $Namespace = '';
-    public ?FakeMap $Meta = null;
-    public int $CreateIndex = 0;
-    public int $ModifyIndex = 0;
+    use MetaField;
 
-    public function getKind(): string
-    {
-        return $this->Kind;
-    }
-
-    public function setKind(string $Kind): ConfigEntry
-    {
-        $this->Kind = $Kind;
-        return $this;
-    }
-
-    public function getName(): string
-    {
-        return $this->Name;
-    }
-
-    public function setName(string $Name): ConfigEntry
-    {
-        $this->Name = $Name;
-        return $this;
-    }
+    public string $Namespace;
+    public int $CreateIndex;
+    public int $ModifyIndex;
 
     public function getNamespace(): string
     {
         return $this->Namespace;
     }
 
-    public function setNamespace(string $Namespace): ConfigEntry
+    public function setNamespace(string $Namespace): self
     {
         $this->Namespace = $Namespace;
-        return $this;
-    }
-
-    public function getMeta(): ?FakeMap
-    {
-        return $this->Meta;
-    }
-
-    public function setMeta(mixed $Meta): ProxyConfigEntry
-    {
-        $this->Meta = FakeMap::parse($Meta);
         return $this;
     }
 
@@ -80,7 +46,7 @@ trait ConfigEntryTrait
         return $this->CreateIndex;
     }
 
-    public function setCreateIndex(int $CreateIndex): ProxyConfigEntry
+    public function setCreateIndex(int $CreateIndex): self
     {
         $this->CreateIndex = $CreateIndex;
         return $this;
@@ -91,7 +57,7 @@ trait ConfigEntryTrait
         return $this->ModifyIndex;
     }
 
-    public function setModifyIndex(int $ModifyIndex): ProxyConfigEntry
+    public function setModifyIndex(int $ModifyIndex): self
     {
         $this->ModifyIndex = $ModifyIndex;
         return $this;

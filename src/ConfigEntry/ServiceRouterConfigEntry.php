@@ -20,34 +20,126 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ServiceRouterConfigEntry extends AbstractModel implements ConfigEntry
+class ServiceRouterConfigEntry extends AbstractType implements ConfigEntry
 {
     use ConfigEntryTrait;
 
-    protected const FIELDS = ConfigEntry::INTERFACE_FIELDS + [
-        self::FIELD_ROUTES => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS      => ServiceRoute::class,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-    ];
+    public string $Kind;
+    public string $Name;
+    public string $Partition;
+    /** @var array<\DCarbone\PHPConsulAPI\ConfigEntry\ServiceRoute> */
+    public array $Routes;
 
-    private const FIELD_ROUTES = 'Routes';
+    /**
+     * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\ServiceRoute> $Routes
+     * @param null|array<string,string> $Meta
+     */
+    public function __construct(
+        string $Kind = '',
+        string $Name = '',
+        string $Partition = '',
+        string $Namespace = '',
+        array $Routes = [],
+        null|array $Meta = null,
+        int $CreateIndex = 0,
+        int $ModifyIndex = 0,
+    ) {
+        $this->Kind = $Kind;
+        $this->Name = $Name;
+        $this->Partition = $Partition;
+        $this->Namespace = $Namespace;
+        $this->setRoutes(...$Routes);
+        $this->setMeta($Meta);
+        $this->CreateIndex = $CreateIndex;
+        $this->ModifyIndex = $ModifyIndex;
+    }
 
-    public array $Routes = [];
+    public function getKind(): string
+    {
+        return $this->Kind;
+    }
 
+    public function setKind(string $Kind): self
+    {
+        $this->Kind = $Kind;
+        return $this;
+    }
+
+    public function getName(): string
+    {
+        return $this->Name;
+    }
+
+    public function setName(string $Name): self
+    {
+        $this->Name = $Name;
+        return $this;
+    }
+
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
+    /**
+     * @return array<\DCarbone\PHPConsulAPI\ConfigEntry\ServiceRoute>
+     */
     public function getRoutes(): array
     {
         return $this->Routes;
     }
 
-    public function setRoutes(array $Routes): self
+    public function setRoutes(ServiceRoute ...$Routes): self
     {
         $this->Routes = $Routes;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('Routes' === $k) {
+                $n->Routes = [];
+                foreach ($v as $vv) {
+                    $n->Routes[] = ServiceRoute::jsonUnserialize($vv);
+                }
+            } elseif ('Meta' === $k) {
+                $n->setMeta($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Kind = $this->Kind;
+        $out->Name = $this->Name;
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
+        }
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        if ([] !== $this->Routes) {
+            $out->Routes = $this->Routes;
+        }
+        if (isset($this->Meta)) {
+            $out->Meta = $this->Meta;
+        }
+        $out->CreateIndex = $this->CreateIndex;
+        $out->ModifyIndex = $this->ModifyIndex;
+        return $out;
     }
 }

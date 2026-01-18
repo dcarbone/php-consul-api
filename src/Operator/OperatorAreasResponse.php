@@ -20,23 +20,27 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedQueryResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
 
 class OperatorAreasResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?array $Areas = null;
+    /** @var \DCarbone\PHPConsulAPI\Operator\Area[] */
+    public array $Areas;
 
-    public function getValue(): ?array
+    /**
+     * @return \DCarbone\PHPConsulAPI\Operator\Area[]
+     */
+    public function getValue(): array
     {
         return $this->Areas;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
         $this->Areas = [];
-        foreach ($decodedData as $area) {
-            $this->Areas[] = new Area($area);
+        foreach ($decoded as $area) {
+            $this->Areas[] = Area::jsonUnserialize($area);
         }
     }
 }

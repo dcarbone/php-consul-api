@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\KV;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class TxnError extends AbstractModel
+class TxnError extends AbstractType
 {
     public int $OpIndex = 0;
     public string $What = '';

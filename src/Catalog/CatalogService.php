@@ -20,60 +20,98 @@ namespace DCarbone\PHPConsulAPI\Catalog;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Agent\AgentServiceConnectProxyConfig;
 use DCarbone\PHPConsulAPI\Health\HealthChecks;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\NodeMetaField;
+use DCarbone\PHPConsulAPI\Peering\Locality;
+use DCarbone\PHPConsulAPI\PHPLib\Types\ServiceMetaField;
+use DCarbone\PHPConsulAPI\PHPLib\Types\TaggedAddressField;
 
-class CatalogService extends AbstractModel
+class CatalogService extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_SERVICE_TAGGED_ADDRESSES => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => ServiceAddress::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-        ],
-        self::FIELD_SERVICE_WEIGHTS          => [
-            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS => Weights::class,
-        ],
-        self::FIELD_SERVICE_PROXY            => [
-            Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS    => AgentServiceConnectProxyConfig::class,
-            Transcoding::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_HEALTH_CHECKS            => [
-            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS => HealthChecks::class,
-        ],
-        self::FIELD_NAMESPACE                => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
+    use TaggedAddressField;
+    use NodeMetaField;
+    use ServiceMetaField;
 
-    private const FIELD_SERVICE_TAGGED_ADDRESSES = 'ServiceTaggedAddresses';
-    private const FIELD_SERVICE_WEIGHTS          = 'ServiceWeights';
-    private const FIELD_SERVICE_PROXY            = 'ServiceProxy';
-    private const FIELD_HEALTH_CHECKS            = 'HealthChecks';
-    private const FIELD_NAMESPACE                = 'Namespace';
-
-    public string $ID = '';
-    public string $Node = '';
-    public string $Address = '';
-    public string $Datacenter = '';
-    public array $TaggedAddresses = [];
-    public array $NodeMeta = [];
-    public string $ServiceID = '';
-    public string $ServiceName = '';
-    public string $ServiceAddress = '';
-    public array $ServiceTaggedAddresses = [];
-    public array $ServiceTags = [];
-    public array $ServiceMeta = [];
-    public int $ServicePort = 0;
+    public string $ID;
+    public string $Node;
+    public string $Address;
+    public string $Datacenter;
+    /** @var array<string,string> */
+    public array $NodeMeta;
+    public string $ServiceID;
+    public string $ServiceName;
+    public string $ServiceAddress;
+    /** @var array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress> */
+    public array $ServiceTaggedAddresses;
+    /** @var array<string> */
+    public array $ServiceTags;
+    public int $ServicePort;
     public Weights $ServiceWeights;
-    public bool $ServiceEnableTagOverride = false;
-    public int $CreateIndex = 0;
-    public ?AgentServiceConnectProxyConfig $ServiceProxy = null;
-    public int $ModifyIndex = 0;
-    public string $Namespace = '';
+    public bool $ServiceEnableTagOverride;
+    public null|AgentServiceConnectProxyConfig $ServiceProxy;
+    public null|Locality $ServiceLocality;
+    public int $CreateIndex;
+    public HealthChecks $Checks;
+    public int $ModifyIndex;
+    public string $Namespace;
+    public string $Partition;
+
+    /**
+     * @param array<string,string> $TaggedAddresses
+     * @param array<string,string> $NodeMeta
+     * @param array<string,string> $ServiceTaggedAddresses
+     * @param array<string> $ServiceTags
+     * @param array<string,string> $ServiceMeta
+     */
+    public function __construct(
+        string $ID = '',
+        string $Node = '',
+        string $Address = '',
+        string $Datacenter = '',
+        array $TaggedAddresses = [],
+        array $NodeMeta = [],
+        string $ServiceID = '',
+        string $ServiceName = '',
+        string $ServiceAddress = '',
+        array $ServiceTaggedAddresses = [],
+        array $ServiceTags = [],
+        array $ServiceMeta = [],
+        int $ServicePort = 0,
+        null|Weights $ServiceWeights = null,
+        bool $ServiceEnableTagOverride = false,
+        null|AgentServiceConnectProxyConfig $ServiceProxy = null,
+        null|Locality $ServiceLocality = null,
+        int $CreateIndex = 0,
+        int $ModifyIndex = 0,
+        null|HealthChecks $Checks = null,
+        string $Namespace = '',
+        string $Partition = ''
+    ) {
+        $this->ID = $ID;
+        $this->Node = $Node;
+        $this->Address = $Address;
+        $this->Datacenter = $Datacenter;
+        $this->setTaggedAddresses($TaggedAddresses);
+        $this->setNodeMeta($NodeMeta);
+        $this->ServiceID = $ServiceID;
+        $this->ServiceName = $ServiceName;
+        $this->ServiceAddress = $ServiceAddress;
+        $this->setServiceTags(...$ServiceTags);
+        $this->setServiceTaggedAddresses($ServiceTaggedAddresses);
+        $this->setServiceMeta($ServiceMeta);
+        $this->ServicePort = $ServicePort;
+        $this->ServiceWeights = $ServiceWeights ?? new Weights();
+        $this->ServiceEnableTagOverride = $ServiceEnableTagOverride;
+        $this->ServiceProxy = $ServiceProxy;
+        $this->ServiceLocality = $ServiceLocality;
+        $this->CreateIndex = $CreateIndex;
+        $this->Checks = $Checks ?? new HealthChecks();
+        $this->ModifyIndex = $ModifyIndex;
+        $this->Namespace = $Namespace;
+        $this->Partition = $Partition;
+    }
 
     public function getID(): string
     {
@@ -119,28 +157,6 @@ class CatalogService extends AbstractModel
         return $this;
     }
 
-    public function getTaggedAddresses(): array
-    {
-        return $this->TaggedAddresses;
-    }
-
-    public function setTaggedAddresses(array $TaggedAddresses): self
-    {
-        $this->TaggedAddresses = $TaggedAddresses;
-        return $this;
-    }
-
-    public function getNodeMeta(): array
-    {
-        return $this->NodeMeta;
-    }
-
-    public function setNodeMeta(array $NodeMeta): self
-    {
-        $this->NodeMeta = $NodeMeta;
-        return $this;
-    }
-
     public function getServiceID(): string
     {
         return $this->ServiceID;
@@ -174,36 +190,50 @@ class CatalogService extends AbstractModel
         return $this;
     }
 
-    public function getServiceTaggedAddresses(): array
+    /**
+     * @return array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress>|null
+     */
+    public function getServiceTaggedAddresses(): null|array
     {
-        return $this->ServiceTaggedAddresses;
+        return $this->ServiceTaggedAddresses ?? null;
     }
 
-    public function setServiceTaggedAddresses(array $ServiceTaggedAddresses): self
+    public function setServiceTaggedAddress(string $Tag, ServiceAddress $ServiceAddress): self
     {
-        $this->ServiceTaggedAddresses = $ServiceTaggedAddresses;
+        if (!isset($this->ServiceTaggedAddresses)) {
+            $this->ServiceTaggedAddresses = [];
+        }
+        $this->ServiceTaggedAddresses[$Tag] = $ServiceAddress;
         return $this;
     }
 
+    /**
+     * @param array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress>|null $ServiceTaggedAddresses
+     */
+    public function setServiceTaggedAddresses(null|array $ServiceTaggedAddresses): self
+    {
+        if (null === $ServiceTaggedAddresses) {
+            unset($this->TaggedAddresses);
+            return $this;
+        }
+        $this->TaggedAddresses = [];
+        foreach ($ServiceTaggedAddresses as $k => $v) {
+            $this->setServiceTaggedAddress($k, $v);
+        }
+        return $this;
+    }
+
+    /**
+     * @return array<string>
+     */
     public function getServiceTags(): array
     {
         return $this->ServiceTags;
     }
 
-    public function setServiceTags(array $ServiceTags): self
+    public function setServiceTags(string ...$ServiceTags): self
     {
         $this->ServiceTags = $ServiceTags;
-        return $this;
-    }
-
-    public function getServiceMeta(): array
-    {
-        return $this->ServiceMeta;
-    }
-
-    public function setServiceMeta(array $ServiceMeta): self
-    {
-        $this->ServiceMeta = $ServiceMeta;
         return $this;
     }
 
@@ -240,6 +270,28 @@ class CatalogService extends AbstractModel
         return $this;
     }
 
+    public function getServiceProxy(): null|AgentServiceConnectProxyConfig
+    {
+        return $this->ServiceProxy;
+    }
+
+    public function setServiceProxy(null|AgentServiceConnectProxyConfig $ServiceProxy): self
+    {
+        $this->ServiceProxy = $ServiceProxy;
+        return $this;
+    }
+
+    public function getServiceLocality(): null|Locality
+    {
+        return $this->ServiceLocality;
+    }
+
+    public function setServiceLocality(null|Locality $ServiceLocality): self
+    {
+        $this->ServiceLocality = $ServiceLocality;
+        return $this;
+    }
+
     public function getCreateIndex(): int
     {
         return $this->CreateIndex;
@@ -251,14 +303,14 @@ class CatalogService extends AbstractModel
         return $this;
     }
 
-    public function getServiceProxy(): ?AgentServiceConnectProxyConfig
+    public function getChecks(): HealthChecks
     {
-        return $this->ServiceProxy;
+        return $this->Checks;
     }
 
-    public function setServiceProxy(?AgentServiceConnectProxyConfig $ServiceProxy): self
+    public function setChecks(HealthChecks $Checks): self
     {
-        $this->ServiceProxy = $ServiceProxy;
+        $this->Checks = $Checks;
         return $this;
     }
 
@@ -273,14 +325,94 @@ class CatalogService extends AbstractModel
         return $this;
     }
 
-    public function getNamespace(): ?string
+    public function getNamespace(): string
     {
         return $this->Namespace;
     }
 
-    public function setNamespace(?string $Namespace): self
+    public function setNamespace(string $Namespace): self
     {
         $this->Namespace = $Namespace;
         return $this;
+    }
+
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('TaggedAddresses' === $k) {
+                $n->settaggedAddresses($v);
+            } elseif ('NodeMeta' === $k) {
+                $n->setnodemeta($v);
+            } elseif ('ServiceTaggedAddresses' === $k) {
+                foreach ($v as $kk => $vv) {
+                    $n->setServiceTaggedAddress($kk, ServiceAddress::jsonUnserialize($vv));
+                }
+            } elseif ('Weights' === $k) {
+                $n->ServiceWeights = Weights::jsonUnserialize($v);
+            } elseif ('ServiceProxy' === $k) {
+                if (null !== $v) {
+                    $n->ServiceProxy = AgentServiceConnectProxyConfig::jsonUnserialize($v);
+                }
+            } elseif ('ServiceLocality' === $k) {
+                if (null !== $v) {
+                    $n->ServiceLocality = Locality::jsonUnserialize($v);
+                }
+            } elseif ('Checks' === $k) {
+                if (null !== $v) {
+                    $n->Checks = HealthChecks::jsonUnserialize($v);
+                }
+            } elseif ('ServiceMeta' === $k) {
+                $n->setServiceMeta($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->ID = $this->ID;
+        $out->Node = $this->Node;
+        $out->Address = $this->Address;
+        $out->Datacenter = $this->Datacenter;
+        $out->TaggedAddresses = $this->getTaggedAddresses();
+        $out->NodeMeta = $this->getNodeMeta();
+        $out->ServiceID = $this->ServiceID;
+        $out->ServiceName = $this->ServiceName;
+        $out->ServiceAddress = $this->ServiceAddress;
+        $out->ServiceTaggedAddresses = $this->getServiceTaggedAddresses();
+        $out->ServiceTags = $this->ServiceTags;
+        $out->ServiceMeta = $this->getServiceMeta();
+        $out->ServicePort = $this->ServicePort;
+        $out->ServiceWeights = $this->ServiceWeights;
+        $out->ServiceEnableTagOverride = $this->ServiceEnableTagOverride;
+        $out->ServiceProxy = $this->ServiceProxy;
+        if (null !== $this->ServiceLocality) {
+            $out->ServiceLocality = $this->ServiceLocality;
+        }
+        $out->CreateIndex = $this->CreateIndex;
+        $out->Checks = $this->Checks;
+        $out->ModifyIndex = $this->ModifyIndex;
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
+        }
+        return $out;
     }
 }

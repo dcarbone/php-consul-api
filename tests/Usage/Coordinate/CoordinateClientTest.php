@@ -47,9 +47,9 @@ final class CoordinateClientTest extends AbstractUsageTests
         $client = new CoordinateClient(ConsulManager::testConfig());
 
         [$dcs, $err] = $client->Datacenters();
-        self::assertNull($err, \sprintf('CoordinateClient::datacenters() - %s', $err));
+        self::assertNull($err, sprintf('CoordinateClient::datacenters() - %s', $err));
         self::assertIsArray($dcs);
-        self::assertGreaterThan(0, \count($dcs), 'Expected at least 1 datacenter');
+        self::assertGreaterThan(0, count($dcs), 'Expected at least 1 datacenter');
     }
 
     /**
@@ -60,7 +60,7 @@ final class CoordinateClientTest extends AbstractUsageTests
         $client = new CoordinateClient(ConsulManager::testConfig());
 
         [$nodes, $qm, $err] = $client->Nodes();
-        self::assertNull($err, \sprintf('CoordinateClient::nodes() - %s', $err));
+        self::assertNull($err, sprintf('CoordinateClient::nodes() - %s', $err));
         self::assertInstanceOf(QueryMeta::class, $qm);
         self::assertIsArray($nodes);
     }

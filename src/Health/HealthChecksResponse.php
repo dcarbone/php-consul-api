@@ -20,20 +20,29 @@ namespace DCarbone\PHPConsulAPI\Health;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedQueryResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
 
 class HealthChecksResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?HealthChecks $HealthChecks = null;
+    public HealthChecks $HealthChecks;
 
-    public function getValue(): ?HealthChecks
+    public function __construct()
+    {
+        $this->HealthChecks = new HealthChecks();
+    }
+
+    public function getValue(): HealthChecks
     {
         return $this->HealthChecks;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        $this->HealthChecks = new HealthChecks((array)$decodedData);
+        if (null === $decoded) {
+            $this->HealthChecks = new HealthChecks();
+            return;
+        }
+        $this->HealthChecks = HealthChecks::jsonUnserialize($decoded);
     }
 }

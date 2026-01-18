@@ -20,112 +20,85 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Catalog\ServiceAddress;
-use DCarbone\PHPConsulAPI\HasSettableStringTags;
-use DCarbone\PHPConsulAPI\HasStringTags;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\MetaField;
+use DCarbone\PHPConsulAPI\Peering\Locality;
 
-class AgentServiceRegistration extends AbstractModel
+class AgentServiceRegistration extends AbstractType
 {
-    use HasSettableStringTags;
-    use HasStringTags;
+    use MetaField;
 
-    protected const FIELDS = [
-        self::FIELD_KIND                => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_ID                  => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_NAME                => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_PORT                => Transcoding::OMITEMPTY_INTEGER_FIELD,
-        self::FIELD_ADDRESS             => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_TAGGED_ADDRESSES    => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => ServiceAddress::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-        self::FIELD_ENABLE_TAG_OVERRIDE => Transcoding::OMITEMPTY_BOOLEAN_FIELD,
-        self::FIELD_META                => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::MIXED,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-        self::FIELD_WEIGHTS             => [
-            Transcoding::FIELD_TYPE      => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS     => AgentWeights::class,
-            Transcoding::FIELD_NULLABLE  => true,
-            Transcoding::FIELD_OMITEMPTY => true,
-        ],
-        self::FIELD_CHECK               => [
-            Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS    => AgentServiceCheck::class,
-            Transcoding::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_CHECKS              => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => AgentServiceChecks::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-        ],
-        self::FIELD_PROXY               => [
-            Transcoding::FIELD_TYPE      => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS     => AgentServiceConnectProxyConfig::class,
-            Transcoding::FIELD_NULLABLE  => true,
-            Transcoding::FIELD_OMITEMPTY => true,
-        ],
-        self::FIELD_CONNECT             => [
-            Transcoding::FIELD_TYPE      => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS     => AgentServiceConnect::class,
-            Transcoding::FIELD_NULLABLE  => true,
-            Transcoding::FIELD_OMITEMPTY => true,
-        ],
-        self::FIELD_NAMESPACE           => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
-
-    private const FIELD_KIND                = 'Kind';
-    private const FIELD_ID                  = 'ID';
-    private const FIELD_NAME                = 'Name';
-    private const FIELD_PORT                = 'Port';
-    private const FIELD_ADDRESS             = 'Address';
-    private const FIELD_TAGGED_ADDRESSES    = 'TaggedAddresses';
-    private const FIELD_ENABLE_TAG_OVERRIDE = 'EnableTagOverride';
-    private const FIELD_META                = 'Meta';
-    private const FIELD_WEIGHTS             = 'Weights';
-    private const FIELD_CHECK               = 'Check';
-    private const FIELD_CHECKS              = 'Checks';
-    private const FIELD_PROXY               = 'Proxy';
-    private const FIELD_CONNECT             = 'Connect';
-    private const FIELD_NAMESPACE           = 'Namespace';
-
-    public string $Kind = '';
-    public string $ID = '';
-    public string $Name = '';
-    public int $Port = 0;
-    public string $Address = '';
-    public array $TaggedAddresses = [];
-    public bool $EnableTagOverride = false;
-    public array $Meta = [];
-    public ?AgentWeights $Weights = null;
-    public ?AgentServiceCheck $Check = null;
+    public ServiceKind $Kind;
+    public string $ID;
+    public string $Name;
+    /** @var string[] */
+    public array $Tags;
+    public int $Port;
+    public string $Address;
+    /** @var array<\DCarbone\PHPConsulAPI\Catalog\ServiceAddress> */
+    public array $TaggedAddresses;
+    public bool $EnableTagOverride;
+    public null|AgentWeights $Weights;
+    public null|AgentServiceCheck $Check;
     public AgentServiceChecks $Checks;
-    public ?AgentServiceConnectProxyConfig $Proxy = null;
-    public ?AgentServiceConnect $Connect = null;
-    public string $Namespace = '';
+    public null|AgentServiceConnectProxyConfig $Proxy;
+    public null|AgentServiceConnect $Connect;
+    public string $Namespace;
+    public string $Partition;
+    public null|Locality $Locality;
 
-    public function __construct(?array $data = [])
-    {
-        parent::__construct($data);
-        if (!isset($this->Checks)) {
-            $this->Checks = new AgentServiceChecks(null);
-        }
+    /**
+     * @param array<string> $Tags
+     * @param array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress> $TaggedAddresses
+     * @param array<string,string> $Meta
+     */
+    public function __construct(
+        string|ServiceKind $Kind = ServiceKind::Typical,
+        string $ID = '',
+        string $Name = '',
+        array $Tags = [],
+        int $Port = 0,
+        string $Address = '',
+        array $TaggedAddresses = [],
+        bool $EnableTagOverride = false,
+        array $Meta = [],
+        null|AgentWeights $Weights = null,
+        null|AgentServiceCheck $Check = null,
+        null|AgentServiceChecks $Checks = null,
+        null|AgentServiceConnectProxyConfig $Proxy = null,
+        null|AgentServiceConnect $Connect = null,
+        string $Namespace = '',
+        string $Partition = '',
+        null|Locality $Locality = null,
+    ) {
+        $this->Kind = is_string($Kind) ? ServiceKind::from($Kind) : $Kind;
+        $this->ID = $ID;
+        $this->Name = $Name;
+        $this->setTags(...$Tags);
+        $this->Port = $Port;
+        $this->Address = $Address;
+        $this->setTaggedAddresses($TaggedAddresses);
+        $this->EnableTagOverride = $EnableTagOverride;
+        $this->setMeta($Meta);
+        $this->Weights = $Weights;
+        $this->Check = $Check;
+        $this->Checks = $Checks ?? new AgentServiceChecks();
+        $this->Proxy = $Proxy;
+        $this->Connect = $Connect;
+        $this->Namespace = $Namespace;
+        $this->Partition = $Partition;
+        $this->Locality = $Locality;
     }
 
-    public function getKind(): string
+    public function getKind(): ServiceKind
     {
         return $this->Kind;
     }
 
-    public function setKind(string $Kind): self
+    public function setKind(string|ServiceKind $Kind): self
     {
-        $this->Kind = $Kind;
+        $this->Kind = $Kind instanceof ServiceKind ? $Kind : ServiceKind::from($Kind);
         return $this;
     }
 
@@ -151,6 +124,20 @@ class AgentServiceRegistration extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return string[]
+     */
+    public function getTags(): array
+    {
+        return $this->Tags;
+    }
+
+    public function setTags(string ...$Tags): self
+    {
+        $this->Tags = $Tags;
+        return $this;
+    }
+
     public function getPort(): int
     {
         return $this->Port;
@@ -173,14 +160,37 @@ class AgentServiceRegistration extends AbstractModel
         return $this;
     }
 
-    public function getTaggedAddresses(): ?array
+    /**
+     * @return array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress>|null
+     */
+    public function getTaggedAddresses(): null|array
     {
-        return $this->TaggedAddresses;
+        return $this->TaggedAddresses ?? null;
     }
 
-    public function setTaggedAddresses(array $TaggedAddresses): self
+    public function setTaggedAddress(string $Tag, ServiceAddress $Address): self
     {
-        $this->TaggedAddresses = $TaggedAddresses;
+        if (!isset($this->TaggedAddresses)) {
+            $this->TaggedAddresses = [];
+        }
+        $this->TaggedAddresses[$Tag] = $Address;
+        return $this;
+    }
+
+    /**
+     * @param array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress>|null $TaggedAddresses
+     * @return $this
+     */
+    public function setTaggedAddresses(null|array $TaggedAddresses): self
+    {
+        if (null === $TaggedAddresses) {
+            unset($this->TaggedAddresses);
+            return $this;
+        }
+        $this->TaggedAddresses = [];
+        foreach ($TaggedAddresses as $k => $v) {
+            $this->setTaggedAddress($k, $v);
+        }
         return $this;
     }
 
@@ -195,34 +205,23 @@ class AgentServiceRegistration extends AbstractModel
         return $this;
     }
 
-    public function getMeta(): ?array
-    {
-        return $this->Meta;
-    }
-
-    public function setMeta(array $Meta): self
-    {
-        $this->Meta = $Meta;
-        return $this;
-    }
-
-    public function getWeights(): ?AgentWeights
+    public function getWeights(): null|AgentWeights
     {
         return $this->Weights;
     }
 
-    public function setWeights(?AgentWeights $Weights): self
+    public function setWeights(null|AgentWeights $Weights): self
     {
         $this->Weights = $Weights;
         return $this;
     }
 
-    public function getCheck(): ?AgentServiceCheck
+    public function getCheck(): null|AgentServiceCheck
     {
         return $this->Check;
     }
 
-    public function setCheck(?AgentServiceCheck $Check): self
+    public function setCheck(null|AgentServiceCheck $Check): self
     {
         $this->Check = $Check;
         return $this;
@@ -239,23 +238,23 @@ class AgentServiceRegistration extends AbstractModel
         return $this;
     }
 
-    public function getProxy(): ?AgentServiceConnectProxyConfig
+    public function getProxy(): null|AgentServiceConnectProxyConfig
     {
         return $this->Proxy;
     }
 
-    public function setProxy(?AgentServiceConnectProxyConfig $Proxy): self
+    public function setProxy(null|AgentServiceConnectProxyConfig $Proxy): self
     {
         $this->Proxy = $Proxy;
         return $this;
     }
 
-    public function getConnect(): ?AgentServiceConnect
+    public function getConnect(): null|AgentServiceConnect
     {
         return $this->Connect;
     }
 
-    public function setConnect(?AgentServiceConnect $Connect): self
+    public function setConnect(null|AgentServiceConnect $Connect): self
     {
         $this->Connect = $Connect;
         return $this;
@@ -271,6 +270,116 @@ class AgentServiceRegistration extends AbstractModel
         $this->Namespace = $Namespace;
         return $this;
     }
+
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
+    public function getLocality(): null|Locality
+    {
+        return $this->Locality;
+    }
+
+    public function setLocality(null|Locality $Locality): self
+    {
+        $this->Locality = $Locality;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('Kind' === $k) {
+                $n->setKind($v);
+            } elseif ('Tags' === $k) {
+                $n->setTags(...$v);
+            } elseif ('TaggedAddresses' === $k) {
+                $n->TaggedAddresses = [];
+                foreach ($v as $kk => $vv) {
+                    $n->TaggedAddresses[$kk] = ServiceAddress::jsonUnserialize($vv);
+                }
+            } elseif ('Weights' === $k) {
+                $n->Weights = AgentWeights::jsonUnserialize($v);
+            } elseif ('Check' === $k) {
+                $n->Check = AgentServiceCheck::jsonUnserialize($v);
+            } elseif ('Checks' === $k) {
+                $n->Checks = AgentServiceChecks::jsonUnserialize($v);
+            } elseif ('Proxy' === $k) {
+                $n->Proxy = AgentServiceConnectProxyConfig::jsonUnserialize($v);
+            } elseif ('Connect' === $k) {
+                $n->Connect = AgentServiceConnect::jsonUnserialize($v);
+            } elseif ('Locality' === $k) {
+                $n->Locality = Locality::jsonUnserialize($v);
+            } elseif ('Meta' === $k) {
+                $n->setMeta($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        if ($this->Kind !== ServiceKind::Typical) {
+            $out->Kind = $this->Kind;
+        }
+        if ('' !== $this->ID) {
+            $out->ID = $this->ID;
+        }
+        if ('' !== $this->Name) {
+            $out->Name = $this->Name;
+        }
+        if ([] !== $this->Tags) {
+            $out->Tags = $this->Tags;
+        }
+        if (0 !== $this->Port) {
+            $out->Port = $this->Port;
+        }
+        if ('' !== $this->Address) {
+            $out->Address = $this->Address;
+        }
+        if (isset($this->TaggedAddresses)) {
+            $out->TaggedAddresses = $this->TaggedAddresses;
+        }
+        if ($this->EnableTagOverride) {
+            $out->EnableTagOverride = $this->EnableTagOverride;
+        }
+        if (isset($this->Meta)) {
+            $out->Meta = $this->Meta;
+        }
+        if (null !== $this->Weights) {
+            $out->Weights = $this->Weights;
+        }
+        $out->Check = $this->Check;
+        $out->Checks = $this->Checks;
+        if (null !== $this->Proxy) {
+            $out->Proxy = $this->Proxy;
+        }
+        if (null !== $this->Connect) {
+            $out->Connect = $this->Connect;
+        }
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
+        }
+        if (null !== $this->Locality) {
+            $out->Locality = $this->Locality;
+        }
+        return $out;
+    }
+
     public function __toString(): string
     {
         return $this->Name;
