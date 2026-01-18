@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI\KV;
+namespace DCarbone\PHPConsulAPI\Txn;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -22,13 +22,14 @@ namespace DCarbone\PHPConsulAPI\KV;
 
 use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\FakeSlice;
+use DCarbone\PHPConsulAPI\Txn\TxnResult;
 
-class KVTxnOps extends FakeSlice
+class TxnResults extends FakeSlice
 {
-    protected string $containedClass = KVTxnOp::class;
+    protected string $containedClass = TxnResult::class;
 
     protected function newChild(array $data): AbstractType
     {
-        return new KVTxnOp($data);
+        return new TxnResult($data);
     }
 }

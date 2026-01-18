@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI\KV;
+namespace DCarbone\PHPConsulAPI\Txn;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -25,24 +25,28 @@ use DCarbone\PHPConsulAPI\Health\HealthCheck;
 
 class CheckTxnOp extends AbstractType
 {
-       public string $Verb = '';
+    public CheckOp $Verb;
     public HealthCheck $Check;
 
-    public function __construct(?array $data = [])
+    public function __construct(CheckOp|string $Verb = CheckOp::UNDEFINED, null|HealthCheck $Check = null)
     {
-        parent::__construct($data);
-        if (!isset($this->Check)) {
-            $this->Check = new HealthCheck(null);
+        $this->setVerb($Verb);
+        if (null === $Check) {
+            $Check = new HealthCheck();
         }
+        $this->Check = $Check;
     }
 
-    public function getVerb(): string
+    public function getVerb(): CheckOp
     {
         return $this->Verb;
     }
 
-    public function setVerb(string $Verb): self
+    public function setVerb(string|CheckOp $Verb): self
     {
+        if (is_string($Verb)) {
+            $Verb = CheckOp::from($Verb);
+        }
         $this->Verb = $Verb;
         return $this;
     }
@@ -64,6 +68,8 @@ class CheckTxnOp extends AbstractType
         foreach ($decoded as $k => $v) {
             if ('Check' === $k) {
                 $n->Check = HealthCheck::jsonUnserialize($v);
+            } elseif ('Verb' === $k) {
+                $n->setVerb($v);
             } else {
                 $n->{$k} = $v;
             }
@@ -71,8 +77,11 @@ class CheckTxnOp extends AbstractType
         return $n;
     }
 
-    public function jsonSerialize(): mixed
+    public function jsonSerialize(): \stdClass
     {
-        // TODO: Implement jsonSerialize() method.
+        $out = $this->_startJsonSerialize();
+        $out->Verb = $this->Verb;
+        $out->Check = $this->Check;
+        return $out;
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI\KV;
+namespace DCarbone\PHPConsulAPI\Txn;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,32 +20,14 @@ namespace DCarbone\PHPConsulAPI\KV;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
-
-class TxnError extends AbstractType
+enum CheckOp: string
 {
-    public int $OpIndex = 0;
-    public string $What = '';
+    case CheckGet = 'get';
+    case CheckSet = 'set';
+    case CheckCAS = 'cas';
+    case CheckDelete = 'delete';
+    case CheckDeleteCAS = 'delete-cas';
 
-    public function getOpIndex(): int
-    {
-        return $this->OpIndex;
-    }
-
-    public function setOpIndex(int $OpIndex): self
-    {
-        $this->OpIndex = $OpIndex;
-        return $this;
-    }
-
-    public function getWhat(): string
-    {
-        return $this->What;
-    }
-
-    public function setWhat(string $What): self
-    {
-        $this->What = $What;
-        return $this;
-    }
+    // Default case for when value is not set.
+    case UNDEFINED = '';
 }

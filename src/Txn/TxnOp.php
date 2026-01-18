@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI\KV;
+namespace DCarbone\PHPConsulAPI\Txn;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,33 +20,34 @@ namespace DCarbone\PHPConsulAPI\KV;
    limitations under the License.
  */
 
+use DCarbone\PHPConsulAPI\Txn\KVTxnOp;
 use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
-use DCarbone\PHPConsulAPI\Catalog\CatalogService;
-use DCarbone\PHPConsulAPI\Catalog\Node;
-use DCarbone\PHPConsulAPI\Health\HealthCheck;
 use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\Txn\CheckTxnOp;
+use DCarbone\PHPConsulAPI\Txn\NodeTxnOp;
+use DCarbone\PHPConsulAPI\Txn\ServiceTxnOp;
 
-class TxnResult extends AbstractType
+class TxnOp extends AbstractType
 {
     protected const FIELDS = [
         self::FIELD_KV      => [
             Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS    => KVPair::class,
+            Transcoding::FIELD_CLASS    => KVTxnOp::class,
             Transcoding::FIELD_NULLABLE => true,
         ],
         self::FIELD_NODE    => [
             Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS    => Node::class,
+            Transcoding::FIELD_CLASS    => NodeTxnOp::class,
             Transcoding::FIELD_NULLABLE => true,
         ],
         self::FIELD_SERVICE => [
             Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS    => CatalogService::class,
+            Transcoding::FIELD_CLASS    => ServiceTxnOp::class,
             Transcoding::FIELD_NULLABLE => true,
         ],
         self::FIELD_CHECK   => [
             Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS    => HealthCheck::class,
+            Transcoding::FIELD_CLASS    => CheckTxnOp::class,
             Transcoding::FIELD_NULLABLE => true,
         ],
     ];
@@ -56,50 +57,50 @@ class TxnResult extends AbstractType
     private const FIELD_SERVICE = 'Service';
     private const FIELD_CHECK   = 'Check';
 
-    public ?KVPair $KV = null;
-    public ?Node $Node = null;
-    public ?CatalogService $Service = null;
-    public ?HealthCheck $Check = null;
+    public ?KVTxnOp $KV = null;
+    public ?NodeTxnOp $Node = null;
+    public ?ServiceTxnOp $Service = null;
+    public ?CheckTxnOp $Check = null;
 
-    public function getKV(): ?KVPair
+    public function getKV(): ?KVTxnOp
     {
         return $this->KV;
     }
 
-    public function setKV(?KVPair $KV): self
+    public function setKV(?KVTxnOp $KV): self
     {
         $this->KV = $KV;
         return $this;
     }
 
-    public function getNode(): ?Node
+    public function getNode(): ?NodeTxnOp
     {
         return $this->Node;
     }
 
-    public function setNode(?Node $Node): self
+    public function setNode(?NodeTxnOp $Node): self
     {
         $this->Node = $Node;
         return $this;
     }
 
-    public function getService(): ?CatalogService
+    public function getService(): ?ServiceTxnOp
     {
         return $this->Service;
     }
 
-    public function setService(?CatalogService $Service): self
+    public function setService(?ServiceTxnOp $Service): self
     {
         $this->Service = $Service;
         return $this;
     }
 
-    public function getCheck(): ?HealthCheck
+    public function getCheck(): ?CheckTxnOp
     {
         return $this->Check;
     }
 
-    public function setCheck(?HealthCheck $Check): self
+    public function setCheck(?CheckTxnOp $Check): self
     {
         $this->Check = $Check;
         return $this;

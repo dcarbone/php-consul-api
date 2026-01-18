@@ -26,6 +26,10 @@ use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\PHPLib\Response\ValuedQueryStringsResponse;
 use DCarbone\PHPConsulAPI\PHPLib\Response\ValuedWriteBoolResponse;
+use DCarbone\PHPConsulAPI\Txn\KVTxnAPIResponse;
+use DCarbone\PHPConsulAPI\Txn\KVTxnOps;
+use DCarbone\PHPConsulAPI\Txn\KVTxnResponse;
+use DCarbone\PHPConsulAPI\Txn\TxnResponse;
 use DCarbone\PHPConsulAPI\WriteOptions;
 use DCarbone\PHPConsulAPI\PHPLib\Response\WriteResponse;
 
@@ -33,8 +37,8 @@ class KVClient extends AbstractClient
 {
     public function Get(string $key, null|QueryOptions $opts = null): KVPairResponse
     {
-        $resp     = $this->_doGet(sprintf('v1/kv/%s', $key), $opts);
-        $ret      = new KVPairResponse();
+        $resp = $this->_doGet(sprintf('v1/kv/%s', $key), $opts);
+        $ret = new KVPairResponse();
         $ret->Err = $resp->Err;
         if (null !== $resp->Err) {
             return $ret;
@@ -61,12 +65,13 @@ class KVClient extends AbstractClient
 
     public function Put(KVPair $p, null|WriteOptions $opts = null): WriteResponse
     {
-        $r = $this->_newPutRequest(sprintf('v1/kv/%s', $p->Key), $p->Value, $opts);
+        $r = $this->_newPutRequest(sprintf('v1/kv/%s', $p->Key), base64_encode($p->Value), $opts);
         if (0 !== $p->Flags) {
             $r->params->set('flags', (string)$p->Flags);
         }
+        $r->header->set('Content-Type', 'application/octet-stream');
         $resp = $this->_requireOK($this->_do($r));
-        $ret  = new WriteResponse();
+        $ret = new WriteResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
@@ -80,7 +85,7 @@ class KVClient extends AbstractClient
     {
         $r = $this->_newGetRequest(sprintf('v1/kv/%s', $prefix), $opts);
         $r->params->set('recurse', '');
-        $ret  = new KVPairsResponse();
+        $ret = new KVPairsResponse();
         $resp = $this->_requireOK($this->_do($r));
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
@@ -90,7 +95,7 @@ class KVClient extends AbstractClient
     {
         $r = $this->_newGetRequest(sprintf('v1/kv/%s', $prefix), $opts);
         $r->params->set('keys', '');
-        $ret  = new ValuedQueryStringsResponse();
+        $ret = new ValuedQueryStringsResponse();
         $resp = $this->_requireOK($this->_do($r));
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
@@ -104,7 +109,7 @@ class KVClient extends AbstractClient
             $r->params->set('flags', (string)$p->Flags);
         }
         $resp = $this->_requireOK($this->_do($r));
-        $ret  = new ValuedWriteBoolResponse();
+        $ret = new ValuedWriteBoolResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
@@ -117,17 +122,17 @@ class KVClient extends AbstractClient
             $r->params->set('flags', (string)$p->Flags);
         }
         $resp = $this->_requireOK($this->_do($r));
-        $ret  = new WriteResponse();
+        $ret = new WriteResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
     public function DeleteCAS(KVPair $p, null|WriteOptions $opts = null): ValuedWriteBoolResponse
     {
-        $r                = $this->_newDeleteRequest(sprintf('v1/kv/%s', ltrim($p->Key, '/')), $opts);
-        $r->params['cas'] = (string)$p->ModifyIndex;
-        $resp             = $this->_requireOK($this->_do($r));
-        $ret              = new ValuedWriteBoolResponse();
+        $r = $this->_newDeleteRequest(sprintf('v1/kv/%s', ltrim($p->Key, '/')), $opts);
+        $r->params->set('cas', (string)$p->ModifyIndex);
+        $resp = $this->_requireOK($this->_do($r));
+        $ret = new ValuedWriteBoolResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
@@ -147,10 +152,10 @@ class KVClient extends AbstractClient
 
     public function DeleteTree(string $prefix, null|WriteOptions $opts = null): WriteResponse
     {
-        $r                    = $this->_newDeleteRequest(sprintf('v1/kv/%s', $prefix), $opts);
-        $r->params['recurse'] = '';
-        $resp                 = $this->_requireOK($this->_do($r));
-        $ret                  = new WriteResponse();
+        $r = $this->_newDeleteRequest(sprintf('v1/kv/%s', $prefix), $opts);
+        $r->params->set('recurse', '');
+        $resp = $this->_requireOK($this->_do($r));
+        $ret = new WriteResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
@@ -183,7 +188,7 @@ class KVClient extends AbstractClient
             }
             $ret->OK = true;
             // TODO: Maybe go straight to actual response?  What is the benefit of this...
-            $internal           = new TxnResponse($dec->Decoded);
+            $internal = new TxnResponse($dec->Decoded);
             $ret->KVTxnResponse = new KVTxnResponse(['Errors' => $internal->Errors, 'Results' => $internal->Results]);
             return $ret;
         }
@@ -195,79 +200,5 @@ class KVClient extends AbstractClient
 
         $ret->Err = new Error('Failed request: ' . $body);
         return $ret;
-    }
-
-    /**
-     * @param string $prefix
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     * @return array(
-     *  @var \DCarbone\PHPConsulAPI\KV\KVPair[]|\DCarbone\PHPConsulAPI\KV\KVTree[]|null array of trees, values, or null on error
-     *  @var \DCarbone\PHPConsulAPI\Error|null error, if any
-     * )
-     */
-    public function Tree(string $prefix = '', null|QueryOptions $opts = null): array
-    {
-        [$valueList, $_, $err] = $this->List($prefix, $opts);
-
-        if (null !== $err) {
-            return [null, $err];
-        }
-
-        $treeHierarchy = [];
-        foreach ($valueList as $kvp) {
-            $path = $kvp->getKey();
-            $slashPos = strpos($path, '/');
-            if (false === $slashPos) {
-                $treeHierarchy[$path] = $kvp;
-                continue;
-            }
-
-            $root = substr($path, 0, $slashPos + 1);
-
-            if (!isset($treeHierarchy[$root])) {
-                $treeHierarchy[$root] = new KVTree($root);
-            }
-
-            if (str_ends_with($path, '/')) {
-                $_path = '';
-                foreach (explode('/', $prefix) as $part) {
-                    if ('' === $part) {
-                        continue;
-                    }
-
-                    $_path .= "{$part}/";
-
-                    if ($root === $_path) {
-                        continue;
-                    }
-
-                    if (!isset($treeHierarchy[$root][$_path])) {
-                        $treeHierarchy[$root][$_path] = new KVTree($_path);
-                    }
-                }
-            } else {
-                $kvPrefix = substr($path, 0, strrpos($path, '/') + 1);
-                $_path    = '';
-                foreach (explode('/', $kvPrefix) as $part) {
-                    if ('' === $part) {
-                        continue;
-                    }
-
-                    $_path .= "{$part}/";
-
-                    if ($root === $_path) {
-                        continue;
-                    }
-
-                    if (!isset($treeHierarchy[$root][$_path])) {
-                        $treeHierarchy[$root][$_path] = new KVTree($_path);
-                    }
-                }
-
-                $treeHierarchy[$root][$path] = $kvp;
-            }
-        }
-        return [$treeHierarchy, null];
     }
 }

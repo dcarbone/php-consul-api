@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI\KV;
+namespace DCarbone\PHPConsulAPI\Txn;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,8 +20,10 @@ namespace DCarbone\PHPConsulAPI\KV;
    limitations under the License.
  */
 
+use DCarbone\PHPConsulAPI\Txn\TxnResults;
 use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\Txn\TxnErrors;
 
 class TxnResponse extends AbstractType
 {

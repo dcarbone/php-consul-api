@@ -83,19 +83,19 @@ abstract class AbstractClient
         return $opts;
     }
 
-    protected function _newRequest(string $method, string $path, mixed $body, ?RequestOptions $opts): Request
+    protected function _newRequest(string $method, string $path, mixed $body, null|RequestOptions $opts): Request
     {
         $r = new Request($method, $path, $this->_config, $body);
         $r->applyOptions($opts);
         return $r;
     }
 
-    protected function _newPostRequest(string $path, mixed $body, ?RequestOptions $opts): Request
+    protected function _newPostRequest(string $path, mixed $body, null|RequestOptions $opts): Request
     {
         return $this->_newRequest(HTTP\MethodPost, $path, $body, $opts);
     }
 
-    protected function _newPutRequest(string $path, mixed $body, ?RequestOptions $opts): Request
+    protected function _newPutRequest(string $path, mixed $body, null|RequestOptions $opts): Request
     {
         return $this->_newRequest(HTTP\MethodPut, $path, $body, $opts);
     }
@@ -208,12 +208,12 @@ abstract class AbstractClient
         return $this->_do($this->_newGetRequest($path, $opts));
     }
 
-    protected function _doPost(string $path, mixed $body, ?RequestOptions $opts): RequestResponse
+    protected function _doPost(string $path, mixed $body, null|RequestOptions $opts): RequestResponse
     {
         return $this->_do($this->_newPostRequest($path, $body, $opts));
     }
 
-    protected function _doPut(string $path, mixed $body, ?RequestOptions $opts): RequestResponse
+    protected function _doPut(string $path, mixed $body, null|RequestOptions $opts): RequestResponse
     {
         return $this->_do($this->_newPutRequest($path, $body, $opts));
     }

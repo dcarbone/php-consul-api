@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI\KV;
+namespace DCarbone\PHPConsulAPI\Txn;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,15 +20,24 @@ namespace DCarbone\PHPConsulAPI\KV;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
-use DCarbone\PHPConsulAPI\FakeSlice;
+use DCarbone\PHPConsulAPI\PHPLib\Response\ErrorField;
+use DCarbone\PHPConsulAPI\PHPLib\Response\QueryMetaField;
 
-class TxnErrors extends FakeSlice
+class KVTxnAPIResponse
 {
-    protected string $containedClass = TxnError::class;
+    use QueryMetaField;
+    use ErrorField;
 
-    protected function newChild(array $data): AbstractType
+    public bool $OK = false;
+    public null|KVTxnResponse $KVTxnResponse = null;
+
+    public function isOK(): bool
     {
-        return new TxnError($data);
+        return $this->OK;
+    }
+
+    public function getKVTxnResponse(): null|KVTxnResponse
+    {
+        return $this->KVTxnResponse;
     }
 }

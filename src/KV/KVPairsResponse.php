@@ -32,7 +32,7 @@ class KVPairsResponse extends AbstractValuedQueryResponse implements Unmarshalle
         $this->KVPairs = new KVPairs();
     }
 
-    public function getValue(): null|KVPairs
+    public function getValue(): KVPairs
     {
         return $this->KVPairs;
     }

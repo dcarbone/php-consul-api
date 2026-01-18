@@ -24,8 +24,8 @@ use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Consul;
 
 /**
- * @implements \ArrayAccess<int, HealthCheck>
- * @implements \IteratorAggregate<int, HealthCheck>
+ * @implements \ArrayAccess<int, \DCarbone\PHPConsulAPI\Health\HealthCheck>
+ * @implements \IteratorAggregate<int, \DCarbone\PHPConsulAPI\Health\HealthCheck>
  */
 class HealthChecks extends AbstractType implements \IteratorAggregate, \Countable, \ArrayAccess
 {
@@ -94,7 +94,7 @@ class HealthChecks extends AbstractType implements \IteratorAggregate, \Countabl
 
     public function offsetGet($offset): null|HealthCheck
     {
-        if (!isset($this->Checks[$offset])) {
+        if (!isset($this[$offset])) {
             throw new \OutOfRangeException("Offset $offset does not exist");
         }
         return $this->Checks[$offset];
@@ -107,10 +107,9 @@ class HealthChecks extends AbstractType implements \IteratorAggregate, \Countabl
         }
         if (null === $offset) {
             $this->Checks[] = $value;
-        } else {
-            if (!is_int($offset)) {
+        } elseif (!is_int($offset)) {
                 throw new \InvalidArgumentException('Offset must be an integer');
-            }
+        } else {
             $this->Checks[$offset] = $value;
         }
     }
