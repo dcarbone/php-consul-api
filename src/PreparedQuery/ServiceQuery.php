@@ -20,12 +20,12 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\HasSettableStringTags;
 use DCarbone\PHPConsulAPI\HasStringTags;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-class ServiceQuery extends AbstractModel
+class ServiceQuery extends AbstractType
 {
     use HasSettableStringTags;
     use HasStringTags;

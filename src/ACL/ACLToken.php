@@ -21,279 +21,78 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ACLToken extends AbstractModel
+class ACLToken extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_POLICIES           => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => ACLTokenPolicyLink::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-        self::FIELD_ROLES              => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => ACLTokenRoleLink::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-        self::FIELD_SERVICE_IDENTITIES => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => ACLServiceIdentity::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-        self::FIELD_NODE_IDENTITIES    => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => ACLNodeIdentity::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-        self::FIELD_AUTH_METHOD        => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_EXPIRATION_TTL     => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_DURATION,
-            Transcoding::FIELD_OMITEMPTY          => true,
-        ],
-        self::FIELD_EXPIRATION_TIME    => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_NULLABLE_TIME,
-            Transcoding::FIELD_NULLABLE           => true,
-            Transcoding::FIELD_OMITEMPTY          => true,
-        ],
-        self::FIELD_CREATE_TIME        => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_TIME,
-            Transcoding::FIELD_OMITEMPTY          => true,
-        ],
-        self::FIELD_RULES              => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_NAMESPACE          => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
+    use ACLTokenFields;
 
-    private const FIELD_POLICIES           = 'Policies';
-    private const FIELD_ROLES              = 'Roles';
-    private const FIELD_SERVICE_IDENTITIES = 'ServiceIdentities';
-    private const FIELD_NODE_IDENTITIES    = 'NodeIdentities';
-    private const FIELD_AUTH_METHOD        = 'AuthMethod';
-    private const FIELD_EXPIRATION_TTL     = 'ExpirationTTL';
-    private const FIELD_EXPIRATION_TIME    = 'ExpirationTime';
-    private const FIELD_CREATE_TIME        = 'CreateTime';
-    private const FIELD_RULES              = 'Rules';
-    private const FIELD_NAMESPACE          = 'Namespace';
-
-    public int $CreateIndex = 0;
-    public int $ModifyIndex = 0;
-    public string $AccessorID = '';
-    public string $SecretID = '';
-    public string $Description = '';
-    public array $Policies = [];
-    public array $Roles = [];
-    public array $ServiceIdentities = [];
-    public array $NodeIdentities = [];
-    public bool $Local = false;
-    public string $AuthMethod = '';
-    public Time\Duration $ExpirationTTL;
-    public ?Time\Time $ExpirationTime = null;
-    public Time\Time $CreateTime;
-    public string $Hash = '';
-    public string $Namespace = '';
-
-    public string $Rules = '';
-
-    public function __construct(?array $data = null)
-    {
-        parent::__construct($data);
-        if (!isset($this->ExpirationTTL)) {
-            $this->ExpirationTTL = new Time\Duration();
-        }
-        if (!isset($this->CreateTime)) {
-            $this->CreateTime = Time::New();
-        }
-    }
-
-    public function getCreateIndex(): int
-    {
-        return $this->CreateIndex;
-    }
-
-    public function setCreateIndex(int $CreateIndex): self
-    {
+    /**
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLTokenPolicyLink> $Policies
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLTokenRoleLink> $Roles
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity> $ServiceIdentities
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity> $NodeIdentities
+     * @param array<\DCarbone\PHPConsulAPI\ACL\ACLTemplatedPolicy> $TemplatePolicies
+     */
+    public function __construct(
+        int $CreateIndex = 0,
+        int $ModifyIndex = 0,
+        string $AccessorID = '',
+        string $SecretID = '',
+        string $Description = '',
+        array $Policies = [],
+        array $Roles = [],
+        array $ServiceIdentities = [],
+        array $NodeIdentities = [],
+        array $TemplatePolicies = [],
+        bool $Local = false,
+        string $AuthMethod = '',
+        null|int|float|string|\DateInterval|Time\Duration $ExpirationTTL = null,
+        null|Time\Time $ExpirationTime = null,
+        null|Time\Time $CreateTime = null,
+        string $Hash = '',
+        string $Namespace = '',
+        string $Rules = '',
+        string $Partition = '',
+        string $AuthMethodNamespace = '',
+    ) {
         $this->CreateIndex = $CreateIndex;
-        return $this;
-    }
-
-    public function getModifyIndex(): int
-    {
-        return $this->ModifyIndex;
-    }
-
-    public function setModifyIndex(int $ModifyIndex): self
-    {
         $this->ModifyIndex = $ModifyIndex;
-        return $this;
-    }
-
-    public function getAccessorID(): string
-    {
-        return $this->AccessorID;
-    }
-
-    public function setAccessorID(string $AccessorID): self
-    {
         $this->AccessorID = $AccessorID;
-        return $this;
-    }
-
-    public function getSecretID(): string
-    {
-        return $this->SecretID;
-    }
-
-    public function setSecretID(string $SecretID): self
-    {
         $this->SecretID = $SecretID;
-        return $this;
-    }
-
-    public function getDescription(): string
-    {
-        return $this->Description;
-    }
-
-    public function setDescription(string $Description): self
-    {
         $this->Description = $Description;
-        return $this;
-    }
-
-    public function getPolicies(): array
-    {
-        return $this->Policies;
-    }
-
-    public function setPolicies(array $Policies): self
-    {
-        $this->Policies = $Policies;
-        return $this;
-    }
-
-    public function getRoles(): array
-    {
-        return $this->Roles;
-    }
-
-    public function setRoles(array $Roles): self
-    {
-        $this->Roles = $Roles;
-        return $this;
-    }
-
-    public function getServiceIdentities(): array
-    {
-        return $this->ServiceIdentities;
-    }
-
-    public function setServiceIdentities(array $ServiceIdentities): self
-    {
-        $this->ServiceIdentities = $ServiceIdentities;
-        return $this;
-    }
-
-    public function getNodeIdentities(): array
-    {
-        return $this->NodeIdentities;
-    }
-
-    public function setNodeIdentities(array $NodeIdentities): self
-    {
-        $this->NodeIdentities = $NodeIdentities;
-        return $this;
-    }
-
-    public function isLocal(): bool
-    {
-        return $this->Local;
-    }
-
-    public function setLocal(bool $Local): self
-    {
+        $this->setPolicies(...$Policies);
+        $this->setRoles(...$Roles);
+        $this->setServiceIdentities(...$ServiceIdentities);
+        $this->setNodeIdentities(...$NodeIdentities);
+        $this->setTemplatePolicies(...$TemplatePolicies);
         $this->Local = $Local;
-        return $this;
-    }
-
-    public function getAuthMethod(): string
-    {
-        return $this->AuthMethod;
-    }
-
-    public function setAuthMethod(string $AuthMethod): self
-    {
         $this->AuthMethod = $AuthMethod;
-        return $this;
-    }
-
-    public function getExpirationTTL(): Time\Duration
-    {
-        return $this->ExpirationTTL;
-    }
-
-    public function setExpirationTTL(Time\Duration $ExpirationTTL): self
-    {
-        $this->ExpirationTTL = $ExpirationTTL;
-        return $this;
-    }
-
-    public function getExpirationTime(): ?Time\Time
-    {
-        return $this->ExpirationTime;
-    }
-
-    public function setExpirationTime(?Time\Time $ExpirationTime): self
-    {
-        $this->ExpirationTime = $ExpirationTime;
-        return $this;
-    }
-
-    public function getCreateTime(): Time\Time
-    {
-        return $this->CreateTime;
-    }
-
-    public function setCreateTime(Time\Time $CreateTime): self
-    {
-        $this->CreateTime = $CreateTime;
-        return $this;
-    }
-
-    public function getHash(): string
-    {
-        return $this->Hash;
-    }
-
-    public function setHash(string $Hash): self
-    {
+        $this->setExpirationTTL($ExpirationTTL);
+        $this->setExpirationTime($ExpirationTime);
+        $this->CreateTime = $CreateTime ?? Time::New();
         $this->Hash = $Hash;
-        return $this;
-    }
-
-    public function getNamespace(): string
-    {
-        return $this->Namespace;
-    }
-
-    public function setNamespace(string $Namespace): self
-    {
         $this->Namespace = $Namespace;
-        return $this;
-    }
-
-    public function getRules(): string
-    {
-        return $this->Rules;
-    }
-
-    public function setRules(string $Rules): self
-    {
         $this->Rules = $Rules;
-        return $this;
+        $this->Partition = $Partition;
+        $this->AuthMethodNamespace = $AuthMethodNamespace;
+}
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if (!$n->_jsonUnserializeField($k, $v, $n)) {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $this->_jsonSerialize($out);
+        return $out;
     }
 }

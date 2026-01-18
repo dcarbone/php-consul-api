@@ -20,20 +20,24 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedQueryResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
 
 class ACLReplicationStatusResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?ACLReplicationStatus $ACLReplicationStatus = null;
+    public null|ACLReplicationStatus $ACLReplicationStatus = null;
 
-    public function getValue(): ?ACLReplicationStatus
+    public function getValue(): null|ACLReplicationStatus
     {
         return $this->ACLReplicationStatus;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        $this->ACLReplicationStatus = new ACLReplicationStatus((array)$decodedData);
+        if (null === $decoded) {
+            $this->ACLReplicationStatus = null;
+            return;
+        }
+        $this->ACLReplicationStatus = ACLReplicationStatus::jsonUnserialize($decoded);
     }
 }

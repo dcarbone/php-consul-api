@@ -20,20 +20,24 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedWriteResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedWriteResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
 
 class ACLAuthMethodWriteResponse extends AbstractValuedWriteResponse implements UnmarshalledResponseInterface
 {
-    public ?ACLAuthMethod $ACLAuthMethod = null;
+    public null|ACLAuthMethod $ACLAuthMethod = null;
 
-    public function getValue(): ?ACLAuthMethod
+    public function getValue(): null|ACLAuthMethod
     {
         return $this->ACLAuthMethod;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        $this->ACLAuthMethod = new ACLAuthMethod((array)$decodedData);
+        if (null === $decoded) {
+            $this->ACLAuthMethod = null;
+            return;
+        }
+        $this->ACLAuthMethod = ACLAuthMethod::jsonUnserialize($decoded);
     }
 }

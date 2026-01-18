@@ -36,12 +36,12 @@ final class SessionClientUsageTest extends AbstractUsageTests
             'Behavior' => Consul::SessionBehaviorDelete,
             'TTL'      => $ttl,
         ]));
-        self::assertNull($err, \sprintf('Error creating session: %s', $err));
+        self::assertNull($err, sprintf('Error creating session: %s', $err));
         self::assertInstanceOf(WriteMeta::class, $wm);
         self::assertIsString($id, 'Expected ID to be string');
 
         [$sessions, $qm, $err] = $client->Info($id);
-        self::assertNull($err, \sprintf('Error getting %s info: %s', $id, $err));
+        self::assertNull($err, sprintf('Error getting %s info: %s', $id, $err));
         self::assertInstanceOf(QueryMeta::class, $qm);
         self::assertIsArray($sessions);
         self::assertCount(1, $sessions);
@@ -58,17 +58,17 @@ final class SessionClientUsageTest extends AbstractUsageTests
         self::assertSame(15 * Time::Second, $session->LockDelay->Nanoseconds());
 
         [$sessions, $wm, $err] = $client->Renew($id);
-        self::assertNull($err, \sprintf('Error renewing session: %s', $err));
+        self::assertNull($err, sprintf('Error renewing session: %s', $err));
         self::assertInstanceOf(WriteMeta::class, $wm);
         self::assertIsArray($sessions);
         self::assertCount(1, $sessions);
         self::assertContainsOnlyInstancesOf(SessionEntry::class, $sessions);
 
         [$_, $err] = $client->Destroy($id);
-        self::assertNull($err, \sprintf('Error destroying session: %s', $err));
+        self::assertNull($err, sprintf('Error destroying session: %s', $err));
 
         [$sessions, $_, $err] = $client->Info($id);
-        self::assertNull($err, \sprintf('Error getting list after expected expiration: %s', $err));
+        self::assertNull($err, sprintf('Error getting list after expected expiration: %s', $err));
         self::assertIsArray($sessions, 'Expected $sessions to be an array');
         self::assertCount(0, $sessions, 'Expected $sessions to be empty');
     }

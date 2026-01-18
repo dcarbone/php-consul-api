@@ -22,6 +22,14 @@ namespace DCarbone\PHPConsulAPI;
 
 use DCarbone\Go\HTTP;
 use DCarbone\Go\Time;
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\QueryResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\ValuedQueryStringResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\ValuedQueryStringsResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\ValuedWriteStringResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\WriteResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\WriteResponseInterface;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\RequestOptions as GuzzleRequestOptions;
 use Psr\Http\Message\ResponseInterface;
@@ -58,14 +66,14 @@ abstract class AbstractClient
             $opts[GuzzleRequestOptions::SSL_KEY] = $this->_config->KeyFile;
         }
 
-        if (null !== $r->timeout && 0 < ($ttl = \intval($r->timeout->Seconds(), 10))) {
+        if (null !== $r->timeout && 0 < ($ttl = intval($r->timeout->Seconds(), 10))) {
             $opts[GuzzleRequestOptions::TIMEOUT] = $ttl;
         }
 
         // todo: per-request content and accept value setting.
         $body = $r->getBody();
         if (null !== $body) {
-            if (\is_scalar($body)) {
+            if (is_scalar($body)) {
                 $opts[GuzzleRequestOptions::BODY] = $body;
             } else {
                 $opts[GuzzleRequestOptions::JSON] = $body;
@@ -75,29 +83,29 @@ abstract class AbstractClient
         return $opts;
     }
 
-    protected function _newRequest(string $method, string $path, mixed $body, ?RequestOptions $opts): Request
+    protected function _newRequest(string $method, string $path, mixed $body, null|RequestOptions $opts): Request
     {
         $r = new Request($method, $path, $this->_config, $body);
         $r->applyOptions($opts);
         return $r;
     }
 
-    protected function _newPostRequest(string $path, mixed $body, ?RequestOptions $opts): Request
+    protected function _newPostRequest(string $path, mixed $body, null|RequestOptions $opts): Request
     {
         return $this->_newRequest(HTTP\MethodPost, $path, $body, $opts);
     }
 
-    protected function _newPutRequest(string $path, mixed $body, ?RequestOptions $opts): Request
+    protected function _newPutRequest(string $path, mixed $body, null|RequestOptions $opts): Request
     {
         return $this->_newRequest(HTTP\MethodPut, $path, $body, $opts);
     }
 
-    protected function _newGetRequest(string $path, ?QueryOptions $opts): Request
+    protected function _newGetRequest(string $path, null|QueryOptions $opts): Request
     {
         return $this->_newRequest(HTTP\MethodGet, $path, null, $opts);
     }
 
-    protected function _newDeleteRequest(string $path, ?WriteOptions $opts): Request
+    protected function _newDeleteRequest(string $path, null|WriteOptions $opts): Request
     {
         return $this->_newRequest(HTTP\MethodDelete, $path, null, $opts);
     }
@@ -132,7 +140,7 @@ abstract class AbstractClient
         }
 
         // calculate execution time
-        $dur = new Time\Duration(\intval((microtime(true) - $start) * Time::Second, 10));
+        $dur = new Time\Duration(intval((microtime(true) - $start) * Time::Second, 10));
 
         return new RequestResponse($r->meta(), $dur, $response, $err);
     }
@@ -155,7 +163,7 @@ abstract class AbstractClient
                 sprintf(
                     '%s - Expected response to be instance of \\Psr\\Message\\ResponseInterface, %s seen.',
                     static::class,
-                    \is_object($r->Response) ? \get_class($r->Response) : \gettype($r->Response)
+                    is_object($r->Response) ? get_class($r->Response) : gettype($r->Response)
                 )
             );
             return $r;
@@ -167,7 +175,7 @@ abstract class AbstractClient
         $actualCode = $r->Response->getStatusCode();
 
         // If response code is in allowed list, move right along
-        if (\in_array($actualCode, $allowed, true)) {
+        if (in_array($actualCode, $allowed, true)) {
             return $r;
         }
 
@@ -195,31 +203,37 @@ abstract class AbstractClient
         return $this->_requireStatus($r, HTTP\StatusOK, HTTP\StatusNotFound);
     }
 
-    protected function _doGet(string $path, ?QueryOptions $opts): RequestResponse
+    protected function _doGet(string $path, null|QueryOptions $opts): RequestResponse
     {
         return $this->_do($this->_newGetRequest($path, $opts));
     }
 
-    protected function _doPost(string $path, mixed $body, ?RequestOptions $opts): RequestResponse
+    protected function _doPost(string $path, mixed $body, null|RequestOptions $opts): RequestResponse
     {
         return $this->_do($this->_newPostRequest($path, $body, $opts));
     }
 
-    protected function _doPut(string $path, mixed $body, ?RequestOptions $opts): RequestResponse
+    protected function _doPut(string $path, mixed $body, null|RequestOptions $opts): RequestResponse
     {
         return $this->_do($this->_newPutRequest($path, $body, $opts));
     }
 
-    protected function _doDelete(string $path, ?WriteOptions $opts): RequestResponse
+    protected function _doDelete(string $path, null|WriteOptions $opts): RequestResponse
     {
         return $this->_do($this->_newDeleteRequest($path, $opts));
     }
 
     protected function _decodeBody(StreamInterface $body): DecodedBody
     {
-        $data = @json_decode((string)$body, true);
+        $data = @json_decode(
+            json: (string)$body,
+            associative: false,
+            depth: $this->_config->JSONDecodeMaxDepth,
+            flags: $this->_config->JSONDecodeOpts,
+        );
 
-        if (\JSON_ERROR_NONE === json_last_error()) {
+        $jsonErr = json_last_error();
+        if (\JSON_ERROR_NONE === $jsonErr) {
             return new DecodedBody($data, null);
         }
 
@@ -227,15 +241,16 @@ abstract class AbstractClient
             null,
             new Error(
                 sprintf(
-                    '%s - Unable to parse response as JSON.  Message: %s',
+                    '%s - Unable to parse response as JSON: (%d) %s',
                     static::class,
+                    $jsonErr,
                     json_last_error_msg()
                 )
             )
         );
     }
 
-    protected function _executePut(string $path, mixed $body, ?WriteOptions $opts): WriteResponse
+    protected function _executePut(string $path, mixed $body, null|WriteOptions $opts): WriteResponse
     {
         $resp = $this->_requireOK($this->_doPut($path, $body, $opts));
         $ret  = new WriteResponse();
@@ -243,7 +258,7 @@ abstract class AbstractClient
         return $ret;
     }
 
-    protected function _executePost(string $path, mixed $body, ?WriteOptions $opts): WriteResponse
+    protected function _executePost(string $path, mixed $body, null|WriteOptions $opts): WriteResponse
     {
         $resp = $this->_requireOK($this->_doPost($path, $body, $opts));
         $ret  = new WriteResponse();
@@ -251,7 +266,7 @@ abstract class AbstractClient
         return $ret;
     }
 
-    protected function _executeDelete(string $path, ?WriteOptions $opts): WriteResponse
+    protected function _executeDelete(string $path, null|WriteOptions $opts): WriteResponse
     {
         $resp = $this->_requireOK($this->_doDelete($path, $opts));
         $ret  = new WriteResponse();
@@ -259,7 +274,7 @@ abstract class AbstractClient
         return $ret;
     }
 
-    protected function _executePutValuedStr(string $path, mixed $body, ?WriteOptions $opts): ValuedWriteStringResponse
+    protected function _executePutValuedStr(string $path, mixed $body, null|WriteOptions $opts): ValuedWriteStringResponse
     {
         $r    = $this->_newPutRequest($path, $body, $opts);
         $resp = $this->_requireOK($this->_do($r));
@@ -268,7 +283,7 @@ abstract class AbstractClient
         return $ret;
     }
 
-    protected function _executeGetValuedStr(string $path, ?QueryOptions $opts): ValuedQueryStringResponse
+    protected function _executeGetValuedStr(string $path, null|QueryOptions $opts): ValuedQueryStringResponse
     {
         $r    = $this->_newGetRequest($path, $opts);
         $resp = $this->_requireOK($this->_do($r));
@@ -277,7 +292,7 @@ abstract class AbstractClient
         return $ret;
     }
 
-    protected function _executeGetValuedStrs(string $path, ?QueryOptions $opts): ValuedQueryStringsResponse
+    protected function _executeGetValuedStrs(string $path, null|QueryOptions $opts): ValuedQueryStringsResponse
     {
         $r    = $this->_newGetRequest($path, $opts);
         $resp = $this->_requireOK($this->_do($r));
@@ -290,27 +305,21 @@ abstract class AbstractClient
      * todo: move into Unmarshaller?
      *
      * @param \DCarbone\PHPConsulAPI\RequestResponse $resp
-     * @param \DCarbone\PHPConsulAPI\AbstractResponse $ret
+     * @param \DCarbone\PHPConsulAPI\PHPLib\Response\AbstractResponse $ret
      * @throws \Exception
      */
     protected function _unmarshalResponse(RequestResponse $resp, AbstractResponse $ret): void
     {
         // determine if this response contains a *Meta field
-        // TODO: change to use interfaces + instanceof?
-        if (property_exists($ret, Transcoding::FIELD_QUERY_META)) {
+        if ($ret instanceof QueryResponseInterface) {
             $ret->QueryMeta = $resp->buildQueryMeta();
-        } elseif (property_exists($ret, Transcoding::FIELD_WRITE_META)) {
+        } elseif ($ret instanceof WriteResponseInterface) {
             $ret->WriteMeta = $resp->buildWriteMeta();
         }
 
-        // todo: can probably assume that all responses have an Err field...
-        $hasErrField = property_exists($ret, Transcoding::FIELD_ERR);
-
         // if there was an error in the response, set and return
         if (null !== $resp->Err) {
-            if ($hasErrField) {
-                $ret->Err = $resp->Err;
-            }
+            $ret->Err = $resp->Err;
             return;
         }
 
@@ -322,9 +331,7 @@ abstract class AbstractClient
         // attempt response decode
         $dec = $this->_decodeBody($resp->Response->getBody());
         if (null !== $dec->Err) {
-            if ($hasErrField) {
-                $ret->Err = $dec->Err;
-            }
+            $ret->Err = $dec->Err;
             return;
         }
 

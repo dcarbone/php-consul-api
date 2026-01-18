@@ -20,41 +20,40 @@ namespace DCarbone\PHPConsulAPI\KV;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class KVPair extends AbstractModel
+class KVPair extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_NAMESPACE => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
+    public string $Key;
+    public int $CreateIndex;
+    public int $ModifyIndex;
+    public int $LockIndex;
+    public int $Flags;
+    public string $Value;
+    public string $Session;
+    public string $Namespace;
+    public string $Partition;
 
-    private const FIELD_NAMESPACE = 'Namespace';
-
-    public string $Key = '';
-    public int $CreateIndex = 0;
-    public int $ModifyIndex = 0;
-    public int $LockIndex = 0;
-    public int $Flags = 0;
-    public string $Value = '';
-    public string $Session = '';
-    public string $Namespace = '';
-
-    /**
-     * KVPair constructor.
-     * @param array $data
-     * @param bool $_decodeValue
-     */
-    public function __construct(array $data = [], bool $_decodeValue = false)
-    {
-        parent::__construct($data);
-        if ($_decodeValue) {
-            $dec = base64_decode($this->Value, true);
-            if (false === $dec) {
-                throw new \InvalidArgumentException(sprintf('Could not base64 decode value "%s"', $this->Value));
-            }
-            $this->Value = $dec;
-        }
+    public function __construct(
+        string $Key = '',
+        int $CreateIndex = 0,
+        int $ModifyIndex = 0,
+        int $LockIndex = 0,
+        int $Flags = 0,
+        string $Value = '',
+        string $Session = '',
+        string $Namespace = '',
+        string $Partition = '',
+    ) {
+        $this->Key = $Key;
+        $this->CreateIndex = $CreateIndex;
+        $this->ModifyIndex = $ModifyIndex;
+        $this->LockIndex = $LockIndex;
+        $this->Flags = $Flags;
+        $this->Value = $Value;
+        $this->Session = $Session;
+        $this->Namespace = $Namespace;
+        $this->Partition = $Partition;
     }
 
     public function getKey(): string
@@ -148,5 +147,41 @@ class KVPair extends AbstractModel
     public function __toString(): string
     {
         return $this->Value;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('Value' === $k) {
+                $val = base64_decode($v, true);
+                if (false === $val) {
+                    throw new \DomainException(sprintf('Could not base64 decode value "%s"', $v));
+                }
+                $n->Value = $val;
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Key = $this->Key;
+        $out->CreateIndex = $this->CreateIndex;
+        $out->ModifyIndex = $this->ModifyIndex;
+        $out->LockIndex = $this->LockIndex;
+        $out->Flags = $this->Flags;
+        $out->Value = $this->Value;
+        $out->Session = $this->Session;
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
+        }
+        return $out;
     }
 }

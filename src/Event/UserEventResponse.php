@@ -20,20 +20,24 @@ namespace DCarbone\PHPConsulAPI\Event;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedWriteResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedWriteResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
 
 class UserEventResponse extends AbstractValuedWriteResponse implements UnmarshalledResponseInterface
 {
-    public ?UserEvent $UserEvent = null;
+    public null|UserEvent $UserEvent = null;
 
-    public function getValue(): ?UserEvent
+    public function getValue(): null|UserEvent
     {
         return $this->UserEvent;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        $this->UserEvent = new UserEvent((array)$decodedData);
+        if (null === $decoded) {
+            $this->UserEvent = null;
+            return;
+        }
+        $this->UserEvent = UserEvent::jsonUnserialize($decoded);
     }
 }

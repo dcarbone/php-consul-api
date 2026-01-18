@@ -20,23 +20,27 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
 
 class OperatorServerHealthsResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
-    public ?array $ServerHealths = null;
+    /** @var \DCarbone\PHPConsulAPI\Operator\ServerHealth[] */
+    public array $ServerHealths;
 
-    public function getValue(): ?array
+    /**
+     * @return \DCarbone\PHPConsulAPI\Operator\ServerHealth[]
+     */
+    public function getValue(): array
     {
         return $this->ServerHealths;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
         $this->ServerHealths = [];
-        foreach ($decodedData as $datum) {
-            $this->ServerHealths[] = new ServerHealth($datum);
+        foreach ($decoded as $datum) {
+            $this->ServerHealths[] = ServerHealth::jsonUnserialize($datum);
         }
     }
 }

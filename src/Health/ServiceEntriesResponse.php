@@ -20,23 +20,27 @@ namespace DCarbone\PHPConsulAPI\Health;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedQueryResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
 
 class ServiceEntriesResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?array $ServiceEntries = null;
+    /** @var \DCarbone\PHPConsulAPI\Health\ServiceEntry[] */
+    public array $ServiceEntries;
 
-    public function getValue(): ?array
+    /**
+     * @return \DCarbone\PHPConsulAPI\Health\ServiceEntry[]
+     */
+    public function getValue(): array
     {
         return $this->ServiceEntries;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
         $this->ServiceEntries = [];
-        foreach ($decodedData as $entry) {
-            $this->ServiceEntries[] = new ServiceEntry($entry);
+        foreach ($decoded as $entry) {
+            $this->ServiceEntries[] = ServiceEntry::jsonUnserialize($entry);
         }
     }
 }

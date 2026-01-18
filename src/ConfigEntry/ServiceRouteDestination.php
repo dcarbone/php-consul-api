@@ -21,42 +21,59 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ServiceRouteDestination extends AbstractModel
+class ServiceRouteDestination extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_SERVICE                  => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_SERVICE_SUBSET           => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_NAMESPACE                => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_PREFIX_REWRITE           => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_REQUEST_TIMEOUT          => Transcoding::DURATION_FIELD + [
-            Transcoding::FIELD_UNMARSHAL_AS => Transcoding::STRING,
-            Transcoding::FIELD_OMITEMPTY    => true,
-        ],
-        self::FIELD_NUM_RETRIES              => Transcoding::OMITEMPTY_INTEGER_FIELD,
-        self::FIELD_RETRY_ON_CONNECT_FAILURE => Transcoding::OMITEMPTY_BOOLEAN_FIELD,
-        self::FIELD_RETRY_ON_STATUS_CODES    => Transcoding::OMITEMPTY_INTEGER_ARRAY_FIELD,
-    ];
-
-    private const FIELD_SERVICE                  = 'Service';
-    private const FIELD_SERVICE_SUBSET           = 'ServiceSubset';
-    private const FIELD_NAMESPACE                = 'Namespace';
-    private const FIELD_PREFIX_REWRITE           = 'PrefixRewrite';
-    private const FIELD_REQUEST_TIMEOUT          = 'RequestTimeout';
-    private const FIELD_NUM_RETRIES              = 'NumRetries';
-    private const FIELD_RETRY_ON_CONNECT_FAILURE = 'RetryOnConnectFailure';
-    private const FIELD_RETRY_ON_STATUS_CODES    = 'RetryOnStatusCodes';
-
-    public string $Service = '';
-    public string $ServiceSubset = '';
-    public string $Namespace = '';
-    public string $PrefixRewrite = '';
+    public string $Service;
+    public string $ServiceSubset;
+    public string $Namespace;
+    public string $Partition;
+    public string $PrefixRewrite;
     public Time\Duration $RequestTimeout;
-    public int $NumRetries = 0;
-    public bool $RetryOnConnectFailure = false;
-    public array $RetryOnStatusCodes = [];
+    public Time\Duration $IdleTimeout;
+    public int $NumRetries;
+    public bool $RetryOnConnectFailure;
+    /** @var array<int> */
+    public array $RetryOnStatusCodes;
+    /** @var array<string> */
+    public array $RetryOn;
+    public null|HTTPHeaderModifiers $RequestHeaders;
+    public null|HTTPHeaderModifiers $ResponseHeaders;
+
+    /**
+     * @param array<int> $RetryOnStatusCodes
+     * @param array<string> $RetryOn
+     */
+    public function __construct(
+        string $Service = '',
+        string $ServiceSubset = '',
+        string $Namespace = '',
+        string $Partition = '',
+        string $PrefixRewrite = '',
+        null|string|int|float|\DateInterval|Time\Duration $RequestTimeout = null,
+        null|string|int|float|\DateInterval|Time\Duration $IdleTimeout = null,
+        int $NumRetries = 0,
+        bool $RetryOnConnectFailure = false,
+        array $RetryOnStatusCodes = [],
+        array $RetryOn = [],
+        null|HTTPHeaderModifiers $RequestHeaders = null,
+        null|HTTPHeaderModifiers $ResponseHeaders = null,
+    ) {
+        $this->Service = $Service;
+        $this->ServiceSubset = $ServiceSubset;
+        $this->Namespace = $Namespace;
+        $this->Partition = $Partition;
+        $this->PrefixRewrite = $PrefixRewrite;
+        $this->RequestTimeout = Time::Duration($RequestTimeout);
+        $this->IdleTimeout = Time::Duration($IdleTimeout);
+        $this->NumRetries = $NumRetries;
+        $this->RetryOnConnectFailure = $RetryOnConnectFailure;
+        $this->setRetryOnStatusCodes(...$RetryOnStatusCodes);
+        $this->setRetryOn(...$RetryOn);
+        $this->RequestHeaders = $RequestHeaders;
+        $this->ResponseHeaders = $ResponseHeaders;
+    }
 
     public function getService(): string
     {
@@ -91,6 +108,17 @@ class ServiceRouteDestination extends AbstractModel
         return $this;
     }
 
+    public function  getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
     public function getPrefixRewrite(): string
     {
         return $this->PrefixRewrite;
@@ -107,9 +135,20 @@ class ServiceRouteDestination extends AbstractModel
         return $this->RequestTimeout;
     }
 
-    public function setRequestTimeout(Time\Duration $RequestTimeout): self
+    public function setRequestTimeout(null|string|int|float|\DateInterval|Time\Duration $RequestTimeout): self
     {
-        $this->RequestTimeout = $RequestTimeout;
+        $this->RequestTimeout = Time::Duration($RequestTimeout);
+        return $this;
+    }
+
+    public function  getIdleTimeout(): Time\Duration
+    {
+        return $this->IdleTimeout;
+    }
+
+    public function setIdleTimeout(null|string|int|float|\DateInterval|Time\Duration $IdleTimeout): self
+    {
+        $this->IdleTimeout = Time::Duration($IdleTimeout);
         return $this;
     }
 
@@ -135,14 +174,129 @@ class ServiceRouteDestination extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return array<int>
+     */
     public function getRetryOnStatusCodes(): array
     {
         return $this->RetryOnStatusCodes;
     }
 
-    public function setRetryOnStatusCodes(array $RetryOnStatusCodes): self
+    public function setRetryOnStatusCodes(int ...$RetryOnStatusCodes): self
     {
         $this->RetryOnStatusCodes = $RetryOnStatusCodes;
         return $this;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function getRetryOn(): array
+    {
+        return $this->RetryOn;
+    }
+
+    public function setRetryOn(string ...$RetryOn): self
+    {
+        $this->RetryOn = $RetryOn;
+        return $this;
+    }
+
+    public function getRequestHeaders(): null|HTTPHeaderModifiers
+    {
+        return $this->RequestHeaders;
+    }
+
+    public function setRequestHeaders(null|HTTPHeaderModifiers $RequestHeaders): self
+    {
+        $this->RequestHeaders = $RequestHeaders;
+        return $this;
+    }
+
+    public function getResponseHeaders(): null|HTTPHeaderModifiers
+    {
+        return $this->ResponseHeaders;
+    }
+
+    public function setResponseHeaders(null|HTTPHeaderModifiers $ResponseHeaders): self
+    {
+        $this->ResponseHeaders = $ResponseHeaders;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('service_subset' === $k) {
+                $n->ServiceSubset = $v;
+            } elseif ('prefix_rewrite' === $k) {
+                $n->PrefixRewrite = $v;
+            } elseif ('RequestTimeout' === $k || 'request_timeout' === $k) {
+                $n->RequestTimeout = Time::Duration($v);
+            } elseif ('IdleTimeout' === $k || 'idle_timeout' === $k) {
+                $n->IdleTimeout = Time::Duration($v);
+            } elseif ('num_retries' === $k) {
+                $n->NumRetries = $v;
+            } elseif ('retry_on_connect_failure' === $k) {
+                $n->RetryOnConnectFailure = $v;
+            } elseif ('retry_on_status_codes' === $k) {
+                $n->RetryOnStatusCodes = $v;
+            } elseif ('retry_on' === $k) {
+                $n->RetryOn = $v;
+            } elseif ('RequestHeaders' === $k || 'request_headers' === $k) {
+                $n->RequestHeaders = null === $v ? null : HTTPHeaderModifiers::jsonUnserialize($v);
+            } elseif ('ResponseHeaders' === $k || 'response_headers' === $k) {
+                $n->ResponseHeaders = null === $v ? null : HTTPHeaderModifiers::jsonUnserialize($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        if ('' !== $this->Service) {
+            $out->Service = $this->Service;
+        }
+        if ('' !== $this->ServiceSubset) {
+            $out->ServiceSubset = $this->ServiceSubset;
+        }
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
+        }
+        if ('' !== $this->PrefixRewrite) {
+            $out->PrefixRewrite = $this->PrefixRewrite;
+        }
+        if (0 !== $this->RequestTimeout->Nanoseconds()) {
+            $out->RequestTimeout = (string)$this->RequestTimeout;
+        }
+        if (0 !== $this->IdleTimeout->Nanoseconds()) {
+            $out->IdleTimeout = (string)$this->IdleTimeout;
+        }
+        if (0 !== $this->NumRetries) {
+            $out->NumRetries = $this->NumRetries;
+        }
+        if ($this->RetryOnConnectFailure) {
+            $out->RetryOnConnectFailure = $this->RetryOnConnectFailure;
+        }
+        if ([] !== $this->RetryOnStatusCodes) {
+            $out->RetryOnStatusCodes = $this->RetryOnStatusCodes;
+        }
+        if ([] !== $this->RetryOn) {
+            $out->RetryOn = $this->RetryOn;
+        }
+        if (null !== $this->RequestHeaders) {
+            $out->RequestHeaders = $this->RequestHeaders;
+        }
+        if (null !== $this->ResponseHeaders) {
+            $out->ResponseHeaders = $this->ResponseHeaders;
+        }
+        return $out;
     }
 }

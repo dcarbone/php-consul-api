@@ -20,20 +20,20 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
 
 class OperatorHealthReplyResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
-    public ?OperatorHealthReply $OperatorHealthReply = null;
+    public null|OperatorHealthReply $OperatorHealthReply;
 
-    public function getValue(): mixed
+    public function getValue(): null|OperatorHealthReply
     {
         return $this->OperatorHealthReply;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        $this->OperatorHealthReply = new OperatorHealthReply((array)$decodedData);
+        $this->OperatorHealthReply = OperatorHealthReply::jsonUnserialize($decoded);
     }
 }

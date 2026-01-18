@@ -21,42 +21,38 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ACLReplicationStatus extends AbstractModel
+class ACLReplicationStatus extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_LAST_SUCCESS => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_TIME,
-        ],
-        self::FIELD_LAST_ERROR   => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_TIME,
-        ],
-    ];
-
-    private const FIELD_LAST_SUCCESS = 'LastSuccess';
-    private const FIELD_LAST_ERROR   = 'LastError';
-
-    public bool $Enabled = false;
-    public bool $Running = false;
-    public string $SourceDatacenter = '';
-    public int $ReplicatedIndex = 0;
-    public int $ReplicatedRoleIndex = 0;
-    public int $ReplicatedTokenIndex = 0;
+    public bool $Enabled;
+    public bool $Running;
+    public string $SourceDatacenter;
+    public int $ReplicatedIndex;
+    public int $ReplicatedRoleIndex;
+    public int $ReplicatedTokenIndex;
     public Time\Time $LastSuccess;
     public Time\Time $LastError;
 
-    public function __construct(?array $data = null)
-    {
-        parent::__construct($data);
-        if (!isset($this->LastSuccess)) {
-            $this->LastSuccess = Time::New();
-        }
-        if (!isset($this->LastError)) {
-            $this->LastError = Time::New();
-        }
-    }
+    public function __construct(
+        bool $Enabled = false,
+        bool $Running = false,
+        string $SourceDatacenter = '',
+        int $ReplicatedIndex = 0,
+        int $ReplicatedRoleIndex = 0,
+        int $ReplicatedTokenIndex = 0,
+        null|Time\Time $LastSuccess = null,
+        null|Time\Time $LastError = null,
+    ) {
+        $this->Enabled = $Enabled;
+        $this->Running = $Running;
+        $this->SourceDatacenter = $SourceDatacenter;
+        $this->ReplicatedIndex = $ReplicatedIndex;
+        $this->ReplicatedRoleIndex = $ReplicatedRoleIndex;
+        $this->ReplicatedTokenIndex = $ReplicatedTokenIndex;
+        $this->LastSuccess = $LastSuccess ?? Time::New();
+        $this->LastError = $LastError ?? Time::New();
+}
 
     public function isEnabled(): bool
     {
@@ -96,5 +92,34 @@ class ACLReplicationStatus extends AbstractModel
     public function getLastError(): Time\Time
     {
         return $this->LastError;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('LastSuccess' === $k) {
+                $n->LastSuccess = Time\Time::createFromFormat(DATE_RFC3339, $v);
+            } elseif ('LastError' === $k) {
+                $n->LastError = Time\Time::createFromFormat(DATE_RFC3339, $v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Enabled = $this->Enabled;
+        $out->Running = $this->Running;
+        $out->SourceDatacenter = $this->SourceDatacenter;
+        $out->ReplicatedIndex = $this->ReplicatedIndex;
+        $out->ReplicatedRoleIndex = $this->ReplicatedRoleIndex;
+        $out->ReplicatedTokenIndex = $this->ReplicatedTokenIndex;
+        $out->LastSuccess = $this->LastSuccess->format(DATE_RFC3339);
+        $out->LastError = $this->LastError->format(DATE_RFC3339);
+        return $out;
     }
 }

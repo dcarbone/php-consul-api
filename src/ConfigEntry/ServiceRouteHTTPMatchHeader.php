@@ -20,34 +20,35 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ServiceRouteHTTPMatchHeader extends AbstractModel
+class ServiceRouteHTTPMatchHeader extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_PRESENT => Transcoding::OMITEMPTY_BOOLEAN_FIELD,
-        self::FIELD_EXACT   => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_PREFIX  => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_SUFFIX  => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_REGEX   => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_INVERT  => Transcoding::OMITEMPTY_BOOLEAN_FIELD,
-    ];
+    public string $Name;
+    public bool $Present;
+    public string $Exact;
+    public string $Prefix;
+    public string $Suffix;
+    public string $Regex;
+    public bool $Invert;
 
-    private const FIELD_PRESENT = 'Present';
-    private const FIELD_EXACT   = 'Exact';
-    private const FIELD_PREFIX  = 'Prefix';
-    private const FIELD_SUFFIX  = 'Suffix';
-    private const FIELD_REGEX   = 'Regex';
-    private const FIELD_INVERT  = 'Invert';
-
-    public string $Name = '';
-    public bool $Present = false;
-    public string $Exact = '';
-    public string $Prefix = '';
-    public string $Suffix = '';
-    public string $Regex = '';
-    public bool $Invert = false;
+    public function __construct(
+        string $Name = '',
+        bool $Present = false,
+        string $Exact = '',
+        string $Prefix = '',
+        string $Suffix = '',
+        string $Regex = '',
+        bool $Invert = false,
+    ) {
+        $this->Name = $Name;
+        $this->Present = $Present;
+        $this->Exact = $Exact;
+        $this->Prefix = $Prefix;
+        $this->Suffix = $Suffix;
+        $this->Regex = $Regex;
+        $this->Invert = $Invert;
+    }
 
     public function getName(): string
     {
@@ -115,14 +116,48 @@ class ServiceRouteHTTPMatchHeader extends AbstractModel
         return $this;
     }
 
-    public function getInvert(): bool|string
+    public function getInvert(): bool
     {
         return $this->Invert;
     }
 
-    public function setInvert(bool|string $Invert): static
+    public function setInvert(bool $Invert): static
     {
         $this->Invert = $Invert;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Name = $this->Name;
+        if ($this->Present) {
+            $out->Present = $this->Present;
+        }
+        if ('' !== $this->Exact) {
+            $out->Exact = $this->Exact;
+        }
+        if ('' !== $this->Prefix) {
+            $out->Prefix = $this->Prefix;
+        }
+        if ('' !== $this->Suffix) {
+            $out->Suffix = $this->Suffix;
+        }
+        if ('' !== $this->Regex) {
+            $out->Regex = $this->Regex;
+        }
+        if ($this->Invert) {
+            $out->Invert = $this->Invert;
+        }
+        return $out;
     }
 }

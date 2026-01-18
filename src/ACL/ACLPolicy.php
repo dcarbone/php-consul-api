@@ -20,26 +20,49 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ACLPolicy extends AbstractModel
+class ACLPolicy extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_NAMESPACE => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
+    public string $ID;
+    public string $Name;
+    public string $Description;
+    public string $Rules;
+    /** @var string[] */
+    public array $Datacenters;
+    public string $Hash;
+    public int $CreateIndex;
+    public int $ModifyIndex;
+    public string $Namespace;
+    public string $Partition;
 
-    private const FIELD_NAMESPACE = 'Namespace';
-
-    public string $ID = '';
-    public string $Name = '';
-    public string $Description = '';
-    public string $Rules = '';
-    public array $Datacenters = [];
-    public string $Hash = '';
-    public int $CreateIndex = 0;
-    public int $ModifyIndex = 0;
-    public string $Namespace = '';
+    /**
+     * @param array<string> $Datacenters
+     */
+    public function __construct(
+        string $ID = '',
+        string $Name = '',
+        string $Description = '',
+        string $Rules = '',
+        array $Datacenters = [],
+        string $Hash = '',
+        int $CreateIndex = 0,
+        int $ModifyIndex = 0,
+        string $Namespace = '',
+        string $Partition = '',
+    ) {
+        $this->ID = $ID;
+        $this->Name = $Name;
+        $this->Description = $Description;
+        $this->Rules = $Rules;
+        $this->setDatacenters(...$Datacenters);
+        $this->Datacenters = $Datacenters;
+        $this->Hash = $Hash;
+        $this->CreateIndex = $CreateIndex;
+        $this->ModifyIndex = $ModifyIndex;
+        $this->Namespace = $Namespace;
+        $this->Partition = $Partition;
+}
 
     public function getID(): string
     {
@@ -85,12 +108,15 @@ class ACLPolicy extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return string[]
+     */
     public function getDatacenters(): array
     {
         return $this->Datacenters;
     }
 
-    public function setDatacenters(array $Datacenters): self
+    public function setDatacenters(string ...$Datacenters): self
     {
         $this->Datacenters = $Datacenters;
         return $this;
@@ -138,5 +164,49 @@ class ACLPolicy extends AbstractModel
     {
         $this->Namespace = $Namespace;
         return $this;
+    }
+
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('Datacenters' === $k) {
+                $n->setDatacenters(...$v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->ID = $this->ID;
+        $out->Name = $this->Name;
+        $out->Description = $this->Description;
+        $out->Rules = $this->Rules;
+        $out->Datacenters = $this->Datacenters;
+        $out->Hash = $this->Hash;
+        $out->CreateIndex = $this->CreateIndex;
+        $out->ModifyIndex = $this->ModifyIndex;
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
+        }
+        return $out;
     }
 }

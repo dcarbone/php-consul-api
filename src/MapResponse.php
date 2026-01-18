@@ -20,17 +20,36 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
+
+/**
+ * @template T
+ */
 class MapResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
-    public ?array $Map = null;
+    /**
+     * @var array<string,T>|null
+     */
+    public null|array $Map;
 
-    public function getValue(): ?array
+    /**
+     * @return array<string,T>|null
+     */
+    public function getValue(): null|array
     {
-        return $this->Map;
+        return $this->Map ?? null;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        $this->Map = $decodedData;
+        if (null === $decoded) {
+            unset($this->Map);
+            return;
+        }
+        $this->Map = [];
+        foreach ($decoded as $k => $v) {
+            $this->Map[$k] = $v;
+        }
     }
 }
