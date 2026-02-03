@@ -20,44 +20,39 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class MetricsInfo extends AbstractModel
+class MetricsInfo extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_GAUGES => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => GaugeValue::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-        ],
-        self::FIELD_POINTS => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => PointValue::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-        ],
-        self::FIELD_COUNTERS => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => SampledValue::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-        ],
-        self::FIELD_SAMPLES => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => SampledValue::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-        ],
-    ];
+    public string $Timestamp;
+    /** @var \DCarbone\PHPConsulAPI\Agent\GaugeValue[] */
+    public array $Gauges;
+    /** @var \DCarbone\PHPConsulAPI\Agent\PointValue[] */
+    public array $Points;
+    /** @var \DCarbone\PHPConsulAPI\Agent\SampledValue[] */
+    public array $Counters;
+    /** @var \DCarbone\PHPConsulAPI\Agent\SampledValue[] */
+    public array $Samples;
 
-    private const FIELD_GAUGES   = 'Gauges';
-    private const FIELD_POINTS   = 'Points';
-    private const FIELD_COUNTERS = 'Counters';
-    private const FIELD_SAMPLES  = 'Samples';
-
-    public string $Timestamp = '';
-    public array $Gauges = [];
-    public array $Points = [];
-    public array $Counters = [];
-    public array $Samples = [];
+    /**
+     * @param array<\DCarbone\PHPConsulAPI\Agent\GaugeValue> $Gauges
+     * @param array<\DCarbone\PHPConsulAPI\Agent\PointValue> $Points
+     * @param array<\DCarbone\PHPConsulAPI\Agent\SampledValue> $Counters
+     * @param array<\DCarbone\PHPConsulAPI\Agent\SampledValue> $Samples
+     */
+    public function __construct(
+        string $Timestamp = '',
+        array $Gauges = [],
+        array $Points = [],
+        array $Counters = [],
+        array $Samples = [],
+    ) {
+        $this->Timestamp = $Timestamp;
+        $this->setGauges(...$Gauges);
+        $this->setPoints(...$Points);
+        $this->setCounters(...$Counters);
+        $this->setSamples(...$Samples);
+}
 
     public function getTimestamp(): string
     {
@@ -70,47 +65,101 @@ class MetricsInfo extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\Agent\GaugeValue[]
+     */
     public function getGauges(): array
     {
         return $this->Gauges;
     }
 
-    public function setGauges(array $gauges): self
+    public function setGauges(GaugeValue ...$gauges): self
     {
         $this->Gauges = $gauges;
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\Agent\PointValue[]
+     */
     public function getPoints(): array
     {
         return $this->Points;
     }
 
-    public function setPoints(array $points): self
+    public function setPoints(PointValue ...$points): self
     {
         $this->Points = $points;
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\Agent\SampledValue[]
+     */
     public function getCounters(): array
     {
         return $this->Counters;
     }
 
-    public function setCounters(array $counters): self
+    public function setCounters(SampledValue ...$counters): self
     {
         $this->Counters = $counters;
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\Agent\SampledValue[]
+     */
     public function getSamples(): array
     {
         return $this->Samples;
     }
 
-    public function setSamples(array $samples): self
+    public function setSamples(SampledValue ...$samples): self
     {
         $this->Samples = $samples;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('Gauges' === $k) {
+                $n->Gauges = [];
+                foreach ($v as $vv) {
+                    $n->Gauges[] = GaugeValue::jsonUnserialize($vv);
+                }
+            } elseif ('Points' === $k) {
+                $n->Points = [];
+                foreach ($v as $vv) {
+                    $n->Points[] = PointValue::jsonUnserialize($vv);
+                }
+            } elseif ('Counters' === $k) {
+                $n->Counters = [];
+                foreach ($v as $vv) {
+                    $n->Counters[] = SampledValue::jsonUnserialize($vv);
+                }
+            } elseif ('Samples' === $k) {
+                $n->Samples = [];
+                foreach ($v as $vv) {
+                    $n->Samples[] = SampledValue::jsonUnserialize($vv);
+                }
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Timestamp = $this->Timestamp;
+        $out->Gauges = $this->Gauges;
+        $out->Points = $this->Points;
+        $out->Counters = $this->Counters;
+        $out->Samples = $this->Samples;
+        return $out;
     }
 }

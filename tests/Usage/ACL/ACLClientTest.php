@@ -24,22 +24,18 @@ use DCarbone\PHPConsulAPI\WriteMeta;
 use DCarbone\PHPConsulAPITests\ConsulManager;
 use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 
-/**
- * Class ACLClientTest
- *
- * @internal
- */
+
 final class ACLClientTest extends AbstractUsageTests
 {
     /** @var string */
-    protected $bootstrappedACL;
+    protected string $bootstrappedACL;
 
     /**
      * @return string
      */
     public function testCanBootstrapACL()
     {
-        ConsulManager::startSingleDev('-bind="127.0.0.1"');
+        ConsulManager::startSingleDev();
 
         $client = new ACLClient(ConsulManager::testConfig());
 
@@ -60,9 +56,9 @@ final class ACLClientTest extends AbstractUsageTests
         $client = new ACLClient(ConsulManager::testConfig());
 
         [$acls, $qm, $err] = $client->Info($aclID);
-        self::assertNull($err, 'ACL::info() return error: ' . $err);
+        self::assertNull($err, 'ACL::Info() return error: ' . $err);
         self::assertInstanceOf(QueryMeta::class, $qm);
         self::assertIsArray($acls);
-        \var_dump($acls);
+        var_dump($acls);
     }
 }

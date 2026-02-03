@@ -20,16 +20,16 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class RaftServer extends AbstractModel
+class RaftServer extends AbstractType
 {
-    public string $ID = '';
-    public string $Node = '';
-    public string $Address = '';
-    public bool $Leader = false;
-    public string $ProtocolVersion = '';
-    public bool $Voter = false;
+    public string $ID;
+    public string $Node;
+    public string $Address;
+    public bool $Leader;
+    public string $ProtocolVersion;
+    public bool $Voter;
 
     public function getID(): string
     {

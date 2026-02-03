@@ -27,13 +27,13 @@ final class RequestResponse
 {
     public RequestMeta $RequestMeta;
     public Time\Duration $Duration;
-    public ?ResponseInterface $Response;
-    public ?Error $Err;
+    public null|ResponseInterface $Response;
+    public null|Error $Err;
 
-    public function __construct(RequestMeta $meta, Time\Duration $dur, ?ResponseInterface $resp, ?Error $err)
+    public function __construct(RequestMeta $meta, null|string|int|float|\DateInterval|Time\Duration $dur, null|ResponseInterface $resp, null|Error $err)
     {
         $this->RequestMeta = $meta;
-        $this->Duration    = $dur;
+        $this->Duration    = Time::Duration($dur);
         $this->Response    = $resp;
         $this->Err         = $err;
     }
@@ -48,24 +48,23 @@ final class RequestResponse
         return $this->Duration;
     }
 
-    public function getResponse(): ?ResponseInterface
+    public function getResponse(): null|ResponseInterface
     {
         return $this->Response;
     }
 
-    public function getErr(): ?Error
+    public function getErr(): null|Error
     {
         return $this->Err;
     }
 
     public function buildQueryMeta(): QueryMeta
     {
-        // init class
-        $qm = new QueryMeta();
-
         // set some always-defined values
-        $qm->RequestTime = $this->Duration;
-        $qm->RequestUrl  = (string)$this->RequestMeta->uri;
+        $qm = new QueryMeta(
+            RequestUrl: (string)$this->RequestMeta->uri,
+            RequestTime: $this->Duration,
+        );
 
         // if there was no response, return as-is
         // note: should never see this in the wild.
@@ -95,7 +94,7 @@ final class RequestResponse
         }
 
         if ('' !== ($h = $this->Response->getHeaderLine(Consul::_headerCache))) {
-            $qm->CacheAge = Time::Duration(\intval($h, 10) * Time::Second);
+            $qm->CacheAge = Time::Duration((int)$h * Time::Second);
         }
 
         return $qm;
@@ -103,8 +102,6 @@ final class RequestResponse
 
     public function buildWriteMeta(): WriteMeta
     {
-        $wm              = new WriteMeta();
-        $wm->RequestTime = $this->Duration;
-        return $wm;
+        return new WriteMeta($this->Duration);
     }
 }

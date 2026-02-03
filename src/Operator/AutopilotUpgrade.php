@@ -20,10 +20,10 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-class AutopilotUpgrade extends AbstractModel
+class AutopilotUpgrade extends AbstractType
 {
     protected const FIELDS = [
         self::FIELD_TARGET_VERSION               => Transcoding::OMITEMPTY_STRING_FIELD,
@@ -49,15 +49,15 @@ class AutopilotUpgrade extends AbstractModel
     private const FIELD_OTHER_VERSION_READ_REPLICAS  = 'OtherVersionReadReplicas';
     private const FIELD_REDUNDANCY_ZONES             = 'RedundancyZones';
 
-    public string $Status = '';
-    public string $TargetVersion = '';
-    public array $TargetVersionVoters = [];
-    public array $TargetVersionNonVoters = [];
-    public array $TargetVersionReadReplicas = [];
-    public array $OtherVersionVoters = [];
-    public array $OtherVersionNonVoters = [];
-    public array $OtherVersionReadReplicas = [];
-    public array $RedundancyZones = [];
+    public string $Status;
+    public string $TargetVersion;
+    public array $TargetVersionVoters;
+    public array $TargetVersionNonVoters;
+    public array $TargetVersionReadReplicas;
+    public array $OtherVersionVoters;
+    public array $OtherVersionNonVoters;
+    public array $OtherVersionReadReplicas;
+    public array $RedundancyZones;
 
     public function getStatus(): string
     {

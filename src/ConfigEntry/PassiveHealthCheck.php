@@ -21,39 +21,44 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class PassiveHealthCheck extends AbstractModel
+class PassiveHealthCheck extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_INTERVAL => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_DURATION,
-            Transcoding::FIELD_OMITEMPTY          => true,
-        ],
-    ];
-
-    private const FIELD_INTERVAL = 'Interval';
-
     public Time\Duration $Interval;
-    public int $MaxFailures = 0;
+    public int $MaxFailures;
 
-    public function __construct(?array $data = [])
-    {
-        parent::__construct($data);
-        if (!isset($this->Interval)) {
-            $this->Interval = new Time\Duration();
-        }
-    }
+    public null|int $EnforcingConsecutive5xx;
+    public null|int $MaxEjectionPercent;
+
+    public null|Time\Duration $BaseEjectionTime;
+
+    /**
+     * @param array<string,mixed>|null $data
+     */
+    public function __construct(
+        null|array $data = [],  // Deprecated, will be removed.
+        null|string|int|float|\DateInterval|Time\Duration $Interval = null,
+        int $MaxFailures = 0,
+        null|int $EnforcingConsecutive5xx = null,
+        null|int $MaxEjectionPercent = null,
+        null|string|int|float|\DateInterval|Time\Duration $BaseEjectionTime = null,
+    ) {
+        $this->Interval = Time::Duration($Interval);
+        $this->MaxFailures = $MaxFailures;
+        $this->EnforcingConsecutive5xx = $EnforcingConsecutive5xx;
+        $this->MaxEjectionPercent = $MaxEjectionPercent;
+        $this->BaseEjectionTime = Time::Duration($BaseEjectionTime);
+}
 
     public function getInterval(): Time\Duration
     {
         return $this->Interval;
     }
 
-    public function setInterval(Time\Duration $Interval): self
+    public function setInterval(null|string|int|float|\DateInterval|Time\Duration $Interval): self
     {
-        $this->Interval = $Interval;
+        $this->Interval = Time::Duration($Interval);
         return $this;
     }
 
@@ -66,5 +71,78 @@ class PassiveHealthCheck extends AbstractModel
     {
         $this->MaxFailures = $MaxFailures;
         return $this;
+    }
+
+    public function getEnforcingConsecutive5xx(): null|int
+    {
+        return $this->EnforcingConsecutive5xx;
+    }
+
+    public function setEnforcingConsecutive5xx(null|int $EnforcingConsecutive5xx): self
+    {
+        $this->EnforcingConsecutive5xx = $EnforcingConsecutive5xx;
+        return $this;
+    }
+
+    public function getMaxEjectionPercent(): null|int
+    {
+        return $this->MaxEjectionPercent;
+    }
+
+    public function setMaxEjectionPercent(null|int $MaxEjectionPercent): self
+    {
+        $this->MaxEjectionPercent = $MaxEjectionPercent;
+        return $this;
+    }
+
+    public function getBaseEjectionTime(): null|Time\Duration
+    {
+        return $this->BaseEjectionTime;
+    }
+
+    public function setBaseEjectionTime(null|Time\Duration $BaseEjectionTime): self
+    {
+        $this->BaseEjectionTime = $BaseEjectionTime;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('Interval' === $k) {
+                $n->Interval = Time::ParseDuration($v);
+            } elseif ('max_failures' === $k) {
+                $n->MaxFailures = $v;
+            } elseif ('enforcing_consecutive_5xx' === $k) {
+                $n->EnforcingConsecutive5xx = $v;
+            } elseif ('max_ejection_percent' === $k) {
+                $n->MaxEjectionPercent = $v;
+            } elseif ('base_ejection_time' === $k) {
+                $n->BaseEjectionTime = Time::ParseDuration($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        if ($this->Interval->Nanoseconds() !== 0) {
+            $out->Interval = $this->Interval;
+        }
+        $out->MaxFailures = $this->MaxFailures;
+        if (null !== $this->EnforcingConsecutive5xx) {
+            $out->EnforcingConsecutive5xx = $this->EnforcingConsecutive5xx;
+        }
+        if (null !== $this->MaxEjectionPercent) {
+            $out->MaxEjectionPercent = $this->MaxEjectionPercent;
+        }
+        if (null !== $this->BaseEjectionTime) {
+            $out->BaseEjectionTime = $this->BaseEjectionTime;
+        }
+        return $out;
     }
 }

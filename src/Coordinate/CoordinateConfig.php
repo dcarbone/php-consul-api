@@ -20,9 +20,10 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
+use DCarbone\PHPConsulAPI\Metrics\Label;
 
-class CoordinateConfig extends AbstractModel
+class CoordinateConfig extends AbstractType
 {
     public const DefaultDimensionality       = 8;
     public const DefaultVivaldiErrorMax      = 1.5;
@@ -33,29 +34,53 @@ class CoordinateConfig extends AbstractModel
     public const DefaultLatencyFilterSize    = 3;
     public const DefaultGravityRho           = 150.0;
 
-    public int $Dimensionality = 0;
-    public float $VivaldiErrorMax = 0.0;
-    public float $VivaldiCE = 0.0;
-    public float $VivaldiCC = 0.0;
-    public int $AdjustmentWindowSize = 0;
-    public float $HeightMin = 0.0;
-    public int $LatencyFilterSize = 0;
-    public float $GravityRho = 0.0;
+    public int $Dimensionality;
+    public float $VivaldiErrorMax;
+    public float $VivaldiCE;
+    public float $VivaldiCC;
+    public int $AdjustmentWindowSize;
+    public float $HeightMin;
+    public int $LatencyFilterSize;
+    public float $GravityRho;
+    /** @var array<\DCarbone\PHPConsulAPI\Metrics\Label> */
+    public array $MetricsLabels;
 
+    /**
+     * @param array<\DCarbone\PHPConsulAPI\Metrics\Label> $MetricsLabels
+     */
+    public function __construct(
+        int $Dimensionality = self::DefaultDimensionality,
+        float $VivaldiErrorMax = self::DefaultVivaldiErrorMax,
+        float $VivaldiCE = self::DefaultVivaldiCE,
+        float $VivaldiCC = self::DefaultVivaldiCC,
+        int $AdjustmentWindowSize = self::DefaultAdjustmentWindowSize,
+        float $HeightMin = self::DefaultHeightMin,
+        int $LatencyFilterSize = self::DefaultLatencyFilterSize,
+        float $GravityRho = self::DefaultGravityRho,
+        array $MetricsLabels = [],
+    ) {
+        {
+            $this->Dimensionality = $Dimensionality;
+            $this->VivaldiErrorMax = $VivaldiErrorMax;
+            $this->VivaldiCE = $VivaldiCE;
+            $this->VivaldiCC = $VivaldiCC;
+            $this->AdjustmentWindowSize = $AdjustmentWindowSize;
+            $this->HeightMin = $HeightMin;
+            $this->LatencyFilterSize = $LatencyFilterSize;
+            $this->GravityRho = $GravityRho;
+            $this->setMetricsLabels(...$MetricsLabels);
+        }
+    }
+
+    /**
+     * Create a new CoordinateConfig with default values.
+     *
+     * @deprecated Just call new CoordinateConfig() instead.
+     * @return self
+     */
     public static function Default(): self
     {
-        return new static(
-            [
-                'Dimensionality'       => static::DefaultDimensionality,
-                'VivaldiErrorMax'      => static::DefaultVivaldiErrorMax,
-                'VivaldiCE'            => static::DefaultVivaldiCE,
-                'VivaldiCC'            => static::DefaultVivaldiCC,
-                'AdjustmentWindowSize' => static::DefaultAdjustmentWindowSize,
-                'HeightMin'            => static::DefaultHeightMin,
-                'LatencyFilterSize'    => static::DefaultLatencyFilterSize,
-                'GravityRho'           => static::DefaultGravityRho,
-            ]
-        );
+        return new self();
     }
 
     public function getDimensionality(): int
@@ -144,5 +169,50 @@ class CoordinateConfig extends AbstractModel
     {
         $this->GravityRho = $gravityRho;
         return $this;
+    }
+
+    /**
+     * @return array<\DCarbone\PHPConsulAPI\Metrics\Label>
+     */
+    public function getMetricsLabels(): array
+    {
+        return $this->MetricsLabels;
+    }
+
+    public function setMetricsLabels(Label ...$MetricsLabels): self
+    {
+        $this->MetricsLabels = $MetricsLabels;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('MetricsLabels' === $k) {
+                $n->MetricsLabels = [];
+                foreach ($v as $vv) {
+                    $n->MetricsLabels[] = Label::jsonUnserialize($vv);
+                }
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Dimensionality = $this->Dimensionality;
+        $out->VivaldiErrorMax = $this->VivaldiErrorMax;
+        $out->VivaldiCE = $this->VivaldiCE;
+        $out->VivaldiCC = $this->VivaldiCC;
+        $out->AdjustmentWindowSize = $this->AdjustmentWindowSize;
+        $out->HeightMin = $this->HeightMin;
+        $out->LatencyFilterSize = $this->LatencyFilterSize;
+        $out->GravityRho = $this->GravityRho;
+        $out->MetricsLabels = $this->MetricsLabels;
+        return $out;
     }
 }

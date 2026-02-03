@@ -20,24 +20,44 @@ namespace DCarbone\PHPConsulAPI\Catalog;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class CatalogDeregistration extends AbstractModel
+class CatalogDeregistration extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_ADDRESS   => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_NAMESPACE => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
+    public string $Node;
+    public string $Address;
+    public string $Datacenter;
+    public string $ServiceID;
+    public string $CheckID;
+    public string $Namespace;
+    public string $Partition;
 
-    private const FIELD_ADDRESS   = 'Address';
-    private const FIELD_NAMESPACE = 'Namespace';
-
-    public string $Node = '';
-    public string $Address = '';
-    public string $Datacenter = '';
-    public string $ServiceID = '';
-    public string $CheckID = '';
+    /**
+     * @param string $Node
+     * @param string $Address
+     * @param string $Datacenter
+     * @param string $ServiceID
+     * @param string $CheckID
+     * @param string $Namespace
+     * @param string $Partition
+     */
+    public function __construct(
+        string $Node = '',
+        string $Address = '',
+        string $Datacenter = '',
+        string $ServiceID = '',
+        string $CheckID = '',
+        string $Namespace = '',
+        string $Partition = ''
+    ) {
+        $this->Node = $Node;
+        $this->Address = $Address;
+        $this->Datacenter = $Datacenter;
+        $this->ServiceID = $ServiceID;
+        $this->CheckID = $CheckID;
+        $this->Namespace = $Namespace;
+        $this->Partition = $Partition;
+}
 
     public function getNode(): string
     {
@@ -92,5 +112,55 @@ class CatalogDeregistration extends AbstractModel
     {
         $this->CheckID = $checkID;
         return $this;
+    }
+
+    public function getNamespace(): string
+    {
+        return $this->Namespace;
+    }
+
+    public function setNamespace(string $Namespace): self
+    {
+        $this->Namespace = $Namespace;
+        return $this;
+    }
+
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Node = $this->Node;
+        if ('' !== $this->Address) {
+            $out->Address = $this->Address;
+        }
+        $out->Datacenter = $this->Datacenter;
+        $out->ServiceID = $this->ServiceID;
+        $out->CheckID = $this->CheckID;
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
+        }
+        return $out;
     }
 }

@@ -20,21 +20,28 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\FakeMap;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
+use DCarbone\PHPConsulAPI\PHPLib\Types\MetaField;
 
-class ACLLoginParams extends AbstractModel
+class ACLLoginParams extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_META => Transcoding::MAP_FIELD + [Transcoding::FIELD_OMITEMPTY => true],
-    ];
+    use MetaField;
 
-    private const FIELD_META = 'Meta';
+    public string $AuthMethod;
+    public string $BearerToken;
 
-    public string $AuthMethod = '';
-    public string $BearerToken = '';
-    public ?FakeMap $Meta = null;
+    /**
+     * @param array<string,string> $Meta
+     */
+    public function __construct(
+        string $AuthMethod = '',
+        string $BearerToken = '',
+        array $Meta = [],
+    ) {
+        $this->AuthMethod = $AuthMethod;
+        $this->BearerToken = $BearerToken;
+        $this->setMeta($Meta);
+    }
 
     public function getAuthMethod(): string
     {
@@ -58,14 +65,27 @@ class ACLLoginParams extends AbstractModel
         return $this;
     }
 
-    public function getMeta(): ?FakeMap
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        return $this->Meta;
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('Meta' === $k) {
+                $n->setMeta($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
     }
 
-    public function setMeta(mixed $Meta): self
+    public function jsonSerialize(): \stdClass
     {
-        $this->Meta = FakeMap::parse($Meta);
-        return $this;
+        $out = $this->_startJsonSerialize();
+        $out->AuthMethod = $this->AuthMethod;
+        $out->BearerToken = $this->BearerToken;
+        if (isset($this->Meta)) {
+            $out->Meta = $this->Meta;
+        }
+        return $out;
     }
 }

@@ -20,23 +20,27 @@ declare(strict_types=1);
 
 namespace DCarbone\PHPConsulAPI\PreparedQuery;
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedQueryResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
 
 class PreparedQueryDefinitionsResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?array $PreparedQueryDefinitions = null;
+    /** @var \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition[] */
+    public array $PreparedQueryDefinitions = [];
 
-    public function getValue(): ?array
+    /**
+     * @return \DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition[]
+     */
+    public function getValue(): array
     {
         return $this->PreparedQueryDefinitions;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
         $this->PreparedQueryDefinitions = [];
-        foreach ($decodedData as $datum) {
-            $this->PreparedQueryDefinitions[] = new PreparedQueryDefinition($datum);
+        foreach ($decoded as $datum) {
+            $this->PreparedQueryDefinitions[] = PreparedQueryDefinition::jsonUnserialize($datum);
         }
     }
 }

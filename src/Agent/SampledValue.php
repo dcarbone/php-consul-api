@@ -20,18 +20,42 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class SampledValue extends AbstractModel
+class SampledValue extends AbstractType
 {
-    public string $Name = '';
-    public int $Count = 0;
-    public float $Sum = 0.0;
-    public float $Min = 0.0;
-    public float $Max = 0.0;
-    public float $Mean = 0.0;
-    public float $Stddev = 0.0;
-    public array $Labels = [];
+    public string $Name;
+    public int $Count;
+    public float $Sum;
+    public float $Min;
+    public float $Max;
+    public float $Mean;
+    public float $Stddev;
+    /** @var array<string,string> */
+    public array $Labels;
+
+    /**
+     * @param array<string,string> $Labels
+     */
+    public function __construct(
+        string $Name = '',
+        int $Count = 0,
+        float $Sum = 0.0,
+        float $Min = 0.0,
+        float $Max = 0.0,
+        float $Mean = 0.0,
+        float $Stddev = 0.0,
+        array $Labels = [],
+    ) {
+        $this->Name = $Name;
+        $this->Count = $Count;
+        $this->Sum = $Sum;
+        $this->Min = $Min;
+        $this->Max = $Max;
+        $this->Mean = $Mean;
+        $this->Stddev = $Stddev;
+        $this->setLabels($Labels);
+    }
 
     public function getName(): string
     {
@@ -104,20 +128,61 @@ class SampledValue extends AbstractModel
         return $this->Stddev;
     }
 
-    public function setStddev(float $Stddev): self
+    public function setStddev(float $stddev): self
     {
-        $this->Stddev = $Stddev;
+        $this->Stddev = $stddev;
         return $this;
     }
 
-    public function getLabels(): array
+    /**
+     * @return array<string,string>|null
+     */
+    public function getLabels(): null|array
     {
         return $this->Labels;
     }
 
-    public function setLabels(array $labels): self
+    /**
+     * @param \stdClass|array<string,string>|null $Labels
+     * @return $this
+     */
+    public function setLabels(null|\stdClass|array $Labels): self
     {
-        $this->Labels = $labels;
+        if (null === $Labels) {
+            unset($this->Labels);
+            return $this;
+        }
+        $this->Labels = [];
+        foreach ($Labels as $k => $v) {
+            $this->Labels[$k] = $v;
+        }
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('Labels' === $k) {
+                $n->setLabels($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Name = $this->Name;
+        $out->Count = $this->Count;
+        $out->Sum = $this->Sum;
+        $out->Min = $this->Min;
+        $out->Max = $this->Max;
+        $out->Mean = $this->Mean;
+        $out->Stddev = $this->Stddev;
+        $out->Labels = $this->getLabels();
+        return $out;
     }
 }

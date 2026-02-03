@@ -21,12 +21,10 @@ namespace DCarbone\PHPConsulAPI\Session;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-use function DCarbone\PHPConsulAPI\dur_to_millisecond;
-
-class SessionEntry extends AbstractModel
+class SessionEntry extends AbstractType
 {
     protected const FIELDS = [
         self::FIELD_LOCK_DELAY     => [
@@ -119,9 +117,9 @@ class SessionEntry extends AbstractModel
         return $this->LockDelay;
     }
 
-    public function setLockDelay(Time\Duration $LockDelay): self
+    public function setLockDelay(null|string|int|float|\DateInterval|Time\Duration $LockDelay): self
     {
-        $this->LockDelay = $LockDelay;
+        $this->LockDelay = Time::Duration($LockDelay);
         return $this;
     }
 

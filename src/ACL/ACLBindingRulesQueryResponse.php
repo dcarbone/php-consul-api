@@ -20,23 +20,27 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedQueryResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
 
 class ACLBindingRulesQueryResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?array $ACLBindingRules = [];
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLBindingRule[] */
+    public array $ACLBindingRules = [];
 
-    public function getValue(): ?array
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLBindingRule[]
+     */
+    public function getValue(): array
     {
         return $this->ACLBindingRules;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
         $this->ACLBindingRules = [];
-        foreach ($decodedData as $datum) {
-            $this->ACLBindingRules[] = new ACLBindingRule($datum);
+        foreach ($decoded as $datum) {
+            $this->ACLBindingRules[] = ACLBindingRule::jsonUnserialize($datum);
         }
     }
 }

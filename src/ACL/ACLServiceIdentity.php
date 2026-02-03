@@ -20,31 +20,62 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ACLServiceIdentity extends AbstractModel
+class ACLServiceIdentity extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_DATACENTERS => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::STRING,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-    ];
+    public string $ServiceName;
+    /** @var string[] */
+    public array $Datacenters;
 
-    private const FIELD_DATACENTERS = 'Datacenters';
-
-    public string $ServiceName = '';
-    public array $Datacenters = [];
+    /**
+     * @param array<string> $Datacenters
+     */
+    public function __construct(string $ServiceName = '', array $Datacenters = [])
+    {
+        $this->ServiceName = $ServiceName;
+        $this->setDatacenters(...$Datacenters);
+    }
 
     public function getServiceName(): string
     {
         return $this->ServiceName;
     }
 
+    /**
+     * @return string[]
+     */
     public function getDatacenters(): array
     {
         return $this->Datacenters;
+    }
+
+    public function setDatacenters(string ...$datacenters): self
+    {
+        $this->Datacenters = $datacenters;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('Datacenters' === $k) {
+                $n->setDatacenters(...$v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->ServiceName = $this->ServiceName;
+        if ([] !== $this->Datacenters) {
+            $out->Datacenters = $this->Datacenters;
+        }
+        return $out;
     }
 }

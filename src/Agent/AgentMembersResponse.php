@@ -20,23 +20,27 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
 
 class AgentMembersResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
-    public ?array $Members = null;
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentMember[] */
+    public array $Members = [];
 
-    public function getValue(): ?array
+    /**
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentMember[]
+     */
+    public function getValue(): array
     {
         return $this->Members;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
         $this->Members = [];
-        foreach ($decodedData as $member) {
-            $this->Members[] = new AgentMember($member);
+        foreach ($decoded as $member) {
+            $this->Members[] = AgentMember::jsonUnserialize($member);
         }
     }
 }

@@ -20,10 +20,10 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-class OperatorHealthReply extends AbstractModel
+class OperatorHealthReply extends AbstractType
 {
     protected const FIELDS = [
         self::FIELD_SERVERS => [
@@ -35,9 +35,9 @@ class OperatorHealthReply extends AbstractModel
 
     private const FIELD_SERVERS = 'Servers';
 
-    public bool $Healthy = false;
-    public int $FailureTolerance = 0;
-    public array $Servers = [];
+    public bool $Healthy;
+    public int $FailureTolerance;
+    public array $Servers;
 
     public function isHealthy(): bool
     {

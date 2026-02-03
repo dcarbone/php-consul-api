@@ -20,22 +20,27 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedQueryResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
 
 class ACLEntriesResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLEntry[] */
     public array $ACLEntries = [];
 
-    public function getValue(): ?array
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLEntry[]
+     */
+    public function getValue(): array
     {
         return $this->ACLEntries;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        foreach ($decodedData as $entry) {
-            $this->ACLEntries[] = new ACLEntry($entry);
+        $this->ACLEntries = [];
+        foreach ($decoded as $entry) {
+            $this->ACLEntries[] = ACLEntry::jsonUnserialize($entry);
         }
     }
 }

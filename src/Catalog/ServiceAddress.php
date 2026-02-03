@@ -20,12 +20,18 @@ namespace DCarbone\PHPConsulAPI\Catalog;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ServiceAddress extends AbstractModel
+class ServiceAddress extends AbstractType
 {
-    public string $Address = '';
-    public int $Port = 0;
+    public string $Address;
+    public int $Port;
+
+    public function __construct(string $address = '', int $port = 0)
+    {
+        $this->Address = $address;
+        $this->Port = $port;
+    }
 
     public function getAddress(): string
     {
@@ -47,5 +53,22 @@ class ServiceAddress extends AbstractModel
     {
         $this->Port = $port;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Address = $this->Address;
+        $out->Port = $this->Port;
+        return $out;
     }
 }

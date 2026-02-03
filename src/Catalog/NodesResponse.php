@@ -20,23 +20,27 @@ namespace DCarbone\PHPConsulAPI\Catalog;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedQueryResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
 
 class NodesResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?array $Nodes = null;
+    /** @var \DCarbone\PHPConsulAPI\Catalog\Node[] */
+    public array $Nodes = [];
 
-    public function getValue(): mixed
+    /**
+     * @return \DCarbone\PHPConsulAPI\Catalog\Node[]
+     */
+    public function getValue(): array
     {
         return $this->Nodes;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
         $this->Nodes = [];
-        foreach ($decodedData as $node) {
-            $this->Nodes[] = new Node($node);
+        foreach ($decoded as $node) {
+            $this->Nodes[] = Node::jsonUnserialize($node);
         }
     }
 }

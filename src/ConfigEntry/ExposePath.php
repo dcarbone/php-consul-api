@@ -20,28 +20,32 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ExposePath extends AbstractModel
+class ExposePath extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_LISTENER_PORT   => Transcoding::OMITEMPTY_INTEGER_FIELD,
-        self::FIELD_PATH            => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_LOCAL_PORT_PATH => Transcoding::OMITEMPTY_INTEGER_FIELD,
-        self::FIELD_PROTOCOL        => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
+    public int $ListenerPort;
+    public string $Path;
+    public int $LocalPathPort;
+    public string $Protocol;
+    public bool $ParsedFromCheck;
 
-    private const FIELD_LISTENER_PORT   = 'ListenerPort';
-    private const FIELD_PATH            = 'Path';
-    private const FIELD_LOCAL_PORT_PATH = 'LocalPortPath';
-    private const FIELD_PROTOCOL        = 'Protocol';
-
-    public int $ListenerPort = 0;
-    public string $Path = '';
-    public int $LocalPathPort = 0;
-    public string $Protocol = '';
-    public bool $ParsedFromCheck = false;
+    /**
+     * @param array<string,mixed>|null $data
+     */
+    public function __construct(
+        int $ListenerPort = 0,
+        string $Path = '',
+        int $LocalPathPort = 0,
+        string $Protocol = '',
+        bool $ParsedFromCheck = false
+    ) {
+        $this->ListenerPort = $ListenerPort;
+        $this->Path = $Path;
+        $this->LocalPathPort = $LocalPathPort;
+        $this->Protocol = $Protocol;
+        $this->ParsedFromCheck = $ParsedFromCheck;
+}
 
     public function getListenerPort(): int
     {
@@ -96,5 +100,41 @@ class ExposePath extends AbstractModel
     {
         $this->ParsedFromCheck = $ParsedFromCheck;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $n = null): self
+    {
+        $n = $n ?? new self();
+        foreach ($decoded as $k => $v) {
+            if ('listener_port' === $k) {
+                $n->ListenerPort = $v;
+            } elseif ('local_path_port' === $k) {
+                $n->LocalPathPort = $v;
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        if (0 !== $this->ListenerPort) {
+            $out->ListenerPort = $this->ListenerPort;
+        }
+        if ('' !== $this->Path) {
+            $out->Path = $this->Path;
+        }
+        if (0 !== $this->LocalPathPort) {
+            $out->LocalPathPort = $this->LocalPathPort;
+        }
+        if ('' !== $this->Protocol) {
+            $out->Protocol = $this->Protocol;
+        }
+        if ($this->ParsedFromCheck) {
+            $out->ParsedFromCheck = true;
+        }
+        return $out;
     }
 }

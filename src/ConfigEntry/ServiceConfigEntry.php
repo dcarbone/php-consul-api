@@ -20,56 +20,119 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ServiceConfigEntry extends AbstractModel implements ConfigEntry
+use function DCarbone\PHPConsulAPI\PHPLib\_enc_obj_if_valued;
+
+class ServiceConfigEntry extends AbstractType implements ConfigEntry
 {
     use ConfigEntryTrait;
 
-    protected const FIELDS = ConfigEntry::INTERFACE_FIELDS + [
-        self::FIELD_PROTOCOL          => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_MODE              => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_TRANSPARENT_PROXY => [
-            Transcoding::FIELD_TYPE      => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS     => TransparentProxyConfig::class,
-            Transcoding::FIELD_NULLABLE  => true,
-            Transcoding::FIELD_OMITEMPTY => true,
-        ],
-        self::FIELD_MESH_GATEWAY      => [
-            Transcoding::FIELD_TYPE      => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS     => MeshGatewayConfig::class,
-            Transcoding::FIELD_OMITEMPTY => true, // todo: does nothing as it isn't nullable...
-        ],
-        self::FIELD_EXPOSE            => [
-            Transcoding::FIELD_TYPE      => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS     => ExposeConfig::class,
-            Transcoding::FIELD_OMITEMPTY => true, // todo: does nothing as isn't nullable..
-        ],
-        self::FIELD_EXTERNAL_SNI      => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_UPSTREAM_CONFIG   => [
-            Transcoding::FIELD_TYPE      => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS     => UpstreamConfiguration::class,
-            Transcoding::FIELD_NULLABLE  => true,
-            Transcoding::FIELD_OMITEMPTY => true,
-        ],
-    ];
+    public string $Kind;
+    public string $Name;
+    public string $Partition;
+    public string $Protocol;
+    public ProxyMode $Mode;
+    public null|TransparentProxyConfig $TransparentProxy;
 
-    private const FIELD_PROTOCOL          = 'Protocol';
-    private const FIELD_MODE              = 'Mode';
-    private const FIELD_TRANSPARENT_PROXY = 'TransparentProxy';
-    private const FIELD_MESH_GATEWAY      = 'MeshGateway';
-    private const FIELD_EXPOSE            = 'Expose';
-    private const FIELD_EXTERNAL_SNI      = 'ExternalSNI';
-    private const FIELD_UPSTREAM_CONFIG   = 'UpstreamConfig';
-
-    public string $Protocol = '';
-    public string $Mode = '';
-    public ?TransparentProxyConfig $TransparentProxy = null;
+    public MutualTLSMode $MutualTLSMode;
     public MeshGatewayConfig $MeshGateway;
     public ExposeConfig $Expose;
-    public string $ExternalSNI = '';
-    public ?UpstreamConfiguration $UpstreamConfig = null;
+    public string $ExternalSNI;
+    public null|UpstreamConfiguration $UpstreamConfig;
+    public null|DestinationConfig $Destination;
+    public int $MaxInboundConnections;
+    public int $LocalConnectTimeoutMs;
+    public int $LocalRequestTimeoutMs;
+    public string $BalanceInboundConnections;
+    public null|RateLimits $RateLimits;
+    /** @var array<\DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension> */
+    public array $EnvoyExtensions;
+
+    /**
+     * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension> $EnvoyExtensions
+     * @param array<string,mixed> $Meta
+     */
+    public function __construct(
+        string $Kind = '',
+        string $Name = '',
+        string $Partition = '',
+        string $Namespace = '',
+        string $Protocol = '',
+        string|ProxyMode $Mode = ProxyMode::Default,
+        null|TransparentProxyConfig $TransparentProxy = null,
+        string|MutualTLSMode $MutualTLSMode = MutualTLSMode::Default,
+        null|MeshGatewayConfig $MeshGateway = null,
+        null|ExposeConfig $Expose = null,
+        string $ExternalSNI = '',
+        null|UpstreamConfiguration $UpstreamConfig = null,
+        null|DestinationConfig $Destination = null,
+        int $MaxInboundConnections = 0,
+        int $LocalConnectTimeoutMs = 0,
+        int $LocalRequestTimeoutMs = 0,
+        string $BalanceInboundConnections = '',
+        null|RateLimits $RateLimits = null,
+        array $EnvoyExtensions = [],
+        array $Meta = [],
+        int $CreateIndex = 0,
+        int $ModifyIndex = 0,
+    ) {
+        $this->Kind = $Kind;
+        $this->Name = $Name;
+        $this->Partition = $Partition;
+        $this->Namespace = $Namespace;
+        $this->Protocol = $Protocol;
+        $this->Mode = is_string($Mode) ? ProxyMode::from($Mode) : $Mode;
+        $this->TransparentProxy = $TransparentProxy;
+        $this->MutualTLSMode = is_string($MutualTLSMode) ? MutualTLSMode::from($MutualTLSMode) : $MutualTLSMode;
+        $this->MeshGateway = $MeshGateway ?? new MeshGatewayConfig();
+        $this->Expose = $Expose ?? new ExposeConfig();
+        $this->ExternalSNI = $ExternalSNI;
+        $this->UpstreamConfig = $UpstreamConfig;
+        $this->Destination = $Destination;
+        $this->MaxInboundConnections = $MaxInboundConnections;
+        $this->LocalConnectTimeoutMs = $LocalConnectTimeoutMs;
+        $this->LocalRequestTimeoutMs = $LocalRequestTimeoutMs;
+        $this->BalanceInboundConnections = $BalanceInboundConnections;
+        $this->RateLimits = $RateLimits;
+        $this->setEnvoyExtensions(...$EnvoyExtensions);
+        $this->setMeta($Meta);
+        $this->CreateIndex = $CreateIndex;
+        $this->ModifyIndex = $ModifyIndex;
+    }
+
+    public function getKind(): string
+    {
+        return $this->Kind;
+    }
+
+    public function setKind(string $Kind): self
+    {
+        $this->Kind = $Kind;
+        return $this;
+    }
+
+    public function getName(): string
+    {
+        return $this->Name;
+    }
+
+    public function setName(string $Name): self
+    {
+        $this->Name = $Name;
+        return $this;
+    }
+
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
 
     public function getProtocol(): string
     {
@@ -82,25 +145,36 @@ class ServiceConfigEntry extends AbstractModel implements ConfigEntry
         return $this;
     }
 
-    public function getMode(): string
+    public function getMode(): ProxyMode
     {
         return $this->Mode;
     }
 
-    public function setMode(string $Mode): self
+    public function setMode(ProxyMode $Mode): self
     {
         $this->Mode = $Mode;
         return $this;
     }
 
-    public function getTransparentProxy(): ?TransparentProxyConfig
+    public function getTransparentProxy(): null|TransparentProxyConfig
     {
         return $this->TransparentProxy;
     }
 
-    public function setTransparentProxy(?TransparentProxyConfig $TransparentProxy): self
+    public function setTransparentProxy(null|TransparentProxyConfig $TransparentProxy): self
     {
         $this->TransparentProxy = $TransparentProxy;
+        return $this;
+    }
+
+    public function getMutualTLSMode(): MutualTLSMode
+    {
+        return $this->MutualTLSMode;
+    }
+
+    public function setMutualTLSMode(MutualTLSMode $MutualTLSMode): self
+    {
+        $this->MutualTLSMode = $MutualTLSMode;
         return $this;
     }
 
@@ -137,14 +211,197 @@ class ServiceConfigEntry extends AbstractModel implements ConfigEntry
         return $this;
     }
 
-    public function getUpstreamConfig(): ?UpstreamConfiguration
+    public function getUpstreamConfig(): null|UpstreamConfiguration
     {
         return $this->UpstreamConfig;
     }
 
-    public function setUpstreamConfig(?UpstreamConfiguration $UpstreamConfig): self
+    public function setUpstreamConfig(null|UpstreamConfiguration $UpstreamConfig): self
     {
         $this->UpstreamConfig = $UpstreamConfig;
         return $this;
+    }
+
+    public function getDestination(): null|DestinationConfig
+    {
+        return $this->Destination;
+    }
+
+    public function setDestination(null|DestinationConfig $Destination): self
+    {
+        $this->Destination = $Destination;
+        return $this;
+    }
+
+    public function getMaxInboundConnections(): int
+    {
+        return $this->MaxInboundConnections;
+    }
+
+    public function setMaxInboundConnections(int $MaxInboundConnections): self
+    {
+        $this->MaxInboundConnections = $MaxInboundConnections;
+        return $this;
+    }
+
+    public function getLocalConnectTimeoutMs(): int
+    {
+        return $this->LocalConnectTimeoutMs;
+    }
+
+    public function setLocalConnectTimeoutMs(int $LocalConnectTimeoutMs): self
+    {
+        $this->LocalConnectTimeoutMs = $LocalConnectTimeoutMs;
+        return $this;
+    }
+
+    public function getLocalRequestTimeoutMs(): int
+    {
+        return $this->LocalRequestTimeoutMs;
+    }
+
+    public function setLocalRequestTimeoutMs(int $LocalRequestTimeoutMs): self
+    {
+        $this->LocalRequestTimeoutMs = $LocalRequestTimeoutMs;
+        return $this;
+    }
+
+    public function getBalanceInboundConnections(): string
+    {
+        return $this->BalanceInboundConnections;
+    }
+
+    public function setBalanceInboundConnections(string $BalanceInboundConnections): self
+    {
+        $this->BalanceInboundConnections = $BalanceInboundConnections;
+        return $this;
+    }
+
+    public function getRateLimits(): null|RateLimits
+    {
+        return $this->RateLimits;
+    }
+
+    public function setRateLimits(null|RateLimits $RateLimits): self
+    {
+        $this->RateLimits = $RateLimits;
+        return $this;
+    }
+
+    /**
+     * @return array<\DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension>
+     */
+    public function getEnvoyExtensions(): array
+    {
+        return $this->EnvoyExtensions;
+    }
+
+    public function setEnvoyExtensions(EnvoyExtension ...$EnvoyExtensions): self
+    {
+        $this->EnvoyExtensions = $EnvoyExtensions;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('Mode' === $k) {
+                $n->Mode = ProxyMode::from($v);
+            } elseif ('TransparentProxy' === $k || 'transparent_proxy' === $k) {
+                $n->TransparentProxy = null === $v ? null : TransparentProxyConfig::jsonUnserialize($v);
+            } elseif ('MutualTLSMode' === $k || 'mutual_tls_mode' === $k) {
+                $n->MutualTLSMode = MutualTLSMode::from($v);
+            } elseif ('MeshGateway' === $k || 'mesh_gateway' === $k) {
+                $n->MeshGateway = MeshGatewayConfig::jsonUnserialize($v);
+            } elseif ('Expose' === $k) {
+                $n->Expose = ExposeConfig::jsonUnserialize($v);
+            } elseif ('external_sni' === $k) {
+                $n->ExternalSNI = $v;
+            } elseif ('UpstreamConfig' === $k || 'upstream_config' === $k) {
+                $n->UpstreamConfig = null === $v ? null : UpstreamConfiguration::jsonUnserialize($v);
+            } elseif ('Destination' === $k) {
+                $n->Destination = null === $v ? null : DestinationConfig::jsonUnserialize($v);
+            } elseif ('max_inbound_connections' === $k) {
+                $n->MaxInboundConnections = $v;
+            } elseif ('local_connect_timeout_ms' === $k) {
+                $n->LocalConnectTimeoutMs = $v;
+            } elseif ('local_request_timeout_ms' === $k) {
+                $n->LocalRequestTimeoutMs = $v;
+            } elseif ('balance_inbound_connections' === $k) {
+                $n->BalanceInboundConnections = $v;
+            } elseif ('RateLimits' === $k || 'rate_limits' === $k) {
+                $n->RateLimits = null === $v ? null : RateLimits::jsonUnserialize($v);
+            } elseif ('EnvoyExtensions' === $k || 'envoy_extensions' === $k) {
+                foreach ($v as $ext) {
+                    $n->EnvoyExtensions[] = EnvoyExtension::jsonUnserialize($ext);
+                }
+            } elseif ('Meta' === $k) {
+                $n->setMeta($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Kind = $this->Kind;
+        $out->Name = $this->Name;
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
+        }
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        if ('' !== $this->Protocol) {
+            $out->Protocol = $this->Protocol;
+        }
+        if (ProxyMode::Default !== $this->Mode) {
+            $out->Mode = $this->Mode->value;
+        }
+        if (null !== $this->TransparentProxy) {
+            $out->TransparentProxy = $this->TransparentProxy;
+        }
+        if (MutualTLSMode::Default !== $this->MutualTLSMode) {
+            $out->MutualTLSMode = $this->MutualTLSMode->value;
+        }
+        _enc_obj_if_valued($out, 'MeshGateway', $this->MeshGateway);
+        _enc_obj_if_valued($out, 'Expose', $this->Expose);
+        if ('' !== $this->ExternalSNI) {
+            $out->ExternalSNI = $this->ExternalSNI;
+        }
+        if (null !== $this->UpstreamConfig) {
+            $out->UpstreamConfig = $this->UpstreamConfig;
+        }
+        if (null !== $this->Destination) {
+            $out->Destination = $this->Destination;
+        }
+        if (0 !== $this->MaxInboundConnections) {
+            $out->MaxInboundConnections = $this->MaxInboundConnections;
+        }
+        if (0 !== $this->LocalConnectTimeoutMs) {
+            $out->LocalConnectTimeoutMs = $this->LocalConnectTimeoutMs;
+        }
+        if (0 !== $this->LocalRequestTimeoutMs) {
+            $out->LocalRequestTimeoutMs = $this->LocalRequestTimeoutMs;
+        }
+        if ('' !== $this->BalanceInboundConnections) {
+            $out->BalanceInboundConnections = $this->BalanceInboundConnections;
+        }
+        if (null !== $this->RateLimits) {
+            $out->RateLimits = $this->RateLimits;
+        }
+        if ([] !== $this->EnvoyExtensions) {
+            $out->EnvoyExtensions = $this->EnvoyExtensions;
+        }
+        if ([] !== $this->Meta) {
+            $out->Meta = $this->Meta;
+        }
+        $out->CreateIndex = $this->CreateIndex;
+        $out->ModifyIndex = $this->ModifyIndex;
+        return $out;
     }
 }

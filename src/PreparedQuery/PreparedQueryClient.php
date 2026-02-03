@@ -22,13 +22,13 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
 
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\QueryOptions;
-use DCarbone\PHPConsulAPI\ValuedWriteStringResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\ValuedWriteStringResponse;
 use DCarbone\PHPConsulAPI\WriteOptions;
-use DCarbone\PHPConsulAPI\WriteResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\WriteResponse;
 
 class PreparedQueryClient extends AbstractClient
 {
-    public function Create(PreparedQueryDefinition $query, ?WriteOptions $opts = null): ValuedWriteStringResponse
+    public function Create(PreparedQueryDefinition $query, null|WriteOptions $opts = null): ValuedWriteStringResponse
     {
         $resp = $this->_requireOK($this->_doPost('v1/query', $query, $opts));
         $ret  = new ValuedWriteStringResponse();
@@ -36,12 +36,12 @@ class PreparedQueryClient extends AbstractClient
         return $ret;
     }
 
-    public function Update(PreparedQueryDefinition $query, ?WriteOptions $opts = null): WriteResponse
+    public function Update(PreparedQueryDefinition $query, null|WriteOptions $opts = null): WriteResponse
     {
         return $this->_executePut('v1/query', $query, $opts);
     }
 
-    public function List(?QueryOptions $opts = null): PreparedQueryDefinitionsResponse
+    public function List(null|QueryOptions $opts = null): PreparedQueryDefinitionsResponse
     {
         $resp = $this->_doGet('v1/query', $opts);
         $ret  = new PreparedQueryDefinitionsResponse();
@@ -49,7 +49,7 @@ class PreparedQueryClient extends AbstractClient
         return $ret;
     }
 
-    public function Get(string $queryID, ?QueryOptions $opts = null): PreparedQueryDefinitionsResponse
+    public function Get(string $queryID, null|QueryOptions $opts = null): PreparedQueryDefinitionsResponse
     {
         $resp = $this->_doGet(sprintf('v1/query/%s', $queryID), $opts);
         $ret  = new PreparedQueryDefinitionsResponse();
@@ -57,12 +57,12 @@ class PreparedQueryClient extends AbstractClient
         return $ret;
     }
 
-    public function Delete(string $queryID, ?WriteOptions $opts = null): WriteResponse
+    public function Delete(string $queryID, null|WriteOptions $opts = null): WriteResponse
     {
         return $this->_executeDelete(sprintf('v1/query/%s', $queryID), $opts);
     }
 
-    public function Execute(string $queryIDOrName, ?QueryOptions $opts = null): PreparedQueryExecuteResponseResponse
+    public function Execute(string $queryIDOrName, null|QueryOptions $opts = null): PreparedQueryExecuteResponseResponse
     {
         $resp = $this->_doGet(sprintf('v1/query/%s/execute', $queryIDOrName), $opts);
         $ret  = new PreparedQueryExecuteResponseResponse();

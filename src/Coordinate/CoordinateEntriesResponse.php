@@ -20,23 +20,27 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedQueryResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
 
 class CoordinateEntriesResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?array $Nodes = null;
+    /** @var \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry[] */
+    public array $Nodes = [];
 
-    public function getValue(): ?array
+    /**
+     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry[]
+     */
+    public function getValue(): array
     {
         return $this->Nodes;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
         $this->Nodes = [];
-        foreach ($decodedData as $node) {
-            $this->Nodes[] = new CoordinateEntry($node);
+        foreach ($decoded as $node) {
+            $this->Nodes[] = CoordinateEntry::jsonUnserialize($node);
         }
     }
 }

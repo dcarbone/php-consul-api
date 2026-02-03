@@ -20,20 +20,24 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedWriteResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedWriteResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
 
 class ACLBindingRuleWriteResponse extends AbstractValuedWriteResponse implements UnmarshalledResponseInterface
 {
-    public ?ACLBindingRule $ACLBindingRule = null;
+    public null|ACLBindingRule $ACLBindingRule = null;
 
-    public function getValue(): ?ACLBindingRule
+    public function getValue(): null|ACLBindingRule
     {
         return $this->ACLBindingRule;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        $this->ACLBindingRule = new ACLBindingRule((array)$decodedData);
+        if (null === $decoded) {
+            $this->ACLBindingRule = null;
+            return;
+        }
+        $this->ACLBindingRule = ACLBindingRule::jsonUnserialize($decoded);
     }
 }

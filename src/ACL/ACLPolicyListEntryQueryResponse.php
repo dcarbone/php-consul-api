@@ -20,23 +20,27 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedQueryResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
 
 class ACLPolicyListEntryQueryResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?array $ACLPolicyListEntries = [];
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLPolicyListEntry[] */
+    public array $ACLPolicyListEntries = [];
 
-    public function getValue(): ?array
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLPolicyListEntry[]
+     */
+    public function getValue(): array
     {
         return $this->ACLPolicyListEntries;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
         $this->ACLPolicyListEntries = [];
-        foreach ($decodedData as $datum) {
-            $this->ACLPolicyListEntries[] = new ACLPolicyListEntry($datum);
+        foreach ($decoded as $datum) {
+            $this->ACLPolicyListEntries[] = ACLPolicyListEntry::jsonUnserialize($datum);
         }
     }
 }

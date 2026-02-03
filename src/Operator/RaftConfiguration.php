@@ -20,10 +20,10 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Transcoding;
 
-class RaftConfiguration extends AbstractModel
+class RaftConfiguration extends AbstractType
 {
     protected const FIELDS = [
         self::FIELD_SERVERS => [
@@ -35,8 +35,8 @@ class RaftConfiguration extends AbstractModel
 
     private const FIELD_SERVERS = 'Servers';
 
-    public array $Servers = [];
-    public int $Index = 0;
+    public array $Servers;
+    public int $Index;
 
     public function getServers(): array
     {

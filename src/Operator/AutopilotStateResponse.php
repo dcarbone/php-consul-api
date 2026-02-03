@@ -20,20 +20,20 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
 
 class AutopilotStateResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
-    public ?AutopilotState $AutopilotState = null;
+    public null|AutopilotState $AutopilotState;
 
-    public function getValue(): ?AutopilotState
+    public function getValue(): null|AutopilotState
     {
         return $this->AutopilotState;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        $this->AutopilotState = new AutopilotState($decodedData);
+        $this->AutopilotState = AutopilotState::jsonUnserialize($decoded);
     }
 }

@@ -20,14 +20,14 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class Area extends AbstractModel
+class Area extends AbstractType
 {
-    public string $ID = '';
-    public string $PeerDatacenter = '';
-    public array $RetryJoin = [];
-    public bool $UseTLS = false;
+    public string $ID;
+    public string $PeerDatacenter;
+    public array $RetryJoin;
+    public bool $UseTLS;
 
     public function getID(): string
     {

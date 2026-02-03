@@ -20,26 +20,24 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ExposeConfig extends AbstractModel
+class ExposeConfig extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_CHECKS => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_PATHS  => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => ExposePath::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-    ];
+    public bool $Checks;
+    /** @var array<\DCarbone\PHPConsulAPI\ConfigEntry\ExposePath> */
+    public array $Paths;
 
-    private const FIELD_CHECKS = 'Checks';
-    private const FIELD_PATHS  = 'Paths';
-
-    public bool $Checks = false;
-    public array $Paths = [];
+    /**
+     * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\ExposePath> $Paths
+     */
+    public function __construct(
+        bool $Checks = false,
+        array $Paths = [],
+    ) {
+        $this->Checks = $Checks;
+        $this->setPaths(...$Paths);
+}
 
     public function isChecks(): bool
     {
@@ -52,14 +50,44 @@ class ExposeConfig extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ConfigEntry\ExposePath[]
+     */
     public function getPaths(): array
     {
         return $this->Paths;
     }
 
-    public function setPaths(array $Paths): self
+    public function setPaths(ExposePath ...$Paths): self
     {
         $this->Paths = $Paths;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded, null|self $n = null): static
+    {
+        $n = $n ?? new self();
+        foreach ($decoded as $k => $v) {
+            if ('Paths' === $k) {
+                foreach ($v as $vv) {
+                    $n->Paths[] = ExposePath::jsonUnserialize($vv);
+                }
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        if ($this->Checks) {
+            $out->Checks = true;
+        }
+        if ([] !== $this->Paths) {
+            $out->Paths = $this->Paths;
+        }
+        return $out;
     }
 }

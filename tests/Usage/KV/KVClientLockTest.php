@@ -41,15 +41,15 @@ final class KVClientLockTest extends AbstractUsageTests
                 ]
             )
         );
-        self::assertNull($err, \sprintf('Error creating session: %s', $err));
+        self::assertNull($err, sprintf('Error creating session: %s', $err));
 
         $kv         = new KVPair(['Key' => $key, 'Value' => 'whatever', 'Session' => $id]);
         [$wm, $err] = $kvClient->Acquire($kv);
-        self::assertNull($err, \sprintf('Error acquiring lock: %s', $err));
+        self::assertNull($err, sprintf('Error acquiring lock: %s', $err));
         self::assertInstanceOf(WriteMeta::class, $wm);
 
         [$kv, $_, $err] = $kvClient->Get($key);
-        self::assertNull($err, \sprintf('Error retrieving key: %s', $err));
+        self::assertNull($err, sprintf('Error retrieving key: %s', $err));
         self::assertInstanceOf(KVPair::class, $kv);
         self::assertSame($id, $kv->Session);
         self::assertSame('whatever', $kv->Value);

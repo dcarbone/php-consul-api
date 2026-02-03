@@ -20,35 +20,54 @@ namespace DCarbone\PHPConsulAPI\Catalog;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\FakeMap;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
+use DCarbone\PHPConsulAPI\PHPLib\Types\MetaField;
+use DCarbone\PHPConsulAPI\Peering\Locality;
+use DCarbone\PHPConsulAPI\PHPLib\Types\TaggedAddressField;
 
-class Node extends AbstractModel
+class Node extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_TAGGED_ADDRESSES => Transcoding::MAP_FIELD,
-        self::FIELD_META             => Transcoding::MAP_FIELD,
-    ];
+    use MetaField;
+    use TaggedAddressField;
 
-    private const FIELD_TAGGED_ADDRESSES = 'TaggedAddresses';
-    private const FIELD_META             = 'Meta';
+    public string $ID;
+    public string $Node;
+    public string $Address;
+    public string $Datacenter;
+    public int $CreateIndex;
+    public int $ModifyIndex;
+    public string $Partition;
+    public string $PeerName;
+    public null|Locality $Locality;
 
-    public string $ID = '';
-    public string $Node = '';
-    public string $Address = '';
-    public string $Datacenter = '';
-    public FakeMap $TaggedAddresses;
-    public FakeMap $Meta;
-    public int $CreateIndex = 0;
-    public int $ModifyIndex = 0;
-
-    public function __construct(?array $data = [])
-    {
-        parent::__construct($data);
-        if (!isset($this->Meta)) {
-            $this->Meta = new FakeMap(null);
-        }
+    /**
+     * @param array<string,string> $TaggedAddresses
+     * @param array<string,string> $Meta
+     */
+    public function __construct(
+        string $ID = '',
+        string $Node = '',
+        string $Address = '',
+        string $Datacenter = '',
+        array $TaggedAddresses = [],
+        array $Meta = [],
+        int $CreateIndex = 0,
+        int $ModifyIndex = 0,
+        string $Partition = '',
+        string $PeerName = '',
+        null|Locality $Locality = null
+    ) {
+        $this->ID = $ID;
+        $this->Node = $Node;
+        $this->Address = $Address;
+        $this->Datacenter = $Datacenter;
+        $this->setTaggedAddresses($TaggedAddresses);
+        $this->setMeta($Meta);
+        $this->CreateIndex = $CreateIndex;
+        $this->ModifyIndex = $ModifyIndex;
+        $this->Partition = $Partition;
+        $this->PeerName = $PeerName;
+        $this->Locality = $Locality;
     }
 
     public function getID(): string
@@ -95,28 +114,6 @@ class Node extends AbstractModel
         return $this;
     }
 
-    public function getTaggedAddresses(): FakeMap
-    {
-        return $this->TaggedAddresses;
-    }
-
-    public function setTaggedAddresses(FakeMap $TaggedAddresses): self
-    {
-        $this->TaggedAddresses = $TaggedAddresses;
-        return $this;
-    }
-
-    public function getMeta(): FakeMap
-    {
-        return $this->Meta;
-    }
-
-    public function setMeta(FakeMap $Meta): self
-    {
-        $this->Meta = $Meta;
-        return $this;
-    }
-
     public function getCreateIndex(): int
     {
         return $this->CreateIndex;
@@ -137,5 +134,78 @@ class Node extends AbstractModel
     {
         $this->ModifyIndex = $ModifyIndex;
         return $this;
+    }
+
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
+    public function getPeerName(): string
+    {
+        return $this->PeerName;
+    }
+
+    public function setPeerName(string $PeerName): self
+    {
+        $this->PeerName = $PeerName;
+        return $this;
+    }
+
+    public function getLocality(): null|Locality
+    {
+        return $this->Locality;
+    }
+
+    public function setLocality(null|Locality $Locality): self
+    {
+        $this->Locality = $Locality;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('Locality' === $k) {
+                $n->Locality = Locality::jsonUnserialize($v);
+            } elseif ('Meta' === $k) {
+                $n->setMeta($v);
+            } elseif ('TaggedAddresses' === $k) {
+                $n->setTaggedAddresses($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->ID = $this->ID;
+        $out->Node = $this->Node;
+        $out->Address = $this->Address;
+        $out->Datacenter = $this->Datacenter;
+        $out->TaggedAddresses = $this->getTaggedAddresses();
+        $out->Meta = $this->getMeta();
+        $out->CreateIndex = $this->CreateIndex;
+        $out->ModifyIndex = $this->ModifyIndex;
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
+        }
+        if ('' !== $this->PeerName) {
+            $out->PeerName = $this->PeerName;
+        }
+        if (null !== $this->Locality) {
+            $out->Locality = $this->Locality;
+        }
+        return $out;
     }
 }

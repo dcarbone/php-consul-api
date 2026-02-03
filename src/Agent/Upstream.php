@@ -20,63 +20,78 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\ConfigEntry\MeshGatewayConfig;
-use DCarbone\PHPConsulAPI\Transcoding;
 
-class Upstream extends AbstractModel
+class Upstream extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_DESTINATION_TYPE      => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_DESTINATION_NAMESPACE => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_DATACENTER            => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_LOCAL_BIND_ADDRESS    => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_LOCAL_BIND_PORT       => Transcoding::OMITEMPTY_INTEGER_FIELD,
-        self::FIELD_CONFIG                => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::MIXED,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-        self::FIELD_MESH_GATEWAY          => [
-            Transcoding::FIELD_TYPE      => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS     => MeshGatewayConfig::class,
-            Transcoding::FIELD_OMITEMPTY => true,
-        ],
-    ];
+    public UpstreamDestType $DestinationType;
+    public string $DestinationPartition;
+    public string $DestinationNamespace;
+    public string $DestinationPeer;
+    public string $DestinationName;
+    public string $Datacenter;
+    public string $LocalBindAddress;
+    public int $LocalBindPort;
+    public string $LocalBindSocketPath;
+    public string $LocalBindSocketMode;
+    /** @var array<string,mixed> */
+    public null|array $Config;
+    public null|MeshGatewayConfig $MeshGateway;
+    public bool $CentrallyConfigured;
 
-    private const FIELD_DESTINATION_TYPE      = 'DestinationType';
-    private const FIELD_DESTINATION_NAMESPACE = 'DestinationNamespace';
-    private const FIELD_DATACENTER            = 'Datacenter';
-    private const FIELD_LOCAL_BIND_ADDRESS    = 'LocalBindAddress';
-    private const FIELD_LOCAL_BIND_PORT       = 'LocalBindPort';
-    private const FIELD_CONFIG                = 'Config';
-    private const FIELD_MESH_GATEWAY          = 'MeshGateway';
-
-    public string $DestinationType = '';
-    public string $DestinationNamespace = '';
-    public string $DestinationName = '';
-    public string $Datacenter = '';
-    public string $LocalBindAddress = '';
-    public int $LocalBindPort = 0;
-    public array $Config = [];
-    public MeshGatewayConfig $MeshGatewayConfig;
-
-    public function __construct(?array $data = [])
-    {
-        parent::__construct($data);
-        if (!isset($this->MeshGatewayConfig)) {
-            $this->MeshGatewayConfig = new MeshGatewayConfig(null);
-        }
+    /**
+     * @param array<string,mixed> $Config
+     */
+    public function __construct(
+        string|UpstreamDestType $DestinationType = UpstreamDestType::UNDEFINED,
+        string $DestinationPartition = '',
+        string $DestinationNamespace = '',
+        string $DestinationPeer = '',
+        string $DestinationName = '',
+        string $Datacenter = '',
+        string $LocalBindAddress = '',
+        int $LocalBindPort = 0,
+        string $LocalBindSocketPath = '',
+        string $LocalBindSocketMode = '',
+        array $Config = [],
+        null|MeshGatewayConfig $MeshGateway = null,
+        bool $CentrallyConfigured = false,
+    ) {
+        $this->setDestinationType($DestinationType);
+        $this->DestinationPartition = $DestinationPartition;
+        $this->DestinationNamespace = $DestinationNamespace;
+        $this->DestinationPeer = $DestinationPeer;
+        $this->DestinationName = $DestinationName;
+        $this->Datacenter = $Datacenter;
+        $this->LocalBindAddress = $LocalBindAddress;
+        $this->LocalBindPort = $LocalBindPort;
+        $this->LocalBindSocketPath = $LocalBindSocketPath;
+        $this->LocalBindSocketMode = $LocalBindSocketMode;
+        $this->setConfig($Config);
+        $this->MeshGateway = $MeshGateway;
+        $this->CentrallyConfigured = $CentrallyConfigured;
     }
 
-    public function getDestinationType(): string
+    public function getDestinationType(): UpstreamDestType
     {
         return $this->DestinationType;
     }
 
-    public function setDestinationType(string $DestinationType): self
+    public function setDestinationType(string|UpstreamDestType $DestinationType): self
     {
-        $this->DestinationType = $DestinationType;
+        $this->DestinationType = $DestinationType instanceof UpstreamDestType ? $DestinationType : UpstreamDestType::from($DestinationType);
+        return $this;
+    }
+
+    public function getDestinationPartition(): string
+    {
+        return $this->DestinationPartition;
+    }
+
+    public function setDestinationPartition(string $DestinationPartition): self
+    {
+        $this->DestinationPartition = $DestinationPartition;
         return $this;
     }
 
@@ -88,6 +103,17 @@ class Upstream extends AbstractModel
     public function setDestinationNamespace(string $DestinationNamespace): self
     {
         $this->DestinationNamespace = $DestinationNamespace;
+        return $this;
+    }
+
+    public function getDestinationPeer(): string
+    {
+        return $this->DestinationPeer;
+    }
+
+    public function setDestinationPeer(string $DestinationPeer): self
+    {
+        $this->DestinationPeer = $DestinationPeer;
         return $this;
     }
 
@@ -135,25 +161,132 @@ class Upstream extends AbstractModel
         return $this;
     }
 
-    public function getConfig(): array
+    public function getLocalBindSocketPath(): string
+    {
+        return $this->LocalBindSocketPath;
+    }
+
+    public function setLocalBindSocketPath(string $LocalBindSocketPath): self
+    {
+        $this->LocalBindSocketPath = $LocalBindSocketPath;
+        return $this;
+    }
+
+    public function getLocalBindSocketMode(): string
+    {
+        return $this->LocalBindSocketMode;
+    }
+
+    public function setLocalBindSocketMode(string $LocalBindSocketMode): self
+    {
+        $this->LocalBindSocketMode = $LocalBindSocketMode;
+        return $this;
+    }
+
+    /**
+     * @return null|array<string,mixed>
+     */
+    public function getConfig(): null|array
     {
         return $this->Config;
     }
 
-    public function setConfig(array $Config): self
+    /**
+     * @param \stdClass|array<string,mixed>|null $Config
+     * @return $this
+     */
+    public function setConfig(null|\stdClass|array $Config): self
     {
-        $this->Config = $Config;
+        if (null == $Config) {
+            $this->Config = null;
+            return $this;
+        }
+        $this->Config = [];
+        foreach ($Config as $k => $v) {
+            $this->Config[$k] = $v;
+        }
         return $this;
     }
 
-    public function getMeshGatewayConfig(): MeshGatewayConfig
+    public function getMeshGateway(): null|MeshGatewayConfig
     {
-        return $this->MeshGatewayConfig;
+        return $this->MeshGateway;
     }
 
-    public function setMeshGatewayConfig(MeshGatewayConfig $MeshGatewayConfig): self
+    public function setMeshGateway(null|MeshGatewayConfig $MeshGateway): self
     {
-        $this->MeshGatewayConfig = $MeshGatewayConfig;
+        $this->MeshGateway = $MeshGateway;
         return $this;
+    }
+
+    public function isCentrallyConfigured(): bool
+    {
+        return $this->CentrallyConfigured;
+    }
+
+    public function setCentrallyConfigured(bool $CentrallyConfigured): self
+    {
+        $this->CentrallyConfigured = $CentrallyConfigured;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('DestinationType' === $k) {
+                $n->setDestinationType($v);
+            } elseif ('MeshGateway' === $k) {
+                $n->MeshGateway = MeshGatewayConfig::jsonUnserialize($v);
+            } elseif ('Config' === $k) {
+                $n->setConfig($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        if ($this->DestinationType !== UpstreamDestType::UNDEFINED) {
+            $out->DestinationType = $this->DestinationType;
+        }
+        if ('' !== $this->DestinationPartition) {
+            $out->DestinationPartition = $this->DestinationPartition;
+        }
+        if ('' !== $this->DestinationNamespace) {
+            $out->DestinationNamespace = $this->DestinationNamespace;
+        }
+        if ('' !== $this->DestinationPeer) {
+            $out->DestinationPeer = $this->DestinationPeer;
+        }
+        $out->DestinationName = $this->DestinationName;
+        if ('' !== $this->Datacenter) {
+            $out->Datacenter = $this->Datacenter;
+        }
+        if ('' !== $this->LocalBindAddress) {
+            $out->LocalBindAddress = $this->LocalBindAddress;
+        }
+        if (0 !== $this->LocalBindPort) {
+            $out->LocalBindPort = $this->LocalBindPort;
+        }
+        if ('' !== $this->LocalBindSocketPath) {
+            $out->LocalBindSocketPath = $this->LocalBindSocketPath;
+        }
+        if ('' !== $this->LocalBindSocketMode) {
+            $out->LocalBindSocketMode = $this->LocalBindSocketMode;
+        }
+        if (null !== $this->Config) {
+            $out->Config = $this->Config;
+        }
+        if (null !== $this->MeshGateway) {
+            $out->MeshGateway = $this->MeshGateway;
+        }
+        if ($this->CentrallyConfigured) {
+            $out->CentrallyConfigured = $this->CentrallyConfigured;
+        }
+        return $out;
     }
 }

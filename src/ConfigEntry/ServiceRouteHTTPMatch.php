@@ -20,43 +20,43 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ServiceRouteHTTPMatch extends AbstractModel
+class ServiceRouteHTTPMatch extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_PATH_EXACT  => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_PATH_PREFIX => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_PATH_REGEX  => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_HEADER      => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => self::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-        self::FIELD_QUERY_PARAM => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => ServiceRouteHTTPMatchQueryParam::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-        self::FIELD_METHODS     => Transcoding::OMITEMPTY_STRING_ARRAY_FIELD,
-    ];
+    public string $PathExact;
+    public string $PathPrefix;
+    public string $PathRegex;
+    public bool $CaseInsensitive;
+    /** @var array<\DCarbone\PHPConsulAPI\ConfigEntry\ServiceRouteHTTPMatchHeader> */
+    public array $Header;
+    /** @var array<\DCarbone\PHPConsulAPI\ConfigEntry\ServiceRouteHTTPMatchQueryParam> */
+    public array $QueryParam;
+    /** @var array<string> */
+    public array $Methods;
 
-    private const FIELD_PATH_EXACT  = 'PathExact';
-    private const FIELD_PATH_PREFIX = 'PathPrefix';
-    private const FIELD_PATH_REGEX  = 'PathRegex';
-    private const FIELD_HEADER      = 'Header';
-    private const FIELD_QUERY_PARAM = 'QueryParam';
-    private const FIELD_METHODS     = 'Methods';
-
-    public string $PathExact = '';
-    public string $PathPrefix = '';
-    public string $PathRegex = '';
-    public array $Header = [];
-    public array $QueryParam = [];
-    public array $Methods = [];
+    /**
+     * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\ServiceRouteHTTPMatchHeader> $Header
+     * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\ServiceRouteHTTPMatchQueryParam> $QueryParam
+     * @param array<string> $Methods
+     */
+    public function __construct(
+        string $PathExact = '',
+        string $PathPrefix = '',
+        string $PathRegex = '',
+        bool $CaseInsensitive = false,
+        array $Header = [],
+        array $QueryParam = [],
+        array $Methods = [],
+    ) {
+        $this->PathExact = $PathExact;
+        $this->PathPrefix = $PathPrefix;
+        $this->PathRegex = $PathRegex;
+        $this->CaseInsensitive = $CaseInsensitive;
+        $this->setHeader(...$Header);
+        $this->setQueryParam(...$QueryParam);
+        $this->setMethods(...$Methods);
+    }
 
     public function getPathExact(): string
     {
@@ -91,36 +91,101 @@ class ServiceRouteHTTPMatch extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ConfigEntry\ServiceRouteHTTPMatchHeader[]
+     */
     public function getHeader(): array
     {
         return $this->Header;
     }
 
-    public function setHeader(array $Header): self
+    public function setHeader(ServiceRouteHTTPMatchHeader ...$Header): self
     {
         $this->Header = $Header;
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ConfigEntry\ServiceRouteHTTPMatchQueryParam[]
+     */
     public function getQueryParam(): array
     {
         return $this->QueryParam;
     }
 
-    public function setQueryParam(array $QueryParam): self
+    public function setQueryParam(ServiceRouteHTTPMatchQueryParam ...$QueryParam): self
     {
         $this->QueryParam = $QueryParam;
         return $this;
     }
 
+    /**
+     * @return string[]
+     */
     public function getMethods(): array
     {
         return $this->Methods;
     }
 
-    public function setMethods(array $Methods): self
+    public function setMethods(string ...$Methods): self
     {
         $this->Methods = $Methods;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('path_exact' === $k) {
+                $n->PathExact = $v;
+            } elseif ('path_prefix' === $k) {
+                $n->PathPrefix = $v;
+            } elseif ('path_regex' === $k) {
+                $n->PathRegex = $v;
+            } elseif ('case_insensitive' === $k) {
+                $n->CaseInsensitive = $v;
+            } elseif ('Header' === $k) {
+                $n->Header = [];
+                foreach ($v as $vv) {
+                    $n->Header[] = ServiceRouteHTTPMatchHeader::jsonUnserialize($vv);
+                }
+            } elseif ('QueryParam' === $k || 'query_param' === $k) {
+                $n->QueryParam = [];
+                foreach ($v as $vv) {
+                    $n->QueryParam[] = ServiceRouteHTTPMatchQueryParam::jsonUnserialize($vv);
+                }
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        if ('' !== $this->PathExact) {
+            $out->PathExact = $this->PathExact;
+        }
+        if ('' !== $this->PathPrefix) {
+            $out->PathPrefix = $this->PathPrefix;
+        }
+        if ('' !== $this->PathRegex) {
+            $out->PathRegex = $this->PathRegex;
+        }
+        if ($this->CaseInsensitive) {
+            $out->CaseInsensitive = $this->CaseInsensitive;
+        }
+        if ([] !== $this->Header) {
+            $out->Header = $this->Header;
+        }
+        if ([] !== $this->QueryParam) {
+            $out->QueryParam = $this->QueryParam;
+        }
+        if ([] !== $this->Methods) {
+            $out->Methods = $this->Methods;
+        }
+        return $out;
     }
 }

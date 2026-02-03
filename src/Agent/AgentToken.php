@@ -20,11 +20,17 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class AgentToken extends AbstractModel
+class AgentToken extends AbstractType
 {
-    public string $Token = '';
+    public string $Token;
+
+    public function __construct(
+        string $Token = '',
+    ) {
+        $this->Token = $Token;
+}
 
     public function getToken(): string
     {
@@ -35,5 +41,21 @@ class AgentToken extends AbstractModel
     {
         $this->Token = $Token;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Token = $this->Token;
+        return $out;
     }
 }

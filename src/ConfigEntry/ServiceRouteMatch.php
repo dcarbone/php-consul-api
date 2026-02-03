@@ -20,32 +20,47 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ServiceRouteMatch extends AbstractModel
+class ServiceRouteMatch extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_HTTP => [
-            Transcoding::FIELD_TYPE      => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS     => ServiceRouteHTTPMatch::class,
-            Transcoding::FIELD_NULLABLE  => true,
-            Transcoding::FIELD_OMITEMPTY => true,
-        ],
-    ];
+    public null|ServiceRouteHTTPMatch $HTTP = null;
 
-    private const FIELD_HTTP = 'HTTP';
+    public function __construct(null|ServiceRouteHTTPMatch $HTTP = null)
+    {
+        $this->HTTP = $HTTP;
+    }
 
-    public ?ServiceRouteHTTPMatch $HTTP = null;
-
-    public function getHTTP(): ?ServiceRouteHTTPMatch
+    public function getHTTP(): null|ServiceRouteHTTPMatch
     {
         return $this->HTTP;
     }
 
-    public function setHTTP(?ServiceRouteHTTPMatch $HTTP): self
+    public function setHTTP(null|ServiceRouteHTTPMatch $HTTP): self
     {
         $this->HTTP = $HTTP;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('HTTP' === $k) {
+                $n->HTTP = ServiceRouteHTTPMatch::jsonUnserialize($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        if (null !== $this->HTTP) {
+            $out->HTTP = $this->HTTP;
+        }
+        return $out;
     }
 }

@@ -20,12 +20,18 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ACLNodeIdentity extends AbstractModel
+class ACLNodeIdentity extends AbstractType
 {
-    public string $NodeName = '';
-    public string $Datacenter = '';
+    public string $NodeName;
+    public string $Datacenter;
+
+    public function __construct(string $NodeName = '', string $Datacenter = '')
+    {
+        $this->NodeName = $NodeName;
+        $this->Datacenter = $Datacenter;
+    }
 
     public function getNodeName(): string
     {
@@ -35,5 +41,22 @@ class ACLNodeIdentity extends AbstractModel
     public function getDatacenter(): string
     {
         return $this->Datacenter;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->NodeName = $this->NodeName;
+        $out->Datacenter = $this->Datacenter;
+        return $out;
     }
 }

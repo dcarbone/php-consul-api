@@ -21,44 +21,59 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
 /**
  * Class Coordinate
  *
  * From github.com/hashicorp/serf/coordinate/coordinate.go
  */
-class Coordinate extends AbstractModel
+class Coordinate extends AbstractType
 {
-    public array $Vec = [];
-    public float $Error = 0.0;
-    public float $Adjustment = 0.0;
-    public float $Height = 0.0;
+    public const ZeroThreshold = 1.0e-6;
+    private const secondsToNanoseconds = 1.0e9;
 
-    public function __construct($data = [])
-    {
-        if (\is_array($data)) {
-            parent::__construct($data);
-        } elseif ($data instanceof CoordinateConfig) {
-            $this->Vec        = array_fill(0, $data->Dimensionality, 0.0);
-            $this->Error      = $data->VivaldiErrorMax;
+    /** @var array<float> */
+    public array $Vec;
+    public float $Error;
+    public float $Adjustment;
+    public float $Height;
+
+    /**
+     * @param array<float> $Vec
+     */
+    public function __construct(
+        null|CoordinateConfig $config = null,
+        array $Vec = [],
+        float $Error = 0.0,
+        float $Adjustment = 0.0,
+        float $Height = 0.0,
+    ) {
+        if (null !== $config) {
+            $this->Vec = array_fill(0, $config->Dimensionality, 0.0);
+            $this->Error = $config->VivaldiErrorMax;
             $this->Adjustment = 0.0;
-            $this->Height     = $data->HeightMin;
+            $this->Height = $config->HeightMin;
         } else {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    '%s::__construct - Argument 1 must be array of values or instance of %s, %s seen',
-                    static::class,
-                    CoordinateConfig::class,
-                    \is_object($data) ? \get_class($data) : \gettype($data)
-                )
-            );
+            $this->setVec(...$Vec);
+            $this->Error = $Error;
+            $this->Adjustment = $Adjustment;
+            $this->Height = $Height;
         }
     }
 
+    /**
+     * @return float[]
+     */
     public function getVec(): array
     {
         return $this->Vec;
+    }
+
+    public function setVec(float ...$Vec): self
+    {
+        $this->Vec = $Vec;
+        return $this;
     }
 
     public function getError(): float
@@ -76,12 +91,7 @@ class Coordinate extends AbstractModel
         return $this->Height;
     }
 
-    /**
-     * todo: prevent php-cs-fixer from being dumb.
-     *
-     * @return \DCarbone\PHPConsulAPI\Coordinate\Coordinate
-     */
-    public function Clone(): Coordinate|static
+    public function Clone(): self
     {
         return clone $this;
     }
@@ -89,16 +99,18 @@ class Coordinate extends AbstractModel
     public function IsValid(): bool
     {
         foreach ($this->Vec as $vec) {
-            if (!is_finite($vec)) {
+            if (!self::_componentIsValid($vec)) {
                 return false;
             }
         }
-        return is_finite($this->Error) && is_finite($this->Adjustment) && is_finite($this->Height);
+        return self::_componentIsValid($this->Error) &&
+            self::_componentIsValid($this->Adjustment) &&
+            self::_componentIsValid($this->Height);
     }
 
     public function IsCompatibleWith(self $other): bool
     {
-        return \count($this->Vec) === \count($other->Vec);
+        return count($this->Vec) === count($other->Vec);
     }
 
     public function ApplyForce(CoordinateConfig $config, float $force, self $other): self
@@ -107,11 +119,11 @@ class Coordinate extends AbstractModel
             throw new DimensionalityConflictException();
         }
 
-        $ret          = clone $this;
-        [$unit, $mag] = unitVectorAt($this->Vec, $other->Vec);
-        $ret->Vec     = add($ret->Vec, mul($unit, $force));
-        if ($mag > ZeroThreshold) {
-            $ret->Height = max(($ret->Height + $other->Height) * $force / $mag + $ret->Height, $config->HeightMin);
+        $ret = clone $this;
+        $va = self::_unitVectorAt($this->Vec, $other->Vec);
+        $ret->Vec = self::_add($ret->Vec, self::_mul($va->vec, $force));
+        if ($va->mag > self::ZeroThreshold) {
+            $ret->Height = max(($ret->Height + $other->Height) * $force / $va->mag + $ret->Height, $config->HeightMin);
         }
 
         return $ret;
@@ -119,22 +131,127 @@ class Coordinate extends AbstractModel
 
     public function DistanceTo(self $other): Time\Duration
     {
-        static $secondsToNanoseconds = 1.0e9;
-
         if (!$this->IsCompatibleWith($other)) {
             throw new DimensionalityConflictException();
         }
 
-        $dist         = $this->rawDistanceTo($other);
+        $dist = $this->rawDistanceTo($other);
         $adjustedDist = $dist + $this->Adjustment + $other->Adjustment;
         if ($adjustedDist > 0.0) {
             $dist = $adjustedDist;
         }
-        return Time::Duration($dist * $secondsToNanoseconds);
+        return Time::Duration($dist * self::secondsToNanoseconds);
     }
 
     protected function rawDistanceTo(self $other): float
     {
-        return magnitude(diff($this->Vec, $other->Vec)) + $this->Height + $other->Height;
+        return self::_magnitude(self::_diff($this->Vec, $other->Vec)) + $this->Height + $other->Height;
+    }
+
+    private static function _componentIsValid(float $f): bool
+    {
+        return !is_nan($f) && is_finite($f);
+    }
+
+    /**
+     * @param array<float> $vec1
+     * @param array<float> $vec2
+     * @return array<float>
+     */
+    private static function _add(array $vec1, array $vec2): array
+    {
+        $ret = [];
+        foreach ($vec1 as $k => $v) {
+            $ret[$k] = $v + $vec2[$k];
+        }
+        return $ret;
+    }
+
+    /**
+     * @param array<float> $vec1
+     * @param array<float> $vec2
+     * @return array<float>
+     */
+    private static function _diff(array $vec1, array $vec2): array
+    {
+        $ret = [];
+        foreach ($vec1 as $k => $v) {
+            $ret[$k] = $v - $vec2[$k];
+        }
+        return $ret;
+    }
+
+    /**
+     * @param array<float> $vec
+     * @return array<float>
+     */
+    private static function _mul(array $vec, float $factor): array
+    {
+        $ret = [];
+        foreach ($vec as $k => $v) {
+            $ret[$k] = $v * $factor;
+        }
+        return $ret;
+    }
+
+    /**
+     * @param array<float> $vec
+     * @return float
+     */
+    private static function _magnitude(array $vec): float
+    {
+        $sum = 0.0;
+        foreach ($vec as $k => $v) {
+            $sum += ($v * $v);
+        }
+        return sqrt($sum);
+    }
+
+    /**
+     * @param array<float> $vec1
+     * @param array<float> $vec2
+     */
+    private static function _unitVectorAt(array $vec1, array $vec2): CoordinateUnitVectorAt
+    {
+        $ret = self::_diff($vec1, $vec2);
+
+        if (($mag = self::_magnitude($ret)) && $mag > self::ZeroThreshold) {
+            return new CoordinateUnitVectorAt(vec: self::_mul($ret, 1.0 / $mag), mag: $mag);
+        }
+
+        foreach ($ret as $k => &$v) {
+            $v = lcg_value() - 0.5;
+        }
+
+        if (($mag = self::_magnitude($ret)) && $mag > self::ZeroThreshold) {
+            return new CoordinateUnitVectorAt(vec: self::_mul($ret, 1.0 / $mag), mag: 0.0);
+        }
+
+        $ret    = array_fill(0, count($ret), 0.0);
+        $ret[0] = 1.0;
+        return new CoordinateUnitVectorAt(vec: $ret, mag: 0.0);
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('Vec' === $k) {
+                $n->Vec = (array)$v;
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Vec = $this->Vec;
+        $out->Error = $this->Error;
+        $out->Adjustment = $this->Adjustment;
+        $out->Height = $this->Height;
+        return $out;
     }
 }

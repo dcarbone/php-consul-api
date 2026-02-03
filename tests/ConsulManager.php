@@ -40,14 +40,14 @@ final class ConsulManager
      */
     public static function startSingle(string $flags): void
     {
-        if (\file_exists(self::PID_FILE)) {
+        if (file_exists(self::PID_FILE)) {
             self::stopSingle();
         }
 
-        \shell_exec(self::START_SINGLE_CMD . " {$flags}");
+        shell_exec(self::START_SINGLE_CMD . " {$flags}");
 
         // sleep to allow consul to setup
-        \sleep(3);
+        sleep(3);
     }
 
     /**
@@ -63,12 +63,10 @@ final class ConsulManager
      */
     public static function stopSingle(): void
     {
-        if (\file_exists(self::PID_FILE)) {
-            \shell_exec(self::STOP_SINGLE_CMD);
-            if (\file_exists(self::PID_FILE)) {
-                \unlink(self::PID_FILE);
-            }
-            \sleep(1);
+        if (file_exists(self::PID_FILE)) {
+            shell_exec(self::STOP_SINGLE_CMD);
+            unlink(self::PID_FILE);
+            sleep(1);
         }
     }
 
@@ -77,9 +75,9 @@ final class ConsulManager
      */
     public static function testConfig(): Config
     {
-        $conf = new Config();
-        $conf->Address = '127.0.0.1:8500';
-        $conf->Scheme = 'http';
-        return $conf;
+        return new Config(
+            Address: '127.0.0.1:8500',
+            Scheme:  'http',
+        );
     }
 }

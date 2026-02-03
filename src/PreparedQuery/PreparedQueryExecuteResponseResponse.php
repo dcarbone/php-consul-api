@@ -20,8 +20,8 @@ declare(strict_types=1);
 
 namespace DCarbone\PHPConsulAPI\PreparedQuery;
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedQueryResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
 
 class PreparedQueryExecuteResponseResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
@@ -32,8 +32,8 @@ class PreparedQueryExecuteResponseResponse extends AbstractValuedQueryResponse i
         return $this->PreparedQueryExecuteResponse;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        $this->PreparedQueryExecuteResponse = new PreparedQueryExecuteResponse((array)$decodedData);
+        $this->PreparedQueryExecuteResponse = new PreparedQueryExecuteResponse((array)$decoded);
     }
 }

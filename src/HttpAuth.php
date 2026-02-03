@@ -22,11 +22,8 @@ namespace DCarbone\PHPConsulAPI;
 
 class HttpAuth implements \JsonSerializable
 {
-    private const FIELD_USERNAME = 'username';
-    private const FIELD_PASSWORD = 'password';
-
-    public string $username = '';
-    public string $password = '';
+    public string $username;
+    public string $password;
 
     public function __construct(string $username = '', string $password = '')
     {
@@ -49,18 +46,23 @@ class HttpAuth implements \JsonSerializable
         return (string)$this;
     }
 
-    public function jsonSerialize(): array
+    public function jsonSerialize(): \stdClass
     {
-        return [self::FIELD_USERNAME => $this->username, self::FIELD_PASSWORD => $this->password];
+        $out = new \stdClass();
+        $out->username = $this->username;
+        if ('' !== $this->password) {
+            $out->password = $this->password;
+        }
+        return $out;
     }
 
     public function __debugInfo(): array
     {
-        return [self::FIELD_USERNAME => $this->username];
+        return ['username' => $this->username];
     }
 
     public function __toString(): string
     {
-        return trim(sprintf('%s:%s', $this->username, $this->password), ':');
+        return $this->password !== '' ? "{$this->username}:{$this->password}" : $this->username;
     }
 }

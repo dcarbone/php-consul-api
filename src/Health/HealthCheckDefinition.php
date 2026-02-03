@@ -21,96 +21,57 @@ namespace DCarbone\PHPConsulAPI\Health;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\Go\Time\Duration;
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Operator\ReadableDuration;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
+use DCarbone\PHPConsulAPI\Values;
 
-class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
+class HealthCheckDefinition extends AbstractType implements \JsonSerializable
 {
-    protected const FIELDS = [
-        self::FIELD_INTERVAL_DURATION                          => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_DURATION,
-            Transcoding::FIELD_SKIP               => true,
-        ],
-        self::FIELD_TIMEOUT_DURATION                           => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_DURATION,
-            Transcoding::FIELD_SKIP               => true,
-        ],
-        self::FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER_DURATION => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_DURATION,
-            Transcoding::FIELD_SKIP               => true,
-        ],
-        self::FIELD_TIMEOUT                                    => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => [ReadableDuration::class, 'unmarshalJSON'],
-        ],
-        self::FIELD_INTERVAL                                   => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => [ReadableDuration::class, 'unmarshalJSON'],
-        ],
-        self::FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER          => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => [ReadableDuration::class, 'unmarshalJSON'],
-        ],
-    ];
+    public string $HTTP;
+    public Values $Header;
+    public string $Method;
+    public string $Body;
+    public bool $TLSSkipVerify;
+    public string $TCP;
+    public bool $TCPUseTLS;
+    public string $UDP;
+    public string $GRPC;
+    public string $OSService;
+    public bool $GRPCUseTLS;
+    public Time\Duration $IntervalDuration;
+    public Time\Duration $TimeoutDuration;
+    public Time\Duration $DeregisterCriticalServiceAfterDuration;
 
-    private const FIELD_HTTP                                       = 'HTTP';
-    private const FIELD_HEADER                                     = 'Header';
-    private const FIELD_METHOD                                     = 'Method';
-    private const FIELD_BODY                                       = 'Body';
-    private const FIELD_TLS_SKIP_VERIFY                            = 'TLSSkipVerify';
-    private const FIELD_TCP                                        = 'TCP';
-    private const FIELD_INTERVAL_DURATION                          = 'IntervalDuration';
-    private const FIELD_TIMEOUT_DURATION                           = 'TimeoutDuration';
-    private const FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER_DURATION = 'DeregisterCriticalServiceAfterDuration';
-    private const FIELD_INTERVAL                                   = 'Interval';
-    private const FIELD_TIMEOUT                                    = 'Timeout';
-    private const FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER          = 'DeregisterCriticalServiceAfter';
-
-    public string $HTTP = '';
-    public array $Header = [];
-    public string $Method = '';
-    public string $Body = '';
-    public bool $TLSSkipVerify = false;
-    public string $TCP = '';
-    public Duration $IntervalDuration;
-    public Duration $TimeoutDuration;
-    public Duration $DeregisterCriticalServiceAfterDuration;
-
-    public ReadableDuration $Interval;
-    public ReadableDuration $Timeout;
-    public ReadableDuration $DeregisterCriticalServiceAfter;
-
-    public function __construct(?array $data = null)
-    {
-        parent::__construct($data);
-        if (!isset($this->Interval)) {
-            $this->Interval = new ReadableDuration();
-        }
-        if (!isset($this->Timeout)) {
-            $this->Timeout = new ReadableDuration();
-        }
-        if (!isset($this->DeregisterCriticalServiceAfter)) {
-            $this->DeregisterCriticalServiceAfter = new ReadableDuration();
-        }
-
-        if (!isset($this->IntervalDuration)) {
-            $this->IntervalDuration = Time::ParseDuration((string)$this->Interval);
-        } else {
-            $this->Interval = ReadableDuration::fromDuration((string)$this->IntervalDuration);
-        }
-        if (!isset($this->TimeoutDuration)) {
-            $this->TimeoutDuration = Time::ParseDuration((string)$this->Timeout);
-        } else {
-            $this->Timeout = ReadableDuration::fromDuration((string)$this->TimeoutDuration);
-        }
-        if (!isset($this->DeregisterCriticalServiceAfterDuration)) {
-            $this->DeregisterCriticalServiceAfterDuration = Time::ParseDuration(
-                (string)$this->DeregisterCriticalServiceAfter
-            );
-        } else {
-            $this->DeregisterCriticalServiceAfter = ReadableDuration::fromDuration(
-                (string)$this->DeregisterCriticalServiceAfterDuration
-            );
-        }
+    /**
+     * @param array<string,array<string>>|\DCarbone\PHPConsulAPI\Values|null $Header
+     */
+    public function __construct(
+        string $HTTP = '',
+        null|array|\stdClass|Values $Header = null,
+        string $Method = '',
+        string $Body = '',
+        bool $TLSSkipVerify = false,
+        string $TCP = '',
+        string $UDP = '',
+        string $GRPC = '',
+        string $OSService = '',
+        bool $GRPCUseTLS = false,
+        null|int|float|string|\DateInterval|Time\Duration $IntervalDuration = null,
+        null|int|float|string|\DateInterval|Time\Duration $TimeoutDuration = null,
+        null|int|float|string|\DateInterval|Time\Duration $DeregisterCriticalServiceAfterDuration = null,
+    ) {
+        $this->HTTP = $HTTP;
+        $this->setHeader($Header);
+        $this->Method = $Method;
+        $this->Body = $Body;
+        $this->TLSSkipVerify = $TLSSkipVerify;
+        $this->TCP = $TCP;
+        $this->UDP = $UDP;
+        $this->GRPC = $GRPC;
+        $this->OSService = $OSService;
+        $this->GRPCUseTLS = $GRPCUseTLS;
+        $this->IntervalDuration = Time::Duration($IntervalDuration);
+        $this->TimeoutDuration = Time::Duration($TimeoutDuration);
+        $this->DeregisterCriticalServiceAfterDuration = Time::Duration($DeregisterCriticalServiceAfterDuration);
     }
 
     public function getHTTP(): string
@@ -118,14 +79,43 @@ class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
         return $this->HTTP;
     }
 
-    public function getHeader(): array
+    public function setHTTP(string $HTTP): self
+    {
+        $this->HTTP = $HTTP;
+        return $this;
+    }
+
+    public function getHeader(): Values
     {
         return $this->Header;
+    }
+
+    /**
+     * @param array<string,array<string>>|\DCarbone\PHPConsulAPI\Values|null $Header
+     * @return $this
+     */
+    public function setHeader(null|array|\stdClass|Values $Header = []): self
+    {
+        if (null === $Header) {
+            $this->Header = new Values();
+            return $this;
+        }
+        if (!$Header instanceof Values) {
+            $Header = Values::fromArray((array)$Header);
+        }
+        $this->Header = $Header;
+        return $this;
     }
 
     public function getMethod(): string
     {
         return $this->Method;
+    }
+
+    public function setMethod(string $Method): self
+    {
+        $this->Method = $Method;
+        return $this;
     }
 
     public function getBody(): string
@@ -144,75 +134,148 @@ class HealthCheckDefinition extends AbstractModel implements \JsonSerializable
         return $this->TLSSkipVerify;
     }
 
+    public function setTLSSkipVerify(bool $TLSSkipVerify): self
+    {
+        $this->TLSSkipVerify = $TLSSkipVerify;
+        return $this;
+    }
+
     public function getTCP(): string
     {
         return $this->TCP;
     }
 
-    public function getIntervalDuration(): ?Duration
+    public function setTCP(string $TCP): self
+    {
+        $this->TCP = $TCP;
+        return $this;
+    }
+
+    public function isTCPUseTLS(): bool
+    {
+        return $this->TCPUseTLS;
+    }
+
+    public function setTCPUseTLS(bool $TCPUseTLS): HealthCheckDefinition
+    {
+        $this->TCPUseTLS = $TCPUseTLS;
+        return $this;
+    }
+
+    public function getUDP(): string
+    {
+        return $this->UDP;
+    }
+
+    public function setUDP(string $UDP): HealthCheckDefinition
+    {
+        $this->UDP = $UDP;
+        return $this;
+    }
+
+    public function getGRPC(): string
+    {
+        return $this->GRPC;
+    }
+
+    public function setGRPC(string $GRPC): HealthCheckDefinition
+    {
+        $this->GRPC = $GRPC;
+        return $this;
+    }
+
+    public function getOSService(): string
+    {
+        return $this->OSService;
+    }
+
+    public function setOSService(string $OSService): HealthCheckDefinition
+    {
+        $this->OSService = $OSService;
+        return $this;
+    }
+
+    public function isGRPCUseTLS(): bool
+    {
+        return $this->GRPCUseTLS;
+    }
+
+    public function setGRPCUseTLS(bool $GRPCUseTLS): HealthCheckDefinition
+    {
+        $this->GRPCUseTLS = $GRPCUseTLS;
+        return $this;
+    }
+
+    public function getIntervalDuration(): Time\Duration
     {
         return $this->IntervalDuration;
     }
 
-    public function getTimeoutDuration(): ?Duration
+    public function setIntervalDuration(null|int|float|string|\DateInterval|Time\Duration $IntervalDuration): self
+    {
+        $this->IntervalDuration = Time::Duration($IntervalDuration);
+        return $this;
+    }
+
+    public function getTimeoutDuration(): Time\Duration
     {
         return $this->TimeoutDuration;
     }
 
-    public function getDeregisterCriticalServiceAfterDuration(): ?Duration
+    public function setTimeoutDuration(null|int|float|string|\DateInterval|Time\Duration $TimeoutDuration): self
+    {
+        $this->TimeoutDuration = Time::Duration($TimeoutDuration);
+        return $this;
+    }
+
+    public function getDeregisterCriticalServiceAfterDuration(): Time\Duration
     {
         return $this->DeregisterCriticalServiceAfterDuration;
     }
 
-    public function getInterval(): ?ReadableDuration
-    {
-        return $this->Interval;
+    public function setDeregisterCriticalServiceAfterDuration(
+        null|int|float|string|\DateInterval|Time\Duration $DeregisterCriticalServiceAfterDuration
+    ): self {
+        $this->DeregisterCriticalServiceAfterDuration = Time::Duration($DeregisterCriticalServiceAfterDuration);
+        return $this;
     }
 
-    public function getTimeout(): ?ReadableDuration
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        return $this->Timeout;
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('Interval' === $k || 'IntervalDuration' === $k) {
+                $n->IntervalDuration = Time::Duration($v);
+            } elseif ('Timeout' === $k || 'TimeoutDuration' === $k) {
+                $n->TimeoutDuration = Time::Duration($v);
+            } elseif ('DeregisterCriticalServiceAfter' === $k || 'DeregisterCriticalServiceAfterDuration' === $k) {
+                $n->DeregisterCriticalServiceAfterDuration = Time::Duration($v);
+            } elseif ('Header' === $k) {
+                $n->setHeader($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
     }
 
-    public function getDeregisterCriticalServiceAfter(): ?ReadableDuration
+    public function jsonSerialize(): \stdClass
     {
-        return $this->DeregisterCriticalServiceAfter;
-    }
-
-    public function jsonSerialize(): array
-    {
-        // prepare base definition
-        $prep = [
-            self::FIELD_HTTP            => $this->HTTP,
-            self::FIELD_HEADER          => $this->Header,
-            self::FIELD_METHOD          => $this->Method,
-            self::FIELD_BODY            => $this->Body,
-            self::FIELD_TLS_SKIP_VERIFY => $this->TLSSkipVerify,
-            self::FIELD_TCP             => $this->TCP,
-
-        ];
-        if (0 !== $this->IntervalDuration->Nanoseconds()) {
-            $prep[self::FIELD_INTERVAL] = (string)$this->IntervalDuration;
-        } elseif (0 !== $this->Interval->Nanoseconds()) {
-            $prep[self::FIELD_INTERVAL] = (string)$this->Interval;
-        }
-        if (0 !== $this->TimeoutDuration->Nanoseconds()) {
-            $prep[self::FIELD_TIMEOUT] = (string)$this->TimeoutDuration;
-        } elseif (0 !== $this->Timeout->Nanoseconds()) {
-            $prep[self::FIELD_TIMEOUT] = (string)$this->Timeout;
-        }
-        if (0 !== $this->DeregisterCriticalServiceAfterDuration->Nanoseconds()) {
-            $prep[self::FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER] = (string)$this->DeregisterCriticalServiceAfterDuration;
-        } elseif (0 !== $this->DeregisterCriticalServiceAfter->Nanoseconds()) {
-            $prep[self::FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER] = (string)$this->DeregisterCriticalServiceAfter;
-        }
-
-        // handle per-field marshalling
-        $out = [];
-        foreach ($prep as $field => $value) {
-            $this->marshalField($out, $field, $value);
-        }
-
+        $out = $this->_startJsonSerialize();
+        $out->HTTP = $this->HTTP;
+        $out->Header = $this->Header;
+        $out->Method = $this->Method;
+        $out->Body = $this->Body;
+        $out->TLSSkipVerify = $this->TLSSkipVerify;
+        $out->TCP = $this->TCP;
+        $out->TCPUseTLS = $this->TCPUseTLS;
+        $out->UDP = $this->UDP;
+        $out->GRPC = $this->GRPC;
+        $out->OSService = $this->OSService;
+        $out->GRPCUseTLS = $this->GRPCUseTLS;
+        $out->Interval = (string)$this->IntervalDuration;
+        $out->Timeout = (string)$this->TimeoutDuration;
+        $out->DeregisterCriticalServiceAfter = (string)$this->DeregisterCriticalServiceAfterDuration;
         return $out;
     }
 }

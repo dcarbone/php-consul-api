@@ -20,26 +20,41 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ACLBindingRule extends AbstractModel
+class ACLBindingRule extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_NAMESPACE => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
+    public string $ID;
+    public string $Description;
+    public string $AuthMethod;
+    public string $Selector;
+    public BindingRuleBindType $BindType;
+    public string $BindName;
+    public int $CreateIndex;
+    public int $ModifyIndex;
+    public string $Namespace;
 
-    private const FIELD_NAMESPACE = 'Namespace';
-
-    public string $ID = '';
-    public string $Description = '';
-    public string $AuthMethod = '';
-    public string $Selector = '';
-    public string $BindType = '';
-    public string $BindName = '';
-    public int $CreateIndex = 0;
-    public int $ModifyIndex = 0;
-    public string $Namespace = '';
+    public function __construct(
+        string $ID = '',
+        string $Description = '',
+        string $AuthMethod = '',
+        string $Selector = '',
+        string|BindingRuleBindType $BindType = BindingRuleBindType::UNDEFINED,
+        string $BindName = '',
+        int $CreateIndex = 0,
+        int $ModifyIndex = 0,
+        string $Namespace = ''
+    ) {
+        $this->ID = $ID;
+        $this->Description = $Description;
+        $this->AuthMethod = $AuthMethod;
+        $this->Selector = $Selector;
+        $this->BindType = ($BindType instanceof BindingRuleBindType) ? $BindType : BindingRuleBindType::from($BindType);
+        $this->BindName = $BindName;
+        $this->CreateIndex = $CreateIndex;
+        $this->ModifyIndex = $ModifyIndex;
+        $this->Namespace = $Namespace;
+}
 
     public function getID(): string
     {
@@ -85,12 +100,12 @@ class ACLBindingRule extends AbstractModel
         return $this;
     }
 
-    public function getBindType(): string
+    public function getBindType(): BindingRuleBindType
     {
         return $this->BindType;
     }
 
-    public function setBindType(string $BindType): self
+    public function setBindType(BindingRuleBindType $BindType): self
     {
         $this->BindType = $BindType;
         return $this;
@@ -138,5 +153,31 @@ class ACLBindingRule extends AbstractModel
     {
         $this->Namespace = $Namespace;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->ID = $this->ID;
+        $out->Description = $this->Description;
+        $out->AuthMethod = $this->AuthMethod;
+        $out->Selector = $this->Selector;
+        $out->BindType = $this->BindType;
+        $out->BindName = $this->BindName;
+        $out->CreateIndex = $this->CreateIndex;
+        $out->ModifyIndex = $this->ModifyIndex;
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        return $out;
     }
 }

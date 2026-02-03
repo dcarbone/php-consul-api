@@ -20,77 +20,71 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
+use DCarbone\PHPConsulAPI\ConfigEntry\AccessLogsConfig;
+use DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension;
 use DCarbone\PHPConsulAPI\ConfigEntry\ExposeConfig;
 use DCarbone\PHPConsulAPI\ConfigEntry\MeshGatewayConfig;
-use DCarbone\PHPConsulAPI\FakeMap;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\ConfigEntry\ProxyMode;
+use DCarbone\PHPConsulAPI\ConfigEntry\TransparentProxyConfig;
 
-class AgentServiceConnectProxyConfig extends AbstractModel
+class AgentServiceConnectProxyConfig extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_ENVOY_EXTENSIONS => [
-            Transcoding::FIELD_CLASS => EnvoyExtension::class,
-            Transcoding::FIELD_TYPE => Transcoding::ARRAY,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-            Transcoding::FIELD_OMITEMPTY => true,
-        ],
-        self::FIELD_DESTINATION_SERVICE_NAME => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_DESTINATION_SERVICE_ID   => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_LOCAL_SERVICE_ADDRESS    => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_LOCAL_SERVICE_PORT       => Transcoding::OMITEMPTY_INTEGER_FIELD,
-        self::FIELD_CONFIG                   => Transcoding::OMITEMPTY_MAP_FIELD,
-        self::FIELD_UPSTREAMS                => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => Upstream::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-        self::FIELD_MESH_GATEWAY             => [
-            Transcoding::FIELD_TYPE      => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS     => MeshGatewayConfig::class,
-            Transcoding::FIELD_OMITEMPTY => true,
-        ],
-        self::FIELD_EXPOSE                   => [
-            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS => ExposeConfig::class,
-        ],
-    ];
+    /** @var array<\DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension> */
+    public array $EnvoyExtensions;
+    public string $DestinationServiceName;
+    public string $DestinationServiceID;
+    public string $LocalServiceAddress;
+    public int $LocalServicePort;
+    public string $LocalServiceSocketPath;
+    public ProxyMode $Mode;
+    public null|TransparentProxyConfig $TransparentProxy;
+    /** @var array<string,mixed> */
+    public array $Config;
+    /** @var \DCarbone\PHPConsulAPI\Agent\Upstream[] */
+    public array $Upstreams;
+    public null|MeshGatewayConfig $MeshGateway;
+    public null|ExposeConfig $Expose;
+    public null|AccessLogsConfig $AccessLogs;
 
-    private const FIELD_ENVOY_EXTENSIONS = 'EnvoyExtension';
-    private const FIELD_DESTINATION_SERVICE_NAME = 'DestinationServiceName';
-    private const FIELD_DESTINATION_SERVICE_ID   = 'DestinationServiceID';
-    private const FIELD_LOCAL_SERVICE_ADDRESS    = 'LocalServiceAddress';
-    private const FIELD_LOCAL_SERVICE_PORT       = 'LocalServicePort';
-    private const FIELD_CONFIG                   = 'Config';
-    private const FIELD_UPSTREAMS                = 'Upstreams';
-    private const FIELD_MESH_GATEWAY             = 'MeshGateway';
-    private const FIELD_EXPOSE                   = 'Expose';
-
-    public array $EnvoyExtensions = [];
-    public string $DestinationServiceName = '';
-    public string $DestinationServiceID = '';
-    public string $LocalServiceAddress = '';
-    public int $LocalServicePort = 0;
-    public ?FakeMap $Config = null;
-    public string $LocalServiceSocketPath = '';
-    public string $Mode = '';
-    public ?TransparentProxyConfig $TransparentProxy = null;
-    public array $Upstreams = [];
-    public MeshGatewayConfig $MeshGateway;
-    public ExposeConfig $Expose;
-
-    public function __construct(?array $data = [])
-    {
-        parent::__construct($data);
-        if (!isset($this->MeshGateway)) {
-            $this->MeshGateway = new MeshGatewayConfig(null);
-        }
-        if (!isset($this->Expose)) {
-            $this->Expose = new ExposeConfig(null);
-        }
+    /**
+     * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension> $EnvoyExtensions
+     * @param array<string,mixed> $Config
+     * @param array<\DCarbone\PHPConsulAPI\Agent\Upstream> $Upstreams
+     */
+    public function __construct(
+        iterable $EnvoyExtensions = [],
+        string $DestinationServiceName = '',
+        string $DestinationServiceID = '',
+        string $LocalServiceAddress = '',
+        int $LocalServicePort = 0,
+        string $LocalServiceSocketPath = '',
+        string|ProxyMode $Mode = ProxyMode::Default,
+        null|TransparentProxyConfig $TransparentProxy = null,
+        array $Config = [],
+        iterable $Upstreams = [],
+        null|MeshGatewayConfig $MeshGateway = null,
+        null|ExposeConfig $Expose = null,
+        null|AccessLogsConfig $AccessLogs = null,
+    ) {
+        $this->setEnvoyExtensions(...$EnvoyExtensions);
+        $this->DestinationServiceName = $DestinationServiceName;
+        $this->DestinationServiceID = $DestinationServiceID;
+        $this->LocalServiceAddress = $LocalServiceAddress;
+        $this->LocalServicePort = $LocalServicePort;
+        $this->setConfig($Config);
+        $this->LocalServiceSocketPath = $LocalServiceSocketPath;
+        $this->Mode = $Mode instanceof ProxyMode ? $Mode : ProxyMode::from($Mode);
+        $this->TransparentProxy = $TransparentProxy;
+        $this->setUpstreams(...$Upstreams);
+        $this->MeshGateway = $MeshGateway;
+        $this->Expose = $Expose;
+        $this->AccessLogs = $AccessLogs;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension[]
+     */
     public function getEnvoyExtensions(): array
     {
         return $this->EnvoyExtensions;
@@ -102,7 +96,7 @@ class AgentServiceConnectProxyConfig extends AbstractModel
         return $this;
     }
 
-    public function setEnvoyExtensions(array $EnvoyExtensions): self
+    public function setEnvoyExtensions(EnvoyExtension ...$EnvoyExtensions): self
     {
         $this->EnvoyExtensions = $EnvoyExtensions;
         return $this;
@@ -163,69 +157,173 @@ class AgentServiceConnectProxyConfig extends AbstractModel
         return $this;
     }
 
-    public function getMode(): string
+    public function getMode(): ProxyMode
     {
         return $this->Mode;
     }
 
-    public function setMode(string $Mode): self
+    public function setMode(string|ProxyMode $Mode): self
     {
-        $this->Mode = $Mode;
+        $this->Mode = $Mode instanceof ProxyMode ? $Mode : ProxyMode::from($Mode);
         return $this;
     }
 
-    public function getTransparentProxy(): ?TransparentProxyConfig
+    public function getTransparentProxy(): null|TransparentProxyConfig
     {
         return $this->TransparentProxy;
     }
 
-    public function setTransparentProxy(?TransparentProxyConfig $TransparentProxy): self
+    public function setTransparentProxy(null|TransparentProxyConfig $TransparentProxy): self
     {
         $this->TransparentProxy = $TransparentProxy;
         return $this;
     }
 
-    public function getConfig(): ?FakeMap
+    /**
+     * @return array<string,mixed>|null
+     */
+    public function getConfig(): null|array
     {
-        return $this->Config;
+        return $this->Config ?? null;
     }
 
-    public function setConfig(array|FakeMap|\stdClass|null $Config): self
+    /**
+     * @param \stdClass|array<string,mixed>|null $Config
+     * @return $this
+     */
+    public function setConfig(null|\stdClass|array $Config): self
     {
-        $this->Config = FakeMap::parse($Config);
+        if (null === $Config) {
+            unset($this->Config);
+            return $this;
+        }
+        $this->Config = [];
+        foreach ($Config as $k => $v) {
+            $this->Config[$k] = $v;
+        }
         return $this;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\Agent\Upstream[]
+     */
     public function getUpstreams(): array
     {
         return $this->Upstreams;
     }
 
-    public function setUpstreams(array $Upstreams): self
+    public function setUpstreams(Upstream ...$Upstreams): self
     {
         $this->Upstreams = $Upstreams;
         return $this;
     }
 
-    public function getMeshGateway(): MeshGatewayConfig
+    public function getMeshGateway(): null|MeshGatewayConfig
     {
         return $this->MeshGateway;
     }
 
-    public function setMeshGateway(MeshGatewayConfig $MeshGateway): self
+    public function setMeshGateway(null|MeshGatewayConfig $MeshGateway): self
     {
         $this->MeshGateway = $MeshGateway;
         return $this;
     }
 
-    public function getExpose(): ExposeConfig
+    public function getExpose(): null|ExposeConfig
     {
         return $this->Expose;
     }
 
-    public function setExpose(ExposeConfig $Expose): self
+    public function setExpose(null|ExposeConfig $Expose): self
     {
         $this->Expose = $Expose;
         return $this;
+    }
+
+    public function getAccessLogs(): null|AccessLogsConfig
+    {
+        return $this->AccessLogs;
+    }
+
+    public function setAccessLogs(null|AccessLogsConfig $AccessLogs): self
+    {
+        $this->AccessLogs = $AccessLogs;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('EnvoyExtensions' === $k) {
+                foreach ($v as $vv) {
+                    $n->EnvoyExtensions[] = EnvoyExtension::jsonUnserialize($vv);
+                }
+            } elseif ('Mode' === $k) {
+                $n->setMode($v);
+            } elseif ('TransparentProxy' === $k) {
+                $n->TransparentProxy = TransparentProxyConfig::jsonUnserialize($v);
+            } elseif ('Upstreams' === $k) {
+                foreach ($v as $vv) {
+                    $n->Upstreams[] = Upstream::jsonUnserialize($vv);
+                }
+            } elseif ('MeshGateway' === $k) {
+                $n->MeshGateway = MeshGatewayConfig::jsonUnserialize($v);
+            } elseif ('Expose' === $k) {
+                $n->Expose = ExposeConfig::jsonUnserialize($v);
+            } elseif ('AccessLogs' === $k) {
+                $n->AccessLogs = null === $v ? null : AccessLogsConfig::jsonUnserialize($v);
+            } elseif ('Config' === $k) {
+                $n->setConfig($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        if ([] !== $this->EnvoyExtensions) {
+            $out->EnvoyExtensions = $this->EnvoyExtensions;
+        }
+        if ('' !== $this->DestinationServiceName) {
+            $out->DestinationServiceName = $this->DestinationServiceName;
+        }
+        if ('' !== $this->DestinationServiceID) {
+            $out->DestinationServiceID = $this->DestinationServiceID;
+        }
+        if ('' !== $this->LocalServiceAddress) {
+            $out->LocalServiceAddress = $this->LocalServiceAddress;
+        }
+        if (0 !== $this->LocalServicePort) {
+            $out->LocalServicePort = $this->LocalServicePort;
+        }
+        if (isset($this->Config)) {
+            $out->Config = $this->Config;
+        }
+        if ('' !== $this->LocalServiceSocketPath) {
+            $out->LocalServiceSocketPath = $this->LocalServiceSocketPath;
+        }
+        if (ProxyMode::Default !== $this->Mode) {
+            $out->Mode = $this->Mode->value;
+        }
+        if (null !== $this->TransparentProxy) {
+            $out->TransparentProxy = $this->TransparentProxy;
+        }
+        if ([] !== $this->Upstreams) {
+            $out->Upstreams = $this->Upstreams;
+        }
+        if (null !== $this->MeshGateway) {
+            $out->MeshGateway = $this->MeshGateway;
+        }
+        if (null !== $this->Expose) {
+            $out->Expose = $this->Expose;
+        }
+        if (null !== $this->AccessLogs) {
+            $out->AccessLogs = $this->AccessLogs;
+        }
+        return $out;
     }
 }

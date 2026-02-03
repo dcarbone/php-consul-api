@@ -25,13 +25,14 @@ use GuzzleHttp\Psr7\Request as Psr7Request;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
+use function DCarbone\PHPConsulAPI\PHPLib\dur_to_millisecond;
 
 class Request
 {
     public Values $header;
     public Params $params;
 
-    public ?Time\Duration $timeout = null;
+    public null|Time\Duration $timeout = null;
 
     private string $scheme;
     private string $address;
@@ -93,7 +94,7 @@ class Request
         return $this->body;
     }
 
-    public function applyOptions(?RequestOptions $opts): void
+    public function applyOptions(null|RequestOptions $opts): void
     {
         if (null === $opts) {
             return;
@@ -112,7 +113,7 @@ class Request
     public function getUri(): UriInterface
     {
         $uri = "{$this->scheme}://{$this->address}/{$this->path}";
-        if (0 < \count($this->params)) {
+        if (0 < count($this->params)) {
             $uri .= "?{$this->params}";
         }
         return new Uri($uri);

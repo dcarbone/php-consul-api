@@ -20,61 +20,70 @@ namespace DCarbone\PHPConsulAPI\Catalog;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Agent\AgentCheck;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
-use DCarbone\PHPConsulAPI\FakeMap;
 use DCarbone\PHPConsulAPI\Health\HealthChecks;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\NodeMetaField;
+use DCarbone\PHPConsulAPI\Peering\Locality;
+use DCarbone\PHPConsulAPI\PHPLib\Types\TaggedAddressField;
 
-class CatalogRegistration extends AbstractModel
+class CatalogRegistration extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_TAGGED_ADDRESSES => Transcoding::MAP_FIELD,
-        self::FIELD_NODE_META        => Transcoding::MAP_FIELD,
-        self::FIELD_SERVICE          => [
-            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS => AgentService::class,
-        ],
-        self::FIELD_CHECK   => [
-            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS => AgentCheck::class,
-        ],
-        self::FIELD_CHECKS  => [
-            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS => HealthChecks::class,
-        ],
-    ];
+    use TaggedAddressField;
+    use NodeMetaField;
 
-    private const FIELD_TAGGED_ADDRESSES = 'TaggedAddresses';
-    private const FIELD_NODE_META        = 'NodeMeta';
-    private const FIELD_SERVICE          = 'Service';
-    private const FIELD_CHECK            = 'Check';
-    private const FIELD_CHECKS           = 'Checks';
+    public string $ID;
+    public string $Node;
+    public string $Address;
+    public string $Datacenter;
+    public null|AgentService $Service;
+    public null|AgentCheck $Check;
+    public null|HealthChecks $Checks;
+    public bool $SkipNodeUpdate;
+    public string $Partition;
+    public null|Locality $Locality;
 
-    public string $ID = '';
-    public string $Node = '';
-    public string $Address = '';
-    public FakeMap $TaggedAddresses;
-    public FakeMap $NodeMeta;
-    public string $Datacenter = '';
-    public ?AgentService $Service = null;
-    public ?AgentCheck $Check = null;
-    public HealthChecks $Checks;
-    public bool $SkipNodeUpdate = false;
-
-    public function __construct(?array $data = [])
-    {
-        parent::__construct($data);
-        if (!isset($this->Checks)) {
-            $this->Checks = new HealthChecks(null);
-        }
-        if (!isset($this->TaggedAddresses)) {
-            $this->TaggedAddresses = new FakeMap(null);
-        }
-        if (!isset($this->NodeMeta)) {
-            $this->NodeMeta = new FakeMap(null);
-        }
+    /**
+     * @param string $ID
+     * @param string $Node
+     * @param string $Address
+     * @param array<string,string> $TaggedAddresses
+     * @param array<string,string> $NodeMeta
+     * @param string $Datacenter
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentService|null $Service
+     * @param \DCarbone\PHPConsulAPI\Agent\AgentCheck|null $Check
+     * @param \DCarbone\PHPConsulAPI\Health\HealthChecks|null $Checks
+     * @param bool $SkipNodeUpdate
+     * @param string $Partition
+     * @param \DCarbone\PHPConsulAPI\Peering\Locality|null $Locality
+     */
+    public function __construct(
+        string $ID = '',
+        string $Node = '',
+        string $Address = '',
+        array $TaggedAddresses = [],
+        array $NodeMeta = [],
+        string $Datacenter = '',
+        null|AgentService $Service = null,
+        null|AgentCheck $Check = null,
+        null|HealthChecks $Checks = null,
+        bool $SkipNodeUpdate = false,
+        string $Partition = '',
+        null|Locality $Locality = null,
+    ) {
+        $this->ID = $ID;
+        $this->Node = $Node;
+        $this->Address = $Address;
+        $this->setTaggedAddresses($TaggedAddresses);
+        $this->setNodeMeta($NodeMeta);
+        $this->Datacenter = $Datacenter;
+        $this->Service = $Service;
+        $this->Check = $Check;
+        $this->Checks = $Checks;
+        $this->SkipNodeUpdate = $SkipNodeUpdate;
+        $this->Partition = $Partition;
+        $this->Locality = $Locality;
     }
 
     public function getID(): string
@@ -110,28 +119,6 @@ class CatalogRegistration extends AbstractModel
         return $this;
     }
 
-    public function getTaggedAddresses(): FakeMap
-    {
-        return $this->TaggedAddresses;
-    }
-
-    public function setTaggedAddresses(FakeMap $TaggedAddresses): self
-    {
-        $this->TaggedAddresses = $TaggedAddresses;
-        return $this;
-    }
-
-    public function getNodeMeta(): FakeMap
-    {
-        return $this->NodeMeta;
-    }
-
-    public function setNodeMeta(FakeMap $NodeMeta): self
-    {
-        $this->NodeMeta = $NodeMeta;
-        return $this;
-    }
-
     public function getDatacenter(): string
     {
         return $this->Datacenter;
@@ -143,23 +130,23 @@ class CatalogRegistration extends AbstractModel
         return $this;
     }
 
-    public function getService(): ?AgentService
+    public function getService(): null|AgentService
     {
         return $this->Service;
     }
 
-    public function setService(?AgentService $Service): self
+    public function setService(null|AgentService $Service): self
     {
         $this->Service = $Service;
         return $this;
     }
 
-    public function getCheck(): ?AgentCheck
+    public function getCheck(): null|AgentCheck
     {
         return $this->Check;
     }
 
-    public function setCheck(?AgentCheck $Check): self
+    public function setCheck(null|AgentCheck $Check): self
     {
         $this->Check = $Check;
         return $this;
@@ -185,5 +172,72 @@ class CatalogRegistration extends AbstractModel
     {
         $this->SkipNodeUpdate = $SkipNodeUpdate;
         return $this;
+    }
+
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
+    public function getLocality(): null|Locality
+    {
+        return $this->Locality;
+    }
+
+    public function setLocality(null|Locality $Locality): self
+    {
+        $this->Locality = $Locality;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('TaggedAddresses' === $k) {
+                $n->setTaggedAddresses($v);
+            } elseif ('NodeMeta' === $k) {
+                $n->setNodeMeta($v);
+            } elseif ('Service' === $k) {
+                $n->Service = null === $v ? null : AgentService::jsonUnserialize($v);
+            } elseif ('Check' === $k) {
+                $n->Check = null === $v ? null : AgentCheck::jsonUnserialize($v);
+            } elseif ('Checks' === $k) {
+                $n->Checks = null === $v ? null : HealthChecks::jsonUnserialize($v);
+            } elseif ('Locality' === $k) {
+                $n->Locality = null === $v ? null : Locality::jsonUnserialize($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->ID = $this->ID;
+        $out->Node = $this->Node;
+        $out->Address = $this->Address;
+        $out->TaggedAddresses = $this->getTaggedAddresses();
+        $out->NodeMeta = $this->getNodeMeta();
+        $out->Datacenter = $this->Datacenter;
+        $out->Service = $this->Service;
+        $out->Check = $this->Check;
+        $out->Checks = $this->Checks;
+        $out->SkipNodeUpdate = $this->SkipNodeUpdate;
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
+        }
+        if (null !== $this->Locality) {
+            $out->Locality = $this->Locality;
+        }
+        return $out;
     }
 }

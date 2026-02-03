@@ -20,21 +20,18 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class ServiceResolverSubset extends AbstractModel
+class ServiceResolverSubset extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_FILTER       => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_ONLY_PASSING => Transcoding::OMITEMPTY_BOOLEAN_FIELD,
-    ];
+    public string $Filter;
+    public bool $OnlyPassing;
 
-    private const FIELD_FILTER       = 'Filter';
-    private const FIELD_ONLY_PASSING = 'OnlyPassing';
-
-    public string $Filter = '';
-    public bool $OnlyPassing = false;
+    public function __construct(string $Filter = '', bool $OnlyPassing = false)
+    {
+        $this->Filter = $Filter;
+        $this->OnlyPassing = $OnlyPassing;
+    }
 
     public function getFilter(): string
     {
@@ -56,5 +53,30 @@ class ServiceResolverSubset extends AbstractModel
     {
         $this->OnlyPassing = $OnlyPassing;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('only_passing' === $k) {
+                $n->OnlyPassing = $v;
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        if ('' !== $this->Filter) {
+            $out->Filter = $this->Filter;
+        }
+        if ($this->OnlyPassing) {
+            $out->OnlyPassing = $this->OnlyPassing;
+        }
+        return $out;
     }
 }

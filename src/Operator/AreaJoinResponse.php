@@ -20,13 +20,13 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class AreaJoinResponse extends AbstractModel
+class AreaJoinResponse extends AbstractType
 {
-    public string $Address = '';
-    public bool $Joined = false;
-    public string $Error = '';
+    public string $Address;
+    public bool $Joined;
+    public string $Error;
 
     public function getAddress(): string
     {

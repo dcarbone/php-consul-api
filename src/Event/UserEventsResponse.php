@@ -20,23 +20,27 @@ namespace DCarbone\PHPConsulAPI\Event;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedQueryResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
 
 class UserEventsResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?array $UserEvents = null;
+    /** @var \DCarbone\PHPConsulAPI\Event\UserEvent[] */
+    public array $UserEvents = [];
 
-    public function getValue(): ?array
+    /**
+     * @return \DCarbone\PHPConsulAPI\Event\UserEvent[]
+     */
+    public function getValue(): array
     {
         return $this->UserEvents;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
         $this->UserEvents = [];
-        foreach ($decodedData as $datum) {
-            $this->UserEvents[] = new UserEvent($datum);
+        foreach ($decoded as $datum) {
+            $this->UserEvents[] = UserEvent::jsonUnserialize($datum);
         }
     }
 }

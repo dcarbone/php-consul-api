@@ -20,20 +20,24 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedQueryResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
 
 class ACLPolicyQueryResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?ACLPolicy $ACLPolicy = null;
+    public null|ACLPolicy $ACLPolicy = null;
 
-    public function getValue(): ?ACLPolicy
+    public function getValue(): null|ACLPolicy
     {
         return $this->ACLPolicy;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        $this->ACLPolicy = new ACLPolicy((array)$decodedData);
+        if (null === $decoded) {
+            $this->ACLPolicy = null;
+            return;
+        }
+        $this->ACLPolicy = ACLPolicy::jsonUnserialize($decoded);
     }
 }

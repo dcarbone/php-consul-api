@@ -20,13 +20,27 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
-class GaugeValue extends AbstractModel
+class GaugeValue extends AbstractType
 {
-    public string $Name = '';
-    public float $Value = 0.0;
-    public array $Labels = [];
+    public string $Name;
+    public float $Value;
+    /** @var array<string,string> */
+    public array $Labels;
+
+    /**
+     * @param array<string,string> $Labels
+     */
+    public function __construct(
+        string $Name = '',
+        float $Value = 0.0,
+        array $Labels = [],
+    ) {
+        $this->Name = $Name;
+        $this->Value = $Value;
+        $this->setLabels($Labels);
+}
 
     public function getName(): string
     {
@@ -50,14 +64,50 @@ class GaugeValue extends AbstractModel
         return $this;
     }
 
-    public function getLabels(): array
+    /**
+     * @return null|array<string,string>
+     */
+    public function getLabels(): null|array
     {
         return $this->Labels;
     }
 
-    public function setLabels(array $labels): self
+    /**
+     * @param \stdClass|array<string,string>|null $Labels
+     * @return $this
+     */
+    public function setLabels(null|\stdClass|array $Labels): self
     {
-        $this->Labels = $labels;
+        if (null === $Labels) {
+            unset($this->Labels);
+            return $this;
+        }
+        $this->Labels = [];
+        foreach ($Labels as $k => $v) {
+            $this->Labels[$k] = $v;
+        }
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('Labels' === $k) {
+                $n->setLabels($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Name = $this->Name;
+        $out->Value = $this->Value;
+        $out->Labels = $this->getLabels();
+        return $out;
     }
 }
