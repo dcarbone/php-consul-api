@@ -29,6 +29,7 @@ use DCarbone\PHPConsulAPI\PHPLib\Response\ValuedWriteBoolResponse;
 use DCarbone\PHPConsulAPI\Txn\KVTxnAPIResponse;
 use DCarbone\PHPConsulAPI\Txn\KVTxnOps;
 use DCarbone\PHPConsulAPI\Txn\KVTxnResponse;
+use DCarbone\PHPConsulAPI\Txn\TxnOp;
 use DCarbone\PHPConsulAPI\Txn\TxnResponse;
 use DCarbone\PHPConsulAPI\WriteOptions;
 use DCarbone\PHPConsulAPI\PHPLib\Response\WriteResponse;
@@ -160,16 +161,22 @@ class KVClient extends AbstractClient
         return $ret;
     }
 
-    public function Txn(KVTxnOps $txn, null|QueryOptions $opts = null): KVTxnAPIResponse
+    /**
+     * @param array<\DCarbone\PHPConsulAPI\Txn\TxnOp> $txn
+     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
+     * @return \DCarbone\PHPConsulAPI\Txn\KVTxnAPIResponse
+     */
+    public function Txn(array $txn, null|QueryOptions $opts = null): KVTxnAPIResponse
     {
-        $txnOps = new KVTxnOps();
         foreach ($txn as $op) {
-            $txnOps->append(clone $op);
+            if (!($op instanceof TxnOp)) {
+                throw new \InvalidArgumentException(sprintf('$txn must be array of %s, saw %s', TxnOp::class, gettype($op)));
+            }
         }
 
         $ret = new KVTxnAPIResponse();
 
-        $resp = $this->_doPut('v1/txn', $txnOps, $opts);
+        $resp = $this->_doPut('v1/txn', $txn, $opts);
         if (null !== $resp->Err) {
             $ret->Err = $resp->Err;
             return $ret;

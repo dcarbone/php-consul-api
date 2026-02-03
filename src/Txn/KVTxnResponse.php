@@ -21,36 +21,62 @@ namespace DCarbone\PHPConsulAPI\Txn;
  */
 
 use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
-use DCarbone\PHPConsulAPI\Transcoding;
-use DCarbone\PHPConsulAPI\Txn\TxnErrors;
 
 class KVTxnResponse extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_RESULTS => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => KVPair::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-        ],
-        self::FIELD_ERRORS  => [
-            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS => TxnErrors::class,
-        ],
-    ];
+    /** @var array<\DCarbone\PHPConsulAPI\Txn\TxnResult> */
+    public array $Results;
+    /** @var array<\DCarbone\PHPConsulAPI\Txn\TxnError> */
+    public array $Errors;
 
-    private const FIELD_RESULTS = 'Results';
-    private const FIELD_ERRORS  = 'Errors';
+    public function __construct()
+    {
+        $this->Results = [];
+        $this->Errors = [];
+    }
 
-    public array $Results = [];
-    public ?TxnErrors $Errors = null;
-
+    /**
+     * @return array<\DCarbone\PHPConsulAPI\Txn\TxnResult>
+     */
     public function getResults(): array
     {
         return $this->Results;
     }
 
-    public function getErrors(): ?TxnErrors
+    /**
+     * @return array<\DCarbone\PHPConsulAPI\Txn\TxnError>
+     */
+    public function getErrors(): array
     {
         return $this->Errors;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('Results' === $k) {
+                $n->Results = [];
+                foreach ($v as $vv) {
+                    $n->Results[] = TxnResult::jsonUnserialize($vv);
+                }
+            } elseif ('Errors' === $k) {
+                $n->Errors = [];
+                foreach ($v as $vv) {
+                    $n->Errors[] = TxnError::jsonUnserialize($vv);
+                }
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Results = $this->Results;
+        $out->Errors = $this->Errors;
+        return $out;
     }
 }

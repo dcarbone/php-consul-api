@@ -65,9 +65,7 @@ final class ConsulManager
     {
         if (file_exists(self::PID_FILE)) {
             shell_exec(self::STOP_SINGLE_CMD);
-            if (file_exists(self::PID_FILE)) {
-                unlink(self::PID_FILE);
-            }
+            unlink(self::PID_FILE);
             sleep(1);
         }
     }
@@ -77,9 +75,9 @@ final class ConsulManager
      */
     public static function testConfig(): Config
     {
-        $conf = new Config();
-        $conf->Address = '127.0.0.1:8500';
-        $conf->Scheme = 'http';
-        return $conf;
+        return new Config(
+            Address: '127.0.0.1:8500',
+            Scheme:  'http',
+        );
     }
 }

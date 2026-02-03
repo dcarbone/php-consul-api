@@ -22,37 +22,33 @@ namespace DCarbone\PHPConsulAPI\Txn;
 
 use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Catalog\Node;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class NodeTxnOp extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_NODE => [
-            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS => Node::class,
-        ],
-    ];
-
-    private const FIELD_NODE = 'Node';
-
-    public string $Verb = '';
+    public NodeOp $Verb;
     public Node $Node;
 
-    public function __construct(?array $data = [])
-    {
-        parent::__construct($data);
-        if (!isset($this->Node)) {
-            $this->Node = new Node(null);
+    public function __construct(
+        NodeOp|string $Verb = NodeOp::UNDEFINED,
+        null|Node $Node = null,
+    ) {
+        $this->setVerb($Verb);
+        if (null === $Node) {
+            $Node = new Node();
         }
+        $this->Node = $Node;
     }
 
-    public function getVerb(): string
+    public function getVerb(): NodeOp
     {
         return $this->Verb;
     }
 
-    public function setVerb(string $Verb): self
+    public function setVerb(NodeOp|string $Verb): self
     {
+        if (is_string($Verb)) {
+            $Verb = NodeOp::from($Verb);
+        }
         $this->Verb = $Verb;
         return $this;
     }
@@ -66,5 +62,28 @@ class NodeTxnOp extends AbstractType
     {
         $this->Node = $Node;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $k => $v) {
+            if ('Verb' === $k) {
+                $n->setVerb($v);
+            } elseif ('Node' === $k) {
+                $n->Node = Node::jsonUnserialize($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Verb = $this->Verb;
+        $out->Node = $this->Node;
+        return $out;
     }
 }
