@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class AutopilotZone extends AbstractType
 {
@@ -39,8 +39,8 @@ class AutopilotZone extends AbstractType
         array $Voters = [],
         int $FailureTolerance = 0,
     ) {
-        $this->Servers = $Servers;
-        $this->Voters = $Voters;
+        $this->setServers(...$Servers);
+        $this->setVoters(...$Voters);
         $this->FailureTolerance = $FailureTolerance;
     }
 
@@ -52,10 +52,7 @@ class AutopilotZone extends AbstractType
         return $this->Servers;
     }
 
-    /**
-     * @param array<string> $Servers
-     */
-    public function setServers(array $Servers): self
+    public function setServers(string ...$Servers): self
     {
         $this->Servers = $Servers;
         return $this;
@@ -69,10 +66,7 @@ class AutopilotZone extends AbstractType
         return $this->Voters;
     }
 
-    /**
-     * @param array<string> $Voters
-     */
-    public function setVoters(array $Voters): self
+    public function setVoters(string ...$Voters): self
     {
         $this->Voters = $Voters;
         return $this;

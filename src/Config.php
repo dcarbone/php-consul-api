@@ -248,9 +248,10 @@ class Config
         return $this->Namespace;
     }
 
-    public function setNamespace(string $namespace): void
+    public function setNamespace(string $namespace): self
     {
         $this->Namespace = $namespace;
+        return $this;
     }
 
     public function getWaitTime(): Time\Duration
@@ -385,7 +386,7 @@ class Config
         return $this->JSONDecodeMaxDepth;
     }
 
-    public function setJSONDecodeMaxDepth(int $JSONDecodeMaxDepth): Config
+    public function setJSONDecodeMaxDepth(int $JSONDecodeMaxDepth): self
     {
         $this->JSONDecodeMaxDepth = $JSONDecodeMaxDepth;
         return $this;
@@ -396,7 +397,7 @@ class Config
         return $this->JSONDecodeOpts;
     }
 
-    public function setJSONDecodeOpts(int $JSONDecodeOpts): Config
+    public function setJSONDecodeOpts(int $JSONDecodeOpts): self
     {
         $this->JSONDecodeOpts = $JSONDecodeOpts;
         return $this;

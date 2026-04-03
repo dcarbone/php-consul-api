@@ -21,10 +21,10 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
  */
 
 use DCarbone\PHPConsulAPI\AbstractClient;
+use DCarbone\PHPConsulAPI\PHPLib\ValuedWriteStringResponse;
+use DCarbone\PHPConsulAPI\PHPLib\WriteResponse;
 use DCarbone\PHPConsulAPI\QueryOptions;
-use DCarbone\PHPConsulAPI\PHPLib\Response\ValuedWriteStringResponse;
 use DCarbone\PHPConsulAPI\WriteOptions;
-use DCarbone\PHPConsulAPI\PHPLib\Response\WriteResponse;
 
 class PreparedQueryClient extends AbstractClient
 {

@@ -20,8 +20,8 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Health\HealthChecks;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class AgentServiceChecksInfo extends AbstractType
 {

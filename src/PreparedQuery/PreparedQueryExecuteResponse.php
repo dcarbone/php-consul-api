@@ -20,8 +20,8 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Health\ServiceEntry;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class PreparedQueryExecuteResponse extends AbstractType
 {
@@ -46,7 +46,7 @@ class PreparedQueryExecuteResponse extends AbstractType
     ) {
         $this->Service = $Service;
         $this->Namespace = $Namespace;
-        $this->Nodes = $Nodes;
+        $this->setNodes(...$Nodes);
         $this->DNS = $DNS ?? new QueryDNSOptions();
         $this->Datacenter = $Datacenter;
         $this->Failovers = $Failovers;
@@ -82,10 +82,7 @@ class PreparedQueryExecuteResponse extends AbstractType
         return $this->Nodes;
     }
 
-    /**
-     * @param array<ServiceEntry> $Nodes
-     */
-    public function setNodes(array $Nodes): self
+    public function setNodes(ServiceEntry ...$Nodes): self
     {
         $this->Nodes = $Nodes;
         return $this;

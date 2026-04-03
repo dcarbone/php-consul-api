@@ -20,8 +20,8 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Consul;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 use function DCarbone\PHPConsulAPI\PHPLib\_enc_obj_if_valued;
 
 class ProxyConfigEntry extends AbstractType implements ConfigEntry

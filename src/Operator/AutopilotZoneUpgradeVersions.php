@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class AutopilotZoneUpgradeVersions extends AbstractType
 {
@@ -45,10 +45,10 @@ class AutopilotZoneUpgradeVersions extends AbstractType
         array $OtherVersionVoters = [],
         array $OtherVersionNonVoters = [],
     ) {
-        $this->TargetVersionVoters = $TargetVersionVoters;
-        $this->TargetVersionNonVoters = $TargetVersionNonVoters;
-        $this->OtherVersionVoters = $OtherVersionVoters;
-        $this->OtherVersionNonVoters = $OtherVersionNonVoters;
+        $this->setTargetVersionVoters(...$TargetVersionVoters);
+        $this->setTargetVersionNonVoters(...$TargetVersionNonVoters);
+        $this->setOtherVersionVoters(...$OtherVersionVoters);
+        $this->setOtherVersionNonVoters(...$OtherVersionNonVoters);
     }
 
     /**
@@ -59,10 +59,7 @@ class AutopilotZoneUpgradeVersions extends AbstractType
         return $this->TargetVersionVoters;
     }
 
-    /**
-     * @param array<string> $TargetVersionVoters
-     */
-    public function setTargetVersionVoters(array $TargetVersionVoters): self
+    public function setTargetVersionVoters(string ...$TargetVersionVoters): self
     {
         $this->TargetVersionVoters = $TargetVersionVoters;
         return $this;
@@ -76,10 +73,7 @@ class AutopilotZoneUpgradeVersions extends AbstractType
         return $this->TargetVersionNonVoters;
     }
 
-    /**
-     * @param array<string> $TargetVersionNonVoters
-     */
-    public function setTargetVersionNonVoters(array $TargetVersionNonVoters): self
+    public function setTargetVersionNonVoters(string ...$TargetVersionNonVoters): self
     {
         $this->TargetVersionNonVoters = $TargetVersionNonVoters;
         return $this;
@@ -93,10 +87,7 @@ class AutopilotZoneUpgradeVersions extends AbstractType
         return $this->OtherVersionVoters;
     }
 
-    /**
-     * @param array<string> $OtherVersionVoters
-     */
-    public function setOtherVersionVoters(array $OtherVersionVoters): self
+    public function setOtherVersionVoters(string ...$OtherVersionVoters): self
     {
         $this->OtherVersionVoters = $OtherVersionVoters;
         return $this;
@@ -110,10 +101,7 @@ class AutopilotZoneUpgradeVersions extends AbstractType
         return $this->OtherVersionNonVoters;
     }
 
-    /**
-     * @param array<string> $OtherVersionNonVoters
-     */
-    public function setOtherVersionNonVoters(array $OtherVersionNonVoters): self
+    public function setOtherVersionNonVoters(string ...$OtherVersionNonVoters): self
     {
         $this->OtherVersionNonVoters = $OtherVersionNonVoters;
         return $this;

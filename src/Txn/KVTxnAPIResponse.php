@@ -20,8 +20,8 @@ namespace DCarbone\PHPConsulAPI\Txn;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Response\ErrorField;
-use DCarbone\PHPConsulAPI\PHPLib\Response\QueryMetaField;
+use DCarbone\PHPConsulAPI\PHPLib\ErrorField;
+use DCarbone\PHPConsulAPI\PHPLib\QueryMetaField;
 
 class KVTxnAPIResponse
 {
@@ -36,8 +36,20 @@ class KVTxnAPIResponse
         return $this->OK;
     }
 
+    public function setOK(bool $OK): self
+    {
+        $this->OK = $OK;
+        return $this;
+    }
+
     public function getKVTxnResponse(): null|KVTxnResponse
     {
         return $this->KVTxnResponse;
+    }
+
+    public function setKVTxnResponse(null|KVTxnResponse $KVTxnResponse): self
+    {
+        $this->KVTxnResponse = $KVTxnResponse;
+        return $this;
     }
 }

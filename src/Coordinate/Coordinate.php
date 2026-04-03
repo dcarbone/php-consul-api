@@ -21,7 +21,7 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 /**
  * Class Coordinate

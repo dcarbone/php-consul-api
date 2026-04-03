@@ -20,8 +20,8 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Metrics\Label;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class CoordinateConfig extends AbstractType
 {

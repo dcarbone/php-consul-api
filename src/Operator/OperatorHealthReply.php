@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class OperatorHealthReply extends AbstractType
 {
@@ -39,7 +39,7 @@ class OperatorHealthReply extends AbstractType
     ) {
         $this->Healthy = $Healthy;
         $this->FailureTolerance = $FailureTolerance;
-        $this->Servers = $Servers;
+        $this->setServers(...$Servers);
     }
 
     public function isHealthy(): bool
@@ -72,10 +72,7 @@ class OperatorHealthReply extends AbstractType
         return $this->Servers;
     }
 
-    /**
-     * @param array<ServerHealth> $Servers
-     */
-    public function setServers(array $Servers): self
+    public function setServers(ServerHealth ...$Servers): self
     {
         $this->Servers = $Servers;
         return $this;

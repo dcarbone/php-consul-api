@@ -20,9 +20,9 @@ namespace DCarbone\PHPConsulAPI\Health;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
 use DCarbone\PHPConsulAPI\Catalog\Node;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class ServiceEntry extends AbstractType
 {

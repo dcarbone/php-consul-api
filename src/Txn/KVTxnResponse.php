@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\Txn;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class KVTxnResponse extends AbstractType
 {
@@ -29,26 +29,44 @@ class KVTxnResponse extends AbstractType
     /** @var array<\DCarbone\PHPConsulAPI\Txn\TxnError> */
     public array $Errors;
 
-    public function __construct()
-    {
-        $this->Results = [];
-        $this->Errors = [];
+    /**
+     * @param array<TxnResult> $Results
+     * @param array<TxnError> $Errors
+     */
+    public function __construct(
+        array $Results = [],
+        array $Errors = [],
+    ) {
+        $this->setResults(...$Results);
+        $this->setErrors(...$Errors);
     }
 
     /**
-     * @return array<\DCarbone\PHPConsulAPI\Txn\TxnResult>
+     * @return array<TxnResult>
      */
     public function getResults(): array
     {
         return $this->Results;
     }
 
+    public function setResults(TxnResult ...$Results): self
+    {
+        $this->Results = $Results;
+        return $this;
+    }
+
     /**
-     * @return array<\DCarbone\PHPConsulAPI\Txn\TxnError>
+     * @return array<TxnError>
      */
     public function getErrors(): array
     {
         return $this->Errors;
+    }
+
+    public function setErrors(TxnError ...$Errors): self
+    {
+        $this->Errors = $Errors;
+        return $this;
     }
 
     public static function jsonUnserialize(\stdClass $decoded): self

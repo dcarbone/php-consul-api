@@ -21,8 +21,7 @@ namespace DCarbone\PHPConsulAPI\Session;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
-
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 use function DCarbone\PHPConsulAPI\PHPLib\dur_to_millisecond;
 
 class SessionEntry extends AbstractType
@@ -69,8 +68,8 @@ class SessionEntry extends AbstractType
         $this->TTL = $TTL;
         $this->Namespace = $Namespace;
         $this->Checks = $Checks;
-        $this->NodeChecks = $NodeChecks;
-        $this->ServiceChecks = $ServiceChecks;
+        $this->setNodeChecks(...$NodeChecks);
+        $this->setServiceChecks(...$ServiceChecks);
     }
 
     public function getCreateIndex(): int
@@ -169,10 +168,7 @@ class SessionEntry extends AbstractType
         return $this->Checks;
     }
 
-    /**
-     * @param array<string> $Checks
-     */
-    public function setChecks(array $Checks): self
+    public function setChecks(string ...$Checks): self
     {
         $this->Checks = $Checks;
         return $this;
@@ -186,10 +182,7 @@ class SessionEntry extends AbstractType
         return $this->NodeChecks;
     }
 
-    /**
-     * @param array<string> $NodeChecks
-     */
-    public function setNodeChecks(array $NodeChecks): self
+    public function setNodeChecks(string ...$NodeChecks): self
     {
         $this->NodeChecks = $NodeChecks;
         return $this;
@@ -203,10 +196,7 @@ class SessionEntry extends AbstractType
         return $this->ServiceChecks;
     }
 
-    /**
-     * @param array<ServiceCheck> $ServiceChecks
-     */
-    public function setServiceChecks(array $ServiceChecks): self
+    public function setServiceChecks(ServiceCheck ...$ServiceChecks): self
     {
         $this->ServiceChecks = $ServiceChecks;
         return $this;

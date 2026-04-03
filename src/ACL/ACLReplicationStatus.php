@@ -21,7 +21,7 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class ACLReplicationStatus extends AbstractType
 {
@@ -59,9 +59,21 @@ class ACLReplicationStatus extends AbstractType
         return $this->Enabled;
     }
 
+    public function setEnabled(bool $Enabled): self
+    {
+        $this->Enabled = $Enabled;
+        return $this;
+    }
+
     public function isRunning(): bool
     {
         return $this->Running;
+    }
+
+    public function setRunning(bool $Running): self
+    {
+        $this->Running = $Running;
+        return $this;
     }
 
     public function getSourceDatacenter(): string
@@ -69,9 +81,21 @@ class ACLReplicationStatus extends AbstractType
         return $this->SourceDatacenter;
     }
 
+    public function setSourceDatacenter(string $SourceDatacenter): self
+    {
+        $this->SourceDatacenter = $SourceDatacenter;
+        return $this;
+    }
+
     public function getReplicatedIndex(): int
     {
         return $this->ReplicatedIndex;
+    }
+
+    public function setReplicatedIndex(int $ReplicatedIndex): self
+    {
+        $this->ReplicatedIndex = $ReplicatedIndex;
+        return $this;
     }
 
     public function getReplicatedRoleIndex(): int
@@ -79,9 +103,21 @@ class ACLReplicationStatus extends AbstractType
         return $this->ReplicatedRoleIndex;
     }
 
+    public function setReplicatedRoleIndex(int $ReplicatedRoleIndex): self
+    {
+        $this->ReplicatedRoleIndex = $ReplicatedRoleIndex;
+        return $this;
+    }
+
     public function getReplicatedTokenIndex(): int
     {
         return $this->ReplicatedTokenIndex;
+    }
+
+    public function setReplicatedTokenIndex(int $ReplicatedTokenIndex): self
+    {
+        $this->ReplicatedTokenIndex = $ReplicatedTokenIndex;
+        return $this;
     }
 
     public function getLastSuccess(): Time\Time
@@ -89,9 +125,21 @@ class ACLReplicationStatus extends AbstractType
         return $this->LastSuccess;
     }
 
+    public function setLastSuccess(Time\Time $LastSuccess): self
+    {
+        $this->LastSuccess = $LastSuccess;
+        return $this;
+    }
+
     public function getLastError(): Time\Time
     {
         return $this->LastError;
+    }
+
+    public function setLastError(Time\Time $LastError): self
+    {
+        $this->LastError = $LastError;
+        return $this;
     }
 
     public static function jsonUnserialize(\stdClass $decoded): self

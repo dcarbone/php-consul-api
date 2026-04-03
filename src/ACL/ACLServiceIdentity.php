@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class ACLServiceIdentity extends AbstractType
 {
@@ -40,6 +40,12 @@ class ACLServiceIdentity extends AbstractType
     public function getServiceName(): string
     {
         return $this->ServiceName;
+    }
+
+    public function setServiceName(string $ServiceName): self
+    {
+        $this->ServiceName = $ServiceName;
+        return $this;
     }
 
     /**

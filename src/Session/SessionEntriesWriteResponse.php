@@ -20,8 +20,8 @@ namespace DCarbone\PHPConsulAPI\Session;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedWriteResponse;
-use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractValuedWriteResponse;
+use DCarbone\PHPConsulAPI\PHPLib\UnmarshalledResponseInterface;
 
 class SessionEntriesWriteResponse extends AbstractValuedWriteResponse implements UnmarshalledResponseInterface
 {

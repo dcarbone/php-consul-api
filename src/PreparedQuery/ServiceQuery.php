@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class ServiceQuery extends AbstractType
 {
@@ -61,7 +61,7 @@ class ServiceQuery extends AbstractType
         $this->Namespace = $Namespace;
         $this->Near = $Near;
         $this->setTags(...$Tags);
-        $this->IgnoreCheckIDs = $IgnoreCheckIDs;
+        $this->setIgnoreCheckIDs(...$IgnoreCheckIDs);
         $this->Failover = $Failover ?? new QueryDatacenterOptions();
         $this->OnlyPassing = $OnlyPassing;
         $this->NodeMeta = $NodeMeta;
@@ -124,10 +124,7 @@ class ServiceQuery extends AbstractType
         return $this->IgnoreCheckIDs;
     }
 
-    /**
-     * @param array<string> $IgnoreCheckIDs
-     */
-    public function setIgnoreCheckIDs(array $IgnoreCheckIDs): self
+    public function setIgnoreCheckIDs(string ...$IgnoreCheckIDs): self
     {
         $this->IgnoreCheckIDs = $IgnoreCheckIDs;
         return $this;

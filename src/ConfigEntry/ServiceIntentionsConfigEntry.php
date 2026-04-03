@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class ServiceIntentionsConfigEntry extends AbstractType implements ConfigEntry
 {
@@ -65,6 +65,12 @@ class ServiceIntentionsConfigEntry extends AbstractType implements ConfigEntry
         return $this->Kind;
     }
 
+    public function setKind(string $Kind): self
+    {
+        $this->Kind = $Kind;
+        return $this;
+    }
+
     public function getName(): string
     {
         return $this->name;
@@ -84,6 +90,17 @@ class ServiceIntentionsConfigEntry extends AbstractType implements ConfigEntry
     public function setPartition(string $Partition): self
     {
         $this->Partition = $Partition;
+        return $this;
+    }
+
+    public function getNamespace(): string
+    {
+        return $this->Namespace;
+    }
+
+    public function setNamespace(string $Namespace): self
+    {
+        $this->Namespace = $Namespace;
         return $this;
     }
 

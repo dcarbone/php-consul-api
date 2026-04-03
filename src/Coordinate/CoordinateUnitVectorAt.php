@@ -20,6 +20,9 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
    limitations under the License.
  */
 
+/**
+ * @implements \ArrayAccess<int, array<float>|float>
+ */
 final class CoordinateUnitVectorAt implements \ArrayAccess
 {
     /** @var array<float> */

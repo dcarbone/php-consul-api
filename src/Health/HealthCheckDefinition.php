@@ -21,7 +21,7 @@ namespace DCarbone\PHPConsulAPI\Health;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 use DCarbone\PHPConsulAPI\Values;
 
 class HealthCheckDefinition extends AbstractType implements \JsonSerializable

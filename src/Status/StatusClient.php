@@ -21,9 +21,9 @@ namespace DCarbone\PHPConsulAPI\Status;
  */
 
 use DCarbone\PHPConsulAPI\AbstractClient;
+use DCarbone\PHPConsulAPI\PHPLib\ValuedStringResponse;
+use DCarbone\PHPConsulAPI\PHPLib\ValuedStringsResponse;
 use DCarbone\PHPConsulAPI\QueryOptions;
-use DCarbone\PHPConsulAPI\PHPLib\Response\ValuedStringResponse;
-use DCarbone\PHPConsulAPI\PHPLib\Response\ValuedStringsResponse;
 
 class StatusClient extends AbstractClient
 {

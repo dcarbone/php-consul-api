@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\MetaField;
+use DCarbone\PHPConsulAPI\PHPLib\MetaField;
 
 trait ConfigEntryTrait
 {

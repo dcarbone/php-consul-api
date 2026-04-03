@@ -20,10 +20,10 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Catalog\ServiceAddress;
-use DCarbone\PHPConsulAPI\PHPLib\Types\MetaField;
 use DCarbone\PHPConsulAPI\Peering\Locality;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+use DCarbone\PHPConsulAPI\PHPLib\MetaField;
 
 class AgentServiceRegistration extends AbstractType
 {

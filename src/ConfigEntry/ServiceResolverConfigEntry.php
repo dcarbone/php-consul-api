@@ -20,11 +20,8 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\Go\Time;
-use stdClass;
-
-use function DCarbone\PHPConsulAPI\PHPLib\_enc_obj_if_valued;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
 {

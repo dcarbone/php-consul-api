@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 use function DCarbone\PHPConsulAPI\PHPLib\_enc_obj_if_valued;
 
 class UpstreamConfig extends AbstractType

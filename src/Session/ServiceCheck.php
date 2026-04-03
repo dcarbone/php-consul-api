@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\Session;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class ServiceCheck extends AbstractType
 {

@@ -20,8 +20,8 @@ namespace DCarbone\PHPConsulAPI\Txn;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Health\HealthCheck;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class CheckTxnOp extends AbstractType
 {

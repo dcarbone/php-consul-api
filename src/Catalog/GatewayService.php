@@ -20,8 +20,8 @@ namespace DCarbone\PHPConsulAPI\Catalog;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Agent\ServiceKind;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class GatewayService extends AbstractType
 {

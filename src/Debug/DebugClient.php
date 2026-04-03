@@ -23,7 +23,7 @@ namespace DCarbone\PHPConsulAPI\Debug;
 use DCarbone\Go\HTTP;
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\PHPLib\Response\ValuedStringResponse;
+use DCarbone\PHPConsulAPI\PHPLib\ValuedStringResponse;
 
 class DebugClient extends AbstractClient
 {

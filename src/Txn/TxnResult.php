@@ -20,11 +20,11 @@ namespace DCarbone\PHPConsulAPI\Txn;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\KV\KVPair;
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Catalog\CatalogService;
 use DCarbone\PHPConsulAPI\Catalog\Node;
 use DCarbone\PHPConsulAPI\Health\HealthCheck;
+use DCarbone\PHPConsulAPI\KV\KVPair;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class TxnResult extends AbstractType
 {

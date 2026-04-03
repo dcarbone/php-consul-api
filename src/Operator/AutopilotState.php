@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class AutopilotState extends AbstractType
 {
@@ -60,8 +60,8 @@ class AutopilotState extends AbstractType
         $this->OptimisticFailureTolerance = $OptimisticFailureTolerance;
         $this->Servers = $Servers;
         $this->Leader = $Leader;
-        $this->Voters = $Voters;
-        $this->ReadReplicas = $ReadReplicas;
+        $this->setVoters(...$Voters);
+        $this->setReadReplicas(...$ReadReplicas);
         $this->RedundancyZone = $RedundancyZone;
         $this->Upgrade = $Upgrade;
     }
@@ -135,10 +135,7 @@ class AutopilotState extends AbstractType
         return $this->Voters;
     }
 
-    /**
-     * @param array<string> $Voters
-     */
-    public function setVoters(array $Voters): self
+    public function setVoters(string ...$Voters): self
     {
         $this->Voters = $Voters;
         return $this;
@@ -152,10 +149,7 @@ class AutopilotState extends AbstractType
         return $this->ReadReplicas;
     }
 
-    /**
-     * @param array<string> $ReadReplicas
-     */
-    public function setReadReplicas(array $ReadReplicas): self
+    public function setReadReplicas(string ...$ReadReplicas): self
     {
         $this->ReadReplicas = $ReadReplicas;
         return $this;

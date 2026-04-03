@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\Txn;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class TxnResponse extends AbstractType
 {
@@ -37,8 +37,8 @@ class TxnResponse extends AbstractType
         array $Results = [],
         array $Errors = [],
     ) {
-        $this->Results = $Results;
-        $this->Errors = $Errors;
+        $this->setResults(...$Results);
+        $this->setErrors(...$Errors);
     }
 
     /**
@@ -49,10 +49,7 @@ class TxnResponse extends AbstractType
         return $this->Results;
     }
 
-    /**
-     * @param array<TxnResult> $Results
-     */
-    public function setResults(array $Results): self
+    public function setResults(TxnResult ...$Results): self
     {
         $this->Results = $Results;
         return $this;
@@ -66,10 +63,7 @@ class TxnResponse extends AbstractType
         return $this->Errors;
     }
 
-    /**
-     * @param array<TxnError> $Errors
-     */
-    public function setErrors(array $Errors): self
+    public function setErrors(TxnError ...$Errors): self
     {
         $this->Errors = $Errors;
         return $this;

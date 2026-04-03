@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class Area extends AbstractType
 {
@@ -41,7 +41,7 @@ class Area extends AbstractType
     ) {
         $this->ID = $ID;
         $this->PeerDatacenter = $PeerDatacenter;
-        $this->RetryJoin = $RetryJoin;
+        $this->setRetryJoin(...$RetryJoin);
         $this->UseTLS = $UseTLS;
     }
 
@@ -75,10 +75,7 @@ class Area extends AbstractType
         return $this->RetryJoin;
     }
 
-    /**
-     * @param array<string> $RetryJoin
-     */
-    public function setRetryJoin(array $RetryJoin): self
+    public function setRetryJoin(string ...$RetryJoin): self
     {
         $this->RetryJoin = $RetryJoin;
         return $this;

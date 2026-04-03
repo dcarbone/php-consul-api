@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class QueryDatacenterOptions extends AbstractType
 {
@@ -36,7 +36,7 @@ class QueryDatacenterOptions extends AbstractType
         array $Datacenters = [],
     ) {
         $this->NearestN = $NearestN;
-        $this->Datacenters = $Datacenters;
+        $this->setDatacenters(...$Datacenters);
     }
 
     public function getNearestN(): int
@@ -58,10 +58,7 @@ class QueryDatacenterOptions extends AbstractType
         return $this->Datacenters;
     }
 
-    /**
-     * @param array<string> $Datacenters
-     */
-    public function setDatacenters(array $Datacenters): self
+    public function setDatacenters(string ...$Datacenters): self
     {
         $this->Datacenters = $Datacenters;
         return $this;

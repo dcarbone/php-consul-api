@@ -50,9 +50,10 @@ class WriteOptions implements RequestOptions
         return $this->Namespace;
     }
 
-    public function setNamespace(string $namespace): void
+    public function setNamespace(string $namespace): self
     {
         $this->Namespace = $namespace;
+        return $this;
     }
 
     public function getDatacenter(): string
@@ -60,9 +61,10 @@ class WriteOptions implements RequestOptions
         return $this->Datacenter;
     }
 
-    public function setDatacenter(string $datacenter): void
+    public function setDatacenter(string $datacenter): self
     {
         $this->Datacenter = $datacenter;
+        return $this;
     }
 
     public function getToken(): string
@@ -70,9 +72,10 @@ class WriteOptions implements RequestOptions
         return $this->Token;
     }
 
-    public function setToken(string $token): void
+    public function setToken(string $token): self
     {
         $this->Token = $token;
+        return $this;
     }
 
     public function getRelayFactor(): int
@@ -80,9 +83,10 @@ class WriteOptions implements RequestOptions
         return $this->RelayFactor;
     }
 
-    public function setRelayFactor(int $relayFactor): void
+    public function setRelayFactor(int $relayFactor): self
     {
         $this->RelayFactor = $relayFactor;
+        return $this;
     }
 
     public function getTimeout(): null|Time\Duration
@@ -90,9 +94,10 @@ class WriteOptions implements RequestOptions
         return $this->Timeout;
     }
 
-    public function setTimeout(null|int|float|string|\DateInterval|Time\Duration $timeout): void
+    public function setTimeout(null|int|float|string|\DateInterval|Time\Duration $timeout): self
     {
         $this->Timeout = Time::Duration($timeout);
+        return $this;
     }
 
     public function apply(Request $r): void

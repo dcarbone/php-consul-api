@@ -20,8 +20,8 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedResponse;
-use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractValuedResponse;
+use DCarbone\PHPConsulAPI\PHPLib\UnmarshalledResponseInterface;
 
 class OperatorServerHealthsResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {

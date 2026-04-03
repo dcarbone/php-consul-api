@@ -20,8 +20,8 @@ namespace DCarbone\PHPConsulAPI\Health;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Consul;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 /**
  * @implements \ArrayAccess<int, \DCarbone\PHPConsulAPI\Health\HealthCheck>

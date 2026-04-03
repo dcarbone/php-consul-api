@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class RaftConfiguration extends AbstractType
 {
@@ -35,7 +35,7 @@ class RaftConfiguration extends AbstractType
         array $Servers = [],
         int $Index = 0,
     ) {
-        $this->Servers = $Servers;
+        $this->setServers(...$Servers);
         $this->Index = $Index;
     }
 
@@ -47,10 +47,7 @@ class RaftConfiguration extends AbstractType
         return $this->Servers;
     }
 
-    /**
-     * @param array<RaftServer> $Servers
-     */
-    public function setServers(array $Servers): self
+    public function setServers(RaftServer ...$Servers): self
     {
         $this->Servers = $Servers;
         return $this;

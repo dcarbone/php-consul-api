@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class PreparedQueryDefinition extends AbstractType
 {

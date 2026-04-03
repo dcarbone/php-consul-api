@@ -22,12 +22,12 @@ namespace DCarbone\PHPConsulAPI\Operator;
 
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Error;
+use DCarbone\PHPConsulAPI\PHPLib\RequestResponse;
+use DCarbone\PHPConsulAPI\PHPLib\ValuedBoolResponse;
+use DCarbone\PHPConsulAPI\PHPLib\ValuedWriteStringResponse;
+use DCarbone\PHPConsulAPI\PHPLib\WriteResponse;
 use DCarbone\PHPConsulAPI\QueryOptions;
-use DCarbone\PHPConsulAPI\RequestResponse;
-use DCarbone\PHPConsulAPI\PHPLib\Response\ValuedBoolResponse;
-use DCarbone\PHPConsulAPI\PHPLib\Response\ValuedWriteStringResponse;
 use DCarbone\PHPConsulAPI\WriteOptions;
-use DCarbone\PHPConsulAPI\PHPLib\Response\WriteResponse;
 
 class OperatorClient extends AbstractClient
 {

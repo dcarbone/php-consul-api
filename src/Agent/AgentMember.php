@@ -20,8 +20,8 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Consul;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class AgentMember extends AbstractType
 {

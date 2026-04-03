@@ -23,16 +23,16 @@ namespace DCarbone\PHPConsulAPI\KV;
 use DCarbone\Go\HTTP;
 use DCarbone\PHPConsulAPI\AbstractClient;
 use DCarbone\PHPConsulAPI\Error;
+use DCarbone\PHPConsulAPI\PHPLib\ValuedQueryStringsResponse;
+use DCarbone\PHPConsulAPI\PHPLib\ValuedWriteBoolResponse;
+use DCarbone\PHPConsulAPI\PHPLib\WriteResponse;
 use DCarbone\PHPConsulAPI\QueryOptions;
-use DCarbone\PHPConsulAPI\PHPLib\Response\ValuedQueryStringsResponse;
-use DCarbone\PHPConsulAPI\PHPLib\Response\ValuedWriteBoolResponse;
 use DCarbone\PHPConsulAPI\Txn\KVTxnAPIResponse;
 use DCarbone\PHPConsulAPI\Txn\KVTxnOps;
 use DCarbone\PHPConsulAPI\Txn\KVTxnResponse;
 use DCarbone\PHPConsulAPI\Txn\TxnOp;
 use DCarbone\PHPConsulAPI\Txn\TxnResponse;
 use DCarbone\PHPConsulAPI\WriteOptions;
-use DCarbone\PHPConsulAPI\PHPLib\Response\WriteResponse;
 
 class KVClient extends AbstractClient
 {

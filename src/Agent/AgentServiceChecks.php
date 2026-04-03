@@ -20,8 +20,6 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
-
 /**
  * @implements \ArrayAccess<int, AgentServiceCheck>
  */

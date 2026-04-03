@@ -20,8 +20,8 @@ namespace DCarbone\PHPConsulAPI\Txn;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class ServiceTxnOp extends AbstractType
 {

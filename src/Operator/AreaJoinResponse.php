@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class AreaJoinResponse extends AbstractType
 {
@@ -43,14 +43,32 @@ class AreaJoinResponse extends AbstractType
         return $this->Address;
     }
 
+    public function setAddress(string $Address): self
+    {
+        $this->Address = $Address;
+        return $this;
+    }
+
     public function isJoined(): bool
     {
         return $this->Joined;
     }
 
+    public function setJoined(bool $Joined): self
+    {
+        $this->Joined = $Joined;
+        return $this;
+    }
+
     public function getError(): string
     {
         return $this->Error;
+    }
+
+    public function setError(string $Error): self
+    {
+        $this->Error = $Error;
+        return $this;
     }
 
     public static function jsonUnserialize(\stdClass $decoded): self

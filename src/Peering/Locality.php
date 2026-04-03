@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\Peering;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class Locality extends AbstractType
 {

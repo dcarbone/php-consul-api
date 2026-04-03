@@ -20,13 +20,13 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\ConfigEntry\AccessLogsConfig;
 use DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension;
 use DCarbone\PHPConsulAPI\ConfigEntry\ExposeConfig;
 use DCarbone\PHPConsulAPI\ConfigEntry\MeshGatewayConfig;
 use DCarbone\PHPConsulAPI\ConfigEntry\ProxyMode;
 use DCarbone\PHPConsulAPI\ConfigEntry\TransparentProxyConfig;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class AgentServiceConnectProxyConfig extends AbstractType
 {

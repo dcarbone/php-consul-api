@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\Txn;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 class KVTxnOp extends AbstractType
 {
@@ -61,9 +61,24 @@ class KVTxnOp extends AbstractType
         return $this->Verb;
     }
 
+    public function setVerb(string|KVOp $Verb): self
+    {
+        if (is_string($Verb)) {
+            $Verb = KVOp::from($Verb);
+        }
+        $this->Verb = $Verb;
+        return $this;
+    }
+
     public function getKey(): string
     {
         return $this->Key;
+    }
+
+    public function setKey(string $Key): self
+    {
+        $this->Key = $Key;
+        return $this;
     }
 
     public function getValue(): string
@@ -71,9 +86,21 @@ class KVTxnOp extends AbstractType
         return $this->Value;
     }
 
+    public function setValue(string $Value): self
+    {
+        $this->Value = $Value;
+        return $this;
+    }
+
     public function getFlags(): int
     {
         return $this->Flags;
+    }
+
+    public function setFlags(int $Flags): self
+    {
+        $this->Flags = $Flags;
+        return $this;
     }
 
     public function getIndex(): int
@@ -81,9 +108,21 @@ class KVTxnOp extends AbstractType
         return $this->Index;
     }
 
+    public function setIndex(int $Index): self
+    {
+        $this->Index = $Index;
+        return $this;
+    }
+
     public function getSession(): string
     {
         return $this->Session;
+    }
+
+    public function setSession(string $Session): self
+    {
+        $this->Session = $Session;
+        return $this;
     }
 
     public function getNamespace(): string
@@ -91,9 +130,21 @@ class KVTxnOp extends AbstractType
         return $this->Namespace;
     }
 
+    public function setNamespace(string $Namespace): self
+    {
+        $this->Namespace = $Namespace;
+        return $this;
+    }
+
     public function getPartition(): string
     {
         return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
     }
 
     public static function jsonUnserialize(\stdClass $decoded): self

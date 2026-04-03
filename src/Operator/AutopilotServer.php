@@ -21,8 +21,8 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
-use DCarbone\PHPConsulAPI\PHPLib\Types\MetaField;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+use DCarbone\PHPConsulAPI\PHPLib\MetaField;
 
 class AutopilotServer extends AbstractType
 {

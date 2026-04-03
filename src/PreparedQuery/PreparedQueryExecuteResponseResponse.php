@@ -20,8 +20,8 @@ declare(strict_types=1);
 
 namespace DCarbone\PHPConsulAPI\PreparedQuery;
 
-use DCarbone\PHPConsulAPI\PHPLib\Response\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractValuedQueryResponse;
+use DCarbone\PHPConsulAPI\PHPLib\UnmarshalledResponseInterface;
 
 class PreparedQueryExecuteResponseResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
