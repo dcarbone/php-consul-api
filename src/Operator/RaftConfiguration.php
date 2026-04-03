@@ -21,28 +21,35 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class RaftConfiguration extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_SERVERS => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => RaftServer::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-        ],
-    ];
-
-    private const FIELD_SERVERS = 'Servers';
-
+    /** @var array<RaftServer> */
     public array $Servers;
     public int $Index;
 
+    /**
+     * @param array<RaftServer> $Servers
+     */
+    public function __construct(
+        array $Servers = [],
+        int $Index = 0,
+    ) {
+        $this->Servers = $Servers;
+        $this->Index = $Index;
+    }
+
+    /**
+     * @return array<RaftServer>
+     */
     public function getServers(): array
     {
         return $this->Servers;
     }
 
+    /**
+     * @param array<RaftServer> $Servers
+     */
     public function setServers(array $Servers): self
     {
         $this->Servers = $Servers;
@@ -58,5 +65,29 @@ class RaftConfiguration extends AbstractType
     {
         $this->Index = $Index;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('Servers' === $k) {
+                $n->Servers = [];
+                foreach ($v as $sv) {
+                    $n->Servers[] = RaftServer::jsonUnserialize($sv);
+                }
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Servers = $this->Servers;
+        $out->Index = $this->Index;
+        return $out;
     }
 }

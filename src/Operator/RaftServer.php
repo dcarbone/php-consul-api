@@ -31,6 +31,22 @@ class RaftServer extends AbstractType
     public string $ProtocolVersion;
     public bool $Voter;
 
+    public function __construct(
+        string $ID = '',
+        string $Node = '',
+        string $Address = '',
+        bool $Leader = false,
+        string $ProtocolVersion = '',
+        bool $Voter = false,
+    ) {
+        $this->ID = $ID;
+        $this->Node = $Node;
+        $this->Address = $Address;
+        $this->Leader = $Leader;
+        $this->ProtocolVersion = $ProtocolVersion;
+        $this->Voter = $Voter;
+    }
+
     public function getID(): string
     {
         return $this->ID;
@@ -95,5 +111,26 @@ class RaftServer extends AbstractType
     {
         $this->Voter = $Voter;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->ID = $this->ID;
+        $out->Node = $this->Node;
+        $out->Address = $this->Address;
+        $out->Leader = $this->Leader;
+        $out->ProtocolVersion = $this->ProtocolVersion;
+        $out->Voter = $this->Voter;
+        return $out;
     }
 }

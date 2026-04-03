@@ -26,17 +26,33 @@ class Area extends AbstractType
 {
     public string $ID;
     public string $PeerDatacenter;
+    /** @var array<string> */
     public array $RetryJoin;
     public bool $UseTLS;
+
+    /**
+     * @param array<string> $RetryJoin
+     */
+    public function __construct(
+        string $ID = '',
+        string $PeerDatacenter = '',
+        array $RetryJoin = [],
+        bool $UseTLS = false,
+    ) {
+        $this->ID = $ID;
+        $this->PeerDatacenter = $PeerDatacenter;
+        $this->RetryJoin = $RetryJoin;
+        $this->UseTLS = $UseTLS;
+    }
 
     public function getID(): string
     {
         return $this->ID;
     }
 
-    public function setID(string $id): self
+    public function setID(string $ID): self
     {
-        $this->ID = $id;
+        $this->ID = $ID;
         return $this;
     }
 
@@ -45,20 +61,26 @@ class Area extends AbstractType
         return $this->PeerDatacenter;
     }
 
-    public function setPeerDatacenter(string $peerDatacenter): self
+    public function setPeerDatacenter(string $PeerDatacenter): self
     {
-        $this->PeerDatacenter = $peerDatacenter;
+        $this->PeerDatacenter = $PeerDatacenter;
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getRetryJoin(): array
     {
         return $this->RetryJoin;
     }
 
-    public function setRetryJoin(array $retryJoin): self
+    /**
+     * @param array<string> $RetryJoin
+     */
+    public function setRetryJoin(array $RetryJoin): self
     {
-        $this->RetryJoin = $retryJoin;
+        $this->RetryJoin = $RetryJoin;
         return $this;
     }
 
@@ -67,9 +89,28 @@ class Area extends AbstractType
         return $this->UseTLS;
     }
 
-    public function setUseTLS(bool $useTLS): self
+    public function setUseTLS(bool $UseTLS): self
     {
-        $this->UseTLS = $useTLS;
+        $this->UseTLS = $UseTLS;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->ID = $this->ID;
+        $out->PeerDatacenter = $this->PeerDatacenter;
+        $out->RetryJoin = $this->RetryJoin;
+        $out->UseTLS = $this->UseTLS;
+        return $out;
     }
 }

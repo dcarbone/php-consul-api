@@ -24,7 +24,7 @@ use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\PHPLib\Types\MetaField;
 
-class AutopilotServer extends AbstractType implements \JsonSerializable
+class AutopilotServer extends AbstractType
 {
     use MetaField;
 
@@ -255,7 +255,7 @@ class AutopilotServer extends AbstractType implements \JsonSerializable
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('lastContact' === $k) {
                 $n->setLastContact($v);
             } elseif ('StableSince' === $k) {

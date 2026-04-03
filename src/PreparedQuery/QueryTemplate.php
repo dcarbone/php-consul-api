@@ -24,8 +24,16 @@ use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
 class QueryTemplate extends AbstractType
 {
-    public string $Type = '';
-    public string $Regexp = '';
+    public string $Type;
+    public string $Regexp;
+
+    public function __construct(
+        string $Type = '',
+        string $Regexp = '',
+    ) {
+        $this->Type = $Type;
+        $this->Regexp = $Regexp;
+    }
 
     public function getType(): string
     {
@@ -47,5 +55,22 @@ class QueryTemplate extends AbstractType
     {
         $this->Regexp = $Regexp;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Type = $this->Type;
+        $out->Regexp = $this->Regexp;
+        return $out;
     }
 }

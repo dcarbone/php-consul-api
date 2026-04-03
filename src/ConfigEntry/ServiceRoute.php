@@ -60,7 +60,7 @@ class ServiceRoute extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('Match' === $k) {
                 $n->Match = null === $v ? null : ServiceRouteMatch::jsonUnserialize($v);
             } elseif ('Destination' === $k) {

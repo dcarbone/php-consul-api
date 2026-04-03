@@ -24,21 +24,42 @@ use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
 class QueryDNSOptions extends AbstractType
 {
-    public string $TTL = '';
+    public string $TTL;
+
+    public function __construct(string $TTL = '')
+    {
+        $this->TTL = $TTL;
+    }
 
     public function getTTL(): string
     {
         return $this->TTL;
     }
 
-    public function setTTL(string $ttl): self
+    public function setTTL(string $TTL): self
     {
-        $this->TTL = $ttl;
+        $this->TTL = $TTL;
         return $this;
     }
 
     public function __toString(): string
     {
         return $this->TTL;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->TTL = $this->TTL;
+        return $out;
     }
 }

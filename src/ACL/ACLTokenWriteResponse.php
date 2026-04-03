@@ -27,7 +27,7 @@ class ACLTokenWriteResponse extends AbstractValuedWriteResponse implements Unmar
 {
     public null|ACLToken $ACLToken = null;
 
-    public function getValue(): ?ACLToken
+    public function getValue(): null|ACLToken
     {
         return $this->ACLToken;
     }

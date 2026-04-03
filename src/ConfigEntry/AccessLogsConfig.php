@@ -113,10 +113,10 @@ class AccessLogsConfig extends AbstractType
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = new static();
-        foreach ($decoded as $k => $v) {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
             if ('Type' === $k) {
                 $n->setType($v);
             } else {

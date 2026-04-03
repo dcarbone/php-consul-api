@@ -100,7 +100,7 @@ class LoadBalancer extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('RingHashConfig' === $k || 'ring_hash_config' === $k) {
                 $n->RingHashConfig = RingHashConfig::jsonUnserialize($v);
             } elseif ('LeastRequestConfig' === $k || 'least_request_config' === $k) {

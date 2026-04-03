@@ -81,14 +81,32 @@ class Coordinate extends AbstractType
         return $this->Error;
     }
 
+    public function setError(float $Error): self
+    {
+        $this->Error = $Error;
+        return $this;
+    }
+
     public function getAdjustment(): float
     {
         return $this->Adjustment;
     }
 
+    public function setAdjustment(float $Adjustment): self
+    {
+        $this->Adjustment = $Adjustment;
+        return $this;
+    }
+
     public function getHeight(): float
     {
         return $this->Height;
+    }
+
+    public function setHeight(float $Height): self
+    {
+        $this->Height = $Height;
+        return $this;
     }
 
     public function Clone(): self
@@ -235,7 +253,7 @@ class Coordinate extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('Vec' === $k) {
                 $n->Vec = (array)$v;
             } else {

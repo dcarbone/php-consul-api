@@ -102,7 +102,7 @@ class HashPolicy extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('field_value' === $k) {
                 $n->FieldValue = $v;
             } elseif ('CookieConfig' === $k || 'cookie_config' === $k) {

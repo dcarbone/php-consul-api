@@ -22,18 +22,9 @@ namespace DCarbone\PHPConsulAPI\Operator;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class SerfMember extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_RTT => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_DURATION,
-        ],
-    ];
-
-    private const FIELD_RTT = 'RTT';
-
     public string $ID;
     public string $Name;
     public string $Addr;
@@ -45,12 +36,28 @@ class SerfMember extends AbstractType
     public string $Status;
     public Time\Duration $RTT;
 
-    public function __construct(?array $data = [])
-    {
-        parent::__construct($data);
-        if (!isset($this->RTT)) {
-            $this->RTT = new Time\Duration(0);
-        }
+    public function __construct(
+        string $ID = '',
+        string $Name = '',
+        string $Addr = '',
+        int $Port = 0,
+        string $Datacenter = '',
+        string $Role = '',
+        string $Build = '',
+        int $Protocol = 0,
+        string $Status = '',
+        null|string|int|float|\DateInterval|Time\Duration $RTT = null,
+    ) {
+        $this->ID = $ID;
+        $this->Name = $Name;
+        $this->Addr = $Addr;
+        $this->Port = $Port;
+        $this->Datacenter = $Datacenter;
+        $this->Role = $Role;
+        $this->Build = $Build;
+        $this->Protocol = $Protocol;
+        $this->Status = $Status;
+        $this->RTT = null === $RTT ? new Time\Duration(0) : Time::Duration($RTT);
     }
 
     public function getID(): string
@@ -161,5 +168,34 @@ class SerfMember extends AbstractType
     {
         $this->RTT = Time::Duration($RTT);
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('RTT' === $k) {
+                $n->RTT = Time::Duration($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->ID = $this->ID;
+        $out->Name = $this->Name;
+        $out->Addr = $this->Addr;
+        $out->Port = $this->Port;
+        $out->Datacenter = $this->Datacenter;
+        $out->Role = $this->Role;
+        $out->Build = $this->Build;
+        $out->Protocol = $this->Protocol;
+        $out->Status = $this->Status;
+        $out->RTT = (string)$this->RTT;
+        return $out;
     }
 }

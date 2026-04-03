@@ -75,7 +75,7 @@ class AgentServiceChecksInfo extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('Checks' === $k) {
                 $n->Checks = HealthChecks::jsonUnserialize($v);
             } elseif ('Service' === $k) {

@@ -155,7 +155,7 @@ class UpstreamConfig extends AbstractType
         return $this;
     }
 
-    public function getLimits(): ?UpstreamLimits
+    public function getLimits(): null|UpstreamLimits
     {
         return $this->Limits;
     }
@@ -202,7 +202,7 @@ class UpstreamConfig extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('envoy_listener_json' === $k) {
                 $n->EnvoyListenerJSON = $v;
             } elseif ('connect_timeout_ms' === $k) {

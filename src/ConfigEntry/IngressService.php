@@ -38,6 +38,9 @@ class IngressService extends AbstractType
     public null|int $MaxConcurrentRequests;
     public null|PassiveHealthCheck $PassiveHealthCheck;
 
+    /**
+     * @param array<string> $Hosts
+     */
     public function __construct(
         string $Name = '',
         array $Hosts = [],
@@ -191,20 +194,20 @@ class IngressService extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach($decoded as $k => $v) {
+        foreach((array)$decoded as $k => $v) {
             if ('RequestHeaders' === $k || 'request_headers' === $k) {
-                $n->RequestHeaders = HTTPHeaderModifiers::jsonUnserialize($v, $n->RequestHeaders);
+                $n->RequestHeaders = HTTPHeaderModifiers::jsonUnserialize($v);
             } elseif ('ResponseHeaders' === $k || 'response_headers' === $k) {
-                $n->ResponseHeaders = HTTPHeaderModifiers::jsonUnserialize($v, $n->ResponseHeaders);
+                $n->ResponseHeaders = HTTPHeaderModifiers::jsonUnserialize($v);
             } elseif ('TLS' === $k) {
-                $n->TLS = GatewayServiceTLSConfig::jsonUnserialize($v, $n->TLS);
+                $n->TLS = GatewayServiceTLSConfig::jsonUnserialize($v);
             } elseif ('PassiveHealthCheck' === $k || 'passive_health_check' === $k) {
-                $n->PassiveHealthCheck = PassiveHealthCheck::jsonUnserialize($v, $n->PassiveHealthCheck);
+                $n->PassiveHealthCheck = PassiveHealthCheck::jsonUnserialize($v);
             } else {
                 $n->{$k} = $v;
             }
         }
-        return $into;
+        return $n;
     }
 
     public function jsonSerialize(): \stdClass

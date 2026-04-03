@@ -20,89 +20,105 @@ namespace DCarbone\PHPConsulAPI\Txn;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\Txn\KVTxnOp;
 use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
-use DCarbone\PHPConsulAPI\Transcoding;
-use DCarbone\PHPConsulAPI\Txn\CheckTxnOp;
-use DCarbone\PHPConsulAPI\Txn\NodeTxnOp;
-use DCarbone\PHPConsulAPI\Txn\ServiceTxnOp;
 
 class TxnOp extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_KV      => [
-            Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS    => KVTxnOp::class,
-            Transcoding::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_NODE    => [
-            Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS    => NodeTxnOp::class,
-            Transcoding::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_SERVICE => [
-            Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS    => ServiceTxnOp::class,
-            Transcoding::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_CHECK   => [
-            Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS    => CheckTxnOp::class,
-            Transcoding::FIELD_NULLABLE => true,
-        ],
-    ];
+    public null|KVTxnOp $KV;
+    public null|NodeTxnOp $Node;
+    public null|ServiceTxnOp $Service;
+    public null|CheckTxnOp $Check;
 
-    private const FIELD_KV      = 'KV';
-    private const FIELD_NODE    = 'Node';
-    private const FIELD_SERVICE = 'Service';
-    private const FIELD_CHECK   = 'Check';
+    public function __construct(
+        null|KVTxnOp $KV = null,
+        null|NodeTxnOp $Node = null,
+        null|ServiceTxnOp $Service = null,
+        null|CheckTxnOp $Check = null,
+    ) {
+        $this->KV = $KV;
+        $this->Node = $Node;
+        $this->Service = $Service;
+        $this->Check = $Check;
+    }
 
-    public ?KVTxnOp $KV = null;
-    public ?NodeTxnOp $Node = null;
-    public ?ServiceTxnOp $Service = null;
-    public ?CheckTxnOp $Check = null;
-
-    public function getKV(): ?KVTxnOp
+    public function getKV(): null|KVTxnOp
     {
         return $this->KV;
     }
 
-    public function setKV(?KVTxnOp $KV): self
+    public function setKV(null|KVTxnOp $KV): self
     {
         $this->KV = $KV;
         return $this;
     }
 
-    public function getNode(): ?NodeTxnOp
+    public function getNode(): null|NodeTxnOp
     {
         return $this->Node;
     }
 
-    public function setNode(?NodeTxnOp $Node): self
+    public function setNode(null|NodeTxnOp $Node): self
     {
         $this->Node = $Node;
         return $this;
     }
 
-    public function getService(): ?ServiceTxnOp
+    public function getService(): null|ServiceTxnOp
     {
         return $this->Service;
     }
 
-    public function setService(?ServiceTxnOp $Service): self
+    public function setService(null|ServiceTxnOp $Service): self
     {
         $this->Service = $Service;
         return $this;
     }
 
-    public function getCheck(): ?CheckTxnOp
+    public function getCheck(): null|CheckTxnOp
     {
         return $this->Check;
     }
 
-    public function setCheck(?CheckTxnOp $Check): self
+    public function setCheck(null|CheckTxnOp $Check): self
     {
         $this->Check = $Check;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('KV' === $k) {
+                $n->KV = null === $v ? null : KVTxnOp::jsonUnserialize($v);
+            } elseif ('Node' === $k) {
+                $n->Node = null === $v ? null : NodeTxnOp::jsonUnserialize($v);
+            } elseif ('Service' === $k) {
+                $n->Service = null === $v ? null : ServiceTxnOp::jsonUnserialize($v);
+            } elseif ('Check' === $k) {
+                $n->Check = null === $v ? null : CheckTxnOp::jsonUnserialize($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        if (null !== $this->KV) {
+            $out->KV = $this->KV;
+        }
+        if (null !== $this->Node) {
+            $out->Node = $this->Node;
+        }
+        if (null !== $this->Service) {
+            $out->Service = $this->Service;
+        }
+        if (null !== $this->Check) {
+            $out->Check = $this->Check;
+        }
+        return $out;
     }
 }

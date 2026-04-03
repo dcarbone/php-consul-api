@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace DCarbone\PHPConsulAPI\Session;
+
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
@@ -18,23 +20,29 @@ declare(strict_types=1);
    limitations under the License.
  */
 
-namespace DCarbone\PHPConsulAPI\Session;
-
 use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
 class ServiceCheck extends AbstractType
 {
-    public string $ID = '';
-    public string $Namespace = '';
+    public string $ID;
+    public string $Namespace;
+
+    public function __construct(
+        string $ID = '',
+        string $Namespace = '',
+    ) {
+        $this->ID = $ID;
+        $this->Namespace = $Namespace;
+    }
 
     public function getID(): string
     {
         return $this->ID;
     }
 
-    public function setID(string $id): self
+    public function setID(string $ID): self
     {
-        $this->ID = $id;
+        $this->ID = $ID;
         return $this;
     }
 
@@ -43,9 +51,28 @@ class ServiceCheck extends AbstractType
         return $this->Namespace;
     }
 
-    public function setNamespace(string $namespace): self
+    public function setNamespace(string $Namespace): self
     {
-        $this->Namespace = $namespace;
+        $this->Namespace = $Namespace;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->ID = $this->ID;
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        return $out;
     }
 }

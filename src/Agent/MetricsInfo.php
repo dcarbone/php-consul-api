@@ -52,16 +52,16 @@ class MetricsInfo extends AbstractType
         $this->setPoints(...$Points);
         $this->setCounters(...$Counters);
         $this->setSamples(...$Samples);
-}
+    }
 
     public function getTimestamp(): string
     {
         return $this->Timestamp;
     }
 
-    public function setTimestamp(string $timestamp): self
+    public function setTimestamp(string $Timestamp): self
     {
-        $this->Timestamp = $timestamp;
+        $this->Timestamp = $Timestamp;
         return $this;
     }
 
@@ -124,7 +124,7 @@ class MetricsInfo extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('Gauges' === $k) {
                 $n->Gauges = [];
                 foreach ($v as $vv) {

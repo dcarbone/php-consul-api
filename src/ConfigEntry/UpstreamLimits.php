@@ -24,9 +24,9 @@ use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
 class UpstreamLimits extends AbstractType
 {
-    public null|int $MaxConnections = null;
-    public null|int $MaxPendingRequests = null;
-    public null|int $MaxConcurrentRequests = null;
+    public null|int $MaxConnections;
+    public null|int $MaxPendingRequests;
+    public null|int $MaxConcurrentRequests;
 
     public function __construct(
         null|int $MaxConnections = null,
@@ -38,34 +38,34 @@ class UpstreamLimits extends AbstractType
         $this->MaxConcurrentRequests = $MaxConcurrentRequests;
     }
 
-    public function getMaxConnections(): ?int
+    public function getMaxConnections(): null|int
     {
         return $this->MaxConnections;
     }
 
-    public function setMaxConnections(?int $MaxConnections): self
+    public function setMaxConnections(null|int $MaxConnections): self
     {
         $this->MaxConnections = $MaxConnections;
         return $this;
     }
 
-    public function getMaxPendingRequests(): ?int
+    public function getMaxPendingRequests(): null|int
     {
         return $this->MaxPendingRequests;
     }
 
-    public function setMaxPendingRequests(?int $MaxPendingRequests): self
+    public function setMaxPendingRequests(null|int $MaxPendingRequests): self
     {
         $this->MaxPendingRequests = $MaxPendingRequests;
         return $this;
     }
 
-    public function getMaxConcurrentRequests(): ?int
+    public function getMaxConcurrentRequests(): null|int
     {
         return $this->MaxConcurrentRequests;
     }
 
-    public function setMaxConcurrentRequests(?int $MaxConcurrentRequests): self
+    public function setMaxConcurrentRequests(null|int $MaxConcurrentRequests): self
     {
         $this->MaxConcurrentRequests = $MaxConcurrentRequests;
         return $this;
@@ -74,7 +74,7 @@ class UpstreamLimits extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('max_connections' === $k) {
                 $n->MaxConnections = $v;
             } elseif ('max_pending_requests' === $k) {

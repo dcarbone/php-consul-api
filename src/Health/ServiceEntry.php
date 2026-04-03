@@ -79,16 +79,13 @@ class ServiceEntry extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('Node' === $k) {
-                $n->Node = new Node($v);
+                $n->Node = null === $v ? null : Node::jsonUnserialize($v);
             } elseif ('Service' === $k) {
-                $n->Service = new AgentService($v);
+                $n->Service = null === $v ? null : AgentService::jsonUnserialize($v);
             } elseif ('Checks' === $k) {
-                $n->Checks = new HealthChecks();
-                foreach ($v as $vv) {
-                    $n->Checks[] = new HealthCheck($vv);
-                }
+                $n->Checks = HealthChecks::jsonUnserialize((array)$v);
             } else {
                 $n->{$k} = $v;
             }

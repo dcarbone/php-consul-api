@@ -30,7 +30,7 @@ use DCarbone\PHPConsulAPI\PHPLib\Response\WriteResponse;
 
 class SessionClient extends AbstractClient
 {
-    public function CreateNoChecks(?SessionEntry $sessionEntry = null, null|WriteOptions $opts = null): ValuedWriteStringResponse
+    public function CreateNoChecks(null|SessionEntry $sessionEntry = null, null|WriteOptions $opts = null): ValuedWriteStringResponse
     {
         if (null === $sessionEntry) {
             $body = new SessionEntry();
@@ -45,7 +45,7 @@ class SessionClient extends AbstractClient
         return $this->_create('v1/session/create', $body, $opts);
     }
 
-    public function Create(?SessionEntry $sessionEntry = null, null|WriteOptions $opts = null): ValuedWriteStringResponse
+    public function Create(null|SessionEntry $sessionEntry = null, null|WriteOptions $opts = null): ValuedWriteStringResponse
     {
         return $this->_create('v1/session/create', $sessionEntry, $opts);
     }

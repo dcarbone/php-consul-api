@@ -59,17 +59,15 @@ class CoordinateConfig extends AbstractType
         float $GravityRho = self::DefaultGravityRho,
         array $MetricsLabels = [],
     ) {
-        {
-            $this->Dimensionality = $Dimensionality;
-            $this->VivaldiErrorMax = $VivaldiErrorMax;
-            $this->VivaldiCE = $VivaldiCE;
-            $this->VivaldiCC = $VivaldiCC;
-            $this->AdjustmentWindowSize = $AdjustmentWindowSize;
-            $this->HeightMin = $HeightMin;
-            $this->LatencyFilterSize = $LatencyFilterSize;
-            $this->GravityRho = $GravityRho;
-            $this->setMetricsLabels(...$MetricsLabels);
-        }
+        $this->Dimensionality = $Dimensionality;
+        $this->VivaldiErrorMax = $VivaldiErrorMax;
+        $this->VivaldiCE = $VivaldiCE;
+        $this->VivaldiCC = $VivaldiCC;
+        $this->AdjustmentWindowSize = $AdjustmentWindowSize;
+        $this->HeightMin = $HeightMin;
+        $this->LatencyFilterSize = $LatencyFilterSize;
+        $this->GravityRho = $GravityRho;
+        $this->setMetricsLabels(...$MetricsLabels);
     }
 
     /**
@@ -88,9 +86,9 @@ class CoordinateConfig extends AbstractType
         return $this->Dimensionality;
     }
 
-    public function setDimensionality(int $dimensionality): self
+    public function setDimensionality(int $Dimensionality): self
     {
-        $this->Dimensionality = $dimensionality;
+        $this->Dimensionality = $Dimensionality;
         return $this;
     }
 
@@ -99,9 +97,9 @@ class CoordinateConfig extends AbstractType
         return $this->VivaldiErrorMax;
     }
 
-    public function setVivaldiErrorMax(float $vivaldiErrorMax): self
+    public function setVivaldiErrorMax(float $VivaldiErrorMax): self
     {
-        $this->VivaldiErrorMax = $vivaldiErrorMax;
+        $this->VivaldiErrorMax = $VivaldiErrorMax;
         return $this;
     }
 
@@ -110,9 +108,9 @@ class CoordinateConfig extends AbstractType
         return $this->VivaldiCE;
     }
 
-    public function setVivaldiCE(float $vivaldiCE): self
+    public function setVivaldiCE(float $VivaldiCE): self
     {
-        $this->VivaldiCE = $vivaldiCE;
+        $this->VivaldiCE = $VivaldiCE;
         return $this;
     }
 
@@ -121,9 +119,9 @@ class CoordinateConfig extends AbstractType
         return $this->VivaldiCC;
     }
 
-    public function setVivaldiCC(float $vivaldiCC): self
+    public function setVivaldiCC(float $VivaldiCC): self
     {
-        $this->VivaldiCC = $vivaldiCC;
+        $this->VivaldiCC = $VivaldiCC;
         return $this;
     }
 
@@ -132,9 +130,9 @@ class CoordinateConfig extends AbstractType
         return $this->AdjustmentWindowSize;
     }
 
-    public function setAdjustmentWindowSize(int $adjustmentWindowSize): self
+    public function setAdjustmentWindowSize(int $AdjustmentWindowSize): self
     {
-        $this->AdjustmentWindowSize = $adjustmentWindowSize;
+        $this->AdjustmentWindowSize = $AdjustmentWindowSize;
         return $this;
     }
 
@@ -143,9 +141,9 @@ class CoordinateConfig extends AbstractType
         return $this->HeightMin;
     }
 
-    public function setHeightMin(float $heightMin): self
+    public function setHeightMin(float $HeightMin): self
     {
-        $this->HeightMin = $heightMin;
+        $this->HeightMin = $HeightMin;
         return $this;
     }
 
@@ -154,9 +152,9 @@ class CoordinateConfig extends AbstractType
         return $this->LatencyFilterSize;
     }
 
-    public function setLatencyFilterSize(int $latencyFilterSize): self
+    public function setLatencyFilterSize(int $LatencyFilterSize): self
     {
-        $this->LatencyFilterSize = $latencyFilterSize;
+        $this->LatencyFilterSize = $LatencyFilterSize;
         return $this;
     }
 
@@ -165,9 +163,9 @@ class CoordinateConfig extends AbstractType
         return $this->GravityRho;
     }
 
-    public function setGravityRho(float $gravityRho): self
+    public function setGravityRho(float $GravityRho): self
     {
-        $this->GravityRho = $gravityRho;
+        $this->GravityRho = $GravityRho;
         return $this;
     }
 
@@ -188,7 +186,7 @@ class CoordinateConfig extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('MetricsLabels' === $k) {
                 $n->MetricsLabels = [];
                 foreach ($v as $vv) {

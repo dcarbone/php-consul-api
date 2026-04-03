@@ -58,7 +58,7 @@ class ACLTemplatedPolicy extends AbstractType
         return $this->TemplateVariables;
     }
 
-    public function setTemplateVariables(null|ACLTemplatedPolicyVariables $TemplateVariables): ACLTemplatedPolicy
+    public function setTemplateVariables(null|ACLTemplatedPolicyVariables $TemplateVariables): self
     {
         $this->TemplateVariables = $TemplateVariables;
         return $this;
@@ -72,7 +72,7 @@ class ACLTemplatedPolicy extends AbstractType
         return $this->Datacenters;
     }
 
-    public function setDatacenters(string ...$Datacenters): ACLTemplatedPolicy
+    public function setDatacenters(string ...$Datacenters): self
     {
         $this->Datacenters = $Datacenters;
         return $this;
@@ -81,7 +81,7 @@ class ACLTemplatedPolicy extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('TemplateVariables' === $k) {
                 $n->setTemplateVariables($v);
             } elseif ('Datacenters' === $k) {

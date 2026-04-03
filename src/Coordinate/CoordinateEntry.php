@@ -85,10 +85,10 @@ class CoordinateEntry extends AbstractType
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null | self $into = null): self
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('Coord' === $k) {
                 $n->Coord = Coordinate::jsonUnserialize($v);
             } else {

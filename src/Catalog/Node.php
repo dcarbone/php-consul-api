@@ -55,7 +55,7 @@ class Node extends AbstractType
         int $ModifyIndex = 0,
         string $Partition = '',
         string $PeerName = '',
-        null|Locality $Locality = null
+        null|Locality $Locality = null,
     ) {
         $this->ID = $ID;
         $this->Node = $Node;
@@ -172,7 +172,7 @@ class Node extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('Locality' === $k) {
                 $n->Locality = Locality::jsonUnserialize($v);
             } elseif ('Meta' === $k) {

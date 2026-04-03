@@ -32,15 +32,6 @@ class CatalogDeregistration extends AbstractType
     public string $Namespace;
     public string $Partition;
 
-    /**
-     * @param string $Node
-     * @param string $Address
-     * @param string $Datacenter
-     * @param string $ServiceID
-     * @param string $CheckID
-     * @param string $Namespace
-     * @param string $Partition
-     */
     public function __construct(
         string $Node = '',
         string $Address = '',
@@ -48,7 +39,7 @@ class CatalogDeregistration extends AbstractType
         string $ServiceID = '',
         string $CheckID = '',
         string $Namespace = '',
-        string $Partition = ''
+        string $Partition = '',
     ) {
         $this->Node = $Node;
         $this->Address = $Address;
@@ -57,16 +48,16 @@ class CatalogDeregistration extends AbstractType
         $this->CheckID = $CheckID;
         $this->Namespace = $Namespace;
         $this->Partition = $Partition;
-}
+    }
 
     public function getNode(): string
     {
         return $this->Node;
     }
 
-    public function setNode(string $node): self
+    public function setNode(string $Node): self
     {
-        $this->Node = $node;
+        $this->Node = $Node;
         return $this;
     }
 
@@ -75,9 +66,9 @@ class CatalogDeregistration extends AbstractType
         return $this->Address;
     }
 
-    public function setAddress(string $address): self
+    public function setAddress(string $Address): self
     {
-        $this->Address = $address;
+        $this->Address = $Address;
         return $this;
     }
 
@@ -86,9 +77,9 @@ class CatalogDeregistration extends AbstractType
         return $this->Datacenter;
     }
 
-    public function setDatacenter(string $datacenter): self
+    public function setDatacenter(string $Datacenter): self
     {
-        $this->Datacenter = $datacenter;
+        $this->Datacenter = $Datacenter;
         return $this;
     }
 
@@ -97,9 +88,9 @@ class CatalogDeregistration extends AbstractType
         return $this->ServiceID;
     }
 
-    public function setServiceID(string $serviceID): self
+    public function setServiceID(string $ServiceID): self
     {
-        $this->ServiceID = $serviceID;
+        $this->ServiceID = $ServiceID;
         return $this;
     }
 
@@ -108,9 +99,9 @@ class CatalogDeregistration extends AbstractType
         return $this->CheckID;
     }
 
-    public function setCheckID(string $checkID): self
+    public function setCheckID(string $CheckID): self
     {
-        $this->CheckID = $checkID;
+        $this->CheckID = $CheckID;
         return $this;
     }
 
@@ -139,7 +130,7 @@ class CatalogDeregistration extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             $n->{$k} = $v;
         }
         return $n;

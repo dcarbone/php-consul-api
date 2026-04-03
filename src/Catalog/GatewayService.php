@@ -38,6 +38,9 @@ class GatewayService extends AbstractType
     public string $SNI;
     public string $FromWildCard;
 
+    /**
+     * @param array<string> $Hosts
+     */
     public function __construct(
         null|CompoundServiceName $Gateway = null,
         null|CompoundServiceName $Service = null,
@@ -49,7 +52,7 @@ class GatewayService extends AbstractType
         string $CertFile = '',
         string $KeyFile = '',
         string $SNI = '',
-        string $FromWildCard = ''
+        string $FromWildCard = '',
     ) {
         $this->Gateway = $Gateway ?? new CompoundServiceName();
         $this->Service = $Service ?? new CompoundServiceName();
@@ -191,7 +194,7 @@ class GatewayService extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('Gateway' === $k) {
                 $n->Gateway = CompoundServiceName::jsonUnserialize($v);
             } elseif ('Service' === $k) {

@@ -142,7 +142,7 @@ class ServiceResolverFailover extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('Targtes' === $k) {
                 $n->Targets = [];
                 foreach ($v as $vv) {

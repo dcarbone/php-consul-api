@@ -88,7 +88,7 @@ class IngressServiceConfig extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('PassiveHealthCheck' === $k || 'passive_health_check' === $k) {
                 $n->PassiveHealthCheck = null === $v ? null : PassiveHealthCheck::jsonUnserialize($v);
             } else {

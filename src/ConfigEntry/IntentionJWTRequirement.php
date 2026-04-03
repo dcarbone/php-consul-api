@@ -65,7 +65,7 @@ class IntentionJWTRequirement extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('VerifyClaims' === $k || 'verify_claims' === $k) {
                 $n->VerifyClaims = [];
                 foreach ($v as $vv) {

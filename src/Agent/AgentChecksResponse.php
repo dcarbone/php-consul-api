@@ -31,7 +31,7 @@ class AgentChecksResponse extends AbstractValuedResponse implements Unmarshalled
     /**
      * @return \DCarbone\PHPConsulAPI\Agent\AgentCheck[]|null
      */
-    public function getValue(): ?array
+    public function getValue(): null|array
     {
         return $this->Checks;
     }

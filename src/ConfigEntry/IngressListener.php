@@ -96,7 +96,7 @@ class IngressListener extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('Services' === $k) {
                 $n->Services = [];
                 foreach ($v as $vv) {
@@ -108,7 +108,7 @@ class IngressListener extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $into;
+        return $n;
     }
 
     public function jsonSerialize(): \stdClass

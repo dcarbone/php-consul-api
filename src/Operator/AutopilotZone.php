@@ -24,26 +24,54 @@ use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
 class AutopilotZone extends AbstractType
 {
+    /** @var array<string> */
     public array $Servers;
+    /** @var array<string> */
     public array $Voters;
     public int $FailureTolerance;
 
+    /**
+     * @param array<string> $Servers
+     * @param array<string> $Voters
+     */
+    public function __construct(
+        array $Servers = [],
+        array $Voters = [],
+        int $FailureTolerance = 0,
+    ) {
+        $this->Servers = $Servers;
+        $this->Voters = $Voters;
+        $this->FailureTolerance = $FailureTolerance;
+    }
+
+    /**
+     * @return array<string>
+     */
     public function getServers(): array
     {
         return $this->Servers;
     }
 
+    /**
+     * @param array<string> $Servers
+     */
     public function setServers(array $Servers): self
     {
         $this->Servers = $Servers;
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getVoters(): array
     {
         return $this->Voters;
     }
 
+    /**
+     * @param array<string> $Voters
+     */
     public function setVoters(array $Voters): self
     {
         $this->Voters = $Voters;
@@ -59,5 +87,23 @@ class AutopilotZone extends AbstractType
     {
         $this->FailureTolerance = $FailureTolerance;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Servers = $this->Servers;
+        $out->Voters = $this->Voters;
+        $out->FailureTolerance = $this->FailureTolerance;
+        return $out;
     }
 }

@@ -22,36 +22,33 @@ namespace DCarbone\PHPConsulAPI\Txn;
 
 use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class ServiceTxnOp extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_SERVICE => [
-            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS => AgentService::class,
-        ],
-    ];
-
-    private const FIELD_SERVICE = 'Service';
-
-    public string $Verb = '';
-    public string $Node = '';
+    public ServiceOp $Verb;
+    public string $Node;
     public AgentService $Service;
 
-    public function __construct(?array $data = [])
-    {
-        parent::__construct($data);
-        $this->Service = new AgentService(null);
+    public function __construct(
+        string|ServiceOp $Verb = ServiceOp::UNDEFINED,
+        string $Node = '',
+        null|AgentService $Service = null,
+    ) {
+        $this->setVerb($Verb);
+        $this->Node = $Node;
+        $this->Service = $Service ?? new AgentService();
     }
 
-    public function getVerb(): string
+    public function getVerb(): ServiceOp
     {
         return $this->Verb;
     }
 
-    public function setVerb(string $Verb): self
+    public function setVerb(string|ServiceOp $Verb): self
     {
+        if (is_string($Verb)) {
+            $Verb = ServiceOp::from($Verb);
+        }
         $this->Verb = $Verb;
         return $this;
     }
@@ -76,5 +73,29 @@ class ServiceTxnOp extends AbstractType
     {
         $this->Service = $Service;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('Verb' === $k) {
+                $n->setVerb($v);
+            } elseif ('Service' === $k) {
+                $n->Service = AgentService::jsonUnserialize($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Verb = $this->Verb;
+        $out->Node = $this->Node;
+        $out->Service = $this->Service;
+        return $out;
     }
 }

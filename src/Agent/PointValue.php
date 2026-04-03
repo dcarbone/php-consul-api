@@ -28,6 +28,9 @@ class PointValue extends AbstractType
     /** @var float[] */
     public array $Points;
 
+    /**
+     * @param iterable<float> $Points
+     */
     public function __construct(
         string $Name = '',
         iterable $Points = [],
@@ -41,9 +44,9 @@ class PointValue extends AbstractType
         return $this->Name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $Name): self
     {
-        $this->Name = $name;
+        $this->Name = $Name;
         return $this;
     }
 
@@ -64,7 +67,7 @@ class PointValue extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             $n->{$k} = $v;
         }
         return $n;

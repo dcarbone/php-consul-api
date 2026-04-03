@@ -22,11 +22,17 @@ namespace DCarbone\PHPConsulAPI\Agent;
 
 use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
+/**
+ * @implements \ArrayAccess<int, AgentServiceCheck>
+ */
 class AgentServiceChecks implements \JsonSerializable, \Countable, \ArrayAccess
 {
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentServiceCheck[] */
     public array $Checks;
 
+    /**
+     * @param iterable<AgentServiceCheck> $Checks
+     */
     public function __construct(
         iterable $Checks = [],
     ) {
@@ -47,6 +53,9 @@ class AgentServiceChecks implements \JsonSerializable, \Countable, \ArrayAccess
         return $this;
     }
 
+    /**
+     * @return iterable<AgentServiceCheck>
+     */
     public function getIterator(): iterable
     {
         if ([] === $this->Checks) {
@@ -89,15 +98,21 @@ class AgentServiceChecks implements \JsonSerializable, \Countable, \ArrayAccess
         unset($this->Checks[$offset]);
     }
 
-    public static function jsonUnserialize(array $decoded): static
+    /**
+     * @param array<\stdClass> $decoded
+     */
+    public static function jsonUnserialize(array $decoded): self
     {
-        $n = new static();
+        $n = new self();
         foreach ($decoded as $v) {
             $n->Checks[] = AgentServiceCheck::jsonUnserialize($v);
         }
         return $n;
     }
 
+    /**
+     * @return array<AgentServiceCheck>
+     */
     public function jsonSerialize(): array
     {
         return $this->Checks;

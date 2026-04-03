@@ -60,7 +60,7 @@ class GatewayTLSSDSConfig extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('cluster_name' === $k) {
                 $n->ClusterName = (string)$v;
             } elseif ('cert_resource' === $k) {

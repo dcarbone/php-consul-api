@@ -109,7 +109,7 @@ class GatewayTLSConfig extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('tls_min_version' === $k) {
                 $n->TLSMinVersion = (string)$v;
             } elseif ('tls_max_version' === $k) {
@@ -122,7 +122,7 @@ class GatewayTLSConfig extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $into;
+        return $n;
     }
 
     public function jsonSerialize(): \stdClass

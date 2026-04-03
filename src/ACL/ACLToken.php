@@ -81,7 +81,7 @@ class ACLToken extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if (!$n->_jsonUnserializeField($k, $v, $n)) {
                 $n->{$k} = $v;
             }

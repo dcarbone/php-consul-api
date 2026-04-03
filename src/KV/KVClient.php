@@ -196,7 +196,10 @@ class KVClient extends AbstractClient
             $ret->OK = true;
             // TODO: Maybe go straight to actual response?  What is the benefit of this...
             $internal = new TxnResponse($dec->Decoded);
-            $ret->KVTxnResponse = new KVTxnResponse(['Errors' => $internal->Errors, 'Results' => $internal->Results]);
+            $kvr = new KVTxnResponse();
+            $kvr->Errors = $internal->Errors;
+            $kvr->Results = $internal->Results;
+            $ret->KVTxnResponse = $kvr;
             return $ret;
         }
 

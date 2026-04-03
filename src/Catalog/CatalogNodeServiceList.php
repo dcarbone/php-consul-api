@@ -35,11 +35,11 @@ class CatalogNodeServiceList extends AbstractType
      */
     public function __construct(
         null|Node $Node = null,
-        array $Services = []
+        array $Services = [],
     ) {
         $this->Node = $Node;
         $this->setServices(...$Services);
-}
+    }
 
     public function getNode(): null|Node
     {
@@ -69,7 +69,7 @@ class CatalogNodeServiceList extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('Node' === $k) {
                 $n->Node = null === $v ? null : Node::jsonUnserialize($v);
             } elseif ('Services' === $k) {

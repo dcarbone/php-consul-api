@@ -21,42 +21,52 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
  */
 
 use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
-use DCarbone\PHPConsulAPI\HasSettableStringTags;
-use DCarbone\PHPConsulAPI\HasStringTags;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class ServiceQuery extends AbstractType
 {
-    use HasSettableStringTags;
-    use HasStringTags;
-
-    protected const FIELDS = [
-        self::FIELD_NAMESPACE => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_FAILOVER  => [
-            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS => QueryDatacenterOptions::class,
-        ],
-    ];
-
-    private const FIELD_NAMESPACE = 'Namespace';
-    private const FIELD_FAILOVER  = 'Failover';
-
-    public string $Service = '';
-    public string $Namespace = '';
-    public string $Near = '';
-    public array $IgnoreCheckIDs = [];
+    public string $Service;
+    public string $Namespace;
+    public string $Near;
+    /** @var array<string> */
+    public array $Tags;
+    /** @var array<string> */
+    public array $IgnoreCheckIDs;
     public QueryDatacenterOptions $Failover;
-    public bool $OnlyPassing = false;
-    public array $NodeMeta = [];
-    public array $ServiceMeta = [];
-    public bool $Connect = false;
+    public bool $OnlyPassing;
+    /** @var array<string, string> */
+    public array $NodeMeta;
+    /** @var array<string, string> */
+    public array $ServiceMeta;
+    public bool $Connect;
 
-    public function __construct(?array $data = [])
-    {
-        parent::__construct($data);
-        if (!isset($this->Failover)) {
-            $this->Failover = new QueryDatacenterOptions(null);
-        }
+    /**
+     * @param array<string> $Tags
+     * @param array<string> $IgnoreCheckIDs
+     * @param array<string, string> $NodeMeta
+     * @param array<string, string> $ServiceMeta
+     */
+    public function __construct(
+        string $Service = '',
+        string $Namespace = '',
+        string $Near = '',
+        array $Tags = [],
+        array $IgnoreCheckIDs = [],
+        null|QueryDatacenterOptions $Failover = null,
+        bool $OnlyPassing = false,
+        array $NodeMeta = [],
+        array $ServiceMeta = [],
+        bool $Connect = false,
+    ) {
+        $this->Service = $Service;
+        $this->Namespace = $Namespace;
+        $this->Near = $Near;
+        $this->setTags(...$Tags);
+        $this->IgnoreCheckIDs = $IgnoreCheckIDs;
+        $this->Failover = $Failover ?? new QueryDatacenterOptions();
+        $this->OnlyPassing = $OnlyPassing;
+        $this->NodeMeta = $NodeMeta;
+        $this->ServiceMeta = $ServiceMeta;
+        $this->Connect = $Connect;
     }
 
     public function getService(): string
@@ -92,11 +102,31 @@ class ServiceQuery extends AbstractType
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
+    public function getTags(): array
+    {
+        return $this->Tags;
+    }
+
+    public function setTags(string ...$Tags): self
+    {
+        $this->Tags = $Tags;
+        return $this;
+    }
+
+    /**
+     * @return array<string>
+     */
     public function getIgnoreCheckIDs(): array
     {
         return $this->IgnoreCheckIDs;
     }
 
+    /**
+     * @param array<string> $IgnoreCheckIDs
+     */
     public function setIgnoreCheckIDs(array $IgnoreCheckIDs): self
     {
         $this->IgnoreCheckIDs = $IgnoreCheckIDs;
@@ -125,22 +155,34 @@ class ServiceQuery extends AbstractType
         return $this;
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function getNodeMeta(): array
     {
         return $this->NodeMeta;
     }
 
+    /**
+     * @param array<string, string> $NodeMeta
+     */
     public function setNodeMeta(array $NodeMeta): self
     {
         $this->NodeMeta = $NodeMeta;
         return $this;
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function getServiceMeta(): array
     {
         return $this->ServiceMeta;
     }
 
+    /**
+     * @param array<string, string> $ServiceMeta
+     */
     public function setServiceMeta(array $ServiceMeta): self
     {
         $this->ServiceMeta = $ServiceMeta;
@@ -156,5 +198,38 @@ class ServiceQuery extends AbstractType
     {
         $this->Connect = $Connect;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('Failover' === $k) {
+                $n->Failover = QueryDatacenterOptions::jsonUnserialize($v);
+            } elseif ('Tags' === $k) {
+                $n->setTags(...$v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Service = $this->Service;
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        $out->Near = $this->Near;
+        $out->Tags = $this->Tags;
+        $out->IgnoreCheckIDs = $this->IgnoreCheckIDs;
+        $out->Failover = $this->Failover;
+        $out->OnlyPassing = $this->OnlyPassing;
+        $out->NodeMeta = $this->NodeMeta;
+        $out->ServiceMeta = $this->ServiceMeta;
+        $out->Connect = $this->Connect;
+        return $out;
     }
 }

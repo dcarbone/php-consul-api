@@ -20,60 +20,91 @@ namespace DCarbone\PHPConsulAPI\Txn;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\Txn\TxnResults;
 use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
-use DCarbone\PHPConsulAPI\Transcoding;
-use DCarbone\PHPConsulAPI\Txn\TxnErrors;
 
 class TxnResponse extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_RESULTS => [
-            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS => TxnResults::class,
-        ],
-        self::FIELD_ERRORS  => [
-            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS => TxnErrors::class,
-        ],
-    ];
+    /** @var array<TxnResult> */
+    public array $Results;
+    /** @var array<TxnError> */
+    public array $Errors;
 
-    private const FIELD_RESULTS = 'Results';
-    private const FIELD_ERRORS  = 'Errors';
-
-    public TxnResults $Results;
-    public TxnErrors $Errors;
-
-    public function __construct(?array $data = null)
-    {
-        parent::__construct($data);
-        if (!isset($this->Results)) {
-            $this->Results = new TxnResults();
-        }
-        if (!isset($this->Errors)) {
-            $this->Errors = new TxnErrors();
-        }
+    /**
+     * @param array<TxnResult> $Results
+     * @param array<TxnError> $Errors
+     */
+    public function __construct(
+        array $Results = [],
+        array $Errors = [],
+    ) {
+        $this->Results = $Results;
+        $this->Errors = $Errors;
     }
 
-    public function getResults(): TxnResults
+    /**
+     * @return array<TxnResult>
+     */
+    public function getResults(): array
     {
         return $this->Results;
     }
 
-    public function setResults(TxnResults $Results): self
+    /**
+     * @param array<TxnResult> $Results
+     */
+    public function setResults(array $Results): self
     {
         $this->Results = $Results;
         return $this;
     }
 
-    public function getErrors(): TxnErrors
+    /**
+     * @return array<TxnError>
+     */
+    public function getErrors(): array
     {
         return $this->Errors;
     }
 
-    public function setErrors(TxnErrors $Errors): self
+    /**
+     * @param array<TxnError> $Errors
+     */
+    public function setErrors(array $Errors): self
     {
         $this->Errors = $Errors;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('Results' === $k) {
+                $n->Results = [];
+                if (null !== $v) {
+                    foreach ($v as $vv) {
+                        $n->Results[] = TxnResult::jsonUnserialize($vv);
+                    }
+                }
+            } elseif ('Errors' === $k) {
+                $n->Errors = [];
+                if (null !== $v) {
+                    foreach ($v as $vv) {
+                        $n->Errors[] = TxnError::jsonUnserialize($vv);
+                    }
+                }
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Results = $this->Results;
+        $out->Errors = $this->Errors;
+        return $out;
     }
 }

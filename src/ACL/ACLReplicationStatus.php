@@ -97,7 +97,7 @@ class ACLReplicationStatus extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('LastSuccess' === $k) {
                 $n->LastSuccess = Time\Time::createFromFormat(DATE_RFC3339, $v);
             } elseif ('LastError' === $k) {

@@ -21,43 +21,56 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class AutopilotUpgrade extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_TARGET_VERSION               => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_TARGET_VERSION_VOTERS        => Transcoding::OMITEMPTY_STRING_ARRAY_FIELD,
-        self::FIELD_TARGET_VERSION_NON_VOTERS    => Transcoding::OMITEMPTY_STRING_ARRAY_FIELD,
-        self::FIELD_TARGET_VERSION_READ_REPLICAS => Transcoding::OMITEMPTY_STRING_ARRAY_FIELD,
-        self::FIELD_OTHER_VERSION_VOTERS         => Transcoding::OMITEMPTY_STRING_ARRAY_FIELD,
-        self::FIELD_OTHER_VERSION_NON_VOTERS     => Transcoding::OMITEMPTY_STRING_ARRAY_FIELD,
-        self::FIELD_OTHER_VERSION_READ_REPLICAS  => Transcoding::OMITEMPTY_STRING_ARRAY_FIELD,
-        self::FIELD_REDUNDANCY_ZONES             => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => AutopilotZoneUpgradeVersions::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-        ],
-    ];
-
-    private const FIELD_TARGET_VERSION               = 'TargetVersion';
-    private const FIELD_TARGET_VERSION_VOTERS        = 'TargetVersionVoters';
-    private const FIELD_TARGET_VERSION_NON_VOTERS    = 'TargetVersionNonVoters';
-    private const FIELD_TARGET_VERSION_READ_REPLICAS = 'TargetVersionReadReplicas';
-    private const FIELD_OTHER_VERSION_VOTERS         = 'OtherVersionVoters';
-    private const FIELD_OTHER_VERSION_NON_VOTERS     = 'OtherVersionNonVoters';
-    private const FIELD_OTHER_VERSION_READ_REPLICAS  = 'OtherVersionReadReplicas';
-    private const FIELD_REDUNDANCY_ZONES             = 'RedundancyZones';
-
     public string $Status;
     public string $TargetVersion;
+    /** @var array<string> */
     public array $TargetVersionVoters;
+    /** @var array<string> */
     public array $TargetVersionNonVoters;
+    /** @var array<string> */
     public array $TargetVersionReadReplicas;
+    /** @var array<string> */
     public array $OtherVersionVoters;
+    /** @var array<string> */
     public array $OtherVersionNonVoters;
+    /** @var array<string> */
     public array $OtherVersionReadReplicas;
+    /** @var array<string, AutopilotZoneUpgradeVersions> */
     public array $RedundancyZones;
+
+    /**
+     * @param array<string> $TargetVersionVoters
+     * @param array<string> $TargetVersionNonVoters
+     * @param array<string> $TargetVersionReadReplicas
+     * @param array<string> $OtherVersionVoters
+     * @param array<string> $OtherVersionNonVoters
+     * @param array<string> $OtherVersionReadReplicas
+     * @param array<string, AutopilotZoneUpgradeVersions> $RedundancyZones
+     */
+    public function __construct(
+        string $Status = '',
+        string $TargetVersion = '',
+        array $TargetVersionVoters = [],
+        array $TargetVersionNonVoters = [],
+        array $TargetVersionReadReplicas = [],
+        array $OtherVersionVoters = [],
+        array $OtherVersionNonVoters = [],
+        array $OtherVersionReadReplicas = [],
+        array $RedundancyZones = [],
+    ) {
+        $this->Status = $Status;
+        $this->TargetVersion = $TargetVersion;
+        $this->TargetVersionVoters = $TargetVersionVoters;
+        $this->TargetVersionNonVoters = $TargetVersionNonVoters;
+        $this->TargetVersionReadReplicas = $TargetVersionReadReplicas;
+        $this->OtherVersionVoters = $OtherVersionVoters;
+        $this->OtherVersionNonVoters = $OtherVersionNonVoters;
+        $this->OtherVersionReadReplicas = $OtherVersionReadReplicas;
+        $this->RedundancyZones = $RedundancyZones;
+    }
 
     public function getStatus(): string
     {
@@ -81,80 +94,169 @@ class AutopilotUpgrade extends AbstractType
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getTargetVersionVoters(): array
     {
         return $this->TargetVersionVoters;
     }
 
+    /**
+     * @param array<string> $TargetVersionVoters
+     */
     public function setTargetVersionVoters(array $TargetVersionVoters): self
     {
         $this->TargetVersionVoters = $TargetVersionVoters;
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getTargetVersionNonVoters(): array
     {
         return $this->TargetVersionNonVoters;
     }
 
+    /**
+     * @param array<string> $TargetVersionNonVoters
+     */
     public function setTargetVersionNonVoters(array $TargetVersionNonVoters): self
     {
         $this->TargetVersionNonVoters = $TargetVersionNonVoters;
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getTargetVersionReadReplicas(): array
     {
         return $this->TargetVersionReadReplicas;
     }
 
+    /**
+     * @param array<string> $TargetVersionReadReplicas
+     */
     public function setTargetVersionReadReplicas(array $TargetVersionReadReplicas): self
     {
         $this->TargetVersionReadReplicas = $TargetVersionReadReplicas;
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getOtherVersionVoters(): array
     {
         return $this->OtherVersionVoters;
     }
 
+    /**
+     * @param array<string> $OtherVersionVoters
+     */
     public function setOtherVersionVoters(array $OtherVersionVoters): self
     {
         $this->OtherVersionVoters = $OtherVersionVoters;
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getOtherVersionNonVoters(): array
     {
         return $this->OtherVersionNonVoters;
     }
 
+    /**
+     * @param array<string> $OtherVersionNonVoters
+     */
     public function setOtherVersionNonVoters(array $OtherVersionNonVoters): self
     {
         $this->OtherVersionNonVoters = $OtherVersionNonVoters;
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getOtherVersionReadReplicas(): array
     {
         return $this->OtherVersionReadReplicas;
     }
 
+    /**
+     * @param array<string> $OtherVersionReadReplicas
+     */
     public function setOtherVersionReadReplicas(array $OtherVersionReadReplicas): self
     {
         $this->OtherVersionReadReplicas = $OtherVersionReadReplicas;
         return $this;
     }
 
+    /**
+     * @return array<string, AutopilotZoneUpgradeVersions>
+     */
     public function getRedundancyZones(): array
     {
         return $this->RedundancyZones;
     }
 
+    /**
+     * @param array<string, AutopilotZoneUpgradeVersions> $RedundancyZones
+     */
     public function setRedundancyZones(array $RedundancyZones): self
     {
         $this->RedundancyZones = $RedundancyZones;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('RedundancyZones' === $k) {
+                $n->RedundancyZones = [];
+                foreach ($v as $zk => $zv) {
+                    $n->RedundancyZones[$zk] = AutopilotZoneUpgradeVersions::jsonUnserialize($zv);
+                }
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Status = $this->Status;
+        if ('' !== $this->TargetVersion) {
+            $out->TargetVersion = $this->TargetVersion;
+        }
+        if ([] !== $this->TargetVersionVoters) {
+            $out->TargetVersionVoters = $this->TargetVersionVoters;
+        }
+        if ([] !== $this->TargetVersionNonVoters) {
+            $out->TargetVersionNonVoters = $this->TargetVersionNonVoters;
+        }
+        if ([] !== $this->TargetVersionReadReplicas) {
+            $out->TargetVersionReadReplicas = $this->TargetVersionReadReplicas;
+        }
+        if ([] !== $this->OtherVersionVoters) {
+            $out->OtherVersionVoters = $this->OtherVersionVoters;
+        }
+        if ([] !== $this->OtherVersionNonVoters) {
+            $out->OtherVersionNonVoters = $this->OtherVersionNonVoters;
+        }
+        if ([] !== $this->OtherVersionReadReplicas) {
+            $out->OtherVersionReadReplicas = $this->OtherVersionReadReplicas;
+        }
+        if ([] !== $this->RedundancyZones) {
+            $out->RedundancyZones = $this->RedundancyZones;
+        }
+        return $out;
     }
 }

@@ -21,23 +21,26 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class OperatorHealthReply extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_SERVERS => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => ServerHealth::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-        ],
-    ];
-
-    private const FIELD_SERVERS = 'Servers';
-
     public bool $Healthy;
     public int $FailureTolerance;
+    /** @var array<ServerHealth> */
     public array $Servers;
+
+    /**
+     * @param array<ServerHealth> $Servers
+     */
+    public function __construct(
+        bool $Healthy = false,
+        int $FailureTolerance = 0,
+        array $Servers = [],
+    ) {
+        $this->Healthy = $Healthy;
+        $this->FailureTolerance = $FailureTolerance;
+        $this->Servers = $Servers;
+    }
 
     public function isHealthy(): bool
     {
@@ -61,14 +64,45 @@ class OperatorHealthReply extends AbstractType
         return $this;
     }
 
+    /**
+     * @return array<ServerHealth>
+     */
     public function getServers(): array
     {
         return $this->Servers;
     }
 
+    /**
+     * @param array<ServerHealth> $Servers
+     */
     public function setServers(array $Servers): self
     {
         $this->Servers = $Servers;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('Servers' === $k) {
+                $n->Servers = [];
+                foreach ($v as $sv) {
+                    $n->Servers[] = ServerHealth::jsonUnserialize($sv);
+                }
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Healthy = $this->Healthy;
+        $out->FailureTolerance = $this->FailureTolerance;
+        $out->Servers = $this->Servers;
+        return $out;
     }
 }

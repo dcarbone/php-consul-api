@@ -121,7 +121,7 @@ class ServiceRouteHTTPMatchHeader extends AbstractType
         return $this->Invert;
     }
 
-    public function setInvert(bool $Invert): static
+    public function setInvert(bool $Invert): self
     {
         $this->Invert = $Invert;
         return $this;
@@ -130,7 +130,7 @@ class ServiceRouteHTTPMatchHeader extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             $n->{$k} = $v;
         }
         return $n;

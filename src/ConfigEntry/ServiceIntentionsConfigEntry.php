@@ -115,7 +115,7 @@ class ServiceIntentionsConfigEntry extends AbstractType implements ConfigEntry
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('Sources' === $k) {
                 $n->Sources = [];
                 foreach ($v as $vv) {

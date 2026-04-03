@@ -40,6 +40,9 @@ class HealthClient extends AbstractClient
         return $this->_getHealthChecks(sprintf('v1/health/checks/%s', $service), $opts);
     }
 
+    /**
+     * @param array<string> $tags
+     */
     public function ServiceMultipleTags(
         string $service,
         array $tags = [],
@@ -58,6 +61,9 @@ class HealthClient extends AbstractClient
         return $this->ServiceMultipleTags($service, '' !== $tag ? [$tag] : [], $passingOnly, $opts);
     }
 
+    /**
+     * @param array<string> $tags
+     */
     public function IngressMultipleTags(
         string $service,
         array $tags = [],
@@ -76,6 +82,9 @@ class HealthClient extends AbstractClient
         return $this->IngressMultipleTags($service, '' !== $tag ? [$tag] : [], $passingOnly, $opts);
     }
 
+    /**
+     * @param array<string> $tags
+     */
     public function ConnectMultipleTags(
         string $service,
         array $tags = [],
@@ -122,6 +131,9 @@ class HealthClient extends AbstractClient
         return $ret;
     }
 
+    /**
+     * @param array<string> $tags
+     */
     private function _getServiceEntries(
         string $service,
         array $tags,

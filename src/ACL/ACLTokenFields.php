@@ -37,7 +37,7 @@ trait ACLTokenFields
     public array $ServiceIdentities;
     /** @var array<\DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity> */
     public array $NodeIdentities;
-    /** @var array>\DCarbone\PHPConsulAPI\ACL\ACLTemplatedPolicy> */
+    /** @var array<\DCarbone\PHPConsulAPI\ACL\ACLTemplatedPolicy> */
     public array $TemplatePolicies;
     public bool $Local;
     public string $AuthMethod;

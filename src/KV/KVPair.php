@@ -61,9 +61,9 @@ class KVPair extends AbstractType
         return $this->Key;
     }
 
-    public function setKey(string $key): self
+    public function setKey(string $Key): self
     {
-        $this->Key = $key;
+        $this->Key = $Key;
         return $this;
     }
 
@@ -72,9 +72,9 @@ class KVPair extends AbstractType
         return $this->CreateIndex;
     }
 
-    public function setCreateIndex(int $createIndex): self
+    public function setCreateIndex(int $CreateIndex): self
     {
-        $this->CreateIndex = $createIndex;
+        $this->CreateIndex = $CreateIndex;
         return $this;
     }
 
@@ -83,9 +83,9 @@ class KVPair extends AbstractType
         return $this->ModifyIndex;
     }
 
-    public function setModifyIndex(int $modifyIndex): self
+    public function setModifyIndex(int $ModifyIndex): self
     {
-        $this->ModifyIndex = $modifyIndex;
+        $this->ModifyIndex = $ModifyIndex;
         return $this;
     }
 
@@ -94,9 +94,9 @@ class KVPair extends AbstractType
         return $this->LockIndex;
     }
 
-    public function setLockIndex(int $lockIndex): self
+    public function setLockIndex(int $LockIndex): self
     {
-        $this->LockIndex = $lockIndex;
+        $this->LockIndex = $LockIndex;
         return $this;
     }
 
@@ -105,9 +105,9 @@ class KVPair extends AbstractType
         return $this->Flags;
     }
 
-    public function setFlags(int $flags): self
+    public function setFlags(int $Flags): self
     {
-        $this->Flags = $flags;
+        $this->Flags = $Flags;
         return $this;
     }
 
@@ -116,9 +116,9 @@ class KVPair extends AbstractType
         return $this->Value;
     }
 
-    public function setValue(string $value): self
+    public function setValue(string $Value): self
     {
-        $this->Value = $value;
+        $this->Value = $Value;
         return $this;
     }
 
@@ -127,9 +127,9 @@ class KVPair extends AbstractType
         return $this->Session;
     }
 
-    public function setSession(string $session): self
+    public function setSession(string $Session): self
     {
-        $this->Session = $session;
+        $this->Session = $Session;
         return $this;
     }
 
@@ -138,9 +138,20 @@ class KVPair extends AbstractType
         return $this->Namespace;
     }
 
-    public function setNamespace(string $namespace): self
+    public function setNamespace(string $Namespace): self
     {
-        $this->Namespace = $namespace;
+        $this->Namespace = $Namespace;
+        return $this;
+    }
+
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
         return $this;
     }
 
@@ -152,7 +163,7 @@ class KVPair extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('Value' === $k) {
                 $val = base64_decode($v, true);
                 if (false === $val) {

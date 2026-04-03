@@ -21,49 +21,33 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
  */
 
 use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class PreparedQueryDefinition extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_SERVICE  => [
-            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS => ServiceQuery::class,
-        ],
-        self::FIELD_DNS      => [
-            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS => QueryDNSOptions::class,
-        ],
-        self::FIELD_Template => [
-            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS => QueryTemplate::class,
-        ],
-    ];
-
-    private const FIELD_SERVICE  = 'Service';
-    private const FIELD_DNS      = 'DNS';
-    private const FIELD_Template = 'Template';
-
-    public string $ID = '';
-    public string $Name = '';
-    public string $Session = '';
-    public string $Token = '';
+    public string $ID;
+    public string $Name;
+    public string $Session;
+    public string $Token;
     public ServiceQuery $Service;
     public QueryDNSOptions $DNS;
     public QueryTemplate $Template;
 
-    public function __construct(?array $data = [])
-    {
-        parent::__construct($data);
-        if (!isset($this->Service)) {
-            $this->Service = new ServiceQuery(null);
-        }
-        if (!isset($this->DNS)) {
-            $this->DNS = new QueryDNSOptions(null);
-        }
-        if (!isset($this->Template)) {
-            $this->Template = new QueryTemplate(null);
-        }
+    public function __construct(
+        string $ID = '',
+        string $Name = '',
+        string $Session = '',
+        string $Token = '',
+        null|ServiceQuery $Service = null,
+        null|QueryDNSOptions $DNS = null,
+        null|QueryTemplate $Template = null,
+    ) {
+        $this->ID = $ID;
+        $this->Name = $Name;
+        $this->Session = $Session;
+        $this->Token = $Token;
+        $this->Service = $Service ?? new ServiceQuery();
+        $this->DNS = $DNS ?? new QueryDNSOptions();
+        $this->Template = $Template ?? new QueryTemplate();
     }
 
     public function getID(): string
@@ -141,5 +125,35 @@ class PreparedQueryDefinition extends AbstractType
     {
         $this->Template = $Template;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('Service' === $k) {
+                $n->Service = ServiceQuery::jsonUnserialize($v);
+            } elseif ('DNS' === $k) {
+                $n->DNS = QueryDNSOptions::jsonUnserialize($v);
+            } elseif ('Template' === $k) {
+                $n->Template = QueryTemplate::jsonUnserialize($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->ID = $this->ID;
+        $out->Name = $this->Name;
+        $out->Session = $this->Session;
+        $out->Token = $this->Token;
+        $out->Service = $this->Service;
+        $out->DNS = $this->DNS;
+        $out->Template = $this->Template;
+        return $out;
     }
 }

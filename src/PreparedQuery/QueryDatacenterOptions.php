@@ -24,28 +24,46 @@ use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
 class QueryDatacenterOptions extends AbstractType
 {
-    public int $NearestN = 0;
-    public array $Datacenters = [];
+    public int $NearestN;
+    /** @var array<string> */
+    public array $Datacenters;
+
+    /**
+     * @param array<string> $Datacenters
+     */
+    public function __construct(
+        int $NearestN = 0,
+        array $Datacenters = [],
+    ) {
+        $this->NearestN = $NearestN;
+        $this->Datacenters = $Datacenters;
+    }
 
     public function getNearestN(): int
     {
         return $this->NearestN;
     }
 
-    public function setNearestN(int $nearestN): self
+    public function setNearestN(int $NearestN): self
     {
-        $this->NearestN = $nearestN;
+        $this->NearestN = $NearestN;
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getDatacenters(): array
     {
         return $this->Datacenters;
     }
 
-    public function setDatacenters(array $datacenters): self
+    /**
+     * @param array<string> $Datacenters
+     */
+    public function setDatacenters(array $Datacenters): self
     {
-        $this->Datacenters = $datacenters;
+        $this->Datacenters = $Datacenters;
         return $this;
     }
 
@@ -53,5 +71,22 @@ class QueryDatacenterOptions extends AbstractType
     {
         $this->Datacenters[] = $datacenter;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->NearestN = $this->NearestN;
+        $out->Datacenters = $this->Datacenters;
+        return $out;
     }
 }

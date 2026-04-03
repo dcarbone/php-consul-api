@@ -45,18 +45,8 @@ class CatalogRegistration extends AbstractType
     public null|Locality $Locality;
 
     /**
-     * @param string $ID
-     * @param string $Node
-     * @param string $Address
      * @param array<string,string> $TaggedAddresses
      * @param array<string,string> $NodeMeta
-     * @param string $Datacenter
-     * @param \DCarbone\PHPConsulAPI\Agent\AgentService|null $Service
-     * @param \DCarbone\PHPConsulAPI\Agent\AgentCheck|null $Check
-     * @param \DCarbone\PHPConsulAPI\Health\HealthChecks|null $Checks
-     * @param bool $SkipNodeUpdate
-     * @param string $Partition
-     * @param \DCarbone\PHPConsulAPI\Peering\Locality|null $Locality
      */
     public function __construct(
         string $ID = '',
@@ -157,9 +147,9 @@ class CatalogRegistration extends AbstractType
         return $this->Checks;
     }
 
-    public function setChecks(HealthChecks $checks): self
+    public function setChecks(HealthChecks $Checks): self
     {
-        $this->Checks = $checks;
+        $this->Checks = $Checks;
         return $this;
     }
 
@@ -199,7 +189,7 @@ class CatalogRegistration extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('TaggedAddresses' === $k) {
                 $n->setTaggedAddresses($v);
             } elseif ('NodeMeta' === $k) {

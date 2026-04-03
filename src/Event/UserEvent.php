@@ -41,7 +41,7 @@ class UserEvent extends AbstractType
         string $ServiceFilter = '',
         string $TagFilter = '',
         int $Version = 0,
-        int $LTime = 0
+        int $LTime = 0,
     ) {
         $this->ID = $ID;
         $this->Name = $Name;
@@ -58,9 +58,21 @@ class UserEvent extends AbstractType
         return $this->ID;
     }
 
+    public function setID(string $ID): self
+    {
+        $this->ID = $ID;
+        return $this;
+    }
+
     public function getName(): string
     {
         return $this->Name;
+    }
+
+    public function setName(string $Name): self
+    {
+        $this->Name = $Name;
+        return $this;
     }
 
     public function getPayload(): string
@@ -68,9 +80,21 @@ class UserEvent extends AbstractType
         return $this->Payload;
     }
 
+    public function setPayload(string $Payload): self
+    {
+        $this->Payload = $Payload;
+        return $this;
+    }
+
     public function getNodeFilter(): string
     {
         return $this->NodeFilter;
+    }
+
+    public function setNodeFilter(string $NodeFilter): self
+    {
+        $this->NodeFilter = $NodeFilter;
+        return $this;
     }
 
     public function getServiceFilter(): string
@@ -78,9 +102,21 @@ class UserEvent extends AbstractType
         return $this->ServiceFilter;
     }
 
+    public function setServiceFilter(string $ServiceFilter): self
+    {
+        $this->ServiceFilter = $ServiceFilter;
+        return $this;
+    }
+
     public function getTagFilter(): string
     {
         return $this->TagFilter;
+    }
+
+    public function setTagFilter(string $TagFilter): self
+    {
+        $this->TagFilter = $TagFilter;
+        return $this;
     }
 
     public function getVersion(): int
@@ -88,15 +124,27 @@ class UserEvent extends AbstractType
         return $this->Version;
     }
 
+    public function setVersion(int $Version): self
+    {
+        $this->Version = $Version;
+        return $this;
+    }
+
     public function getLTime(): int
     {
         return $this->LTime;
     }
 
+    public function setLTime(int $LTime): self
+    {
+        $this->LTime = $LTime;
+        return $this;
+    }
+
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             $n->{$k} = $v;
         }
         return $n;

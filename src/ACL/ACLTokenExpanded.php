@@ -196,10 +196,10 @@ class ACLTokenExpanded extends ACLToken
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|ACLToken $into = null): static
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ($n->_jsonUnserializeField($k, $v, $n)) {
                 continue;
             }

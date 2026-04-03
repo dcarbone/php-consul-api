@@ -22,40 +22,34 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
 
 use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 use DCarbone\PHPConsulAPI\Health\ServiceEntry;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class PreparedQueryExecuteResponse extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_NODES     => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => ServiceEntry::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-        ],
-        self::FIELD_DNS       => [
-            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS => QueryDNSOptions::class,
-        ],
-        self::FIELD_NAMESPACE => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
-
-    private const FIELD_NAMESPACE = 'Namespace';
-    private const FIELD_NODES     = 'Nodes';
-    private const FIELD_DNS       = 'DNS';
-
-    public string $Service = '';
-    public string $Namespace = '';
-    public array $Nodes = [];
+    public string $Service;
+    public string $Namespace;
+    /** @var array<ServiceEntry> */
+    public array $Nodes;
     public QueryDNSOptions $DNS;
-    public string $Datacenter = '';
-    public int $Failovers = 0;
+    public string $Datacenter;
+    public int $Failovers;
 
-    public function __construct(?array $data = [])
-    {
-        parent::__construct($data);
-        if (!isset($this->DNS)) {
-            $this->DNS = new QueryDNSOptions(null);
-        }
+    /**
+     * @param array<ServiceEntry> $Nodes
+     */
+    public function __construct(
+        string $Service = '',
+        string $Namespace = '',
+        array $Nodes = [],
+        null|QueryDNSOptions $DNS = null,
+        string $Datacenter = '',
+        int $Failovers = 0,
+    ) {
+        $this->Service = $Service;
+        $this->Namespace = $Namespace;
+        $this->Nodes = $Nodes;
+        $this->DNS = $DNS ?? new QueryDNSOptions();
+        $this->Datacenter = $Datacenter;
+        $this->Failovers = $Failovers;
     }
 
     public function getService(): string
@@ -80,11 +74,17 @@ class PreparedQueryExecuteResponse extends AbstractType
         return $this;
     }
 
+    /**
+     * @return array<ServiceEntry>
+     */
     public function getNodes(): array
     {
         return $this->Nodes;
     }
 
+    /**
+     * @param array<ServiceEntry> $Nodes
+     */
     public function setNodes(array $Nodes): self
     {
         $this->Nodes = $Nodes;
@@ -122,5 +122,37 @@ class PreparedQueryExecuteResponse extends AbstractType
     {
         $this->Failovers = $Failovers;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('Nodes' === $k) {
+                $n->Nodes = [];
+                foreach ($v as $nv) {
+                    $n->Nodes[] = ServiceEntry::jsonUnserialize($nv);
+                }
+            } elseif ('DNS' === $k) {
+                $n->DNS = QueryDNSOptions::jsonUnserialize($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Service = $this->Service;
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        $out->Nodes = $this->Nodes;
+        $out->DNS = $this->DNS;
+        $out->Datacenter = $this->Datacenter;
+        $out->Failovers = $this->Failovers;
+        return $out;
     }
 }

@@ -30,9 +30,6 @@ class ExposePath extends AbstractType
     public string $Protocol;
     public bool $ParsedFromCheck;
 
-    /**
-     * @param array<string,mixed>|null $data
-     */
     public function __construct(
         int $ListenerPort = 0,
         string $Path = '',
@@ -105,7 +102,7 @@ class ExposePath extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded, null|self $n = null): self
     {
         $n = $n ?? new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('listener_port' === $k) {
                 $n->ListenerPort = $v;
             } elseif ('local_path_port' === $k) {

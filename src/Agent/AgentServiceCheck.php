@@ -106,16 +106,16 @@ class AgentServiceCheck extends AbstractType
         $this->SuccessBeforePassing = $SuccessBeforePassing;
         $this->FailuresBeforeCritical = $FailuresBeforeCritical;
         $this->DeregisterCriticalServiceAfter = $DeregisterCriticalServiceAfter;
-}
+    }
 
     public function getCheckID(): string
     {
         return $this->CheckID;
     }
 
-    public function setCheckID(string $checkID): self
+    public function setCheckID(string $CheckID): self
     {
-        $this->CheckID = $checkID;
+        $this->CheckID = $CheckID;
         return $this;
     }
 
@@ -124,9 +124,9 @@ class AgentServiceCheck extends AbstractType
         return $this->Name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $Name): self
     {
-        $this->Name = $name;
+        $this->Name = $Name;
         return $this;
     }
 
@@ -138,9 +138,9 @@ class AgentServiceCheck extends AbstractType
         return $this->Args;
     }
 
-    public function setArgs(string ...$args): self
+    public function setArgs(string ...$Args): self
     {
-        $this->Args = $args;
+        $this->Args = $Args;
         return $this;
     }
 
@@ -149,9 +149,9 @@ class AgentServiceCheck extends AbstractType
         return $this->DockerContainerID;
     }
 
-    public function setDockerContainerID(string $dockerContainerID): self
+    public function setDockerContainerID(string $DockerContainerID): self
     {
-        $this->DockerContainerID = $dockerContainerID;
+        $this->DockerContainerID = $DockerContainerID;
         return $this;
     }
 
@@ -160,9 +160,9 @@ class AgentServiceCheck extends AbstractType
         return $this->Shell;
     }
 
-    public function setShell(string $shell): self
+    public function setShell(string $Shell): self
     {
-        $this->Shell = $shell;
+        $this->Shell = $Shell;
         return $this;
     }
 
@@ -171,9 +171,9 @@ class AgentServiceCheck extends AbstractType
         return $this->Interval;
     }
 
-    public function setInterval(string $interval): self
+    public function setInterval(string $Interval): self
     {
-        $this->Interval = $interval;
+        $this->Interval = $Interval;
         return $this;
     }
 
@@ -182,9 +182,9 @@ class AgentServiceCheck extends AbstractType
         return $this->Timeout;
     }
 
-    public function setTimeout(string $timeout): self
+    public function setTimeout(string $Timeout): self
     {
-        $this->Timeout = $timeout;
+        $this->Timeout = $Timeout;
         return $this;
     }
 
@@ -193,9 +193,9 @@ class AgentServiceCheck extends AbstractType
         return $this->TTL;
     }
 
-    public function setTTL(string $ttl): self
+    public function setTTL(string $TTL): self
     {
-        $this->TTL = $ttl;
+        $this->TTL = $TTL;
         return $this;
     }
 
@@ -204,9 +204,9 @@ class AgentServiceCheck extends AbstractType
         return $this->HTTP;
     }
 
-    public function setHTTP(string $http): self
+    public function setHTTP(string $HTTP): self
     {
-        $this->HTTP = $http;
+        $this->HTTP = $HTTP;
         return $this;
     }
 
@@ -237,9 +237,9 @@ class AgentServiceCheck extends AbstractType
         return $this->Method;
     }
 
-    public function setMethod(string $method): self
+    public function setMethod(string $Method): self
     {
-        $this->Method = $method;
+        $this->Method = $Method;
         return $this;
     }
 
@@ -248,9 +248,9 @@ class AgentServiceCheck extends AbstractType
         return $this->TCP;
     }
 
-    public function setTCP(string $tcp): self
+    public function setTCP(string $TCP): self
     {
-        $this->TCP = $tcp;
+        $this->TCP = $TCP;
         return $this;
     }
 
@@ -259,9 +259,9 @@ class AgentServiceCheck extends AbstractType
         return $this->Status;
     }
 
-    public function setStatus(string $status): self
+    public function setStatus(string $Status): self
     {
-        $this->Status = $status;
+        $this->Status = $Status;
         return $this;
     }
 
@@ -270,9 +270,9 @@ class AgentServiceCheck extends AbstractType
         return $this->Notes;
     }
 
-    public function setNotes(string $notes): self
+    public function setNotes(string $Notes): self
     {
-        $this->Notes = $notes;
+        $this->Notes = $Notes;
         return $this;
     }
 
@@ -281,9 +281,9 @@ class AgentServiceCheck extends AbstractType
         return $this->TLSSkipVerify;
     }
 
-    public function setTLSSkipVerify(bool $tlsSkipVerify): self
+    public function setTLSSkipVerify(bool $TLSSkipVerify): self
     {
-        $this->TLSSkipVerify = $tlsSkipVerify;
+        $this->TLSSkipVerify = $TLSSkipVerify;
         return $this;
     }
 
@@ -308,7 +308,7 @@ class AgentServiceCheck extends AbstractType
         return $this->H2PING;
     }
 
-    public function setH2PING(string $H2PING): AgentServiceCheck
+    public function setH2PING(string $H2PING): self
     {
         $this->H2PING = $H2PING;
         return $this;
@@ -319,7 +319,7 @@ class AgentServiceCheck extends AbstractType
         return $this->H2PINGUseTLS;
     }
 
-    public function setH2PINGUseTLS(bool $H2PINGUseTLS): AgentServiceCheck
+    public function setH2PINGUseTLS(bool $H2PINGUseTLS): self
     {
         $this->H2PINGUseTLS = $H2PINGUseTLS;
         return $this;
@@ -380,16 +380,16 @@ class AgentServiceCheck extends AbstractType
         return $this->DeregisterCriticalServiceAfter;
     }
 
-    public function setDeregisterCriticalServiceAfter(string $deregisterCriticalServiceAfter): self
+    public function setDeregisterCriticalServiceAfter(string $DeregisterCriticalServiceAfter): self
     {
-        $this->DeregisterCriticalServiceAfter = $deregisterCriticalServiceAfter;
+        $this->DeregisterCriticalServiceAfter = $DeregisterCriticalServiceAfter;
         return $this;
     }
 
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('ScriptArgs' === $k) {
                 $n->Args = $v;
             } elseif ('Header' === $k) {

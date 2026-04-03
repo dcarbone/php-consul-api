@@ -27,7 +27,6 @@ class MeshGatewayConfig extends AbstractType
     public MeshGatewayMode $Mode;
 
     public function __construct(
-        null|array $data = [], // Deprecated, will be removed.
         string|MeshGatewayMode $mode = MeshGatewayMode::Default,
     ) {
         $this->setMode($mode);
@@ -47,7 +46,7 @@ class MeshGatewayConfig extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('Mode' === $k) {
                 $n->setMode($v);
             } else {

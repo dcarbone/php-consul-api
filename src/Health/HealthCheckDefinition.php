@@ -51,6 +51,7 @@ class HealthCheckDefinition extends AbstractType implements \JsonSerializable
         string $Body = '',
         bool $TLSSkipVerify = false,
         string $TCP = '',
+        bool $TCPUseTLS = false,
         string $UDP = '',
         string $GRPC = '',
         string $OSService = '',
@@ -65,6 +66,7 @@ class HealthCheckDefinition extends AbstractType implements \JsonSerializable
         $this->Body = $Body;
         $this->TLSSkipVerify = $TLSSkipVerify;
         $this->TCP = $TCP;
+        $this->TCPUseTLS = $TCPUseTLS;
         $this->UDP = $UDP;
         $this->GRPC = $GRPC;
         $this->OSService = $OSService;
@@ -156,7 +158,7 @@ class HealthCheckDefinition extends AbstractType implements \JsonSerializable
         return $this->TCPUseTLS;
     }
 
-    public function setTCPUseTLS(bool $TCPUseTLS): HealthCheckDefinition
+    public function setTCPUseTLS(bool $TCPUseTLS): self
     {
         $this->TCPUseTLS = $TCPUseTLS;
         return $this;
@@ -167,7 +169,7 @@ class HealthCheckDefinition extends AbstractType implements \JsonSerializable
         return $this->UDP;
     }
 
-    public function setUDP(string $UDP): HealthCheckDefinition
+    public function setUDP(string $UDP): self
     {
         $this->UDP = $UDP;
         return $this;
@@ -178,7 +180,7 @@ class HealthCheckDefinition extends AbstractType implements \JsonSerializable
         return $this->GRPC;
     }
 
-    public function setGRPC(string $GRPC): HealthCheckDefinition
+    public function setGRPC(string $GRPC): self
     {
         $this->GRPC = $GRPC;
         return $this;
@@ -189,7 +191,7 @@ class HealthCheckDefinition extends AbstractType implements \JsonSerializable
         return $this->OSService;
     }
 
-    public function setOSService(string $OSService): HealthCheckDefinition
+    public function setOSService(string $OSService): self
     {
         $this->OSService = $OSService;
         return $this;
@@ -200,7 +202,7 @@ class HealthCheckDefinition extends AbstractType implements \JsonSerializable
         return $this->GRPCUseTLS;
     }
 
-    public function setGRPCUseTLS(bool $GRPCUseTLS): HealthCheckDefinition
+    public function setGRPCUseTLS(bool $GRPCUseTLS): self
     {
         $this->GRPCUseTLS = $GRPCUseTLS;
         return $this;
@@ -243,7 +245,7 @@ class HealthCheckDefinition extends AbstractType implements \JsonSerializable
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('Interval' === $k || 'IntervalDuration' === $k) {
                 $n->IntervalDuration = Time::Duration($v);
             } elseif ('Timeout' === $k || 'TimeoutDuration' === $k) {

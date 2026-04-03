@@ -81,7 +81,7 @@ class MeshDirectionalTLSConfig extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('CipherSuites' === $k || 'cipher_suites' === $k) {
                 $n->setCipherSuites(...$v);
             } elseif ('tls_min_version' === $k) {

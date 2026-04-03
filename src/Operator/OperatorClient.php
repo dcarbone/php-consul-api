@@ -64,6 +64,9 @@ class OperatorClient extends AbstractClient
         return $this->_executeDelete(sprintf('v1/operator/area/%s', $areaID), $opts);
     }
 
+    /**
+     * @param array<string> $addresses
+     */
     public function AreaJoin(string $areaID, array $addresses, null|WriteOptions $opts = null): OperatorAreaJoinResponse
     {
         $resp = $this->_requireOK($this->_doPut(sprintf('v1/operator/area/%s/join', $areaID), $addresses, $opts));
@@ -88,7 +91,7 @@ class OperatorClient extends AbstractClient
         return $ret;
     }
 
-    public function AutopilotSetConfiguration(AutopilotConfiguration $conf, null|WriteOptions $opts = null): ?Error
+    public function AutopilotSetConfiguration(AutopilotConfiguration $conf, null|WriteOptions $opts = null): null|Error
     {
         return $this->_requireOK($this->_doPut('v1/operator/autopilot/configuration', $conf, $opts))->Err;
     }
@@ -127,7 +130,7 @@ class OperatorClient extends AbstractClient
         return $ret;
     }
 
-    public function RaftRemovePeerByAddress(string $address, null|WriteOptions $opts = null): ?Error
+    public function RaftRemovePeerByAddress(string $address, null|WriteOptions $opts = null): null|Error
     {
         $r = $this->_newDeleteRequest('v1/operator/raft/peer', $opts);
         $r->applyOptions($opts);

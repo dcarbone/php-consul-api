@@ -24,8 +24,16 @@ use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
 class TxnError extends AbstractType
 {
-    public int $OpIndex = 0;
-    public string $What = '';
+    public int $OpIndex;
+    public string $What;
+
+    public function __construct(
+        int $OpIndex = 0,
+        string $What = '',
+    ) {
+        $this->OpIndex = $OpIndex;
+        $this->What = $What;
+    }
 
     public function getOpIndex(): int
     {
@@ -47,5 +55,22 @@ class TxnError extends AbstractType
     {
         $this->What = $What;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->OpIndex = $this->OpIndex;
+        $out->What = $this->What;
+        return $out;
     }
 }

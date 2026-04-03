@@ -28,6 +28,16 @@ class AreaJoinResponse extends AbstractType
     public bool $Joined;
     public string $Error;
 
+    public function __construct(
+        string $Address = '',
+        bool $Joined = false,
+        string $Error = '',
+    ) {
+        $this->Address = $Address;
+        $this->Joined = $Joined;
+        $this->Error = $Error;
+    }
+
     public function getAddress(): string
     {
         return $this->Address;
@@ -41,5 +51,23 @@ class AreaJoinResponse extends AbstractType
     public function getError(): string
     {
         return $this->Error;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Address = $this->Address;
+        $out->Joined = $this->Joined;
+        $out->Error = $this->Error;
+        return $out;
     }
 }

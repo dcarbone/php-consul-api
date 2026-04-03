@@ -21,68 +21,128 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
-use DCarbone\PHPConsulAPI\Transcoding;
 
 class AutopilotZoneUpgradeVersions extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_TARGET_VERSION_VOTERS     => Transcoding::OMITEMPTY_STRING_ARRAY_FIELD,
-        self::FIELD_TARGET_VERSION_NON_VOTERS => Transcoding::OMITEMPTY_STRING_ARRAY_FIELD,
-        self::FIELD_OTHER_VERSION_VOTERS      => Transcoding::OMITEMPTY_STRING_ARRAY_FIELD,
-        self::FIELD_OTHER_VERSION_NON_VOTERS  => Transcoding::OMITEMPTY_STRING_ARRAY_FIELD,
-    ];
-
-    private const FIELD_TARGET_VERSION_VOTERS     = 'TargetVersionVoters';
-    private const FIELD_TARGET_VERSION_NON_VOTERS = 'TargetVersionNonVoters';
-    private const FIELD_OTHER_VERSION_VOTERS      = 'OtherVersionVoters';
-    private const FIELD_OTHER_VERSION_NON_VOTERS  = 'OtherVersionNonVoters';
-
+    /** @var array<string> */
     public array $TargetVersionVoters;
+    /** @var array<string> */
     public array $TargetVersionNonVoters;
+    /** @var array<string> */
     public array $OtherVersionVoters;
+    /** @var array<string> */
     public array $OtherVersionNonVoters;
 
+    /**
+     * @param array<string> $TargetVersionVoters
+     * @param array<string> $TargetVersionNonVoters
+     * @param array<string> $OtherVersionVoters
+     * @param array<string> $OtherVersionNonVoters
+     */
+    public function __construct(
+        array $TargetVersionVoters = [],
+        array $TargetVersionNonVoters = [],
+        array $OtherVersionVoters = [],
+        array $OtherVersionNonVoters = [],
+    ) {
+        $this->TargetVersionVoters = $TargetVersionVoters;
+        $this->TargetVersionNonVoters = $TargetVersionNonVoters;
+        $this->OtherVersionVoters = $OtherVersionVoters;
+        $this->OtherVersionNonVoters = $OtherVersionNonVoters;
+    }
+
+    /**
+     * @return array<string>
+     */
     public function getTargetVersionVoters(): array
     {
         return $this->TargetVersionVoters;
     }
 
+    /**
+     * @param array<string> $TargetVersionVoters
+     */
     public function setTargetVersionVoters(array $TargetVersionVoters): self
     {
         $this->TargetVersionVoters = $TargetVersionVoters;
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getTargetVersionNonVoters(): array
     {
         return $this->TargetVersionNonVoters;
     }
 
+    /**
+     * @param array<string> $TargetVersionNonVoters
+     */
     public function setTargetVersionNonVoters(array $TargetVersionNonVoters): self
     {
         $this->TargetVersionNonVoters = $TargetVersionNonVoters;
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getOtherVersionVoters(): array
     {
         return $this->OtherVersionVoters;
     }
 
+    /**
+     * @param array<string> $OtherVersionVoters
+     */
     public function setOtherVersionVoters(array $OtherVersionVoters): self
     {
         $this->OtherVersionVoters = $OtherVersionVoters;
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getOtherVersionNonVoters(): array
     {
         return $this->OtherVersionNonVoters;
     }
 
+    /**
+     * @param array<string> $OtherVersionNonVoters
+     */
     public function setOtherVersionNonVoters(array $OtherVersionNonVoters): self
     {
         $this->OtherVersionNonVoters = $OtherVersionNonVoters;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        if ([] !== $this->TargetVersionVoters) {
+            $out->TargetVersionVoters = $this->TargetVersionVoters;
+        }
+        if ([] !== $this->TargetVersionNonVoters) {
+            $out->TargetVersionNonVoters = $this->TargetVersionNonVoters;
+        }
+        if ([] !== $this->OtherVersionVoters) {
+            $out->OtherVersionVoters = $this->OtherVersionVoters;
+        }
+        if ([] !== $this->OtherVersionNonVoters) {
+            $out->OtherVersionNonVoters = $this->OtherVersionNonVoters;
+        }
+        return $out;
     }
 }

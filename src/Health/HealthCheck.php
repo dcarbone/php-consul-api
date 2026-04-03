@@ -206,6 +206,39 @@ class HealthCheck extends AbstractType
         return $this;
     }
 
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
+    public function getExposedPort(): int
+    {
+        return $this->ExposedPort;
+    }
+
+    public function setExposedPort(int $ExposedPort): self
+    {
+        $this->ExposedPort = $ExposedPort;
+        return $this;
+    }
+
+    public function getPeerName(): string
+    {
+        return $this->PeerName;
+    }
+
+    public function setPeerName(string $PeerName): self
+    {
+        $this->PeerName = $PeerName;
+        return $this;
+    }
+
     public function getDefinition(): HealthCheckDefinition
     {
         return $this->Definition;
@@ -242,7 +275,7 @@ class HealthCheck extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('Definition' === $k) {
                 $n->Definition = HealthCheckDefinition::jsonUnserialize($v);
             } elseif ('ServiceTags' === $k) {

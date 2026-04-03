@@ -129,7 +129,7 @@ class MeshConfigEntry extends AbstractType implements ConfigEntry
     public static function jsonUnserialize(\stdClass $decoded, null|self $n = null): self
     {
         $n = $n ?? new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('TransparentProxy' === $k || 'transparent_proxy' === $k) {
                 $n->TransparentProxy = null === $v ? new TransparentProxyMeshConfig() : TransparentProxyMeshConfig::jsonUnserialize($v);
             } elseif ('TLS' === $k) {

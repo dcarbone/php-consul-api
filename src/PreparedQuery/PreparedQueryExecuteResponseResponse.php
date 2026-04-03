@@ -25,15 +25,15 @@ use DCarbone\PHPConsulAPI\PHPLib\Response\UnmarshalledResponseInterface;
 
 class PreparedQueryExecuteResponseResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?PreparedQueryExecuteResponse $PreparedQueryExecuteResponse = null;
+    public null|PreparedQueryExecuteResponse $PreparedQueryExecuteResponse = null;
 
-    public function getValue(): ?PreparedQueryExecuteResponse
+    public function getValue(): null|PreparedQueryExecuteResponse
     {
         return $this->PreparedQueryExecuteResponse;
     }
 
     public function unmarshalValue(mixed $decoded): void
     {
-        $this->PreparedQueryExecuteResponse = new PreparedQueryExecuteResponse((array)$decoded);
+        $this->PreparedQueryExecuteResponse = PreparedQueryExecuteResponse::jsonUnserialize($decoded);
     }
 }

@@ -59,7 +59,7 @@ class MeshTLSConfig extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $V) {
+        foreach ((array)$decoded as $k => $V) {
             if ('Incoming' === $k) {
                 $n->Incoming = null === $V ? null : MeshDirectionalTLSConfig::jsonUnserialize($V);
             } elseif ('Outgoing' === $k) {

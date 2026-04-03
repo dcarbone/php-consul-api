@@ -21,15 +21,86 @@ namespace DCarbone\PHPConsulAPI\Txn;
  */
 
 use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
-use DCarbone\PHPConsulAPI\FakeSlice;
-use DCarbone\PHPConsulAPI\Txn\TxnResult;
 
-class TxnResults extends FakeSlice
+/**
+ * @implements \ArrayAccess<int, TxnResult>
+ * @implements \IteratorAggregate<int, TxnResult>
+ */
+class TxnResults extends AbstractType implements \Countable, \ArrayAccess, \IteratorAggregate
 {
-    protected string $containedClass = TxnResult::class;
+    /** @var array<TxnResult> */
+    private array $results = [];
 
-    protected function newChild(array $data): AbstractType
+    /**
+     * @param array<TxnResult> $results
+     */
+    public function __construct(array $results = [])
     {
-        return new TxnResult($data);
+        $this->results = $results;
+    }
+
+    public function count(): int
+    {
+        return \count($this->results);
+    }
+
+    public function offsetExists(mixed $offset): bool
+    {
+        return isset($this->results[$offset]);
+    }
+
+    public function offsetGet(mixed $offset): TxnResult
+    {
+        return $this->results[$offset];
+    }
+
+    public function offsetSet(mixed $offset, mixed $value): void
+    {
+        if (null === $offset) {
+            $this->results[] = $value;
+        } else {
+            $this->results[$offset] = $value;
+        }
+    }
+
+    public function offsetUnset(mixed $offset): void
+    {
+        unset($this->results[$offset]);
+    }
+
+    /**
+     * @return \ArrayIterator<int, TxnResult>
+     */
+    public function getIterator(): \ArrayIterator
+    {
+        return new \ArrayIterator($this->results);
+    }
+
+    /**
+     * @return array<TxnResult>
+     */
+    public function all(): array
+    {
+        return $this->results;
+    }
+
+    /**
+     * @param array<\stdClass> $decoded
+     */
+    public static function jsonUnserialize(array $decoded): self
+    {
+        $n = new self();
+        foreach ($decoded as $v) {
+            $n->results[] = TxnResult::jsonUnserialize($v);
+        }
+        return $n;
+    }
+
+    /**
+     * @return array<TxnResult>
+     */
+    public function jsonSerialize(): array
+    {
+        return $this->results;
     }
 }

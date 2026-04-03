@@ -22,4 +22,12 @@ namespace DCarbone\PHPConsulAPI\ACL;
 
 class ACLTokenPolicyLink extends ACLLink
 {
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
 }

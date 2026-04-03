@@ -61,7 +61,7 @@ class CatalogService extends AbstractType
     /**
      * @param array<string,string> $TaggedAddresses
      * @param array<string,string> $NodeMeta
-     * @param array<string,string> $ServiceTaggedAddresses
+     * @param array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress> $ServiceTaggedAddresses
      * @param array<string> $ServiceTags
      * @param array<string,string> $ServiceMeta
      */
@@ -87,7 +87,7 @@ class CatalogService extends AbstractType
         int $ModifyIndex = 0,
         null|HealthChecks $Checks = null,
         string $Namespace = '',
-        string $Partition = ''
+        string $Partition = '',
     ) {
         $this->ID = $ID;
         $this->Node = $Node;
@@ -350,11 +350,11 @@ class CatalogService extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('TaggedAddresses' === $k) {
-                $n->settaggedAddresses($v);
+                $n->setTaggedAddresses($v);
             } elseif ('NodeMeta' === $k) {
-                $n->setnodemeta($v);
+                $n->setNodeMeta($v);
             } elseif ('ServiceTaggedAddresses' === $k) {
                 foreach ($v as $kk => $vv) {
                     $n->setServiceTaggedAddress($kk, ServiceAddress::jsonUnserialize($vv));

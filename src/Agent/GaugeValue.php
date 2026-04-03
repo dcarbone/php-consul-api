@@ -40,16 +40,16 @@ class GaugeValue extends AbstractType
         $this->Name = $Name;
         $this->Value = $Value;
         $this->setLabels($Labels);
-}
+    }
 
     public function getName(): string
     {
         return $this->Name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $Name): self
     {
-        $this->Name = $name;
+        $this->Name = $Name;
         return $this;
     }
 
@@ -58,9 +58,9 @@ class GaugeValue extends AbstractType
         return $this->Value;
     }
 
-    public function setValue(float $value): self
+    public function setValue(float $Value): self
     {
-        $this->Value = $value;
+        $this->Value = $Value;
         return $this;
     }
 
@@ -92,7 +92,7 @@ class GaugeValue extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('Labels' === $k) {
                 $n->setLabels($v);
             } else {

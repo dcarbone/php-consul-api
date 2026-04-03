@@ -130,7 +130,7 @@ class Consul
     public SessionClient $Session;
     public StatusClient $Status;
 
-    public function __construct(?Config $config = null)
+    public function __construct(null|Config $config = null)
     {
         $config = Config::merge($config);
 
@@ -220,14 +220,14 @@ class Consul
     public static function MakeConfigEntry(string $kind, string $name): ConfigEntry\ConfigEntry
     {
         return match ($kind) {
-            Consul::ServiceDefaults => new ConfigEntry\ServiceConfigEntry(kind: $kind, name: $name),
-            Consul::ProxyDefaults => new ConfigEntry\ProxyConfigEntry(kind: $kind, name: $name),
-            Consul::ServiceRouter => new ConfigEntry\ServiceRouterConfigEntry(kind: $kind, name: $name),
-            Consul::ServiceSplitter => new ConfigEntry\ServiceSplitterConfigEntry(kind: $kind, name: $name),
-            Consul::ServiceResolver => new ConfigEntry\ServiceResolverConfigEntry(kind: $kind, name: $name),
-            Consul::IngressGateway => new ConfigEntry\IngressGatewayConfigEntry(kind: $kind, name: $name),
-            Consul::TerminatingGateway => new ConfigEntry\TerminatingGatewayConfigEntry(kind: $kind, name: $name),
-            Consul::ServiceIntentions =>  new ConfigEntry\ServiceIntentionsConfigEntry(kind: $kind, name: $name),
+            Consul::ServiceDefaults => new ConfigEntry\ServiceConfigEntry(Kind: $kind, Name: $name),
+            Consul::ProxyDefaults => new ConfigEntry\ProxyConfigEntry(Kind: $kind, Name: $name),
+            Consul::ServiceRouter => new ConfigEntry\ServiceRouterConfigEntry(Kind: $kind, Name: $name),
+            Consul::ServiceSplitter => new ConfigEntry\ServiceSplitterConfigEntry(Kind: $kind, Name: $name),
+            Consul::ServiceResolver => new ConfigEntry\ServiceResolverConfigEntry(Kind: $kind, Name: $name),
+            Consul::IngressGateway => new ConfigEntry\IngressGatewayConfigEntry(Kind: $kind, Name: $name),
+            Consul::TerminatingGateway => new ConfigEntry\TerminatingGatewayConfigEntry(Kind: $kind, Name: $name),
+            Consul::ServiceIntentions =>  new ConfigEntry\ServiceIntentionsConfigEntry(Kind: $kind, name: $name),
 
             default => throw new \InvalidArgumentException(sprintf('Unknown kind "%s"', $kind)),
         };

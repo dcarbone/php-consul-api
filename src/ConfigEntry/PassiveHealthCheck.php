@@ -33,11 +33,7 @@ class PassiveHealthCheck extends AbstractType
 
     public null|Time\Duration $BaseEjectionTime;
 
-    /**
-     * @param array<string,mixed>|null $data
-     */
     public function __construct(
-        null|array $data = [],  // Deprecated, will be removed.
         null|string|int|float|\DateInterval|Time\Duration $Interval = null,
         int $MaxFailures = 0,
         null|int $EnforcingConsecutive5xx = null,
@@ -109,7 +105,7 @@ class PassiveHealthCheck extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('Interval' === $k) {
                 $n->Interval = Time::ParseDuration($v);
             } elseif ('max_failures' === $k) {

@@ -67,7 +67,7 @@ class UpstreamConfiguration extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('Overrides' === $k) {
                 $n->Overrides = [];
                 foreach ($v as $vv) {

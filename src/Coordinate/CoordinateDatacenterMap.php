@@ -24,8 +24,8 @@ use DCarbone\PHPConsulAPI\PHPLib\Types\AbstractType;
 
 class CoordinateDatacenterMap extends AbstractType
 {
-    public string $Datacenter = '';
-    public string $AreaID = '';
+    public string $Datacenter;
+    public string $AreaID;
     /** @var array<\DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry> */
     public array $Coordinates;
 
@@ -47,9 +47,21 @@ class CoordinateDatacenterMap extends AbstractType
         return $this->Datacenter;
     }
 
+    public function setDatacenter(string $Datacenter): self
+    {
+        $this->Datacenter = $Datacenter;
+        return $this;
+    }
+
     public function getAreaID(): string
     {
         return $this->AreaID;
+    }
+
+    public function setAreaID(string $AreaID): self
+    {
+        $this->AreaID = $AreaID;
+        return $this;
     }
 
     /**
@@ -69,7 +81,7 @@ class CoordinateDatacenterMap extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('Coordinates' === $k) {
                 $n->Coordinates = [];
                 foreach ($v as $vv) {

@@ -22,9 +22,13 @@ namespace DCarbone\PHPConsulAPI\PHPLib\Response;
 
 trait StringsValueField
 {
+    /** @var array<string> */
     public array $Value = [];
 
-    public function getValue(): ?array
+    /**
+     * @return null|array<string>
+     */
+    public function getValue(): null|array
     {
         return $this->Value;
     }

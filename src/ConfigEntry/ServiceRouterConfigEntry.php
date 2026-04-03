@@ -106,7 +106,7 @@ class ServiceRouterConfigEntry extends AbstractType implements ConfigEntry
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('Routes' === $k) {
                 $n->Routes = [];
                 foreach ($v as $vv) {

@@ -28,7 +28,6 @@ class TransparentProxyConfig extends AbstractType
     public bool $DialedDirectly;
 
     public function __construct(
-        null|array $data = [], // Deprecated, will be removed.
         int $OutboundListenerPort = 0,
         bool $DialedDirectly = false
     ) {
@@ -61,7 +60,7 @@ class TransparentProxyConfig extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             $n->{$k} = $v;
         }
         return $n;

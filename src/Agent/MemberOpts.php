@@ -36,16 +36,16 @@ class MemberOpts extends AbstractType
         $this->WAN = $WAN;
         $this->Segment = $Segment;
         $this->Filter = $Filter;
-}
+    }
 
     public function isWAN(): bool
     {
         return $this->WAN;
     }
 
-    public function setWAN(bool $wan): self
+    public function setWAN(bool $WAN): self
     {
-        $this->WAN = $wan;
+        $this->WAN = $WAN;
         return $this;
     }
 
@@ -54,16 +54,27 @@ class MemberOpts extends AbstractType
         return $this->Segment;
     }
 
-    public function setSegment(string $segment): self
+    public function setSegment(string $Segment): self
     {
-        $this->Segment = $segment;
+        $this->Segment = $Segment;
+        return $this;
+    }
+
+    public function getFilter(): string
+    {
+        return $this->Filter;
+    }
+
+    public function setFilter(string $Filter): self
+    {
+        $this->Filter = $Filter;
         return $this;
     }
 
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             $n->{$k} = $v;
         }
         return $n;

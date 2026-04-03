@@ -36,16 +36,16 @@ class RateLimits extends AbstractType
         return $this->InstanceLevel;
     }
 
-    public function setInstanceLevel(InstanceLevelRateLimits $instanceLevel): self
+    public function setInstanceLevel(InstanceLevelRateLimits $InstanceLevel): self
     {
-        $this->InstanceLevel = $instanceLevel;
+        $this->InstanceLevel = $InstanceLevel;
         return $this;
     }
 
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('InstanceLevel' === $k || 'instance_level' === $k) {
                 $n->InstanceLevel = InstanceLevelRateLimits::jsonUnserialize($v);
             } else {

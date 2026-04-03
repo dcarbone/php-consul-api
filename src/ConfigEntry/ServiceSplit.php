@@ -105,7 +105,7 @@ class ServiceSplit extends AbstractType
         return $this;
     }
 
-    public function getRequestHeaders(): ?HTTPHeaderModifiers
+    public function getRequestHeaders(): null|HTTPHeaderModifiers
     {
         return $this->RequestHeaders;
     }
@@ -130,7 +130,7 @@ class ServiceSplit extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('service_subset' === $k) {
                 $n->ServiceSubset = $v;
             } elseif ('RequestHeaders' === $k || 'request_headers' === $k) {

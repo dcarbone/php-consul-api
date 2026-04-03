@@ -64,10 +64,10 @@ class ExposeConfig extends AbstractType
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $n = null): static
+    public static function jsonUnserialize(\stdClass $decoded, null|self $n = null): self
     {
         $n = $n ?? new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('Paths' === $k) {
                 foreach ($v as $vv) {
                     $n->Paths[] = ExposePath::jsonUnserialize($vv);

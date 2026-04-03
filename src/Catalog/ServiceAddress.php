@@ -27,10 +27,10 @@ class ServiceAddress extends AbstractType
     public string $Address;
     public int $Port;
 
-    public function __construct(string $address = '', int $port = 0)
+    public function __construct(string $Address = '', int $Port = 0)
     {
-        $this->Address = $address;
-        $this->Port = $port;
+        $this->Address = $Address;
+        $this->Port = $Port;
     }
 
     public function getAddress(): string
@@ -38,9 +38,9 @@ class ServiceAddress extends AbstractType
         return $this->Address;
     }
 
-    public function setAddress(string $address): self
+    public function setAddress(string $Address): self
     {
-        $this->Address = $address;
+        $this->Address = $Address;
         return $this;
     }
 
@@ -49,16 +49,16 @@ class ServiceAddress extends AbstractType
         return $this->Port;
     }
 
-    public function setPort(int $port): self
+    public function setPort(int $Port): self
     {
-        $this->Port = $port;
+        $this->Port = $Port;
         return $this;
     }
 
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             $n->{$k} = $v;
         }
         return $n;

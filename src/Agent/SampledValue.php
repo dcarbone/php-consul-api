@@ -62,9 +62,9 @@ class SampledValue extends AbstractType
         return $this->Name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $Name): self
     {
-        $this->Name = $name;
+        $this->Name = $Name;
         return $this;
     }
 
@@ -73,9 +73,9 @@ class SampledValue extends AbstractType
         return $this->Count;
     }
 
-    public function setCount(int $count): self
+    public function setCount(int $Count): self
     {
-        $this->Count = $count;
+        $this->Count = $Count;
         return $this;
     }
 
@@ -84,9 +84,9 @@ class SampledValue extends AbstractType
         return $this->Sum;
     }
 
-    public function setSum(float $sum): self
+    public function setSum(float $Sum): self
     {
-        $this->Sum = $sum;
+        $this->Sum = $Sum;
         return $this;
     }
 
@@ -95,9 +95,9 @@ class SampledValue extends AbstractType
         return $this->Min;
     }
 
-    public function setMin(float $min): self
+    public function setMin(float $Min): self
     {
-        $this->Min = $min;
+        $this->Min = $Min;
         return $this;
     }
 
@@ -106,9 +106,9 @@ class SampledValue extends AbstractType
         return $this->Max;
     }
 
-    public function setMax(float $max): self
+    public function setMax(float $Max): self
     {
-        $this->Max = $max;
+        $this->Max = $Max;
         return $this;
     }
 
@@ -117,9 +117,9 @@ class SampledValue extends AbstractType
         return $this->Mean;
     }
 
-    public function setMean(float $mean): self
+    public function setMean(float $Mean): self
     {
-        $this->Mean = $mean;
+        $this->Mean = $Mean;
         return $this;
     }
 
@@ -128,9 +128,9 @@ class SampledValue extends AbstractType
         return $this->Stddev;
     }
 
-    public function setStddev(float $stddev): self
+    public function setStddev(float $Stddev): self
     {
-        $this->Stddev = $stddev;
+        $this->Stddev = $Stddev;
         return $this;
     }
 
@@ -162,7 +162,7 @@ class SampledValue extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('Labels' === $k) {
                 $n->setLabels($v);
             } else {

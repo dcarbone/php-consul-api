@@ -38,9 +38,9 @@ class AgentCheckUpdate extends AbstractType
         return $this->Status;
     }
 
-    public function setStatus(string $status): self
+    public function setStatus(string $Status): self
     {
-        $this->Status = $status;
+        $this->Status = $Status;
         return $this;
     }
 
@@ -49,16 +49,16 @@ class AgentCheckUpdate extends AbstractType
         return $this->Output;
     }
 
-    public function setOutput(string $output): self
+    public function setOutput(string $Output): self
     {
-        $this->Output = $output;
+        $this->Output = $Output;
         return $this;
     }
 
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             $n->{$k} = $v;
         }
         return $n;

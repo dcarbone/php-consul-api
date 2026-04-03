@@ -40,9 +40,9 @@ class ServiceRegisterOpts extends AbstractType
         return $this->ReplaceExistingChecks;
     }
 
-    public function setReplaceExistingChecks(bool $replaceExistingChecks): self
+    public function setReplaceExistingChecks(bool $ReplaceExistingChecks): self
     {
-        $this->ReplaceExistingChecks = $replaceExistingChecks;
+        $this->ReplaceExistingChecks = $ReplaceExistingChecks;
         return $this;
     }
 
@@ -51,7 +51,7 @@ class ServiceRegisterOpts extends AbstractType
         return $this->Token;
     }
 
-    public function setToken(string $Token): ServiceRegisterOpts
+    public function setToken(string $Token): self
     {
         $this->Token = $Token;
         return $this;
@@ -60,7 +60,7 @@ class ServiceRegisterOpts extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             $n->{$k} = $v;
         }
         return $n;
