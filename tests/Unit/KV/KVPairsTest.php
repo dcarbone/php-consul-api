@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 
 namespace DCarbone\PHPConsulAPITests\Unit\KV;
 
@@ -25,6 +24,52 @@ final class KVPairsTest extends TestCase
         $kv2 = new KVPair(Key: 'b');
         $pairs = new KVPairs($kv1, $kv2);
         self::assertCount(2, $pairs);
+    }
+
+    public function testGetKVPairsReturnsArray(): void
+    {
+        $kv1 = new KVPair(Key: 'a');
+        $kv2 = new KVPair(Key: 'b');
+        $pairs = new KVPairs($kv1, $kv2);
+        $arr = $pairs->getKVPairs();
+        self::assertIsArray($arr);
+        self::assertCount(2, $arr);
+        self::assertSame('a', $arr[0]->getKey());
+        self::assertSame('b', $arr[1]->getKey());
+    }
+
+    public function testGetKVPairsEmptyByDefault(): void
+    {
+        $pairs = new KVPairs();
+        self::assertSame([], $pairs->getKVPairs());
+    }
+
+    public function testSetKVPairsVariadic(): void
+    {
+        $pairs = new KVPairs();
+        $result = $pairs->setKVPairs(new KVPair(Key: 'x'), new KVPair(Key: 'y'));
+        self::assertSame($pairs, $result);
+        self::assertCount(2, $pairs);
+        self::assertSame('x', $pairs->getKVPairs()[0]->getKey());
+        self::assertSame('y', $pairs->getKVPairs()[1]->getKey());
+    }
+
+    public function testSetKVPairsReplacesExisting(): void
+    {
+        $pairs = new KVPairs(new KVPair(Key: 'old'));
+        self::assertCount(1, $pairs);
+        $pairs->setKVPairs(new KVPair(Key: 'new1'), new KVPair(Key: 'new2'));
+        self::assertCount(2, $pairs);
+        self::assertSame('new1', $pairs->getKVPairs()[0]->getKey());
+    }
+
+    public function testSetKVPairsWithNoArgsClearsArray(): void
+    {
+        $pairs = new KVPairs(new KVPair(Key: 'a'), new KVPair(Key: 'b'));
+        self::assertCount(2, $pairs);
+        $pairs->setKVPairs();
+        self::assertCount(0, $pairs);
+        self::assertSame([], $pairs->getKVPairs());
     }
 
     public function testCountable(): void

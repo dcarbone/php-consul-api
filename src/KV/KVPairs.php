@@ -36,6 +36,20 @@ class KVPairs extends AbstractType implements \IteratorAggregate, \Countable, \A
         $this->KVPairs = $KVPairs;
     }
 
+    /**
+     * @return array<KVPair>
+     */
+    public function getKVPairs(): array
+    {
+        return $this->KVPairs;
+    }
+
+    public function setKVPairs(KVPair ...$KVPairs): self
+    {
+        $this->KVPairs = $KVPairs;
+        return $this;
+    }
+
     public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->KVPairs);

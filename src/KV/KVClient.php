@@ -28,7 +28,6 @@ use DCarbone\PHPConsulAPI\PHPLib\ValuedWriteBoolResponse;
 use DCarbone\PHPConsulAPI\PHPLib\WriteResponse;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Txn\KVTxnAPIResponse;
-use DCarbone\PHPConsulAPI\Txn\KVTxnOps;
 use DCarbone\PHPConsulAPI\Txn\KVTxnResponse;
 use DCarbone\PHPConsulAPI\Txn\TxnOp;
 use DCarbone\PHPConsulAPI\Txn\TxnResponse;

@@ -1,11 +1,9 @@
 <?php
 
-/** @noinspection PhpMissingFieldTypeInspection */
-
 namespace DCarbone\PHPConsulAPITests\Usage\KV;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,7 +18,6 @@ namespace DCarbone\PHPConsulAPITests\Usage\KV;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\PHPLib\Error;
 use DCarbone\PHPConsulAPI\KV\KVClient;
 use DCarbone\PHPConsulAPI\KV\KVPair;
 use DCarbone\PHPConsulAPI\KV\KVPairs;
@@ -28,245 +25,326 @@ use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPI\WriteMeta;
 use DCarbone\PHPConsulAPITests\ConsulManager;
 use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
-use PHPUnit\Framework\AssertionFailedError;
 
 /**
- * Class KVCRUDTest
+ * Replicates the upstream Go TestAPI_ClientPut / TestAPI_ClientGet / TestAPI_ClientList /
+ * TestAPI_ClientKeys / TestAPI_ClientDelete / TestAPI_ClientDeleteTree tests.
  *
  * @internal
  */
 final class KVCRUDTest extends AbstractUsageTests
 {
-    public const KVKey1   = 'testkey1';
-    public const KVValue1 = 'testvalue1';
-
-    public const KVKey2   = 'testkey2';
-    public const KVValue2 = 'testvalue2';
-
-    public const KVKey3   = 'testkey3';
-    public const KVValue3 = 'testvalue3';
-
-    public const KVPrefix = 'tests';
-    /** @var bool */
     protected bool $singlePerTest = true;
 
-    public function testCanPutKey(): void
+    // ---------------------------------------------------------------
+    // PUT
+    // ---------------------------------------------------------------
+
+    /**
+     * Mirrors Go TestAPI_ClientPut: put a simple key, verify no error.
+     */
+    public function testPut(): void
     {
         $client = new KVClient(ConsulManager::testConfig());
 
-        [$wm, $err] = $client->Put(new KVPair(Key: self::KVKey1, Value: self::KVValue1));
-        self::assertNull($err, sprintf('Unable to set kvp: %s', (string)$err));
+        [$wm, $err] = $client->Put(new KVPair(Key: 'test/put', Value: 'hello'));
+        self::assertNull($err, sprintf('KV::Put returned error: %s', (string)$err));
         self::assertInstanceOf(WriteMeta::class, $wm);
     }
 
     /**
-     * @depends testCanPutKey
+     * Mirrors Go TestAPI_ClientPut with flags set.
      */
-    public function testCanGetKey(): void
+    public function testPutWithFlags(): void
     {
         $client = new KVClient(ConsulManager::testConfig());
-        $client->Put(new KVPair(Key: self::KVKey1, Value: self::KVValue1));
 
-        [$kv, $qm, $err] = $client->Get(self::KVKey1);
-        self::assertNull($err, sprintf('KV::get returned error: %s', (string)$err));
-        self::assertInstanceOf(QueryMeta::class, $qm);
+        [$wm, $err] = $client->Put(new KVPair(Key: 'test/flags', Value: 'flagged', Flags: 42));
+        self::assertNull($err, sprintf('KV::Put returned error: %s', (string)$err));
+        self::assertInstanceOf(WriteMeta::class, $wm);
+
+        [$kv, , $err] = $client->Get('test/flags');
+        self::assertNull($err, sprintf('KV::Get returned error: %s', (string)$err));
         self::assertInstanceOf(KVPair::class, $kv);
-        self::assertSame(self::KVKey1, $kv->Key);
-        self::assertSame(self::KVValue1, $kv->Value);
+        self::assertSame(42, $kv->Flags);
+        self::assertSame('flagged', $kv->Value);
+    }
+
+    // ---------------------------------------------------------------
+    // GET
+    // ---------------------------------------------------------------
+
+    /**
+     * Mirrors Go TestAPI_ClientGet: put then get, verify value matches.
+     */
+    public function testGet(): void
+    {
+        $client = new KVClient(ConsulManager::testConfig());
+
+        $key = 'test/get';
+        $value = 'bar';
+
+        [$_, $err] = $client->Put(new KVPair(Key: $key, Value: $value));
+        self::assertNull($err, sprintf('KV::Put returned error: %s', (string)$err));
+
+        [$kv, $qm, $err] = $client->Get($key);
+        self::assertNull($err, sprintf('KV::Get returned error: %s', (string)$err));
+        self::assertInstanceOf(KVPair::class, $kv);
+        self::assertInstanceOf(QueryMeta::class, $qm);
+        self::assertSame($key, $kv->Key);
+        self::assertSame($value, $kv->Value);
+        self::assertGreaterThan(0, $kv->CreateIndex);
+        self::assertGreaterThan(0, $kv->ModifyIndex);
+        self::assertSame(0, $kv->LockIndex);
+        self::assertSame(0, $kv->Flags);
+        self::assertSame('', $kv->Session);
+        self::assertGreaterThan(0, $qm->LastIndex);
     }
 
     /**
-     * @depends testCanPutKey
+     * Mirrors Go TestAPI_ClientGet for a non-existent key: returns nil KVPair, no error.
      */
-    public function testCanDeleteKey(): void
+    public function testGetNotExist(): void
     {
         $client = new KVClient(ConsulManager::testConfig());
-        $client->Put(new KVPair(Key: self::KVKey1, Value: self::KVValue1));
 
-        [$wm, $err] = $client->Delete(self::KVKey1);
-        self::assertNull($err, sprintf('KV::delete returned error: %s', $err));
-        self::assertInstanceOf(
-            WriteMeta::class,
-            $wm,
-            sprintf(
-                'expected "%s", saw "%s"',
-                WriteMeta::class,
-                is_object($wm) ? get_class($wm) : gettype($wm)
-            )
-        );
+        [$kv, $qm, $err] = $client->Get('nonexistent/key');
+        self::assertNull($err, sprintf('KV::Get returned error: %s', (string)$err));
+        self::assertNull($kv, 'Expected null KVPair for non-existent key');
+        self::assertInstanceOf(QueryMeta::class, $qm);
     }
 
-    public function testListReturnsErrorWithInvalidPrefix(): void
+    // ---------------------------------------------------------------
+    // LIST
+    // ---------------------------------------------------------------
+
+    /**
+     * Mirrors Go TestAPI_ClientList: put multiple keys under a prefix, list them.
+     */
+    public function testList(): void
     {
-        $client        = new KVClient(ConsulManager::testConfig());
-        [$_, $_, $err] = $client->List(12345);
-        self::assertInstanceOf(
-            Error::class,
-            $err,
-            sprintf(
-                'Expected $err to be instanceof "%s", saw "%s"',
-                Error::class,
-                is_object($err) ? get_class($err) : gettype($err)
-            )
-        );
+        $client = new KVClient(ConsulManager::testConfig());
+
+        $prefix = 'test/list';
+        $keys = [
+            "{$prefix}/foo" => 'foo-value',
+            "{$prefix}/bar" => 'bar-value',
+            "{$prefix}/baz" => 'baz-value',
+        ];
+
+        foreach ($keys as $k => $v) {
+            [$_, $err] = $client->Put(new KVPair(Key: $k, Value: $v));
+            self::assertNull($err, sprintf('KV::Put(%s) returned error: %s', $k, (string)$err));
+        }
+
+        [$list, $qm, $err] = $client->List($prefix);
+        self::assertNull($err, sprintf('KV::List returned error: %s', (string)$err));
+        self::assertInstanceOf(KVPairs::class, $list);
+        self::assertInstanceOf(QueryMeta::class, $qm);
+        self::assertCount(3, $list);
+
+        $found = [];
+        foreach ($list as $pair) {
+            self::assertInstanceOf(KVPair::class, $pair);
+            $found[$pair->Key] = $pair->Value;
+        }
+
+        foreach ($keys as $k => $v) {
+            self::assertArrayHasKey($k, $found, "Key {$k} not found in list");
+            self::assertSame($v, $found[$k], "Value mismatch for key {$k}");
+        }
     }
 
     /**
-     * @depends testCanPutKey
+     * Mirrors Go TestAPI_ClientList with no prefix: list all keys in the store.
      */
-    public function testCanGetNoPrefixList(): void
+    public function testListNoPrefix(): void
     {
-        /** @var \DCarbone\PHPConsulAPI\KV\KVPair[] $list */
-        /** @var \DCarbone\PHPConsulAPI\QueryMeta $qm */
-        /** @var \DCarbone\PHPConsulAPI\PHPLib\Error $err */
         $client = new KVClient(ConsulManager::testConfig());
-        $client->Put(new KVPair(Key: self::KVKey1, Value: self::KVValue1));
-        $client->Put(new KVPair(Key: self::KVKey2, Value: self::KVValue2));
-        $client->Put(new KVPair(Key: self::KVKey3, Value: self::KVValue3));
 
-        /** @noinspection PhpUnhandledExceptionInspection */
+        [$_, $err] = $client->Put(new KVPair(Key: 'alpha', Value: 'a'));
+        self::assertNull($err);
+        [$_, $err] = $client->Put(new KVPair(Key: 'beta', Value: 'b'));
+        self::assertNull($err);
+
         [$list, $qm, $err] = $client->List();
-        self::assertNull($err, sprintf('KV::valueList returned error: %s', $err));
+        self::assertNull($err, sprintf('KV::List returned error: %s', (string)$err));
+        self::assertInstanceOf(KVPairs::class, $list);
+        self::assertInstanceOf(QueryMeta::class, $qm);
+        self::assertGreaterThanOrEqual(2, count($list));
+    }
 
-        try {
-            self::assertInstanceOf(KVPairs::class, $list);
-            self::assertInstanceOf(QueryMeta::class, $qm);
-            self::assertCount(3, $list);
+    // ---------------------------------------------------------------
+    // KEYS
+    // ---------------------------------------------------------------
 
-            $key1found = false;
-            $key2found = false;
-            $key3found = false;
+    /**
+     * Mirrors Go TestAPI_ClientKeys: put multiple keys, get keys list.
+     */
+    public function testKeys(): void
+    {
+        $client = new KVClient(ConsulManager::testConfig());
 
-            foreach ($list as $kv) {
-                if (self::KVValue1 === $kv->Value) {
-                    $key1found = true;
-                } elseif (self::KVValue2 === $kv->Value) {
-                    $key2found = true;
-                } elseif (self::KVValue3 === $kv->Value) {
-                    $key3found = true;
-                }
-            }
+        $prefix = 'test/keys';
+        $keyNames = ["{$prefix}/a", "{$prefix}/b", "{$prefix}/c"];
 
-            self::assertTrue($key1found, 'Key1 not found in list!');
-            self::assertTrue($key2found, 'Key2 not found in list!');
-            self::assertTrue($key3found, 'Key3 not found in list!');
-        } catch (AssertionFailedError $e) {
-            echo "\nno prefix \$list value:\n";
-            var_dump($list);
-            echo "\n";
+        foreach ($keyNames as $k) {
+            [$_, $err] = $client->Put(new KVPair(Key: $k, Value: 'v'));
+            self::assertNull($err, sprintf('KV::Put(%s) returned error: %s', $k, (string)$err));
+        }
 
-            throw $e;
+        [$keys, $qm, $err] = $client->Keys($prefix);
+        self::assertNull($err, sprintf('KV::Keys returned error: %s', (string)$err));
+        self::assertInstanceOf(QueryMeta::class, $qm);
+        self::assertIsArray($keys);
+        self::assertCount(3, $keys);
+        self::assertContainsOnly('string', $keys, true);
+
+        foreach ($keyNames as $expected) {
+            self::assertContains($expected, $keys, "Expected key {$expected} not found");
         }
     }
 
     /**
-     * @depends testCanPutKey
+     * Mirrors Go TestAPI_ClientKeys with no prefix: returns all keys.
      */
-    public function testCanGetPrefixList(): void
+    public function testKeysNoPrefix(): void
     {
-        /** @var \DCarbone\PHPConsulAPI\KV\KVPair[] $list */
-        /** @var \DCarbone\PHPConsulAPI\QueryMeta $qm */
-        /** @var \DCarbone\PHPConsulAPI\PHPLib\Error $err */
         $client = new KVClient(ConsulManager::testConfig());
-        $client->Put(new KVPair(Key: self::KVPrefix . '/' . self::KVKey1, Value: self::KVValue1));
-        $client->Put(new KVPair(Key: self::KVPrefix . '/' . self::KVKey2, Value: self::KVValue2));
-        $client->Put(new KVPair(Key: self::KVPrefix . '/' . self::KVKey3, Value: self::KVValue3));
 
-        [$list, $qm, $err] = $client->List(self::KVPrefix);
-        self::assertNull($err, sprintf('KV::valueList returned error: %s', $err));
+        [$_, $err] = $client->Put(new KVPair(Key: 'keytest1', Value: 'v'));
+        self::assertNull($err);
+        [$_, $err] = $client->Put(new KVPair(Key: 'keytest2', Value: 'v'));
+        self::assertNull($err);
+
+        [$keys, $qm, $err] = $client->Keys();
+        self::assertNull($err, sprintf('KV::Keys returned error: %s', (string)$err));
         self::assertInstanceOf(QueryMeta::class, $qm);
-
-        try {
-            self::assertInstanceOf(KVPairs::class, $list);
-            self::assertCount(3, $list);
-            self::assertContainsOnlyInstancesOf(KVPair::class, $list);
-
-            $key1found = false;
-            $key2found = false;
-            $key3found = false;
-
-            foreach ($list as $kv) {
-                if (self::KVValue1 === $kv->Value) {
-                    $key1found = true;
-                } elseif (self::KVValue2 === $kv->Value) {
-                    $key2found = true;
-                } elseif (self::KVValue3 === $kv->Value) {
-                    $key3found = true;
-                }
-            }
-
-            self::assertTrue($key1found, 'Key1 not found in list!');
-            self::assertTrue($key2found, 'Key2 not found in list!');
-            self::assertTrue($key3found, 'Key3 not found in list!');
-        } catch (AssertionFailedError $e) {
-            echo "\nprefix \$list value:\n";
-            var_dump($list);
-            echo "\n";
-
-            throw $e;
-        }
+        self::assertIsArray($keys);
+        self::assertGreaterThanOrEqual(2, count($keys));
+        self::assertContains('keytest1', $keys);
+        self::assertContains('keytest2', $keys);
     }
 
-    public function testKeysReturnsErrorWithInvalidPrefix(): void
+    // ---------------------------------------------------------------
+    // DELETE
+    // ---------------------------------------------------------------
+
+    /**
+     * Mirrors Go TestAPI_ClientDelete: put, delete, verify gone.
+     */
+    public function testDelete(): void
     {
-        $client        = new KVClient(ConsulManager::testConfig());
-        [$_, $_, $err] = $client->Keys(12345);
-        self::assertInstanceOf(
-            Error::class,
-            $err,
-            sprintf(
-                'Expected $err to be "%s", saw "%s"',
-                Error::class,
-                is_object($err) ? get_class($err) : gettype($err)
-            )
-        );
+        $client = new KVClient(ConsulManager::testConfig());
+
+        $key = 'test/delete';
+
+        [$_, $err] = $client->Put(new KVPair(Key: $key, Value: 'removeme'));
+        self::assertNull($err, sprintf('KV::Put returned error: %s', (string)$err));
+
+        // Verify it exists
+        [$kv, , $err] = $client->Get($key);
+        self::assertNull($err);
+        self::assertInstanceOf(KVPair::class, $kv);
+
+        // Delete
+        [$wm, $err] = $client->Delete($key);
+        self::assertNull($err, sprintf('KV::Delete returned error: %s', (string)$err));
+        self::assertInstanceOf(WriteMeta::class, $wm);
+
+        // Verify it's gone
+        [$kv, , $err] = $client->Get($key);
+        self::assertNull($err, sprintf('KV::Get after delete returned error: %s', (string)$err));
+        self::assertNull($kv, 'Expected null after deletion');
     }
 
     /**
-     * @depends testCanPutKey
+     * Mirrors Go TestAPI_ClientDeleteTree: put a tree, delete tree, verify gone.
      */
-    public function testCanGetNoPrefixKeys(): void
+    public function testDeleteTree(): void
     {
-        /** @var string[] $list */
-        /** @var \DCarbone\PHPConsulAPI\QueryMeta $qm */
-        /** @var \DCarbone\PHPConsulAPI\PHPLib\Error $err */
         $client = new KVClient(ConsulManager::testConfig());
-        $client->Put(new KVPair(Key: self::KVKey1, Value: self::KVValue1));
-        $client->Put(new KVPair(Key: self::KVKey2, Value: self::KVValue2));
-        $client->Put(new KVPair(Key: self::KVKey3, Value: self::KVValue3));
 
-        [$list, $qm, $err] = $client->Keys();
-        self::assertNull($err, sprintf('KV::keys returned error: %s', $err));
-        self::assertInstanceOf(QueryMeta::class, $qm);
+        $prefix = 'test/deltree';
+        $keys = ["{$prefix}/1", "{$prefix}/2", "{$prefix}/sub/3"];
 
-        try {
-            self::assertIsArray($list);
-            self::assertCount(3, $list);
-            self::assertContainsOnly('string', $list, true);
-
-            $key1found = false;
-            $key2found = false;
-            $key3found = false;
-
-            foreach ($list as $key) {
-                if (self::KVKey1 === $key) {
-                    $key1found = true;
-                } elseif (self::KVKey2 === $key) {
-                    $key2found = true;
-                } elseif (self::KVKey3 === $key) {
-                    $key3found = true;
-                }
-            }
-
-            self::assertTrue($key1found, 'Key1 not found in list!');
-            self::assertTrue($key2found, 'Key2 not found in list!');
-            self::assertTrue($key3found, 'Key3 not found in list!');
-        } catch (AssertionFailedError $e) {
-            echo "\nprefix \$list value:\n";
-            var_dump($list);
-            echo "\n";
-
-            throw $e;
+        foreach ($keys as $k) {
+            [$_, $err] = $client->Put(new KVPair(Key: $k, Value: 'v'));
+            self::assertNull($err, sprintf('KV::Put(%s) returned error: %s', $k, (string)$err));
         }
+
+        // Verify they exist
+        [$list, , $err] = $client->List($prefix);
+        self::assertNull($err);
+        self::assertCount(3, $list);
+
+        // Delete tree
+        [$wm, $err] = $client->DeleteTree($prefix);
+        self::assertNull($err, sprintf('KV::DeleteTree returned error: %s', (string)$err));
+        self::assertInstanceOf(WriteMeta::class, $wm);
+
+        // Verify all gone - should return empty list
+        [$list, , $err] = $client->List($prefix);
+        self::assertNull($err, sprintf('KV::List after delete tree returned error: %s', (string)$err));
+        self::assertCount(0, $list);
+    }
+
+    // ---------------------------------------------------------------
+    // Combined read-after-write patterns
+    // ---------------------------------------------------------------
+
+    /**
+     * Put a key, update it, verify the value and ModifyIndex changed.
+     */
+    public function testPutOverwrite(): void
+    {
+        $client = new KVClient(ConsulManager::testConfig());
+
+        $key = 'test/overwrite';
+
+        [$_, $err] = $client->Put(new KVPair(Key: $key, Value: 'original'));
+        self::assertNull($err);
+
+        [$kv1, , $err] = $client->Get($key);
+        self::assertNull($err);
+        self::assertSame('original', $kv1->Value);
+
+        [$_, $err] = $client->Put(new KVPair(Key: $key, Value: 'updated'));
+        self::assertNull($err);
+
+        [$kv2, , $err] = $client->Get($key);
+        self::assertNull($err);
+        self::assertSame('updated', $kv2->Value);
+        self::assertGreaterThan($kv1->ModifyIndex, $kv2->ModifyIndex);
+    }
+
+    /**
+     * Put empty value, verify it round-trips correctly.
+     */
+    public function testPutEmptyValue(): void
+    {
+        $client = new KVClient(ConsulManager::testConfig());
+
+        $key = 'test/empty';
+
+        [$_, $err] = $client->Put(new KVPair(Key: $key, Value: ''));
+        self::assertNull($err, sprintf('KV::Put returned error: %s', (string)$err));
+
+        [$kv, , $err] = $client->Get($key);
+        self::assertNull($err, sprintf('KV::Get returned error: %s', (string)$err));
+        self::assertInstanceOf(KVPair::class, $kv);
+        self::assertSame('', $kv->Value);
+    }
+
+    /**
+     * Delete a key that doesn't exist - should succeed without error.
+     */
+    public function testDeleteNonExistent(): void
+    {
+        $client = new KVClient(ConsulManager::testConfig());
+
+        [$wm, $err] = $client->Delete('nonexistent/delete');
+        self::assertNull($err, sprintf('KV::Delete returned error: %s', (string)$err));
+        self::assertInstanceOf(WriteMeta::class, $wm);
     }
 }

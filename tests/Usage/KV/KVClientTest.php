@@ -3,7 +3,7 @@
 namespace DCarbone\PHPConsulAPITests\Usage\KV;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -18,12 +18,13 @@ namespace DCarbone\PHPConsulAPITests\Usage\KV;
    limitations under the License.
  */
 
+use DCarbone\PHPConsulAPI\Consul;
 use DCarbone\PHPConsulAPI\KV\KVClient;
 use DCarbone\PHPConsulAPITests\ConsulManager;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class KVClientTest
+ * Basic client instantiation tests.
  *
  * @internal
  */
@@ -33,5 +34,12 @@ final class KVClientTest extends TestCase
     {
         $kv = new KVClient(ConsulManager::testConfig());
         self::assertInstanceOf(KVClient::class, $kv);
+    }
+
+    public function testCanConstructViaConsul(): void
+    {
+        $consul = new Consul(ConsulManager::testConfig());
+        self::assertInstanceOf(KVClient::class, $consul->KV);
+        self::assertInstanceOf(KVClient::class, $consul->KV());
     }
 }
