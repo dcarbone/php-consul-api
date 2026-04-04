@@ -56,9 +56,9 @@ class ACLServiceIdentity extends AbstractType
         return $this->Datacenters;
     }
 
-    public function setDatacenters(string ...$datacenters): self
+    public function setDatacenters(string ...$Datacenters): self
     {
-        $this->Datacenters = $datacenters;
+        $this->Datacenters = $Datacenters;
         return $this;
     }
 

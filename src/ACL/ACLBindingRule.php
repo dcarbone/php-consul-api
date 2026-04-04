@@ -105,9 +105,9 @@ class ACLBindingRule extends AbstractType
         return $this->BindType;
     }
 
-    public function setBindType(BindingRuleBindType $BindType): self
+    public function setBindType(string|BindingRuleBindType $BindType): self
     {
-        $this->BindType = $BindType;
+        $this->BindType = ($BindType instanceof BindingRuleBindType) ? $BindType : BindingRuleBindType::from($BindType);
         return $this;
     }
 

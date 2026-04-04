@@ -86,5 +86,35 @@ final class ACLBindingRuleTest extends TestCase
         self::assertSame('web', $b->getBindName());
         self::assertSame(BindingRuleBindType::Service, $b->getBindType());
     }
+
+    public function testConstructorWithStringBindType(): void
+    {
+        $b = new ACLBindingRule(
+            ID: 'br-str',
+            BindType: 'service',
+            BindName: 'web',
+        );
+        self::assertSame(BindingRuleBindType::Service, $b->getBindType());
+        self::assertSame(BindingRuleBindType::Service, $b->BindType);
+        self::assertSame('web', $b->getBindName());
+    }
+
+    public function testSetBindTypeWithString(): void
+    {
+        $b = new ACLBindingRule();
+        $result = $b->setBindType('role');
+        self::assertSame($b, $result);
+        self::assertSame(BindingRuleBindType::Role, $b->getBindType());
+        self::assertSame(BindingRuleBindType::Role, $b->BindType);
+    }
+
+    public function testSetBindTypeWithEnum(): void
+    {
+        $b = new ACLBindingRule();
+        $result = $b->setBindType(BindingRuleBindType::Node);
+        self::assertSame($b, $result);
+        self::assertSame(BindingRuleBindType::Node, $b->getBindType());
+        self::assertSame(BindingRuleBindType::Node, $b->BindType);
+    }
 }
 

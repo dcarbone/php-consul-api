@@ -210,7 +210,7 @@ trait ACLTokenFields
         return $this;
     }
 
-    public function getExpirationTime(): Time\Time
+    public function getExpirationTime(): null|Time\Time
     {
         return $this->ExpirationTime;
     }

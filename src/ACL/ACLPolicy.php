@@ -56,7 +56,6 @@ class ACLPolicy extends AbstractType
         $this->Description = $Description;
         $this->Rules = $Rules;
         $this->setDatacenters(...$Datacenters);
-        $this->Datacenters = $Datacenters;
         $this->Hash = $Hash;
         $this->CreateIndex = $CreateIndex;
         $this->ModifyIndex = $ModifyIndex;

@@ -38,9 +38,21 @@ class ACLNodeIdentity extends AbstractType
         return $this->NodeName;
     }
 
+    public function setNodeName(string $NodeName): self
+    {
+        $this->NodeName = $NodeName;
+        return $this;
+    }
+
     public function getDatacenter(): string
     {
         return $this->Datacenter;
+    }
+
+    public function setDatacenter(string $Datacenter): self
+    {
+        $this->Datacenter = $Datacenter;
+        return $this;
     }
 
     public static function jsonUnserialize(\stdClass $decoded): self

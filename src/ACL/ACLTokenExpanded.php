@@ -67,7 +67,7 @@ class ACLTokenExpanded extends ACLToken
         array $TemplatePolicies = [],
         bool $Local = false,
         string $AuthMethod = '',
-        \DateInterval|float|int|string|Time\Duration|null $ExpirationTTL = null,
+        null|int|float|string|\DateInterval|Time\Duration $ExpirationTTL = null,
         null|Time\Time $ExpirationTime = null,
         null|Time\Time $CreateTime = null,
         string $Hash = '',

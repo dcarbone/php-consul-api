@@ -14,14 +14,29 @@ final class ACLNodeIdentityTest extends TestCase
     {
         $n = new ACLNodeIdentity();
         self::assertSame('', $n->getNodeName());
+        self::assertSame('', $n->NodeName);
         self::assertSame('', $n->getDatacenter());
+        self::assertSame('', $n->Datacenter);
     }
 
     public function testConstructorWithParams(): void
     {
         $n = new ACLNodeIdentity(NodeName: 'node-1', Datacenter: 'dc1');
         self::assertSame('node-1', $n->getNodeName());
+        self::assertSame('node-1', $n->NodeName);
         self::assertSame('dc1', $n->getDatacenter());
+        self::assertSame('dc1', $n->Datacenter);
+    }
+
+    public function testFluentSetters(): void
+    {
+        $n = new ACLNodeIdentity();
+        $result = $n->setNodeName('node-set')->setDatacenter('dc-set');
+        self::assertSame($n, $result);
+        self::assertSame('node-set', $n->getNodeName());
+        self::assertSame('node-set', $n->NodeName);
+        self::assertSame('dc-set', $n->getDatacenter());
+        self::assertSame('dc-set', $n->Datacenter);
     }
 
     public function testJsonSerialize(): void

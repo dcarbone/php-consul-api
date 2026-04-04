@@ -4,7 +4,6 @@ namespace DCarbone\PHPConsulAPITests\Unit\ACL;
 
 use DCarbone\PHPConsulAPI\ACL\ACLAuthMethod;
 use DCarbone\PHPConsulAPI\ACL\ACLAuthMethodNamespaceRule;
-use DCarbone\Go\Time;
 use PHPUnit\Framework\TestCase;
 
 /**
