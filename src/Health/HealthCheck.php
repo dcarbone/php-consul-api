@@ -56,6 +56,7 @@ class HealthCheck extends AbstractType
         string $ServiceID = '',
         string $ServiceName = '',
         array $ServiceTags = [],
+        string $Type = '',
         string $Namespace = '',
         string $Partition = '',
         int $ExposedPort = 0,
@@ -73,6 +74,7 @@ class HealthCheck extends AbstractType
         $this->ServiceID = $ServiceID;
         $this->ServiceName = $ServiceName;
         $this->setServiceTags(...$ServiceTags);
+        $this->Type = $Type;
         $this->Namespace = $Namespace;
         $this->Partition = $Partition;
         $this->ExposedPort = $ExposedPort;
