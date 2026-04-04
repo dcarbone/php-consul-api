@@ -40,9 +40,21 @@ class AgentWeights extends AbstractType
         return $this->Passing;
     }
 
+    public function setPassing(int $Passing): self
+    {
+        $this->Passing = $Passing;
+        return $this;
+    }
+
     public function getWarning(): int
     {
         return $this->Warning;
+    }
+
+    public function setWarning(int $Warning): self
+    {
+        $this->Warning = $Warning;
+        return $this;
     }
 
     public static function jsonUnserialize(\stdClass $decoded): self

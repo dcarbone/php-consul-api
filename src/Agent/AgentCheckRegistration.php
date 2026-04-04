@@ -127,6 +127,17 @@ class AgentCheckRegistration extends AgentServiceCheck
         return $this;
     }
 
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
     public function jsonSerialize(): \stdClass
     {
         $out = parent::jsonSerialize();

@@ -3,7 +3,6 @@
 namespace DCarbone\PHPConsulAPITests\Unit\Agent;
 
 use DCarbone\PHPConsulAPI\Agent\AgentService;
-use DCarbone\PHPConsulAPI\Agent\AgentWeights;
 use DCarbone\PHPConsulAPI\Agent\ServiceKind;
 use PHPUnit\Framework\TestCase;
 

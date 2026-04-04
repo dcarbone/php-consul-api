@@ -3,7 +3,6 @@
 namespace DCarbone\PHPConsulAPITests\Unit\Agent;
 
 use DCarbone\PHPConsulAPI\Agent\AgentCheck;
-use DCarbone\PHPConsulAPI\Agent\AgentCheckUpdate;
 use DCarbone\PHPConsulAPI\Health\HealthCheckDefinition;
 use PHPUnit\Framework\TestCase;
 
