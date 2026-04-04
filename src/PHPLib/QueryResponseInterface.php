@@ -25,4 +25,6 @@ use DCarbone\PHPConsulAPI\QueryMeta;
 interface QueryResponseInterface
 {
     public function getQueryMeta(): null|QueryMeta;
+
+    public function setQueryMeta(null|QueryMeta $QueryMeta): void;
 }

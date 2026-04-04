@@ -21,8 +21,8 @@ namespace DCarbone\PHPConsulAPI\Session;
  */
 
 use DCarbone\Go\HTTP;
-use DCarbone\PHPConsulAPI\AbstractClient;
-use DCarbone\PHPConsulAPI\Error;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractClient;
+use DCarbone\PHPConsulAPI\PHPLib\Error;
 use DCarbone\PHPConsulAPI\PHPLib\ValuedWriteStringResponse;
 use DCarbone\PHPConsulAPI\PHPLib\WriteResponse;
 use DCarbone\PHPConsulAPI\QueryOptions;

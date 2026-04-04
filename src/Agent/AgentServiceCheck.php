@@ -21,7 +21,7 @@ namespace DCarbone\PHPConsulAPI\Agent;
  */
 
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
-use DCarbone\PHPConsulAPI\Values;
+use DCarbone\PHPConsulAPI\PHPLib\Values;
 
 class AgentServiceCheck extends AbstractType
 {
@@ -53,7 +53,7 @@ class AgentServiceCheck extends AbstractType
 
     /**
      * @param array<string> $Args
-     * @param null|array<string,array<string>>|\DCarbone\PHPConsulAPI\Values $Header
+     * @param null|array<string,array<string>>|\DCarbone\PHPConsulAPI\PHPLib\Values $Header
      */
     public function __construct(
         string $CheckID = '',
@@ -216,7 +216,7 @@ class AgentServiceCheck extends AbstractType
     }
 
     /**
-     * @param \stdClass|array<string,array<string>>|\DCarbone\PHPConsulAPI\Values|null $Header
+     * @param \stdClass|array<string,array<string>>|\DCarbone\PHPConsulAPI\PHPLib\Values|null $Header
      * @return $this
      */
     public function setHeader(null|\stdClass|array|Values $Header): self

@@ -21,18 +21,24 @@ namespace DCarbone\PHPConsulAPI\Agent;
  */
 
 use DCarbone\Go\HTTP;
-use DCarbone\PHPConsulAPI\AbstractClient;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractClient;
 use DCarbone\PHPConsulAPI\Consul;
-use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\MapResponse;
+use DCarbone\PHPConsulAPI\PHPLib\Error;
+use DCarbone\PHPConsulAPI\PHPLib\MapResponse;
 use DCarbone\PHPConsulAPI\PHPLib\ValuedStringResponse;
 use DCarbone\PHPConsulAPI\QueryOptions;
-use DCarbone\PHPConsulAPI\Request;
+use DCarbone\PHPConsulAPI\PHPLib\Request;
 
 class AgentClient extends AbstractClient
 {
+    /** @var \DCarbone\PHPConsulAPI\PHPLib\MapResponse<mixed>|null */
     private null|MapResponse $_self = null;
 
+    /**
+     * @param bool $refresh
+     * @return \DCarbone\PHPConsulAPI\PHPLib\MapResponse<mixed>
+     * @throws \Exception
+     */
     public function Self(bool $refresh = false): MapResponse
     {
         if (!$refresh && isset($this->_self)) {
@@ -47,6 +53,10 @@ class AgentClient extends AbstractClient
         return $ret;
     }
 
+    /**
+     * @return \DCarbone\PHPConsulAPI\PHPLib\MapResponse<mixed>
+     * @throws \Exception
+     */
     public function Host(): MapResponse
     {
         $resp = $this->_requireOK($this->_doGet('v1/agent/host', null));
@@ -76,8 +86,8 @@ class AgentClient extends AbstractClient
         if (null !== $self->Err) {
             return $ret;
         }
-        if (isset($self->Map->Config, $self->Map->Config->NodeName)) {
-            $ret->Value = $self->Map->Config->NodeName;
+        if (isset($self->Map['Config'], $self->Map['Config']['NodeName'])) {
+            $ret->Value = $self->Map['Config']['NodeName'];
         }
         return $ret;
     }

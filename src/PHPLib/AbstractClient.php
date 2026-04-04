@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\PHPLib;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -22,16 +22,9 @@ namespace DCarbone\PHPConsulAPI;
 
 use DCarbone\Go\HTTP;
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\PHPLib\AbstractResponse;
-use DCarbone\PHPConsulAPI\PHPLib\DecodedBody;
-use DCarbone\PHPConsulAPI\PHPLib\QueryResponseInterface;
-use DCarbone\PHPConsulAPI\PHPLib\RequestResponse;
-use DCarbone\PHPConsulAPI\PHPLib\UnmarshalledResponseInterface;
-use DCarbone\PHPConsulAPI\PHPLib\ValuedQueryStringResponse;
-use DCarbone\PHPConsulAPI\PHPLib\ValuedQueryStringsResponse;
-use DCarbone\PHPConsulAPI\PHPLib\ValuedWriteStringResponse;
-use DCarbone\PHPConsulAPI\PHPLib\WriteResponse;
-use DCarbone\PHPConsulAPI\PHPLib\WriteResponseInterface;
+use DCarbone\PHPConsulAPI\Config;
+use DCarbone\PHPConsulAPI\QueryOptions;
+use DCarbone\PHPConsulAPI\WriteOptions;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\RequestOptions as GuzzleRequestOptions;
 use Psr\Http\Message\ResponseInterface;
@@ -51,6 +44,10 @@ abstract class AbstractClient
         return $this->_config;
     }
 
+    /**
+     * @param \DCarbone\PHPConsulAPI\PHPLib\Request $r
+     * @return array<string,mixed>
+     */
     protected function _buildGuzzleRequestOptions(Request $r): array
     {
         // todo: figure out better guzzle integration
@@ -112,6 +109,11 @@ abstract class AbstractClient
         return $this->_newRequest(HTTP\MethodDelete, $path, null, $opts);
     }
 
+    /**
+     * @param \DCarbone\PHPConsulAPI\PHPLib\Request $r
+     * @return \DCarbone\PHPConsulAPI\PHPLib\RequestResponse
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     protected function _do(Request $r): RequestResponse
     {
         $start    = microtime(true);
@@ -120,7 +122,7 @@ abstract class AbstractClient
 
         try {
             // If we actually have a client defined...
-            if (isset($this->_config->HttpClient) && $this->_config->HttpClient instanceof ClientInterface) {
+            if (isset($this->_config->HttpClient)) {
                 $response = $this->_config->HttpClient->send(
                     $r->toPsrRequest(),
                     $this->_buildGuzzleRequestOptions($r)
@@ -156,18 +158,6 @@ abstract class AbstractClient
 
         // if no response, return immediately
         if (null === $r->Response) {
-            return $r;
-        }
-
-        // if, for whatever reason, we see an unexpected response structure...
-        if (!($r->Response instanceof ResponseInterface)) {
-            $r->Err = new Error(
-                sprintf(
-                    '%s - Expected response to be instance of \\Psr\\Message\\ResponseInterface, %s seen.',
-                    static::class,
-                    is_object($r->Response) ? get_class($r->Response) : gettype($r->Response)
-                )
-            );
             return $r;
         }
 
@@ -307,21 +297,21 @@ abstract class AbstractClient
      * todo: move into Unmarshaller?
      *
      * @param \DCarbone\PHPConsulAPI\PHPLib\RequestResponse $resp
-     * @param \DCarbone\PHPConsulAPI\PHPLib\AbstractResponse $ret
+     * @param \DCarbone\PHPConsulAPI\PHPLib\AbstractResponse<mixed> $ret
      * @throws \Exception
      */
     protected function _unmarshalResponse(RequestResponse $resp, AbstractResponse $ret): void
     {
         // determine if this response contains a *Meta field
         if ($ret instanceof QueryResponseInterface) {
-            $ret->QueryMeta = $resp->buildQueryMeta();
+            $ret->setQueryMeta($resp->buildQueryMeta());
         } elseif ($ret instanceof WriteResponseInterface) {
-            $ret->WriteMeta = $resp->buildWriteMeta();
+            $ret->setWriteMeta($resp->buildWriteMeta());
         }
 
         // if there was an error in the response, set and return
         if (null !== $resp->Err) {
-            $ret->Err = $resp->Err;
+            $ret->setErr($resp->Err);
             return;
         }
 
@@ -333,7 +323,7 @@ abstract class AbstractClient
         // attempt response decode
         $dec = $this->_decodeBody($resp->Response->getBody());
         if (null !== $dec->Err) {
-            $ret->Err = $dec->Err;
+            $ret->setErr($dec->Err);
             return;
         }
 

@@ -21,6 +21,8 @@ namespace DCarbone\PHPConsulAPI;
  */
 
 use DCarbone\Go\Time;
+use DCarbone\PHPConsulAPI\PHPLib\Request;
+use DCarbone\PHPConsulAPI\PHPLib\RequestOptions;
 
 class WriteOptions implements RequestOptions
 {

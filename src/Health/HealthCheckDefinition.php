@@ -22,7 +22,7 @@ namespace DCarbone\PHPConsulAPI\Health;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
-use DCarbone\PHPConsulAPI\Values;
+use DCarbone\PHPConsulAPI\PHPLib\Values;
 
 class HealthCheckDefinition extends AbstractType implements \JsonSerializable
 {
@@ -42,7 +42,7 @@ class HealthCheckDefinition extends AbstractType implements \JsonSerializable
     public Time\Duration $DeregisterCriticalServiceAfterDuration;
 
     /**
-     * @param array<string,array<string>>|\DCarbone\PHPConsulAPI\Values|null $Header
+     * @param array<string,array<string>>|\DCarbone\PHPConsulAPI\PHPLib\Values|null $Header
      */
     public function __construct(
         string $HTTP = '',
@@ -93,7 +93,7 @@ class HealthCheckDefinition extends AbstractType implements \JsonSerializable
     }
 
     /**
-     * @param array<string,array<string>>|\DCarbone\PHPConsulAPI\Values|null $Header
+     * @param array<string,array<string>>|\DCarbone\PHPConsulAPI\PHPLib\Values|null $Header
      * @return $this
      */
     public function setHeader(null|array|\stdClass|Values $Header = []): self

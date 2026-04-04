@@ -20,8 +20,8 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractClient;
-use DCarbone\PHPConsulAPI\Error;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractClient;
+use DCarbone\PHPConsulAPI\PHPLib\Error;
 use DCarbone\PHPConsulAPI\PHPLib\RequestResponse;
 use DCarbone\PHPConsulAPI\PHPLib\ValuedBoolResponse;
 use DCarbone\PHPConsulAPI\PHPLib\ValuedWriteStringResponse;

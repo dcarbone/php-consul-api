@@ -20,8 +20,6 @@ namespace DCarbone\PHPConsulAPI\PHPLib;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\Error;
-
 final class DecodedBody
 {
     use ErrorField;

@@ -91,8 +91,9 @@ class CookieConfig extends AbstractType
         if ($this->Session) {
             $out->Session = $this->Session;
         }
-        if (($v = $this->TTL->Nanoseconds()) && 0 !== $v) {
-            $out->TTL = $v;
+        $ns = $this->TTL->Nanoseconds();
+        if ((0 !== $ns)) {
+            $out->TTL = $ns;
         }
         if ('' !== $this->Path) {
             $out->Path = $this->Path;

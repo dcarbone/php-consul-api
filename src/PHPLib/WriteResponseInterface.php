@@ -25,4 +25,6 @@ use DCarbone\PHPConsulAPI\WriteMeta;
 interface WriteResponseInterface
 {
     public function getWriteMeta(): null|WriteMeta;
+
+    public function setWriteMeta(null|WriteMeta $WriteMeta): void;
 }

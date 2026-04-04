@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\PHPLib;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -21,11 +21,12 @@ namespace DCarbone\PHPConsulAPI;
  */
 
 use DCarbone\Go\Time;
+use DCarbone\PHPConsulAPI\Config;
+use DCarbone\PHPConsulAPI\RequestMeta;
 use GuzzleHttp\Psr7\Request as Psr7Request;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
-use function DCarbone\PHPConsulAPI\PHPLib\dur_to_millisecond;
 
 class Request
 {

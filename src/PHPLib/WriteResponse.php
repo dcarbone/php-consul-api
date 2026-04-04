@@ -20,7 +20,6 @@ namespace DCarbone\PHPConsulAPI\PHPLib;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\WriteMeta;
 
 /**
@@ -29,7 +28,6 @@ use DCarbone\PHPConsulAPI\WriteMeta;
 class WriteResponse extends AbstractResponse implements WriteResponseInterface
 {
     use WriteMetaField;
-    use ErrorField;
 
     public function offsetExists(mixed $offset): bool
     {
@@ -45,5 +43,10 @@ class WriteResponse extends AbstractResponse implements WriteResponseInterface
             return $this->Err;
         }
         throw $this->_newOutOfRangeException($offset);
+    }
+
+    public function setWriteMeta(?WriteMeta $WriteMeta): void
+    {
+        $this->WriteMeta = $WriteMeta;
     }
 }

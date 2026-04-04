@@ -20,16 +20,14 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\Error;
+use DCarbone\PHPConsulAPI\PHPLib\Error;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractResponse;
-use DCarbone\PHPConsulAPI\PHPLib\ErrorField;
 
 /**
  * @extends AbstractResponse<string|AgentServiceChecksInfo|Error|null>
  */
 class AgentHealthServiceResponse extends AbstractResponse
 {
-    use ErrorField;
 
     public string $AggregatedStatus;
     public null|AgentServiceChecksInfo $AgentServiceChecksInfo;

@@ -22,7 +22,6 @@ namespace DCarbone\PHPConsulAPI\PHPLib;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\Consul;
-use DCarbone\PHPConsulAPI\Error;
 use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPI\RequestMeta;
 use DCarbone\PHPConsulAPI\WriteMeta;

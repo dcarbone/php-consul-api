@@ -26,7 +26,6 @@ namespace DCarbone\PHPConsulAPI\PHPLib;
 abstract class AbstractValuedWriteResponse extends AbstractResponse implements ValuedResponseInterface
 {
     use WriteMetaField;
-    use ErrorField;
 
     public function offsetExists(mixed $offset): bool
     {

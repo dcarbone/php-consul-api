@@ -18,7 +18,7 @@ namespace DCarbone\PHPConsulAPITests\Usage;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\Values;
+use DCarbone\PHPConsulAPI\PHPLib\Values;
 use PHPUnit\Framework\TestCase;
 
 /**

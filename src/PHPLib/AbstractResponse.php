@@ -26,6 +26,8 @@ namespace DCarbone\PHPConsulAPI\PHPLib;
  */
 abstract class AbstractResponse implements \ArrayAccess
 {
+    use ErrorField;
+
     public function offsetUnset(mixed $offset): void
     {
         throw new \BadMethodCallException(sprintf('Calling %s on class %s is forbidden', __METHOD__, static::class));

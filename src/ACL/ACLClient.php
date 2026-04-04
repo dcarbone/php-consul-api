@@ -20,8 +20,8 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractClient;
-use DCarbone\PHPConsulAPI\Error;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractClient;
+use DCarbone\PHPConsulAPI\PHPLib\Error;
 use DCarbone\PHPConsulAPI\PHPLib\ValuedWriteStringResponse;
 use DCarbone\PHPConsulAPI\PHPLib\WriteResponse;
 use DCarbone\PHPConsulAPI\QueryOptions;
@@ -272,11 +272,11 @@ class ACLClient extends AbstractClient
     public function AuthMethodUpdate(ACLAuthMethod $authMethod, null|WriteOptions $opts = null): ACLAuthMethodWriteResponse
     {
         $ret = new ACLAuthMethodWriteResponse();
-        if ('' === $authMethod->ID) {
-            $ret->Err = new Error('must specify an ID in AuthMethod Update');
+        if ('' === $authMethod->Name) {
+            $ret->Err = new Error('must specify an Name in AuthMethod Update');
             return $ret;
         }
-        $resp = $this->_requireOK($this->_doPut(sprintf('/v1/acl/auth-method/%s', $authMethod->ID), $authMethod, $opts));
+        $resp = $this->_requireOK($this->_doPut(sprintf('/v1/acl/auth-method/%s', $authMethod->Name), $authMethod, $opts));
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }

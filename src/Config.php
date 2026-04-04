@@ -188,7 +188,7 @@ class Config
         if ($inc->InsecureSkipVerify) {
             $actual->InsecureSkipVerify = true;
         }
-        if (null !== $inc->HttpClient) {
+        if (isset($inc->HttpClient)) {
             $actual->HttpClient = $inc->HttpClient;
         }
         if (0 !== $inc->JSONEncodeOpts) {
@@ -203,7 +203,7 @@ class Config
 
     public static function newDefaultConfig(): self
     {
-        return new static();
+        return new self();
     }
 
     public function getAddress(): string

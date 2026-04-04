@@ -20,13 +20,14 @@ namespace DCarbone\PHPConsulAPI\PHPLib;
    limitations under the License.
  */
 
+use DCarbone\PHPConsulAPI\QueryMeta;
+
 /**
  * @extends AbstractResponse<mixed>
  */
 abstract class AbstractValuedQueryResponse extends AbstractResponse implements QueryResponseInterface, ValuedResponseInterface
 {
     use QueryMetaField;
-    use ErrorField;
 
     public function offsetExists(mixed $offset): bool
     {
@@ -45,5 +46,10 @@ abstract class AbstractValuedQueryResponse extends AbstractResponse implements Q
             return $this->Err;
         }
         throw $this->_newOutOfRangeException($offset);
+    }
+
+    public function setQueryMeta(?QueryMeta $QueryMeta): void
+    {
+        $this->QueryMeta = $QueryMeta;
     }
 }

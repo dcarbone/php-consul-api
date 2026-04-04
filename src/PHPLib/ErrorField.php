@@ -20,8 +20,6 @@ namespace DCarbone\PHPConsulAPI\PHPLib;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\Error;
-
 trait ErrorField
 {
     public null|Error $Err = null;
@@ -29,5 +27,10 @@ trait ErrorField
     public function getErr(): null|Error
     {
         return $this->Err;
+    }
+
+    public function setErr(null|Error $Err): void
+    {
+        $this->Err = $Err;
     }
 }

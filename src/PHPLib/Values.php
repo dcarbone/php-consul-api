@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\PHPLib;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -37,11 +37,7 @@ class Values implements \IteratorAggregate, \ArrayAccess, \Countable, \JsonSeria
     {
         $out = new self();
         foreach ($values as $hdr => $vals) {
-            if (is_array($vals)) {
-                $out->add($hdr, ...$vals);
-            } else {
-                $out->add($hdr, $vals);
-            }
+            $out->add($hdr, ...(array)$vals);
         }
         return $out;
     }
@@ -133,11 +129,7 @@ class Values implements \IteratorAggregate, \ArrayAccess, \Countable, \JsonSeria
      */
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        if (is_array($value)) {
-            $this->set($offset, ...$value);
-        } else {
-            $this->set($offset, $value);
-        }
+        $this->set($offset, ...(array)$value);
     }
 
     public function offsetUnset(mixed $offset): void

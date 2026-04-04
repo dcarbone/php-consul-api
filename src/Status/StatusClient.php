@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\Status;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractClient;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractClient;
 use DCarbone\PHPConsulAPI\PHPLib\ValuedStringResponse;
 use DCarbone\PHPConsulAPI\PHPLib\ValuedStringsResponse;
 use DCarbone\PHPConsulAPI\QueryOptions;

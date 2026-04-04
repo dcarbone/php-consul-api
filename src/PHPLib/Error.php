@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DCarbone\PHPConsulAPI;
+namespace DCarbone\PHPConsulAPI\PHPLib;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -21,7 +21,6 @@ namespace DCarbone\PHPConsulAPI;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\PHPLib\RequestResponse;
 
 class Error implements \JsonSerializable
 {

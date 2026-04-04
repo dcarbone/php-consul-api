@@ -21,6 +21,8 @@ namespace DCarbone\PHPConsulAPI;
  */
 
 use DCarbone\Go\Time;
+use DCarbone\PHPConsulAPI\PHPLib\Request;
+use DCarbone\PHPConsulAPI\PHPLib\RequestOptions;
 use function DCarbone\PHPConsulAPI\PHPLib\dur_to_millisecond;
 
 class QueryOptions implements RequestOptions

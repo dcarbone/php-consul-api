@@ -20,8 +20,8 @@ namespace DCarbone\PHPConsulAPI\Health;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractClient;
-use DCarbone\PHPConsulAPI\Error;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractClient;
+use DCarbone\PHPConsulAPI\PHPLib\Error;
 use DCarbone\PHPConsulAPI\QueryOptions;
 
 class HealthClient extends AbstractClient

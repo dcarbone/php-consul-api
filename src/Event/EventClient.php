@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\Event;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractClient;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractClient;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\WriteOptions;
 

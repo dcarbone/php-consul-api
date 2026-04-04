@@ -25,7 +25,6 @@ namespace DCarbone\PHPConsulAPI\PHPLib;
  */
 abstract class AbstractValuedResponse extends AbstractResponse implements ValuedResponseInterface
 {
-    use ErrorField;
 
     public function offsetExists(mixed $offset): bool
     {

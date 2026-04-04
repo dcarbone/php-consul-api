@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPITests\Usage;
 
 use DCarbone\PHPConsulAPI\KV\KVPair;
 use DCarbone\PHPConsulAPI\QueryOptions;
-use DCarbone\PHPConsulAPI\Request;
+use DCarbone\PHPConsulAPI\PHPLib\Request;
 use DCarbone\PHPConsulAPI\WriteOptions;
 use DCarbone\PHPConsulAPITests\ConsulManager;
 use PHPUnit\Framework\TestCase;

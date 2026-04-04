@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\Values;
+use DCarbone\PHPConsulAPI\PHPLib\Values;
 
 class AgentCheckRegistration extends AgentServiceCheck
 {

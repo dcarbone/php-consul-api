@@ -20,14 +20,11 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\Error;
+use DCarbone\PHPConsulAPI\PHPLib\Error;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractResponse;
-use DCarbone\PHPConsulAPI\PHPLib\ErrorField;
 
 class AgentHealthServicesResponse extends AbstractResponse
 {
-    use ErrorField;
-
     public string $AggregatedStatus;
     /** @var \DCarbone\PHPConsulAPI\Agent\AgentServiceChecksInfo[] */
     public array $AgentServiceChecksInfos;
@@ -35,7 +32,7 @@ class AgentHealthServicesResponse extends AbstractResponse
     /**
      * @param string $aggregatedStatus
      * @param \stdClass[] $checkInfos
-     * @param \DCarbone\PHPConsulAPI\Error|null $err
+     * @param \DCarbone\PHPConsulAPI\PHPLib\Error|null $err
      */
     public function __construct(string $aggregatedStatus, array $checkInfos, null|Error $err)
     {
@@ -67,7 +64,7 @@ class AgentHealthServicesResponse extends AbstractResponse
 
     /**
      * @param mixed $offset
-     * @return string|\DCarbone\PHPConsulAPI\Agent\AgentServiceChecksInfo[]|\DCarbone\PHPConsulAPI\Error|null
+     * @return string|\DCarbone\PHPConsulAPI\Agent\AgentServiceChecksInfo[]|\DCarbone\PHPConsulAPI\PHPLib\Error|null
      */
     public function offsetGet(mixed $offset): string|array|Error|null
     {
