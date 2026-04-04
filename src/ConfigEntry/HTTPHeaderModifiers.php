@@ -25,11 +25,11 @@ use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 class HTTPHeaderModifiers extends AbstractType
 {
     /** @var array<string,string> */
-    public array $Add;
+    public array $Add = [];
     /** @var array<string,string> */
-    public array $Set;
+    public array $Set = [];
     /** @var array<string> */
-    public array $Remove;
+    public array $Remove = [];
 
     /**
      * @param null|array<string,string> $Add
@@ -58,9 +58,6 @@ class HTTPHeaderModifiers extends AbstractType
 
     public function setAddKey(string $k, string $v): self
     {
-        if (!isset($this->Add)) {
-            $this->Add = [];
-        }
         $this->Add[$k] = $v;
         return $this;
     }
@@ -70,12 +67,12 @@ class HTTPHeaderModifiers extends AbstractType
      */
     public function setAdd(null|\stdClass|array $Add): self
     {
-        unset($this->Add);
+        $this->Add = [];
         if (null === $Add) {
             return $this;
         }
         foreach ($Add as $k => $v) {
-            $this->setAddKey($k, $v);
+            $this->Add[$k] = $v;
         }
         return $this;
     }
@@ -90,9 +87,6 @@ class HTTPHeaderModifiers extends AbstractType
 
     public function setSetKey(string $k, string $v): self
     {
-        if (!isset($this->Set)) {
-            $this->Set = [];
-        }
         $this->Set[$k] = $v;
         return $this;
     }
@@ -102,12 +96,12 @@ class HTTPHeaderModifiers extends AbstractType
      */
     public function setSet(null|\stdClass|array $Set): self
     {
-        unset($this->Set);
+        $this->Set = [];
         if (null === $Set) {
             return $this;
         }
         foreach ($Set as $k => $v) {
-            $this->setSetKey($k, $v);
+            $this->Set[$k] = $v;
         }
         return $this;
     }
@@ -148,13 +142,13 @@ class HTTPHeaderModifiers extends AbstractType
     public function jsonSerialize(): \stdClass
     {
         $out = $this->_startJsonSerialize();
-        if (isset($this->Add)) {
+        if ([] !== $this->Add) {
             $out->Add = $this->Add;
         }
-        if (isset($this->Set)) {
+        if ([] !== $this->Set) {
             $out->Set = $this->Set;
         }
-        if (isset($this->Remove)) {
+        if ([] !== $this->Remove) {
             $out->Remove = $this->Remove;
         }
         return $out;

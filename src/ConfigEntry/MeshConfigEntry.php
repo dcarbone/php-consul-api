@@ -54,7 +54,7 @@ class MeshConfigEntry extends AbstractType implements ConfigEntry
         $this->setMeta($Meta);
         $this->CreateIndex = $CreateIndex;
         $this->ModifyIndex = $ModifyIndex;
-        $this->TransparentProxy = $TransparentProxy;
+        $this->TransparentProxy = $TransparentProxy ?? new TransparentProxyMeshConfig();
         $this->AllowEnablingPermissiveMutualTLS = $AllowEnablingPermissiveMutualTLS;
         $this->TLS = $TLS;
         $this->HTTP = $HTTP;
