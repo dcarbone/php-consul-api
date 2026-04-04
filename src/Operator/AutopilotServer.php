@@ -34,7 +34,7 @@ class AutopilotServer extends AbstractType
     public string $Address;
     public string $NodeStatus;
     public string $Version;
-    public null|Time\Duration $LastContact;
+    public null|Time\Duration $LastContact = null;
     public int $LastTerm;
     public int $LastIndex;
     public bool $Healthy;
@@ -141,16 +141,13 @@ class AutopilotServer extends AbstractType
 
     public function getLastContact(): null|Time\Duration
     {
-        if (!isset($this->LastContact)) {
-            return null;
-        }
         return $this->LastContact;
     }
 
     public function setLastContact(null|string|int|float|\DateInterval|Time\Duration $LastContact): self
     {
         if (null === $LastContact) {
-            unset($this->LastContact);
+            $this->LastContact = null;
             return $this;
         }
         $this->LastContact = Time::Duration($LastContact);
@@ -285,7 +282,7 @@ class AutopilotServer extends AbstractType
         $out->Address = $this->Address;
         $out->NodeStatus = $this->NodeStatus;
         $out->Version = $this->Version;
-        $out->lastContact = isset($this->LastContact) ? (string)$this->LastContact : null;
+        $out->lastContact = null !== $this->LastContact ? (string)$this->LastContact : null;
         $out->LastTerm = $this->LastTerm;
         $out->LastIndex = $this->LastIndex;
         $out->Healthy = $this->Healthy;

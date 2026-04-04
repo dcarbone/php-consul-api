@@ -31,8 +31,8 @@ class SampledValue extends AbstractType
     public float $Max;
     public float $Mean;
     public float $Stddev;
-    /** @var array<string,string> */
-    public array $Labels;
+    /** @var null|array<string,string> */
+    public null|array $Labels = null;
 
     /**
      * @param array<string,string> $Labels
@@ -149,7 +149,7 @@ class SampledValue extends AbstractType
     public function setLabels(null|\stdClass|array $Labels): self
     {
         if (null === $Labels) {
-            unset($this->Labels);
+            $this->Labels = null;
             return $this;
         }
         $this->Labels = [];

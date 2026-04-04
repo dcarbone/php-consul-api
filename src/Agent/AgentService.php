@@ -36,8 +36,8 @@ class AgentService extends AbstractType
     public int $Port;
     public string $Address;
     public string $SocketPath;
-    /** @var array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress> */
-    public null|array $TaggedAddresses;
+    /** @var null|array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress> */
+    public null|array $TaggedAddresses = null;
     public AgentWeights $Weights;
     public bool $EnableTagOverride;
     public int $CreateIndex;

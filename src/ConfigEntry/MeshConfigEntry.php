@@ -169,7 +169,7 @@ class MeshConfigEntry extends AbstractType implements ConfigEntry
         if (null !== $this->Peering) {
             $out->Peering = $this->Peering;
         }
-        if (isset($this->Meta)) {
+        if (null !== $this->Meta) {
             $out->Meta = $this->Meta;
         }
         $out->CreateIndex = $this->CreateIndex;

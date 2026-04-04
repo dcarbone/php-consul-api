@@ -28,20 +28,20 @@ class MapResponse extends AbstractValuedResponse implements UnmarshalledResponse
     /**
      * @var array<string,T>|null
      */
-    public null|array $Map;
+    public null|array $Map = null;
 
     /**
      * @return array<string,T>|null
      */
     public function getValue(): null|array
     {
-        return $this->Map ?? null;
+        return $this->Map;
     }
 
     public function unmarshalValue(mixed $decoded): void
     {
         if (null === $decoded) {
-            unset($this->Map);
+            $this->Map = null;
             return;
         }
         $this->Map = [];

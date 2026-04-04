@@ -31,11 +31,11 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
     public string $Name;
     public string $Partition;
     public string $DefaultSubset;
-    /** @var array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverSubset> */
-    public array $Subsets;
+    /** @var null|array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverSubset> */
+    public null|array $Subsets = null;
     public null|ServiceResolverRedirect $Redirect;
-    /** @var array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverFailover> */
-    public array $Failover;
+    /** @var null|array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverFailover> */
+    public null|array $Failover = null;
     public Time\Duration $ConnectTimeout;
     public Time\Duration $RequestTimeout;
     public null|ServiceResolverPrioritizeByLocality $PrioritizeByLocality;
@@ -126,16 +126,16 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
     }
 
     /**
-     * @return array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverSubset>
+     * @return null|array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverSubset>
      */
-    public function getSubsets(): array
+    public function getSubsets(): null|array
     {
         return $this->Subsets;
     }
 
     public function setSubsetKey(string $key, ServiceResolverSubset $subset): self
     {
-        if (!isset($this->Subsets)) {
+        if (null === $this->Subsets) {
             $this->Subsets = [];
         }
         $this->Subsets[$key] = $subset;
@@ -147,7 +147,7 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
      */
     public function setSubsets(null|array $Subsets): self
     {
-        unset($this->Subsets);
+        $this->Subsets = null;
         if (null === $Subsets) {
             return $this;
         }
@@ -169,15 +169,18 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
     }
 
     /**
-     * @return array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverFailover>
+     * @return null|array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverFailover>
      */
-    public function getFailover(): array
+    public function getFailover(): null|array
     {
         return $this->Failover;
     }
 
     public function setFailoverKey(string $key, ServiceResolverFailover $failover): self
     {
+        if (null === $this->Failover) {
+            $this->Failover = [];
+        }
         $this->Failover[$key] = $failover;
         return $this;
     }
@@ -187,7 +190,7 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
      */
     public function setFailover(null|array $Failover): self
     {
-        unset($this->Failover);
+        $this->Failover = null;
         if (null === $Failover) {
             return $this;
         }
@@ -288,13 +291,13 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
         if ('' !== $this->DefaultSubset) {
             $out->DefaultSubset = $this->DefaultSubset;
         }
-        if (isset($this->Subsets)) {
+        if (null !== $this->Subsets) {
             $out->Subsets = $this->Subsets;
         }
         if (null !== $this->Redirect) {
             $out->Redirect = $this->Redirect;
         }
-        if (isset($this->Failover)) {
+        if (null !== $this->Failover) {
             $out->Failover = $this->Failover;
         }
         if (0 !== $this->ConnectTimeout->Nanoseconds()) {
@@ -309,7 +312,7 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
         if (null !== $this->LoadBalancer) {
             $out->LoadBalancer = $this->LoadBalancer;
         }
-        if (isset($this->Meta)) {
+        if (null !== $this->Meta) {
             $out->Meta = $this->Meta;
         }
         $out->CreateIndex = $this->CreateIndex;

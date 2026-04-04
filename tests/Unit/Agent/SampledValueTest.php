@@ -73,8 +73,8 @@ final class SampledValueTest extends TestCase
     {
         $s = new SampledValue(Labels: ['a' => 'b']);
         $s->setLabels(null);
-        // After setLabels(null), the property is unset; it becomes uninitialized.
-        self::assertFalse(isset($s->Labels));
+        // After setLabels(null), the property is null.
+        self::assertNull($s->Labels);
     }
 
     public function testJsonSerialize(): void

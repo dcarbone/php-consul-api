@@ -22,23 +22,20 @@ namespace DCarbone\PHPConsulAPI\PHPLib;
 
 trait MetaField
 {
-    /** @var array<string,string> */
-    public array $Meta;
+    /** @var null|array<string,string> */
+    public null|array $Meta = null;
 
     /**
      * @return array<string,string>|null
      */
     public function getMeta(): null|array
     {
-        if (!isset($this->Meta)) {
-            return null;
-        }
         return $this->Meta;
     }
 
     public function setMetaKey(string $k, string $v): self
     {
-        if (!isset($this->Meta)) {
+        if (null === $this->Meta) {
             $this->Meta = [];
         }
         $this->Meta[$k] = $v;
@@ -50,7 +47,7 @@ trait MetaField
      */
     public function setMeta(null|\stdClass|array $Meta): self
     {
-        unset($this->Meta);
+        $this->Meta = null;
         if (null === $Meta) {
             return $this;
         }

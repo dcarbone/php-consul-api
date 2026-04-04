@@ -135,7 +135,7 @@ class ServiceSplitterConfigEntry extends AbstractType implements ConfigEntry
         if ([] !== $this->Splits) {
             $out->Splits = $this->Splits;
         }
-        if (isset($this->Meta)) {
+        if (null !== $this->Meta) {
             $out->Meta = $this->Meta;
         }
         $out->CreateIndex = $this->CreateIndex;

@@ -35,7 +35,7 @@ class AgentServiceCheck extends AbstractType
     public string $Timeout;
     public string $TTL;
     public string $HTTP;
-    public Values $Header;
+    public null|Values $Header = null;
     public string $Method;
     public string $TCP;
     public string $Status;
@@ -212,9 +212,6 @@ class AgentServiceCheck extends AbstractType
 
     public function getHeader(): null|Values
     {
-        if (!isset($this->Header)) {
-            return null;
-        }
         return $this->Header;
     }
 
@@ -225,7 +222,7 @@ class AgentServiceCheck extends AbstractType
     public function setHeader(null|\stdClass|array|Values $Header): self
     {
         if (null === $Header) {
-            unset($this->Header);
+            $this->Header = null;
             return $this;
         }
         if (!$Header instanceof Values) {
@@ -434,7 +431,7 @@ class AgentServiceCheck extends AbstractType
         if ('' !== $this->HTTP) {
             $out->HTTP = $this->HTTP;
         }
-        if (isset($this->Header)) {
+        if (null !== $this->Header) {
             $out->Header = $this->Header;
         }
         if ('' !== $this->Method) {

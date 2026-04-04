@@ -31,7 +31,7 @@ final class RequestResponse
 {
     public RequestMeta $RequestMeta;
     public Time\Duration $Duration;
-    public null|ResponseInterface $Response;
+    public null|ResponseInterface $Response = null;
     public null|Error $Err;
 
     public function __construct(RequestMeta $meta, null|string|int|float|\DateInterval|Time\Duration $dur, null|ResponseInterface $resp, null|Error $err)
@@ -72,7 +72,7 @@ final class RequestResponse
 
         // if there was no response, return as-is
         // note: should never see this in the wild.
-        if (!isset($this->Response)) {
+        if (null === $this->Response) {
             return $qm;
         }
 

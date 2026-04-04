@@ -45,9 +45,8 @@ final class GaugeValueTest extends TestCase
     {
         $g = new GaugeValue(Name: 'cpu', Labels: ['a' => 'b']);
         $g->setLabels(null);
-        // After setLabels(null), the property is unset; getLabels returns null
-        // because the property is uninitialized.
-        self::assertFalse(isset($g->Labels));
+        // After setLabels(null), the property is null; getLabels returns null.
+        self::assertNull($g->Labels);
     }
 
     public function testJsonSerialize(): void

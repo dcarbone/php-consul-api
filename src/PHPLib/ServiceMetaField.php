@@ -22,23 +22,20 @@ namespace DCarbone\PHPConsulAPI\PHPLib;
 
 trait ServiceMetaField
 {
-    /** @var array<string,string> */
-    public array $ServiceMeta;
+    /** @var null|array<string,string> */
+    public null|array $ServiceMeta = null;
 
     /**
      * @return null|array<string,string>
      */
     public function getServiceMeta(): null|array
     {
-        if (!isset($this->ServiceMeta)) {
-            return null;
-        }
         return $this->ServiceMeta;
     }
 
     public function setServiceMetaValue(string $k, string $v): self
     {
-        if (!isset($this->ServiceMeta)) {
+        if (null === $this->ServiceMeta) {
             $this->ServiceMeta = [];
         }
         $this->ServiceMeta[$k] = $v;
@@ -50,7 +47,7 @@ trait ServiceMetaField
      */
     public function setServiceMeta(null|\stdClass|array $ServiceMeta): self
     {
-        unset($this->ServiceMeta);
+        $this->ServiceMeta = null;
         if (null === $ServiceMeta) {
             return $this;
         }

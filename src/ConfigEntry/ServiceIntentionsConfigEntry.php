@@ -166,7 +166,7 @@ class ServiceIntentionsConfigEntry extends AbstractType implements ConfigEntry
         if (null !== $this->JWT) {
             $out->JWT = $this->JWT;
         }
-        if (isset($this->Meta)) {
+        if (null !== $this->Meta) {
             $out->Meta = $this->Meta;
         }
         $out->CreateIndex = $this->CreateIndex;

@@ -38,13 +38,11 @@ class CatalogService extends AbstractType
     public string $Node;
     public string $Address;
     public string $Datacenter;
-    /** @var array<string,string> */
-    public array $NodeMeta;
     public string $ServiceID;
     public string $ServiceName;
     public string $ServiceAddress;
-    /** @var array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress> */
-    public array $ServiceTaggedAddresses;
+    /** @var null|array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress> */
+    public null|array $ServiceTaggedAddresses = null;
     /** @var array<string> */
     public array $ServiceTags;
     public int $ServicePort;
@@ -195,15 +193,12 @@ class CatalogService extends AbstractType
      */
     public function getServiceTaggedAddresses(): null|array
     {
-        if (!isset($this->ServiceTaggedAddresses)) {
-            return null;
-        }
         return $this->ServiceTaggedAddresses;
     }
 
     public function setServiceTaggedAddress(string $Tag, ServiceAddress $ServiceAddress): self
     {
-        if (!isset($this->ServiceTaggedAddresses)) {
+        if (null === $this->ServiceTaggedAddresses) {
             $this->ServiceTaggedAddresses = [];
         }
         $this->ServiceTaggedAddresses[$Tag] = $ServiceAddress;
@@ -216,10 +211,10 @@ class CatalogService extends AbstractType
     public function setServiceTaggedAddresses(null|array $ServiceTaggedAddresses): self
     {
         if (null === $ServiceTaggedAddresses) {
-            unset($this->TaggedAddresses);
+            $this->TaggedAddresses = null;
             return $this;
         }
-        $this->TaggedAddresses = [];
+        $this->TaggedAddresses = null;
         foreach ($ServiceTaggedAddresses as $k => $v) {
             $this->setServiceTaggedAddress($k, $v);
         }

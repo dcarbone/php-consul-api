@@ -26,8 +26,8 @@ class EnvoyExtension extends AbstractType
 {
     public string $Name;
     public bool $Required;
-    /** @var array<string,mixed> */
-    public array $Arguments;
+    /** @var null|array<string,mixed> */
+    public null|array $Arguments = null;
     public string $ConsulVersion;
     public string $EnvoyVersion;
 
@@ -75,15 +75,12 @@ class EnvoyExtension extends AbstractType
      */
     public function getArguments(): null|array
     {
-        if (!isset($this->Arguments)) {
-            return null;
-        }
         return $this->Arguments;
     }
 
     public function setArgument(string $k, mixed $v): self
     {
-        if (!isset($this->Arguments)) {
+        if (null === $this->Arguments) {
             $this->Arguments = [];
         }
         $this->Arguments[$k] = $v;
@@ -96,7 +93,7 @@ class EnvoyExtension extends AbstractType
     public function setArguments(null|\stdClass|array $Arguments): self
     {
         if (null === $Arguments) {
-            unset($this->Arguments);
+            $this->Arguments = null;
             return $this;
         }
         $this->Arguments = [];

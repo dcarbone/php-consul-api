@@ -169,7 +169,7 @@ class IngressGatewayConfigEntry extends AbstractType implements ConfigEntry
         }
         $out->TLS = $this->TLS;
         $out->Listeners = $this->Listeners;
-        if (isset($this->Meta)) {
+        if (null !== $this->Meta) {
             $out->Meta = $this->Meta;
         }
         if (null !== $this->Defaults) {

@@ -135,7 +135,7 @@ class ServiceRouterConfigEntry extends AbstractType implements ConfigEntry
         if ([] !== $this->Routes) {
             $out->Routes = $this->Routes;
         }
-        if (isset($this->Meta)) {
+        if (null !== $this->Meta) {
             $out->Meta = $this->Meta;
         }
         $out->CreateIndex = $this->CreateIndex;

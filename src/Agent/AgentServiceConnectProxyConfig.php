@@ -39,8 +39,8 @@ class AgentServiceConnectProxyConfig extends AbstractType
     public string $LocalServiceSocketPath;
     public ProxyMode $Mode;
     public null|TransparentProxyConfig $TransparentProxy;
-    /** @var array<string,mixed> */
-    public array $Config;
+    /** @var null|array<string,mixed> */
+    public null|array $Config = null;
     /** @var \DCarbone\PHPConsulAPI\Agent\Upstream[] */
     public array $Upstreams;
     public null|MeshGatewayConfig $MeshGateway;
@@ -184,9 +184,6 @@ class AgentServiceConnectProxyConfig extends AbstractType
      */
     public function getConfig(): null|array
     {
-        if (!isset($this->Config)) {
-            return null;
-        }
         return $this->Config;
     }
 
@@ -197,7 +194,7 @@ class AgentServiceConnectProxyConfig extends AbstractType
     public function setConfig(null|\stdClass|array $Config): self
     {
         if (null === $Config) {
-            unset($this->Config);
+            $this->Config = null;
             return $this;
         }
         $this->Config = [];
@@ -303,7 +300,7 @@ class AgentServiceConnectProxyConfig extends AbstractType
         if (0 !== $this->LocalServicePort) {
             $out->LocalServicePort = $this->LocalServicePort;
         }
-        if (isset($this->Config)) {
+        if (null !== $this->Config) {
             $out->Config = $this->Config;
         }
         if ('' !== $this->LocalServiceSocketPath) {

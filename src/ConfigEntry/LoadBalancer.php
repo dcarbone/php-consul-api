@@ -27,8 +27,8 @@ class LoadBalancer extends AbstractType
     public string $Policy;
     public null|RingHashConfig $RingHashConfig;
     public null|LeastRequestConfig $LeastRequestConfig;
-    /** @var array<\DCarbone\PHPConsulAPI\ConfigEntry\HashPolicy> */
-    public array $HashPolicies;
+    /** @var null|array<\DCarbone\PHPConsulAPI\ConfigEntry\HashPolicy> */
+    public null|array $HashPolicies = null;
 
     /**
      * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\HashPolicy> $HashPolicies
@@ -130,7 +130,7 @@ class LoadBalancer extends AbstractType
         if (null !== $this->LeastRequestConfig) {
             $out->LeastRequestConfig = $this->LeastRequestConfig;
         }
-        if (isset($this->HashPolicies)) {
+        if (null !== $this->HashPolicies) {
             $out->HashPolicies = $this->HashPolicies;
         }
         return $out;

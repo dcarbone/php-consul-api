@@ -22,23 +22,20 @@ namespace DCarbone\PHPConsulAPI\PHPLib;
 
 trait NodeMetaField
 {
-    /** @var array<string,string> */
-    public array $NodeMeta;
+    /** @var null|array<string,string> */
+    public null|array $NodeMeta = null;
 
     /**
      * @return null|array<string,string>
      */
     public function getNodeMeta(): null|array
     {
-        if (!isset($this->NodeMeta)) {
-            return null;
-        }
         return $this->NodeMeta;
     }
 
     public function setNodeMetaKey(string $k, string $v): self
     {
-        if (!isset($this->NodeMeta)) {
+        if (null === $this->NodeMeta) {
             $this->NodeMeta = [];
         }
         $this->NodeMeta[$k] = $v;
@@ -50,7 +47,7 @@ trait NodeMetaField
      */
     public function setNodeMeta(null|\stdClass|array $NodeMeta): self
     {
-        unset($this->NodeMeta);
+        $this->NodeMeta = null;
         if (null === $NodeMeta) {
             return $this;
         }

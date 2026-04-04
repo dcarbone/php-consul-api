@@ -28,8 +28,8 @@ class ConnectProxyConfig extends AbstractType
     public string $TargetServiceID;
     public string $TargetServiceName;
     public string $ContentHash;
-    /** @var array<string,mixed> */
-    public array $Config;
+    /** @var null|array<string,mixed> */
+    public null|array $Config = null;
     /** @var array<\DCarbone\PHPConsulAPI\Agent\Upstream> */
     public array $Upstreams;
 
@@ -112,7 +112,7 @@ class ConnectProxyConfig extends AbstractType
     public function setConfig(null|\stdClass|array $Config): self
     {
         if (null === $Config) {
-            unset($this->Config);
+            $this->Config = null;
             return $this;
         }
         $this->Config = [];

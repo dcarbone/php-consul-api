@@ -27,7 +27,7 @@ final class ACLLoginParamsTest extends TestCase
     public function testSetMetaDirectly(): void
     {
         $p = new ACLLoginParams();
-        // Meta uses unset/isset semantics via MetaField trait.
+        // Meta uses null semantics via MetaField trait.
         // After setMeta, accessing $p->Meta directly returns data through __get.
         $p->setMeta(['key' => 'val']);
         self::assertSame('val', $p->Meta['key']);

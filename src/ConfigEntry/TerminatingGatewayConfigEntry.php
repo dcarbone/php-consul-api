@@ -143,7 +143,7 @@ class TerminatingGatewayConfigEntry extends AbstractType implements ConfigEntry
         if ([] !== $this->Services) {
             $out->Services = $this->Services;
         }
-        if (isset($this->Meta)) {
+        if (null !== $this->Meta) {
             $out->Meta = $this->Meta;
         }
         $out->CreateIndex = $this->CreateIndex;

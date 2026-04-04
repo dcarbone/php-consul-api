@@ -41,7 +41,7 @@ class AgentClient extends AbstractClient
      */
     public function Self(bool $refresh = false): MapResponse
     {
-        if (!$refresh && isset($this->_self)) {
+        if (!$refresh && null !== $this->_self) {
             return $this->_self;
         }
         $resp = $this->_requireOK($this->_doGet('v1/agent/self', null));

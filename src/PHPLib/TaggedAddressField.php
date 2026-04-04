@@ -22,23 +22,20 @@ namespace DCarbone\PHPConsulAPI\PHPLib;
 
 trait TaggedAddressField
 {
-    /** @var array<string,string> */
-    public array $TaggedAddresses;
+    /** @var null|array<string,string> */
+    public null|array $TaggedAddresses = null;
 
     /**
      * @return null|array<string,string>
      */
     public function getTaggedAddresses(): null|array
     {
-        if (!isset($this->TaggedAddresses)) {
-            return null;
-        }
         return $this->TaggedAddresses;
     }
 
     public function setTaggedAddress(string $k, string $v): self
     {
-        if (!isset($this->TaggedAddresses)) {
+        if (null === $this->TaggedAddresses) {
             $this->TaggedAddresses = [];
         }
         $this->TaggedAddresses[$k] = $v;
@@ -50,7 +47,7 @@ trait TaggedAddressField
      */
     public function setTaggedAddresses(null|\stdClass|array $TaggedAddresses): self
     {
-        unset($this->TaggedAddresses);
+        $this->TaggedAddresses = null;
         if (null === $TaggedAddresses) {
             return $this;
         }

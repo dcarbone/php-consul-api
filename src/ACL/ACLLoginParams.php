@@ -83,7 +83,7 @@ class ACLLoginParams extends AbstractType
         $out = $this->_startJsonSerialize();
         $out->AuthMethod = $this->AuthMethod;
         $out->BearerToken = $this->BearerToken;
-        if (isset($this->Meta)) {
+        if (null !== $this->Meta) {
             $out->Meta = $this->Meta;
         }
         return $out;

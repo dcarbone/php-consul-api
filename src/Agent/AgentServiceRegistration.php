@@ -36,8 +36,8 @@ class AgentServiceRegistration extends AbstractType
     public array $Tags;
     public int $Port;
     public string $Address;
-    /** @var array<\DCarbone\PHPConsulAPI\Catalog\ServiceAddress> */
-    public array $TaggedAddresses;
+    /** @var null|array<\DCarbone\PHPConsulAPI\Catalog\ServiceAddress> */
+    public null|array $TaggedAddresses = null;
     public bool $EnableTagOverride;
     public null|AgentWeights $Weights;
     public null|AgentServiceCheck $Check;
@@ -165,15 +165,12 @@ class AgentServiceRegistration extends AbstractType
      */
     public function getTaggedAddresses(): null|array
     {
-        if (!isset($this->TaggedAddresses)) {
-            return null;
-        }
         return $this->TaggedAddresses;
     }
 
     public function setTaggedAddress(string $Tag, ServiceAddress $Address): self
     {
-        if (!isset($this->TaggedAddresses)) {
+        if (null === $this->TaggedAddresses) {
             $this->TaggedAddresses = [];
         }
         $this->TaggedAddresses[$Tag] = $Address;
@@ -187,7 +184,7 @@ class AgentServiceRegistration extends AbstractType
     public function setTaggedAddresses(null|array $TaggedAddresses): self
     {
         if (null === $TaggedAddresses) {
-            unset($this->TaggedAddresses);
+            $this->TaggedAddresses = null;
             return $this;
         }
         $this->TaggedAddresses = [];
@@ -351,13 +348,13 @@ class AgentServiceRegistration extends AbstractType
         if ('' !== $this->Address) {
             $out->Address = $this->Address;
         }
-        if (isset($this->TaggedAddresses) && [] !== $this->TaggedAddresses) {
+        if (null !== $this->TaggedAddresses && [] !== $this->TaggedAddresses) {
             $out->TaggedAddresses = $this->TaggedAddresses;
         }
         if ($this->EnableTagOverride) {
             $out->EnableTagOverride = $this->EnableTagOverride;
         }
-        if (isset($this->Meta)) {
+        if (null !== $this->Meta) {
             $out->Meta = $this->Meta;
         }
         if (null !== $this->Weights) {
