@@ -20,6 +20,9 @@
    (e.g. `public function __construct(string $foo, string|MyEnum $bar)`).
   * Write tests for both cases.
 * **Never** leave imports unused in generated code.
+* **Always** used named parameters wherever possible.
+* **Never** bother with docblocks unless they are necessary to specify types that cannot be expressed in code
+   (e.g. `/** @param string[] $items */` for `array $items`).
 
 # When generting code for concrete implementations of AbstractType:
 * **Always** ensure that class fields have an associated getter and setter method.
