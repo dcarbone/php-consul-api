@@ -30,7 +30,10 @@ trait TaggedAddressField
      */
     public function getTaggedAddresses(): null|array
     {
-        return $this->TaggedAddresses ?? null;
+        if (!isset($this->TaggedAddresses)) {
+            return null;
+        }
+        return $this->TaggedAddresses;
     }
 
     public function setTaggedAddress(string $k, string $v): self

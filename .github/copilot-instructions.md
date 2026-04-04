@@ -12,3 +12,7 @@
 * **Always** limit yourself to POSIX shell syntax when executing shell scripts.
 * **Always** run phpstan with 512MB of memory when analyzing generated code 
    (e.g. `phpstan analyze -c phpstan.neon --memory-limit=512M src/`).
+* **Always** specify `: void` for methods that do not return a value (e.g. `public function setFoo(string $foo): void`).
+   * This includes unit test methods (e.g. `public function testFoo(): void`).
+* **Always** use `declare(strict_types=1);` at the top of all PHP files.
+   * Do not do this in PHPUnit test class files, as PHPUnit does not support strict types.

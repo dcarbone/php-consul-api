@@ -1,8 +1,8 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-TMPDIR=${DIR}/../tmp
+DIR="$(cd "$(dirname "$0")" && pwd)"
+TMPDIR="${DIR}/../tmp"
 
-if [ -e "${TMPDIR}"/consul.pid ]; then
-    kill -SIGINT "$(cat "${TMPDIR}"/consul.pid)"
+if [ -e "${TMPDIR}/consul.pid" ]; then
+    kill -INT "$(cat "${TMPDIR}/consul.pid")"
 fi

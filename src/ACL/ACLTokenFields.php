@@ -21,6 +21,7 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\Go\Time;
+use function DCarbone\PHPConsulAPI\PHPLib\parse_time;
 
 trait ACLTokenFields
 {
@@ -43,7 +44,7 @@ trait ACLTokenFields
     public string $AuthMethod;
     public Time\Duration $ExpirationTTL;
     public null|Time\Time $ExpirationTime = null;
-    public Time\Time $CreateTime;
+    public null|Time\Time $CreateTime;
     public string $Hash;
     public string $Namespace;
     public string $Partition;
@@ -220,12 +221,12 @@ trait ACLTokenFields
         return $this;
     }
 
-    public function getCreateTime(): Time\Time
+    public function getCreateTime(): null|Time\Time
     {
         return $this->CreateTime;
     }
 
-    public function setCreateTime(Time\Time $CreateTime): self
+    public function setCreateTime(null|Time\Time $CreateTime): self
     {
         $this->CreateTime = $CreateTime;
         return $this;
@@ -311,9 +312,9 @@ trait ACLTokenFields
         } elseif ('ExpirationTTL' === $k) {
             $n->setExpirationTTL($v);
         } elseif ('ExpirationTime' === $k) {
-            $n->ExpirationTime = (null === $v ? $v : Time\Time::createFromFormat(DATE_RFC3339, $v));
+            $n->ExpirationTime = (null === $v ? $v : parse_time($v));
         } elseif ('CreateTime' === $k) {
-            $n->CreateTime = Time\Time::createFromFormat(DATE_RFC3339, $v);
+            $n->CreateTime = parse_time($v);
         } else {
             return false;
         }
@@ -353,7 +354,7 @@ trait ACLTokenFields
         if (null !== $this->ExpirationTime) {
             $out->ExpirationTime = $this->ExpirationTime->format(DATE_RFC3339);
         }
-        if (!$this->CreateTime->isZero()) {
+        if (null !== $this->CreateTime && !$this->CreateTime->isZero()) {
             $out->CreateTime = $this->CreateTime->format(DATE_RFC3339);
         }
         $out->Hash = $this->Hash;

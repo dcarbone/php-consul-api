@@ -30,7 +30,10 @@ trait NodeMetaField
      */
     public function getNodeMeta(): null|array
     {
-        return $this->NodeMeta ?? null;
+        if (!isset($this->NodeMeta)) {
+            return null;
+        }
+        return $this->NodeMeta;
     }
 
     public function setNodeMetaKey(string $k, string $v): self

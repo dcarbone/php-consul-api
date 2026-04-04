@@ -78,7 +78,7 @@ class AgentServiceRegistration extends AbstractType
         $this->setTags(...$Tags);
         $this->Port = $Port;
         $this->Address = $Address;
-        $this->setTaggedAddresses($TaggedAddresses);
+        $this->setTaggedAddresses($TaggedAddresses ?: null);
         $this->EnableTagOverride = $EnableTagOverride;
         $this->setMeta($Meta);
         $this->Weights = $Weights;
@@ -165,7 +165,10 @@ class AgentServiceRegistration extends AbstractType
      */
     public function getTaggedAddresses(): null|array
     {
-        return $this->TaggedAddresses ?? null;
+        if (!isset($this->TaggedAddresses)) {
+            return null;
+        }
+        return $this->TaggedAddresses;
     }
 
     public function setTaggedAddress(string $Tag, ServiceAddress $Address): self
@@ -348,7 +351,7 @@ class AgentServiceRegistration extends AbstractType
         if ('' !== $this->Address) {
             $out->Address = $this->Address;
         }
-        if (isset($this->TaggedAddresses)) {
+        if (isset($this->TaggedAddresses) && [] !== $this->TaggedAddresses) {
             $out->TaggedAddresses = $this->TaggedAddresses;
         }
         if ($this->EnableTagOverride) {

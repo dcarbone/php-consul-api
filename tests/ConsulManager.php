@@ -33,6 +33,9 @@ final class ConsulManager
 
     public const PID_FILE = self::TMP_DIR . '/consul.pid';
 
+    public const CONFIG_FILE = __DIR__ . '/consul.hcl';
+    public const MANAGEMENT_TOKEN = '00000000-0000-0000-0000-000000000001';
+
     /**
      * Start up single instance of Consul Agent with specified flags
      *
@@ -59,6 +62,14 @@ final class ConsulManager
     }
 
     /**
+     * Start a single instance of a consul agent in "-dev" mode with ACL config
+     */
+    public static function startSingleDevACL(): void
+    {
+        self::startSingle('-dev -config-file=' . self::CONFIG_FILE);
+    }
+
+    /**
      * Stop running instance
      */
     public static function stopSingle(): void
@@ -71,13 +82,15 @@ final class ConsulManager
     }
 
     /**
+     * @param string $Token
      * @return \DCarbone\PHPConsulAPI\Config
      */
-    public static function testConfig(): Config
+    public static function testConfig(string $Token = ''): Config
     {
         return new Config(
             Address: '127.0.0.1:8500',
-            Scheme:  'http',
+            Scheme: 'http',
+            Token:  $Token,
         );
     }
 }

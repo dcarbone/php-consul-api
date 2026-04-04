@@ -33,17 +33,15 @@ final class KVClientLockTest extends AbstractUsageTests
 
         [$id, $_, $err] = $sessionClient->CreateNoChecks(
             new SessionEntry(
-                [
-                    'Name'      => $name,
-                    'TTL'       => '10s',
-                    'LockDelay' => new Time\Duration(0),
-                    'Behavior'  => Consul::SessionBehaviorDelete,
-                ]
+                Name: $name,
+                TTL: '10s',
+                LockDelay: new Time\Duration(0),
+                Behavior: Consul::SessionBehaviorDelete,
             )
         );
         self::assertNull($err, sprintf('Error creating session: %s', $err));
 
-        $kv         = new KVPair(['Key' => $key, 'Value' => 'whatever', 'Session' => $id]);
+        $kv         = new KVPair(Key: $key, Value: 'whatever', Session: $id);
         [$wm, $err] = $kvClient->Acquire($kv);
         self::assertNull($err, sprintf('Error acquiring lock: %s', $err));
         self::assertInstanceOf(WriteMeta::class, $wm);

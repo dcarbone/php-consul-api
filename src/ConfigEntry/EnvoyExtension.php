@@ -75,7 +75,10 @@ class EnvoyExtension extends AbstractType
      */
     public function getArguments(): null|array
     {
-        return $this->Arguments ?? null;
+        if (!isset($this->Arguments)) {
+            return null;
+        }
+        return $this->Arguments;
     }
 
     public function setArgument(string $k, mixed $v): self

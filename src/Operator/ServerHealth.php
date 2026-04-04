@@ -22,6 +22,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+use function DCarbone\PHPConsulAPI\PHPLib\parse_time;
 
 class ServerHealth extends AbstractType
 {
@@ -209,7 +210,7 @@ class ServerHealth extends AbstractType
             if ('LastContact' === $k) {
                 $n->setLastContact($v);
             } elseif ('StableSince' === $k) {
-                $n->StableSince = Time\Time::createFromFormat(DATE_RFC3339, $v);
+                $n->StableSince = parse_time($v);
             } else {
                 $n->{$k} = $v;
             }

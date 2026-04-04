@@ -184,7 +184,10 @@ class AgentServiceConnectProxyConfig extends AbstractType
      */
     public function getConfig(): null|array
     {
-        return $this->Config ?? null;
+        if (!isset($this->Config)) {
+            return null;
+        }
+        return $this->Config;
     }
 
     /**

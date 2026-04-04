@@ -30,7 +30,10 @@ trait ServiceMetaField
      */
     public function getServiceMeta(): null|array
     {
-        return $this->ServiceMeta ?? null;
+        if (!isset($this->ServiceMeta)) {
+            return null;
+        }
+        return $this->ServiceMeta;
     }
 
     public function setServiceMetaValue(string $k, string $v): self

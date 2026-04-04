@@ -245,8 +245,10 @@ class SessionEntry extends AbstractType
                 $n->LockDelay = Time::Duration($v);
             } elseif ('ServiceChecks' === $k) {
                 $n->ServiceChecks = [];
-                foreach ($v as $sc) {
-                    $n->ServiceChecks[] = ServiceCheck::jsonUnserialize($sc);
+                if (null !== $v) {
+                    foreach ($v as $sc) {
+                        $n->ServiceChecks[] = ServiceCheck::jsonUnserialize($sc);
+                    }
                 }
             } else {
                 $n->{$k} = $v;

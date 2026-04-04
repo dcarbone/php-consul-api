@@ -3,7 +3,7 @@
 namespace DCarbone\PHPConsulAPITests\Usage\ACL;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -19,46 +19,157 @@ namespace DCarbone\PHPConsulAPITests\Usage\ACL;
  */
 
 use DCarbone\PHPConsulAPI\ACL\ACLClient;
+use DCarbone\PHPConsulAPI\ACL\ACLPolicy;
+use DCarbone\PHPConsulAPI\ACL\ACLToken;
+use DCarbone\PHPConsulAPI\ACL\ACLTokenPolicyLink;
 use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPI\WriteMeta;
 use DCarbone\PHPConsulAPITests\ConsulManager;
 use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 
-
+/**
+ * @internal
+ */
 final class ACLClientTest extends AbstractUsageTests
 {
-    /** @var string */
-    protected string $bootstrappedACL;
+    protected static bool $singlePerClass = false;
 
-    /**
-     * @return string
-     */
-    public function testCanBootstrapACL()
+    public static function setUpBeforeClass(): void
     {
-        ConsulManager::startSingleDev();
+        ConsulManager::startSingleDevACL();
+    }
 
-        $client = new ACLClient(ConsulManager::testConfig());
+    private static function managementClient(): ACLClient
+    {
+        return new ACLClient(ConsulManager::testConfig(ConsulManager::MANAGEMENT_TOKEN));
+    }
 
-        [$aclID, $wm, $err] = $client->Bootstrap();
-        self::assertNull($err, 'ACL::bootstrap() returned error: ' . $err);
-        self::assertInstanceOf(WriteMeta::class, $wm);
-        self::assertIsString($aclID);
+    public function testTokenReadSelf(): void
+    {
+        $client = self::managementClient();
 
-        return $aclID;
+        [$token, $qm, $err] = $client->TokenReadSelf();
+        self::assertNull($err, 'TokenReadSelf() returned error: ' . $err);
+        self::assertInstanceOf(QueryMeta::class, $qm);
+        self::assertInstanceOf(ACLToken::class, $token);
+        self::assertNotEmpty($token->AccessorID);
+        self::assertNotEmpty($token->SecretID);
     }
 
     /**
-     * @depends testCanBootstrapACL
-     * @param string $aclID
+     * @return string The policy ID
      */
-    public function testCanGetBootstrappedACL(string $aclID): void
+    public function testPolicyCreate(): string
     {
-        $client = new ACLClient(ConsulManager::testConfig());
+        $client = self::managementClient();
 
-        [$acls, $qm, $err] = $client->Info($aclID);
-        self::assertNull($err, 'ACL::Info() return error: ' . $err);
+        $policy = new ACLPolicy(
+            Name: 'php-consul-api-test-policy',
+            Description: 'Test policy created by php-consul-api',
+            Rules: 'key_prefix "test/" { policy = "read" }',
+        );
+
+        [$created, $wm, $err] = $client->PolicyCreate($policy);
+        self::assertNull($err, 'PolicyCreate() returned error: ' . $err);
+        self::assertInstanceOf(WriteMeta::class, $wm);
+        self::assertInstanceOf(ACLPolicy::class, $created);
+        self::assertNotEmpty($created->ID);
+        self::assertSame('php-consul-api-test-policy', $created->Name);
+
+        return $created->ID;
+    }
+
+    /**
+     * @depends testPolicyCreate
+     * @return array{0: string, 1: string} [accessorID, policyID]
+     */
+    public function testTokenCreate(string $policyID): array
+    {
+        $client = self::managementClient();
+
+        $token = new ACLToken(
+            Description: 'php-consul-api-test-token',
+            Policies: [new ACLTokenPolicyLink(ID: $policyID)],
+        );
+
+        [$created, $wm, $err] = $client->TokenCreate($token);
+        self::assertNull($err, 'TokenCreate() returned error: ' . $err);
+        self::assertInstanceOf(WriteMeta::class, $wm);
+        self::assertInstanceOf(ACLToken::class, $created);
+        self::assertNotEmpty($created->AccessorID);
+        self::assertNotEmpty($created->SecretID);
+        self::assertSame('php-consul-api-test-token', $created->Description);
+
+        return [$created->AccessorID, $policyID];
+    }
+
+    /**
+     * @depends testTokenCreate
+     * @param array{0: string, 1: string} $ids
+     * @return array{0: string, 1: string} [accessorID, policyID]
+     */
+    public function testTokenRead(array $ids): array
+    {
+        [$accessorID] = $ids;
+
+        $client = self::managementClient();
+
+        [$token, $qm, $err] = $client->TokenRead($accessorID);
+        self::assertNull($err, 'TokenRead() returned error: ' . $err);
         self::assertInstanceOf(QueryMeta::class, $qm);
-        self::assertIsArray($acls);
-        var_dump($acls);
+        self::assertInstanceOf(ACLToken::class, $token);
+        self::assertSame($accessorID, $token->AccessorID);
+        self::assertSame('php-consul-api-test-token', $token->Description);
+
+        return $ids;
+    }
+
+    /**
+     * @depends testTokenRead
+     * @param array{0: string, 1: string} $ids
+     * @return array{0: string, 1: string} [accessorID, policyID]
+     */
+    public function testTokenList(array $ids): array
+    {
+        $client = self::managementClient();
+
+        [$entries, $qm, $err] = $client->TokenList();
+        self::assertNull($err, 'TokenList() returned error: ' . $err);
+        self::assertInstanceOf(QueryMeta::class, $qm);
+        self::assertIsArray($entries);
+        // At minimum: the management token + the anonymous token + our created token
+        self::assertGreaterThanOrEqual(2, count($entries));
+
+        return $ids;
+    }
+
+    /**
+     * @depends testTokenList
+     * @param array{0: string, 1: string} $ids
+     * @return string The policyID
+     */
+    public function testTokenDelete(array $ids): string
+    {
+        [$accessorID, $policyID] = $ids;
+
+        $client = self::managementClient();
+
+        [$wm, $err] = $client->TokenDelete($accessorID);
+        self::assertNull($err, 'TokenDelete() returned error: ' . $err);
+        self::assertInstanceOf(WriteMeta::class, $wm);
+
+        return $policyID;
+    }
+
+    /**
+     * @depends testTokenDelete
+     */
+    public function testPolicyDelete(string $policyID): void
+    {
+        $client = self::managementClient();
+
+        [$wm, $err] = $client->PolicyDelete($policyID);
+        self::assertNull($err, 'PolicyDelete() returned error: ' . $err);
+        self::assertInstanceOf(WriteMeta::class, $wm);
     }
 }

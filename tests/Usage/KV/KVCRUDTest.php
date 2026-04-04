@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPITests\Usage\KV;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\Error;
+use DCarbone\PHPConsulAPI\PHPLib\Error;
 use DCarbone\PHPConsulAPI\KV\KVClient;
 use DCarbone\PHPConsulAPI\KV\KVPair;
 use DCarbone\PHPConsulAPI\KV\KVPairs;
@@ -54,7 +54,7 @@ final class KVCRUDTest extends AbstractUsageTests
     {
         $client = new KVClient(ConsulManager::testConfig());
 
-        [$wm, $err] = $client->Put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
+        [$wm, $err] = $client->Put(new KVPair(Key: self::KVKey1, Value: self::KVValue1));
         self::assertNull($err, sprintf('Unable to set kvp: %s', (string)$err));
         self::assertInstanceOf(WriteMeta::class, $wm);
     }
@@ -65,7 +65,7 @@ final class KVCRUDTest extends AbstractUsageTests
     public function testCanGetKey(): void
     {
         $client = new KVClient(ConsulManager::testConfig());
-        $client->Put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
+        $client->Put(new KVPair(Key: self::KVKey1, Value: self::KVValue1));
 
         [$kv, $qm, $err] = $client->Get(self::KVKey1);
         self::assertNull($err, sprintf('KV::get returned error: %s', (string)$err));
@@ -81,7 +81,7 @@ final class KVCRUDTest extends AbstractUsageTests
     public function testCanDeleteKey(): void
     {
         $client = new KVClient(ConsulManager::testConfig());
-        $client->Put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
+        $client->Put(new KVPair(Key: self::KVKey1, Value: self::KVValue1));
 
         [$wm, $err] = $client->Delete(self::KVKey1);
         self::assertNull($err, sprintf('KV::delete returned error: %s', $err));
@@ -118,11 +118,11 @@ final class KVCRUDTest extends AbstractUsageTests
     {
         /** @var \DCarbone\PHPConsulAPI\KV\KVPair[] $list */
         /** @var \DCarbone\PHPConsulAPI\QueryMeta $qm */
-        /** @var \DCarbone\PHPConsulAPI\Error $err */
+        /** @var \DCarbone\PHPConsulAPI\PHPLib\Error $err */
         $client = new KVClient(ConsulManager::testConfig());
-        $client->Put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
-        $client->Put(new KVPair(['Key' => self::KVKey2, 'Value' => self::KVValue2]));
-        $client->Put(new KVPair(['Key' => self::KVKey3, 'Value' => self::KVValue3]));
+        $client->Put(new KVPair(Key: self::KVKey1, Value: self::KVValue1));
+        $client->Put(new KVPair(Key: self::KVKey2, Value: self::KVValue2));
+        $client->Put(new KVPair(Key: self::KVKey3, Value: self::KVValue3));
 
         /** @noinspection PhpUnhandledExceptionInspection */
         [$list, $qm, $err] = $client->List();
@@ -166,11 +166,11 @@ final class KVCRUDTest extends AbstractUsageTests
     {
         /** @var \DCarbone\PHPConsulAPI\KV\KVPair[] $list */
         /** @var \DCarbone\PHPConsulAPI\QueryMeta $qm */
-        /** @var \DCarbone\PHPConsulAPI\Error $err */
+        /** @var \DCarbone\PHPConsulAPI\PHPLib\Error $err */
         $client = new KVClient(ConsulManager::testConfig());
-        $client->Put(new KVPair(['Key' => self::KVPrefix . '/' . self::KVKey1, 'Value' => self::KVValue1]));
-        $client->Put(new KVPair(['Key' => self::KVPrefix . '/' . self::KVKey2, 'Value' => self::KVValue2]));
-        $client->Put(new KVPair(['Key' => self::KVPrefix . '/' . self::KVKey3, 'Value' => self::KVValue3]));
+        $client->Put(new KVPair(Key: self::KVPrefix . '/' . self::KVKey1, Value: self::KVValue1));
+        $client->Put(new KVPair(Key: self::KVPrefix . '/' . self::KVKey2, Value: self::KVValue2));
+        $client->Put(new KVPair(Key: self::KVPrefix . '/' . self::KVKey3, Value: self::KVValue3));
 
         [$list, $qm, $err] = $client->List(self::KVPrefix);
         self::assertNull($err, sprintf('KV::valueList returned error: %s', $err));
@@ -229,11 +229,11 @@ final class KVCRUDTest extends AbstractUsageTests
     {
         /** @var string[] $list */
         /** @var \DCarbone\PHPConsulAPI\QueryMeta $qm */
-        /** @var \DCarbone\PHPConsulAPI\Error $err */
+        /** @var \DCarbone\PHPConsulAPI\PHPLib\Error $err */
         $client = new KVClient(ConsulManager::testConfig());
-        $client->Put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVValue1]));
-        $client->Put(new KVPair(['Key' => self::KVKey2, 'Value' => self::KVValue2]));
-        $client->Put(new KVPair(['Key' => self::KVKey3, 'Value' => self::KVValue3]));
+        $client->Put(new KVPair(Key: self::KVKey1, Value: self::KVValue1));
+        $client->Put(new KVPair(Key: self::KVKey2, Value: self::KVValue2));
+        $client->Put(new KVPair(Key: self::KVKey3, Value: self::KVValue3));
 
         [$list, $qm, $err] = $client->Keys();
         self::assertNull($err, sprintf('KV::keys returned error: %s', $err));

@@ -30,4 +30,9 @@ trait WriteMetaField
     {
         return $this->WriteMeta;
     }
+
+    public function setWriteMeta(null|WriteMeta $WriteMeta): void
+    {
+        $this->WriteMeta = $WriteMeta;
+    }
 }

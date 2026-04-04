@@ -61,16 +61,16 @@ final class CatalogClientTest extends AbstractUsageTests
     {
         $client = new CatalogClient(ConsulManager::testConfig());
 
-        $registration = new CatalogRegistration([
-            'Node'    => 'dc1',
-            'Address' => self::ServiceAddress,
-            'Service' => new AgentService([
-                'ID'       => self::ServiceID1,
-                'Service'  => self::ServiceName,
-                'Port'     => self::ServicePort,
-                'Address'  => self::ServiceAddress,
-            ]),
-        ]);
+        $registration = new CatalogRegistration(
+            Node: 'dc1',
+            Address: self::ServiceAddress,
+            Service:new AgentService(
+                ID: self::ServiceID1,
+                Service: self::ServiceName,
+                Port:self::ServicePort,
+                Address: self::ServiceAddress,
+            ),
+        );
 
         [$wm, $err] = $client->Register($registration);
         self::assertNull($err, 'CatalogClient::register returned error: ' . $err);
@@ -99,16 +99,16 @@ final class CatalogClientTest extends AbstractUsageTests
     {
         $client = new CatalogClient(ConsulManager::testConfig());
 
-        [$wm, $err] = $client->Register(new CatalogRegistration([
-            'Node'    => 'dc1',
-            'Address' => self::ServiceAddress,
-            'Service' => new AgentService([
-                'ID'      => self::ServiceID2,
-                'Service' => self::ServiceName,
-                'Port'    => self::ServicePort,
-                'Address' => self::ServiceAddress,
-            ]),
-        ]));
+        [$wm, $err] = $client->Register(new CatalogRegistration(
+            Node: 'dc1',
+            Address: self::ServiceAddress,
+            Service: new AgentService(
+                ID: self::ServiceID2,
+                Service: self::ServiceName,
+                Port: self::ServicePort,
+                Address: self::ServiceAddress,
+            ),
+        ));
 
         self::assertNull($err, 'CatalogClient::register failed to register second service: ' . $err);
         self::assertInstanceOf(WriteMeta::class, $wm);
@@ -165,10 +165,10 @@ final class CatalogClientTest extends AbstractUsageTests
     {
         $client = new CatalogClient(ConsulManager::testConfig());
 
-        [$wm, $err] = $client->Deregister(new CatalogDeregistration([
-            'Node'      => 'dc1',
-            'ServiceID' => self::ServiceID1,
-        ]));
+        [$wm, $err] = $client->Deregister(new CatalogDeregistration(
+            Node: 'dc1',
+            ServiceID: self::ServiceID1,
+        ));
         self::assertNull($err, 'CatalogClient::deregister returned error: ' . $err);
         self::assertInstanceOf(WriteMeta::class, $wm);
 

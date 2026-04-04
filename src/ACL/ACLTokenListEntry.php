@@ -22,6 +22,7 @@ namespace DCarbone\PHPConsulAPI\ACL;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+use function DCarbone\PHPConsulAPI\PHPLib\parse_time;
 
 class ACLTokenListEntry extends AbstractType
 {
@@ -43,7 +44,7 @@ class ACLTokenListEntry extends AbstractType
     public bool $Local;
     public string $AuthMethod;
     public null|Time\Time $ExpirationTime = null;
-    public Time\Time $CreateTime;
+    public null|Time\Time $CreateTime;
     public string $Hash;
     public bool $Legacy;
     public string $Namespace;
@@ -257,12 +258,12 @@ class ACLTokenListEntry extends AbstractType
         return $this;
     }
 
-    public function getCreateTime(): Time\Time
+    public function getCreateTime(): null|Time\Time
     {
         return $this->CreateTime;
     }
 
-    public function setCreateTime(Time\Time $CreateTime): self
+    public function setCreateTime(null|Time\Time $CreateTime): self
     {
         $this->CreateTime = $CreateTime;
         return $this;
@@ -348,9 +349,9 @@ class ACLTokenListEntry extends AbstractType
                     $n->TemplatedPolicies[] = ACLTemplatedPolicy::jsonUnserialize($vv);
                 }
             } elseif ('ExpirationTime' === $k) {
-                $n->ExpirationTime = (null === $v ? null : Time\Time::createFromFormat(DATE_RFC3339, $v));
+                $n->ExpirationTime = (null === $v ? null : parse_time($v));
             } elseif ('CreateTime' === $k) {
-                $n->CreateTime = Time\Time::createFromFormat(DATE_RFC3339, $v);
+                $n->CreateTime = parse_time($v);
             } else {
                 $n->{$k} = $v;
             }
@@ -388,7 +389,9 @@ class ACLTokenListEntry extends AbstractType
         if (null !== $this->ExpirationTime) {
             $out->ExpirationTime = $this->ExpirationTime->format(DATE_RFC3339);
         }
-        $out->CreateTime = $this->CreateTime->format(DATE_RFC3339);
+        if (null !== $this->CreateTime) {
+            $out->CreateTime = $this->CreateTime->format(DATE_RFC3339);
+        }
         $out->Hash = $this->Hash;
         if ('' !== $this->Namespace) {
             $out->Namespace = $this->Namespace;

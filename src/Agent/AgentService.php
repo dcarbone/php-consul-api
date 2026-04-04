@@ -87,7 +87,7 @@ class AgentService extends AbstractType
         $this->setTags(...$Tags);
         $this->Address = $Address;
         $this->SocketPath = $SocketPath;
-        $this->setTaggedAddresses($TaggedAddresses);
+        $this->setTaggedAddresses($TaggedAddresses ?: null);
         $this->Weights = $Weights ?? new AgentWeights();
         $this->EnableTagOverride = $EnableTagOverride;
         $this->CreateIndex = $CreateIndex;
@@ -185,14 +185,11 @@ class AgentService extends AbstractType
      */
     public function setTaggedAddresses(null|\stdClass|array $TaggedAddresses): self
     {
-        if (null === $TaggedAddresses) {
+        if (null === $TaggedAddresses || [] === $TaggedAddresses) {
             $this->TaggedAddresses = null;
             return $this;
         }
-        $this->TaggedAddresses = [];
-        foreach ($TaggedAddresses as $k => $v) {
-            $this->TaggedAddresses[] = $v;
-        }
+        $this->TaggedAddresses = (array)$TaggedAddresses;
         return $this;
     }
 

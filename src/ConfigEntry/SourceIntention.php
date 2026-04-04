@@ -22,6 +22,7 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+use function DCarbone\PHPConsulAPI\PHPLib\parse_time;
 
 class SourceIntention extends AbstractType
 {
@@ -253,9 +254,9 @@ class SourceIntention extends AbstractType
             } elseif ('legacy_meta' === $k) {
                 $n->LegacyMeta = $v;
             } elseif ('legacy_create_time' === $k) {
-                $n->LegacyCreateTime = null === $v ? null : Time\Time::createFromFormat(DATE_RFC3339, $v);
+                $n->LegacyCreateTime = null === $v ? null : parse_time($v);
             } elseif ('legacy_update_time' === $k) {
-                $n->LegacyUpdateTime = null === $v ? null : Time\Time::createFromFormat(DATE_RFC3339, $v);
+                $n->LegacyUpdateTime = null === $v ? null : parse_time($v);
             } else {
                 $n->{$k} = $v;
             }

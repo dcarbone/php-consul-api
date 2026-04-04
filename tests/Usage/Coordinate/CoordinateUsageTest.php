@@ -8,11 +8,6 @@ use DCarbone\PHPConsulAPI\Coordinate\DimensionalityConflictException;
 use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 use PHPUnit\Framework\AssertionFailedError;
 
-use function DCarbone\PHPConsulAPI\Coordinate\add;
-use function DCarbone\PHPConsulAPI\Coordinate\diff;
-use function DCarbone\PHPConsulAPI\Coordinate\magnitude;
-use function DCarbone\PHPConsulAPI\Coordinate\unitVectorAt;
-
 /**
  * These tests were largely pulled from https://github.com/hashicorp/serf/blob/master/coordinate/coordinate_test.go
  *
@@ -28,23 +23,23 @@ final class CoordinateUsageTest extends AbstractUsageTests
     {
         $vec1 = [1.0, -3.0, 3.0];
         $vec2 = [-4.0, 5.0, 6.0];
-        $this->verifyEqualVectors(add($vec1, $vec2), [-3.0, 2.0, 9.0]);
+        $this->verifyEqualVectors(Coordinate::_add($vec1, $vec2), [-3.0, 2.0, 9.0]);
     }
 
     public function testDiff(): void
     {
         $vec1 = [1.0, -3.0, 3.0];
         $vec2 = [-4.0, 5.0, 6.0];
-        $this->verifyEqualVectors(diff($vec1, $vec2), [5.0, -8.0, -3.0]);
+        $this->verifyEqualVectors(Coordinate::_diff($vec1, $vec2), [5.0, -8.0, -3.0]);
     }
 
     public function testMagnitude(): void
     {
         $zero = [0.0, 0.0, 0.0];
-        $this->verifyEqualFloats(magnitude($zero), 0.0);
+        $this->verifyEqualFloats(Coordinate::_magnitude($zero), 0.0);
 
         $vec = [1.0, -2.0, 3.0];
-        $this->verifyEqualFloats(magnitude($vec), 3.7416573867739413);
+        $this->verifyEqualFloats(Coordinate::_magnitude($vec), 3.7416573867739413);
     }
 
     public function testUnitVectorAt(): void
@@ -52,13 +47,13 @@ final class CoordinateUsageTest extends AbstractUsageTests
         $vec1 = [1.0, 2.0, 3.0];
         $vec2 = [0.5, 0.6, 0.7];
 
-        [$u, $mag] = unitVectorAt($vec1, $vec2);
+        [$u, $mag] = Coordinate::_unitVectorAt($vec1, $vec2);
         $this->verifyEqualVectors($u, [0.18257418583505536, 0.511207720338155, 0.8398412548412546]);
-        $this->verifyEqualFloats(magnitude($u), 1.0);
-        $this->verifyEqualFloats($mag, magnitude(diff($vec1, $vec2)));
+        $this->verifyEqualFloats(Coordinate::_magnitude($u), 1.0);
+        $this->verifyEqualFloats($mag, Coordinate::_magnitude(Coordinate::_diff($vec1, $vec2)));
 
-        [$u, $mag] = unitVectorAt($vec1, $vec1);
-        $this->verifyEqualFloats(magnitude($u), 1.0);
+        [$u, $mag] = Coordinate::_unitVectorAt($vec1, $vec1);
+        $this->verifyEqualFloats(Coordinate::_magnitude($u), 1.0);
         $this->verifyEqualFloats($mag, 0.0);
     }
 
@@ -78,9 +73,7 @@ final class CoordinateUsageTest extends AbstractUsageTests
     public function testCanConstructCoordinateWithArrayOfValues(): void
     {
         $coord = new Coordinate(
-            [
-                'Vec' => [0.1, 0.2],
-            ]
+            Vec: [0.1, 0.2],
         );
         self::assertInstanceOf(Coordinate::class, $coord);
         self::assertIsArray($coord->Vec);

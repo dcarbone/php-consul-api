@@ -212,7 +212,10 @@ class AgentServiceCheck extends AbstractType
 
     public function getHeader(): null|Values
     {
-        return $this->Header ?? null;
+        if (!isset($this->Header)) {
+            return null;
+        }
+        return $this->Header;
     }
 
     /**

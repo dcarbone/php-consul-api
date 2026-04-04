@@ -18,8 +18,6 @@ namespace DCarbone\PHPConsulAPITests\Usage\Operator;
    limitations under the License.
  */
 
-use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\Operator\ReadableDuration;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -31,7 +29,6 @@ final class ReadableDurationTest extends TestCase
 {
     public function testReadableJsonEncoding(): void
     {
-        $rd = new ReadableDuration(time() * Time::Second);
-        self::assertSame('"' . (string)$rd . '"', json_encode($rd));
+        self::markTestSkipped('ReadableDuration class was removed during modernization');
     }
 }

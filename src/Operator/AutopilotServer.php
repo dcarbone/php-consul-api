@@ -23,6 +23,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 use DCarbone\PHPConsulAPI\PHPLib\MetaField;
+use function DCarbone\PHPConsulAPI\PHPLib\parse_time;
 
 class AutopilotServer extends AbstractType
 {
@@ -140,7 +141,10 @@ class AutopilotServer extends AbstractType
 
     public function getLastContact(): null|Time\Duration
     {
-        return $this->LastContact ?? null;
+        if (!isset($this->LastContact)) {
+            return null;
+        }
+        return $this->LastContact;
     }
 
     public function setLastContact(null|string|int|float|\DateInterval|Time\Duration $LastContact): self
@@ -259,7 +263,7 @@ class AutopilotServer extends AbstractType
             if ('lastContact' === $k) {
                 $n->setLastContact($v);
             } elseif ('StableSince' === $k) {
-                $n->StableSince = Time\Time::createFromFormat(DATE_RFC3339, $v);
+                $n->StableSince = parse_time($v);
             } elseif ('Meta' === $k) {
                 $n->setMeta($v);
             } elseif ('Status' === $k) {

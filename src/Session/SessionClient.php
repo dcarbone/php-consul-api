@@ -128,7 +128,7 @@ class SessionClient extends AbstractClient
             return $ret;
         }
 
-        $ret->Value = $dec->Decoded['ID'] ?? '';
+        $ret->Value = $dec->Decoded->ID ?? '';
         return $ret;
     }
 }

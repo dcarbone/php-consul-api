@@ -44,9 +44,4 @@ class WriteResponse extends AbstractResponse implements WriteResponseInterface
         }
         throw $this->_newOutOfRangeException($offset);
     }
-
-    public function setWriteMeta(?WriteMeta $WriteMeta): void
-    {
-        $this->WriteMeta = $WriteMeta;
-    }
 }

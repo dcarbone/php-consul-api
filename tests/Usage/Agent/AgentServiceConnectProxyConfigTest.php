@@ -24,10 +24,10 @@ use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 
 class AgentServiceConnectProxyConfigTest extends AbstractUsageTests
 {
-    public function test_construct_givenConfig_willUnmarshalConfigValuesSuccessfully()
+    public function test_construct_givenConfig_willUnmarshalConfigValuesSuccessfully(): void
     {
         $config = new AgentServiceConnectProxyConfig(
-            Config: (object)[
+            Config: [
                 'envoy_prometheus_bind_addr' => '0.0.0.0:12345',
                 'handshake_timeout_ms' => 10000,
                 'local_connect_timeout_ms' => 1000,
@@ -36,7 +36,7 @@ class AgentServiceConnectProxyConfigTest extends AbstractUsageTests
             ],
         );
 
-        $this->assertEquals((object)[
+        $this->assertEquals([
             'envoy_prometheus_bind_addr' => '0.0.0.0:12345',
             'handshake_timeout_ms' => 10000,
             'local_connect_timeout_ms' => 1000,

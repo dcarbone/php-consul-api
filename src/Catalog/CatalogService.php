@@ -195,7 +195,10 @@ class CatalogService extends AbstractType
      */
     public function getServiceTaggedAddresses(): null|array
     {
-        return $this->ServiceTaggedAddresses ?? null;
+        if (!isset($this->ServiceTaggedAddresses)) {
+            return null;
+        }
+        return $this->ServiceTaggedAddresses;
     }
 
     public function setServiceTaggedAddress(string $Tag, ServiceAddress $ServiceAddress): self
@@ -359,7 +362,7 @@ class CatalogService extends AbstractType
                 foreach ($v as $kk => $vv) {
                     $n->setServiceTaggedAddress($kk, ServiceAddress::jsonUnserialize($vv));
                 }
-            } elseif ('Weights' === $k) {
+            } elseif ('Weights' === $k || 'ServiceWeights' === $k) {
                 $n->ServiceWeights = Weights::jsonUnserialize($v);
             } elseif ('ServiceProxy' === $k) {
                 if (null !== $v) {

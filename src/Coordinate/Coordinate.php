@@ -176,7 +176,7 @@ class Coordinate extends AbstractType
      * @param array<float> $vec2
      * @return array<float>
      */
-    private static function _add(array $vec1, array $vec2): array
+    public static function _add(array $vec1, array $vec2): array
     {
         $ret = [];
         foreach ($vec1 as $k => $v) {
@@ -190,7 +190,7 @@ class Coordinate extends AbstractType
      * @param array<float> $vec2
      * @return array<float>
      */
-    private static function _diff(array $vec1, array $vec2): array
+    public static function _diff(array $vec1, array $vec2): array
     {
         $ret = [];
         foreach ($vec1 as $k => $v) {
@@ -216,7 +216,7 @@ class Coordinate extends AbstractType
      * @param array<float> $vec
      * @return float
      */
-    private static function _magnitude(array $vec): float
+    public static function _magnitude(array $vec): float
     {
         $sum = 0.0;
         foreach ($vec as $k => $v) {
@@ -229,7 +229,7 @@ class Coordinate extends AbstractType
      * @param array<float> $vec1
      * @param array<float> $vec2
      */
-    private static function _unitVectorAt(array $vec1, array $vec2): CoordinateUnitVectorAt
+    public static function _unitVectorAt(array $vec1, array $vec2): CoordinateUnitVectorAt
     {
         $ret = self::_diff($vec1, $vec2);
 

@@ -23,7 +23,7 @@ namespace DCarbone\PHPConsulAPI\PHPLib;
 /**
  * @extends AbstractResponse<mixed>
  */
-abstract class AbstractValuedWriteResponse extends AbstractResponse implements ValuedResponseInterface
+abstract class AbstractValuedWriteResponse extends AbstractResponse implements ValuedResponseInterface, WriteResponseInterface
 {
     use WriteMetaField;
 

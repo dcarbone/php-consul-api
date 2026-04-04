@@ -54,7 +54,7 @@ final class AgentClientTest extends AbstractUsageTests
 
         [$self, $err] = $client->Self();
         self::assertNull($err);
-        self::assertIsObject(
+        self::assertIsArray(
             $self,
             sprintf(
                 'Expected AgentClient::self to return array, saw "%s"',
@@ -153,11 +153,11 @@ final class AgentClientTest extends AbstractUsageTests
 
         try {
             self::assertNull($err, sprintf('AgentClient::services return error: %s', $err));
-            self::assertIsObject($svcs);
-            self::assertContainsOnlyInstancesOf(AgentService::class, (array)$svcs);
+            self::assertIsArray($svcs);
+            self::assertContainsOnlyInstancesOf(AgentService::class, $svcs);
 
             // NOTE: will always contain "consul" service
-            self::assertCount(2, (array)$svcs);
+            self::assertCount(2, $svcs);
         } catch (AssertionFailedError $e) {
             echo "\nservices list:\n";
             var_dump($svcs);
@@ -181,9 +181,9 @@ final class AgentClientTest extends AbstractUsageTests
 
         try {
             self::assertNull($err, sprintf('AgentClient::services returned error: %s', $err));
-            self::assertIsObject($svcs);
-            self::assertContainsOnlyInstancesOf(AgentService::class, (array)$svcs);
-            self::assertCount(1, (array)$svcs);
+            self::assertIsArray($svcs);
+            self::assertContainsOnlyInstancesOf(AgentService::class, $svcs);
+            self::assertCount(1, $svcs);
         } catch (AssertionFailedError $e) {
             echo "\nservices list:\n";
             var_dump($svcs);
@@ -219,9 +219,9 @@ final class AgentClientTest extends AbstractUsageTests
 
         try {
             self::assertNull($err, sprintf('AgentClient::services returned error: %s', $err));
-            self::assertIsObject($svcs);
-            self::assertContainsOnlyInstancesOf(AgentService::class, (array)$svcs);
-            self::assertCount(2, (array)$svcs);
+            self::assertIsArray($svcs);
+            self::assertContainsOnlyInstancesOf(AgentService::class, $svcs);
+            self::assertCount(2, $svcs);
         } catch (AssertionFailedError $e) {
             echo "\nservices list:\n";
             var_dump($svcs);

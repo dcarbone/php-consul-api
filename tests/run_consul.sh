@@ -1,10 +1,8 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-TMPDIR=${DIR}/../tmp
+DIR="$(cd "$(dirname "$0")" && pwd)"
+TMPDIR="${DIR}/../tmp"
 
-consul_args=("$@")
+echo "Starting Single consul instance with flags \"$*\""
 
-echo Starting Single consul instance with flags \""${consul_args[*]}"\"
-
-/usr/bin/env consul agent "${consul_args[@]}" >> "${TMPDIR}"/consul.log 2>&1 & echo $! > "${TMPDIR}"/consul.pid
+/usr/bin/env consul agent "$@" >> "${TMPDIR}/consul.log" 2>&1 & echo $! > "${TMPDIR}/consul.pid"

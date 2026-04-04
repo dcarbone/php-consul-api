@@ -66,7 +66,7 @@ class KVClient extends AbstractClient
 
     public function Put(KVPair $p, null|WriteOptions $opts = null): WriteResponse
     {
-        $r = $this->_newPutRequest(sprintf('v1/kv/%s', $p->Key), base64_encode($p->Value), $opts);
+        $r = $this->_newPutRequest(sprintf('v1/kv/%s', $p->Key), $p->Value, $opts);
         if (0 !== $p->Flags) {
             $r->params->set('flags', (string)$p->Flags);
         }

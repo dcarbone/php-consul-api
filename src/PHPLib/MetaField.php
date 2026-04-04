@@ -30,7 +30,10 @@ trait MetaField
      */
     public function getMeta(): null|array
     {
-        return $this->Meta ?? null;
+        if (!isset($this->Meta)) {
+            return null;
+        }
+        return $this->Meta;
     }
 
     public function setMetaKey(string $k, string $v): self

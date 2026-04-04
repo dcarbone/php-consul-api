@@ -2,6 +2,6 @@ acl {
   enabled = true
   default_policy = "allow"
   tokens {
-    default = "123456"
+    initial_management = "00000000-0000-0000-0000-000000000001"
   }
 }

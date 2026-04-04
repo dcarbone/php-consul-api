@@ -31,11 +31,11 @@ final class SessionClientUsageTest extends AbstractUsageTests
         /** @var \DCarbone\PHPConsulAPI\Error $err */
         $client = new SessionClient(ConsulManager::testConfig());
 
-        [$id, $wm, $err] = $client->CreateNoChecks(new SessionEntry([
-            'Name'     => $name,
-            'Behavior' => Consul::SessionBehaviorDelete,
-            'TTL'      => $ttl,
-        ]));
+        [$id, $wm, $err] = $client->CreateNoChecks(new SessionEntry(
+            Name: $name,
+            Behavior: Consul::SessionBehaviorDelete,
+            TTL: $ttl,
+        ));
         self::assertNull($err, sprintf('Error creating session: %s', $err));
         self::assertInstanceOf(WriteMeta::class, $wm);
         self::assertIsString($id, 'Expected ID to be string');

@@ -28,7 +28,7 @@ final class KVClientCASTest extends AbstractUsageTests
         /** @var \DCarbone\PHPConsulAPI\Error $err */
         $client = new KVClient(ConsulManager::testConfig());
 
-        [$_, $err] = $client->Put(new KVPair(['Key' => self::KVKey1, 'Value' => self::KVOriginalValue]));
+        [$_, $err] = $client->Put(new KVPair(Key: self::KVKey1, Value: self::KVOriginalValue));
         self::assertNull($err, sprintf('Unable to put KV: %s', $err));
 
         [$kv, $_, $err] = $client->Get(self::KVKey1);

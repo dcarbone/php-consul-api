@@ -22,6 +22,7 @@ namespace DCarbone\PHPConsulAPI\ACL;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+use function DCarbone\PHPConsulAPI\PHPLib\parse_time;
 
 class ACLReplicationStatus extends AbstractType
 {
@@ -147,9 +148,9 @@ class ACLReplicationStatus extends AbstractType
         $n = new self();
         foreach ((array)$decoded as $k => $v) {
             if ('LastSuccess' === $k) {
-                $n->LastSuccess = Time\Time::createFromFormat(DATE_RFC3339, $v);
+                $n->LastSuccess = parse_time($v);
             } elseif ('LastError' === $k) {
-                $n->LastError = Time\Time::createFromFormat(DATE_RFC3339, $v);
+                $n->LastError = parse_time($v);
             } else {
                 $n->{$k} = $v;
             }
