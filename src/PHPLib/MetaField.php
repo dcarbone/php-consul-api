@@ -54,7 +54,7 @@ trait MetaField
         if (null === $Meta) {
             return $this;
         }
-        foreach ($Meta as $k => $v) {
+        foreach ((array)$Meta as $k => $v) {
             $this->setMetaKey($k, $v);
         }
         return $this;

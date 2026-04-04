@@ -16,3 +16,6 @@
    * This includes unit test methods (e.g. `public function testFoo(): void`).
 * **Always** use `declare(strict_types=1);` at the top of all PHP files.
    * Do not do this in PHPUnit test class files, as PHPUnit does not support strict types.
+* **Always** ensure that constructor parameters for enum fields also accept the enum value type 
+   (e.g. `public function __construct(string $foo, string|MyEnum $bar)`).
+  * Write tests for both cases.
