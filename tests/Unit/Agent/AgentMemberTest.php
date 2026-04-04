@@ -16,7 +16,7 @@ final class AgentMemberTest extends TestCase
         self::assertSame('', $m->getName());
         self::assertSame('', $m->getAddr());
         self::assertSame(0, $m->getPort());
-        self::assertSame([], $m->getTags());
+        self::assertSame([], $m->Tags);
         self::assertSame(0, $m->getStatus());
         self::assertSame(0, $m->getProtocolMin());
         self::assertSame(0, $m->getProtocolMax());
@@ -32,7 +32,7 @@ final class AgentMemberTest extends TestCase
         self::assertSame('node1', $m->getName());
         self::assertSame('127.0.0.1', $m->getAddr());
         self::assertSame(8301, $m->getPort());
-        self::assertSame(['role' => 'consul'], $m->getTags());
+        self::assertSame(['role' => 'consul'], $m->Tags);
         self::assertSame(1, $m->getStatus());
     }
 

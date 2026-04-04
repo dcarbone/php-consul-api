@@ -19,3 +19,10 @@
 * **Always** ensure that constructor parameters for enum fields also accept the enum value type 
    (e.g. `public function __construct(string $foo, string|MyEnum $bar)`).
   * Write tests for both cases.
+
+# When generting code for concrete implementations of AbstractType:
+* **Always** ensure that class fields have an associated getter and setter method.
+* **Always** ensure the constructor has parameters for all class fields, and that the constructor parameters are
+   assigned to the class fields.
+* **Always** write unit tests that use both the constructor and the setter methods to set class fields,
+   and that use the getter methods and fields directly to verify that the fields were set correctly.
