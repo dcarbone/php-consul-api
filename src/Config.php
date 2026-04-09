@@ -314,7 +314,7 @@ class Config
             $colon = strpos($httpAuth, ':');
             if (false === $colon) {
                 $username = $httpAuth;
-                $password = null;
+                $password = '';
             } else {
                 $username = substr($httpAuth, 0, $colon);
                 $password = substr($httpAuth, $colon + 1);

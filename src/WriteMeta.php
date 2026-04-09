@@ -35,4 +35,10 @@ class WriteMeta
     {
         return $this->RequestTime;
     }
+
+    public function setRequestTime(null|string|int|float|\DateInterval|Time\Duration $RequestTime): self
+    {
+        $this->RequestTime = Time::Duration($RequestTime);
+        return $this;
+    }
 }

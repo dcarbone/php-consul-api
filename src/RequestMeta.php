@@ -38,9 +38,21 @@ class RequestMeta
         return $this->method;
     }
 
+    public function setMethod(string $method): self
+    {
+        $this->method = $method;
+        return $this;
+    }
+
     public function getUri(): UriInterface
     {
         return $this->uri;
+    }
+
+    public function setUri(UriInterface $uri): self
+    {
+        $this->uri = $uri;
+        return $this;
     }
 
     public function __toString(): string
