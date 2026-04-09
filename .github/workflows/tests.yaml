@@ -154,4 +154,4 @@ jobs:
       - name: 'Execute tests'
         # language=bash
         run: |
-          ./vendor/bin/phpunit -c phpunit.xml
+          ./vendor/bin/phpunit -c phpunit.xml --display-deprecations
