@@ -181,7 +181,7 @@ final class KVPairsTest extends TestCase
         $obj2->Flags = 0;
         $obj2->Session = '';
 
-        $pairs = KVPairs::jsonUnserialize([$obj1, $obj2]);
+        $pairs = KVPairs::jsonUnserialize($obj1, $obj2);
         self::assertCount(2, $pairs);
         self::assertSame('k1', $pairs[0]->getKey());
         self::assertSame('v1', $pairs[0]->getValue());

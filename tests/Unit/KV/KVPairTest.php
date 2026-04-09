@@ -15,32 +15,56 @@ final class KVPairTest extends TestCase
     {
         $kvp = new KVPair();
         self::assertSame('', $kvp->getKey());
+        self::assertSame('', $kvp->Key);
         self::assertSame(0, $kvp->getCreateIndex());
+        self::assertSame(0, $kvp->CreateIndex);
         self::assertSame(0, $kvp->getModifyIndex());
+        self::assertSame(0, $kvp->ModifyIndex);
         self::assertSame(0, $kvp->getLockIndex());
+        self::assertSame(0, $kvp->LockIndex);
         self::assertSame(0, $kvp->getFlags());
+        self::assertSame(0, $kvp->Flags);
         self::assertSame('', $kvp->getValue());
+        self::assertSame('', $kvp->Value);
         self::assertSame('', $kvp->getSession());
+        self::assertSame('', $kvp->Session);
         self::assertSame('', $kvp->getNamespace());
+        self::assertSame('', $kvp->Namespace);
         self::assertSame('', $kvp->getPartition());
+        self::assertSame('', $kvp->Partition);
     }
 
     public function testConstructorWithNamedParams(): void
     {
         $kvp = new KVPair(
             Key: 'test/key',
-            Value: 'hello',
+            CreateIndex: 10,
+            ModifyIndex: 20,
+            LockIndex: 3,
             Flags: 42,
+            Value: 'hello',
             Session: 'sess-1',
             Namespace: 'ns',
             Partition: 'part',
         );
         self::assertSame('test/key', $kvp->getKey());
-        self::assertSame('hello', $kvp->getValue());
+        self::assertSame('test/key', $kvp->Key);
+        self::assertSame(10, $kvp->getCreateIndex());
+        self::assertSame(10, $kvp->CreateIndex);
+        self::assertSame(20, $kvp->getModifyIndex());
+        self::assertSame(20, $kvp->ModifyIndex);
+        self::assertSame(3, $kvp->getLockIndex());
+        self::assertSame(3, $kvp->LockIndex);
         self::assertSame(42, $kvp->getFlags());
+        self::assertSame(42, $kvp->Flags);
+        self::assertSame('hello', $kvp->getValue());
+        self::assertSame('hello', $kvp->Value);
         self::assertSame('sess-1', $kvp->getSession());
+        self::assertSame('sess-1', $kvp->Session);
         self::assertSame('ns', $kvp->getNamespace());
+        self::assertSame('ns', $kvp->Namespace);
         self::assertSame('part', $kvp->getPartition());
+        self::assertSame('part', $kvp->Partition);
     }
 
     public function testFluentSetters(): void
@@ -59,14 +83,23 @@ final class KVPairTest extends TestCase
 
         self::assertSame($kvp, $result);
         self::assertSame('k', $kvp->getKey());
+        self::assertSame('k', $kvp->Key);
         self::assertSame(1, $kvp->getCreateIndex());
+        self::assertSame(1, $kvp->CreateIndex);
         self::assertSame(2, $kvp->getModifyIndex());
+        self::assertSame(2, $kvp->ModifyIndex);
         self::assertSame(3, $kvp->getLockIndex());
+        self::assertSame(3, $kvp->LockIndex);
         self::assertSame(4, $kvp->getFlags());
+        self::assertSame(4, $kvp->Flags);
         self::assertSame('v', $kvp->getValue());
+        self::assertSame('v', $kvp->Value);
         self::assertSame('s', $kvp->getSession());
+        self::assertSame('s', $kvp->Session);
         self::assertSame('ns', $kvp->getNamespace());
+        self::assertSame('ns', $kvp->Namespace);
         self::assertSame('pt', $kvp->getPartition());
+        self::assertSame('pt', $kvp->Partition);
     }
 
     public function testJsonSerialize(): void

@@ -43,6 +43,6 @@ class KVPairsResponse extends AbstractValuedQueryResponse implements Unmarshalle
             $this->KVPairs = new KVPairs();
             return;
         }
-        $this->KVPairs = KVPairs::jsonUnserialize($decoded);
+        $this->KVPairs = KVPairs::jsonUnserialize(...$decoded);
     }
 }

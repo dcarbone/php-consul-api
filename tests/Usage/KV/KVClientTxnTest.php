@@ -45,7 +45,8 @@ final class KVClientTxnTest extends AbstractUsageTests
         $key   = 'test/txn/set';
         $value = 'txn-value';
 
-        $txnResp = $client->Txn([
+        $txnResp = $client->Txn(
+            null,
             new TxnOp(
                 KV: new KVTxnOp(
                     Verb: KVOp::KVSet,
@@ -53,7 +54,7 @@ final class KVClientTxnTest extends AbstractUsageTests
                     Value: $value,
                 ),
             ),
-        ]);
+        );
 
         self::assertNull($txnResp->Err, sprintf('KV::Txn set returned error: %s', (string)$txnResp->Err));
         self::assertTrue($txnResp->OK, 'Txn should be OK');
@@ -88,14 +89,15 @@ final class KVClientTxnTest extends AbstractUsageTests
         self::assertNull($err);
 
         // Get via Txn
-        $txnResp = $client->Txn([
+        $txnResp = $client->Txn(
+            null,
             new TxnOp(
                 KV: new KVTxnOp(
                     Verb: KVOp::KVGet,
                     Key: $key,
                 ),
             ),
-        ]);
+        );
 
         self::assertNull($txnResp->Err, sprintf('KV::Txn get returned error: %s', (string)$txnResp->Err));
         self::assertTrue($txnResp->OK);
@@ -116,7 +118,8 @@ final class KVClientTxnTest extends AbstractUsageTests
     {
         $client = new KVClient(ConsulManager::testConfig());
 
-        $txnResp = $client->Txn([
+        $txnResp = $client->Txn(
+            null,
             new TxnOp(
                 KV: new KVTxnOp(
                     Verb: KVOp::KVSet,
@@ -138,7 +141,7 @@ final class KVClientTxnTest extends AbstractUsageTests
                     Value: 'val-c',
                 ),
             ),
-        ]);
+        );
 
         self::assertNull($txnResp->Err, sprintf('KV::Txn returned error: %s', (string)$txnResp->Err));
         self::assertTrue($txnResp->OK);
@@ -174,14 +177,15 @@ final class KVClientTxnTest extends AbstractUsageTests
         self::assertNull($err);
 
         // Delete via Txn
-        $txnResp = $client->Txn([
+        $txnResp = $client->Txn(
+            null,
             new TxnOp(
                 KV: new KVTxnOp(
                     Verb: KVOp::KVDelete,
                     Key: $key,
                 ),
             ),
-        ]);
+        );
 
         self::assertNull($txnResp->Err, sprintf('KV::Txn delete returned error: %s', (string)$txnResp->Err));
         self::assertTrue($txnResp->OK);
@@ -211,7 +215,8 @@ final class KVClientTxnTest extends AbstractUsageTests
         self::assertInstanceOf(KVPair::class, $kv);
 
         // CAS via Txn with correct index
-        $txnResp = $client->Txn([
+        $txnResp = $client->Txn(
+            null,
             new TxnOp(
                 KV: new KVTxnOp(
                     Verb: KVOp::KVCAS,
@@ -220,7 +225,7 @@ final class KVClientTxnTest extends AbstractUsageTests
                     Index: $kv->ModifyIndex,
                 ),
             ),
-        ]);
+        );
 
         self::assertNull($txnResp->Err);
         self::assertTrue($txnResp->OK);
@@ -247,14 +252,15 @@ final class KVClientTxnTest extends AbstractUsageTests
         self::assertNull($err);
 
         // Delete tree via Txn
-        $txnResp = $client->Txn([
+        $txnResp = $client->Txn(
+            null,
             new TxnOp(
                 KV: new KVTxnOp(
                     Verb: KVOp::KVDeleteTree,
                     Key: $prefix,
                 ),
             ),
-        ]);
+        );
 
         self::assertNull($txnResp->Err, sprintf('KV::Txn delete-tree returned error: %s', (string)$txnResp->Err));
         self::assertTrue($txnResp->OK);
@@ -279,14 +285,15 @@ final class KVClientTxnTest extends AbstractUsageTests
         self::assertNull($err);
 
         // check-not-exists should succeed when key doesn't exist
-        $txnResp = $client->Txn([
+        $txnResp = $client->Txn(
+            null,
             new TxnOp(
                 KV: new KVTxnOp(
                     Verb: KVOp::KVCheckNotExists,
                     Key: $key,
                 ),
             ),
-        ]);
+        );
 
         self::assertNull($txnResp->Err, sprintf('KV::Txn returned error: %s', (string)$txnResp->Err));
         self::assertTrue($txnResp->OK);
@@ -302,7 +309,8 @@ final class KVClientTxnTest extends AbstractUsageTests
         $key = 'test/txn/set-get';
 
         // Set then get in same txn
-        $txnResp = $client->Txn([
+        $txnResp = $client->Txn(
+            null,
             new TxnOp(
                 KV: new KVTxnOp(
                     Verb: KVOp::KVSet,
@@ -316,7 +324,7 @@ final class KVClientTxnTest extends AbstractUsageTests
                     Key: $key,
                 ),
             ),
-        ]);
+        );
 
         self::assertNull($txnResp->Err, sprintf('KV::Txn returned error: %s', (string)$txnResp->Err));
         self::assertTrue($txnResp->OK);
@@ -340,7 +348,8 @@ final class KVClientTxnTest extends AbstractUsageTests
 
         $key = 'test/txn/flags';
 
-        $txnResp = $client->Txn([
+        $txnResp = $client->Txn(
+            null,
             new TxnOp(
                 KV: new KVTxnOp(
                     Verb: KVOp::KVSet,
@@ -349,7 +358,7 @@ final class KVClientTxnTest extends AbstractUsageTests
                     Flags: 123,
                 ),
             ),
-        ]);
+        );
 
         self::assertNull($txnResp->Err);
         self::assertTrue($txnResp->OK);

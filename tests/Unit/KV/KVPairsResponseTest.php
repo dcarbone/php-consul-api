@@ -2,7 +2,6 @@
 
 namespace DCarbone\PHPConsulAPITests\Unit\KV;
 
-use DCarbone\PHPConsulAPI\KV\KVPair;
 use DCarbone\PHPConsulAPI\KV\KVPairs;
 use DCarbone\PHPConsulAPI\KV\KVPairsResponse;
 use DCarbone\PHPConsulAPI\PHPLib\Error;

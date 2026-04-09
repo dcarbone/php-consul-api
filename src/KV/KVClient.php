@@ -160,18 +160,8 @@ class KVClient extends AbstractClient
         return $ret;
     }
 
-    /**
-     * @param array<\DCarbone\PHPConsulAPI\Txn\TxnOp> $txn
-     * @param \DCarbone\PHPConsulAPI\QueryOptions|null $opts
-     * @return \DCarbone\PHPConsulAPI\Txn\KVTxnAPIResponse
-     */
-    public function Txn(array $txn, null|QueryOptions $opts = null): KVTxnAPIResponse
+    public function Txn(null|QueryOptions $opts = null, TxnOp ...$txn): KVTxnAPIResponse
     {
-        foreach ($txn as $op) {
-            if (!($op instanceof TxnOp)) {
-                throw new \InvalidArgumentException(sprintf('$txn must be array of %s, saw %s', TxnOp::class, gettype($op)));
-            }
-        }
 
         $ret = new KVTxnAPIResponse();
 
