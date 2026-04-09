@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace DCarbone\PHPConsulAPITests\Unit\Operator;
 
 use DCarbone\PHPConsulAPI\Operator\AutopilotZone;
@@ -16,8 +14,11 @@ final class AutopilotZoneTest extends TestCase
     {
         $zone = new AutopilotZone();
         self::assertSame([], $zone->getServers());
+        self::assertSame([], $zone->Servers);
         self::assertSame([], $zone->getVoters());
+        self::assertSame([], $zone->Voters);
         self::assertSame(0, $zone->getFailureTolerance());
+        self::assertSame(0, $zone->FailureTolerance);
     }
 
     public function testConstructorWithValues(): void
@@ -28,8 +29,11 @@ final class AutopilotZoneTest extends TestCase
             FailureTolerance: 2,
         );
         self::assertSame(['srv-1', 'srv-2'], $zone->getServers());
+        self::assertSame(['srv-1', 'srv-2'], $zone->Servers);
         self::assertSame(['v-1'], $zone->getVoters());
+        self::assertSame(['v-1'], $zone->Voters);
         self::assertSame(2, $zone->getFailureTolerance());
+        self::assertSame(2, $zone->FailureTolerance);
     }
 
     public function testVariadicSetServers(): void

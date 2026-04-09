@@ -61,8 +61,8 @@ class AutopilotServer extends AbstractType
         null|Time\Time $StableSince = null,
         string $RedundancyZone = '',
         string $UpgradeVersion = '',
-        bool $readReplica = false,
-        string|AutopilotServerStatus $status = AutopilotServerStatus::UNDEFINED,
+        bool $ReadReplica = false,
+        string|AutopilotServerStatus $Status = AutopilotServerStatus::UNDEFINED,
         null|\stdClass|array $Meta = null,
         string|AutopilotServerType $NodeType = AutopilotServerType::UNDEFINED,
     ) {
@@ -78,8 +78,8 @@ class AutopilotServer extends AbstractType
         $this->StableSince = $StableSince ?? new TIme\Time();
         $this->RedundancyZone = $RedundancyZone;
         $this->UpgradeVersion = $UpgradeVersion;
-        $this->ReadReplica = $readReplica;
-        $this->setStatus($status);
+        $this->ReadReplica = $ReadReplica;
+        $this->setStatus($Status);
         $this->setMeta($Meta);
         $this->setNodeType($NodeType);
     }

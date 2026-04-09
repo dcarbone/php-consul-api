@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace DCarbone\PHPConsulAPITests\Unit\Operator;
 
 use DCarbone\PHPConsulAPI\Operator\SerfMember;
@@ -16,14 +14,23 @@ final class SerfMemberTest extends TestCase
     {
         $m = new SerfMember();
         self::assertSame('', $m->getID());
+        self::assertSame('', $m->ID);
         self::assertSame('', $m->getName());
+        self::assertSame('', $m->Name);
         self::assertSame('', $m->getAddr());
+        self::assertSame('', $m->Addr);
         self::assertSame(0, $m->getPort());
+        self::assertSame(0, $m->Port);
         self::assertSame('', $m->getDatacenter());
+        self::assertSame('', $m->Datacenter);
         self::assertSame('', $m->getRole());
+        self::assertSame('', $m->Role);
         self::assertSame('', $m->getBuild());
+        self::assertSame('', $m->Build);
         self::assertSame(0, $m->getProtocol());
+        self::assertSame(0, $m->Protocol);
         self::assertSame('', $m->getStatus());
+        self::assertSame('', $m->Status);
         self::assertSame(0.0, $m->getRTT()->Seconds());
     }
 
@@ -42,11 +49,20 @@ final class SerfMemberTest extends TestCase
             RTT: '5ms',
         );
         self::assertSame('member-1', $m->getID());
+        self::assertSame('member-1', $m->ID);
         self::assertSame('node-1', $m->getName());
+        self::assertSame('node-1', $m->Name);
         self::assertSame('10.0.0.1', $m->getAddr());
+        self::assertSame('10.0.0.1', $m->Addr);
         self::assertSame(8301, $m->getPort());
+        self::assertSame(8301, $m->Port);
         self::assertSame('dc1', $m->getDatacenter());
+        self::assertSame('dc1', $m->Datacenter);
         self::assertSame('consul', $m->getRole());
+        self::assertSame('consul', $m->Role);
+        self::assertSame('1.22.0', $m->Build);
+        self::assertSame(2, $m->Protocol);
+        self::assertSame('alive', $m->Status);
     }
 
     public function testFluentSetters(): void
@@ -64,6 +80,15 @@ final class SerfMemberTest extends TestCase
             ->setStatus('s')
             ->setRTT('10ms');
         self::assertSame($m, $result);
+        self::assertSame('i', $m->ID);
+        self::assertSame('n', $m->Name);
+        self::assertSame('a', $m->Addr);
+        self::assertSame(1234, $m->Port);
+        self::assertSame('dc', $m->Datacenter);
+        self::assertSame('r', $m->Role);
+        self::assertSame('b', $m->Build);
+        self::assertSame(2, $m->Protocol);
+        self::assertSame('s', $m->Status);
     }
 
     public function testJsonSerialize(): void

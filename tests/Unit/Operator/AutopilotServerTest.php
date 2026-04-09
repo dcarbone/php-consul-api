@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace DCarbone\PHPConsulAPITests\Unit\Operator;
 
 use DCarbone\PHPConsulAPI\Operator\AutopilotServer;
@@ -18,19 +16,33 @@ final class AutopilotServerTest extends TestCase
     {
         $s = new AutopilotServer();
         self::assertSame('', $s->getID());
+        self::assertSame('', $s->ID);
         self::assertSame('', $s->getName());
+        self::assertSame('', $s->Name);
         self::assertSame('', $s->getAddress());
+        self::assertSame('', $s->Address);
         self::assertSame('', $s->getNodeStatus());
+        self::assertSame('', $s->NodeStatus);
         self::assertSame('', $s->getVersion());
+        self::assertSame('', $s->Version);
         self::assertNull($s->getLastContact());
+        self::assertNull($s->LastContact);
         self::assertSame(0, $s->getLastTerm());
+        self::assertSame(0, $s->LastTerm);
         self::assertSame(0, $s->getLastIndex());
+        self::assertSame(0, $s->LastIndex);
         self::assertFalse($s->isHealthy());
+        self::assertFalse($s->Healthy);
         self::assertSame('', $s->getRedundancyZone());
+        self::assertSame('', $s->RedundancyZone);
         self::assertSame('', $s->getUpgradeVersion());
+        self::assertSame('', $s->UpgradeVersion);
         self::assertFalse($s->isReadReplica());
+        self::assertFalse($s->ReadReplica);
         self::assertSame(AutopilotServerStatus::UNDEFINED, $s->getStatus());
+        self::assertSame(AutopilotServerStatus::UNDEFINED, $s->Status);
         self::assertSame(AutopilotServerType::UNDEFINED, $s->getNodeType());
+        self::assertSame(AutopilotServerType::UNDEFINED, $s->NodeType);
     }
 
     public function testConstructorWithValues(): void
@@ -47,12 +59,26 @@ final class AutopilotServerTest extends TestCase
             Healthy: true,
             RedundancyZone: 'zone-a',
             UpgradeVersion: '1.22.0',
-            readReplica: false,
-            status: AutopilotServerStatus::Leader,
+            ReadReplica: false,
+            Status: AutopilotServerStatus::Leader,
             NodeType: AutopilotServerType::Voter,
         );
         self::assertSame('srv-1', $s->getID());
+        self::assertSame('srv-1', $s->ID);
         self::assertTrue($s->isHealthy());
+        self::assertTrue($s->Healthy);
+        self::assertSame(AutopilotServerStatus::Leader, $s->getStatus());
+        self::assertSame(AutopilotServerStatus::Leader, $s->Status);
+        self::assertSame(AutopilotServerType::Voter, $s->getNodeType());
+        self::assertSame(AutopilotServerType::Voter, $s->NodeType);
+    }
+
+    public function testConstructorWithEnumStringValues(): void
+    {
+        $s = new AutopilotServer(
+            Status: 'leader',
+            NodeType: 'voter',
+        );
         self::assertSame(AutopilotServerStatus::Leader, $s->getStatus());
         self::assertSame(AutopilotServerType::Voter, $s->getNodeType());
     }
@@ -76,8 +102,19 @@ final class AutopilotServerTest extends TestCase
             ->setStatus(AutopilotServerStatus::Voter)
             ->setNodeType(AutopilotServerType::ReadReplica);
         self::assertSame($s, $result);
-        self::assertSame(AutopilotServerStatus::Voter, $s->getStatus());
-        self::assertSame(AutopilotServerType::ReadReplica, $s->getNodeType());
+        self::assertSame('i', $s->ID);
+        self::assertSame('n', $s->Name);
+        self::assertSame('a', $s->Address);
+        self::assertSame('ns', $s->NodeStatus);
+        self::assertSame('v', $s->Version);
+        self::assertSame(1, $s->LastTerm);
+        self::assertSame(50, $s->LastIndex);
+        self::assertTrue($s->Healthy);
+        self::assertSame('z', $s->RedundancyZone);
+        self::assertSame('uv', $s->UpgradeVersion);
+        self::assertTrue($s->ReadReplica);
+        self::assertSame(AutopilotServerStatus::Voter, $s->Status);
+        self::assertSame(AutopilotServerType::ReadReplica, $s->NodeType);
     }
 
     public function testSetStatusFromString(): void

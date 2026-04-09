@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace DCarbone\PHPConsulAPITests\Unit\Operator;
 
 use DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration;
@@ -16,15 +14,25 @@ final class AutopilotConfigurationTest extends TestCase
     {
         $c = new AutopilotConfiguration();
         self::assertFalse($c->isCleanupDeadServers());
+        self::assertFalse($c->CleanupDeadServers);
         self::assertNull($c->getLastContactThreshold());
+        self::assertNull($c->LastContactThreshold);
         self::assertSame(0, $c->getMaxTrailingLogs());
+        self::assertSame(0, $c->MaxTrailingLogs);
         self::assertSame(0, $c->getMinQuorum());
+        self::assertSame(0, $c->MinQuorum);
         self::assertNull($c->getServerStabilizationTime());
+        self::assertNull($c->ServerStabilizationTime);
         self::assertSame('', $c->getRedundancyZoneTag());
+        self::assertSame('', $c->RedundancyZoneTag);
         self::assertFalse($c->isDisableUpgradeMigration());
+        self::assertFalse($c->DisableUpgradeMigration);
         self::assertSame('', $c->getUpgradeVersionTag());
+        self::assertSame('', $c->UpgradeVersionTag);
         self::assertSame(0, $c->getCreateIndex());
+        self::assertSame(0, $c->CreateIndex);
         self::assertSame(0, $c->getModifyIndex());
+        self::assertSame(0, $c->ModifyIndex);
     }
 
     public function testConstructorWithValues(): void
@@ -42,15 +50,25 @@ final class AutopilotConfigurationTest extends TestCase
             ModifyIndex: 10,
         );
         self::assertTrue($c->isCleanupDeadServers());
+        self::assertTrue($c->CleanupDeadServers);
         self::assertNotNull($c->getLastContactThreshold());
+        self::assertNotNull($c->LastContactThreshold);
         self::assertSame(250, $c->getMaxTrailingLogs());
+        self::assertSame(250, $c->MaxTrailingLogs);
         self::assertSame(3, $c->getMinQuorum());
+        self::assertSame(3, $c->MinQuorum);
         self::assertNotNull($c->getServerStabilizationTime());
+        self::assertNotNull($c->ServerStabilizationTime);
         self::assertSame('zone', $c->getRedundancyZoneTag());
+        self::assertSame('zone', $c->RedundancyZoneTag);
         self::assertTrue($c->isDisableUpgradeMigration());
+        self::assertTrue($c->DisableUpgradeMigration);
         self::assertSame('build', $c->getUpgradeVersionTag());
+        self::assertSame('build', $c->UpgradeVersionTag);
         self::assertSame(5, $c->getCreateIndex());
+        self::assertSame(5, $c->CreateIndex);
         self::assertSame(10, $c->getModifyIndex());
+        self::assertSame(10, $c->ModifyIndex);
     }
 
     public function testFluentSetters(): void
@@ -68,6 +86,14 @@ final class AutopilotConfigurationTest extends TestCase
             ->setCreateIndex(1)
             ->setModifyIndex(2);
         self::assertSame($c, $result);
+        self::assertTrue($c->CleanupDeadServers);
+        self::assertSame(100, $c->MaxTrailingLogs);
+        self::assertSame(1, $c->MinQuorum);
+        self::assertSame('rz', $c->RedundancyZoneTag);
+        self::assertTrue($c->DisableUpgradeMigration);
+        self::assertSame('uv', $c->UpgradeVersionTag);
+        self::assertSame(1, $c->CreateIndex);
+        self::assertSame(2, $c->ModifyIndex);
     }
 
     public function testNullDurationSetters(): void

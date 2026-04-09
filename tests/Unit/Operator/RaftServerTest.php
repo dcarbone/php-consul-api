@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace DCarbone\PHPConsulAPITests\Unit\Operator;
 
 use DCarbone\PHPConsulAPI\Operator\RaftServer;
@@ -16,11 +14,17 @@ final class RaftServerTest extends TestCase
     {
         $r = new RaftServer();
         self::assertSame('', $r->getID());
+        self::assertSame('', $r->ID);
         self::assertSame('', $r->getNode());
+        self::assertSame('', $r->Node);
         self::assertSame('', $r->getAddress());
+        self::assertSame('', $r->Address);
         self::assertFalse($r->isLeader());
+        self::assertFalse($r->Leader);
         self::assertSame('', $r->getProtocolVersion());
+        self::assertSame('', $r->ProtocolVersion);
         self::assertFalse($r->isVoter());
+        self::assertFalse($r->Voter);
     }
 
     public function testConstructorWithValues(): void
@@ -34,11 +38,17 @@ final class RaftServerTest extends TestCase
             Voter: true,
         );
         self::assertSame('id-1', $r->getID());
+        self::assertSame('id-1', $r->ID);
         self::assertSame('node-1', $r->getNode());
+        self::assertSame('node-1', $r->Node);
         self::assertSame('10.0.0.1:8300', $r->getAddress());
+        self::assertSame('10.0.0.1:8300', $r->Address);
         self::assertTrue($r->isLeader());
+        self::assertTrue($r->Leader);
         self::assertSame('3', $r->getProtocolVersion());
+        self::assertSame('3', $r->ProtocolVersion);
         self::assertTrue($r->isVoter());
+        self::assertTrue($r->Voter);
     }
 
     public function testFluentSetters(): void
@@ -52,6 +62,12 @@ final class RaftServerTest extends TestCase
             ->setProtocolVersion('2')
             ->setVoter(true);
         self::assertSame($r, $result);
+        self::assertSame('i', $r->ID);
+        self::assertSame('n', $r->Node);
+        self::assertSame('a', $r->Address);
+        self::assertTrue($r->Leader);
+        self::assertSame('2', $r->ProtocolVersion);
+        self::assertTrue($r->Voter);
     }
 
     public function testJsonSerialize(): void

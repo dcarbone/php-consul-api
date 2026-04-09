@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace DCarbone\PHPConsulAPITests\Unit\Operator;
 
 use DCarbone\PHPConsulAPI\Operator\ServerHealth;
@@ -16,16 +14,27 @@ final class ServerHealthTest extends TestCase
     {
         $s = new ServerHealth();
         self::assertSame('', $s->getID());
+        self::assertSame('', $s->ID);
         self::assertSame('', $s->getName());
+        self::assertSame('', $s->Name);
         self::assertSame('', $s->getAddress());
+        self::assertSame('', $s->Address);
         self::assertSame('', $s->getSerfStatus());
+        self::assertSame('', $s->SerfStatus);
         self::assertSame('', $s->getVersion());
+        self::assertSame('', $s->Version);
         self::assertFalse($s->isLeader());
+        self::assertFalse($s->Leader);
         self::assertNull($s->getLastContact());
+        self::assertNull($s->LastContact);
         self::assertSame(0, $s->getLastTerm());
+        self::assertSame(0, $s->LastTerm);
         self::assertSame(0, $s->getLastIndex());
+        self::assertSame(0, $s->LastIndex);
         self::assertFalse($s->isHealthy());
+        self::assertFalse($s->Healthy);
         self::assertFalse($s->isVoter());
+        self::assertFalse($s->Voter);
     }
 
     public function testConstructorWithValues(): void
@@ -44,13 +53,21 @@ final class ServerHealthTest extends TestCase
             Voter: true,
         );
         self::assertSame('srv-1', $s->getID());
+        self::assertSame('srv-1', $s->ID);
         self::assertSame('node-1', $s->getName());
+        self::assertSame('node-1', $s->Name);
         self::assertTrue($s->isLeader());
+        self::assertTrue($s->Leader);
         self::assertNotNull($s->getLastContact());
+        self::assertNotNull($s->LastContact);
         self::assertSame(3, $s->getLastTerm());
+        self::assertSame(3, $s->LastTerm);
         self::assertSame(100, $s->getLastIndex());
+        self::assertSame(100, $s->LastIndex);
         self::assertTrue($s->isHealthy());
+        self::assertTrue($s->Healthy);
         self::assertTrue($s->isVoter());
+        self::assertTrue($s->Voter);
     }
 
     public function testFluentSetters(): void
@@ -69,6 +86,16 @@ final class ServerHealthTest extends TestCase
             ->setHealthy(true)
             ->setVoter(true);
         self::assertSame($s, $result);
+        self::assertSame('i', $s->ID);
+        self::assertSame('n', $s->Name);
+        self::assertSame('a', $s->Address);
+        self::assertSame('alive', $s->SerfStatus);
+        self::assertSame('v', $s->Version);
+        self::assertTrue($s->Leader);
+        self::assertSame(1, $s->LastTerm);
+        self::assertSame(50, $s->LastIndex);
+        self::assertTrue($s->Healthy);
+        self::assertTrue($s->Voter);
     }
 
     public function testNullLastContact(): void

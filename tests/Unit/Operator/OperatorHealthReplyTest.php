@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace DCarbone\PHPConsulAPITests\Unit\Operator;
 
 use DCarbone\PHPConsulAPI\Operator\OperatorHealthReply;
@@ -17,8 +15,11 @@ final class OperatorHealthReplyTest extends TestCase
     {
         $r = new OperatorHealthReply();
         self::assertFalse($r->isHealthy());
+        self::assertFalse($r->Healthy);
         self::assertSame(0, $r->getFailureTolerance());
+        self::assertSame(0, $r->FailureTolerance);
         self::assertSame([], $r->getServers());
+        self::assertSame([], $r->Servers);
     }
 
     public function testConstructorWithValues(): void
@@ -26,8 +27,11 @@ final class OperatorHealthReplyTest extends TestCase
         $sh = new ServerHealth(ID: 'srv-1', Healthy: true);
         $r = new OperatorHealthReply(Healthy: true, FailureTolerance: 1, Servers: [$sh]);
         self::assertTrue($r->isHealthy());
+        self::assertTrue($r->Healthy);
         self::assertSame(1, $r->getFailureTolerance());
+        self::assertSame(1, $r->FailureTolerance);
         self::assertCount(1, $r->getServers());
+        self::assertCount(1, $r->Servers);
         self::assertSame('srv-1', $r->getServers()[0]->getID());
     }
 
@@ -39,7 +43,10 @@ final class OperatorHealthReplyTest extends TestCase
             ->setFailureTolerance(2)
             ->setServers(new ServerHealth(ID: 'a'), new ServerHealth(ID: 'b'));
         self::assertSame($r, $result);
+        self::assertTrue($r->Healthy);
+        self::assertSame(2, $r->FailureTolerance);
         self::assertCount(2, $r->getServers());
+        self::assertCount(2, $r->Servers);
     }
 
     public function testJsonSerialize(): void

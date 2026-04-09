@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace DCarbone\PHPConsulAPITests\Unit\Operator;
 
 use DCarbone\PHPConsulAPI\Operator\RaftConfiguration;
@@ -17,7 +15,9 @@ final class RaftConfigurationTest extends TestCase
     {
         $rc = new RaftConfiguration();
         self::assertSame([], $rc->getServers());
+        self::assertSame([], $rc->Servers);
         self::assertSame(0, $rc->getIndex());
+        self::assertSame(0, $rc->Index);
     }
 
     public function testConstructorWithServers(): void
@@ -28,9 +28,11 @@ final class RaftConfigurationTest extends TestCase
         $rc = new RaftConfiguration(Servers: [$s1, $s2], Index: 5);
 
         self::assertCount(2, $rc->getServers());
+        self::assertCount(2, $rc->Servers);
         self::assertSame('srv-1', $rc->getServers()[0]->getID());
         self::assertSame('srv-2', $rc->getServers()[1]->getID());
         self::assertSame(5, $rc->getIndex());
+        self::assertSame(5, $rc->Index);
     }
 
     public function testVariadicSetServersReplacesExisting(): void

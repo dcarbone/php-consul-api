@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace DCarbone\PHPConsulAPITests\Unit\Operator;
 
 use DCarbone\PHPConsulAPI\Operator\AutopilotZoneUpgradeVersions;
@@ -16,9 +14,13 @@ final class AutopilotZoneUpgradeVersionsTest extends TestCase
     {
         $z = new AutopilotZoneUpgradeVersions();
         self::assertSame([], $z->getTargetVersionVoters());
+        self::assertSame([], $z->TargetVersionVoters);
         self::assertSame([], $z->getTargetVersionNonVoters());
+        self::assertSame([], $z->TargetVersionNonVoters);
         self::assertSame([], $z->getOtherVersionVoters());
+        self::assertSame([], $z->OtherVersionVoters);
         self::assertSame([], $z->getOtherVersionNonVoters());
+        self::assertSame([], $z->OtherVersionNonVoters);
     }
 
     public function testConstructorWithValues(): void
@@ -30,9 +32,13 @@ final class AutopilotZoneUpgradeVersionsTest extends TestCase
             OtherVersionNonVoters: ['e', 'f'],
         );
         self::assertSame(['a', 'b'], $z->getTargetVersionVoters());
+        self::assertSame(['a', 'b'], $z->TargetVersionVoters);
         self::assertSame(['c'], $z->getTargetVersionNonVoters());
+        self::assertSame(['c'], $z->TargetVersionNonVoters);
         self::assertSame(['d'], $z->getOtherVersionVoters());
+        self::assertSame(['d'], $z->OtherVersionVoters);
         self::assertSame(['e', 'f'], $z->getOtherVersionNonVoters());
+        self::assertSame(['e', 'f'], $z->OtherVersionNonVoters);
     }
 
     public function testFluentSetters(): void
@@ -45,6 +51,10 @@ final class AutopilotZoneUpgradeVersionsTest extends TestCase
             ->setOtherVersionNonVoters('w');
         self::assertSame($z, $result);
         self::assertSame(['x'], $z->getTargetVersionVoters());
+        self::assertSame(['x'], $z->TargetVersionVoters);
+        self::assertSame(['y'], $z->TargetVersionNonVoters);
+        self::assertSame(['z'], $z->OtherVersionVoters);
+        self::assertSame(['w'], $z->OtherVersionNonVoters);
     }
 
     public function testJsonSerializeOmitsEmptyArrays(): void

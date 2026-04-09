@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace DCarbone\PHPConsulAPITests\Unit\Operator;
 
 use DCarbone\PHPConsulAPI\Operator\AutopilotState;
@@ -16,14 +14,23 @@ final class AutopilotStateTest extends TestCase
     {
         $s = new AutopilotState();
         self::assertFalse($s->isHealthy());
+        self::assertFalse($s->Healthy);
         self::assertSame(0, $s->getFailureTolerance());
+        self::assertSame(0, $s->FailureTolerance);
         self::assertSame(0, $s->getOptimisticFailureTolerance());
+        self::assertSame(0, $s->OptimisticFailureTolerance);
         self::assertSame([], $s->getServers());
+        self::assertSame([], $s->Servers);
         self::assertSame('', $s->getLeader());
+        self::assertSame('', $s->Leader);
         self::assertSame([], $s->getVoters());
+        self::assertSame([], $s->Voters);
         self::assertSame([], $s->getReadReplicas());
+        self::assertSame([], $s->ReadReplicas);
         self::assertSame([], $s->getRedundancyZone());
+        self::assertSame([], $s->RedundancyZone);
         self::assertNull($s->getUpgrade());
+        self::assertNull($s->Upgrade);
     }
 
     public function testConstructorWithValues(): void
@@ -36,9 +43,13 @@ final class AutopilotStateTest extends TestCase
             Voters: ['v1', 'v2'],
         );
         self::assertTrue($s->isHealthy());
+        self::assertTrue($s->Healthy);
         self::assertSame(1, $s->getFailureTolerance());
+        self::assertSame(1, $s->FailureTolerance);
         self::assertSame('leader-id', $s->getLeader());
+        self::assertSame('leader-id', $s->Leader);
         self::assertSame(['v1', 'v2'], $s->getVoters());
+        self::assertSame(['v1', 'v2'], $s->Voters);
     }
 
     public function testFluentSetters(): void
@@ -55,6 +66,12 @@ final class AutopilotStateTest extends TestCase
             ->setRedundancyZone([])
             ->setUpgrade(null);
         self::assertSame($s, $result);
+        self::assertTrue($s->Healthy);
+        self::assertSame(1, $s->FailureTolerance);
+        self::assertSame(2, $s->OptimisticFailureTolerance);
+        self::assertSame('l', $s->Leader);
+        self::assertSame(['v1'], $s->Voters);
+        self::assertSame(['r1'], $s->ReadReplicas);
     }
 
     public function testJsonSerialize(): void

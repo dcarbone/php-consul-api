@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace DCarbone\PHPConsulAPITests\Unit\Operator;
 
 use DCarbone\PHPConsulAPI\Operator\AutopilotUpgrade;
@@ -16,14 +14,23 @@ final class AutopilotUpgradeTest extends TestCase
     {
         $u = new AutopilotUpgrade();
         self::assertSame('', $u->getStatus());
+        self::assertSame('', $u->Status);
         self::assertSame('', $u->getTargetVersion());
+        self::assertSame('', $u->TargetVersion);
         self::assertSame([], $u->getTargetVersionVoters());
+        self::assertSame([], $u->TargetVersionVoters);
         self::assertSame([], $u->getTargetVersionNonVoters());
+        self::assertSame([], $u->TargetVersionNonVoters);
         self::assertSame([], $u->getTargetVersionReadReplicas());
+        self::assertSame([], $u->TargetVersionReadReplicas);
         self::assertSame([], $u->getOtherVersionVoters());
+        self::assertSame([], $u->OtherVersionVoters);
         self::assertSame([], $u->getOtherVersionNonVoters());
+        self::assertSame([], $u->OtherVersionNonVoters);
         self::assertSame([], $u->getOtherVersionReadReplicas());
+        self::assertSame([], $u->OtherVersionReadReplicas);
         self::assertSame([], $u->getRedundancyZones());
+        self::assertSame([], $u->RedundancyZones);
     }
 
     public function testConstructorWithValues(): void
@@ -35,9 +42,13 @@ final class AutopilotUpgradeTest extends TestCase
             OtherVersionVoters: ['b'],
         );
         self::assertSame('awaiting-new-voters', $u->getStatus());
+        self::assertSame('awaiting-new-voters', $u->Status);
         self::assertSame('1.22.0', $u->getTargetVersion());
+        self::assertSame('1.22.0', $u->TargetVersion);
         self::assertSame(['a'], $u->getTargetVersionVoters());
+        self::assertSame(['a'], $u->TargetVersionVoters);
         self::assertSame(['b'], $u->getOtherVersionVoters());
+        self::assertSame(['b'], $u->OtherVersionVoters);
     }
 
     public function testFluentSetters(): void
@@ -54,6 +65,14 @@ final class AutopilotUpgradeTest extends TestCase
             ->setOtherVersionReadReplicas('orr1')
             ->setRedundancyZones([]);
         self::assertSame($u, $result);
+        self::assertSame('idle', $u->Status);
+        self::assertSame('1.0', $u->TargetVersion);
+        self::assertSame(['v1'], $u->TargetVersionVoters);
+        self::assertSame(['nv1'], $u->TargetVersionNonVoters);
+        self::assertSame(['rr1'], $u->TargetVersionReadReplicas);
+        self::assertSame(['ov1'], $u->OtherVersionVoters);
+        self::assertSame(['onv1'], $u->OtherVersionNonVoters);
+        self::assertSame(['orr1'], $u->OtherVersionReadReplicas);
     }
 
     public function testJsonSerialize(): void

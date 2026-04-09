@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace DCarbone\PHPConsulAPITests\Unit\Metrics;
 
 use DCarbone\PHPConsulAPI\Metrics\Label;
@@ -16,14 +14,18 @@ final class LabelTest extends TestCase
     {
         $l = new Label();
         self::assertSame('', $l->getName());
+        self::assertSame('', $l->Name);
         self::assertSame('', $l->getValue());
+        self::assertSame('', $l->Value);
     }
 
     public function testConstructorWithValues(): void
     {
         $l = new Label(Name: 'env', Value: 'prod');
         self::assertSame('env', $l->getName());
+        self::assertSame('env', $l->Name);
         self::assertSame('prod', $l->getValue());
+        self::assertSame('prod', $l->Value);
     }
 
     public function testFluentSetters(): void
@@ -32,7 +34,9 @@ final class LabelTest extends TestCase
         $result = $l->setName('host')->setValue('node-1');
         self::assertSame($l, $result);
         self::assertSame('host', $l->getName());
+        self::assertSame('host', $l->Name);
         self::assertSame('node-1', $l->getValue());
+        self::assertSame('node-1', $l->Value);
     }
 
     public function testJsonSerialize(): void
@@ -51,7 +55,9 @@ final class LabelTest extends TestCase
         $decoded->Value = 'us-east';
         $l = Label::jsonUnserialize($decoded);
         self::assertSame('region', $l->getName());
+        self::assertSame('region', $l->Name);
         self::assertSame('us-east', $l->getValue());
+        self::assertSame('us-east', $l->Value);
     }
 
     public function testJsonRoundTrip(): void

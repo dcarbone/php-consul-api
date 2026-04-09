@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace DCarbone\PHPConsulAPITests\Unit\Operator;
 
 use DCarbone\PHPConsulAPI\Operator\Area;
@@ -16,9 +14,13 @@ final class AreaTest extends TestCase
     {
         $area = new Area();
         self::assertSame('', $area->getID());
+        self::assertSame('', $area->ID);
         self::assertSame('', $area->getPeerDatacenter());
+        self::assertSame('', $area->PeerDatacenter);
         self::assertSame([], $area->getRetryJoin());
+        self::assertSame([], $area->RetryJoin);
         self::assertFalse($area->isUseTLS());
+        self::assertFalse($area->UseTLS);
     }
 
     public function testConstructorWithValues(): void
@@ -30,9 +32,13 @@ final class AreaTest extends TestCase
             UseTLS: true,
         );
         self::assertSame('area-1', $area->getID());
+        self::assertSame('area-1', $area->ID);
         self::assertSame('dc2', $area->getPeerDatacenter());
+        self::assertSame('dc2', $area->PeerDatacenter);
         self::assertSame(['10.0.0.1', '10.0.0.2'], $area->getRetryJoin());
+        self::assertSame(['10.0.0.1', '10.0.0.2'], $area->RetryJoin);
         self::assertTrue($area->isUseTLS());
+        self::assertTrue($area->UseTLS);
     }
 
     public function testFluentSetters(): void
@@ -46,9 +52,13 @@ final class AreaTest extends TestCase
 
         self::assertSame($area, $result);
         self::assertSame('a', $area->getID());
+        self::assertSame('a', $area->ID);
         self::assertSame('dc', $area->getPeerDatacenter());
+        self::assertSame('dc', $area->PeerDatacenter);
         self::assertSame(['1.2.3.4', '5.6.7.8'], $area->getRetryJoin());
+        self::assertSame(['1.2.3.4', '5.6.7.8'], $area->RetryJoin);
         self::assertTrue($area->isUseTLS());
+        self::assertTrue($area->UseTLS);
     }
 
     public function testVariadicSetRetryJoinReplacesExisting(): void

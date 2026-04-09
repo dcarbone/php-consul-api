@@ -64,10 +64,7 @@ class OperatorClient extends AbstractClient
         return $this->_executeDelete(sprintf('v1/operator/area/%s', $areaID), $opts);
     }
 
-    /**
-     * @param array<string> $addresses
-     */
-    public function AreaJoin(string $areaID, array $addresses, null|WriteOptions $opts = null): OperatorAreaJoinResponse
+    public function AreaJoin(string $areaID, null|WriteOptions $opts = null, string ...$addresses): OperatorAreaJoinResponse
     {
         $resp = $this->_requireOK($this->_doPut(sprintf('v1/operator/area/%s/join', $areaID), $addresses, $opts));
         $ret  = new OperatorAreaJoinResponse();

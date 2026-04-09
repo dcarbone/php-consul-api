@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace DCarbone\PHPConsulAPITests\Unit\Operator;
 
 use DCarbone\PHPConsulAPI\Operator\AreaJoinResponse;
@@ -16,8 +14,11 @@ final class AreaJoinResponseTest extends TestCase
     {
         $resp = new AreaJoinResponse();
         self::assertSame('', $resp->getAddress());
+        self::assertSame('', $resp->Address);
         self::assertFalse($resp->isJoined());
+        self::assertFalse($resp->Joined);
         self::assertSame('', $resp->getError());
+        self::assertSame('', $resp->Error);
     }
 
     public function testConstructorWithValues(): void
@@ -28,7 +29,9 @@ final class AreaJoinResponseTest extends TestCase
             Error: '',
         );
         self::assertSame('10.0.0.1', $resp->getAddress());
+        self::assertSame('10.0.0.1', $resp->Address);
         self::assertTrue($resp->isJoined());
+        self::assertTrue($resp->Joined);
     }
 
     public function testFluentSetters(): void
@@ -41,8 +44,11 @@ final class AreaJoinResponseTest extends TestCase
 
         self::assertSame($resp, $result);
         self::assertSame('192.168.1.1', $resp->getAddress());
+        self::assertSame('192.168.1.1', $resp->Address);
         self::assertTrue($resp->isJoined());
+        self::assertTrue($resp->Joined);
         self::assertSame('some error', $resp->getError());
+        self::assertSame('some error', $resp->Error);
     }
 
     public function testJsonSerialize(): void
