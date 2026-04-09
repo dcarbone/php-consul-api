@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace DCarbone\PHPConsulAPITests\Unit\Coordinate;
 
 use DCarbone\PHPConsulAPI\Coordinate\Coordinate;
@@ -18,8 +16,11 @@ final class CoordinateDatacenterMapTest extends TestCase
     {
         $m = new CoordinateDatacenterMap();
         self::assertSame('', $m->getDatacenter());
+        self::assertSame('', $m->Datacenter);
         self::assertSame('', $m->getAreaID());
+        self::assertSame('', $m->AreaID);
         self::assertSame([], $m->getCoordinates());
+        self::assertSame([], $m->Coordinates);
     }
 
     public function testConstructorWithValues(): void
@@ -27,9 +28,31 @@ final class CoordinateDatacenterMapTest extends TestCase
         $entry = new CoordinateEntry(Node: 'n1', Coord: new Coordinate(Vec: [1.0]));
         $m = new CoordinateDatacenterMap(Datacenter: 'dc1', AreaID: 'area-1', Coordinates: [$entry]);
         self::assertSame('dc1', $m->getDatacenter());
+        self::assertSame('dc1', $m->Datacenter);
         self::assertSame('area-1', $m->getAreaID());
+        self::assertSame('area-1', $m->AreaID);
         self::assertCount(1, $m->getCoordinates());
-        self::assertSame('n1', $m->getCoordinates()[0]->getNode());
+        self::assertCount(1, $m->Coordinates);
+        self::assertSame('n1', $m->Coordinates[0]->Node);
+    }
+
+    public function testSettersWithDirectFieldAccess(): void
+    {
+        $m = new CoordinateDatacenterMap();
+
+        $m->setDatacenter('dc2');
+        self::assertSame('dc2', $m->getDatacenter());
+        self::assertSame('dc2', $m->Datacenter);
+
+        $m->setAreaID('a2');
+        self::assertSame('a2', $m->getAreaID());
+        self::assertSame('a2', $m->AreaID);
+
+        $entry = new CoordinateEntry(Node: 'n');
+        $m->setCoordinates($entry);
+        self::assertCount(1, $m->getCoordinates());
+        self::assertCount(1, $m->Coordinates);
+        self::assertSame('n', $m->Coordinates[0]->Node);
     }
 
     public function testFluentSetters(): void
@@ -40,9 +63,9 @@ final class CoordinateDatacenterMapTest extends TestCase
             ->setAreaID('a2')
             ->setCoordinates(new CoordinateEntry(Node: 'n'));
         self::assertSame($m, $result);
-        self::assertSame('dc2', $m->getDatacenter());
-        self::assertSame('a2', $m->getAreaID());
-        self::assertCount(1, $m->getCoordinates());
+        self::assertSame('dc2', $m->Datacenter);
+        self::assertSame('a2', $m->AreaID);
+        self::assertCount(1, $m->Coordinates);
     }
 
     public function testJsonSerialize(): void
@@ -73,19 +96,19 @@ final class CoordinateDatacenterMapTest extends TestCase
         $decoded->Coordinates = [$entryObj];
 
         $m = CoordinateDatacenterMap::jsonUnserialize($decoded);
-        self::assertSame('dc-json', $m->getDatacenter());
-        self::assertSame('area-json', $m->getAreaID());
-        self::assertCount(1, $m->getCoordinates());
-        self::assertInstanceOf(CoordinateEntry::class, $m->getCoordinates()[0]);
-        self::assertSame('json-n', $m->getCoordinates()[0]->getNode());
+        self::assertSame('dc-json', $m->Datacenter);
+        self::assertSame('area-json', $m->AreaID);
+        self::assertCount(1, $m->Coordinates);
+        self::assertInstanceOf(CoordinateEntry::class, $m->Coordinates[0]);
+        self::assertSame('json-n', $m->Coordinates[0]->Node);
     }
 
     public function testJsonRoundTrip(): void
     {
         $original = new CoordinateDatacenterMap(Datacenter: 'dc1', AreaID: 'a1');
         $restored = CoordinateDatacenterMap::jsonUnserialize($original->jsonSerialize());
-        self::assertSame($original->getDatacenter(), $restored->getDatacenter());
-        self::assertSame($original->getAreaID(), $restored->getAreaID());
+        self::assertSame($original->Datacenter, $restored->Datacenter);
+        self::assertSame($original->AreaID, $restored->AreaID);
     }
 }
 

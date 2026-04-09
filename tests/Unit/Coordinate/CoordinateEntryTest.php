@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace DCarbone\PHPConsulAPITests\Unit\Coordinate;
 
 use DCarbone\PHPConsulAPI\Coordinate\Coordinate;
@@ -17,9 +15,13 @@ final class CoordinateEntryTest extends TestCase
     {
         $e = new CoordinateEntry();
         self::assertSame('', $e->getNode());
+        self::assertSame('', $e->Node);
         self::assertSame('', $e->getSegment());
+        self::assertSame('', $e->Segment);
         self::assertSame('', $e->getPartition());
+        self::assertSame('', $e->Partition);
         self::assertNull($e->getCoord());
+        self::assertNull($e->Coord);
     }
 
     public function testConstructorWithValues(): void
@@ -27,10 +29,40 @@ final class CoordinateEntryTest extends TestCase
         $coord = new Coordinate(Vec: [1.0, 2.0], Error: 0.1);
         $e = new CoordinateEntry(Node: 'node-1', Segment: 'seg', Partition: 'part', Coord: $coord);
         self::assertSame('node-1', $e->getNode());
+        self::assertSame('node-1', $e->Node);
         self::assertSame('seg', $e->getSegment());
+        self::assertSame('seg', $e->Segment);
         self::assertSame('part', $e->getPartition());
+        self::assertSame('part', $e->Partition);
         self::assertNotNull($e->getCoord());
-        self::assertSame([1.0, 2.0], $e->getCoord()->getVec());
+        self::assertNotNull($e->Coord);
+        self::assertSame([1.0, 2.0], $e->Coord->Vec);
+    }
+
+    public function testSettersWithDirectFieldAccess(): void
+    {
+        $e = new CoordinateEntry();
+
+        $e->setNode('n');
+        self::assertSame('n', $e->getNode());
+        self::assertSame('n', $e->Node);
+
+        $e->setSegment('s');
+        self::assertSame('s', $e->getSegment());
+        self::assertSame('s', $e->Segment);
+
+        $e->setPartition('p');
+        self::assertSame('p', $e->getPartition());
+        self::assertSame('p', $e->Partition);
+
+        $coord = new Coordinate(Vec: [0.5]);
+        $e->setCoord($coord);
+        self::assertSame($coord, $e->getCoord());
+        self::assertSame($coord, $e->Coord);
+
+        $e->setCoord(null);
+        self::assertNull($e->getCoord());
+        self::assertNull($e->Coord);
     }
 
     public function testFluentSetters(): void
@@ -39,10 +71,10 @@ final class CoordinateEntryTest extends TestCase
         $coord = new Coordinate(Vec: [0.5]);
         $result = $e->setNode('n')->setSegment('s')->setPartition('p')->setCoord($coord);
         self::assertSame($e, $result);
-        self::assertSame('n', $e->getNode());
-        self::assertSame('s', $e->getSegment());
-        self::assertSame('p', $e->getPartition());
-        self::assertNotNull($e->getCoord());
+        self::assertSame('n', $e->Node);
+        self::assertSame('s', $e->Segment);
+        self::assertSame('p', $e->Partition);
+        self::assertNotNull($e->Coord);
     }
 
     public function testJsonSerialize(): void
@@ -77,10 +109,10 @@ final class CoordinateEntryTest extends TestCase
         $decoded->Coord = $coordObj;
 
         $e = CoordinateEntry::jsonUnserialize($decoded);
-        self::assertSame('json-node', $e->getNode());
-        self::assertSame('json-seg', $e->getSegment());
-        self::assertNotNull($e->getCoord());
-        self::assertSame([1.5, 2.5], $e->getCoord()->getVec());
+        self::assertSame('json-node', $e->Node);
+        self::assertSame('json-seg', $e->Segment);
+        self::assertNotNull($e->Coord);
+        self::assertSame([1.5, 2.5], $e->Coord->Vec);
     }
 
     public function testJsonRoundTrip(): void
@@ -89,10 +121,9 @@ final class CoordinateEntryTest extends TestCase
         $json = json_encode($original);
         $decoded = json_decode($json, false);
         $restored = CoordinateEntry::jsonUnserialize($decoded);
-        self::assertSame($original->getNode(), $restored->getNode());
-        self::assertSame($original->getSegment(), $restored->getSegment());
-        self::assertNotNull($restored->getCoord());
-        self::assertSame($original->getCoord()->getVec(), $restored->getCoord()->getVec());
+        self::assertSame($original->Node, $restored->Node);
+        self::assertSame($original->Segment, $restored->Segment);
+        self::assertNotNull($restored->Coord);
+        self::assertSame($original->Coord->Vec, $restored->Coord->Vec);
     }
 }
-

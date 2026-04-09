@@ -1,11 +1,10 @@
 <?php
 
-declare(strict_types=1);
-
 namespace DCarbone\PHPConsulAPITests\Unit\Coordinate;
 
 use DCarbone\PHPConsulAPI\Coordinate\Coordinate;
 use DCarbone\PHPConsulAPI\Coordinate\CoordinateConfig;
+use DCarbone\PHPConsulAPI\Coordinate\DimensionalityConflictException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -17,29 +16,58 @@ final class CoordinateTest extends TestCase
     {
         $c = new Coordinate();
         self::assertSame([], $c->getVec());
+        self::assertSame([], $c->Vec);
         self::assertSame(0.0, $c->getError());
+        self::assertSame(0.0, $c->Error);
         self::assertSame(0.0, $c->getAdjustment());
+        self::assertSame(0.0, $c->Adjustment);
         self::assertSame(0.0, $c->getHeight());
+        self::assertSame(0.0, $c->Height);
     }
 
     public function testConstructorWithValues(): void
     {
         $c = new Coordinate(Vec: [1.0, 2.0, 3.0], Error: 0.5, Adjustment: 0.1, Height: 0.01);
         self::assertSame([1.0, 2.0, 3.0], $c->getVec());
+        self::assertSame([1.0, 2.0, 3.0], $c->Vec);
         self::assertSame(0.5, $c->getError());
+        self::assertSame(0.5, $c->Error);
         self::assertSame(0.1, $c->getAdjustment());
+        self::assertSame(0.1, $c->Adjustment);
         self::assertSame(0.01, $c->getHeight());
+        self::assertSame(0.01, $c->Height);
     }
 
     public function testConstructorWithConfig(): void
     {
         $config = new CoordinateConfig(Dimensionality: 4);
         $c = new Coordinate(config: $config);
-        self::assertCount(4, $c->getVec());
-        self::assertSame([0.0, 0.0, 0.0, 0.0], $c->getVec());
-        self::assertSame($config->VivaldiErrorMax, $c->getError());
-        self::assertSame(0.0, $c->getAdjustment());
-        self::assertSame($config->HeightMin, $c->getHeight());
+        self::assertCount(4, $c->Vec);
+        self::assertSame([0.0, 0.0, 0.0, 0.0], $c->Vec);
+        self::assertSame($config->VivaldiErrorMax, $c->Error);
+        self::assertSame(0.0, $c->Adjustment);
+        self::assertSame($config->HeightMin, $c->Height);
+    }
+
+    public function testSettersWithDirectFieldAccess(): void
+    {
+        $c = new Coordinate();
+
+        $c->setVec(1.0, 2.0);
+        self::assertSame([1.0, 2.0], $c->getVec());
+        self::assertSame([1.0, 2.0], $c->Vec);
+
+        $c->setError(0.3);
+        self::assertSame(0.3, $c->getError());
+        self::assertSame(0.3, $c->Error);
+
+        $c->setAdjustment(0.05);
+        self::assertSame(0.05, $c->getAdjustment());
+        self::assertSame(0.05, $c->Adjustment);
+
+        $c->setHeight(0.001);
+        self::assertSame(0.001, $c->getHeight());
+        self::assertSame(0.001, $c->Height);
     }
 
     public function testFluentSetters(): void
@@ -47,10 +75,10 @@ final class CoordinateTest extends TestCase
         $c = new Coordinate();
         $result = $c->setVec(1.0, 2.0)->setError(0.3)->setAdjustment(0.05)->setHeight(0.001);
         self::assertSame($c, $result);
-        self::assertSame([1.0, 2.0], $c->getVec());
-        self::assertSame(0.3, $c->getError());
-        self::assertSame(0.05, $c->getAdjustment());
-        self::assertSame(0.001, $c->getHeight());
+        self::assertSame([1.0, 2.0], $c->Vec);
+        self::assertSame(0.3, $c->Error);
+        self::assertSame(0.05, $c->Adjustment);
+        self::assertSame(0.001, $c->Height);
     }
 
     public function testClone(): void
@@ -58,8 +86,8 @@ final class CoordinateTest extends TestCase
         $c = new Coordinate(Vec: [1.0, 2.0], Error: 0.1);
         $clone = $c->Clone();
         self::assertNotSame($c, $clone);
-        self::assertSame($c->getVec(), $clone->getVec());
-        self::assertSame($c->getError(), $clone->getError());
+        self::assertSame($c->Vec, $clone->Vec);
+        self::assertSame($c->Error, $clone->Error);
     }
 
     public function testIsValid(): void
@@ -90,6 +118,33 @@ final class CoordinateTest extends TestCase
         $b = new Coordinate(Vec: [3.0, 4.0], Error: 0.0, Adjustment: 0.0, Height: 0.0);
         $dist = $a->DistanceTo($b);
         self::assertGreaterThan(0, $dist->Nanoseconds());
+    }
+
+    public function testDistanceToIncompatibleThrows(): void
+    {
+        $a = new Coordinate(Vec: [1.0, 2.0]);
+        $b = new Coordinate(Vec: [1.0, 2.0, 3.0]);
+        $this->expectException(DimensionalityConflictException::class);
+        $a->DistanceTo($b);
+    }
+
+    public function testApplyForceIncompatibleThrows(): void
+    {
+        $config = new CoordinateConfig();
+        $a = new Coordinate(Vec: [1.0, 2.0]);
+        $b = new Coordinate(Vec: [1.0, 2.0, 3.0]);
+        $this->expectException(DimensionalityConflictException::class);
+        $a->ApplyForce($config, 1.0, $b);
+    }
+
+    public function testApplyForce(): void
+    {
+        $config = new CoordinateConfig();
+        $a = new Coordinate(Vec: [0.0, 0.0], Height: $config->HeightMin);
+        $b = new Coordinate(Vec: [3.0, 4.0], Height: $config->HeightMin);
+        $result = $a->ApplyForce($config, 0.5, $b);
+        self::assertNotSame($a, $result);
+        self::assertCount(2, $result->Vec);
     }
 
     public function testStaticAdd(): void
@@ -137,20 +192,20 @@ final class CoordinateTest extends TestCase
         $decoded->Adjustment = 0.05;
         $decoded->Height = 0.001;
         $c = Coordinate::jsonUnserialize($decoded);
-        self::assertSame([1.5, 2.5], $c->getVec());
-        self::assertSame(0.3, $c->getError());
-        self::assertSame(0.05, $c->getAdjustment());
-        self::assertSame(0.001, $c->getHeight());
+        self::assertSame([1.5, 2.5], $c->Vec);
+        self::assertSame(0.3, $c->Error);
+        self::assertSame(0.05, $c->Adjustment);
+        self::assertSame(0.001, $c->Height);
     }
 
     public function testJsonRoundTrip(): void
     {
         $original = new Coordinate(Vec: [1.0, 2.0, 3.0], Error: 0.4, Adjustment: 0.02, Height: 0.003);
         $restored = Coordinate::jsonUnserialize($original->jsonSerialize());
-        self::assertSame($original->getVec(), $restored->getVec());
-        self::assertSame($original->getError(), $restored->getError());
-        self::assertSame($original->getAdjustment(), $restored->getAdjustment());
-        self::assertSame($original->getHeight(), $restored->getHeight());
+        self::assertSame($original->Vec, $restored->Vec);
+        self::assertSame($original->Error, $restored->Error);
+        self::assertSame($original->Adjustment, $restored->Adjustment);
+        self::assertSame($original->Height, $restored->Height);
     }
 }
 

@@ -74,7 +74,6 @@ class CoordinateConfig extends AbstractType
      * Create a new CoordinateConfig with default values.
      *
      * @deprecated Just call new CoordinateConfig() instead.
-     * @return self
      */
     public static function Default(): self
     {
