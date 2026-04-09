@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace DCarbone\PHPConsulAPITests\Unit\PreparedQuery;
 
 use DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions;
@@ -16,7 +14,9 @@ final class QueryDatacenterOptionsTest extends TestCase
     {
         $opts = new QueryDatacenterOptions();
         self::assertSame(0, $opts->getNearestN());
+        self::assertSame(0, $opts->NearestN);
         self::assertSame([], $opts->getDatacenters());
+        self::assertSame([], $opts->Datacenters);
     }
 
     public function testConstructorWithValues(): void
@@ -26,7 +26,9 @@ final class QueryDatacenterOptionsTest extends TestCase
             Datacenters: ['dc1', 'dc2', 'dc3'],
         );
         self::assertSame(3, $opts->getNearestN());
+        self::assertSame(3, $opts->NearestN);
         self::assertSame(['dc1', 'dc2', 'dc3'], $opts->getDatacenters());
+        self::assertSame(['dc1', 'dc2', 'dc3'], $opts->Datacenters);
     }
 
     public function testFluentSetters(): void
@@ -38,7 +40,9 @@ final class QueryDatacenterOptionsTest extends TestCase
 
         self::assertSame($opts, $result);
         self::assertSame(5, $opts->getNearestN());
+        self::assertSame(5, $opts->NearestN);
         self::assertSame(['us-east', 'us-west'], $opts->getDatacenters());
+        self::assertSame(['us-east', 'us-west'], $opts->Datacenters);
     }
 
     public function testVariadicSetDatacentersReplacesExisting(): void
@@ -47,6 +51,7 @@ final class QueryDatacenterOptionsTest extends TestCase
         $opts->setDatacenters('new-dc-1', 'new-dc-2');
 
         self::assertSame(['new-dc-1', 'new-dc-2'], $opts->getDatacenters());
+        self::assertSame(['new-dc-1', 'new-dc-2'], $opts->Datacenters);
     }
 
     public function testVariadicSetDatacentersWithNoArgsClearsArray(): void
@@ -55,6 +60,7 @@ final class QueryDatacenterOptionsTest extends TestCase
         $opts->setDatacenters();
 
         self::assertSame([], $opts->getDatacenters());
+        self::assertSame([], $opts->Datacenters);
     }
 
     public function testAddDatacenter(): void
@@ -64,6 +70,7 @@ final class QueryDatacenterOptionsTest extends TestCase
 
         self::assertSame($opts, $result);
         self::assertSame(['dc1', 'dc2'], $opts->getDatacenters());
+        self::assertSame(['dc1', 'dc2'], $opts->Datacenters);
     }
 
     public function testJsonSerialize(): void
@@ -89,7 +96,9 @@ final class QueryDatacenterOptionsTest extends TestCase
         $opts = QueryDatacenterOptions::jsonUnserialize($decoded);
 
         self::assertSame(4, $opts->getNearestN());
+        self::assertSame(4, $opts->NearestN);
         self::assertSame(['x', 'y'], $opts->getDatacenters());
+        self::assertSame(['x', 'y'], $opts->Datacenters);
     }
 
     public function testJsonRoundTrip(): void

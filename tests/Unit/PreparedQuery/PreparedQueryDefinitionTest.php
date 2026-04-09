@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace DCarbone\PHPConsulAPITests\Unit\PreparedQuery;
 
 use DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryDefinition;
@@ -19,12 +17,19 @@ final class PreparedQueryDefinitionTest extends TestCase
     {
         $d = new PreparedQueryDefinition();
         self::assertSame('', $d->getID());
+        self::assertSame('', $d->ID);
         self::assertSame('', $d->getName());
+        self::assertSame('', $d->Name);
         self::assertSame('', $d->getSession());
+        self::assertSame('', $d->Session);
         self::assertSame('', $d->getToken());
+        self::assertSame('', $d->Token);
         self::assertInstanceOf(ServiceQuery::class, $d->getService());
+        self::assertInstanceOf(ServiceQuery::class, $d->Service);
         self::assertInstanceOf(QueryDNSOptions::class, $d->getDNS());
+        self::assertInstanceOf(QueryDNSOptions::class, $d->DNS);
         self::assertInstanceOf(QueryTemplate::class, $d->getTemplate());
+        self::assertInstanceOf(QueryTemplate::class, $d->Template);
     }
 
     public function testConstructorWithValues(): void
@@ -36,24 +41,38 @@ final class PreparedQueryDefinitionTest extends TestCase
             Token: 'tok-1',
         );
         self::assertSame('pq-1', $d->getID());
+        self::assertSame('pq-1', $d->ID);
         self::assertSame('my-query', $d->getName());
+        self::assertSame('my-query', $d->Name);
         self::assertSame('sess-1', $d->getSession());
+        self::assertSame('sess-1', $d->Session);
         self::assertSame('tok-1', $d->getToken());
+        self::assertSame('tok-1', $d->Token);
     }
 
     public function testFluentSetters(): void
     {
         $d = new PreparedQueryDefinition();
+        $svc = new ServiceQuery(Service: 'web');
+        $dns = new QueryDNSOptions(TTL: '5s');
+        $tmpl = new QueryTemplate(Type: 'tmpl');
         $result = $d
             ->setID('i')
             ->setName('n')
             ->setSession('s')
             ->setToken('t')
-            ->setService(new ServiceQuery(Service: 'web'))
-            ->setDNS(new QueryDNSOptions(TTL: '5s'))
-            ->setTemplate(new QueryTemplate(Type: 'tmpl'));
+            ->setService($svc)
+            ->setDNS($dns)
+            ->setTemplate($tmpl);
         self::assertSame($d, $result);
+        self::assertSame('i', $d->ID);
+        self::assertSame('n', $d->Name);
+        self::assertSame('s', $d->Session);
+        self::assertSame('t', $d->Token);
+        self::assertSame($svc, $d->Service);
         self::assertSame('web', $d->getService()->getService());
+        self::assertSame($dns, $d->DNS);
+        self::assertSame($tmpl, $d->Template);
     }
 
     public function testJsonSerialize(): void

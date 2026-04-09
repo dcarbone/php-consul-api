@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace DCarbone\PHPConsulAPITests\Unit\PreparedQuery;
 
 use DCarbone\PHPConsulAPI\PreparedQuery\QueryDNSOptions;
@@ -16,12 +14,14 @@ final class QueryDNSOptionsTest extends TestCase
     {
         $d = new QueryDNSOptions();
         self::assertSame('', $d->getTTL());
+        self::assertSame('', $d->TTL);
     }
 
     public function testConstructorWithValues(): void
     {
         $d = new QueryDNSOptions(TTL: '10s');
         self::assertSame('10s', $d->getTTL());
+        self::assertSame('10s', $d->TTL);
     }
 
     public function testFluentSetters(): void
@@ -30,6 +30,7 @@ final class QueryDNSOptionsTest extends TestCase
         $result = $d->setTTL('30s');
         self::assertSame($d, $result);
         self::assertSame('30s', $d->getTTL());
+        self::assertSame('30s', $d->TTL);
     }
 
     public function testJsonSerialize(): void
@@ -46,6 +47,7 @@ final class QueryDNSOptionsTest extends TestCase
         $decoded->TTL = '15s';
         $d = QueryDNSOptions::jsonUnserialize($decoded);
         self::assertSame('15s', $d->getTTL());
+        self::assertSame('15s', $d->TTL);
     }
 
     public function testJsonRoundTrip(): void

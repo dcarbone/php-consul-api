@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace DCarbone\PHPConsulAPITests\Unit\Peering;
 
 use DCarbone\PHPConsulAPI\Peering\Locality;
@@ -16,14 +14,18 @@ final class LocalityTest extends TestCase
     {
         $l = new Locality();
         self::assertSame('', $l->getRegion());
+        self::assertSame('', $l->Region);
         self::assertSame('', $l->getZone());
+        self::assertSame('', $l->Zone);
     }
 
     public function testConstructorWithValues(): void
     {
         $l = new Locality(Region: 'us-east-1', Zone: 'us-east-1a');
         self::assertSame('us-east-1', $l->getRegion());
+        self::assertSame('us-east-1', $l->Region);
         self::assertSame('us-east-1a', $l->getZone());
+        self::assertSame('us-east-1a', $l->Zone);
     }
 
     public function testFluentSetters(): void
@@ -32,7 +34,9 @@ final class LocalityTest extends TestCase
         $result = $l->setRegion('eu-west-1')->setZone('eu-west-1b');
         self::assertSame($l, $result);
         self::assertSame('eu-west-1', $l->getRegion());
+        self::assertSame('eu-west-1', $l->Region);
         self::assertSame('eu-west-1b', $l->getZone());
+        self::assertSame('eu-west-1b', $l->Zone);
     }
 
     public function testJsonSerialize(): void
@@ -51,7 +55,9 @@ final class LocalityTest extends TestCase
         $decoded->Zone = 'ap-south-1a';
         $l = Locality::jsonUnserialize($decoded);
         self::assertSame('ap-south-1', $l->getRegion());
+        self::assertSame('ap-south-1', $l->Region);
         self::assertSame('ap-south-1a', $l->getZone());
+        self::assertSame('ap-south-1a', $l->Zone);
     }
 
     public function testJsonRoundTrip(): void
