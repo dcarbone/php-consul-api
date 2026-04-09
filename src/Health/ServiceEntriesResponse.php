@@ -28,6 +28,11 @@ class ServiceEntriesResponse extends AbstractValuedQueryResponse implements Unma
     /** @var \DCarbone\PHPConsulAPI\Health\ServiceEntry[] */
     public array $ServiceEntries;
 
+    public function __construct()
+    {
+        $this->ServiceEntries = [];
+    }
+
     /**
      * @return \DCarbone\PHPConsulAPI\Health\ServiceEntry[]
      */
