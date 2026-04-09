@@ -154,6 +154,10 @@ class KVTxnOp extends AbstractType
             if ('Verb' === $k) {
                 $n->Verb = KVOp::from($v);
             } elseif ('Value' === $k) {
+                if (null === $v) {
+                    $n->Value = '';
+                    continue;
+                }
                 $val = base64_decode($v, true);
                 if (false === $val) {
                     throw new \DomainException(sprintf('Could not base64 decode value "%s"', $v));
@@ -171,7 +175,7 @@ class KVTxnOp extends AbstractType
         $out = $this->_startJsonSerialize();
         $out->Verb = $this->Verb;
         $out->Key = $this->Key;
-        $out->Value = $this->Value;
+        $out->Value = base64_encode($this->Value);
         $out->Flags = $this->Flags;
         $out->Index = $this->Index;
         $out->Session = $this->Session;

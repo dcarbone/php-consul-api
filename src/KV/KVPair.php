@@ -165,6 +165,10 @@ class KVPair extends AbstractType
         $n = new self();
         foreach ((array)$decoded as $k => $v) {
             if ('Value' === $k) {
+                if (null === $v) {
+                    $n->Value = '';
+                    continue;
+                }
                 $val = base64_decode($v, true);
                 if (false === $val) {
                     throw new \DomainException(sprintf('Could not base64 decode value "%s"', $v));
