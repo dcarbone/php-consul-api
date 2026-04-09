@@ -45,7 +45,7 @@ class ServiceIntentionsConfigEntry extends AbstractType implements ConfigEntry
         string $Namespace = '',
         array $Sources = [],
         null|IntentionJWTRequirement $JWT = null,
-        array $Meta = null,
+        null|array $Meta = null,
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
     ) {

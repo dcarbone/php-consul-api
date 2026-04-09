@@ -24,7 +24,7 @@ class DimensionalityConflictException extends \DomainException
 {
     public const DefaultMessage = 'coordinate dimensionality does not match';
 
-    public function __construct(string $message = '', int $code = 0, \Throwable $previous = null)
+    public function __construct(string $message = '', int $code = 0, null|\Throwable $previous = null)
     {
         parent::__construct('' === $message ? static::DefaultMessage : $message, $code, $previous);
     }

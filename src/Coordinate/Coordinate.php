@@ -238,7 +238,7 @@ class Coordinate extends AbstractType
         }
 
         foreach ($ret as $k => &$v) {
-            $v = lcg_value() - 0.5;
+            $v = self::_randomFloat() - 0.5;
         }
 
         if (($mag = self::_magnitude($ret)) && $mag > self::ZeroThreshold) {
@@ -248,6 +248,14 @@ class Coordinate extends AbstractType
         $ret    = array_fill(0, count($ret), 0.0);
         $ret[0] = 1.0;
         return new CoordinateUnitVectorAt(vec: $ret, mag: 0.0);
+    }
+
+    private static function _randomFloat(): float
+    {
+        if (PHP_VERSION_ID >= 83000) {
+            return (new \Random\Randomizer())->getFloat(0.0, 1.0);
+        }
+        return mt_rand() / mt_getrandmax();
     }
 
     public static function jsonUnserialize(\stdClass $decoded): self
