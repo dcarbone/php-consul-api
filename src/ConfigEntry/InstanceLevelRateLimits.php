@@ -39,7 +39,7 @@ class InstanceLevelRateLimits extends AbstractType
     ) {
         $this->RequestsPerSecond = $RequestsPerSecond;
         $this->RequestsMaxBurst = $RequestsMaxBurst;
-        $this->SetRoutes(...$Routes);
+        $this->setRoutes(...$Routes);
     }
 
     public function getRequestsPerSecond(): int
