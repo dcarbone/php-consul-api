@@ -23,6 +23,7 @@ use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\PHPLib\Request;
 use DCarbone\PHPConsulAPI\WriteOptions;
 use DCarbone\PHPConsulAPITests\ConsulManager;
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
@@ -40,18 +41,14 @@ final class RequestUsageTest extends TestCase
         self::assertInstanceOf(Request::class, $r);
     }
 
-    /**
-     * @depends testCanConstructWithoutBody
-     */
+    #[Depends('testCanConstructWithoutBody')]
     public function testCanConstructWithBody(): void
     {
         $r = new Request('', '', ConsulManager::testConfig(), new KVPair());
         self::assertInstanceOf(Request::class, $r);
     }
 
-    /**
-     * @depends testCanConstructWithoutBody
-     */
+    #[Depends('testCanConstructWithoutBody')]
     public function testCanCreatePsr7Uri(): void
     {
         $r   = new Request('GET', 'kv', ConsulManager::testConfig(), null);
@@ -60,9 +57,7 @@ final class RequestUsageTest extends TestCase
         self::assertSame('/kv', $uri->getPath());
     }
 
-    /**
-     * @depends testCanCreatePsr7Uri
-     */
+    #[Depends('testCanCreatePsr7Uri')]
     public function testCanCreatePsr7Request(): void
     {
         $r = new Request('GET', '/kv', ConsulManager::testConfig(), null);
@@ -73,9 +68,7 @@ final class RequestUsageTest extends TestCase
         self::assertSame('GET', $psr7Request->getMethod());
     }
 
-    /**
-     * @depends testCanCreatePsr7Request
-     */
+    #[Depends('testCanCreatePsr7Request')]
     public function testCanSetQueryOptions(): void
     {
         $r = new Request('GET', 'kv', ConsulManager::testConfig(), null);
@@ -86,9 +79,7 @@ final class RequestUsageTest extends TestCase
         self::assertSame('pretty', $uri->getQuery());
     }
 
-    /**
-     * @depends testCanCreatePsr7Request
-     */
+    #[Depends('testCanCreatePsr7Request')]
     public function testCanSetWriteOptions(): void
     {
         $r = new Request('GET', 'kv', ConsulManager::testConfig(), null);

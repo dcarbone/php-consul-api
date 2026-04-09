@@ -7,6 +7,7 @@ use DCarbone\PHPConsulAPI\Coordinate\CoordinateConfig;
 use DCarbone\PHPConsulAPI\Coordinate\DimensionalityConflictException;
 use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\Attributes\Depends;
 
 /**
  * These tests were largely pulled from https://github.com/hashicorp/serf/blob/master/coordinate/coordinate_test.go
@@ -83,9 +84,7 @@ final class CoordinateUsageTest extends AbstractUsageTests
         self::assertSame($coord->Vec[1], 0.2);
     }
 
-    /**
-     * @depends testCanConstructCoordinateWithDefaultConfig
-     */
+    #[Depends('testCanConstructCoordinateWithDefaultConfig')]
     public function testIsValidStates(): void
     {
         $coord = new Coordinate(CoordinateConfig::Default());

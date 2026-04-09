@@ -30,6 +30,7 @@ use DCarbone\PHPConsulAPI\WriteMeta;
 use DCarbone\PHPConsulAPITests\ConsulManager;
 use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\Attributes\Depends;
 
 /**
  * Class CatalogClientTest
@@ -54,9 +55,7 @@ final class CatalogClientTest extends AbstractUsageTests
         self::assertInstanceOf(CatalogClient::class, $client);
     }
 
-    /**
-     * @depends testCanConstructClient
-     */
+    #[Depends('testCanConstructClient')]
     public function testCanRegisterService(): void
     {
         $client = new CatalogClient(ConsulManager::testConfig());
@@ -77,9 +76,7 @@ final class CatalogClientTest extends AbstractUsageTests
         self::assertInstanceOf(WriteMeta::class, $wm);
     }
 
-    /**
-     * @depends testCanRegisterService
-     */
+    #[Depends('testCanRegisterService')]
     public function testCanGetService(): void
     {
         $client = new CatalogClient(ConsulManager::testConfig());
@@ -92,9 +89,7 @@ final class CatalogClientTest extends AbstractUsageTests
         self::assertInstanceOf(CatalogService::class, reset($service));
     }
 
-    /**
-     * @depends testCanGetService
-     */
+    #[Depends('testCanGetService')]
     public function testCanRegisterSecondServiceWithSameName(): void
     {
         $client = new CatalogClient(ConsulManager::testConfig());
@@ -114,9 +109,7 @@ final class CatalogClientTest extends AbstractUsageTests
         self::assertInstanceOf(WriteMeta::class, $wm);
     }
 
-    /**
-     * @depends testCanRegisterSecondServiceWithSameName
-     */
+    #[Depends('testCanRegisterSecondServiceWithSameName')]
     public function testCanGetListOfService(): void
     {
         $client = new CatalogClient(ConsulManager::testConfig());
@@ -137,9 +130,7 @@ final class CatalogClientTest extends AbstractUsageTests
         }
     }
 
-    /**
-     * @depends testCanRegisterSecondServiceWithSameName
-     */
+    #[Depends('testCanRegisterSecondServiceWithSameName')]
     public function testCanGetListOfServices(): void
     {
         $client = new CatalogClient(ConsulManager::testConfig());
@@ -181,9 +172,8 @@ final class CatalogClientTest extends AbstractUsageTests
 
     /**
      * TODO: Update after multi-datacenter tests are possible...
-     *
-     * @depends testCanConstructClient
      */
+    #[Depends('testCanConstructClient')]
     public function testCanGetDatacenters(): void
     {
         $client = new CatalogClient(ConsulManager::testConfig());
@@ -201,9 +191,7 @@ final class CatalogClientTest extends AbstractUsageTests
         }
     }
 
-    /**
-     * @depends testCanConstructClient
-     */
+    #[Depends('testCanConstructClient')]
     public function testCanGetListOfNodes(): void
     {
         $client = new CatalogClient(ConsulManager::testConfig());
@@ -222,9 +210,7 @@ final class CatalogClientTest extends AbstractUsageTests
         }
     }
 
-    /**
-     * @depends testCanGetListOfNodes
-     */
+    #[Depends('testCanGetListOfNodes')]
     public function testCanGetNode(): void
     {
         $client = new CatalogClient(ConsulManager::testConfig());

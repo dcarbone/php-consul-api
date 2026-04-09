@@ -5,6 +5,7 @@ namespace DCarbone\PHPConsulAPITests\Usage;
 use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\Consul;
 use DCarbone\PHPConsulAPITests\ConsulManager;
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 
 /*
@@ -39,9 +40,7 @@ final class ConfigUsageTest extends TestCase
         self::assertInstanceOf(Config::class, $config);
     }
 
-    /**
-     * @depends testCanConstructConfig
-     */
+    #[Depends('testCanConstructConfig')]
     public function testConfigDefaults(): void
     {
         $config = new Config();

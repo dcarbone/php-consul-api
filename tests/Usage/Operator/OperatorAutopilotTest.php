@@ -23,6 +23,7 @@ use DCarbone\PHPConsulAPI\Operator\OperatorClient;
 use DCarbone\PHPConsulAPI\Operator\OperatorHealthReply;
 use DCarbone\PHPConsulAPITests\ConsulManager;
 use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
+use PHPUnit\Framework\Attributes\Depends;
 
 /**
  * Class OperatorAutopilotTest
@@ -47,9 +48,7 @@ final class OperatorAutopilotTest extends AbstractUsageTests
         );
     }
 
-    /**
-     * @depends testCanGetAutopilotConfiguration
-     */
+    #[Depends('testCanGetAutopilotConfiguration')]
     public function testCanSetAutopilotConfiguration(): void
     {
         $client = new OperatorClient(ConsulManager::testConfig());
@@ -71,9 +70,7 @@ final class OperatorAutopilotTest extends AbstractUsageTests
         }
     }
 
-    /**
-     * @depends testCanSetAutopilotConfiguration
-     */
+    #[Depends('testCanSetAutopilotConfiguration')]
     public function testCanCASAutopilotConfiguration(): void
     {
         $client = new OperatorClient(ConsulManager::testConfig());

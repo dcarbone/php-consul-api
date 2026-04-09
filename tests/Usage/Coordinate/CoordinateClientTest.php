@@ -22,6 +22,7 @@ use DCarbone\PHPConsulAPI\Coordinate\CoordinateClient;
 use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPITests\ConsulManager;
 use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
+use PHPUnit\Framework\Attributes\Depends;
 
 /**
  * Class CoordinateClientTest
@@ -39,9 +40,7 @@ final class CoordinateClientTest extends AbstractUsageTests
         self::assertInstanceOf(CoordinateClient::class, $client);
     }
 
-    /**
-     * @depends testCanConstructClient
-     */
+    #[Depends('testCanConstructClient')]
     public function testDatacenters(): void
     {
         $client = new CoordinateClient(ConsulManager::testConfig());
@@ -52,9 +51,7 @@ final class CoordinateClientTest extends AbstractUsageTests
         self::assertGreaterThan(0, count($dcs), 'Expected at least 1 datacenter');
     }
 
-    /**
-     * @depends testCanConstructClient
-     */
+    #[Depends('testCanConstructClient')]
     public function testNodes(): void
     {
         $client = new CoordinateClient(ConsulManager::testConfig());

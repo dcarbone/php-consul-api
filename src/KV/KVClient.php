@@ -85,9 +85,30 @@ class KVClient extends AbstractClient
     {
         $r = $this->_newGetRequest(sprintf('v1/kv/%s', $prefix), $opts);
         $r->params->set('recurse', '');
+        $resp = $this->_do($r);
         $ret = new KVPairsResponse();
-        $resp = $this->_requireOK($this->_do($r));
-        $this->_unmarshalResponse($resp, $ret);
+
+        if (null !== $resp->Err) {
+            $ret->setErr($resp->Err);
+            return $ret;
+        }
+
+        $ret->setQueryMeta($resp->buildQueryMeta());
+
+        $code = $resp->Response->getStatusCode();
+
+        if (HTTP\StatusOK === $code) {
+            $dec = $this->_decodeBody($resp->Response->getBody());
+            if (null !== $dec->Err) {
+                $ret->setErr($dec->Err);
+            } else {
+                $ret->unmarshalValue($dec->Decoded);
+            }
+        } elseif (HTTP\StatusNotFound !== $code) {
+            $ret->setErr(new Error(sprintf('%s: %s', $code, $resp->Response->getReasonPhrase())));
+        }
+        // 404 → empty KVPairs (already initialized in constructor)
+
         return $ret;
     }
 

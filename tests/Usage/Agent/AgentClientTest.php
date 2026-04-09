@@ -26,6 +26,7 @@ use DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration;
 use DCarbone\PHPConsulAPITests\ConsulManager;
 use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
 use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\Attributes\Depends;
 
 /**
  * Class AgentClientTest
@@ -45,9 +46,7 @@ final class AgentClientTest extends AbstractUsageTests
         self::assertInstanceOf(AgentClient::class, $client);
     }
 
-    /**
-     * @depends testCanConstructAgentClient
-     */
+    #[Depends('testCanConstructAgentClient')]
     public function testCanGetSelf(): void
     {
         $client = new AgentClient(ConsulManager::testConfig());
@@ -63,9 +62,7 @@ final class AgentClientTest extends AbstractUsageTests
         );
     }
 
-    /**
-     * @depends testCanGetSelf
-     */
+    #[Depends('testCanGetSelf')]
     public function testCanReloadSelf(): void
     {
         $client = new AgentClient(ConsulManager::testConfig());
@@ -73,9 +70,7 @@ final class AgentClientTest extends AbstractUsageTests
         self::assertNull($err, sprintf('AgentClient::reload returned error: %s', $err));
     }
 
-    /**
-     * @depends testCanGetSelf
-     */
+    #[Depends('testCanGetSelf')]
     public function testCanGetNodeName(): void
     {
         $client = new AgentClient(ConsulManager::testConfig());
@@ -89,9 +84,7 @@ final class AgentClientTest extends AbstractUsageTests
         self::assertNotEmpty($nodeName, 'NodeName was empty!');
     }
 
-    /**
-     * @depends testCanConstructAgentClient
-     */
+    #[Depends('testCanConstructAgentClient')]
     public function testCanGeMembers(): void
     {
         $client = new AgentClient(ConsulManager::testConfig());
@@ -103,9 +96,7 @@ final class AgentClientTest extends AbstractUsageTests
         self::assertCount(1, $members);
     }
 
-    /**
-     * @depends testCanConstructAgentClient
-     */
+    #[Depends('testCanConstructAgentClient')]
     public function testCanRegisterServiceNoChecks(): void
     {
         $client = new AgentClient(ConsulManager::testConfig());
@@ -120,9 +111,7 @@ final class AgentClientTest extends AbstractUsageTests
         self::assertNull($err, sprintf('AgentClient::serviceRegister returned error: %s', $err));
     }
 
-    /**
-     * @depends testCanConstructAgentClient
-     */
+    #[Depends('testCanConstructAgentClient')]
     public function testCanRegisterServiceWithOneCheck(): void
     {
         $client = new AgentClient(ConsulManager::testConfig());
@@ -142,9 +131,8 @@ final class AgentClientTest extends AbstractUsageTests
 
     /**
      * TODO: Expand later with multi-service return test?
-     *
-     * @depends testCanRegisterServiceNoChecks
      */
+    #[Depends('testCanRegisterServiceNoChecks')]
     public function testCanGetServiceList(): void
     {
         $client = new AgentClient(ConsulManager::testConfig());
@@ -167,9 +155,7 @@ final class AgentClientTest extends AbstractUsageTests
         }
     }
 
-    /**
-     * @depends testCanRegisterServiceNoChecks
-     */
+    #[Depends('testCanRegisterServiceNoChecks')]
     public function testCanDeregisterService(): void
     {
         $client = new AgentClient(ConsulManager::testConfig());
@@ -193,9 +179,7 @@ final class AgentClientTest extends AbstractUsageTests
         }
     }
 
-    /**
-     * @depends testCanDeregisterService
-     */
+    #[Depends('testCanDeregisterService')]
     public function testCanRegisterServiceWithCheck(): void
     {
         $client = new AgentClient(ConsulManager::testConfig());

@@ -19,6 +19,7 @@ namespace DCarbone\PHPConsulAPITests\Usage;
  */
 
 use DCarbone\PHPConsulAPI\PHPLib\Values;
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -34,18 +35,14 @@ final class ValuesUsageTest extends TestCase
         self::assertInstanceOf(Values::class, $values);
     }
 
-    /**
-     * @depends testCanConstruct
-     */
+    #[Depends('testCanConstruct')]
     public function testCanAddValue(): void
     {
         $v = new Values();
         $v->add('test', 'value');
     }
 
-    /**
-     * @depends testCanConstruct
-     */
+    #[Depends('testCanConstruct')]
     public function testExceptionThrownWhenAddingInvalidKey(): void
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -53,9 +50,7 @@ final class ValuesUsageTest extends TestCase
         $v->add(1234, 'whatever');
     }
 
-    /**
-     * @depends testCanConstruct
-     */
+    #[Depends('testCanConstruct')]
     public function testExceptionThrownWhenAddingInvalidValue(): void
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -63,9 +58,7 @@ final class ValuesUsageTest extends TestCase
         $v->add('test', new \stdClass());
     }
 
-    /**
-     * @depends testCanAddValue
-     */
+    #[Depends('testCanAddValue')]
     public function testCanGetAll(): void
     {
         $values = new Values();

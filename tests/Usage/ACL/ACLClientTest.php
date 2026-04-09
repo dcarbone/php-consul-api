@@ -26,6 +26,7 @@ use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPI\WriteMeta;
 use DCarbone\PHPConsulAPITests\ConsulManager;
 use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
+use PHPUnit\Framework\Attributes\Depends;
 
 /**
  * @internal
@@ -80,9 +81,9 @@ final class ACLClientTest extends AbstractUsageTests
     }
 
     /**
-     * @depends testPolicyCreate
      * @return array{0: string, 1: string} [accessorID, policyID]
      */
+    #[Depends('testPolicyCreate')]
     public function testTokenCreate(string $policyID): array
     {
         $client = self::managementClient();
@@ -104,10 +105,10 @@ final class ACLClientTest extends AbstractUsageTests
     }
 
     /**
-     * @depends testTokenCreate
      * @param array{0: string, 1: string} $ids
      * @return array{0: string, 1: string} [accessorID, policyID]
      */
+    #[Depends('testTokenCreate')]
     public function testTokenRead(array $ids): array
     {
         [$accessorID] = $ids;
@@ -125,10 +126,10 @@ final class ACLClientTest extends AbstractUsageTests
     }
 
     /**
-     * @depends testTokenRead
      * @param array{0: string, 1: string} $ids
      * @return array{0: string, 1: string} [accessorID, policyID]
      */
+    #[Depends('testTokenRead')]
     public function testTokenList(array $ids): array
     {
         $client = self::managementClient();
@@ -144,10 +145,9 @@ final class ACLClientTest extends AbstractUsageTests
     }
 
     /**
-     * @depends testTokenList
      * @param array{0: string, 1: string} $ids
-     * @return string The policyID
      */
+    #[Depends('testTokenList')]
     public function testTokenDelete(array $ids): string
     {
         [$accessorID, $policyID] = $ids;
@@ -161,9 +161,7 @@ final class ACLClientTest extends AbstractUsageTests
         return $policyID;
     }
 
-    /**
-     * @depends testTokenDelete
-     */
+    #[Depends('testTokenDelete')]
     public function testPolicyDelete(string $policyID): void
     {
         $client = self::managementClient();
