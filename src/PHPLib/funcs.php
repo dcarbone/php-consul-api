@@ -55,7 +55,7 @@ function dur_to_millisecond(Time\Duration $dur): string
         $ms = 1;
     }
 
-    return "${ms}ms";
+    return "{$ms}ms";
 }
 
 $_zeroObject = new \stdClass();
