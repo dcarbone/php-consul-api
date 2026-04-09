@@ -38,6 +38,6 @@ class ACLAuthMethodQueryResponse extends AbstractValuedQueryResponse implements 
             $this->ACLAuthMethod = null;
             return;
         }
-        $this->ACLAuthMethod = $this->ACLAuthMethod::jsonUnserialize($decoded);
+        $this->ACLAuthMethod = ACLAuthMethod::jsonUnserialize($decoded);
     }
 }
