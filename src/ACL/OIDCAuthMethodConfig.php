@@ -37,6 +37,8 @@ class OIDCAuthMethodConfig extends AbstractType
     public string $OIDCDiscoveryCACert;
     public string $OIDCClientID;
     public string $OIDCClientSecret;
+    public null|OIDCClientAssertion $OIDCClientAssertion;
+    public null|bool $OIDCClientUsePKCE;
     /** @var array<string> */
     public array $OIDCScopes;
     /** @var array<string> */
@@ -72,6 +74,8 @@ class OIDCAuthMethodConfig extends AbstractType
         string $OIDCDiscoveryCACert = '',
         string $OIDCClientID = '',
         string $OIDCClientSecret = '',
+        null|OIDCClientAssertion $OIDCClientAssertion = null,
+        null|bool $OIDCClientUsePKCE = null,
         array $OIDCScopes = [],
         array $OIDCACRValues = [],
         array $AllowedRedirectURIs = [],
@@ -92,6 +96,8 @@ class OIDCAuthMethodConfig extends AbstractType
         $this->OIDCDiscoveryCACert = $OIDCDiscoveryCACert;
         $this->OIDCClientID = $OIDCClientID;
         $this->OIDCClientSecret = $OIDCClientSecret;
+        $this->OIDCClientAssertion = $OIDCClientAssertion;
+        $this->OIDCClientUsePKCE = $OIDCClientUsePKCE;
         $this->setOIDCScopes(...$OIDCScopes);
         $this->setOIDCACRValues(...$OIDCACRValues);
         $this->setAllowedRedirectURIs(...$AllowedRedirectURIs);
@@ -232,6 +238,28 @@ class OIDCAuthMethodConfig extends AbstractType
     public function setOIDCClientSecret(string $OIDCClientSecret): self
     {
         $this->OIDCClientSecret = $OIDCClientSecret;
+        return $this;
+    }
+
+    public function getOIDCClientAssertion(): null|OIDCClientAssertion
+    {
+        return $this->OIDCClientAssertion;
+    }
+
+    public function setOIDCClientAssertion(null|OIDCClientAssertion $OIDCClientAssertion): self
+    {
+        $this->OIDCClientAssertion = $OIDCClientAssertion;
+        return $this;
+    }
+
+    public function getOIDCClientUsePKCE(): null|bool
+    {
+        return $this->OIDCClientUsePKCE;
+    }
+
+    public function setOIDCClientUsePKCE(null|bool $OIDCClientUsePKCE): self
+    {
+        $this->OIDCClientUsePKCE = $OIDCClientUsePKCE;
         return $this;
     }
 
@@ -386,6 +414,8 @@ class OIDCAuthMethodConfig extends AbstractType
                 $n->setOIDCACRValues(...$v);
             } elseif ('AllowedRedirectURIs' === $k) {
                 $n->setAllowedRedirectURIs(...$v);
+            } elseif ('OIDCClientAssertion' === $k) {
+                $n->OIDCClientAssertion = null !== $v ? OIDCClientAssertion::jsonUnserialize($v) : null;
             } elseif ('JWTValidationPubKeys' === $k) {
                 $n->setJWTValidationPubKeys(...$v);
             } elseif ('ExpirationLeeway' === $k) {
@@ -428,6 +458,12 @@ class OIDCAuthMethodConfig extends AbstractType
         }
         if ('' !== $this->OIDCClientSecret) {
             $out->OIDCClientSecret = $this->OIDCClientSecret;
+        }
+        if (null !== $this->OIDCClientAssertion) {
+            $out->OIDCClientAssertion = $this->OIDCClientAssertion;
+        }
+        if (null !== $this->OIDCClientUsePKCE) {
+            $out->OIDCClientUsePKCE = $this->OIDCClientUsePKCE;
         }
         if ([] !== $this->OIDCScopes) {
             $out->OIDCScopes = $this->OIDCScopes;

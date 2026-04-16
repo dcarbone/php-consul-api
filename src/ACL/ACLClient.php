@@ -29,9 +29,16 @@ use DCarbone\PHPConsulAPI\WriteOptions;
 
 class ACLClient extends AbstractClient
 {
-    public function Bootstrap(): ValuedWriteStringResponse
+    public function Bootstrap(string $bootstrapSecret = ''): ACLTokenWriteResponse
     {
-        return $this->_executePutValuedStr('v1/acl/bootstrap', null, null);
+        $body = null;
+        if ('' !== $bootstrapSecret) {
+            $body = (object)['BootstrapSecret' => $bootstrapSecret];
+        }
+        $resp = $this->_requireOK($this->_doPut('v1/acl/bootstrap', $body, null));
+        $ret  = new ACLTokenWriteResponse();
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
     }
 
     public function Create(ACLEntry $acl, null|WriteOptions $opts = null): ValuedWriteStringResponse
@@ -146,6 +153,27 @@ class ACLClient extends AbstractClient
     public function TokenList(null|QueryOptions $opts = null): ACLTokenListEntryQueryResponse
     {
         $resp = $this->_requireOK($this->_doGet('/v1/acl/tokens', $opts));
+        $ret  = new ACLTokenListEntryQueryResponse();
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    public function TokenListFiltered(ACLTokenFilterOptions $filter, null|QueryOptions $opts = null): ACLTokenListEntryQueryResponse
+    {
+        $r = $this->_newGetRequest('/v1/acl/tokens', $opts);
+        if ('' !== $filter->AuthMethod) {
+            $r->params->set('authmethod', $filter->AuthMethod);
+        }
+        if ('' !== $filter->Policy) {
+            $r->params->set('policy', $filter->Policy);
+        }
+        if ('' !== $filter->Role) {
+            $r->params->set('role', $filter->Role);
+        }
+        if ('' !== $filter->ServiceName) {
+            $r->params->set('servicename', $filter->ServiceName);
+        }
+        $resp = $this->_requireOK($this->_do($r));
         $ret  = new ACLTokenListEntryQueryResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
@@ -380,6 +408,30 @@ class ACLClient extends AbstractClient
             return $ret;
         }
         $resp = $this->_requireOK($this->_doPost('/v1/acl/oidc/callback', $auth, $opts));
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    public function TemplatedPolicyReadByName(string $templateName, null|QueryOptions $opts = null): ACLTemplatedPolicyResponseQueryResponse
+    {
+        $resp = $this->_requireNotFoundOrOK($this->_doGet(sprintf('/v1/acl/templated-policy/name/%s', $templateName), $opts));
+        $ret  = new ACLTemplatedPolicyResponseQueryResponse();
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    public function TemplatedPolicyList(null|QueryOptions $opts = null): ACLTemplatedPoliciesQueryResponse
+    {
+        $resp = $this->_requireOK($this->_doGet('/v1/acl/templated-policies', $opts));
+        $ret  = new ACLTemplatedPoliciesQueryResponse();
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    public function TemplatedPolicyPreview(ACLTemplatedPolicy $tp, null|WriteOptions $opts = null): ACLPolicyWriteResponse
+    {
+        $resp = $this->_requireOK($this->_doPost(sprintf('/v1/acl/templated-policy/preview/%s', $tp->TemplateName), $tp->TemplateVariables, $opts));
+        $ret  = new ACLPolicyWriteResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }

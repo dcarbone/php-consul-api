@@ -23,6 +23,7 @@
 * **Always** used named parameters wherever possible.
 * **Never** bother with docblocks unless they are necessary to specify types that cannot be expressed in code
    (e.g. `/** @param string[] $items */` for `array $items`).
+* **Never** call `jsonSerialize` directly in generated code.
 
 # When generting code for concrete implementations of AbstractType:
 * **Always** ensure that class fields have an associated getter and setter method.
