@@ -41,7 +41,7 @@ final class GatewayServicesResponseTest extends TestCase
         $d->CertFile = '';
         $d->KeyFile = '';
         $d->SNI = '';
-        $d->FromWildCard = '';
+        $d->FromWildcard = false;
 
         $r = new GatewayServicesResponse();
         $r->unmarshalValue([$d]);

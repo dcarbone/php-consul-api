@@ -36,7 +36,7 @@ class GatewayService extends AbstractType
     public string $CertFile;
     public string $KeyFile;
     public string $SNI;
-    public string $FromWildCard;
+    public bool $FromWildcard;
 
     /**
      * @param array<string> $Hosts
@@ -52,7 +52,7 @@ class GatewayService extends AbstractType
         string $CertFile = '',
         string $KeyFile = '',
         string $SNI = '',
-        string $FromWildCard = '',
+        bool $FromWildcard = false,
     ) {
         $this->Gateway = $Gateway ?? new CompoundServiceName();
         $this->Service = $Service ?? new CompoundServiceName();
@@ -64,7 +64,7 @@ class GatewayService extends AbstractType
         $this->CertFile = $CertFile;
         $this->KeyFile = $KeyFile;
         $this->SNI = $SNI;
-        $this->FromWildCard = $FromWildCard;
+        $this->FromWildcard = $FromWildcard;
     }
 
     public function getGateway(): CompoundServiceName
@@ -180,14 +180,14 @@ class GatewayService extends AbstractType
         return $this;
     }
 
-    public function getFromWildCard(): string
+    public function getFromWildcard(): bool
     {
-        return $this->FromWildCard;
+        return $this->FromWildcard;
     }
 
-    public function setFromWildCard(string $FromWildCard): self
+    public function setFromWildcard(bool $FromWildcard): self
     {
-        $this->FromWildCard = $FromWildCard;
+        $this->FromWildcard = $FromWildcard;
         return $this;
     }
 
@@ -238,8 +238,8 @@ class GatewayService extends AbstractType
         if ('' !== $this->SNI) {
             $out->SNI = $this->SNI;
         }
-        if ('' !== $this->FromWildCard) {
-            $out->FromWildCard = $this->FromWildCard;
+        if ($this->FromWildcard) {
+            $out->FromWildcard = $this->FromWildcard;
         }
         return $out;
     }

@@ -25,6 +25,8 @@ final class RaftServerTest extends TestCase
         self::assertSame('', $r->ProtocolVersion);
         self::assertFalse($r->isVoter());
         self::assertFalse($r->Voter);
+        self::assertSame(0, $r->getLastIndex());
+        self::assertSame(0, $r->LastIndex);
     }
 
     public function testConstructorWithValues(): void
@@ -36,6 +38,7 @@ final class RaftServerTest extends TestCase
             Leader: true,
             ProtocolVersion: '3',
             Voter: true,
+            LastIndex: 42,
         );
         self::assertSame('id-1', $r->getID());
         self::assertSame('id-1', $r->ID);
@@ -49,6 +52,8 @@ final class RaftServerTest extends TestCase
         self::assertSame('3', $r->ProtocolVersion);
         self::assertTrue($r->isVoter());
         self::assertTrue($r->Voter);
+        self::assertSame(42, $r->getLastIndex());
+        self::assertSame(42, $r->LastIndex);
     }
 
     public function testFluentSetters(): void
@@ -60,7 +65,8 @@ final class RaftServerTest extends TestCase
             ->setAddress('a')
             ->setLeader(true)
             ->setProtocolVersion('2')
-            ->setVoter(true);
+            ->setVoter(true)
+            ->setLastIndex(99);
         self::assertSame($r, $result);
         self::assertSame('i', $r->ID);
         self::assertSame('n', $r->Node);
@@ -68,15 +74,17 @@ final class RaftServerTest extends TestCase
         self::assertTrue($r->Leader);
         self::assertSame('2', $r->ProtocolVersion);
         self::assertTrue($r->Voter);
+        self::assertSame(99, $r->LastIndex);
     }
 
     public function testJsonSerialize(): void
     {
-        $r = new RaftServer(ID: 'x', Node: 'y', Leader: true);
+        $r = new RaftServer(ID: 'x', Node: 'y', Leader: true, LastIndex: 55);
         $out = $r->jsonSerialize();
         self::assertInstanceOf(\stdClass::class, $out);
         self::assertSame('x', $out->ID);
         self::assertTrue($out->Leader);
+        self::assertSame(55, $out->LastIndex);
     }
 
     public function testJsonUnserialize(): void
@@ -88,19 +96,22 @@ final class RaftServerTest extends TestCase
         $decoded->Leader = false;
         $decoded->ProtocolVersion = '3';
         $decoded->Voter = true;
+        $decoded->LastIndex = 123;
         $r = RaftServer::jsonUnserialize($decoded);
         self::assertSame('r1', $r->getID());
         self::assertSame('n1', $r->getNode());
         self::assertTrue($r->isVoter());
+        self::assertSame(123, $r->getLastIndex());
     }
 
     public function testJsonRoundTrip(): void
     {
-        $original = new RaftServer(ID: 'rt', Node: 'n', Address: 'a', Leader: true, Voter: true);
+        $original = new RaftServer(ID: 'rt', Node: 'n', Address: 'a', Leader: true, Voter: true, LastIndex: 77);
         $restored = RaftServer::jsonUnserialize($original->jsonSerialize());
         self::assertSame($original->getID(), $restored->getID());
         self::assertSame($original->getNode(), $restored->getNode());
         self::assertSame($original->isLeader(), $restored->isLeader());
+        self::assertSame($original->getLastIndex(), $restored->getLastIndex());
     }
 }
 

@@ -30,6 +30,7 @@ class HealthCheckDefinition extends AbstractType implements \JsonSerializable
     public Values $Header;
     public string $Method;
     public string $Body;
+    public string $TLSServerName;
     public bool $TLSSkipVerify;
     public string $TCP;
     public bool $TCPUseTLS;
@@ -40,6 +41,7 @@ class HealthCheckDefinition extends AbstractType implements \JsonSerializable
     public Time\Duration $IntervalDuration;
     public Time\Duration $TimeoutDuration;
     public Time\Duration $DeregisterCriticalServiceAfterDuration;
+    public string $SessionName;
 
     /**
      * @param array<string,array<string>>|\DCarbone\PHPConsulAPI\PHPLib\Values|null $Header
@@ -49,6 +51,7 @@ class HealthCheckDefinition extends AbstractType implements \JsonSerializable
         null|array|\stdClass|Values $Header = null,
         string $Method = '',
         string $Body = '',
+        string $TLSServerName = '',
         bool $TLSSkipVerify = false,
         string $TCP = '',
         bool $TCPUseTLS = false,
@@ -59,11 +62,13 @@ class HealthCheckDefinition extends AbstractType implements \JsonSerializable
         null|int|float|string|\DateInterval|Time\Duration $IntervalDuration = null,
         null|int|float|string|\DateInterval|Time\Duration $TimeoutDuration = null,
         null|int|float|string|\DateInterval|Time\Duration $DeregisterCriticalServiceAfterDuration = null,
+        string $SessionName = '',
     ) {
         $this->HTTP = $HTTP;
         $this->setHeader($Header);
         $this->Method = $Method;
         $this->Body = $Body;
+        $this->TLSServerName = $TLSServerName;
         $this->TLSSkipVerify = $TLSSkipVerify;
         $this->TCP = $TCP;
         $this->TCPUseTLS = $TCPUseTLS;
@@ -74,6 +79,7 @@ class HealthCheckDefinition extends AbstractType implements \JsonSerializable
         $this->IntervalDuration = Time::Duration($IntervalDuration);
         $this->TimeoutDuration = Time::Duration($TimeoutDuration);
         $this->DeregisterCriticalServiceAfterDuration = Time::Duration($DeregisterCriticalServiceAfterDuration);
+        $this->SessionName = $SessionName;
     }
 
     public function getHTTP(): string
@@ -128,6 +134,17 @@ class HealthCheckDefinition extends AbstractType implements \JsonSerializable
     public function setBody(string $Body): self
     {
         $this->Body = $Body;
+        return $this;
+    }
+
+    public function getTLSServerName(): string
+    {
+        return $this->TLSServerName;
+    }
+
+    public function setTLSServerName(string $TLSServerName): self
+    {
+        $this->TLSServerName = $TLSServerName;
         return $this;
     }
 
@@ -242,6 +259,17 @@ class HealthCheckDefinition extends AbstractType implements \JsonSerializable
         return $this;
     }
 
+    public function getSessionName(): string
+    {
+        return $this->SessionName;
+    }
+
+    public function setSessionName(string $SessionName): self
+    {
+        $this->SessionName = $SessionName;
+        return $this;
+    }
+
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
@@ -268,6 +296,9 @@ class HealthCheckDefinition extends AbstractType implements \JsonSerializable
         $out->Header = $this->Header;
         $out->Method = $this->Method;
         $out->Body = $this->Body;
+        if ('' !== $this->TLSServerName) {
+            $out->TLSServerName = $this->TLSServerName;
+        }
         $out->TLSSkipVerify = $this->TLSSkipVerify;
         $out->TCP = $this->TCP;
         $out->TCPUseTLS = $this->TCPUseTLS;
@@ -278,6 +309,9 @@ class HealthCheckDefinition extends AbstractType implements \JsonSerializable
         $out->Interval = (string)$this->IntervalDuration;
         $out->Timeout = (string)$this->TimeoutDuration;
         $out->DeregisterCriticalServiceAfter = (string)$this->DeregisterCriticalServiceAfterDuration;
+        if ('' !== $this->SessionName) {
+            $out->SessionName = $this->SessionName;
+        }
         return $out;
     }
 }

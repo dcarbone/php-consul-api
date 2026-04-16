@@ -24,6 +24,8 @@ final class HealthCheckDefinitionTest extends TestCase
         self::assertSame('', $d->Method);
         self::assertSame('', $d->getBody());
         self::assertSame('', $d->Body);
+        self::assertSame('', $d->getTLSServerName());
+        self::assertSame('', $d->TLSServerName);
         self::assertFalse($d->isTLSSkipVerify());
         self::assertFalse($d->TLSSkipVerify);
         self::assertSame('', $d->getTCP());
@@ -44,6 +46,8 @@ final class HealthCheckDefinitionTest extends TestCase
         self::assertInstanceOf(Time\Duration::class, $d->TimeoutDuration);
         self::assertInstanceOf(Time\Duration::class, $d->getDeregisterCriticalServiceAfterDuration());
         self::assertInstanceOf(Time\Duration::class, $d->DeregisterCriticalServiceAfterDuration);
+        self::assertSame('', $d->getSessionName());
+        self::assertSame('', $d->SessionName);
     }
 
     public function testConstructorWithValues(): void
@@ -52,6 +56,7 @@ final class HealthCheckDefinitionTest extends TestCase
             HTTP: 'http://localhost:8080/health',
             Method: 'GET',
             Body: '{}',
+            TLSServerName: 'my-server.consul',
             TLSSkipVerify: true,
             TCP: 'localhost:8080',
             TCPUseTLS: true,
@@ -62,6 +67,7 @@ final class HealthCheckDefinitionTest extends TestCase
             IntervalDuration: '10s',
             TimeoutDuration: '5s',
             DeregisterCriticalServiceAfterDuration: '30s',
+            SessionName: 'my-session',
         );
         self::assertSame('http://localhost:8080/health', $d->getHTTP());
         self::assertSame('http://localhost:8080/health', $d->HTTP);
@@ -69,6 +75,7 @@ final class HealthCheckDefinitionTest extends TestCase
         self::assertSame('GET', $d->Method);
         self::assertSame('{}', $d->getBody());
         self::assertSame('{}', $d->Body);
+        self::assertSame('my-server.consul', $d->getTLSServerName());
         self::assertTrue($d->isTLSSkipVerify());
         self::assertTrue($d->TLSSkipVerify);
         self::assertSame('localhost:8080', $d->getTCP());
@@ -83,6 +90,7 @@ final class HealthCheckDefinitionTest extends TestCase
         self::assertSame('my-svc', $d->OSService);
         self::assertTrue($d->isGRPCUseTLS());
         self::assertTrue($d->GRPCUseTLS);
+        self::assertSame('my-session', $d->getSessionName());
     }
 
     public function testSettersWithDirectFieldAccess(): void
@@ -100,6 +108,10 @@ final class HealthCheckDefinitionTest extends TestCase
         $d->setBody('body');
         self::assertSame('body', $d->getBody());
         self::assertSame('body', $d->Body);
+
+        $d->setTLSServerName('server.consul');
+        self::assertSame('server.consul', $d->getTLSServerName());
+        self::assertSame('server.consul', $d->TLSServerName);
 
         $d->setTLSSkipVerify(true);
         self::assertTrue($d->isTLSSkipVerify());
@@ -140,6 +152,10 @@ final class HealthCheckDefinitionTest extends TestCase
         $d->setDeregisterCriticalServiceAfterDuration('60s');
         self::assertInstanceOf(Time\Duration::class, $d->getDeregisterCriticalServiceAfterDuration());
         self::assertInstanceOf(Time\Duration::class, $d->DeregisterCriticalServiceAfterDuration);
+
+        $d->setSessionName('sess-1');
+        self::assertSame('sess-1', $d->getSessionName());
+        self::assertSame('sess-1', $d->SessionName);
     }
 
     public function testSetHeaderWithArray(): void
@@ -174,6 +190,7 @@ final class HealthCheckDefinitionTest extends TestCase
             ->setHTTP('http://test')
             ->setMethod('POST')
             ->setBody('body')
+            ->setTLSServerName('server.consul')
             ->setTLSSkipVerify(true)
             ->setTCP('localhost:8080')
             ->setTCPUseTLS(true)
@@ -183,7 +200,8 @@ final class HealthCheckDefinitionTest extends TestCase
             ->setGRPCUseTLS(true)
             ->setIntervalDuration('10s')
             ->setTimeoutDuration('5s')
-            ->setDeregisterCriticalServiceAfterDuration('30s');
+            ->setDeregisterCriticalServiceAfterDuration('30s')
+            ->setSessionName('sess');
         self::assertSame($d, $result);
     }
 
@@ -192,13 +210,25 @@ final class HealthCheckDefinitionTest extends TestCase
         $d = new HealthCheckDefinition(
             HTTP: 'http://test',
             Method: 'GET',
+            TLSServerName: 'server.consul',
             TLSSkipVerify: true,
+            SessionName: 'my-session',
         );
         $out = $d->jsonSerialize();
         self::assertInstanceOf(\stdClass::class, $out);
         self::assertSame('http://test', $out->HTTP);
         self::assertSame('GET', $out->Method);
+        self::assertSame('server.consul', $out->TLSServerName);
         self::assertTrue($out->TLSSkipVerify);
+        self::assertSame('my-session', $out->SessionName);
+    }
+
+    public function testJsonSerializeOmitsEmptyOptionalFields(): void
+    {
+        $d = new HealthCheckDefinition();
+        $out = $d->jsonSerialize();
+        self::assertObjectNotHasProperty('TLSServerName', $out);
+        self::assertObjectNotHasProperty('SessionName', $out);
     }
 
     public function testJsonUnserialize(): void
@@ -207,6 +237,7 @@ final class HealthCheckDefinitionTest extends TestCase
         $decoded->HTTP = 'http://json';
         $decoded->Method = 'PUT';
         $decoded->Body = 'data';
+        $decoded->TLSServerName = 'server.consul';
         $decoded->TLSSkipVerify = true;
         $decoded->TCP = 'tcp-host';
         $decoded->TCPUseTLS = true;
@@ -217,11 +248,13 @@ final class HealthCheckDefinitionTest extends TestCase
         $decoded->Interval = '10s';
         $decoded->Timeout = '5s';
         $decoded->DeregisterCriticalServiceAfter = '30s';
+        $decoded->SessionName = 'sess-1';
 
         $d = HealthCheckDefinition::jsonUnserialize($decoded);
         self::assertSame('http://json', $d->HTTP);
         self::assertSame('PUT', $d->Method);
         self::assertSame('data', $d->Body);
+        self::assertSame('server.consul', $d->TLSServerName);
         self::assertTrue($d->TLSSkipVerify);
         self::assertSame('tcp-host', $d->TCP);
         self::assertTrue($d->TCPUseTLS);
@@ -232,6 +265,7 @@ final class HealthCheckDefinitionTest extends TestCase
         self::assertInstanceOf(Time\Duration::class, $d->IntervalDuration);
         self::assertInstanceOf(Time\Duration::class, $d->TimeoutDuration);
         self::assertInstanceOf(Time\Duration::class, $d->DeregisterCriticalServiceAfterDuration);
+        self::assertSame('sess-1', $d->SessionName);
     }
 
     public function testJsonUnserializeWithDurationKeys(): void
@@ -262,15 +296,19 @@ final class HealthCheckDefinitionTest extends TestCase
         $original = new HealthCheckDefinition(
             HTTP: 'http://rt',
             Method: 'GET',
+            TLSServerName: 'server.consul',
             TLSSkipVerify: true,
             TCP: 'tcp',
             GRPCUseTLS: true,
+            SessionName: 'sess',
         );
         $restored = HealthCheckDefinition::jsonUnserialize($original->jsonSerialize());
         self::assertSame($original->HTTP, $restored->HTTP);
         self::assertSame($original->Method, $restored->Method);
+        self::assertSame($original->TLSServerName, $restored->TLSServerName);
         self::assertSame($original->TLSSkipVerify, $restored->TLSSkipVerify);
         self::assertSame($original->TCP, $restored->TCP);
         self::assertSame($original->GRPCUseTLS, $restored->GRPCUseTLS);
+        self::assertSame($original->SessionName, $restored->SessionName);
     }
 }

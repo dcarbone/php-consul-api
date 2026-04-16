@@ -30,6 +30,7 @@ class RaftServer extends AbstractType
     public bool $Leader;
     public string $ProtocolVersion;
     public bool $Voter;
+    public int $LastIndex;
 
     public function __construct(
         string $ID = '',
@@ -38,6 +39,7 @@ class RaftServer extends AbstractType
         bool $Leader = false,
         string $ProtocolVersion = '',
         bool $Voter = false,
+        int $LastIndex = 0,
     ) {
         $this->ID = $ID;
         $this->Node = $Node;
@@ -45,6 +47,7 @@ class RaftServer extends AbstractType
         $this->Leader = $Leader;
         $this->ProtocolVersion = $ProtocolVersion;
         $this->Voter = $Voter;
+        $this->LastIndex = $LastIndex;
     }
 
     public function getID(): string
@@ -113,6 +116,17 @@ class RaftServer extends AbstractType
         return $this;
     }
 
+    public function getLastIndex(): int
+    {
+        return $this->LastIndex;
+    }
+
+    public function setLastIndex(int $LastIndex): self
+    {
+        $this->LastIndex = $LastIndex;
+        return $this;
+    }
+
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
@@ -131,6 +145,7 @@ class RaftServer extends AbstractType
         $out->Leader = $this->Leader;
         $out->ProtocolVersion = $this->ProtocolVersion;
         $out->Voter = $this->Voter;
+        $out->LastIndex = $this->LastIndex;
         return $out;
     }
 }

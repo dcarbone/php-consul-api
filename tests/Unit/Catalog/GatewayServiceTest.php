@@ -26,7 +26,7 @@ final class GatewayServiceTest extends TestCase
         self::assertSame('', $g->getCertFile());
         self::assertSame('', $g->getKeyFile());
         self::assertSame('', $g->getSNI());
-        self::assertSame('', $g->getFromWildCard());
+        self::assertFalse($g->getFromWildcard());
     }
 
     public function testConstructorWithParams(): void
@@ -44,7 +44,7 @@ final class GatewayServiceTest extends TestCase
             CertFile: '/cert.pem',
             KeyFile: '/key.pem',
             SNI: 'web.consul',
-            FromWildCard: 'true',
+            FromWildcard: true,
         );
         self::assertSame('gw', $g->getGateway()->getName());
         self::assertSame('web', $g->getService()->getName());
@@ -54,6 +54,7 @@ final class GatewayServiceTest extends TestCase
         self::assertSame(['web.example.com'], $g->getHosts());
         self::assertSame('/ca.pem', $g->getCAFile());
         self::assertSame('web.consul', $g->getSNI());
+        self::assertTrue($g->getFromWildcard());
     }
 
     public function testConstructorWithStringGatewayKind(): void
@@ -77,12 +78,13 @@ final class GatewayServiceTest extends TestCase
             ->setCertFile('/cert')
             ->setKeyFile('/key')
             ->setSNI('sni')
-            ->setFromWildCard('wc');
+            ->setFromWildcard(true);
         self::assertSame($g, $result);
         self::assertSame('gw', $g->getGateway()->getName());
         self::assertSame(ServiceKind::MeshGateway, $g->getGatewayKind());
         self::assertSame(443, $g->getPort());
         self::assertSame(['a.com', 'b.com'], $g->getHosts());
+        self::assertTrue($g->getFromWildcard());
     }
 
     public function testJsonSerialize(): void
@@ -113,7 +115,7 @@ final class GatewayServiceTest extends TestCase
         self::assertObjectNotHasProperty('CertFile', $out);
         self::assertObjectNotHasProperty('KeyFile', $out);
         self::assertObjectNotHasProperty('SNI', $out);
-        self::assertObjectNotHasProperty('FromWildCard', $out);
+        self::assertObjectNotHasProperty('FromWildcard', $out);
     }
 
     public function testJsonUnserialize(): void
@@ -137,7 +139,7 @@ final class GatewayServiceTest extends TestCase
         $d->CertFile = '';
         $d->KeyFile = '';
         $d->SNI = '';
-        $d->FromWildCard = '';
+        $d->FromWildcard = true;
 
         $g = GatewayService::jsonUnserialize($d);
         self::assertInstanceOf(GatewayService::class, $g);
@@ -146,6 +148,7 @@ final class GatewayServiceTest extends TestCase
         self::assertSame(ServiceKind::IngressGateway, $g->getGatewayKind());
         self::assertSame(443, $g->getPort());
         self::assertSame(['a.com'], $g->getHosts());
+        self::assertTrue($g->getFromWildcard());
     }
 }
 
