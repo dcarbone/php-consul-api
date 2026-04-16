@@ -3,6 +3,8 @@
 namespace DCarbone\PHPConsulAPITests\Unit\ACL;
 
 use DCarbone\PHPConsulAPI\ACL\OIDCAuthMethodConfig;
+use DCarbone\PHPConsulAPI\ACL\OIDCClientAssertion;
+use DCarbone\PHPConsulAPI\ACL\OIDCClientAssertionKey;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -21,6 +23,8 @@ final class OIDCAuthMethodConfigTest extends TestCase
         self::assertSame('', $c->getOIDCDiscoveryCACert());
         self::assertSame('', $c->getOIDCClientID());
         self::assertSame('', $c->getOIDCClientSecret());
+        self::assertNull($c->getOIDCClientAssertion());
+        self::assertNull($c->getOIDCClientUsePKCE());
         self::assertSame([], $c->getOIDCScopes());
         self::assertSame([], $c->getOIDCACRValues());
         self::assertSame([], $c->getAllowedRedirectURIs());
@@ -36,10 +40,17 @@ final class OIDCAuthMethodConfigTest extends TestCase
 
     public function testConstructorWithParams(): void
     {
+        $assertion = new OIDCClientAssertion(
+            Audience: ['https://oidc.example.com'],
+            PrivateKey: new OIDCClientAssertionKey(PemKey: 'test-pem-key'),
+            KeyAlgorithm: 'RS256',
+        );
         $c = new OIDCAuthMethodConfig(
             OIDCDiscoveryURL: 'https://oidc.example.com',
             OIDCClientID: 'client-id',
             OIDCClientSecret: 'client-secret',
+            OIDCClientAssertion: $assertion,
+            OIDCClientUsePKCE: true,
             AllowedRedirectURIs: ['https://example.com/callback'],
             BoundAudiences: ['aud1'],
             ClaimMappings: ['sub' => 'name'],
@@ -49,6 +60,8 @@ final class OIDCAuthMethodConfigTest extends TestCase
         self::assertSame(['https://example.com/callback'], $c->getAllowedRedirectURIs());
         self::assertSame(['aud1'], $c->getBoundAudiences());
         self::assertSame(['sub' => 'name'], $c->getClaimMappings());
+        self::assertSame($assertion, $c->getOIDCClientAssertion());
+        self::assertTrue($c->getOIDCClientUsePKCE());
     }
 
     public function testFluentSetters(): void
@@ -78,6 +91,31 @@ final class OIDCAuthMethodConfigTest extends TestCase
         self::assertTrue($c->isVerboseOIDCLogging());
     }
 
+    public function testOIDCClientAssertionSetters(): void
+    {
+        $c = new OIDCAuthMethodConfig();
+
+        $assertion = new OIDCClientAssertion(
+            Audience: ['https://example.com'],
+            PrivateKey: new OIDCClientAssertionKey(PemKey: 'pem-data'),
+            KeyAlgorithm: 'RS256',
+        );
+        $c->setOIDCClientAssertion($assertion);
+        self::assertSame($assertion, $c->getOIDCClientAssertion());
+
+        $c->setOIDCClientAssertion(null);
+        self::assertNull($c->getOIDCClientAssertion());
+
+        $c->setOIDCClientUsePKCE(true);
+        self::assertTrue($c->getOIDCClientUsePKCE());
+
+        $c->setOIDCClientUsePKCE(false);
+        self::assertFalse($c->getOIDCClientUsePKCE());
+
+        $c->setOIDCClientUsePKCE(null);
+        self::assertNull($c->getOIDCClientUsePKCE());
+    }
+
     public function testSetClaimMapping(): void
     {
         $c = new OIDCAuthMethodConfig();
@@ -92,6 +130,24 @@ final class OIDCAuthMethodConfigTest extends TestCase
         self::assertObjectNotHasProperty('JWTSupportedAlgs', $out);
         self::assertObjectNotHasProperty('OIDCDiscoveryURL', $out);
         self::assertObjectNotHasProperty('VerboseOIDCLogging', $out);
+        self::assertObjectNotHasProperty('OIDCClientAssertion', $out);
+        self::assertObjectNotHasProperty('OIDCClientUsePKCE', $out);
+    }
+
+    public function testJsonSerializeWithAssertionAndPKCE(): void
+    {
+        $assertion = new OIDCClientAssertion(
+            Audience: ['https://example.com'],
+            KeyAlgorithm: 'RS256',
+        );
+        $c = new OIDCAuthMethodConfig(
+            OIDCClientAssertion: $assertion,
+            OIDCClientUsePKCE: true,
+        );
+        $out = $c->jsonSerialize();
+        self::assertObjectHasProperty('OIDCClientAssertion', $out);
+        self::assertObjectHasProperty('OIDCClientUsePKCE', $out);
+        self::assertTrue($out->OIDCClientUsePKCE);
     }
 
     public function testJsonUnserialize(): void
@@ -112,10 +168,44 @@ final class OIDCAuthMethodConfigTest extends TestCase
         $d->ExpirationLeeway = '5m0s';
         $d->NotBeforeLeeway = '0s';
         $d->ClockSkewLeeway = '0s';
+        $d->OIDCClientUsePKCE = true;
         $c = OIDCAuthMethodConfig::jsonUnserialize($d);
         self::assertSame('https://oidc.example.com', $c->getOIDCDiscoveryURL());
         self::assertSame(['aud'], $c->getBoundAudiences());
         self::assertSame(['sub' => 'name'], $c->getClaimMappings());
+        self::assertTrue($c->getOIDCClientUsePKCE());
+    }
+
+    public function testJsonUnserializeWithAssertion(): void
+    {
+        $d = new \stdClass();
+        $d->OIDCDiscoveryURL = 'https://oidc.example.com';
+        $d->OIDCClientID = 'cid';
+        $d->BoundAudiences = [];
+        $d->AllowedRedirectURIs = [];
+        $d->ClaimMappings = new \stdClass();
+        $d->ListClaimMappings = new \stdClass();
+        $d->JWTSupportedAlgs = [];
+        $d->OIDCScopes = [];
+        $d->OIDCACRValues = [];
+        $d->JWTValidationPubKeys = [];
+        $d->ExpirationLeeway = '0s';
+        $d->NotBeforeLeeway = '0s';
+        $d->ClockSkewLeeway = '0s';
+
+        $assertionObj = new \stdClass();
+        $assertionObj->Audience = ['https://example.com'];
+        $assertionObj->KeyAlgorithm = 'RS256';
+        $keyObj = new \stdClass();
+        $keyObj->PemKey = 'test-pem';
+        $assertionObj->PrivateKey = $keyObj;
+        $d->OIDCClientAssertion = $assertionObj;
+
+        $c = OIDCAuthMethodConfig::jsonUnserialize($d);
+        self::assertNotNull($c->getOIDCClientAssertion());
+        self::assertSame(['https://example.com'], $c->getOIDCClientAssertion()->getAudience());
+        self::assertSame('RS256', $c->getOIDCClientAssertion()->getKeyAlgorithm());
+        self::assertSame('test-pem', $c->getOIDCClientAssertion()->getPrivateKey()->getPemKey());
     }
 }
 

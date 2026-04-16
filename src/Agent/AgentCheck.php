@@ -34,6 +34,7 @@ class AgentCheck extends AbstractType
     public string $ServiceID;
     public string $ServiceName;
     public string $Type;
+    public int $ExposedPort;
     public HealthCheckDefinition $Definition;
     public string $Namespace;
     public string $Partition;
@@ -48,6 +49,7 @@ class AgentCheck extends AbstractType
         string $ServiceID = '',
         string $ServiceName = '',
         string $Type = '',
+        int $ExposedPort = 0,
         null|HealthCheckDefinition $Definition = null,
         string $Namespace = '',
         string $Partition = '',
@@ -61,6 +63,7 @@ class AgentCheck extends AbstractType
         $this->ServiceID = $ServiceID;
         $this->ServiceName = $ServiceName;
         $this->Type = $Type;
+        $this->ExposedPort = $ExposedPort;
         $this->Definition = $Definition ?? new HealthCheckDefinition();
         $this->Namespace = $Namespace;
         $this->Partition = $Partition;
@@ -165,6 +168,17 @@ class AgentCheck extends AbstractType
         return $this;
     }
 
+    public function getExposedPort(): int
+    {
+        return $this->ExposedPort;
+    }
+
+    public function setExposedPort(int $ExposedPort): self
+    {
+        $this->ExposedPort = $ExposedPort;
+        return $this;
+    }
+
     public function getDefinition(): HealthCheckDefinition
     {
         return $this->Definition;
@@ -212,6 +226,7 @@ class AgentCheck extends AbstractType
         $out->ServiceID = $this->ServiceID;
         $out->ServiceName = $this->ServiceName;
         $out->Type = $this->Type;
+        $out->ExposedPort = $this->ExposedPort;
         $out->Definition = $this->Definition;
         if ('' !== $this->Namespace) {
             $out->Namespace = $this->Namespace;

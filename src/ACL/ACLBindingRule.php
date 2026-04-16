@@ -30,9 +30,11 @@ class ACLBindingRule extends AbstractType
     public string $Selector;
     public BindingRuleBindType $BindType;
     public string $BindName;
+    public null|ACLTemplatedPolicyVariables $BindVars;
     public int $CreateIndex;
     public int $ModifyIndex;
     public string $Namespace;
+    public string $Partition;
 
     public function __construct(
         string $ID = '',
@@ -41,9 +43,11 @@ class ACLBindingRule extends AbstractType
         string $Selector = '',
         string|BindingRuleBindType $BindType = BindingRuleBindType::UNDEFINED,
         string $BindName = '',
+        null|ACLTemplatedPolicyVariables $BindVars = null,
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
-        string $Namespace = ''
+        string $Namespace = '',
+        string $Partition = '',
     ) {
         $this->ID = $ID;
         $this->Description = $Description;
@@ -51,9 +55,11 @@ class ACLBindingRule extends AbstractType
         $this->Selector = $Selector;
         $this->BindType = ($BindType instanceof BindingRuleBindType) ? $BindType : BindingRuleBindType::from($BindType);
         $this->BindName = $BindName;
+        $this->BindVars = $BindVars;
         $this->CreateIndex = $CreateIndex;
         $this->ModifyIndex = $ModifyIndex;
         $this->Namespace = $Namespace;
+        $this->Partition = $Partition;
 }
 
     public function getID(): string
@@ -122,6 +128,17 @@ class ACLBindingRule extends AbstractType
         return $this;
     }
 
+    public function getBindVars(): null|ACLTemplatedPolicyVariables
+    {
+        return $this->BindVars;
+    }
+
+    public function setBindVars(null|ACLTemplatedPolicyVariables $BindVars): self
+    {
+        $this->BindVars = $BindVars;
+        return $this;
+    }
+
     public function getCreateIndex(): int
     {
         return $this->CreateIndex;
@@ -155,11 +172,26 @@ class ACLBindingRule extends AbstractType
         return $this;
     }
 
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
         foreach ((array)$decoded as $k => $v) {
-            $n->{$k} = $v;
+            if ('BindVars' === $k && null !== $v) {
+                $n->BindVars = ACLTemplatedPolicyVariables::jsonUnserialize($v);
+            } else {
+                $n->{$k} = $v;
+            }
         }
         return $n;
     }
@@ -173,10 +205,16 @@ class ACLBindingRule extends AbstractType
         $out->Selector = $this->Selector;
         $out->BindType = $this->BindType;
         $out->BindName = $this->BindName;
+        if (null !== $this->BindVars) {
+            $out->BindVars = $this->BindVars;
+        }
         $out->CreateIndex = $this->CreateIndex;
         $out->ModifyIndex = $this->ModifyIndex;
         if ('' !== $this->Namespace) {
             $out->Namespace = $this->Namespace;
+        }
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
         }
         return $out;
     }

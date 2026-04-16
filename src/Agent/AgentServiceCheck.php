@@ -37,9 +37,13 @@ class AgentServiceCheck extends AbstractType
     public string $HTTP;
     public null|Values $Header = null;
     public string $Method;
+    public string $Body;
     public string $TCP;
+    public bool $TCPUseTLS;
+    public string $UDP;
     public string $Status;
     public string $Notes;
+    public string $TLSServerName;
     public bool $TLSSkipVerify;
     public string $GRPC;
     public bool $GRPCUseTLS;
@@ -48,6 +52,7 @@ class AgentServiceCheck extends AbstractType
     public string $AliasNode;
     public string $AliasService;
     public int $SuccessBeforePassing;
+    public int $FailuresBeforeWarning;
     public int $FailuresBeforeCritical;
     public string $DeregisterCriticalServiceAfter;
 
@@ -67,9 +72,13 @@ class AgentServiceCheck extends AbstractType
         string $HTTP = '',
         null|array|Values $Header = null,
         string $Method = '',
+        string $Body = '',
         string $TCP = '',
+        bool $TCPUseTLS = false,
+        string $UDP = '',
         string $Status = '',
         string $Notes = '',
+        string $TLSServerName = '',
         bool $TLSSkipVerify = false,
         string $GRPC = '',
         bool $GRPCUseTLS = false,
@@ -78,6 +87,7 @@ class AgentServiceCheck extends AbstractType
         string $AliasNode = '',
         string $AliasService = '',
         int $SuccessBeforePassing = 0,
+        int $FailuresBeforeWarning = 0,
         int $FailuresBeforeCritical = 0,
         string $DeregisterCriticalServiceAfter = '',
     ) {
@@ -93,9 +103,13 @@ class AgentServiceCheck extends AbstractType
         $this->HTTP = $HTTP;
         $this->setHeader($Header);
         $this->Method = $Method;
+        $this->Body = $Body;
         $this->TCP = $TCP;
+        $this->TCPUseTLS = $TCPUseTLS;
+        $this->UDP = $UDP;
         $this->Status = $Status;
         $this->Notes = $Notes;
+        $this->TLSServerName = $TLSServerName;
         $this->TLSSkipVerify = $TLSSkipVerify;
         $this->GRPC = $GRPC;
         $this->GRPCUseTLS = $GRPCUseTLS;
@@ -104,6 +118,7 @@ class AgentServiceCheck extends AbstractType
         $this->AliasNode = $AliasNode;
         $this->AliasService = $AliasService;
         $this->SuccessBeforePassing = $SuccessBeforePassing;
+        $this->FailuresBeforeWarning = $FailuresBeforeWarning;
         $this->FailuresBeforeCritical = $FailuresBeforeCritical;
         $this->DeregisterCriticalServiceAfter = $DeregisterCriticalServiceAfter;
     }
@@ -243,6 +258,17 @@ class AgentServiceCheck extends AbstractType
         return $this;
     }
 
+    public function getBody(): string
+    {
+        return $this->Body;
+    }
+
+    public function setBody(string $Body): self
+    {
+        $this->Body = $Body;
+        return $this;
+    }
+
     public function getTCP(): string
     {
         return $this->TCP;
@@ -251,6 +277,28 @@ class AgentServiceCheck extends AbstractType
     public function setTCP(string $TCP): self
     {
         $this->TCP = $TCP;
+        return $this;
+    }
+
+    public function isTCPUseTLS(): bool
+    {
+        return $this->TCPUseTLS;
+    }
+
+    public function setTCPUseTLS(bool $TCPUseTLS): self
+    {
+        $this->TCPUseTLS = $TCPUseTLS;
+        return $this;
+    }
+
+    public function getUDP(): string
+    {
+        return $this->UDP;
+    }
+
+    public function setUDP(string $UDP): self
+    {
+        $this->UDP = $UDP;
         return $this;
     }
 
@@ -273,6 +321,17 @@ class AgentServiceCheck extends AbstractType
     public function setNotes(string $Notes): self
     {
         $this->Notes = $Notes;
+        return $this;
+    }
+
+    public function getTLSServerName(): string
+    {
+        return $this->TLSServerName;
+    }
+
+    public function setTLSServerName(string $TLSServerName): self
+    {
+        $this->TLSServerName = $TLSServerName;
         return $this;
     }
 
@@ -364,6 +423,17 @@ class AgentServiceCheck extends AbstractType
         return $this;
     }
 
+    public function getFailuresBeforeWarning(): int
+    {
+        return $this->FailuresBeforeWarning;
+    }
+
+    public function setFailuresBeforeWarning(int $FailuresBeforeWarning): self
+    {
+        $this->FailuresBeforeWarning = $FailuresBeforeWarning;
+        return $this;
+    }
+
     public function getFailuresBeforeCritical(): int
     {
         return $this->FailuresBeforeCritical;
@@ -437,14 +507,26 @@ class AgentServiceCheck extends AbstractType
         if ('' !== $this->Method) {
             $out->Method = $this->Method;
         }
+        if ('' !== $this->Body) {
+            $out->Body = $this->Body;
+        }
         if ('' !== $this->TCP) {
             $out->TCP = $this->TCP;
+        }
+        if ($this->TCPUseTLS) {
+            $out->TCPUseTLS = $this->TCPUseTLS;
+        }
+        if ('' !== $this->UDP) {
+            $out->UDP = $this->UDP;
         }
         if ('' !== $this->Status) {
             $out->Status = $this->Status;
         }
         if ('' !== $this->Notes) {
             $out->Notes = $this->Notes;
+        }
+        if ('' !== $this->TLSServerName) {
+            $out->TLSServerName = $this->TLSServerName;
         }
         if ($this->TLSSkipVerify) {
             $out->TLSSkipVerify = $this->TLSSkipVerify;
@@ -469,6 +551,9 @@ class AgentServiceCheck extends AbstractType
         }
         if (0 !== $this->SuccessBeforePassing) {
             $out->SuccessBeforePassing = $this->SuccessBeforePassing;
+        }
+        if (0 !== $this->FailuresBeforeWarning) {
+            $out->FailuresBeforeWarning = $this->FailuresBeforeWarning;
         }
         if (0 !== $this->FailuresBeforeCritical) {
             $out->FailuresBeforeCritical = $this->FailuresBeforeCritical;

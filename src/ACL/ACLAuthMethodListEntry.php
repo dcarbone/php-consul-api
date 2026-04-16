@@ -34,6 +34,7 @@ class ACLAuthMethodListEntry extends AbstractType
     public int $CreateIndex;
     public int $ModifyIndex;
     public string $Namespace;
+    public string $Partition;
 
     public function __construct(
         string $Name = '',
@@ -44,7 +45,8 @@ class ACLAuthMethodListEntry extends AbstractType
         string $TokenLocality = '',
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
-        string $Namespace = ''
+        string $Namespace = '',
+        string $Partition = '',
     ) {
         $this->Name = $Name;
         $this->Type = $Type;
@@ -55,6 +57,7 @@ class ACLAuthMethodListEntry extends AbstractType
         $this->CreateIndex = $CreateIndex;
         $this->ModifyIndex = $ModifyIndex;
         $this->Namespace = $Namespace;
+        $this->Partition = $Partition;
 }
 
     public function getName(): string
@@ -156,6 +159,17 @@ class ACLAuthMethodListEntry extends AbstractType
         return $this;
     }
 
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
@@ -190,6 +204,9 @@ class ACLAuthMethodListEntry extends AbstractType
         $out->ModifyIndex = $this->ModifyIndex;
         if ('' !== $this->Namespace) {
             $out->Namespace = $this->Namespace;
+        }
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
         }
         return $out;
     }

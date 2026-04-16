@@ -29,30 +29,36 @@ class ACLReplicationStatus extends AbstractType
     public bool $Enabled;
     public bool $Running;
     public string $SourceDatacenter;
+    public string $ReplicationType;
     public int $ReplicatedIndex;
     public int $ReplicatedRoleIndex;
     public int $ReplicatedTokenIndex;
     public Time\Time $LastSuccess;
     public Time\Time $LastError;
+    public string $LastErrorMessage;
 
     public function __construct(
         bool $Enabled = false,
         bool $Running = false,
         string $SourceDatacenter = '',
+        string $ReplicationType = '',
         int $ReplicatedIndex = 0,
         int $ReplicatedRoleIndex = 0,
         int $ReplicatedTokenIndex = 0,
         null|Time\Time $LastSuccess = null,
         null|Time\Time $LastError = null,
+        string $LastErrorMessage = '',
     ) {
         $this->Enabled = $Enabled;
         $this->Running = $Running;
         $this->SourceDatacenter = $SourceDatacenter;
+        $this->ReplicationType = $ReplicationType;
         $this->ReplicatedIndex = $ReplicatedIndex;
         $this->ReplicatedRoleIndex = $ReplicatedRoleIndex;
         $this->ReplicatedTokenIndex = $ReplicatedTokenIndex;
         $this->LastSuccess = $LastSuccess ?? Time::New();
         $this->LastError = $LastError ?? Time::New();
+        $this->LastErrorMessage = $LastErrorMessage;
 }
 
     public function isEnabled(): bool
@@ -85,6 +91,17 @@ class ACLReplicationStatus extends AbstractType
     public function setSourceDatacenter(string $SourceDatacenter): self
     {
         $this->SourceDatacenter = $SourceDatacenter;
+        return $this;
+    }
+
+    public function getReplicationType(): string
+    {
+        return $this->ReplicationType;
+    }
+
+    public function setReplicationType(string $ReplicationType): self
+    {
+        $this->ReplicationType = $ReplicationType;
         return $this;
     }
 
@@ -143,6 +160,17 @@ class ACLReplicationStatus extends AbstractType
         return $this;
     }
 
+    public function getLastErrorMessage(): string
+    {
+        return $this->LastErrorMessage;
+    }
+
+    public function setLastErrorMessage(string $LastErrorMessage): self
+    {
+        $this->LastErrorMessage = $LastErrorMessage;
+        return $this;
+    }
+
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
@@ -164,11 +192,13 @@ class ACLReplicationStatus extends AbstractType
         $out->Enabled = $this->Enabled;
         $out->Running = $this->Running;
         $out->SourceDatacenter = $this->SourceDatacenter;
+        $out->ReplicationType = $this->ReplicationType;
         $out->ReplicatedIndex = $this->ReplicatedIndex;
         $out->ReplicatedRoleIndex = $this->ReplicatedRoleIndex;
         $out->ReplicatedTokenIndex = $this->ReplicatedTokenIndex;
         $out->LastSuccess = $this->LastSuccess->format(DATE_RFC3339);
         $out->LastError = $this->LastError->format(DATE_RFC3339);
+        $out->LastErrorMessage = $this->LastErrorMessage;
         return $out;
     }
 }

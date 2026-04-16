@@ -35,7 +35,10 @@ class AgentServiceRegistration extends AbstractType
     /** @var string[] */
     public array $Tags;
     public int $Port;
+    /** @var array<ServicePort> */
+    public array $Ports;
     public string $Address;
+    public string $SocketPath;
     /** @var null|array<\DCarbone\PHPConsulAPI\Catalog\ServiceAddress> */
     public null|array $TaggedAddresses = null;
     public bool $EnableTagOverride;
@@ -50,6 +53,7 @@ class AgentServiceRegistration extends AbstractType
 
     /**
      * @param array<string> $Tags
+     * @param array<ServicePort> $Ports
      * @param array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress> $TaggedAddresses
      * @param array<string,string> $Meta
      */
@@ -59,7 +63,9 @@ class AgentServiceRegistration extends AbstractType
         string $Name = '',
         array $Tags = [],
         int $Port = 0,
+        array $Ports = [],
         string $Address = '',
+        string $SocketPath = '',
         array $TaggedAddresses = [],
         bool $EnableTagOverride = false,
         array $Meta = [],
@@ -77,7 +83,9 @@ class AgentServiceRegistration extends AbstractType
         $this->Name = $Name;
         $this->setTags(...$Tags);
         $this->Port = $Port;
+        $this->setPorts(...$Ports);
         $this->Address = $Address;
+        $this->SocketPath = $SocketPath;
         $this->setTaggedAddresses($TaggedAddresses ?: null);
         $this->EnableTagOverride = $EnableTagOverride;
         $this->setMeta($Meta);
@@ -149,6 +157,20 @@ class AgentServiceRegistration extends AbstractType
         return $this;
     }
 
+    /**
+     * @return array<ServicePort>
+     */
+    public function getPorts(): array
+    {
+        return $this->Ports;
+    }
+
+    public function setPorts(ServicePort ...$Ports): self
+    {
+        $this->Ports = $Ports;
+        return $this;
+    }
+
     public function getAddress(): string
     {
         return $this->Address;
@@ -157,6 +179,17 @@ class AgentServiceRegistration extends AbstractType
     public function setAddress(string $Address): self
     {
         $this->Address = $Address;
+        return $this;
+    }
+
+    public function getSocketPath(): string
+    {
+        return $this->SocketPath;
+    }
+
+    public function setSocketPath(string $SocketPath): self
+    {
+        $this->SocketPath = $SocketPath;
         return $this;
     }
 
@@ -301,6 +334,13 @@ class AgentServiceRegistration extends AbstractType
                 $n->setKind($v);
             } elseif ('Tags' === $k) {
                 $n->setTags(...$v);
+            } elseif ('Ports' === $k) {
+                $n->Ports = [];
+                if (null !== $v) {
+                    foreach ($v as $vv) {
+                        $n->Ports[] = ServicePort::jsonUnserialize($vv);
+                    }
+                }
             } elseif ('TaggedAddresses' === $k) {
                 $n->TaggedAddresses = [];
                 foreach ($v as $kk => $vv) {
@@ -345,8 +385,14 @@ class AgentServiceRegistration extends AbstractType
         if (0 !== $this->Port) {
             $out->Port = $this->Port;
         }
+        if ([] !== $this->Ports) {
+            $out->Ports = $this->Ports;
+        }
         if ('' !== $this->Address) {
             $out->Address = $this->Address;
+        }
+        if ('' !== $this->SocketPath) {
+            $out->SocketPath = $this->SocketPath;
         }
         if (null !== $this->TaggedAddresses && [] !== $this->TaggedAddresses) {
             $out->TaggedAddresses = $this->TaggedAddresses;

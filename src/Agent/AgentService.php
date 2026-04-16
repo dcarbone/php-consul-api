@@ -34,6 +34,8 @@ class AgentService extends AbstractType
     /** @var array<string> */
     public array $Tags;
     public int $Port;
+    /** @var array<ServicePort> */
+    public array $Ports;
     public string $Address;
     public string $SocketPath;
     /** @var null|array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress> */
@@ -54,6 +56,7 @@ class AgentService extends AbstractType
     /**
      * @param array<string> $Tags
      * @param array<string,string> $Meta
+     * @param array<ServicePort> $Ports
      * @param array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress> $TaggedAddresses
      */
     public function __construct(
@@ -64,6 +67,7 @@ class AgentService extends AbstractType
         array $Tags = [],
         array $Meta = [],
         int $Port = 0,
+        array $Ports = [],
         string $Address = '',
         array $TaggedAddresses = [],
         null|AgentWeights $Weights = null,
@@ -84,6 +88,7 @@ class AgentService extends AbstractType
         $this->Service = $Service;
         $this->setMeta($Meta);
         $this->Port = $Port;
+        $this->setPorts(...$Ports);
         $this->setTags(...$Tags);
         $this->Address = $Address;
         $this->SocketPath = $SocketPath;
@@ -157,6 +162,20 @@ class AgentService extends AbstractType
     public function setPort(int $Port): self
     {
         $this->Port = $Port;
+        return $this;
+    }
+
+    /**
+     * @return array<ServicePort>
+     */
+    public function getPorts(): array
+    {
+        return $this->Ports;
+    }
+
+    public function setPorts(ServicePort ...$Ports): self
+    {
+        $this->Ports = $Ports;
         return $this;
     }
 
@@ -333,6 +352,13 @@ class AgentService extends AbstractType
                 $n->Kind = ServiceKind::from($v);
             } elseif ('Tags' === $k) {
                 $n->setTags(...$v);
+            } elseif ('Ports' === $k) {
+                $n->Ports = [];
+                if (null !== $v) {
+                    foreach ($v as $vv) {
+                        $n->Ports[] = ServicePort::jsonUnserialize($vv);
+                    }
+                }
             } elseif ('Proxy' === $k) {
                 $n->Proxy = null === $v ? null : AgentServiceConnectProxyConfig::jsonUnserialize($v);
             } elseif ('Weights' === $k) {
@@ -363,6 +389,9 @@ class AgentService extends AbstractType
         $out->Tags = $this->Tags;
         $out->Meta = $this->getMeta();
         $out->Port = $this->Port;
+        if ([] !== $this->Ports) {
+            $out->Ports = $this->Ports;
+        }
         $out->Address = $this->Address;
         if ('' !== $this->SocketPath) {
             $out->SocketPath = $this->SocketPath;
