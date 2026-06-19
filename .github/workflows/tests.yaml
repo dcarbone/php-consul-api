@@ -37,7 +37,7 @@ jobs:
 
     name: Tests - PHP ${{ matrix.php-version }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: 'Define vars'
         id: vars
