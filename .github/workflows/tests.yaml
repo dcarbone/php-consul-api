@@ -61,7 +61,7 @@ jobs:
           ini-values: precision=14,serialize_precision=-1
 
       - name: 'Install jq'
-        uses: dcarbone/install-jq-action@v3
+        uses: dcarbone/install-jq-action@v4
         with:
           force: true
 
