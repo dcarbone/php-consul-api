@@ -1,6 +1,6 @@
 <?php
 
-namespace DCarbone\PHPConsulAPITests\Usage;
+namespace DCarbone\PHPConsulAPITests\Integration;
 
 /*
    Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)

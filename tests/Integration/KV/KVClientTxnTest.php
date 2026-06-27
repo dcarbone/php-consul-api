@@ -1,6 +1,6 @@
 <?php
 
-namespace DCarbone\PHPConsulAPITests\Usage\KV;
+namespace DCarbone\PHPConsulAPITests\Integration\KV;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -24,7 +24,7 @@ use DCarbone\PHPConsulAPI\Txn\KVOp;
 use DCarbone\PHPConsulAPI\Txn\KVTxnOp;
 use DCarbone\PHPConsulAPI\Txn\TxnOp;
 use DCarbone\PHPConsulAPITests\ConsulManager;
-use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
+use DCarbone\PHPConsulAPITests\Integration\AbstractUsageTests;
 
 /**
  * Replicates the upstream Go TestAPI_KVTxn test.

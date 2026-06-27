@@ -1,6 +1,6 @@
 <?php
 
-namespace DCarbone\PHPConsulAPITests\Usage;
+namespace DCarbone\PHPConsulAPITests\Integration;
 
 use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\Consul;

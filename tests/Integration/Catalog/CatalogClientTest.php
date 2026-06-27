@@ -1,6 +1,6 @@
 <?php
 
-namespace DCarbone\PHPConsulAPITests\Usage\Catalog;
+namespace DCarbone\PHPConsulAPITests\Integration\Catalog;
 
 /*
    Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -28,7 +28,7 @@ use DCarbone\PHPConsulAPI\Catalog\Node;
 use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPI\WriteMeta;
 use DCarbone\PHPConsulAPITests\ConsulManager;
-use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
+use DCarbone\PHPConsulAPITests\Integration\AbstractUsageTests;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Attributes\Depends;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace DCarbone\PHPConsulAPITests\Usage\Operator;
+namespace DCarbone\PHPConsulAPITests\Integration\Operator;
 
 /*
    Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -22,7 +22,7 @@ use DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration;
 use DCarbone\PHPConsulAPI\Operator\OperatorClient;
 use DCarbone\PHPConsulAPI\Operator\OperatorHealthReply;
 use DCarbone\PHPConsulAPITests\ConsulManager;
-use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
+use DCarbone\PHPConsulAPITests\Integration\AbstractUsageTests;
 use PHPUnit\Framework\Attributes\Depends;
 
 /**

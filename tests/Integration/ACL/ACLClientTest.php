@@ -1,6 +1,6 @@
 <?php
 
-namespace DCarbone\PHPConsulAPITests\Usage\ACL;
+namespace DCarbone\PHPConsulAPITests\Integration\ACL;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\ACL\ACLTokenPolicyLink;
 use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPI\WriteMeta;
 use DCarbone\PHPConsulAPITests\ConsulManager;
-use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
+use DCarbone\PHPConsulAPITests\Integration\AbstractUsageTests;
 use PHPUnit\Framework\Attributes\Depends;
 
 /**

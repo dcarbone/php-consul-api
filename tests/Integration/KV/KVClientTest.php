@@ -1,9 +1,9 @@
 <?php
 
-namespace DCarbone\PHPConsulAPITests\Usage\Operator;
+namespace DCarbone\PHPConsulAPITests\Integration\KV;
 
 /*
-   Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -18,20 +18,28 @@ namespace DCarbone\PHPConsulAPITests\Usage\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\Operator\OperatorClient;
+use DCarbone\PHPConsulAPI\Consul;
+use DCarbone\PHPConsulAPI\KV\KVClient;
 use DCarbone\PHPConsulAPITests\ConsulManager;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Class OperatorClientTest
+ * Basic client instantiation tests.
  *
  * @internal
  */
-final class OperatorClientTest extends TestCase
+final class KVClientTest extends TestCase
 {
-    public function testCanConstructOperatorClient(): void
+    public function testCanConstructClient(): void
     {
-        $client = new OperatorClient(ConsulManager::testConfig());
-        self::assertInstanceOf(OperatorClient::class, $client);
+        $kv = new KVClient(ConsulManager::testConfig());
+        self::assertInstanceOf(KVClient::class, $kv);
+    }
+
+    public function testCanConstructViaConsul(): void
+    {
+        $consul = new Consul(ConsulManager::testConfig());
+        self::assertInstanceOf(KVClient::class, $consul->KV);
+        self::assertInstanceOf(KVClient::class, $consul->KV());
     }
 }

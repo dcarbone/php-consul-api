@@ -1,6 +1,6 @@
 <?php
 
-namespace DCarbone\PHPConsulAPITests\Usage\KV;
+namespace DCarbone\PHPConsulAPITests\Integration\KV;
 
 /*
    Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -26,7 +26,7 @@ use DCarbone\PHPConsulAPI\Session\SessionClient;
 use DCarbone\PHPConsulAPI\Session\SessionEntry;
 use DCarbone\PHPConsulAPI\WriteMeta;
 use DCarbone\PHPConsulAPITests\ConsulManager;
-use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
+use DCarbone\PHPConsulAPITests\Integration\AbstractUsageTests;
 
 /**
  * Replicates the upstream Go TestAPI_ClientAcquireRelease test.

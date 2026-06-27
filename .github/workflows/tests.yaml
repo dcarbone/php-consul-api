@@ -38,7 +38,7 @@ on:
 
 env:
   CONSUL_HTTP_ADDR: "127.0.0.1:8500"
-  CONSUL_VERSION: '1.22.2'
+  CONSUL_VERSION: '2.0.1'
 
 jobs:
   tests:
@@ -46,7 +46,6 @@ jobs:
     strategy:
       matrix:
         php-version:
-          - '8.1'
           - '8.2'
           - '8.3'
           - '8.4'
@@ -63,7 +62,6 @@ jobs:
         run: |
           _phpunit_version=
           case "${{ matrix.php-version }}" in
-            8.1) _phpunit_version='10.5' ;;
             8.2) _phpunit_version='11.1' ;;
             8.3) _phpunit_version='12.0' ;;
             8.4) _phpunit_version='12.0' ;;

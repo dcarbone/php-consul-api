@@ -1,6 +1,6 @@
 <?php
 
-namespace DCarbone\PHPConsulAPITests\Usage\Random;
+namespace DCarbone\PHPConsulAPITests\Integration\Random;
 
 /*
    Copyright 2016-2023 Daniel Carbone (daniel.p.carbone@gmail.com)

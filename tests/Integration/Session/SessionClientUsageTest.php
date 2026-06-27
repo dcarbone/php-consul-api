@@ -1,6 +1,6 @@
 <?php
 
-namespace DCarbone\PHPConsulAPITests\Usage\Session;
+namespace DCarbone\PHPConsulAPITests\Integration\Session;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\Consul;
@@ -9,7 +9,7 @@ use DCarbone\PHPConsulAPI\Session\SessionClient;
 use DCarbone\PHPConsulAPI\Session\SessionEntry;
 use DCarbone\PHPConsulAPI\WriteMeta;
 use DCarbone\PHPConsulAPITests\ConsulManager;
-use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
+use DCarbone\PHPConsulAPITests\Integration\AbstractUsageTests;
 
 /**
  * Class SessionClientUsageTest

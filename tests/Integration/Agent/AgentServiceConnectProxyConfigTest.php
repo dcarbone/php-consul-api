@@ -1,6 +1,6 @@
 <?php
 
-namespace DCarbone\PHPConsulAPITests\Usage\Agent;
+namespace DCarbone\PHPConsulAPITests\Integration\Agent;
 
 /*
    Copyright 2023 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPITests\Usage\Agent;
  */
 
 use DCarbone\PHPConsulAPI\Agent\AgentServiceConnectProxyConfig;
-use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
+use DCarbone\PHPConsulAPITests\Integration\AbstractUsageTests;
 
 class AgentServiceConnectProxyConfigTest extends AbstractUsageTests
 {

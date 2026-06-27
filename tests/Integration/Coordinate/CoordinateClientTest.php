@@ -1,6 +1,6 @@
 <?php
 
-namespace DCarbone\PHPConsulAPITests\Usage\Coordinate;
+namespace DCarbone\PHPConsulAPITests\Integration\Coordinate;
 
 /*
    Copyright 2016-2021 Daniel Carbone (daniel.p.carbone@gmail.com)
@@ -21,7 +21,7 @@ namespace DCarbone\PHPConsulAPITests\Usage\Coordinate;
 use DCarbone\PHPConsulAPI\Coordinate\CoordinateClient;
 use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPITests\ConsulManager;
-use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
+use DCarbone\PHPConsulAPITests\Integration\AbstractUsageTests;
 use PHPUnit\Framework\Attributes\Depends;
 
 /**

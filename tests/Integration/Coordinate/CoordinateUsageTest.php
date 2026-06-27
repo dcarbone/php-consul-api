@@ -1,11 +1,11 @@
 <?php
 
-namespace DCarbone\PHPConsulAPITests\Usage\Coordinate;
+namespace DCarbone\PHPConsulAPITests\Integration\Coordinate;
 
 use DCarbone\PHPConsulAPI\Coordinate\Coordinate;
 use DCarbone\PHPConsulAPI\Coordinate\CoordinateConfig;
 use DCarbone\PHPConsulAPI\Coordinate\DimensionalityConflictException;
-use DCarbone\PHPConsulAPITests\Usage\AbstractUsageTests;
+use DCarbone\PHPConsulAPITests\Integration\AbstractUsageTests;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Attributes\Depends;
 
