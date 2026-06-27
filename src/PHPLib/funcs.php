@@ -34,15 +34,18 @@ function parse_time(string $ts): null|Time\Time
     // Truncate fractional seconds beyond 6 digits (microseconds) since PHP
     // cannot parse nanoseconds.
     $fixed = preg_replace('/(\.\d{6})\d+/', '$1', $ts);
+
     // Try microsecond-precision first, then fall back to no fractional seconds
-    $t = Time\Time::createFromFormat('Y-m-d\TH:i:s.uP', $fixed);
-    if (false !== $t) {
-        return $t;
+    $dt = \DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s.uP', $fixed);
+    if (false !== $dt) {
+        return new Time\Time($dt->format('Y-m-d H:i:s.u O'));
     }
-    $t = Time\Time::createFromFormat(\DATE_RFC3339, $fixed);
-    if (false !== $t) {
-        return $t;
+
+    $dt = \DateTimeImmutable::createFromFormat(\DATE_RFC3339, $fixed);
+    if (false !== $dt) {
+        return new Time\Time($dt->format('Y-m-d H:i:s O'));
     }
+
     return null;
 }
 
