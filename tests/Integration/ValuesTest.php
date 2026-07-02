@@ -22,12 +22,7 @@ use DCarbone\PHPConsulAPI\PHPLib\Values;
 use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Class ValuesUsageTest
- *
- * @internal
- */
-final class ValuesUsageTest extends TestCase
+final class ValuesTest extends TestCase
 {
     public function testCanConstruct(): void
     {

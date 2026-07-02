@@ -21,10 +21,7 @@ namespace DCarbone\PHPConsulAPITests\Integration;
 use DCarbone\PHPConsulAPITests\ConsulManager;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Class AbstractUsageTests
- */
-abstract class AbstractUsageTests extends TestCase
+abstract class AbstractIntegrationTestCase extends TestCase
 {
     /** @var bool */
     protected static bool $singlePerClass = false;

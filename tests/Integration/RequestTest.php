@@ -28,12 +28,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
 
-/**
- * Class RequestUsageTest
- *
- * @internal
- */
-final class RequestUsageTest extends TestCase
+final class RequestTest extends TestCase
 {
     public function testCanConstructWithoutBody(): void
     {

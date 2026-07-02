@@ -22,9 +22,6 @@ namespace DCarbone\PHPConsulAPITests;
 
 use DCarbone\PHPConsulAPI\Config;
 
-/**
- * Class ConsulManager
- */
 final class ConsulManager
 {
     public const TMP_DIR  = __DIR__ . '/../tmp';

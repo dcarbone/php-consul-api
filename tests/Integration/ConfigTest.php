@@ -24,12 +24,7 @@ use PHPUnit\Framework\TestCase;
    limitations under the License.
  */
 
-/**
- * Class ConfigUsageTest
- *
- * @internal
- */
-final class ConfigUsageTest extends TestCase
+final class ConfigTest extends TestCase
 {
     public const DEFAULT_ADDRESS = '127.0.0.1:8500';
     public const DEFAULT_SCHEME  = 'http';

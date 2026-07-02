@@ -24,6 +24,7 @@ use DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration;
 use DCarbone\PHPConsulAPI\Agent\AgentMember;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
 use DCarbone\PHPConsulAPI\Agent\AgentServiceCheck;
+use DCarbone\PHPConsulAPI\Agent\AgentServiceConnectProxyConfig;
 use DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration;
 use DCarbone\PHPConsulAPI\Agent\MemberOpts;
 use DCarbone\PHPConsulAPI\Agent\MetricsInfo;
@@ -31,16 +32,11 @@ use DCarbone\PHPConsulAPI\Agent\ServiceRegisterOpts;
 use DCarbone\PHPConsulAPI\Consul;
 use DCarbone\PHPConsulAPI\PHPLib\Error;
 use DCarbone\PHPConsulAPITests\ConsulManager;
-use DCarbone\PHPConsulAPITests\Integration\AbstractUsageTests;
+use DCarbone\PHPConsulAPITests\Integration\AbstractIntegrationTestCase;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Attributes\Depends;
 
-/**
- * Class AgentClientTest
- *
- * @internal
- */
-final class AgentClientTest extends AbstractUsageTests
+final class AgentClientTest extends AbstractIntegrationTestCase
 {
     public const Service1Name = 'test_1_service';
     public const Service2Name = 'test_2_service';
@@ -418,5 +414,33 @@ final class AgentClientTest extends AbstractUsageTests
 
         $err = $client->ForceLeavePrune('nonexistent-node');
         self::assertInstanceOf(Error::class, $err);
+    }
+
+    public function testConstructGivenConfigWillUnmarshalConfigValuesSuccessfully(): void
+    {
+        $config = new AgentServiceConnectProxyConfig(
+            Config: [
+                'envoy_prometheus_bind_addr' => '0.0.0.0:12345',
+                'handshake_timeout_ms' => 10000,
+                'local_connect_timeout_ms' => 1000,
+                'local_request_timeout_ms' => 0,
+                'protocol' => 'http',
+            ],
+        );
+
+        self::assertEquals([
+            'envoy_prometheus_bind_addr' => '0.0.0.0:12345',
+            'handshake_timeout_ms' => 10000,
+            'local_connect_timeout_ms' => 1000,
+            'local_request_timeout_ms' => 0,
+            'protocol' => 'http',
+        ], $config->Config);
+    }
+
+    public function testCanLeaveAgent(): void
+    {
+        $client = new AgentClient(ConsulManager::testConfig());
+        $err = $client->Leave();
+        self::assertNull($err, sprintf('AgentClient::leave returned error: %s', $err));
     }
 }

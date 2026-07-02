@@ -23,11 +23,7 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-/**
- * Class Coordinate
- *
- * From github.com/hashicorp/serf/coordinate/coordinate.go
- */
+/** From github.com/hashicorp/serf/coordinate/coordinate.go */
 class Coordinate extends AbstractType
 {
     public const ZeroThreshold = 1.0e-6;

@@ -25,13 +25,13 @@ use DCarbone\PHPConsulAPI\ACL\ACLTokenPolicyLink;
 use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPI\WriteMeta;
 use DCarbone\PHPConsulAPITests\ConsulManager;
-use DCarbone\PHPConsulAPITests\Integration\AbstractUsageTests;
+use DCarbone\PHPConsulAPITests\Integration\AbstractIntegrationTestCase;
 use PHPUnit\Framework\Attributes\Depends;
 
 /**
  * @internal
  */
-final class ACLClientTest extends AbstractUsageTests
+final class ACLClientTest extends AbstractIntegrationTestCase
 {
     protected static bool $singlePerClass = false;
 

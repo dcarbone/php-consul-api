@@ -19,19 +19,89 @@ namespace DCarbone\PHPConsulAPITests\Integration\Operator;
  */
 
 use DCarbone\PHPConsulAPI\Operator\OperatorClient;
+use DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration;
+use DCarbone\PHPConsulAPI\Operator\OperatorHealthReply;
 use DCarbone\PHPConsulAPITests\ConsulManager;
-use PHPUnit\Framework\TestCase;
+use DCarbone\PHPConsulAPITests\Integration\AbstractIntegrationTestCase;
+use PHPUnit\Framework\Attributes\Depends;
 
-/**
- * Class OperatorClientTest
- *
- * @internal
- */
-final class OperatorClientTest extends TestCase
+final class OperatorClientTest extends AbstractIntegrationTestCase
 {
+    protected static bool $singlePerClass = true;
+
     public function testCanConstructOperatorClient(): void
     {
         $client = new OperatorClient(ConsulManager::testConfig());
         self::assertInstanceOf(OperatorClient::class, $client);
+    }
+
+    #[Depends('testCanConstructOperatorClient')]
+    public function testCanGetAutopilotConfiguration(): void
+    {
+        $client = new OperatorClient(ConsulManager::testConfig());
+
+        [$conf, $err] = $client->AutopilotGetConfiguration();
+        self::assertNull($err, sprintf('Unable to list autopilot configuration: %s', $err));
+        self::assertInstanceOf(
+            AutopilotConfiguration::class,
+            $conf,
+            sprintf('Expected instance of %s, saw: %s', AutopilotConfiguration::class, json_encode($conf))
+        );
+    }
+
+    #[Depends('testCanGetAutopilotConfiguration')]
+    public function testCanSetAutopilotConfiguration(): void
+    {
+        $client = new OperatorClient(ConsulManager::testConfig());
+
+        [$current]               = $client->AutopilotGetConfiguration();
+        $new                     = clone $current;
+        $new->CleanupDeadServers = !$current->CleanupDeadServers;
+        $err                     = $client->AutopilotSetConfiguration($new);
+        self::assertNull($err, 'Unable to update Autopilot configuration: ' . $err);
+        [$updated, $err] = $client->AutopilotGetConfiguration();
+        self::assertNull($err, 'Unable to get updated Autopilot configuration: ' . $err);
+        self::assertInstanceOf(AutopilotConfiguration::class, $updated);
+        if ($current->CleanupDeadServers) {
+            self::assertFalse($updated->CleanupDeadServers, 'Autopilot conf did not change');
+        } else {
+            self::assertTrue($updated->CleanupDeadServers, 'Autopilot conf did not change');
+        }
+    }
+
+    #[Depends('testCanSetAutopilotConfiguration')]
+    public function testCanCASAutopilotConfiguration(): void
+    {
+        $client = new OperatorClient(ConsulManager::testConfig());
+        [$current]               = $client->AutopilotGetConfiguration();
+        $new                     = clone $current;
+        $new->CleanupDeadServers = !$current->CleanupDeadServers;
+        [$ok, $err]              = $client->AutopilotCASConfiguration($new);
+        self::assertNull($err, 'Unable to update Autopilot configuration: ' . $err);
+        self::assertTrue($ok);
+        [$updated, $err] = $client->AutopilotGetConfiguration();
+        self::assertNull($err, 'Unable to get updated Autopilot configuration: ' . $err);
+        self::assertInstanceOf(AutopilotConfiguration::class, $updated);
+        if ($current->CleanupDeadServers) {
+            self::assertFalse($updated->CleanupDeadServers, 'Autopilot conf did not change');
+        } else {
+            self::assertTrue($updated->CleanupDeadServers, 'Autopilot conf did not change');
+        }
+    }
+
+    #[Depends('testCanConstructOperatorClient')]
+    public function testCanGetAutopilotServerHealth(): void
+    {
+        $client = new OperatorClient(ConsulManager::testConfig());
+
+        [$healths, $err] = $client->AutopilotServerHealth();
+        self::assertNull($err, 'Unable to get Autopilot server health: %s' . $err);
+        self::assertInstanceOf(OperatorHealthReply::class, $healths);
+        self::assertCount(1, $healths->Servers);
+    }
+
+    public function testReadableJsonEncoding(): void
+    {
+        self::markTestSkipped('ReadableDuration class was removed during modernization');
     }
 }

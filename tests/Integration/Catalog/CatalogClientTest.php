@@ -30,16 +30,11 @@ use DCarbone\PHPConsulAPI\Catalog\Node;
 use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPI\WriteMeta;
 use DCarbone\PHPConsulAPITests\ConsulManager;
-use DCarbone\PHPConsulAPITests\Integration\AbstractUsageTests;
+use DCarbone\PHPConsulAPITests\Integration\AbstractIntegrationTestCase;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Attributes\Depends;
 
-/**
- * Class CatalogClientTest
- *
- * @internal
- */
-final class CatalogClientTest extends AbstractUsageTests
+final class CatalogClientTest extends AbstractIntegrationTestCase
 {
     public const ServiceID1 = 'test1';
     public const ServiceID2 = 'test2';

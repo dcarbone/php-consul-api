@@ -21,17 +21,18 @@ namespace DCarbone\PHPConsulAPITests\Integration\Random;
 use DCarbone\PHPConsulAPI\Consul;
 use DCarbone\PHPConsulAPI\Health\HealthChecks;
 use DCarbone\PHPConsulAPI\Health\HealthClient;
+use DCarbone\PHPConsulAPI\KV\KVPair;
 use DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryClient;
 use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPI\Status\StatusClient;
 use DCarbone\PHPConsulAPITests\ConsulManager;
-use DCarbone\PHPConsulAPITests\Integration\AbstractUsageTests;
+use DCarbone\PHPConsulAPITests\Integration\AbstractIntegrationTestCase;
 use PHPUnit\Framework\Attributes\Depends;
 
 /**
  * @internal
  */
-final class ConsulAdditionalClientCoverageTest extends AbstractUsageTests
+final class ConsulAdditionalClientCoverageTest extends AbstractIntegrationTestCase
 {
     /** @var bool */
     protected static bool $singlePerClass = true;
@@ -80,6 +81,22 @@ final class ConsulAdditionalClientCoverageTest extends AbstractUsageTests
         self::assertInstanceOf(QueryMeta::class, $qm);
         self::assertInstanceOf(HealthChecks::class, $checks);
         self::assertGreaterThanOrEqual(1, count($checks));
+    }
+
+    public function testDynamicFieldAssignment(): void
+    {
+        static $k = 'nope';
+        static $v = 'should not be here';
+
+        $json = sprintf('{"%s":"%s"}', $k, $v);
+
+        $dec = json_decode($json);
+
+        self::assertIsObject($dec);
+
+        $kvp = KVPair::jsonUnserialize($dec);
+
+        self::assertEquals($v, $kvp->{$k});
     }
 
 }

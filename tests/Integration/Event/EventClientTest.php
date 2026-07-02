@@ -23,15 +23,10 @@ use DCarbone\PHPConsulAPI\Event\UserEvent;
 use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPI\WriteMeta;
 use DCarbone\PHPConsulAPITests\ConsulManager;
-use DCarbone\PHPConsulAPITests\Integration\AbstractUsageTests;
+use DCarbone\PHPConsulAPITests\Integration\AbstractIntegrationTestCase;
 use PHPUnit\Framework\Attributes\Depends;
 
-/**
- * Class EventClientUsageTest
- *
- * @internal
- */
-final class EventClientUsageTest extends AbstractUsageTests
+final class EventClientTest extends AbstractIntegrationTestCase
 {
     /** @var bool */
     protected static bool $singlePerClass = true;
@@ -81,6 +76,38 @@ final class EventClientUsageTest extends AbstractUsageTests
         );
 
         self::assertGreaterThanOrEqual(1, count($matching));
+    }
+
+    #[Depends('testCanFireEvent')]
+    public function testCanListEvents(UserEvent $event): void
+    {
+        $client = new EventClient(ConsulManager::testConfig());
+
+        [$events, $qm, $err] = $client->List();
+
+        self::assertNull($err, sprintf('EventClient::List (all) returned error: %s', $err));
+        self::assertInstanceOf(QueryMeta::class, $qm);
+        self::assertIsArray($events);
+        self::assertContainsOnlyInstancesOf(UserEvent::class, $events);
+        self::assertGreaterThanOrEqual(1, count($events));
+
+        $matching = array_filter(
+            $events,
+            static fn(UserEvent $listed): bool => $listed->ID === $event->ID
+        );
+
+        self::assertGreaterThanOrEqual(1, count($matching));
+    }
+
+    #[Depends('testCanConstructClient')]
+    public function testCanMapIDToIndex(): void
+    {
+        $client = new EventClient(ConsulManager::testConfig());
+
+        $index = $client->IDToIndex('12345678-9012-3456-7890-123456789012');
+
+        self::assertIsInt($index);
+        self::assertGreaterThan(0, $index);
     }
 
 }

@@ -9,14 +9,9 @@ use DCarbone\PHPConsulAPI\Session\SessionClient;
 use DCarbone\PHPConsulAPI\Session\SessionEntry;
 use DCarbone\PHPConsulAPI\WriteMeta;
 use DCarbone\PHPConsulAPITests\ConsulManager;
-use DCarbone\PHPConsulAPITests\Integration\AbstractUsageTests;
+use DCarbone\PHPConsulAPITests\Integration\AbstractIntegrationTestCase;
 
-/**
- * Class SessionClientUsageTest
- *
- * @internal
- */
-final class SessionClientTest extends AbstractUsageTests
+final class SessionClientTest extends AbstractIntegrationTestCase
 {
     /** @var bool */
     protected static bool $singlePerClass = true;
