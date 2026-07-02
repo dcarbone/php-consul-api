@@ -19,10 +19,17 @@ namespace DCarbone\PHPConsulAPITests\Integration\Agent;
  */
 
 use DCarbone\PHPConsulAPI\Agent\AgentClient;
+use DCarbone\PHPConsulAPI\Agent\AgentCheck;
+use DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration;
 use DCarbone\PHPConsulAPI\Agent\AgentMember;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
 use DCarbone\PHPConsulAPI\Agent\AgentServiceCheck;
 use DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration;
+use DCarbone\PHPConsulAPI\Agent\MemberOpts;
+use DCarbone\PHPConsulAPI\Agent\MetricsInfo;
+use DCarbone\PHPConsulAPI\Agent\ServiceRegisterOpts;
+use DCarbone\PHPConsulAPI\Consul;
+use DCarbone\PHPConsulAPI\PHPLib\Error;
 use DCarbone\PHPConsulAPITests\ConsulManager;
 use DCarbone\PHPConsulAPITests\Integration\AbstractUsageTests;
 use PHPUnit\Framework\AssertionFailedError;
@@ -216,5 +223,200 @@ final class AgentClientTest extends AbstractUsageTests
 
         $err = $client->ServiceDeregister(self::Service1Name);
         self::assertNull($err, sprintf('Error deregistering service: %s', $err));
+    }
+
+    #[Depends('testCanConstructAgentClient')]
+    public function testCanGetHost(): void
+    {
+        $client = new AgentClient(ConsulManager::testConfig());
+        [$host, $err] = $client->Host();
+        self::assertNull($err, sprintf('AgentClient::host returned error: %s', $err));
+        self::assertIsArray($host);
+        self::assertNotEmpty($host);
+    }
+
+    #[Depends('testCanConstructAgentClient')]
+    public function testCanGetMetrics(): void
+    {
+        $client = new AgentClient(ConsulManager::testConfig());
+        [$metrics, $err] = $client->Metrics();
+        if (null === $err) {
+            self::assertInstanceOf(MetricsInfo::class, $metrics);
+            return;
+        }
+
+        self::assertStringContainsString(
+            'json: unsupported value: NaN',
+            (string)$err,
+            sprintf('AgentClient::metrics returned unexpected error: %s', $err)
+        );
+    }
+
+    #[Depends('testCanConstructAgentClient')]
+    public function testCanGetChecksAndFilteredChecks(): void
+    {
+        $client = new AgentClient(ConsulManager::testConfig());
+
+        [$checks, $err] = $client->Checks();
+        self::assertNull($err, sprintf('AgentClient::checks returned error: %s', $err));
+        self::assertIsArray($checks);
+        self::assertContainsOnlyInstancesOf(AgentCheck::class, $checks);
+
+        [$filtered, $err] = $client->ChecksWithFilter('');
+        self::assertNull($err, sprintf('AgentClient::checksWithFilter returned error: %s', $err));
+        self::assertIsArray($filtered);
+        self::assertContainsOnlyInstancesOf(AgentCheck::class, $filtered);
+    }
+
+    #[Depends('testCanConstructAgentClient')]
+    public function testCanGetServicesWithFilter(): void
+    {
+        $client = new AgentClient(ConsulManager::testConfig());
+
+        [$services, $err] = $client->ServicesWithFilter('');
+        self::assertNull($err, sprintf('AgentClient::servicesWithFilter returned error: %s', $err));
+        self::assertIsArray($services);
+        self::assertContainsOnlyInstancesOf(AgentService::class, $services);
+    }
+
+    #[Depends('testCanConstructAgentClient')]
+    public function testCanGetMemberOpts(): void
+    {
+        $client = new AgentClient(ConsulManager::testConfig());
+        [$members, $err] = $client->MemberOpts(new MemberOpts());
+        self::assertNull($err, sprintf('AgentClient::memberOpts returned error: %s', $err));
+        self::assertIsArray($members);
+        self::assertContainsOnlyInstancesOf(AgentMember::class, $members);
+        self::assertCount(1, $members);
+    }
+
+    #[Depends('testCanConstructAgentClient')]
+    public function testCanRegisterServiceWithRegisterOptsAndGetByID(): void
+    {
+        $client = new AgentClient(ConsulManager::testConfig());
+        $serviceID = 'opts-service-id';
+
+        $service = new AgentServiceRegistration();
+        $service
+            ->setID($serviceID)
+            ->setName('opts-service')
+            ->setAddress('127.0.0.1')
+            ->setPort(43210)
+            ->setCheck(new AgentServiceCheck(TTL: '30s'));
+
+        try {
+            $err = $client->ServiceRegisterOpts($service, new ServiceRegisterOpts(ReplaceExistingChecks: true));
+            self::assertNull($err, sprintf('AgentClient::serviceRegisterOpts returned error: %s', $err));
+
+            [$svc, $err] = $client->Service($serviceID);
+            self::assertNull($err, sprintf('AgentClient::service returned error: %s', $err));
+            self::assertInstanceOf(AgentService::class, $svc);
+            self::assertSame($serviceID, $svc->ID);
+        } finally {
+            $client->ServiceDeregister($serviceID);
+        }
+    }
+
+    #[Depends('testCanConstructAgentClient')]
+    public function testCanRegisterDeregisterCheckAndUpdateTTLStates(): void
+    {
+        $client = new AgentClient(ConsulManager::testConfig());
+        $checkID = 'integration-check-ttl';
+
+        try {
+            $err = $client->CheckRegister(new AgentCheckRegistration(
+                ID: $checkID,
+                Name: 'integration-check-ttl',
+                TTL: '30s',
+            ));
+            self::assertNull($err, sprintf('AgentClient::checkRegister returned error: %s', $err));
+
+            $err = $client->PassTTL($checkID, 'passing');
+            self::assertNull($err, sprintf('AgentClient::passTTL returned error: %s', $err));
+
+            $err = $client->WarnTTL($checkID, 'warning');
+            self::assertNull($err, sprintf('AgentClient::warnTTL returned error: %s', $err));
+
+            $err = $client->FailTTL($checkID, 'critical');
+            self::assertNull($err, sprintf('AgentClient::failTTL returned error: %s', $err));
+
+            $err = $client->UpdateTTL($checkID, 'invalid', 'not-a-valid-status');
+            self::assertInstanceOf(Error::class, $err);
+        } finally {
+            $client->CheckDeregister($checkID);
+        }
+    }
+
+    #[Depends('testCanConstructAgentClient')]
+    public function testCanQueryAgentHealthByIDAndName(): void
+    {
+        $client = new AgentClient(ConsulManager::testConfig());
+        $serviceID = 'unknown-health-service-id';
+        $serviceName = 'unknown-health-service-name';
+
+        [$statusByID, $infoByID, $err] = $client->AgentHealthServiceByID($serviceID);
+        self::assertInstanceOf(Error::class, $err);
+        self::assertSame(Consul::HealthCritical, $statusByID);
+        self::assertNull($infoByID);
+
+        [$statusByName, $infoByName, $err] = $client->AgentHealthServiceByName($serviceName);
+        self::assertInstanceOf(Error::class, $err);
+        self::assertSame(Consul::HealthCritical, $statusByName);
+        self::assertIsArray($infoByName);
+        self::assertCount(0, $infoByName);
+    }
+
+    #[Depends('testCanConstructAgentClient')]
+    public function testCanToggleServiceMaintenance(): void
+    {
+        $client = new AgentClient(ConsulManager::testConfig());
+        $serviceID = 'maint-service-id';
+
+        $service = new AgentServiceRegistration();
+        $service
+            ->setID($serviceID)
+            ->setName('maint-service-name')
+            ->setAddress('127.0.0.1')
+            ->setPort(43212);
+
+        try {
+            $err = $client->ServiceRegister($service);
+            self::assertNull($err, sprintf('AgentClient::serviceRegister returned error: %s', $err));
+
+            $err = $client->EnableServiceMaintenance($serviceID, 'integration maintenance');
+            self::assertNull($err, sprintf('AgentClient::enableServiceMaintenance returned error: %s', $err));
+
+            $err = $client->DisableServiceMaintenance($serviceID);
+            self::assertNull($err, sprintf('AgentClient::disableServiceMaintenance returned error: %s', $err));
+        } finally {
+            $client->ServiceDeregister($serviceID);
+        }
+    }
+
+    #[Depends('testCanConstructAgentClient')]
+    public function testCanToggleNodeMaintenance(): void
+    {
+        $client = new AgentClient(ConsulManager::testConfig());
+
+        $err = $client->EnableNodeMaintenance('integration node maintenance');
+        self::assertNull($err, sprintf('AgentClient::enableNodeMaintenance returned error: %s', $err));
+
+        $err = $client->DisableNodeMaintenance();
+        self::assertNull($err, sprintf('AgentClient::disableNodeMaintenance returned error: %s', $err));
+    }
+
+    #[Depends('testCanConstructAgentClient')]
+    public function testJoinAndForceLeaveEndpoints(): void
+    {
+        $client = new AgentClient(ConsulManager::testConfig());
+
+        $err = $client->Join('127.0.0.1');
+        self::assertNull($err, sprintf('AgentClient::join returned error: %s', $err));
+
+        $err = $client->ForceLeave('nonexistent-node');
+        self::assertInstanceOf(Error::class, $err);
+
+        $err = $client->ForceLeavePrune('nonexistent-node');
+        self::assertInstanceOf(Error::class, $err);
     }
 }

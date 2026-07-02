@@ -22,8 +22,10 @@ use DCarbone\PHPConsulAPI\Agent\AgentService;
 use DCarbone\PHPConsulAPI\Catalog\CatalogClient;
 use DCarbone\PHPConsulAPI\Catalog\CatalogDeregistration;
 use DCarbone\PHPConsulAPI\Catalog\CatalogNode;
+use DCarbone\PHPConsulAPI\Catalog\CatalogNodeServiceList;
 use DCarbone\PHPConsulAPI\Catalog\CatalogRegistration;
 use DCarbone\PHPConsulAPI\Catalog\CatalogService;
+use DCarbone\PHPConsulAPI\Catalog\GatewayService;
 use DCarbone\PHPConsulAPI\Catalog\Node;
 use DCarbone\PHPConsulAPI\QueryMeta;
 use DCarbone\PHPConsulAPI\WriteMeta;
@@ -45,6 +47,7 @@ final class CatalogClientTest extends AbstractUsageTests
     public const ServiceName    = 'testservice';
     public const ServicePort    = 1234;
     public const ServiceAddress = '10.2.3.4';
+    public const ServiceTag     = 'tagged';
 
     /** @var bool */
     protected static bool $singlePerClass = true;
@@ -100,6 +103,7 @@ final class CatalogClientTest extends AbstractUsageTests
             Service: new AgentService(
                 ID: self::ServiceID2,
                 Service: self::ServiceName,
+                Tags: [self::ServiceTag],
                 Port: self::ServicePort,
                 Address: self::ServiceAddress,
             ),
@@ -128,6 +132,21 @@ final class CatalogClientTest extends AbstractUsageTests
             var_dump($service);
             throw $e;
         }
+    }
+
+    #[Depends('testCanRegisterSecondServiceWithSameName')]
+    public function testCanGetServiceByMultipleTags(): void
+    {
+        $client = new CatalogClient(ConsulManager::testConfig());
+
+        [$service, $qm, $err] = $client->ServiceMultipleTags(self::ServiceName, [self::ServiceTag]);
+
+        self::assertNull($err, 'CatalogClient::serviceMultipleTags returned error: ' . $err);
+        self::assertInstanceOf(QueryMeta::class, $qm);
+        self::assertIsArray($service);
+        self::assertCount(1, $service);
+        self::assertInstanceOf(CatalogService::class, $service[0]);
+        self::assertContains(self::ServiceTag, $service[0]->ServiceTags);
     }
 
     #[Depends('testCanRegisterSecondServiceWithSameName')]
@@ -244,5 +263,45 @@ final class CatalogClientTest extends AbstractUsageTests
             var_dump($node);
             throw $e;
         }
+    }
+
+    #[Depends('testCanGetListOfNodes')]
+    public function testCanGetNodeServicesList(): void
+    {
+        $client = new CatalogClient(ConsulManager::testConfig());
+
+        [$nodes, , $err] = $client->Nodes();
+        self::assertNull($err, 'CatalogClient::nodes returned error: ' . $err);
+
+        $nodeName = null;
+        foreach ($nodes as $node) {
+            if ('' !== $node->Node) {
+                $nodeName = $node->Node;
+                break;
+            }
+        }
+
+        self::assertNotNull($nodeName, 'Unable to get node name');
+
+        [$list, $qm, $err] = $client->NodeServicesList($nodeName);
+        self::assertNull($err, 'CatalogClient::nodeServicesList returned error: ' . $err);
+        self::assertInstanceOf(QueryMeta::class, $qm);
+        self::assertInstanceOf(CatalogNodeServiceList::class, $list);
+        self::assertInstanceOf(Node::class, $list->Node);
+        self::assertIsArray($list->Services);
+        self::assertNotEmpty($list->Services);
+        self::assertContainsOnlyInstancesOf(AgentService::class, array_values($list->Services));
+    }
+
+    #[Depends('testCanConstructClient')]
+    public function testCanGetGatewayServices(): void
+    {
+        $client = new CatalogClient(ConsulManager::testConfig());
+
+        [$services, $qm, $err] = $client->GatewayServices('does-not-exist');
+        self::assertNull($err, 'CatalogClient::gatewayServices returned error: ' . $err);
+        self::assertInstanceOf(QueryMeta::class, $qm);
+        self::assertIsArray($services);
+        self::assertContainsOnlyInstancesOf(GatewayService::class, $services);
     }
 }

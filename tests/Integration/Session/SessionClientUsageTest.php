@@ -28,7 +28,7 @@ final class SessionClientUsageTest extends AbstractUsageTests
 
         /** @var \DCarbone\PHPConsulAPI\Session\SessionEntry $session */
         /** @var \DCarbone\PHPConsulAPI\Session\SessionEntry[] $sessions */
-        /** @var \DCarbone\PHPConsulAPI\Error $err */
+        /** @var \DCarbone\PHPConsulAPI\PHPLib\Error $err */
         $client = new SessionClient(ConsulManager::testConfig());
 
         [$id, $wm, $err] = $client->CreateNoChecks(new SessionEntry(
@@ -71,5 +71,64 @@ final class SessionClientUsageTest extends AbstractUsageTests
         self::assertNull($err, sprintf('Error getting list after expected expiration: %s', $err));
         self::assertIsArray($sessions, 'Expected $sessions to be an array');
         self::assertCount(0, $sessions, 'Expected $sessions to be empty');
+    }
+
+    public function testCreateListAndNodeLifecycle(): void
+    {
+        static $name = 'testsession-create';
+
+        /** @var \DCarbone\PHPConsulAPI\Session\SessionEntry[] $sessions */
+        /** @var \DCarbone\PHPConsulAPI\PHPLib\Error $err */
+        $client = new SessionClient(ConsulManager::testConfig());
+
+        [$id, $wm, $err] = $client->Create(new SessionEntry(
+            Name: $name,
+            Behavior: Consul::SessionBehaviorDelete,
+        ));
+        self::assertNull($err, sprintf('Error creating session with checks: %s', $err));
+        self::assertInstanceOf(WriteMeta::class, $wm);
+        self::assertIsString($id, 'Expected ID to be string');
+        self::assertNotSame('', $id, 'Expected ID to be non-empty');
+
+        [$sessions, $qm, $err] = $client->Info($id);
+        self::assertNull($err, sprintf('Error getting %s info: %s', $id, $err));
+        self::assertInstanceOf(QueryMeta::class, $qm);
+        self::assertCount(1, $sessions);
+        self::assertSame($id, $sessions[0]->ID);
+        self::assertSame($name, $sessions[0]->Name);
+
+        $node = $sessions[0]->Node;
+        self::assertNotSame('', $node, 'Expected session node to be non-empty');
+
+        [$nodeSessions, $qm, $err] = $client->Node($node);
+        self::assertNull($err, sprintf('Error listing sessions for node %s: %s', $node, $err));
+        self::assertInstanceOf(QueryMeta::class, $qm);
+        self::assertContainsOnlyInstancesOf(SessionEntry::class, $nodeSessions);
+
+        $foundInNode = false;
+        foreach ($nodeSessions as $nodeSession) {
+            if ($id === $nodeSession->ID) {
+                $foundInNode = true;
+                break;
+            }
+        }
+        self::assertTrue($foundInNode, sprintf('Expected session %s to be present in node list', $id));
+
+        [$allSessions, $qm, $err] = $client->List();
+        self::assertNull($err, sprintf('Error listing all sessions: %s', $err));
+        self::assertInstanceOf(QueryMeta::class, $qm);
+        self::assertContainsOnlyInstancesOf(SessionEntry::class, $allSessions);
+
+        $foundInList = false;
+        foreach ($allSessions as $listedSession) {
+            if ($id === $listedSession->ID) {
+                $foundInList = true;
+                break;
+            }
+        }
+        self::assertTrue($foundInList, sprintf('Expected session %s to be present in session list', $id));
+
+        [$_, $err] = $client->Destroy($id);
+        self::assertNull($err, sprintf('Error destroying session: %s', $err));
     }
 }

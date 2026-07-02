@@ -20,6 +20,8 @@ namespace DCarbone\PHPConsulAPITests\Integration\KV;
 
 use DCarbone\PHPConsulAPI\KV\KVClient;
 use DCarbone\PHPConsulAPI\KV\KVPair;
+use DCarbone\PHPConsulAPI\Session\SessionClient;
+use DCarbone\PHPConsulAPI\Session\SessionEntry;
 use DCarbone\PHPConsulAPI\Txn\KVOp;
 use DCarbone\PHPConsulAPI\Txn\KVTxnOp;
 use DCarbone\PHPConsulAPI\Txn\TxnOp;
@@ -369,5 +371,202 @@ final class KVClientTxnTest extends AbstractUsageTests
         self::assertSame('flagged', $kv->Value);
         self::assertSame(123, $kv->Flags);
     }
-}
 
+    /**
+     * Cover get-or-empty txn verb on a missing key.
+     */
+    public function testTxnGetOrEmptyMissingKey(): void
+    {
+        $client = new KVClient(ConsulManager::testConfig());
+
+        $key = 'test/txn/get-or-empty-missing';
+        [$_, $err] = $client->Delete($key);
+        self::assertNull($err);
+
+        $txnResp = $client->Txn(
+            null,
+            new TxnOp(
+                KV: new KVTxnOp(
+                    Verb: KVOp::KVGetOrEmpty,
+                    Key: $key,
+                ),
+            ),
+        );
+
+        self::assertNull($txnResp->Err);
+        self::assertTrue($txnResp->OK);
+        self::assertNotNull($txnResp->KVTxnResponse);
+        self::assertCount(1, $txnResp->KVTxnResponse->Results);
+    }
+
+    /**
+     * Cover get-tree txn verb.
+     */
+    public function testTxnGetTree(): void
+    {
+        $client = new KVClient(ConsulManager::testConfig());
+
+        $prefix = 'test/txn/get-tree';
+        [$_, $err] = $client->Put(new KVPair(Key: "{$prefix}/a", Value: 'va'));
+        self::assertNull($err);
+        [$_, $err] = $client->Put(new KVPair(Key: "{$prefix}/b", Value: 'vb'));
+        self::assertNull($err);
+
+        $txnResp = $client->Txn(
+            null,
+            new TxnOp(
+                KV: new KVTxnOp(
+                    Verb: KVOp::KVGetTree,
+                    Key: $prefix,
+                ),
+            ),
+        );
+
+        self::assertNull($txnResp->Err);
+        self::assertTrue($txnResp->OK);
+        self::assertNotNull($txnResp->KVTxnResponse);
+        self::assertGreaterThanOrEqual(2, count($txnResp->KVTxnResponse->Results));
+    }
+
+    /**
+     * Cover delete-cas txn verb.
+     */
+    public function testTxnDeleteCAS(): void
+    {
+        $client = new KVClient(ConsulManager::testConfig());
+
+        $key = 'test/txn/delete-cas';
+        [$_, $err] = $client->Put(new KVPair(Key: $key, Value: 'delete-me'));
+        self::assertNull($err);
+
+        [$kv, , $err] = $client->Get($key);
+        self::assertNull($err);
+        self::assertInstanceOf(KVPair::class, $kv);
+
+        $txnResp = $client->Txn(
+            null,
+            new TxnOp(
+                KV: new KVTxnOp(
+                    Verb: KVOp::KVDeleteCAS,
+                    Key: $key,
+                    Index: $kv->ModifyIndex,
+                ),
+            ),
+        );
+
+        self::assertNull($txnResp->Err);
+        self::assertTrue($txnResp->OK);
+
+        [$kv, , $err] = $client->Get($key);
+        self::assertNull($err);
+        self::assertNull($kv);
+    }
+
+    /**
+     * Cover check-index txn verb for both success and failure.
+     */
+    public function testTxnCheckIndex(): void
+    {
+        $client = new KVClient(ConsulManager::testConfig());
+
+        $key = 'test/txn/check-index';
+        [$_, $err] = $client->Put(new KVPair(Key: $key, Value: 'v1'));
+        self::assertNull($err);
+
+        [$kv, , $err] = $client->Get($key);
+        self::assertNull($err);
+        self::assertInstanceOf(KVPair::class, $kv);
+        $index = $kv->ModifyIndex;
+
+        $okResp = $client->Txn(
+            null,
+            new TxnOp(
+                KV: new KVTxnOp(
+                    Verb: KVOp::KVCheckIndex,
+                    Key: $key,
+                    Index: $index,
+                ),
+            ),
+        );
+        self::assertNull($okResp->Err);
+        self::assertTrue($okResp->OK);
+        self::assertNotNull($okResp->KVTxnResponse);
+        self::assertEmpty($okResp->KVTxnResponse->Errors);
+
+        [$_, $err] = $client->Put(new KVPair(Key: $key, Value: 'v2'));
+        self::assertNull($err);
+
+        $conflictResp = $client->Txn(
+            null,
+            new TxnOp(
+                KV: new KVTxnOp(
+                    Verb: KVOp::KVCheckIndex,
+                    Key: $key,
+                    Index: $index,
+                ),
+            ),
+        );
+        self::assertNull($conflictResp->Err);
+        self::assertNotNull($conflictResp->KVTxnResponse);
+        self::assertNotEmpty($conflictResp->KVTxnResponse->Errors);
+    }
+
+    /**
+     * Cover lock, check-session, and unlock txn verbs.
+     */
+    public function testTxnLockCheckSessionUnlock(): void
+    {
+        $conf = ConsulManager::testConfig();
+        $client = new KVClient($conf);
+        $sessionClient = new SessionClient($conf);
+
+        [$sessionID, , $err] = $sessionClient->CreateNoChecks(new SessionEntry(Name: 'txn-lock-check-session'));
+        self::assertNull($err);
+        self::assertNotSame('', $sessionID);
+
+        $key = 'test/txn/lock-unlock';
+
+        $lockResp = $client->Txn(
+            null,
+            new TxnOp(
+                KV: new KVTxnOp(
+                    Verb: KVOp::KVLock,
+                    Key: $key,
+                    Value: 'locked',
+                    Session: $sessionID,
+                ),
+            ),
+        );
+        self::assertNull($lockResp->Err);
+        self::assertTrue($lockResp->OK);
+
+        $checkResp = $client->Txn(
+            null,
+            new TxnOp(
+                KV: new KVTxnOp(
+                    Verb: KVOp::KVCheckSession,
+                    Key: $key,
+                    Session: $sessionID,
+                ),
+            ),
+        );
+        self::assertNull($checkResp->Err);
+        self::assertTrue($checkResp->OK);
+        self::assertNotNull($checkResp->KVTxnResponse);
+        self::assertEmpty($checkResp->KVTxnResponse->Errors);
+
+        $unlockResp = $client->Txn(
+            null,
+            new TxnOp(
+                KV: new KVTxnOp(
+                    Verb: KVOp::KVUnlock,
+                    Key: $key,
+                    Value: 'locked',
+                    Session: $sessionID,
+                ),
+            ),
+        );
+        self::assertNull($unlockResp->Err);
+        self::assertTrue($unlockResp->OK);
+    }
+}
