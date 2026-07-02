@@ -16,7 +16,7 @@ use DCarbone\PHPConsulAPITests\Integration\AbstractUsageTests;
  *
  * @internal
  */
-final class SessionClientUsageTest extends AbstractUsageTests
+final class SessionClientTest extends AbstractUsageTests
 {
     /** @var bool */
     protected static bool $singlePerClass = true;
