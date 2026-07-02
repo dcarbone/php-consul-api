@@ -18,10 +18,10 @@
         </testsuite>
 
         <testsuite name="usage-config">
-            <file>./tests/Integration/ConfigUsageTest.php</file>
+            <file>./tests/Integration/ConfigTest.php</file>
         </testsuite>
         <testsuite name="usage-request">
-            <file>./tests/Integration/RequestUsageTest.php</file>
+            <file>./tests/Integration/RequestTest.php</file>
         </testsuite>
 
         <testsuite name="usage-acl">
