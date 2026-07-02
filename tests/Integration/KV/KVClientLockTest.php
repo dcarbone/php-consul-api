@@ -51,9 +51,9 @@ final class KVClientLockTest extends AbstractUsageTests
         [$id, $_, $err] = $sessionClient->CreateNoChecks(
             new SessionEntry(
                 Name: 'lock-test',
-                TTL: '10s',
                 LockDelay: new Time\Duration(0),
                 Behavior: Consul::SessionBehaviorDelete,
+                TTL: '10s',
             )
         );
         self::assertNull($err, sprintf('Error creating session: %s', (string)$err));
@@ -102,9 +102,9 @@ final class KVClientLockTest extends AbstractUsageTests
         [$session1, , $err] = $sessionClient->CreateNoChecks(
             new SessionEntry(
                 Name: 'lock-conflict-1',
-                TTL: '10s',
                 LockDelay: new Time\Duration(0),
                 Behavior: Consul::SessionBehaviorRelease,
+                TTL: '10s',
             )
         );
         self::assertNull($err);
@@ -112,9 +112,9 @@ final class KVClientLockTest extends AbstractUsageTests
         [$session2, , $err] = $sessionClient->CreateNoChecks(
             new SessionEntry(
                 Name: 'lock-conflict-2',
-                TTL: '10s',
                 LockDelay: new Time\Duration(0),
                 Behavior: Consul::SessionBehaviorRelease,
+                TTL: '10s',
             )
         );
         self::assertNull($err);
@@ -155,15 +155,15 @@ final class KVClientLockTest extends AbstractUsageTests
         [$id, , $err] = $sessionClient->CreateNoChecks(
             new SessionEntry(
                 Name: 'lock-flags',
-                TTL: '10s',
                 LockDelay: new Time\Duration(0),
                 Behavior: Consul::SessionBehaviorRelease,
+                TTL: '10s',
             )
         );
         self::assertNull($err);
 
         $key = 'test/lock-flags';
-        $kv = new KVPair(Key: $key, Value: 'flagged', Session: $id, Flags: 77);
+        $kv = new KVPair(Key: $key, Flags: 77, Value: 'flagged', Session: $id);
         [$_, $err] = $kvClient->Acquire($kv);
         self::assertNull($err);
 
