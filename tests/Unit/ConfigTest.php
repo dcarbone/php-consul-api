@@ -3,6 +3,7 @@
 namespace DCarbone\PHPConsulAPITests\Unit;
 
 use DCarbone\Go\Time;
+use DCarbone\PHPConsulAPI\Consul;
 use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\HttpAuth;
 use GuzzleHttp\Client;
@@ -218,5 +219,50 @@ final class ConfigTest extends TestCase
         self::assertSame(Config::DEFAULT_ADDRESS, $c->getAddress());
         self::assertSame(Config::DEFAULT_SCHEME, $c->getScheme());
     }
-}
 
+    public function testEnvInsecureSkipVerifySupportsNumericTrueString(): void
+    {
+        self::setEnv(name: Consul::HTTPSSLVerifyEnvName, value: '1');
+        try {
+            $c = new Config();
+            self::assertTrue($c->isInsecureSkipVerify());
+        } finally {
+            self::clearEnv(Consul::HTTPSSLVerifyEnvName);
+        }
+    }
+
+    public function testExplicitDefaultAddressIsNotOverriddenByEnv(): void
+    {
+        self::setEnv(name: Consul::HTTPAddrEnvName, value: '192.168.99.99:8500');
+        try {
+            $c = new Config(Address: Config::DEFAULT_ADDRESS);
+            self::assertSame(Config::DEFAULT_ADDRESS, $c->getAddress());
+        } finally {
+            self::clearEnv(Consul::HTTPAddrEnvName);
+        }
+    }
+
+    public function testExplicitFalseSkipVerifyOverridesEnv(): void
+    {
+        self::setEnv(name: Consul::HTTPSSLVerifyEnvName, value: '1');
+        try {
+            $c = new Config(InsecureSkipVerify: false);
+            self::assertFalse($c->isInsecureSkipVerify());
+        } finally {
+            self::clearEnv(Consul::HTTPSSLVerifyEnvName);
+        }
+    }
+
+    private static function setEnv(string $name, string $value): void
+    {
+        putenv(sprintf('%s=%s', $name, $value));
+        $_ENV[$name] = $value;
+        $_SERVER[$name] = $value;
+    }
+
+    private static function clearEnv(string $name): void
+    {
+        putenv($name);
+        unset($_ENV[$name], $_SERVER[$name]);
+    }
+}

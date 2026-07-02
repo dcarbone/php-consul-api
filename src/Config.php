@@ -94,18 +94,18 @@ class Config
     public int $JSONDecodeOpts;
 
     public function __construct(
-        string $Address = self::DEFAULT_ADDRESS,
-        string $Scheme = self::DEFAULT_SCHEME,
+        null|string $Address = null,
+        null|bool|string $Scheme = null,
         string $Datacenter = '',
         string $Namespace = '',
         null|string|HttpAuth $HttpAuth = null,
         null|string|int|float|\DateInterval|Time\Duration $WaitTime = null,
-        string $Token = '',
-        string $TokenFile = '',
-        string $CAFile = '',
-        string $CertFile = '',
-        string $KeyFile = '',
-        bool $InsecureSkipVerify = false,
+        null|string $Token = null,
+        null|string $TokenFile = null,
+        null|string $CAFile = null,
+        null|string $CertFile = null,
+        null|string $KeyFile = null,
+        null|bool $InsecureSkipVerify = null,
         null|ClientInterface $HttpClient = null,
         int $JSONEncodeOpts = JSON_UNESCAPED_SLASHES,
         int $JSONDecodeMaxDepth = 512,
@@ -123,7 +123,7 @@ class Config
         $this->CertFile = self::_resolveValue($CertFile, Consul::HTTPClientCertEnvName, '');
         $this->KeyFile = self::_resolveValue($KeyFile, Consul::HTTPClientKeyEnvName, '');
         $skipVerify = self::_resolveValue($InsecureSkipVerify, Consul::HTTPSSLVerifyEnvName, false);
-        $this->InsecureSkipVerify = is_string($skipVerify) ? strtolower($skipVerify) === 'true' : $skipVerify;
+        $this->InsecureSkipVerify = self::_coerceBool($skipVerify);
 
         // quick validation on key/cert combo
         $c = $this->CertFile;
@@ -405,7 +405,7 @@ class Config
 
     protected static function _resolveValue(mixed $explicit, string $env, mixed $default): mixed
     {
-        if ($explicit !== $default) {
+        if (null !== $explicit) {
             return $explicit;
         }
 
@@ -420,5 +420,22 @@ class Config
         }
 
         return $default;
+    }
+
+    protected static function _coerceBool(mixed $value): bool
+    {
+        if (is_bool($value)) {
+            return $value;
+        }
+        if (is_string($value)) {
+            $normalized = strtolower(trim($value));
+            if (in_array($normalized, ['1', 'true', 'yes', 'on'], true)) {
+                return true;
+            }
+            if (in_array($normalized, ['0', 'false', 'no', 'off'], true)) {
+                return false;
+            }
+        }
+        return (bool)$value;
     }
 }
