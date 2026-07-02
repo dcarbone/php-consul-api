@@ -231,6 +231,32 @@ final class ConfigTest extends TestCase
         }
     }
 
+    public function testEnvInsecureSkipVerifySupportsTruthyStringValues(): void
+    {
+        foreach (['true', 'yes', 'on'] as $value) {
+            self::setEnv(name: Consul::HTTPSSLVerifyEnvName, value: $value);
+            try {
+                $c = new Config();
+                self::assertTrue($c->isInsecureSkipVerify(), sprintf('Expected "%s" to coerce to true', $value));
+            } finally {
+                self::clearEnv(Consul::HTTPSSLVerifyEnvName);
+            }
+        }
+    }
+
+    public function testEnvInsecureSkipVerifySupportsFalsyStringValues(): void
+    {
+        foreach (['0', 'false', 'no', 'off'] as $value) {
+            self::setEnv(name: Consul::HTTPSSLVerifyEnvName, value: $value);
+            try {
+                $c = new Config();
+                self::assertFalse($c->isInsecureSkipVerify(), sprintf('Expected "%s" to coerce to false', $value));
+            } finally {
+                self::clearEnv(Consul::HTTPSSLVerifyEnvName);
+            }
+        }
+    }
+
     public function testExplicitDefaultAddressIsNotOverriddenByEnv(): void
     {
         self::setEnv(name: Consul::HTTPAddrEnvName, value: '192.168.99.99:8500');
@@ -239,6 +265,28 @@ final class ConfigTest extends TestCase
             self::assertSame(Config::DEFAULT_ADDRESS, $c->getAddress());
         } finally {
             self::clearEnv(Consul::HTTPAddrEnvName);
+        }
+    }
+
+    public function testExplicitDefaultSchemeIsNotOverriddenByEnv(): void
+    {
+        self::setEnv(name: Consul::HTTPSSLEnvName, value: '1');
+        try {
+            $c = new Config(Scheme: Config::DEFAULT_SCHEME);
+            self::assertSame(Config::DEFAULT_SCHEME, $c->getScheme());
+        } finally {
+            self::clearEnv(Consul::HTTPSSLEnvName);
+        }
+    }
+
+    public function testExplicitEmptyTokenIsNotOverriddenByEnv(): void
+    {
+        self::setEnv(name: Consul::HTTPTokenEnvName, value: 'env-token');
+        try {
+            $c = new Config(Token: '');
+            self::assertSame('', $c->getToken());
+        } finally {
+            self::clearEnv(Consul::HTTPTokenEnvName);
         }
     }
 
