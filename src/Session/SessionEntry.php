@@ -22,6 +22,7 @@ namespace DCarbone\PHPConsulAPI\Session;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+
 use function DCarbone\PHPConsulAPI\PHPLib\dur_to_millisecond;
 
 class SessionEntry extends AbstractType

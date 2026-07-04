@@ -42,7 +42,7 @@ class ExposePath extends AbstractType
         $this->LocalPathPort = $LocalPathPort;
         $this->Protocol = $Protocol;
         $this->ParsedFromCheck = $ParsedFromCheck;
-}
+    }
 
     public function getListenerPort(): int
     {

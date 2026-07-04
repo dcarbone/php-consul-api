@@ -21,6 +21,7 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
  */
 
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+
 use function DCarbone\PHPConsulAPI\PHPLib\_enc_obj_if_valued;
 
 class ServiceConfigEntry extends AbstractType implements ConfigEntry

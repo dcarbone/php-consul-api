@@ -106,4 +106,3 @@ class OIDCClientAssertion extends AbstractType
         return $out;
     }
 }
-

@@ -108,7 +108,7 @@ class HealthChecks extends AbstractType implements \IteratorAggregate, \Countabl
         if (null === $offset) {
             $this->Checks[] = $value;
         } elseif (!is_int($offset)) {
-                throw new \InvalidArgumentException('Offset must be an integer');
+            throw new \InvalidArgumentException('Offset must be an integer');
         } else {
             $this->Checks[$offset] = $value;
         }

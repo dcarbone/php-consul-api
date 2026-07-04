@@ -51,7 +51,7 @@ class ConnectProxyConfig extends AbstractType
         $this->ContentHash = $ContentHash;
         $this->setConfig($Config);
         $this->setUpstreams(...$Upstreams);
-}
+    }
 
     public function getProxyServiceID(): string
     {

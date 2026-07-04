@@ -41,4 +41,3 @@ class ACLTemplatedPolicyResponseQueryResponse extends AbstractValuedQueryRespons
         $this->ACLTemplatedPolicyResponse = ACLTemplatedPolicyResponse::jsonUnserialize($decoded);
     }
 }
-

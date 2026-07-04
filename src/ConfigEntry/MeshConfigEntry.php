@@ -59,7 +59,7 @@ class MeshConfigEntry extends AbstractType implements ConfigEntry
         $this->TLS = $TLS;
         $this->HTTP = $HTTP;
         $this->Peering = $Peering;
-}
+    }
 
     public function getKind(): string
     {

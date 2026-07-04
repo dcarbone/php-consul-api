@@ -74,4 +74,3 @@ class ForceLeaveOpts extends AbstractType
         return $out;
     }
 }
-

@@ -108,7 +108,7 @@ class ServiceRouteDestination extends AbstractType
         return $this;
     }
 
-    public function  getPartition(): string
+    public function getPartition(): string
     {
         return $this->Partition;
     }
@@ -141,7 +141,7 @@ class ServiceRouteDestination extends AbstractType
         return $this;
     }
 
-    public function  getIdleTimeout(): Time\Duration
+    public function getIdleTimeout(): Time\Duration
     {
         return $this->IdleTimeout;
     }

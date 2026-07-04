@@ -21,6 +21,7 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\Go\Time;
+
 use function DCarbone\PHPConsulAPI\PHPLib\parse_time;
 
 trait ACLTokenFields

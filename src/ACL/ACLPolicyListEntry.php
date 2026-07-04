@@ -58,7 +58,7 @@ class ACLPolicyListEntry extends AbstractType
         $this->ModifyIndex = $ModifyIndex;
         $this->Namespace = $Namespace;
         $this->Partition = $Partition;
-}
+    }
 
     public function getID(): string
     {

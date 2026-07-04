@@ -59,4 +59,3 @@ class OIDCClientAssertionKey extends AbstractType
         return $out;
     }
 }
-

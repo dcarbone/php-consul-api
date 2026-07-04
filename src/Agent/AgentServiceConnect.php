@@ -33,7 +33,7 @@ class AgentServiceConnect extends AbstractType
     ) {
         $this->Native = $Native;
         $this->SidecarService = $SidecarService;
-}
+    }
 
     public function isNative(): bool
     {

@@ -46,7 +46,7 @@ class EnvoyExtension extends AbstractType
         $this->setArguments($Arguments);
         $this->ConsulVersion = $ConsulVersion;
         $this->EnvoyVersion = $EnvoyVersion;
-}
+    }
 
     public function getName(): string
     {

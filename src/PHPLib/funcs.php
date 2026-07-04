@@ -27,7 +27,7 @@ use DCarbone\Go\Time;
  * fractional seconds that PHP's DateTime cannot handle. Truncates to microseconds.
  *
  * @param string $ts RFC3339 timestamp string (e.g. "2026-04-03T20:02:59.892792592-05:00")
- * @return null|Time\Time
+ * @return null|\DCarbone\Go\Time
  */
 function parse_time(string $ts): null|Time\Time
 {

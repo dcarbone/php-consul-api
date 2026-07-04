@@ -67,7 +67,7 @@ class AgentCheck extends AbstractType
         $this->Definition = $Definition ?? new HealthCheckDefinition();
         $this->Namespace = $Namespace;
         $this->Partition = $Partition;
-}
+    }
 
     public function getNode(): string
     {

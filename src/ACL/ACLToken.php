@@ -76,7 +76,7 @@ class ACLToken extends AbstractType
         $this->Rules = $Rules;
         $this->Partition = $Partition;
         $this->AuthMethodNamespace = $AuthMethodNamespace;
-}
+    }
 
     public static function jsonUnserialize(\stdClass $decoded): self
     {

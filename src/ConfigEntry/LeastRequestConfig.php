@@ -49,7 +49,7 @@ class LeastRequestConfig extends AbstractType
             if ('choice_count' === $k) {
                 $n->ChoiceCount = $v;
             } else {
-                $n->{$k}= $v;
+                $n->{$k} = $v;
             }
         }
         return $n;

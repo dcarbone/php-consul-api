@@ -22,6 +22,7 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+
 use function DCarbone\PHPConsulAPI\PHPLib\parse_time;
 
 class SourceIntention extends AbstractType

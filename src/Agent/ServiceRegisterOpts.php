@@ -33,7 +33,7 @@ class ServiceRegisterOpts extends AbstractType
     ) {
         $this->ReplaceExistingChecks = $ReplaceExistingChecks;
         $this->Token = $Token;
-}
+    }
 
     public function isReplaceExistingChecks(): bool
     {

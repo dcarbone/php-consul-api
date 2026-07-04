@@ -105,7 +105,7 @@ class ACLTokenExpanded extends ACLToken
         $this->AgentACLDefaultPolicy = $AgentACLDefaultPolicy;
         $this->AgentACLDownPolicy = $AgentACLDownPolicy;
         $this->ResolvedByAgent = $ResolvedByAgent;
-}
+    }
 
     /**
      * @return \DCarbone\PHPConsulAPI\ACL\ACLPolicy[]

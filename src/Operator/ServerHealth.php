@@ -22,6 +22,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+
 use function DCarbone\PHPConsulAPI\PHPLib\parse_time;
 
 class ServerHealth extends AbstractType

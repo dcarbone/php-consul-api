@@ -30,7 +30,7 @@ class MeshGatewayConfig extends AbstractType
         string|MeshGatewayMode $mode = MeshGatewayMode::Default,
     ) {
         $this->setMode($mode);
-}
+    }
 
     public function getMode(): MeshGatewayMode
     {

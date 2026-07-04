@@ -22,6 +22,7 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 use DCarbone\PHPConsulAPI\Consul;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+
 use function DCarbone\PHPConsulAPI\PHPLib\_enc_obj_if_valued;
 
 class ProxyConfigEntry extends AbstractType implements ConfigEntry
@@ -87,7 +88,7 @@ class ProxyConfigEntry extends AbstractType implements ConfigEntry
             $this->setMeta($Meta);
             $this->CreateIndex = $CreateIndex;
             $this->ModifyIndex = $ModifyIndex;
-}
+        }
     }
 
     public function getKind(): string

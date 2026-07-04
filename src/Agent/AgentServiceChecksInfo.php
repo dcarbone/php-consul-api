@@ -37,7 +37,7 @@ class AgentServiceChecksInfo extends AbstractType
         $this->AggregatedStatus = $AggregatedStatus;
         $this->Service = $Service;
         $this->Checks = $Checks ?? new HealthChecks();
-}
+    }
 
     public function getAggregatedStatus(): string
     {

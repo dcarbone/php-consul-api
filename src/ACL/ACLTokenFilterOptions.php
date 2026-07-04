@@ -112,4 +112,3 @@ class ACLTokenFilterOptions extends AbstractType
         return $out;
     }
 }
-

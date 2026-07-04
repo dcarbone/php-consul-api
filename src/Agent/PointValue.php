@@ -37,7 +37,7 @@ class PointValue extends AbstractType
     ) {
         $this->Name = $Name;
         $this->setPoints(...$Points);
-}
+    }
 
     public function getName(): string
     {

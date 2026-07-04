@@ -33,7 +33,7 @@ class TransparentProxyConfig extends AbstractType
     ) {
         $this->OutboundListenerPort = $OutboundListenerPort;
         $this->DialedDirectly = $DialedDirectly;
-}
+    }
 
     public function getOutboundListenerPort(): int
     {

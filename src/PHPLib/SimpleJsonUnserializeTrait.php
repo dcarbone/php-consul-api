@@ -25,7 +25,7 @@ trait SimpleJsonUnserializeTrait
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach((array)$decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             $n->{$k} = $v;
         }
         return $n;

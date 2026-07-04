@@ -39,7 +39,7 @@ class ACLOIDCCallbackParams extends AbstractType
         $this->State = $State;
         $this->Code = $Code;
         $this->ClientNonce = $ClientNonce;
-}
+    }
 
     public function getAuthMethod(): string
     {

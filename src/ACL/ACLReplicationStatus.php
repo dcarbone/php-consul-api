@@ -22,6 +22,7 @@ namespace DCarbone\PHPConsulAPI\ACL;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+
 use function DCarbone\PHPConsulAPI\PHPLib\parse_time;
 
 class ACLReplicationStatus extends AbstractType
@@ -59,7 +60,7 @@ class ACLReplicationStatus extends AbstractType
         $this->LastSuccess = $LastSuccess ?? Time::New();
         $this->LastError = $LastError ?? Time::New();
         $this->LastErrorMessage = $LastErrorMessage;
-}
+    }
 
     public function isEnabled(): bool
     {

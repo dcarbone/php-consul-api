@@ -89,4 +89,3 @@ class AgentAuthorizeParams extends AbstractType
         return $out;
     }
 }
-

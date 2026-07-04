@@ -74,4 +74,3 @@ class AgentAuthorize extends AbstractType
         return $out;
     }
 }
-

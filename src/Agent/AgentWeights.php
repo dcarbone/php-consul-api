@@ -33,7 +33,7 @@ class AgentWeights extends AbstractType
     ) {
         $this->Passing = $Passing;
         $this->Warning = $Warning;
-}
+    }
 
     public function getPassing(): int
     {

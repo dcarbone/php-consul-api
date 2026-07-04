@@ -22,6 +22,7 @@ namespace DCarbone\PHPConsulAPI\ACL;
 
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+
 use function DCarbone\PHPConsulAPI\PHPLib\parse_time;
 
 class ACLTokenListEntry extends AbstractType
@@ -98,7 +99,7 @@ class ACLTokenListEntry extends AbstractType
         $this->Namespace = $Namespace;
         $this->Partition = $Partition;
         $this->AuthMethodNamespace = $AuthMethodNamespace;
-}
+    }
 
     public function getCreateIndex(): int
     {

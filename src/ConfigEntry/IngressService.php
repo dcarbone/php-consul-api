@@ -194,7 +194,7 @@ class IngressService extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach((array)$decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             if ('RequestHeaders' === $k || 'request_headers' === $k) {
                 $n->RequestHeaders = HTTPHeaderModifiers::jsonUnserialize($v);
             } elseif ('ResponseHeaders' === $k || 'response_headers' === $k) {

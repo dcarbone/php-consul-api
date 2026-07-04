@@ -70,7 +70,7 @@ class ACLAuthMethod extends AbstractType
         $this->setNamespaceRules(...$NamespaceRules);
         $this->Namespace = $Namespace;
         $this->Partition = $Partition;
-}
+    }
 
     public function getName(): string
     {

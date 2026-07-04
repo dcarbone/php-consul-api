@@ -47,4 +47,3 @@ class ACLTemplatedPoliciesQueryResponse extends AbstractValuedQueryResponse impl
         }
     }
 }
-

@@ -23,6 +23,7 @@ namespace DCarbone\PHPConsulAPI\Operator;
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 use DCarbone\PHPConsulAPI\PHPLib\MetaField;
+
 use function DCarbone\PHPConsulAPI\PHPLib\parse_time;
 
 class AutopilotServer extends AbstractType

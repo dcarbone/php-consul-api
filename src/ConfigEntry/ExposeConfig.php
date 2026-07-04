@@ -37,7 +37,7 @@ class ExposeConfig extends AbstractType
     ) {
         $this->Checks = $Checks;
         $this->setPaths(...$Paths);
-}
+    }
 
     public function isChecks(): bool
     {

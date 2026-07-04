@@ -44,7 +44,7 @@ class ACLOIDCAuthURLParams extends AbstractType
         $this->RedirectURI = $RedirectURI;
         $this->ClientNonce = $ClientNonce;
         $this->setMeta($Meta);
-}
+    }
 
     public function getAuthMethod(): string
     {

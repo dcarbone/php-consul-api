@@ -28,7 +28,6 @@ use DCarbone\PHPConsulAPI\PHPLib\AbstractResponse;
  */
 class AgentHealthServiceResponse extends AbstractResponse
 {
-
     public string $AggregatedStatus;
     public null|AgentServiceChecksInfo $AgentServiceChecksInfo;
 

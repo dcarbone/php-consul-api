@@ -30,7 +30,7 @@ class AgentToken extends AbstractType
         string $Token = '',
     ) {
         $this->Token = $Token;
-}
+    }
 
     public function getToken(): string
     {

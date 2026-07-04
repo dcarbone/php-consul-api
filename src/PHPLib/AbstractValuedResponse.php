@@ -25,7 +25,6 @@ namespace DCarbone\PHPConsulAPI\PHPLib;
  */
 abstract class AbstractValuedResponse extends AbstractResponse implements ValuedResponseInterface
 {
-
     public function offsetExists(mixed $offset): bool
     {
         return is_int($offset) && 0 <= $offset && $offset < 2;

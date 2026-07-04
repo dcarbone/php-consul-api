@@ -104,4 +104,3 @@ class ACLTemplatedPolicyResponse extends AbstractType
         return $out;
     }
 }
-

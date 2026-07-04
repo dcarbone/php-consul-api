@@ -45,7 +45,7 @@ class PassiveHealthCheck extends AbstractType
         $this->EnforcingConsecutive5xx = $EnforcingConsecutive5xx;
         $this->MaxEjectionPercent = $MaxEjectionPercent;
         $this->BaseEjectionTime = null !== $BaseEjectionTime ? Time::Duration($BaseEjectionTime) : null;
-}
+    }
 
     public function getInterval(): Time\Duration
     {
