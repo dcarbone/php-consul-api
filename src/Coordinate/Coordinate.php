@@ -248,7 +248,7 @@ class Coordinate extends AbstractType
 
     private static function _randomFloat(): float
     {
-        if (PHP_VERSION_ID >= 83000) {
+        if (PHP_VERSION_ID >= 80300) {
             return (new \Random\Randomizer())->getFloat(0.0, 1.0);
         }
         return mt_rand() / mt_getrandmax();

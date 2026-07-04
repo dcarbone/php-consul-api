@@ -23,6 +23,9 @@ namespace DCarbone\PHPConsulAPI\Agent;
 use DCarbone\PHPConsulAPI\PHPLib\Error;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractResponse;
 
+/**
+ * @extends AbstractResponse<string|AgentServiceChecksInfo[]|Error|null>
+ */
 class AgentHealthServicesResponse extends AbstractResponse
 {
     public string $AggregatedStatus;

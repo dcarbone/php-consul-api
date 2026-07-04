@@ -24,6 +24,15 @@ on:
       - '**.php'
       - 'composer.json'
       - 'composer.lock'
+      - '.php-cs-fixer.php'
+      - 'phpstan.neon'
+      - 'psalm.xml'
+      - 'tools/php-cs-fixer/composer.json'
+      - 'tools/php-cs-fixer/composer.lock'
+      - 'tools/phpstan/composer.json'
+      - 'tools/phpstan/composer.lock'
+      - 'tools/psalm/composer.json'
+      - 'tools/psalm/composer.lock'
       - 'phpunit.xml'
       - '.github/workflows/tests.yaml'
   push:
@@ -33,6 +42,15 @@ on:
       - '**.php'
       - 'composer.json'
       - 'composer.lock'
+      - '.php-cs-fixer.php'
+      - 'phpstan.neon'
+      - 'psalm.xml'
+      - 'tools/php-cs-fixer/composer.json'
+      - 'tools/php-cs-fixer/composer.lock'
+      - 'tools/phpstan/composer.json'
+      - 'tools/phpstan/composer.lock'
+      - 'tools/psalm/composer.json'
+      - 'tools/psalm/composer.lock'
       - 'phpunit.xml'
       - '.github/workflows/tests.yaml'
 
@@ -41,6 +59,68 @@ env:
   CONSUL_VERSION: '2.0.1'
 
 jobs:
+  checks:
+    runs-on: ubuntu-22.04
+    name: Checks - PHP 8.3
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: json,dom,simplexml,tokenizer,mbstring
+          ini-values: precision=14,serialize_precision=-1
+          ini-file: 'development'
+
+      - name: 'Install root composer deps'
+        shell: bash -e {0}
+        # language=sh
+        run: |
+          composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: 'Restore tool vendor cache'
+        id: tool-vendor-cache
+        uses: actions/cache/restore@v6
+        with:
+          path: |
+            tools/php-cs-fixer/vendor
+            tools/phpstan/vendor
+            tools/psalm/vendor
+          key: "tool-vendor-${{ runner.os }}-8.3-${{ hashFiles('tools/php-cs-fixer/composer.lock', 'tools/phpstan/composer.lock', 'tools/psalm/composer.lock') }}"
+
+      - name: 'Install tool composer deps'
+        shell: bash -e {0}
+        # language=sh
+        run: |
+          composer install --working-dir tools/php-cs-fixer --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+          composer install --working-dir tools/phpstan --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+          composer install --working-dir tools/psalm --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: 'Save tool vendor cache'
+        if: steps.tool-vendor-cache.outputs.cache-hit != 'true' && steps.tool-vendor-cache.outputs.cache-hit != true
+        uses: actions/cache/save@v6
+        with:
+          path: |
+            tools/php-cs-fixer/vendor
+            tools/phpstan/vendor
+            tools/psalm/vendor
+          key: "tool-vendor-${{ runner.os }}-8.3-${{ hashFiles('tools/php-cs-fixer/composer.lock', 'tools/phpstan/composer.lock', 'tools/psalm/composer.lock') }}"
+
+      - name: 'Execute php-cs-fixer'
+        # language=bash
+        run: |
+          composer php-cs-fixer -- --dry-run --diff
+
+      - name: 'Execute phpstan'
+        # language=bash
+        run: |
+          composer phpstan
+
+      - name: 'Execute psalm'
+        # language=bash
+        run: |
+          composer psalm
+
   tests:
     runs-on: ubuntu-22.04
     strategy:

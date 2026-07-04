@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/tools/php-cs-fixer/vendor/autoload.php';
 
 use AdamWojs\PhpCsFixerPhpdocForceFQCN\Fixer\Phpdoc\ForceFQCNFixer;
 use PhpCsFixer\Config;
+use PhpCsFixer\Finder;
 
 $config = new Config('php-consul-api');
 
@@ -15,9 +16,14 @@ $config
     ->setLineEnding("\n")
     ->setIndent('    ')
     ->registerCustomFixers(
-        [
+        fixers: [
             new ForceFQCNFixer(),
         ]
+    )
+    ->setFinder(
+        Finder::create()
+            ->in(__DIR__ . '/src')
+            ->name('*.php')
     )
     ->setRules(
         [
