@@ -6,6 +6,10 @@ PHP client for the [Consul HTTP API](https://www.consul.io/docs/agent/http.html)
 
 This library is loosely based upon the [official GO client](https://github.com/hashicorp/consul/tree/main/api).
 
+## PHP Compatibility
+
+- `v3.x` requires **PHP 8.2+**.
+
 ## Version Compatibility
 
 | PHPConsulAPI Version | Consul Version |
