@@ -21,7 +21,6 @@ namespace DCarbone\PHPConsulAPI\PHPLib;
  */
 
 use DCarbone\Go\Time;
-use JetBrains\PhpStorm\Pure;
 
 /**
  * Parses an RFC3339 timestamp from Consul, which may contain nanosecond-precision
