@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\ACL;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,41 +20,48 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractClient;
-use DCarbone\PHPConsulAPI\Error;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractClient;
+use DCarbone\PHPConsulAPI\PHPLib\Error;
+use DCarbone\PHPConsulAPI\PHPLib\ValuedWriteStringResponse;
+use DCarbone\PHPConsulAPI\PHPLib\WriteResponse;
 use DCarbone\PHPConsulAPI\QueryOptions;
-use DCarbone\PHPConsulAPI\ValuedWriteStringResponse;
 use DCarbone\PHPConsulAPI\WriteOptions;
-use DCarbone\PHPConsulAPI\WriteResponse;
 
 class ACLClient extends AbstractClient
 {
-    public function Bootstrap(): ValuedWriteStringResponse
+    public function Bootstrap(string $bootstrapSecret = ''): ACLTokenWriteResponse
     {
-        return $this->_executePutValuedStr('v1/acl/bootstrap', null, null);
+        $body = null;
+        if ('' !== $bootstrapSecret) {
+            $body = (object)['BootstrapSecret' => $bootstrapSecret];
+        }
+        $resp = $this->_requireOK($this->_doPut('v1/acl/bootstrap', $body, null));
+        $ret  = new ACLTokenWriteResponse();
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
     }
 
-    public function Create(ACLEntry $acl, ?WriteOptions $opts = null): ValuedWriteStringResponse
+    public function Create(ACLEntry $acl, null|WriteOptions $opts = null): ValuedWriteStringResponse
     {
         return $this->_executePutValuedStr('v1/acl/create', $acl, $opts);
     }
 
-    public function Update(ACLEntry $acl, ?WriteOptions $opts = null): WriteResponse
+    public function Update(ACLEntry $acl, null|WriteOptions $opts = null): WriteResponse
     {
         return $this->_executePut('v1/acl/update', $acl, $opts);
     }
 
-    public function Destroy(string $id, ?WriteOptions $opts = null): WriteResponse
+    public function Destroy(string $id, null|WriteOptions $opts = null): WriteResponse
     {
         return $this->_executePut(sprintf('v1/acl/destroy/%s', $id), null, $opts);
     }
 
-    public function Clone(string $id, ?WriteOptions $opts = null): ValuedWriteStringResponse
+    public function Clone(string $id, null|WriteOptions $opts = null): ValuedWriteStringResponse
     {
         return $this->_executePutValuedStr(sprintf('v1/acl/clone/%s', $id), null, $opts);
     }
 
-    public function Info(string $id, ?QueryOptions $opts = null): ACLEntriesResponse
+    public function Info(string $id, null|QueryOptions $opts = null): ACLEntriesResponse
     {
         $resp = $this->_requireOK($this->_doGet(sprintf('v1/acl/info/%s', $id), $opts));
         $ret  = new ACLEntriesResponse();
@@ -62,7 +69,7 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function List(?QueryOptions $opts = null): ACLEntriesResponse
+    public function List(null|QueryOptions $opts = null): ACLEntriesResponse
     {
         $resp = $this->_requireOK($this->_doGet('v1/acl/list', $opts));
         $ret  = new ACLEntriesResponse();
@@ -70,7 +77,7 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function Replication(?QueryOptions $opts = null): ACLReplicationStatusResponse
+    public function Replication(null|QueryOptions $opts = null): ACLReplicationStatusResponse
     {
         $resp = $this->_requireOK($this->_doGet('/v1/acl/replication', $opts));
         $ret  = new ACLReplicationStatusResponse();
@@ -78,7 +85,7 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function TokenCreate(ACLToken $token, ?WriteOptions $opts = null): ACLTokenWriteResponse
+    public function TokenCreate(ACLToken $token, null|WriteOptions $opts = null): ACLTokenWriteResponse
     {
         $resp = $this->_requireOK($this->_doPut('/v1/acl/token', $token, $opts));
         $ret  = new ACLTokenWriteResponse();
@@ -86,7 +93,7 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function TokenUpdate(ACLToken $token, ?WriteOptions $opts = null): ACLTokenWriteResponse
+    public function TokenUpdate(ACLToken $token, null|WriteOptions $opts = null): ACLTokenWriteResponse
     {
         $ret = new ACLTokenWriteResponse();
         if ('' === $token->AccessorID) {
@@ -98,34 +105,44 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function TokenClone(string $tokenID, string $description, ?WriteOptions $opts = null): ACLTokenWriteResponse
+    public function TokenClone(string $accessorID, string $description, null|WriteOptions $opts = null): ACLTokenWriteResponse
     {
         $ret = new ACLTokenWriteResponse();
-        if ('' === $tokenID) {
+        if ('' === $accessorID) {
             $ret->Err = new Error('must specify tokenID for Token Cloning');
             return $ret;
         }
         $resp = $this->_requireOK(
-            $this->_doPut(sprintf('/v1/acl/token/%s/clone', $tokenID), ['description' => $description], $opts)
+            $this->_doPut(sprintf('/v1/acl/token/%s/clone', $accessorID), ['description' => $description], $opts)
         );
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
-    public function TokenDelete(string $tokenID, ?WriteOptions $opts = null): WriteResponse
+    public function TokenDelete(string $accessorID, null|WriteOptions $opts = null): WriteResponse
     {
-        return $this->_executeDelete(sprintf('/v1/acl/token/%s', $tokenID), $opts);
+        return $this->_executeDelete(sprintf('/v1/acl/token/%s', $accessorID), $opts);
     }
 
-    public function TokenRead(string $tokenID, ?QueryOptions $opts = null): ACLTokenQueryResponse
+    public function TokenRead(string $accessorID, null|QueryOptions $opts = null): ACLTokenQueryResponse
     {
-        $resp = $this->_requireOK($this->_doGet(sprintf('/v1/acl/token/%s', $tokenID), $opts));
+        $resp = $this->_requireOK($this->_doGet(sprintf('/v1/acl/token/%s', $accessorID), $opts));
         $ret  = new ACLTokenQueryResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
-    public function TokenReadSelf(?QueryOptions $opts = null): ACLTokenQueryResponse
+    public function TokenReadExpanded(string $accessorID, null|QueryOptions $opts = null): ACLTokenExpandedQueryResponse
+    {
+        $req = $this->_newGetRequest(sprintf('/v1/acl/token/%s', $accessorID), $opts);
+        $req->params->set('expanded', 'true');
+        $resp = $this->_requireOK($this->_do($req));
+        $ret = new ACLTokenExpandedQueryResponse();
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    public function TokenReadSelf(null|QueryOptions $opts = null): ACLTokenQueryResponse
     {
         $resp = $this->_requireOK($this->_doGet('/v1/acl/token/self', $opts));
         $ret  = new ACLTokenQueryResponse();
@@ -133,7 +150,7 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function TokenList(?QueryOptions $opts = null): ACLTokenListEntryQueryResponse
+    public function TokenList(null|QueryOptions $opts = null): ACLTokenListEntryQueryResponse
     {
         $resp = $this->_requireOK($this->_doGet('/v1/acl/tokens', $opts));
         $ret  = new ACLTokenListEntryQueryResponse();
@@ -141,7 +158,28 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function PolicyCreate(ACLPolicy $policy, ?WriteOptions $opts = null): ACLPolicyWriteResponse
+    public function TokenListFiltered(ACLTokenFilterOptions $filter, null|QueryOptions $opts = null): ACLTokenListEntryQueryResponse
+    {
+        $r = $this->_newGetRequest('/v1/acl/tokens', $opts);
+        if ('' !== $filter->AuthMethod) {
+            $r->params->set('authmethod', $filter->AuthMethod);
+        }
+        if ('' !== $filter->Policy) {
+            $r->params->set('policy', $filter->Policy);
+        }
+        if ('' !== $filter->Role) {
+            $r->params->set('role', $filter->Role);
+        }
+        if ('' !== $filter->ServiceName) {
+            $r->params->set('servicename', $filter->ServiceName);
+        }
+        $resp = $this->_requireOK($this->_do($r));
+        $ret  = new ACLTokenListEntryQueryResponse();
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    public function PolicyCreate(ACLPolicy $policy, null|WriteOptions $opts = null): ACLPolicyWriteResponse
     {
         $ret = new ACLPolicyWriteResponse();
         if ('' !== $policy->ID) {
@@ -153,7 +191,7 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function PolicyUpdate(ACLPolicy $policy, ?WriteOptions $opts = null): ACLPolicyWriteResponse
+    public function PolicyUpdate(ACLPolicy $policy, null|WriteOptions $opts = null): ACLPolicyWriteResponse
     {
         $ret = new ACLPolicyWriteResponse();
         if ('' === $policy->ID) {
@@ -165,12 +203,12 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function PolicyDelete(string $policyID, ?WriteOptions $opts = null): WriteResponse
+    public function PolicyDelete(string $policyID, null|WriteOptions $opts = null): WriteResponse
     {
         return $this->_executeDelete(sprintf('/v1/acl/policy/%s', $policyID), $opts);
     }
 
-    public function PolicyRead(string $policyID, ?QueryOptions $opts = null): ACLPolicyQueryResponse
+    public function PolicyRead(string $policyID, null|QueryOptions $opts = null): ACLPolicyQueryResponse
     {
         $resp = $this->_requireOK($this->_doGet(sprintf('/v1/acl/policy/%s', $policyID), $opts));
         $ret  = new ACLPolicyQueryResponse();
@@ -178,7 +216,7 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function PolicyReadByName(string $policyName, ?QueryOptions $opts = null): ACLPolicyQueryResponse
+    public function PolicyReadByName(string $policyName, null|QueryOptions $opts = null): ACLPolicyQueryResponse
     {
         $resp = $this->_requireOK($this->_doGet(sprintf('/v1/acl/policy/name/%s', $policyName), $opts));
         $ret  = new ACLPolicyQueryResponse();
@@ -186,7 +224,7 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function PolicyList(?QueryOptions $opts = null): ACLPolicyListEntryQueryResponse
+    public function PolicyList(null|QueryOptions $opts = null): ACLPolicyListEntryQueryResponse
     {
         $resp = $this->_requireOK($this->_doGet('/v1/acl/policies', $opts));
         $ret  = new ACLPolicyListEntryQueryResponse();
@@ -194,7 +232,7 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function RoleCreate(ACLRole $role, ?WriteOptions $opts = null): ACLRoleWriteResponse
+    public function RoleCreate(ACLRole $role, null|WriteOptions $opts = null): ACLRoleWriteResponse
     {
         $ret = new ACLRoleWriteResponse();
         if ('' !== $role->ID) {
@@ -206,7 +244,7 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function RoleUpdate(ACLRole $role, ?WriteOptions $opts = null): ACLRoleWriteResponse
+    public function RoleUpdate(ACLRole $role, null|WriteOptions $opts = null): ACLRoleWriteResponse
     {
         $ret = new ACLRoleWriteResponse();
         if ('' === $role->ID) {
@@ -218,12 +256,12 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function RoleDelete(string $roleID, ?WriteOptions $opts = null): WriteResponse
+    public function RoleDelete(string $roleID, null|WriteOptions $opts = null): WriteResponse
     {
         return $this->_executeDelete(sprintf('/v1/acl/role/%s', $roleID), $opts);
     }
 
-    public function RoleRead(string $roleID, ?QueryOptions $opts = null): ACLRoleQueryResponse
+    public function RoleRead(string $roleID, null|QueryOptions $opts = null): ACLRoleQueryResponse
     {
         $resp = $this->_requireNotFoundOrOK($this->_doGet(sprintf('/v1/acl/role/%s', $roleID), $opts));
         $ret  = new ACLRoleQueryResponse();
@@ -231,7 +269,7 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function RoleReadByName(string $roleName, ?QueryOptions $opts = null): ACLRoleQueryResponse
+    public function RoleReadByName(string $roleName, null|QueryOptions $opts = null): ACLRoleQueryResponse
     {
         $resp = $this->_requireOK($this->_doGet(sprintf('/v1/acl/role/name/%s', $roleName), $opts));
         $ret  = new ACLRoleQueryResponse();
@@ -239,7 +277,7 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function RoleList(?QueryOptions $opts = null): ACLRolesQueryResponse
+    public function RoleList(null|QueryOptions $opts = null): ACLRolesQueryResponse
     {
         $resp = $this->_requireOK($this->_doGet('/v1/acl/roles', $opts));
         $ret  = new ACLRolesQueryResponse();
@@ -247,7 +285,7 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function AuthMethodCreate(ACLAuthMethod $authMethod, ?WriteOptions $opts = null): ACLAuthMethodWriteResponse
+    public function AuthMethodCreate(ACLAuthMethod $authMethod, null|WriteOptions $opts = null): ACLAuthMethodWriteResponse
     {
         $ret = new ACLAuthMethodWriteResponse();
         if ('' !== $authMethod->Name) {
@@ -259,24 +297,24 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function AuthMethodUpdate(ACLAuthMethod $authMethod, ?WriteOptions $opts = null): ACLAuthMethodWriteResponse
+    public function AuthMethodUpdate(ACLAuthMethod $authMethod, null|WriteOptions $opts = null): ACLAuthMethodWriteResponse
     {
         $ret = new ACLAuthMethodWriteResponse();
-        if ('' === $authMethod->ID) {
-            $ret->Err = new Error('must specify an ID in AuthMethod Update');
+        if ('' === $authMethod->Name) {
+            $ret->Err = new Error('must specify an Name in AuthMethod Update');
             return $ret;
         }
-        $resp = $this->_requireOK($this->_doPut(sprintf('/v1/acl/auth-method/%s', $authMethod->ID), $authMethod, $opts));
+        $resp = $this->_requireOK($this->_doPut(sprintf('/v1/acl/auth-method/%s', $authMethod->Name), $authMethod, $opts));
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
-    public function AuthMethodDelete(string $authMethodID, ?WriteOptions $opts = null): WriteResponse
+    public function AuthMethodDelete(string $authMethodID, null|WriteOptions $opts = null): WriteResponse
     {
         return $this->_executeDelete(sprintf('/v1/acl/authMethod/%s', $authMethodID), $opts);
     }
 
-    public function AuthMethodRead(string $authMethodID, ?QueryOptions $opts = null): ACLAuthMethodQueryResponse
+    public function AuthMethodRead(string $authMethodID, null|QueryOptions $opts = null): ACLAuthMethodQueryResponse
     {
         $resp = $this->_requireNotFoundOrOK($this->_doGet(sprintf('/v1/acl/authMethod/%s', $authMethodID), $opts));
         $ret  = new ACLAuthMethodQueryResponse();
@@ -284,7 +322,7 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function AuthMethodList(?QueryOptions $opts = null): ACLAuthMethodListEntryQueryResponse
+    public function AuthMethodList(null|QueryOptions $opts = null): ACLAuthMethodListEntryQueryResponse
     {
         $resp = $this->_requireOK($this->_doGet('/v1/acl/auth-methods', $opts));
         $ret  = new ACLAuthMethodListEntryQueryResponse();
@@ -292,10 +330,8 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function BindingRuleCreate(
-        ACLBindingRule $bindingRule,
-        ?WriteOptions $opts = null
-    ): ACLBindingRuleWriteResponse {
+    public function BindingRuleCreate(ACLBindingRule $bindingRule, null|WriteOptions $opts = null): ACLBindingRuleWriteResponse
+    {
         $ret = new ACLBindingRuleWriteResponse();
         if ('' !== $bindingRule->ID) {
             $ret->Err = new Error('cannot specify an id in BindingRule Create');
@@ -306,10 +342,8 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function BindingRuleUpdate(
-        ACLBindingRule $bindingRule,
-        ?WriteOptions $opts = null
-    ): ACLBindingRuleWriteResponse {
+    public function BindingRuleUpdate(ACLBindingRule $bindingRule, null|WriteOptions $opts = null): ACLBindingRuleWriteResponse
+    {
         $ret = new ACLBindingRuleWriteResponse();
         if ('' === $bindingRule->ID) {
             $ret->Err = new Error('must specify an ID in BindingRule Update');
@@ -320,12 +354,12 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function BindingRuleDelete(string $bindingRuleID, ?WriteOptions $opts = null): WriteResponse
+    public function BindingRuleDelete(string $bindingRuleID, null|WriteOptions $opts = null): WriteResponse
     {
         return $this->_executeDelete(sprintf('/v1/acl/binding-rule/%s', $bindingRuleID), $opts);
     }
 
-    public function BindingRuleRead(string $bindingRuleID, ?QueryOptions $opts = null): ACLBindingRuleQueryResponse
+    public function BindingRuleRead(string $bindingRuleID, null|QueryOptions $opts = null): ACLBindingRuleQueryResponse
     {
         $resp = $this->_requireNotFoundOrOK($this->_doGet(sprintf('/v1/acl/binding-rule/%s', $bindingRuleID), $opts));
         $ret  = new ACLBindingRuleQueryResponse();
@@ -333,7 +367,7 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function BindingRuleList(?QueryOptions $opts = null): ACLBindingRulesQueryResponse
+    public function BindingRuleList(null|QueryOptions $opts = null): ACLBindingRulesQueryResponse
     {
         $resp = $this->_requireOK($this->_doGet('/v1/acl/binding-rules', $opts));
         $ret  = new ACLBindingRulesQueryResponse();
@@ -341,7 +375,7 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function Login(ACLLoginParams $login, ?WriteOptions $opts = null): ACLTokenWriteResponse
+    public function Login(ACLLoginParams $login, null|WriteOptions $opts = null): ACLTokenWriteResponse
     {
         $resp = $this->_requireOK($this->_doPost('/v1/acl/login', $login, $opts));
         $ret  = new ACLTokenWriteResponse();
@@ -349,12 +383,12 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function Logout(?WriteOptions $opts = null): WriteResponse
+    public function Logout(null|WriteOptions $opts = null): WriteResponse
     {
         return $this->_executePost('/v1/acl/logout', null, $opts);
     }
 
-    public function OIDCAuthURL(ACLOIDCAuthURLParams $auth, ?WriteOptions $opts = null): ValuedWriteStringResponse
+    public function OIDCAuthURL(ACLOIDCAuthURLParams $auth, null|WriteOptions $opts = null): ValuedWriteStringResponse
     {
         $ret = new ValuedWriteStringResponse();
         if ('' === $auth->AuthMethod) {
@@ -366,7 +400,7 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function OIDCCallback(ACLOIDCCallbackParams $auth, ?WriteOptions $opts = null): ACLTokenWriteResponse
+    public function OIDCCallback(ACLOIDCCallbackParams $auth, null|WriteOptions $opts = null): ACLTokenWriteResponse
     {
         $ret = new ACLTokenWriteResponse();
         if ('' === $auth->AuthMethod) {
@@ -374,6 +408,30 @@ class ACLClient extends AbstractClient
             return $ret;
         }
         $resp = $this->_requireOK($this->_doPost('/v1/acl/oidc/callback', $auth, $opts));
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    public function TemplatedPolicyReadByName(string $templateName, null|QueryOptions $opts = null): ACLTemplatedPolicyResponseQueryResponse
+    {
+        $resp = $this->_requireNotFoundOrOK($this->_doGet(sprintf('/v1/acl/templated-policy/name/%s', $templateName), $opts));
+        $ret  = new ACLTemplatedPolicyResponseQueryResponse();
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    public function TemplatedPolicyList(null|QueryOptions $opts = null): ACLTemplatedPoliciesQueryResponse
+    {
+        $resp = $this->_requireOK($this->_doGet('/v1/acl/templated-policies', $opts));
+        $ret  = new ACLTemplatedPoliciesQueryResponse();
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    public function TemplatedPolicyPreview(ACLTemplatedPolicy $tp, null|WriteOptions $opts = null): ACLPolicyWriteResponse
+    {
+        $resp = $this->_requireOK($this->_doPost(sprintf('/v1/acl/templated-policy/preview/%s', $tp->TemplateName), $tp->TemplateVariables, $opts));
+        $ret  = new ACLPolicyWriteResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }

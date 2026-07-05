@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,25 +20,29 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractResponse;
-use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\PHPLib\Error;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractResponse;
 
+/**
+ * @extends AbstractResponse<string|AgentServiceChecksInfo[]|Error|null>
+ */
 class AgentHealthServicesResponse extends AbstractResponse
 {
-    use ErrorContainer;
+    public string $AggregatedStatus;
+    /** @var \DCarbone\PHPConsulAPI\Agent\AgentServiceChecksInfo[] */
+    public array $AgentServiceChecksInfos;
 
-    public string $AggregatedStatus = '';
-    public ?array $AgentServiceChecksInfos = null;
-
-    public function __construct(string $aggregatedStatus, ?array $checkInfos, ?Error $err)
+    /**
+     * @param string $aggregatedStatus
+     * @param \stdClass[] $checkInfos
+     * @param \DCarbone\PHPConsulAPI\PHPLib\Error|null $err
+     */
+    public function __construct(string $aggregatedStatus, array $checkInfos, null|Error $err)
     {
         $this->AggregatedStatus = $aggregatedStatus;
-        if (null !== $checkInfos) {
-            $this->AgentServiceChecksInfos = [];
-            foreach ($checkInfos as $checkInfo) {
-                $this->AgentServiceChecksInfos[] = new AgentServiceChecksInfo($checkInfo);
-            }
+        $this->AgentServiceChecksInfos = [];
+        foreach ($checkInfos as $checkInfo) {
+            $this->AgentServiceChecksInfos[] = AgentServiceChecksInfo::jsonUnserialize($checkInfo);
         }
         $this->Err = $err;
     }
@@ -48,17 +52,24 @@ class AgentHealthServicesResponse extends AbstractResponse
         return $this->AggregatedStatus;
     }
 
-    public function getAgentServiceChecksInfos(): ?array
+    /**
+     * @return \DCarbone\PHPConsulAPI\Agent\AgentServiceChecksInfo[]
+     */
+    public function getAgentServiceChecksInfos(): array
     {
         return $this->AgentServiceChecksInfos;
     }
 
     public function offsetExists(mixed $offset): bool
     {
-        return \is_int($offset) && 0 <= $offset && $offset < 3;
+        return is_int($offset) && 0 <= $offset && $offset < 3;
     }
 
-    public function offsetGet(mixed $offset): mixed
+    /**
+     * @param mixed $offset
+     * @return string|\DCarbone\PHPConsulAPI\Agent\AgentServiceChecksInfo[]|\DCarbone\PHPConsulAPI\PHPLib\Error|null
+     */
+    public function offsetGet(mixed $offset): string|array|Error|null
     {
         if (0 === $offset) {
             return $this->AggregatedStatus;

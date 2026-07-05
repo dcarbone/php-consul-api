@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -24,19 +24,48 @@ use DCarbone\Go\Time;
 
 class QueryMeta
 {
-    public string $RequestUrl = '';
-    public int $LastIndex = 0;
-    public string $LastContentHash = '';
-    public int $LastContact = 0;
-    public bool $KnownLeader = false;
-    public ?Time\Duration $RequestTime = null;
-    public bool $AddressTranslationEnabled = false;
-    public bool $CacheHit = false;
-    public ?Time\Duration $CacheAge = null;
+    public string $RequestUrl;
+    public int $LastIndex;
+    public string $LastContentHash;
+    public int $LastContact;
+    public bool $KnownLeader;
+    public Time\Duration $RequestTime;
+    public bool $AddressTranslationEnabled;
+    public bool $CacheHit;
+    public Time\Duration $CacheAge;
+
+    public function __construct(
+        string $RequestUrl,
+        null|string|int|float|\DateInterval|Time\Duration $RequestTime,
+        int $LastIndex = 0,
+        string $LastContentHash = '',
+        int $LastContact = 0,
+        bool $KnownLeader = false,
+        bool $AddressTranslationEnabled = false,
+        bool $CacheHit = false,
+        null|string|int|float|\DateInterval|Time\Duration $CacheAge = null
+    ) {
+        $this->RequestUrl = $RequestUrl;
+        $this->RequestTime = Time::Duration($RequestTime);
+
+        $this->LastIndex = $LastIndex;
+        $this->LastContentHash = $LastContentHash;
+        $this->LastContact = $LastContact;
+        $this->KnownLeader = $KnownLeader;
+        $this->AddressTranslationEnabled = $AddressTranslationEnabled;
+        $this->CacheHit = $CacheHit;
+        $this->CacheAge = Time::Duration($CacheAge);
+    }
 
     public function getRequestUrl(): string
     {
         return $this->RequestUrl;
+    }
+
+    public function setRequestUrl(string $RequestUrl): self
+    {
+        $this->RequestUrl = $RequestUrl;
+        return $this;
     }
 
     public function getLastIndex(): int
@@ -44,9 +73,21 @@ class QueryMeta
         return $this->LastIndex;
     }
 
+    public function setLastIndex(int $LastIndex): self
+    {
+        $this->LastIndex = $LastIndex;
+        return $this;
+    }
+
     public function getLastContentHash(): string
     {
         return $this->LastContentHash;
+    }
+
+    public function setLastContentHash(string $LastContentHash): self
+    {
+        $this->LastContentHash = $LastContentHash;
+        return $this;
     }
 
     public function getLastContact(): int
@@ -54,14 +95,32 @@ class QueryMeta
         return $this->LastContact;
     }
 
+    public function setLastContact(int $LastContact): self
+    {
+        $this->LastContact = $LastContact;
+        return $this;
+    }
+
     public function isKnownLeader(): bool
     {
         return $this->KnownLeader;
     }
 
-    public function getRequestTime(): ?Time\Duration
+    public function setKnownLeader(bool $KnownLeader): self
+    {
+        $this->KnownLeader = $KnownLeader;
+        return $this;
+    }
+
+    public function getRequestTime(): Time\Duration
     {
         return $this->RequestTime;
+    }
+
+    public function setRequestTime(null|string|int|float|\DateInterval|Time\Duration $RequestTime): self
+    {
+        $this->RequestTime = Time::Duration($RequestTime);
+        return $this;
     }
 
     public function isAddressTranslationEnabled(): bool
@@ -69,13 +128,31 @@ class QueryMeta
         return $this->AddressTranslationEnabled;
     }
 
+    public function setAddressTranslationEnabled(bool $AddressTranslationEnabled): self
+    {
+        $this->AddressTranslationEnabled = $AddressTranslationEnabled;
+        return $this;
+    }
+
     public function isCacheHit(): bool
     {
         return $this->CacheHit;
     }
 
-    public function getCacheAge(): ?Time\Duration
+    public function setCacheHit(bool $CacheHit): self
+    {
+        $this->CacheHit = $CacheHit;
+        return $this;
+    }
+
+    public function getCacheAge(): Time\Duration
     {
         return $this->CacheAge;
+    }
+
+    public function setCacheAge(null|string|int|float|\DateInterval|Time\Duration $CacheAge): self
+    {
+        $this->CacheAge = Time::Duration($CacheAge);
+        return $this;
     }
 }

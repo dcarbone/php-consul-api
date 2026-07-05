@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,20 +20,20 @@ declare(strict_types=1);
 
 namespace DCarbone\PHPConsulAPI\PreparedQuery;
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractValuedQueryResponse;
+use DCarbone\PHPConsulAPI\PHPLib\UnmarshalledResponseInterface;
 
 class PreparedQueryExecuteResponseResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?PreparedQueryExecuteResponse $PreparedQueryExecuteResponse = null;
+    public null|PreparedQueryExecuteResponse $PreparedQueryExecuteResponse = null;
 
-    public function getValue(): ?PreparedQueryExecuteResponse
+    public function getValue(): null|PreparedQueryExecuteResponse
     {
         return $this->PreparedQueryExecuteResponse;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        $this->PreparedQueryExecuteResponse = new PreparedQueryExecuteResponse((array)$decodedData);
+        $this->PreparedQueryExecuteResponse = PreparedQueryExecuteResponse::jsonUnserialize($decoded);
     }
 }

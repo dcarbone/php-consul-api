@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\PreparedQuery;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,25 +20,46 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class QueryDNSOptions extends AbstractModel
+class QueryDNSOptions extends AbstractType
 {
-    public string $TTL = '';
+    public string $TTL;
+
+    public function __construct(string $TTL = '')
+    {
+        $this->TTL = $TTL;
+    }
 
     public function getTTL(): string
     {
         return $this->TTL;
     }
 
-    public function setTTL(string $ttl): self
+    public function setTTL(string $TTL): self
     {
-        $this->TTL = $ttl;
+        $this->TTL = $TTL;
         return $this;
     }
 
     public function __toString(): string
     {
         return $this->TTL;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->TTL = $this->TTL;
+        return $out;
     }
 }

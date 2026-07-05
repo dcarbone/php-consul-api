@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Health;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,23 +20,32 @@ namespace DCarbone\PHPConsulAPI\Health;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractValuedQueryResponse;
+use DCarbone\PHPConsulAPI\PHPLib\UnmarshalledResponseInterface;
 
 class ServiceEntriesResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?array $ServiceEntries = null;
+    /** @var \DCarbone\PHPConsulAPI\Health\ServiceEntry[] */
+    public array $ServiceEntries;
 
-    public function getValue(): ?array
+    public function __construct()
+    {
+        $this->ServiceEntries = [];
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Health\ServiceEntry[]
+     */
+    public function getValue(): array
     {
         return $this->ServiceEntries;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
         $this->ServiceEntries = [];
-        foreach ($decodedData as $entry) {
-            $this->ServiceEntries[] = new ServiceEntry($entry);
+        foreach ($decoded as $entry) {
+            $this->ServiceEntries[] = ServiceEntry::jsonUnserialize($entry);
         }
     }
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Health;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,43 +20,68 @@ namespace DCarbone\PHPConsulAPI\Health;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class HealthCheck extends AbstractModel
+class HealthCheck extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_NAMESPACE  => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_DEFINITION => [
-            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS => HealthCheckDefinition::class,
-        ],
-    ];
-
-    private const FIELD_NAMESPACE  = 'Namespace';
-    private const FIELD_DEFINITION = 'Definition';
-
-    public string $Node = '';
-    public string $CheckID = '';
-    public string $Name = '';
-    public string $Status = '';
-    public string $Notes = '';
-    public string $Output = '';
-    public string $ServiceID = '';
-    public string $ServiceName = '';
-    public array $ServiceTags = [];
-    public string $Type = '';
-    public string $Namespace = '';
+    public string $Node;
+    public string $CheckID;
+    public string $Name;
+    public string $Status;
+    public string $Notes;
+    public string $Output;
+    public string $ServiceID;
+    public string $ServiceName;
+    /** @var array<string> */
+    public array $ServiceTags;
+    public string $Type;
+    public string $Namespace;
+    public string $Partition;
+    public int $ExposedPort;
+    public string $PeerName;
     public HealthCheckDefinition $Definition;
-    public int $CreateIndex = 0;
-    public int $ModifyIndex = 0;
+    public int $CreateIndex;
+    public int $ModifyIndex;
 
-    public function __construct(?array $data = [])
-    {
-        parent::__construct($data);
-        if (!isset($this->Definition)) {
-            $this->Definition = new HealthCheckDefinition(null);
-        }
+    /**
+     * @param array<string> $ServiceTags
+     */
+    public function __construct(
+        string $Node = '',
+        string $CheckID = '',
+        string $Name = '',
+        string $Status = '',
+        string $Notes = '',
+        string $Output = '',
+        string $ServiceID = '',
+        string $ServiceName = '',
+        array $ServiceTags = [],
+        string $Type = '',
+        string $Namespace = '',
+        string $Partition = '',
+        int $ExposedPort = 0,
+        string $PeerName = '',
+        null|HealthCheckDefinition $Definition = null,
+        int $CreateIndex = 0,
+        int $ModifyIndex = 0,
+    ) {
+        $this->Node = $Node;
+        $this->CheckID = $CheckID;
+        $this->Name = $Name;
+        $this->Status = $Status;
+        $this->Notes = $Notes;
+        $this->Output = $Output;
+        $this->ServiceID = $ServiceID;
+        $this->ServiceName = $ServiceName;
+        $this->setServiceTags(...$ServiceTags);
+        $this->Type = $Type;
+        $this->Namespace = $Namespace;
+        $this->Partition = $Partition;
+        $this->ExposedPort = $ExposedPort;
+        $this->PeerName = $PeerName;
+        $this->Definition = $Definition ?? new HealthCheckDefinition();
+        $this->CreateIndex = $CreateIndex;
+        $this->ModifyIndex = $ModifyIndex;
     }
 
     public function getNode(): string
@@ -147,12 +172,15 @@ class HealthCheck extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getServiceTags(): array
     {
         return $this->ServiceTags;
     }
 
-    public function setServiceTags(array $ServiceTags): self
+    public function setServiceTags(string ...$ServiceTags): self
     {
         $this->ServiceTags = $ServiceTags;
         return $this;
@@ -177,6 +205,39 @@ class HealthCheck extends AbstractModel
     public function setNamespace(string $Namespace): self
     {
         $this->Namespace = $Namespace;
+        return $this;
+    }
+
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
+    public function getExposedPort(): int
+    {
+        return $this->ExposedPort;
+    }
+
+    public function setExposedPort(int $ExposedPort): self
+    {
+        $this->ExposedPort = $ExposedPort;
+        return $this;
+    }
+
+    public function getPeerName(): string
+    {
+        return $this->PeerName;
+    }
+
+    public function setPeerName(string $PeerName): self
+    {
+        $this->PeerName = $PeerName;
         return $this;
     }
 
@@ -211,5 +272,49 @@ class HealthCheck extends AbstractModel
     {
         $this->ModifyIndex = $ModifyIndex;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('Definition' === $k) {
+                $n->Definition = HealthCheckDefinition::jsonUnserialize($v);
+            } elseif ('ServiceTags' === $k) {
+                $n->setServiceTags(...$v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Node = $this->Node;
+        $out->CheckID = $this->CheckID;
+        $out->Name = $this->Name;
+        $out->Status = $this->Status;
+        $out->Notes = $this->Notes;
+        $out->Output = $this->Output;
+        $out->ServiceID = $this->ServiceID;
+        $out->ServiceName = $this->ServiceName;
+        $out->ServiceTags = $this->ServiceTags;
+        $out->Type = $this->Type;
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
+        }
+        $out->ExposedPort = $this->ExposedPort;
+        if ('' !== $this->PeerName) {
+            $out->PeerName = $this->PeerName;
+        }
+        $out->Definition = $this->Definition;
+        $out->CreateIndex = $this->CreateIndex;
+        $out->ModifyIndex = $this->ModifyIndex;
+        return $out;
     }
 }

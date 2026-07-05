@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,23 +20,31 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractValuedResponse;
+use DCarbone\PHPConsulAPI\PHPLib\UnmarshalledResponseInterface;
 
 class AgentServicesResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
-    public ?array $Services = null;
+    /** @var null|array<string,\DCarbone\PHPConsulAPI\Agent\AgentService> */
+    public null|array $Services = null;
 
-    public function getValue(): ?array
+    /**
+     * @return array<string,\DCarbone\PHPConsulAPI\Agent\AgentService>|null
+     */
+    public function getValue(): null|array
     {
         return $this->Services;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
+        if (null === $decoded) {
+            $this->Services = null;
+            return;
+        }
         $this->Services = [];
-        foreach ($decodedData as $k => $service) {
-            $this->Services[$k] = new AgentService($service);
+        foreach ($decoded as $k => $v) {
+            $this->Services[$k] = AgentService::jsonUnserialize($v);
         }
     }
 }

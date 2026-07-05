@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,20 +20,57 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class ServiceRegisterOpts extends AbstractModel
+class ServiceRegisterOpts extends AbstractType
 {
-    public bool $ReplaceExistingChecks = false;
+    public bool $ReplaceExistingChecks;
+    public string $Token;
+
+    public function __construct(
+        bool $ReplaceExistingChecks = false,
+        string $Token = '',
+    ) {
+        $this->ReplaceExistingChecks = $ReplaceExistingChecks;
+        $this->Token = $Token;
+    }
 
     public function isReplaceExistingChecks(): bool
     {
         return $this->ReplaceExistingChecks;
     }
 
-    public function setReplaceExistingChecks(bool $replaceExistingChecks): self
+    public function setReplaceExistingChecks(bool $ReplaceExistingChecks): self
     {
-        $this->ReplaceExistingChecks = $replaceExistingChecks;
+        $this->ReplaceExistingChecks = $ReplaceExistingChecks;
         return $this;
+    }
+
+    public function getToken(): string
+    {
+        return $this->Token;
+    }
+
+    public function setToken(string $Token): self
+    {
+        $this->Token = $Token;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->ReplaceExistingChecks = $this->ReplaceExistingChecks;
+        $out->Token = $this->Token;
+        return $out;
     }
 }

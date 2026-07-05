@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\ACL;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,14 +20,26 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class ACLOIDCCallbackParams extends AbstractModel
+class ACLOIDCCallbackParams extends AbstractType
 {
-    public string $AuthMethod = '';
-    public string $State = '';
-    public string $Code = '';
-    public string $ClientNonce = '';
+    public string $AuthMethod;
+    public string $State;
+    public string $Code;
+    public string $ClientNonce;
+
+    public function __construct(
+        string $AuthMethod = '',
+        string $State = '',
+        string $Code = '',
+        string $ClientNonce = '',
+    ) {
+        $this->AuthMethod = $AuthMethod;
+        $this->State = $State;
+        $this->Code = $Code;
+        $this->ClientNonce = $ClientNonce;
+    }
 
     public function getAuthMethod(): string
     {
@@ -71,5 +83,24 @@ class ACLOIDCCallbackParams extends AbstractModel
     {
         $this->ClientNonce = $ClientNonce;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->AuthMethod = $this->AuthMethod;
+        $out->State = $this->State;
+        $out->Code = $this->Code;
+        $out->ClientNonce = $this->ClientNonce;
+        return $out;
     }
 }

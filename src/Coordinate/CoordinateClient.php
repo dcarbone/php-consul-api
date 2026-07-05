@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Coordinate;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,11 +20,10 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
    limitations under the License.
  */
 
-use DCarbone\Go\HTTP;
-use DCarbone\PHPConsulAPI\AbstractClient;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractClient;
+use DCarbone\PHPConsulAPI\PHPLib\WriteResponse;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\WriteOptions;
-use DCarbone\PHPConsulAPI\WriteResponse;
 
 class CoordinateClient extends AbstractClient
 {
@@ -36,7 +35,7 @@ class CoordinateClient extends AbstractClient
         return $ret;
     }
 
-    public function Nodes(?QueryOptions $opts = null): CoordinateEntriesResponse
+    public function Nodes(null|QueryOptions $opts = null): CoordinateEntriesResponse
     {
         $resp = $this->_requireOK($this->_doGet('v1/coordinate/nodes', $opts));
         $ret  = new CoordinateEntriesResponse();
@@ -44,12 +43,12 @@ class CoordinateClient extends AbstractClient
         return $ret;
     }
 
-    public function Update(CoordinateEntry $coordinateEntry, ?WriteOptions $opts = null): WriteResponse
+    public function Update(CoordinateEntry $coordinateEntry, null|WriteOptions $opts = null): WriteResponse
     {
         return $this->_executePut('v1/coordinate/update', $coordinateEntry, $opts);
     }
 
-    public function Node(string $node, ?QueryOptions $opts = null): CoordinateEntriesResponse
+    public function Node(string $node, null|QueryOptions $opts = null): CoordinateEntriesResponse
     {
         $resp = $this->_requireOK($this->_doGet(sprintf('v1/coordinate/node/%s', $node), $opts));
         $ret  = new CoordinateEntriesResponse();

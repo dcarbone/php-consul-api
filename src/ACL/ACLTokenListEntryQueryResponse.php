@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\ACL;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,23 +20,27 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractValuedQueryResponse;
+use DCarbone\PHPConsulAPI\PHPLib\UnmarshalledResponseInterface;
 
 class ACLTokenListEntryQueryResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?array $ACLTokenListEntries = [];
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLTokenListEntry[] */
+    public array $ACLTokenListEntries = [];
 
-    public function getValue(): ?array
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLTokenListEntry[]
+     */
+    public function getValue(): array
     {
         return $this->ACLTokenListEntries;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
         $this->ACLTokenListEntries = [];
-        foreach ($decodedData as $datum) {
-            $this->ACLTokenListEntries[] = new ACLTokenListEntry($datum);
+        foreach ($decoded as $datum) {
+            $this->ACLTokenListEntries[] = ACLTokenListEntry::jsonUnserialize($datum);
         }
     }
 }

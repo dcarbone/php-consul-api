@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Operator;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,24 +20,27 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class OperatorHealthReply extends AbstractModel
+class OperatorHealthReply extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_SERVERS => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => ServerHealth::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-        ],
-    ];
+    public bool $Healthy;
+    public int $FailureTolerance;
+    /** @var array<ServerHealth> */
+    public array $Servers;
 
-    private const FIELD_SERVERS = 'Servers';
-
-    public bool $Healthy = false;
-    public int $FailureTolerance = 0;
-    public array $Servers = [];
+    /**
+     * @param array<ServerHealth> $Servers
+     */
+    public function __construct(
+        bool $Healthy = false,
+        int $FailureTolerance = 0,
+        array $Servers = [],
+    ) {
+        $this->Healthy = $Healthy;
+        $this->FailureTolerance = $FailureTolerance;
+        $this->setServers(...$Servers);
+    }
 
     public function isHealthy(): bool
     {
@@ -61,14 +64,42 @@ class OperatorHealthReply extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return array<ServerHealth>
+     */
     public function getServers(): array
     {
         return $this->Servers;
     }
 
-    public function setServers(array $Servers): self
+    public function setServers(ServerHealth ...$Servers): self
     {
         $this->Servers = $Servers;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('Servers' === $k) {
+                $n->Servers = [];
+                foreach ($v as $sv) {
+                    $n->Servers[] = ServerHealth::jsonUnserialize($sv);
+                }
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Healthy = $this->Healthy;
+        $out->FailureTolerance = $this->FailureTolerance;
+        $out->Servers = $this->Servers;
+        return $out;
     }
 }

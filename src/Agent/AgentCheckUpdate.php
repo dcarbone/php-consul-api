@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,21 +20,27 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-final class AgentCheckUpdate extends AbstractModel
+class AgentCheckUpdate extends AbstractType
 {
-    public string $Status = '';
-    public string $Output = '';
+    public string $Status;
+    public string $Output;
+
+    public function __construct(string $Status = '', string $Output = '')
+    {
+        $this->Status = $Status;
+        $this->Output = $Output;
+    }
 
     public function getStatus(): string
     {
         return $this->Status;
     }
 
-    public function setStatus(string $status): self
+    public function setStatus(string $Status): self
     {
-        $this->Status = $status;
+        $this->Status = $Status;
         return $this;
     }
 
@@ -43,10 +49,27 @@ final class AgentCheckUpdate extends AbstractModel
         return $this->Output;
     }
 
-    public function setOutput(string $output): self
+    public function setOutput(string $Output): self
     {
-        $this->Output = $output;
+        $this->Output = $Output;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Status = $this->Status;
+        $out->Output = $this->Output;
+        return $out;
     }
 
     public function __toString(): string

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -38,9 +38,21 @@ class RequestMeta
         return $this->method;
     }
 
+    public function setMethod(string $method): self
+    {
+        $this->method = $method;
+        return $this;
+    }
+
     public function getUri(): UriInterface
     {
         return $this->uri;
+    }
+
+    public function setUri(UriInterface $uri): self
+    {
+        $this->uri = $uri;
+        return $this;
     }
 
     public function __toString(): string

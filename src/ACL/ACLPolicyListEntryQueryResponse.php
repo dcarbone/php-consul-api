@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\ACL;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,23 +20,27 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractValuedQueryResponse;
+use DCarbone\PHPConsulAPI\PHPLib\UnmarshalledResponseInterface;
 
 class ACLPolicyListEntryQueryResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?array $ACLPolicyListEntries = [];
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLPolicyListEntry[] */
+    public array $ACLPolicyListEntries = [];
 
-    public function getValue(): ?array
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLPolicyListEntry[]
+     */
+    public function getValue(): array
     {
         return $this->ACLPolicyListEntries;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
         $this->ACLPolicyListEntries = [];
-        foreach ($decodedData as $datum) {
-            $this->ACLPolicyListEntries[] = new ACLPolicyListEntry($datum);
+        foreach ($decoded as $datum) {
+            $this->ACLPolicyListEntries[] = ACLPolicyListEntry::jsonUnserialize($datum);
         }
     }
 }

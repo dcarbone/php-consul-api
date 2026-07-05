@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Operator;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,17 +20,33 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class AreaJoinResponse extends AbstractModel
+class AreaJoinResponse extends AbstractType
 {
-    public string $Address = '';
-    public bool $Joined = false;
-    public string $Error = '';
+    public string $Address;
+    public bool $Joined;
+    public string $Error;
+
+    public function __construct(
+        string $Address = '',
+        bool $Joined = false,
+        string $Error = '',
+    ) {
+        $this->Address = $Address;
+        $this->Joined = $Joined;
+        $this->Error = $Error;
+    }
 
     public function getAddress(): string
     {
         return $this->Address;
+    }
+
+    public function setAddress(string $Address): self
+    {
+        $this->Address = $Address;
+        return $this;
     }
 
     public function isJoined(): bool
@@ -38,8 +54,38 @@ class AreaJoinResponse extends AbstractModel
         return $this->Joined;
     }
 
+    public function setJoined(bool $Joined): self
+    {
+        $this->Joined = $Joined;
+        return $this;
+    }
+
     public function getError(): string
     {
         return $this->Error;
+    }
+
+    public function setError(string $Error): self
+    {
+        $this->Error = $Error;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Address = $this->Address;
+        $out->Joined = $this->Joined;
+        $out->Error = $this->Error;
+        return $out;
     }
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Catalog;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,12 +20,18 @@ namespace DCarbone\PHPConsulAPI\Catalog;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class Weights extends AbstractModel
+class Weights extends AbstractType
 {
-    public int $Passing = 0;
-    public int $Warning = 0;
+    public int $Passing;
+    public int $Warning;
+
+    public function __construct(int $Passing = 0, int $Warning = 0)
+    {
+        $this->Passing = $Passing;
+        $this->Warning = $Warning;
+    }
 
     public function getPassing(): int
     {
@@ -47,5 +53,22 @@ class Weights extends AbstractModel
     {
         $this->Warning = $Warning;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Passing = $this->Passing;
+        $out->Warning = $this->Warning;
+        return $out;
     }
 }

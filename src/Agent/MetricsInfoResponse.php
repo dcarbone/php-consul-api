@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,20 +20,24 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractValuedResponse;
+use DCarbone\PHPConsulAPI\PHPLib\UnmarshalledResponseInterface;
 
 class MetricsInfoResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
-    public ?MetricsInfo $MetricsInfo = null;
+    public null|MetricsInfo $MetricsInfo = null;
 
-    public function getValue(): ?MetricsInfo
+    public function getValue(): null|MetricsInfo
     {
         return $this->MetricsInfo;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        $this->MetricsInfo = new MetricsInfo((array)$decodedData);
+        if (null === $decoded) {
+            $this->MetricsInfo = null;
+            return;
+        }
+        $this->MetricsInfo = MetricsInfo::jsonUnserialize($decoded);
     }
 }

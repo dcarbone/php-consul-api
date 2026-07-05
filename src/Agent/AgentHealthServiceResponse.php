@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,23 +20,27 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractResponse;
-use DCarbone\PHPConsulAPI\Error;
-use DCarbone\PHPConsulAPI\ErrorContainer;
+use DCarbone\PHPConsulAPI\PHPLib\Error;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractResponse;
 
+/**
+ * @extends AbstractResponse<string|AgentServiceChecksInfo|Error|null>
+ */
 class AgentHealthServiceResponse extends AbstractResponse
 {
-    use ErrorContainer;
+    public string $AggregatedStatus;
+    public null|AgentServiceChecksInfo $AgentServiceChecksInfo;
 
-    public string $AggregatedStatus = '';
-    public ?AgentServiceChecksInfo $AgentServiceChecksInfo = null;
-
-    public function __construct(string $aggregatedStatus, ?array $checkInfo, ?Error $err)
-    {
+    public function __construct(
+        string $aggregatedStatus,
+        null|\stdClass $checksInfo,
+        null|Error $err
+    ) {
         $this->AggregatedStatus = $aggregatedStatus;
-        if (null !== $checkInfo) {
-            $this->AgentServiceChecksInfo = new AgentServiceChecksInfo($checkInfo);
+        if (null !== $checksInfo) {
+            $checksInfo = AgentServiceChecksInfo::jsonUnserialize($checksInfo);
         }
+        $this->AgentServiceChecksInfo = $checksInfo;
         $this->Err = $err;
     }
 
@@ -45,17 +49,17 @@ class AgentHealthServiceResponse extends AbstractResponse
         return $this->AggregatedStatus;
     }
 
-    public function getAgentServiceChecksInfos(): ?AgentServiceChecksInfo
+    public function getAgentServiceChecksInfos(): null|AgentServiceChecksInfo
     {
         return $this->AgentServiceChecksInfo;
     }
 
     public function offsetExists(mixed $offset): bool
     {
-        return \is_int($offset) && 0 <= $offset && $offset < 3;
+        return is_int($offset) && 0 <= $offset && $offset < 3;
     }
 
-    public function offsetGet(mixed $offset): Error|string|null|AgentServiceChecksInfo
+    public function offsetGet(mixed $offset): string|AgentServiceChecksInfo|Error|null
     {
         if (0 === $offset) {
             return $this->AggregatedStatus;

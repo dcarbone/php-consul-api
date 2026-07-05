@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\ACL;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,23 +20,26 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractValuedQueryResponse;
+use DCarbone\PHPConsulAPI\PHPLib\UnmarshalledResponseInterface;
 
 class ACLAuthMethodListEntryQueryResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?array $ACLAuthMethodListEntries = [];
+    /** @var \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodListEntry[] */
+    public array $ACLAuthMethodListEntries = [];
 
-    public function getValue(): ?array
+    /**
+     * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodListEntry[]
+     */
+    public function getValue(): array
     {
         return $this->ACLAuthMethodListEntries;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        $this->ACLAuthMethodListEntries = [];
-        foreach ($decodedData as $datum) {
-            $this->ACLAuthMethodListEntries[] = new ACLAuthMethodListEntry($datum);
+        foreach ($decoded as $datum) {
+            $this->ACLAuthMethodListEntries[] = ACLAuthMethodListEntry::jsonUnserialize($datum);
         }
     }
 }

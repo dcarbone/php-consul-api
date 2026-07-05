@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,101 +20,117 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+use DCarbone\PHPConsulAPI\PHPLib\Values;
 
-class AgentServiceCheck extends AbstractModel
+class AgentServiceCheck extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_CHECK_ID                          => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_NAME                              => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_SCRIPT_ARGS                       => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::STRING,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-        self::FIELD_DOCKER_CONTAINER_ID               => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_SHELL                             => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_INTERVAL                          => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_TIMEOUT                           => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_TTL                               => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_HTTP                              => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_HEADER                            => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::MIXED,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-        self::FIELD_METHOD                            => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_BODY                              => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_TCP                               => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_STATUS                            => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_NOTES                             => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_TLS_SKIP_VERIFY                   => Transcoding::OMITEMPTY_BOOLEAN_FIELD,
-        self::FIELD_GRPC                              => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_GRPC_USE_TLS                      => Transcoding::OMITEMPTY_BOOLEAN_FIELD,
-        self::FIELD_ALIAS_NODE                        => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_ALIAS_SERVICE                     => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_SUCCESS_BEFORE_PASSING            => Transcoding::OMITEMPTY_INTEGER_FIELD,
-        self::FIELD_FAILURES_BEFORE_CRITICAL          => Transcoding::OMITEMPTY_INTEGER_FIELD,
-        self::FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER => Transcoding::OMITEMPTY_BOOLEAN_FIELD,
-    ];
+    public string $CheckID;
+    public string $Name;
+    /** @var string[] */
+    public array $Args;
+    public string $DockerContainerID;
+    public string $Shell;
+    public string $Interval;
+    public string $Timeout;
+    public string $TTL;
+    public string $HTTP;
+    public null|Values $Header = null;
+    public string $Method;
+    public string $Body;
+    public string $TCP;
+    public bool $TCPUseTLS;
+    public string $UDP;
+    public string $Status;
+    public string $Notes;
+    public string $TLSServerName;
+    public bool $TLSSkipVerify;
+    public string $GRPC;
+    public bool $GRPCUseTLS;
+    public string $H2PING;
+    public bool $H2PINGUseTLS;
+    public string $AliasNode;
+    public string $AliasService;
+    public int $SuccessBeforePassing;
+    public int $FailuresBeforeWarning;
+    public int $FailuresBeforeCritical;
+    public string $DeregisterCriticalServiceAfter;
 
-    private const FIELD_CHECK_ID                          = 'CheckID';
-    private const FIELD_NAME                              = 'Name';
-    private const FIELD_SCRIPT_ARGS                       = 'ScriptArgs';
-    private const FIELD_DOCKER_CONTAINER_ID               = 'DockerContainerID';
-    private const FIELD_SHELL                             = 'Shell';
-    private const FIELD_INTERVAL                          = 'Interval';
-    private const FIELD_TIMEOUT                           = 'Timeout';
-    private const FIELD_TTL                               = 'TTL';
-    private const FIELD_HTTP                              = 'HTTP';
-    private const FIELD_HEADER                            = 'Header';
-    private const FIELD_METHOD                            = 'Method';
-    private const FIELD_BODY                              = 'Body';
-    private const FIELD_TCP                               = 'TCP';
-    private const FIELD_STATUS                            = 'Status';
-    private const FIELD_NOTES                             = 'Notes';
-    private const FIELD_TLS_SKIP_VERIFY                   = 'TLSSkipVerify';
-    private const FIELD_GRPC                              = 'GRPC';
-    private const FIELD_GRPC_USE_TLS                      = 'GRPCUseTLS';
-    private const FIELD_ALIAS_NODE                        = 'AliasNode';
-    private const FIELD_ALIAS_SERVICE                     = 'AliasService';
-    private const FIELD_SUCCESS_BEFORE_PASSING            = 'SuccessBeforePassing';
-    private const FIELD_FAILURES_BEFORE_CRITICAL          = 'FailuresBeforeCritical';
-    private const FIELD_DEREGISTER_CRITICAL_SERVICE_AFTER = 'DeregisterCriticalServiceAfter';
-
-    public string $CheckID = '';
-    public string $Name = '';
-    public array $ScriptArgs = [];
-    public string $DockerContainerID = '';
-    public string $Shell = '';
-    public string $Interval = '';
-    public string $Timeout = '';
-    public string $TTL = '';
-    public string $HTTP = '';
-    public array $Header = [];
-    public string $Method = '';
-    public string $TCP = '';
-    public string $Status = '';
-    public string $Notes = '';
-    public bool $TLSSkipVerify = false;
-    public string $GRPC = '';
-    public bool $GRPCUseTLS = false;
-    public string $AliasNode = '';
-    public string $AliasService = '';
-    public int $SuccessBeforePassing = 0;
-    public int $FailuresBeforeCritical = 0;
-
-    public string $DeregisterCriticalServiceAfter = '';
+    /**
+     * @param array<string> $Args
+     * @param null|array<string,array<string>>|\DCarbone\PHPConsulAPI\PHPLib\Values $Header
+     */
+    public function __construct(
+        string $CheckID = '',
+        string $Name = '',
+        array $Args = [],
+        string $DockerContainerID = '',
+        string $Shell = '',
+        string $Interval = '',
+        string $Timeout = '',
+        string $TTL = '',
+        string $HTTP = '',
+        null|array|Values $Header = null,
+        string $Method = '',
+        string $Body = '',
+        string $TCP = '',
+        bool $TCPUseTLS = false,
+        string $UDP = '',
+        string $Status = '',
+        string $Notes = '',
+        string $TLSServerName = '',
+        bool $TLSSkipVerify = false,
+        string $GRPC = '',
+        bool $GRPCUseTLS = false,
+        string $H2PING = '',
+        bool $H2PINGUseTLS = false,
+        string $AliasNode = '',
+        string $AliasService = '',
+        int $SuccessBeforePassing = 0,
+        int $FailuresBeforeWarning = 0,
+        int $FailuresBeforeCritical = 0,
+        string $DeregisterCriticalServiceAfter = '',
+    ) {
+        $this->CheckID = $CheckID;
+        $this->Name = $Name;
+        $this->Args = [];
+        $this->setArgs(...$Args);
+        $this->DockerContainerID = $DockerContainerID;
+        $this->Shell = $Shell;
+        $this->Interval = $Interval;
+        $this->Timeout = $Timeout;
+        $this->TTL = $TTL;
+        $this->HTTP = $HTTP;
+        $this->setHeader($Header);
+        $this->Method = $Method;
+        $this->Body = $Body;
+        $this->TCP = $TCP;
+        $this->TCPUseTLS = $TCPUseTLS;
+        $this->UDP = $UDP;
+        $this->Status = $Status;
+        $this->Notes = $Notes;
+        $this->TLSServerName = $TLSServerName;
+        $this->TLSSkipVerify = $TLSSkipVerify;
+        $this->GRPC = $GRPC;
+        $this->GRPCUseTLS = $GRPCUseTLS;
+        $this->H2PING = $H2PING;
+        $this->H2PINGUseTLS = $H2PINGUseTLS;
+        $this->AliasNode = $AliasNode;
+        $this->AliasService = $AliasService;
+        $this->SuccessBeforePassing = $SuccessBeforePassing;
+        $this->FailuresBeforeWarning = $FailuresBeforeWarning;
+        $this->FailuresBeforeCritical = $FailuresBeforeCritical;
+        $this->DeregisterCriticalServiceAfter = $DeregisterCriticalServiceAfter;
+    }
 
     public function getCheckID(): string
     {
         return $this->CheckID;
     }
 
-    public function setCheckID(string $checkID): self
+    public function setCheckID(string $CheckID): self
     {
-        $this->CheckID = $checkID;
+        $this->CheckID = $CheckID;
         return $this;
     }
 
@@ -123,20 +139,23 @@ class AgentServiceCheck extends AbstractModel
         return $this->Name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $Name): self
     {
-        $this->Name = $name;
+        $this->Name = $Name;
         return $this;
     }
 
-    public function getScriptArgs(): array
+    /**
+     * @return array<string>
+     */
+    public function getArgs(): array
     {
-        return $this->ScriptArgs;
+        return $this->Args;
     }
 
-    public function setScriptArgs(array $args): self
+    public function setArgs(string ...$Args): self
     {
-        $this->ScriptArgs = $args;
+        $this->Args = $Args;
         return $this;
     }
 
@@ -145,9 +164,9 @@ class AgentServiceCheck extends AbstractModel
         return $this->DockerContainerID;
     }
 
-    public function setDockerContainerID(string $dockerContainerID): self
+    public function setDockerContainerID(string $DockerContainerID): self
     {
-        $this->DockerContainerID = $dockerContainerID;
+        $this->DockerContainerID = $DockerContainerID;
         return $this;
     }
 
@@ -156,9 +175,9 @@ class AgentServiceCheck extends AbstractModel
         return $this->Shell;
     }
 
-    public function setShell(string $shell): self
+    public function setShell(string $Shell): self
     {
-        $this->Shell = $shell;
+        $this->Shell = $Shell;
         return $this;
     }
 
@@ -167,9 +186,9 @@ class AgentServiceCheck extends AbstractModel
         return $this->Interval;
     }
 
-    public function setInterval(string $interval): self
+    public function setInterval(string $Interval): self
     {
-        $this->Interval = $interval;
+        $this->Interval = $Interval;
         return $this;
     }
 
@@ -178,9 +197,9 @@ class AgentServiceCheck extends AbstractModel
         return $this->Timeout;
     }
 
-    public function setTimeout(string $timeout): self
+    public function setTimeout(string $Timeout): self
     {
-        $this->Timeout = $timeout;
+        $this->Timeout = $Timeout;
         return $this;
     }
 
@@ -189,9 +208,9 @@ class AgentServiceCheck extends AbstractModel
         return $this->TTL;
     }
 
-    public function setTTL(string $ttl): self
+    public function setTTL(string $TTL): self
     {
-        $this->TTL = $ttl;
+        $this->TTL = $TTL;
         return $this;
     }
 
@@ -200,20 +219,31 @@ class AgentServiceCheck extends AbstractModel
         return $this->HTTP;
     }
 
-    public function setHTTP(string $http): self
+    public function setHTTP(string $HTTP): self
     {
-        $this->HTTP = $http;
+        $this->HTTP = $HTTP;
         return $this;
     }
 
-    public function getHeader(): array
+    public function getHeader(): null|Values
     {
         return $this->Header;
     }
 
-    public function setHeader(array $header): self
+    /**
+     * @param \stdClass|array<string,array<string>>|\DCarbone\PHPConsulAPI\PHPLib\Values|null $Header
+     * @return $this
+     */
+    public function setHeader(null|\stdClass|array|Values $Header): self
     {
-        $this->Header = $header;
+        if (null === $Header) {
+            $this->Header = null;
+            return $this;
+        }
+        if (!$Header instanceof Values) {
+            $Header = Values::fromArray((array)$Header);
+        }
+        $this->Header = $Header;
         return $this;
     }
 
@@ -222,9 +252,20 @@ class AgentServiceCheck extends AbstractModel
         return $this->Method;
     }
 
-    public function setMethod(string $method): self
+    public function setMethod(string $Method): self
     {
-        $this->Method = $method;
+        $this->Method = $Method;
+        return $this;
+    }
+
+    public function getBody(): string
+    {
+        return $this->Body;
+    }
+
+    public function setBody(string $Body): self
+    {
+        $this->Body = $Body;
         return $this;
     }
 
@@ -233,9 +274,31 @@ class AgentServiceCheck extends AbstractModel
         return $this->TCP;
     }
 
-    public function setTCP(string $tcp): self
+    public function setTCP(string $TCP): self
     {
-        $this->TCP = $tcp;
+        $this->TCP = $TCP;
+        return $this;
+    }
+
+    public function isTCPUseTLS(): bool
+    {
+        return $this->TCPUseTLS;
+    }
+
+    public function setTCPUseTLS(bool $TCPUseTLS): self
+    {
+        $this->TCPUseTLS = $TCPUseTLS;
+        return $this;
+    }
+
+    public function getUDP(): string
+    {
+        return $this->UDP;
+    }
+
+    public function setUDP(string $UDP): self
+    {
+        $this->UDP = $UDP;
         return $this;
     }
 
@@ -244,9 +307,9 @@ class AgentServiceCheck extends AbstractModel
         return $this->Status;
     }
 
-    public function setStatus(string $status): self
+    public function setStatus(string $Status): self
     {
-        $this->Status = $status;
+        $this->Status = $Status;
         return $this;
     }
 
@@ -255,9 +318,20 @@ class AgentServiceCheck extends AbstractModel
         return $this->Notes;
     }
 
-    public function setNotes(string $notes): self
+    public function setNotes(string $Notes): self
     {
-        $this->Notes = $notes;
+        $this->Notes = $Notes;
+        return $this;
+    }
+
+    public function getTLSServerName(): string
+    {
+        return $this->TLSServerName;
+    }
+
+    public function setTLSServerName(string $TLSServerName): self
+    {
+        $this->TLSServerName = $TLSServerName;
         return $this;
     }
 
@@ -266,9 +340,9 @@ class AgentServiceCheck extends AbstractModel
         return $this->TLSSkipVerify;
     }
 
-    public function setTLSSkipVerify(bool $tlsSkipVerify): self
+    public function setTLSSkipVerify(bool $TLSSkipVerify): self
     {
-        $this->TLSSkipVerify = $tlsSkipVerify;
+        $this->TLSSkipVerify = $TLSSkipVerify;
         return $this;
     }
 
@@ -286,6 +360,28 @@ class AgentServiceCheck extends AbstractModel
     public function isGRPCUseTLS(): bool
     {
         return $this->GRPCUseTLS;
+    }
+
+    public function getH2PING(): string
+    {
+        return $this->H2PING;
+    }
+
+    public function setH2PING(string $H2PING): self
+    {
+        $this->H2PING = $H2PING;
+        return $this;
+    }
+
+    public function isH2PINGUseTLS(): bool
+    {
+        return $this->H2PINGUseTLS;
+    }
+
+    public function setH2PINGUseTLS(bool $H2PINGUseTLS): self
+    {
+        $this->H2PINGUseTLS = $H2PINGUseTLS;
+        return $this;
     }
 
     public function setGRPCUseTLS(bool $GRPCUseTLS): self
@@ -327,6 +423,17 @@ class AgentServiceCheck extends AbstractModel
         return $this;
     }
 
+    public function getFailuresBeforeWarning(): int
+    {
+        return $this->FailuresBeforeWarning;
+    }
+
+    public function setFailuresBeforeWarning(int $FailuresBeforeWarning): self
+    {
+        $this->FailuresBeforeWarning = $FailuresBeforeWarning;
+        return $this;
+    }
+
     public function getFailuresBeforeCritical(): int
     {
         return $this->FailuresBeforeCritical;
@@ -343,9 +450,117 @@ class AgentServiceCheck extends AbstractModel
         return $this->DeregisterCriticalServiceAfter;
     }
 
-    public function setDeregisterCriticalServiceAfter(string $deregisterCriticalServiceAfter): self
+    public function setDeregisterCriticalServiceAfter(string $DeregisterCriticalServiceAfter): self
     {
-        $this->DeregisterCriticalServiceAfter = $deregisterCriticalServiceAfter;
+        $this->DeregisterCriticalServiceAfter = $DeregisterCriticalServiceAfter;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('ScriptArgs' === $k) {
+                $n->Args = $v;
+            } elseif ('Header' === $k) {
+                $n->setHeader($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        if ('' !== $this->CheckID) {
+            $out->CheckID = $this->CheckID;
+        }
+        if ('' !== $this->Name) {
+            $out->Name = $this->Name;
+        }
+        if ([] !== $this->Args) {
+            $out->ScriptArgs = $this->Args;
+        }
+        if ('' !== $this->DockerContainerID) {
+            $out->DockerContainerID = $this->DockerContainerID;
+        }
+        if ('' !== $this->Shell) {
+            $out->Shell = $this->Shell;
+        }
+        if ('' !== $this->Interval) {
+            $out->Interval = $this->Interval;
+        }
+        if ('' !== $this->Timeout) {
+            $out->Timeout = $this->Timeout;
+        }
+        if ('' !== $this->TTL) {
+            $out->TTL = $this->TTL;
+        }
+        if ('' !== $this->HTTP) {
+            $out->HTTP = $this->HTTP;
+        }
+        if (null !== $this->Header) {
+            $out->Header = $this->Header;
+        }
+        if ('' !== $this->Method) {
+            $out->Method = $this->Method;
+        }
+        if ('' !== $this->Body) {
+            $out->Body = $this->Body;
+        }
+        if ('' !== $this->TCP) {
+            $out->TCP = $this->TCP;
+        }
+        if ($this->TCPUseTLS) {
+            $out->TCPUseTLS = $this->TCPUseTLS;
+        }
+        if ('' !== $this->UDP) {
+            $out->UDP = $this->UDP;
+        }
+        if ('' !== $this->Status) {
+            $out->Status = $this->Status;
+        }
+        if ('' !== $this->Notes) {
+            $out->Notes = $this->Notes;
+        }
+        if ('' !== $this->TLSServerName) {
+            $out->TLSServerName = $this->TLSServerName;
+        }
+        if ($this->TLSSkipVerify) {
+            $out->TLSSkipVerify = $this->TLSSkipVerify;
+        }
+        if ('' !== $this->GRPC) {
+            $out->GRPC = $this->GRPC;
+        }
+        if ($this->GRPCUseTLS) {
+            $out->GRPCUseTLS = $this->GRPCUseTLS;
+        }
+        if ('' !== $this->H2PING) {
+            $out->H2PING = $this->H2PING;
+        }
+        if ($this->H2PINGUseTLS) {
+            $out->H2PINGUseTLS = $this->H2PINGUseTLS;
+        }
+        if ('' !== $this->AliasNode) {
+            $out->AliasNode = $this->AliasNode;
+        }
+        if ('' !== $this->AliasService) {
+            $out->AliasService = $this->AliasService;
+        }
+        if (0 !== $this->SuccessBeforePassing) {
+            $out->SuccessBeforePassing = $this->SuccessBeforePassing;
+        }
+        if (0 !== $this->FailuresBeforeWarning) {
+            $out->FailuresBeforeWarning = $this->FailuresBeforeWarning;
+        }
+        if (0 !== $this->FailuresBeforeCritical) {
+            $out->FailuresBeforeCritical = $this->FailuresBeforeCritical;
+        }
+        if ('' !== $this->DeregisterCriticalServiceAfter) {
+            $out->DeregisterCriticalServiceAfter = $this->DeregisterCriticalServiceAfter;
+        }
+        return $out;
     }
 }

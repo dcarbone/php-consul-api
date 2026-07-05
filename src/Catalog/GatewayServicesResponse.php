@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Catalog;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,23 +20,27 @@ namespace DCarbone\PHPConsulAPI\Catalog;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractValuedQueryResponse;
+use DCarbone\PHPConsulAPI\PHPLib\UnmarshalledResponseInterface;
 
 class GatewayServicesResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?array $GatewayServices = null;
+    /** @var \DCarbone\PHPConsulAPI\Catalog\GatewayService[] */
+    public array $GatewayServices = [];
 
-    public function getValue(): mixed
+    /**
+     * @return \DCarbone\PHPConsulAPI\Catalog\GatewayService[]
+     */
+    public function getValue(): array
     {
         return $this->GatewayServices;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
         $this->GatewayServices = [];
-        foreach ($decodedData as $service) {
-            $this->GatewayServices[] = new GatewayService($service);
+        foreach ($decoded as $service) {
+            $this->GatewayServices[] = GatewayService::jsonUnserialize($service);
         }
     }
 }

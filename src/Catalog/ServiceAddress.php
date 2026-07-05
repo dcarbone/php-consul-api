@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Catalog;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,21 +20,27 @@ namespace DCarbone\PHPConsulAPI\Catalog;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class ServiceAddress extends AbstractModel
+class ServiceAddress extends AbstractType
 {
-    public string $Address = '';
-    public int $Port = 0;
+    public string $Address;
+    public int $Port;
+
+    public function __construct(string $Address = '', int $Port = 0)
+    {
+        $this->Address = $Address;
+        $this->Port = $Port;
+    }
 
     public function getAddress(): string
     {
         return $this->Address;
     }
 
-    public function setAddress(string $address): self
+    public function setAddress(string $Address): self
     {
-        $this->Address = $address;
+        $this->Address = $Address;
         return $this;
     }
 
@@ -43,9 +49,26 @@ class ServiceAddress extends AbstractModel
         return $this->Port;
     }
 
-    public function setPort(int $port): self
+    public function setPort(int $Port): self
     {
-        $this->Port = $port;
+        $this->Port = $Port;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Address = $this->Address;
+        $out->Port = $this->Port;
+        return $out;
     }
 }

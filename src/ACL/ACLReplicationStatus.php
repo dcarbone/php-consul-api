@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\ACL;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -21,41 +21,45 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class ACLReplicationStatus extends AbstractModel
+use function DCarbone\PHPConsulAPI\PHPLib\parse_time;
+
+class ACLReplicationStatus extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_LAST_SUCCESS => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_TIME,
-        ],
-        self::FIELD_LAST_ERROR   => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_TIME,
-        ],
-    ];
-
-    private const FIELD_LAST_SUCCESS = 'LastSuccess';
-    private const FIELD_LAST_ERROR   = 'LastError';
-
-    public bool $Enabled = false;
-    public bool $Running = false;
-    public string $SourceDatacenter = '';
-    public int $ReplicatedIndex = 0;
-    public int $ReplicatedRoleIndex = 0;
-    public int $ReplicatedTokenIndex = 0;
+    public bool $Enabled;
+    public bool $Running;
+    public string $SourceDatacenter;
+    public string $ReplicationType;
+    public int $ReplicatedIndex;
+    public int $ReplicatedRoleIndex;
+    public int $ReplicatedTokenIndex;
     public Time\Time $LastSuccess;
     public Time\Time $LastError;
+    public string $LastErrorMessage;
 
-    public function __construct(?array $data = null)
-    {
-        parent::__construct($data);
-        if (!isset($this->LastSuccess)) {
-            $this->LastSuccess = Time::New();
-        }
-        if (!isset($this->LastError)) {
-            $this->LastError = Time::New();
-        }
+    public function __construct(
+        bool $Enabled = false,
+        bool $Running = false,
+        string $SourceDatacenter = '',
+        string $ReplicationType = '',
+        int $ReplicatedIndex = 0,
+        int $ReplicatedRoleIndex = 0,
+        int $ReplicatedTokenIndex = 0,
+        null|Time\Time $LastSuccess = null,
+        null|Time\Time $LastError = null,
+        string $LastErrorMessage = '',
+    ) {
+        $this->Enabled = $Enabled;
+        $this->Running = $Running;
+        $this->SourceDatacenter = $SourceDatacenter;
+        $this->ReplicationType = $ReplicationType;
+        $this->ReplicatedIndex = $ReplicatedIndex;
+        $this->ReplicatedRoleIndex = $ReplicatedRoleIndex;
+        $this->ReplicatedTokenIndex = $ReplicatedTokenIndex;
+        $this->LastSuccess = $LastSuccess ?? Time::New();
+        $this->LastError = $LastError ?? Time::New();
+        $this->LastErrorMessage = $LastErrorMessage;
     }
 
     public function isEnabled(): bool
@@ -63,9 +67,21 @@ class ACLReplicationStatus extends AbstractModel
         return $this->Enabled;
     }
 
+    public function setEnabled(bool $Enabled): self
+    {
+        $this->Enabled = $Enabled;
+        return $this;
+    }
+
     public function isRunning(): bool
     {
         return $this->Running;
+    }
+
+    public function setRunning(bool $Running): self
+    {
+        $this->Running = $Running;
+        return $this;
     }
 
     public function getSourceDatacenter(): string
@@ -73,9 +89,32 @@ class ACLReplicationStatus extends AbstractModel
         return $this->SourceDatacenter;
     }
 
+    public function setSourceDatacenter(string $SourceDatacenter): self
+    {
+        $this->SourceDatacenter = $SourceDatacenter;
+        return $this;
+    }
+
+    public function getReplicationType(): string
+    {
+        return $this->ReplicationType;
+    }
+
+    public function setReplicationType(string $ReplicationType): self
+    {
+        $this->ReplicationType = $ReplicationType;
+        return $this;
+    }
+
     public function getReplicatedIndex(): int
     {
         return $this->ReplicatedIndex;
+    }
+
+    public function setReplicatedIndex(int $ReplicatedIndex): self
+    {
+        $this->ReplicatedIndex = $ReplicatedIndex;
+        return $this;
     }
 
     public function getReplicatedRoleIndex(): int
@@ -83,9 +122,21 @@ class ACLReplicationStatus extends AbstractModel
         return $this->ReplicatedRoleIndex;
     }
 
+    public function setReplicatedRoleIndex(int $ReplicatedRoleIndex): self
+    {
+        $this->ReplicatedRoleIndex = $ReplicatedRoleIndex;
+        return $this;
+    }
+
     public function getReplicatedTokenIndex(): int
     {
         return $this->ReplicatedTokenIndex;
+    }
+
+    public function setReplicatedTokenIndex(int $ReplicatedTokenIndex): self
+    {
+        $this->ReplicatedTokenIndex = $ReplicatedTokenIndex;
+        return $this;
     }
 
     public function getLastSuccess(): Time\Time
@@ -93,8 +144,62 @@ class ACLReplicationStatus extends AbstractModel
         return $this->LastSuccess;
     }
 
+    public function setLastSuccess(Time\Time $LastSuccess): self
+    {
+        $this->LastSuccess = $LastSuccess;
+        return $this;
+    }
+
     public function getLastError(): Time\Time
     {
         return $this->LastError;
+    }
+
+    public function setLastError(Time\Time $LastError): self
+    {
+        $this->LastError = $LastError;
+        return $this;
+    }
+
+    public function getLastErrorMessage(): string
+    {
+        return $this->LastErrorMessage;
+    }
+
+    public function setLastErrorMessage(string $LastErrorMessage): self
+    {
+        $this->LastErrorMessage = $LastErrorMessage;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('LastSuccess' === $k) {
+                $n->LastSuccess = parse_time($v);
+            } elseif ('LastError' === $k) {
+                $n->LastError = parse_time($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Enabled = $this->Enabled;
+        $out->Running = $this->Running;
+        $out->SourceDatacenter = $this->SourceDatacenter;
+        $out->ReplicationType = $this->ReplicationType;
+        $out->ReplicatedIndex = $this->ReplicatedIndex;
+        $out->ReplicatedRoleIndex = $this->ReplicatedRoleIndex;
+        $out->ReplicatedTokenIndex = $this->ReplicatedTokenIndex;
+        $out->LastSuccess = $this->LastSuccess->format(DATE_RFC3339);
+        $out->LastError = $this->LastError->format(DATE_RFC3339);
+        $out->LastErrorMessage = $this->LastErrorMessage;
+        return $out;
     }
 }

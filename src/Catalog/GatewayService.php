@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Catalog;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,66 +20,51 @@ namespace DCarbone\PHPConsulAPI\Catalog;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\Agent\ServiceKind;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class GatewayService extends AbstractModel
+class GatewayService extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_GATEWAY  => [
-            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS => CompoundServiceName::class,
-        ],
-        self::FIELD_SERVICE  => [
-            Transcoding::FIELD_TYPE  => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS => CompoundServiceName::class,
-        ],
-        self::FIELD_PORT     => Transcoding::OMITEMPTY_INTEGER_FIELD,
-        self::FIELD_PROTOCOL => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_HOSTS    => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::STRING,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-        self::FIELD_CA_FILE      => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_CERT_FILE    => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_KEY_FILE     => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_SNI          => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_FROM_WILDCARD => Transcoding::OMITEMPTY_BOOLEAN_FIELD,
-    ];
-
-    private const FIELD_GATEWAY       = 'Gateway';
-    private const FIELD_SERVICE       = 'Service';
-    private const FIELD_PORT          = 'Port';
-    private const FIELD_PROTOCOL      = 'Protocol';
-    private const FIELD_HOSTS         = 'Hosts';
-    private const FIELD_CA_FILE       = 'CAFile';
-    private const FIELD_CERT_FILE     = 'CertFile';
-    private const FIELD_KEY_FILE      = 'KeyFile';
-    private const FIELD_SNI           = 'SNI';
-    private const FIELD_FROM_WILDCARD = 'FromWildcard';
-
     public CompoundServiceName $Gateway;
     public CompoundServiceName $Service;
-    public string $GatewayKind = '';
-    public int $Port = 0;
-    public string $Protocol = '';
-    public array $Hosts = [];
-    public string $CAFile = '';
-    public string $CertFile = '';
-    public string $KeyFile = '';
-    public string $SNI = '';
-    public string $FromWildCard = '';
+    public ServiceKind $GatewayKind;
+    public int $Port;
+    public string $Protocol;
+    /** @var array<string> */
+    public array $Hosts;
+    public string $CAFile;
+    public string $CertFile;
+    public string $KeyFile;
+    public string $SNI;
+    public bool $FromWildcard;
 
-    public function __construct(?array $data = [])
-    {
-        parent::__construct($data);
-        if (!isset($this->Gateway)) {
-            $this->Gateway = new CompoundServiceName();
-        }
-        if (!isset($this->Service)) {
-            $this->Service = new CompoundServiceName();
-        }
+    /**
+     * @param array<string> $Hosts
+     */
+    public function __construct(
+        null|CompoundServiceName $Gateway = null,
+        null|CompoundServiceName $Service = null,
+        string|ServiceKind $GatewayKind = '',
+        int $Port = 0,
+        string $Protocol = '',
+        array $Hosts = [],
+        string $CAFile = '',
+        string $CertFile = '',
+        string $KeyFile = '',
+        string $SNI = '',
+        bool $FromWildcard = false,
+    ) {
+        $this->Gateway = $Gateway ?? new CompoundServiceName();
+        $this->Service = $Service ?? new CompoundServiceName();
+        $this->GatewayKind = $GatewayKind instanceof ServiceKind ? $GatewayKind : ServiceKind::from($GatewayKind);
+        $this->Port = $Port;
+        $this->Protocol = $Protocol;
+        $this->setHosts(...$Hosts);
+        $this->CAFile = $CAFile;
+        $this->CertFile = $CertFile;
+        $this->KeyFile = $KeyFile;
+        $this->SNI = $SNI;
+        $this->FromWildcard = $FromWildcard;
     }
 
     public function getGateway(): CompoundServiceName
@@ -104,12 +89,12 @@ class GatewayService extends AbstractModel
         return $this;
     }
 
-    public function getGatewayKind(): string
+    public function getGatewayKind(): ServiceKind
     {
         return $this->GatewayKind;
     }
 
-    public function setGatewayKind(string $GatewayKind): self
+    public function setGatewayKind(ServiceKind $GatewayKind): self
     {
         $this->GatewayKind = $GatewayKind;
         return $this;
@@ -137,12 +122,15 @@ class GatewayService extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getHosts(): array
     {
         return $this->Hosts;
     }
 
-    public function setHosts(array $Hosts): self
+    public function setHosts(string ...$Hosts): self
     {
         $this->Hosts = $Hosts;
         return $this;
@@ -192,14 +180,67 @@ class GatewayService extends AbstractModel
         return $this;
     }
 
-    public function getFromWildCard(): string
+    public function getFromWildcard(): bool
     {
-        return $this->FromWildCard;
+        return $this->FromWildcard;
     }
 
-    public function setFromWildCard(string $FromWildCard): self
+    public function setFromWildcard(bool $FromWildcard): self
     {
-        $this->FromWildCard = $FromWildCard;
+        $this->FromWildcard = $FromWildcard;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('Gateway' === $k) {
+                $n->Gateway = CompoundServiceName::jsonUnserialize($v);
+            } elseif ('Service' === $k) {
+                $n->Service = CompoundServiceName::jsonUnserialize($v);
+            } elseif ('GatewayKind' === $k) {
+                $n->GatewayKind = ServiceKind::from($v);
+            } elseif ('Hosts' === $k) {
+                $n->setHosts(...$v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Gateway = $this->Gateway;
+        $out->Service = $this->Service;
+        $out->GatewayKind = $this->GatewayKind->value;
+        if (0 !== $this->Port) {
+            $out->Port = $this->Port;
+        }
+        if ('' !== $this->Protocol) {
+            $out->Protocol = $this->Protocol;
+        }
+        if ([] !== $this->Hosts) {
+            $out->Hosts = $this->Hosts;
+        }
+        if ('' !== $this->CAFile) {
+            $out->CAFile = $this->CAFile;
+        }
+        if ('' !== $this->CertFile) {
+            $out->CertFile = $this->CertFile;
+        }
+        if ('' !== $this->KeyFile) {
+            $out->KeyFile = $this->KeyFile;
+        }
+        if ('' !== $this->SNI) {
+            $out->SNI = $this->SNI;
+        }
+        if ($this->FromWildcard) {
+            $out->FromWildcard = $this->FromWildcard;
+        }
+        return $out;
     }
 }

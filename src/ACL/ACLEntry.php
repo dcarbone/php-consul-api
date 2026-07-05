@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\ACL;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,25 +20,41 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class ACLEntry extends AbstractModel
+class ACLEntry extends AbstractType
 {
-    public int $CreateIndex = 0;
-    public int $ModifyIndex = 0;
-    public string $ID = '';
-    public string $Name = '';
-    public string $Type = '';
-    public string $Rules = '';
+    public int $CreateIndex;
+    public int $ModifyIndex;
+    public string $ID;
+    public string $Name;
+    public string $Type;
+    public string $Rules;
+
+    public function __construct(
+        int $CreateIndex = 0,
+        int $ModifyIndex = 0,
+        string $ID = '',
+        string $Name = '',
+        string $Type = '',
+        string $Rules = '',
+    ) {
+        $this->CreateIndex = $CreateIndex;
+        $this->ModifyIndex = $ModifyIndex;
+        $this->ID = $ID;
+        $this->Name = $Name;
+        $this->Type = $Type;
+        $this->Rules = $Rules;
+    }
 
     public function getCreateIndex(): int
     {
         return $this->CreateIndex;
     }
 
-    public function setCreateIndex(int $createIndex): self
+    public function setCreateIndex(int $CreateIndex): self
     {
-        $this->CreateIndex = $createIndex;
+        $this->CreateIndex = $CreateIndex;
         return $this;
     }
 
@@ -47,9 +63,9 @@ class ACLEntry extends AbstractModel
         return $this->ModifyIndex;
     }
 
-    public function setModifyIndex(int $modifyIndex): self
+    public function setModifyIndex(int $ModifyIndex): self
     {
-        $this->ModifyIndex = $modifyIndex;
+        $this->ModifyIndex = $ModifyIndex;
         return $this;
     }
 
@@ -58,9 +74,9 @@ class ACLEntry extends AbstractModel
         return $this->ID;
     }
 
-    public function setID(string $id): self
+    public function setID(string $ID): self
     {
-        $this->ID = $id;
+        $this->ID = $ID;
         return $this;
     }
 
@@ -69,9 +85,9 @@ class ACLEntry extends AbstractModel
         return $this->Name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $Name): self
     {
-        $this->Name = $name;
+        $this->Name = $Name;
         return $this;
     }
 
@@ -80,9 +96,9 @@ class ACLEntry extends AbstractModel
         return $this->Type;
     }
 
-    public function setType(string $type): self
+    public function setType(string $Type): self
     {
-        $this->Type = $type;
+        $this->Type = $Type;
         return $this;
     }
 
@@ -91,9 +107,30 @@ class ACLEntry extends AbstractModel
         return $this->Rules;
     }
 
-    public function setRules(string $rules): self
+    public function setRules(string $Rules): self
     {
-        $this->Rules = $rules;
+        $this->Rules = $Rules;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->CreateIndex = $this->CreateIndex;
+        $out->ModifyIndex = $this->ModifyIndex;
+        $out->ID = $this->ID;
+        $out->Name = $this->Name;
+        $out->Type = $this->Type;
+        $out->Rules = $this->Rules;
+        return $out;
     }
 }

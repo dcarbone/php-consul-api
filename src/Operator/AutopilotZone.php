@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Operator;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,31 +20,53 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class AutopilotZone extends AbstractModel
+class AutopilotZone extends AbstractType
 {
-    public array $Servers = [];
-    public array $Voters = [];
-    public int $FailureTolerance = 0;
+    /** @var array<string> */
+    public array $Servers;
+    /** @var array<string> */
+    public array $Voters;
+    public int $FailureTolerance;
 
+    /**
+     * @param array<string> $Servers
+     * @param array<string> $Voters
+     */
+    public function __construct(
+        array $Servers = [],
+        array $Voters = [],
+        int $FailureTolerance = 0,
+    ) {
+        $this->setServers(...$Servers);
+        $this->setVoters(...$Voters);
+        $this->FailureTolerance = $FailureTolerance;
+    }
+
+    /**
+     * @return array<string>
+     */
     public function getServers(): array
     {
         return $this->Servers;
     }
 
-    public function setServers(array $Servers): self
+    public function setServers(string ...$Servers): self
     {
         $this->Servers = $Servers;
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getVoters(): array
     {
         return $this->Voters;
     }
 
-    public function setVoters(array $Voters): self
+    public function setVoters(string ...$Voters): self
     {
         $this->Voters = $Voters;
         return $this;
@@ -59,5 +81,23 @@ class AutopilotZone extends AbstractModel
     {
         $this->FailureTolerance = $FailureTolerance;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Servers = $this->Servers;
+        $out->Voters = $this->Voters;
+        $out->FailureTolerance = $this->FailureTolerance;
+        return $out;
     }
 }

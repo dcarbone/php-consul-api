@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,32 +20,64 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class PointValue extends AbstractModel
+class PointValue extends AbstractType
 {
-    public string $Name = '';
-    public array $Points = [];
+    public string $Name;
+    /** @var float[] */
+    public array $Points;
+
+    /**
+     * @param iterable<float> $Points
+     */
+    public function __construct(
+        string $Name = '',
+        iterable $Points = [],
+    ) {
+        $this->Name = $Name;
+        $this->setPoints(...$Points);
+    }
 
     public function getName(): string
     {
         return $this->Name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $Name): self
     {
-        $this->Name = $name;
+        $this->Name = $Name;
         return $this;
     }
 
+    /**
+     * @return float[]
+     */
     public function getPoints(): array
     {
         return $this->Points;
     }
 
-    public function setPoints(array $points): self
+    public function setPoints(float ...$points): self
     {
         $this->Points = $points;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Name = $this->Name;
+        $out->Points = $this->Points;
+        return $out;
     }
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Catalog;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,20 +20,24 @@ namespace DCarbone\PHPConsulAPI\Catalog;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractValuedQueryResponse;
-use DCarbone\PHPConsulAPI\UnmarshalledResponseInterface;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractValuedQueryResponse;
+use DCarbone\PHPConsulAPI\PHPLib\UnmarshalledResponseInterface;
 
 class CatalogNodeServicesListResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public ?CatalogNodeServiceList $CatalogNodeServiceList = null;
+    public null|CatalogNodeServiceList $CatalogNodeServiceList = null;
 
-    public function getValue(): ?CatalogNodeServiceList
+    public function getValue(): null|CatalogNodeServiceList
     {
         return $this->CatalogNodeServiceList;
     }
 
-    public function unmarshalValue(mixed $decodedData): void
+    public function unmarshalValue(mixed $decoded): void
     {
-        $this->CatalogNodeServiceList = new CatalogNodeServiceList((array)$decodedData);
+        if (null === $decoded) {
+            $this->CatalogNodeServiceList = null;
+            return;
+        }
+        $this->CatalogNodeServiceList = CatalogNodeServiceList::jsonUnserialize($decoded);
     }
 }

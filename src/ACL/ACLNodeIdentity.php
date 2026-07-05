@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\ACL;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,20 +20,55 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class ACLNodeIdentity extends AbstractModel
+class ACLNodeIdentity extends AbstractType
 {
-    public string $NodeName = '';
-    public string $Datacenter = '';
+    public string $NodeName;
+    public string $Datacenter;
+
+    public function __construct(string $NodeName = '', string $Datacenter = '')
+    {
+        $this->NodeName = $NodeName;
+        $this->Datacenter = $Datacenter;
+    }
 
     public function getNodeName(): string
     {
         return $this->NodeName;
     }
 
+    public function setNodeName(string $NodeName): self
+    {
+        $this->NodeName = $NodeName;
+        return $this;
+    }
+
     public function getDatacenter(): string
     {
         return $this->Datacenter;
+    }
+
+    public function setDatacenter(string $Datacenter): self
+    {
+        $this->Datacenter = $Datacenter;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->NodeName = $this->NodeName;
+        $out->Datacenter = $this->Datacenter;
+        return $out;
     }
 }

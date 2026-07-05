@@ -1,0 +1,76 @@
+<?php
+
+declare(strict_types=1);
+
+namespace DCarbone\PHPConsulAPI\Txn;
+
+/*
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ */
+
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+
+class TxnError extends AbstractType
+{
+    public int $OpIndex;
+    public string $What;
+
+    public function __construct(
+        int $OpIndex = 0,
+        string $What = '',
+    ) {
+        $this->OpIndex = $OpIndex;
+        $this->What = $What;
+    }
+
+    public function getOpIndex(): int
+    {
+        return $this->OpIndex;
+    }
+
+    public function setOpIndex(int $OpIndex): self
+    {
+        $this->OpIndex = $OpIndex;
+        return $this;
+    }
+
+    public function getWhat(): string
+    {
+        return $this->What;
+    }
+
+    public function setWhat(string $What): self
+    {
+        $this->What = $What;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->OpIndex = $this->OpIndex;
+        $out->What = $this->What;
+        return $out;
+    }
+}

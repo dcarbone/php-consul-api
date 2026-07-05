@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,27 +20,45 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class MeshGatewayConfig extends AbstractModel
+class MeshGatewayConfig extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_MODE => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
+    public MeshGatewayMode $Mode;
 
-    private const FIELD_MODE = 'Mode';
+    public function __construct(
+        string|MeshGatewayMode $mode = MeshGatewayMode::Default,
+    ) {
+        $this->setMode($mode);
+    }
 
-    public string $Mode = '';
-
-    public function getMode(): string
+    public function getMode(): MeshGatewayMode
     {
         return $this->Mode;
     }
 
-    public function setMode(string $mode): self
+    public function setMode(string|MeshGatewayMode $Mode): self
     {
-        $this->Mode = $mode;
+        $this->Mode = $Mode instanceof MeshGatewayMode ? $Mode : MeshGatewayMode::from($Mode);
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('Mode' === $k) {
+                $n->setMode($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        return $out;
     }
 }

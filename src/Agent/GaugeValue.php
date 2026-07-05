@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,22 +20,36 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class GaugeValue extends AbstractModel
+class GaugeValue extends AbstractType
 {
-    public string $Name = '';
-    public float $Value = 0.0;
-    public array $Labels = [];
+    public string $Name;
+    public float $Value;
+    /** @var null|array<string,string> */
+    public null|array $Labels = null;
+
+    /**
+     * @param array<string,string> $Labels
+     */
+    public function __construct(
+        string $Name = '',
+        float $Value = 0.0,
+        array $Labels = [],
+    ) {
+        $this->Name = $Name;
+        $this->Value = $Value;
+        $this->setLabels($Labels);
+    }
 
     public function getName(): string
     {
         return $this->Name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $Name): self
     {
-        $this->Name = $name;
+        $this->Name = $Name;
         return $this;
     }
 
@@ -44,20 +58,56 @@ class GaugeValue extends AbstractModel
         return $this->Value;
     }
 
-    public function setValue(float $value): self
+    public function setValue(float $Value): self
     {
-        $this->Value = $value;
+        $this->Value = $Value;
         return $this;
     }
 
-    public function getLabels(): array
+    /**
+     * @return null|array<string,string>
+     */
+    public function getLabels(): null|array
     {
         return $this->Labels;
     }
 
-    public function setLabels(array $labels): self
+    /**
+     * @param \stdClass|array<string,string>|null $Labels
+     * @return $this
+     */
+    public function setLabels(null|\stdClass|array $Labels): self
     {
-        $this->Labels = $labels;
+        if (null === $Labels) {
+            $this->Labels = null;
+            return $this;
+        }
+        $this->Labels = [];
+        foreach ($Labels as $k => $v) {
+            $this->Labels[$k] = $v;
+        }
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('Labels' === $k) {
+                $n->setLabels($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Name = $this->Name;
+        $out->Value = $this->Value;
+        $out->Labels = $this->getLabels();
+        return $out;
     }
 }

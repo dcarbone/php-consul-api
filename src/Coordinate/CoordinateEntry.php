@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Coordinate;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,24 +20,26 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class CoordinateEntry extends AbstractModel
+class CoordinateEntry extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_COORDINATE => [
-            Transcoding::FIELD_TYPE     => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS    => Coordinate::class,
-            Transcoding::FIELD_NULLABLE => true,
-        ],
-    ];
+    public string $Node;
+    public string $Segment;
+    public string $Partition;
+    public null|Coordinate $Coord;
 
-    private const FIELD_COORDINATE = 'Coord';
-
-    public string $Node = '';
-    public string $Segment = '';
-    public ?Coordinate $Coord = null;
+    public function __construct(
+        string $Node = '',
+        string $Segment = '',
+        string $Partition = '',
+        null|Coordinate $Coord = null,
+    ) {
+        $this->Node = $Node;
+        $this->Segment = $Segment;
+        $this->Partition = $Partition;
+        $this->Coord = $Coord;
+    }
 
     public function getNode(): string
     {
@@ -61,14 +63,50 @@ class CoordinateEntry extends AbstractModel
         return $this;
     }
 
-    public function getCoord(): ?Coordinate
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
+    public function getCoord(): null|Coordinate
     {
         return $this->Coord;
     }
 
-    public function setCoord(?Coordinate $Coord): self
+    public function setCoord(null|Coordinate $Coord): self
     {
         $this->Coord = $Coord;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('Coord' === $k) {
+                $n->Coord = Coordinate::jsonUnserialize($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Node = $this->Node;
+        $out->Segment = $this->Segment;
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
+        }
+        $out->Coord = $this->Coord;
+        return $out;
     }
 }

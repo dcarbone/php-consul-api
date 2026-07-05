@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Operator;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,35 +20,45 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\Go\Time;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class AutopilotConfiguration extends AbstractModel
+class AutopilotConfiguration extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_LAST_CONTACT_THRESHOLD    => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => [ReadableDuration::class, 'unmarshalJSON'],
-            Transcoding::FIELD_NULLABLE           => true,
-        ],
-        self::FIELD_SERVER_STABILIZATION_TIME => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => [ReadableDuration::class, 'unmarshalJSON'],
-            Transcoding::FIELD_NULLABLE           => true,
-        ],
-    ];
+    public bool $CleanupDeadServers;
+    public null|Time\Duration $LastContactThreshold;
+    public int $MaxTrailingLogs;
+    public int $MinQuorum;
+    public null|Time\Duration $ServerStabilizationTime;
+    public string $RedundancyZoneTag;
+    public bool $DisableUpgradeMigration;
+    public string $UpgradeVersionTag;
+    public int $CreateIndex;
+    public int $ModifyIndex;
 
-    private const FIELD_LAST_CONTACT_THRESHOLD    = 'LastContactThreshold';
-    private const FIELD_SERVER_STABILIZATION_TIME = 'ServerStabilizationTime';
-
-    public bool $CleanupDeadServers = false;
-    public ?ReadableDuration $LastContactThreshold = null;
-    public int $MaxTrailingLogs = 0;
-    public int $MinQuorum = 0;
-    public ?ReadableDuration $ServerStabilizationTime = null;
-    public string $RedundancyZoneTag = '';
-    public bool $DisableUpgradeMigration = false;
-    public string $UpgradeVersionTag = '';
-    public int $CreateIndex = 0;
-    public int $ModifyIndex = 0;
+    public function __construct(
+        bool $CleanupDeadServers = false,
+        null|string|int|float|\DateInterval|Time\Duration $LastContactThreshold = null,
+        int $MaxTrailingLogs = 0,
+        int $MinQuorum = 0,
+        null|string|int|float|\DateInterval|Time\Duration $ServerStabilizationTime = null,
+        string $RedundancyZoneTag = '',
+        bool $DisableUpgradeMigration = false,
+        string $UpgradeVersionTag = '',
+        int $CreateIndex = 0,
+        int $ModifyIndex = 0,
+    ) {
+        $this->CleanupDeadServers = $CleanupDeadServers;
+        $this->setLastContactThreshold($LastContactThreshold);
+        $this->MaxTrailingLogs = $MaxTrailingLogs;
+        $this->MinQuorum = $MinQuorum;
+        $this->setServerStabilizationTime($ServerStabilizationTime);
+        $this->RedundancyZoneTag = $RedundancyZoneTag;
+        $this->DisableUpgradeMigration = $DisableUpgradeMigration;
+        $this->UpgradeVersionTag = $UpgradeVersionTag;
+        $this->CreateIndex = $CreateIndex;
+        $this->ModifyIndex = $ModifyIndex;
+    }
 
     public function isCleanupDeadServers(): bool
     {
@@ -61,14 +71,18 @@ class AutopilotConfiguration extends AbstractModel
         return $this;
     }
 
-    public function getLastContactThreshold(): ?ReadableDuration
+    public function getLastContactThreshold(): null|Time\Duration
     {
         return $this->LastContactThreshold;
     }
 
-    public function setLastContactThreshold(?ReadableDuration $LastContactThreshold): self
+    public function setLastContactThreshold(null|string|int|float|\DateInterval|Time\Duration $LastContactThreshold): self
     {
-        $this->LastContactThreshold = $LastContactThreshold;
+        if (null === $LastContactThreshold) {
+            $this->LastContactThreshold = null;
+            return $this;
+        }
+        $this->LastContactThreshold = Time::Duration($LastContactThreshold);
         return $this;
     }
 
@@ -94,14 +108,18 @@ class AutopilotConfiguration extends AbstractModel
         return $this;
     }
 
-    public function getServerStabilizationTime(): ?ReadableDuration
+    public function getServerStabilizationTime(): null|Time\Duration
     {
         return $this->ServerStabilizationTime;
     }
 
-    public function setServerStabilizationTime(?ReadableDuration $ServerStabilizationTime): self
+    public function setServerStabilizationTime(null|string|int|float|\DateInterval|Time\Duration $ServerStabilizationTime): self
     {
-        $this->ServerStabilizationTime = $ServerStabilizationTime;
+        if (null === $ServerStabilizationTime) {
+            $this->ServerStabilizationTime = null;
+            return $this;
+        }
+        $this->ServerStabilizationTime = Time::Duration($ServerStabilizationTime);
         return $this;
     }
 
@@ -158,5 +176,44 @@ class AutopilotConfiguration extends AbstractModel
     {
         $this->ModifyIndex = $ModifyIndex;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('LastContactThreshold' === $k) {
+                $n->setLastContactThreshold($v);
+            } elseif ('ServerStabilizationTime' === $k) {
+                $n->setServerStabilizationTime($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->CleanupDeadServers = $this->CleanupDeadServers;
+        if (null !== $this->LastContactThreshold) {
+            $out->LastContactThreshold = (string)$this->LastContactThreshold;
+        }
+        $out->MaxTrailingLogs = $this->MaxTrailingLogs;
+        $out->MinQuorum = $this->MinQuorum;
+        if (null !== $this->ServerStabilizationTime) {
+            $out->ServerStabilizationTime = (string)$this->ServerStabilizationTime;
+        }
+        if ('' !== $this->RedundancyZoneTag) {
+            $out->RedundancyZoneTag = $this->RedundancyZoneTag;
+        }
+        $out->DisableUpgradeMigration = $this->DisableUpgradeMigration;
+        if ('' !== $this->UpgradeVersionTag) {
+            $out->UpgradeVersionTag = $this->UpgradeVersionTag;
+        }
+        $out->CreateIndex = $this->CreateIndex;
+        $out->ModifyIndex = $this->ModifyIndex;
+        return $out;
     }
 }

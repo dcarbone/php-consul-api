@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\PreparedQuery;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,32 +20,47 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class QueryDatacenterOptions extends AbstractModel
+class QueryDatacenterOptions extends AbstractType
 {
-    public int $NearestN = 0;
-    public array $Datacenters = [];
+    public int $NearestN;
+    /** @var array<string> */
+    public array $Datacenters;
+
+    /**
+     * @param array<string> $Datacenters
+     */
+    public function __construct(
+        int $NearestN = 0,
+        array $Datacenters = [],
+    ) {
+        $this->NearestN = $NearestN;
+        $this->setDatacenters(...$Datacenters);
+    }
 
     public function getNearestN(): int
     {
         return $this->NearestN;
     }
 
-    public function setNearestN(int $nearestN): self
+    public function setNearestN(int $NearestN): self
     {
-        $this->NearestN = $nearestN;
+        $this->NearestN = $NearestN;
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getDatacenters(): array
     {
         return $this->Datacenters;
     }
 
-    public function setDatacenters(array $datacenters): self
+    public function setDatacenters(string ...$Datacenters): self
     {
-        $this->Datacenters = $datacenters;
+        $this->Datacenters = $Datacenters;
         return $this;
     }
 
@@ -53,5 +68,22 @@ class QueryDatacenterOptions extends AbstractModel
     {
         $this->Datacenters[] = $datacenter;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->NearestN = $this->NearestN;
+        $out->Datacenters = $this->Datacenters;
+        return $out;
     }
 }

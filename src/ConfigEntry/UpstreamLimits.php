@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,61 +20,80 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class UpstreamLimits extends AbstractModel
+class UpstreamLimits extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_MAX_CONNECTIONS         => [
-            Transcoding::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_MAX_PENDING_REQUESTS    => [
-            Transcoding::FIELD_NULLABLE => true,
-        ],
-        self::FIELD_MAX_CONCURRENT_REQUESTS => [
-            Transcoding::FIELD_NULLABLE => true,
-        ],
-    ];
+    public null|int $MaxConnections;
+    public null|int $MaxPendingRequests;
+    public null|int $MaxConcurrentRequests;
 
-    private const FIELD_MAX_CONNECTIONS         = 'MaxConnections';
-    private const FIELD_MAX_PENDING_REQUESTS    = 'MaxPendingRequests';
-    private const FIELD_MAX_CONCURRENT_REQUESTS = 'MaxConcurrentRequests';
+    public function __construct(
+        null|int $MaxConnections = null,
+        null|int $MaxPendingRequests = null,
+        null|int $MaxConcurrentRequests = null,
+    ) {
+        $this->MaxConnections = $MaxConnections;
+        $this->MaxPendingRequests = $MaxPendingRequests;
+        $this->MaxConcurrentRequests = $MaxConcurrentRequests;
+    }
 
-    public ?int $MaxConnections = null;
-    public ?int $MaxPendingRequests = null;
-    public ?int $MaxConcurrentRequests = null;
-
-    public function getMaxConnections(): ?int
+    public function getMaxConnections(): null|int
     {
         return $this->MaxConnections;
     }
 
-    public function setMaxConnections(?int $MaxConnections): self
+    public function setMaxConnections(null|int $MaxConnections): self
     {
         $this->MaxConnections = $MaxConnections;
         return $this;
     }
 
-    public function getMaxPendingRequests(): ?int
+    public function getMaxPendingRequests(): null|int
     {
         return $this->MaxPendingRequests;
     }
 
-    public function setMaxPendingRequests(?int $MaxPendingRequests): self
+    public function setMaxPendingRequests(null|int $MaxPendingRequests): self
     {
         $this->MaxPendingRequests = $MaxPendingRequests;
         return $this;
     }
 
-    public function getMaxConcurrentRequests(): ?int
+    public function getMaxConcurrentRequests(): null|int
     {
         return $this->MaxConcurrentRequests;
     }
 
-    public function setMaxConcurrentRequests(?int $MaxConcurrentRequests): self
+    public function setMaxConcurrentRequests(null|int $MaxConcurrentRequests): self
     {
         $this->MaxConcurrentRequests = $MaxConcurrentRequests;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('max_connections' === $k) {
+                $n->MaxConnections = $v;
+            } elseif ('max_pending_requests' === $k) {
+                $n->MaxPendingRequests = $v;
+            } elseif ('max_concurrent_requests' === $k) {
+                $n->MaxConcurrentRequests = $v;
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->MaxConnections = $this->MaxConnections;
+        $out->MaxPendingRequests = $this->MaxPendingRequests;
+        $out->MaxConcurrentRequests = $this->MaxConcurrentRequests;
+        return $out;
     }
 }

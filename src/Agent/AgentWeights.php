@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Agent;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,20 +20,57 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class AgentWeights extends AbstractModel
+class AgentWeights extends AbstractType
 {
-    public int $Passing = 0;
-    public int $Warning = 0;
+    public int $Passing;
+    public int $Warning;
+
+    public function __construct(
+        int $Passing = 0,
+        int $Warning = 0,
+    ) {
+        $this->Passing = $Passing;
+        $this->Warning = $Warning;
+    }
 
     public function getPassing(): int
     {
         return $this->Passing;
     }
 
+    public function setPassing(int $Passing): self
+    {
+        $this->Passing = $Passing;
+        return $this;
+    }
+
     public function getWarning(): int
     {
         return $this->Warning;
+    }
+
+    public function setWarning(int $Warning): self
+    {
+        $this->Warning = $Warning;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Passing = $this->Passing;
+        $out->Warning = $this->Warning;
+        return $out;
     }
 }

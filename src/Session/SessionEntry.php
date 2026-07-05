@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Session;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -21,53 +21,56 @@ namespace DCarbone\PHPConsulAPI\Session;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-use function DCarbone\PHPConsulAPI\dur_to_millisecond;
+use function DCarbone\PHPConsulAPI\PHPLib\dur_to_millisecond;
 
-class SessionEntry extends AbstractModel
+class SessionEntry extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_LOCK_DELAY     => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_DURATION,
-        ],
-        self::FIELD_SERVICE_CHECKS => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => ServiceCheck::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-        ],
-        self::FIELD_NAMESPACE      => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
-
-    private const FIELD_NAME           = 'Name';
-    private const FIELD_NODE           = 'Node';
-    private const FIELD_LOCK_DELAY     = 'LockDelay';
-    private const FIELD_CHECKS         = 'Checks';
-    private const FIELD_NODE_CHECKS    = 'NodeChecks';
-    private const FIELD_SERVICE_CHECKS = 'ServiceChecks';
-    private const FIELD_BEHAVIOR       = 'Behavior';
-    private const FIELD_TTL            = 'TTL';
-    private const FIELD_NAMESPACE      = 'Namespace';
-
-    public int $CreateIndex = 0;
-    public string $ID = '';
-    public string $Name = '';
-    public string $Node = '';
+    public int $CreateIndex;
+    public string $ID;
+    public string $Name;
+    public string $Node;
     public Time\Duration $LockDelay;
-    public string $Behavior = '';
-    public string $TTL = '';
-    public string $Namespace = '';
-    public array $Checks = [];
-    public array $NodeChecks = [];
-    public array $ServiceChecks = [];
+    public string $Behavior;
+    public string $TTL;
+    public string $Namespace;
+    /** @var array<string> */
+    public array $Checks;
+    /** @var array<string> */
+    public array $NodeChecks;
+    /** @var array<ServiceCheck> */
+    public array $ServiceChecks;
 
-    public function __construct(?array $data = null)
-    {
-        parent::__construct($data);
-        if (!isset($this->LockDelay)) {
-            $this->LockDelay = new Time\Duration(0);
-        }
+    /**
+     * @param array<string> $Checks
+     * @param array<string> $NodeChecks
+     * @param array<ServiceCheck> $ServiceChecks
+     */
+    public function __construct(
+        int $CreateIndex = 0,
+        string $ID = '',
+        string $Name = '',
+        string $Node = '',
+        null|string|int|float|\DateInterval|Time\Duration $LockDelay = null,
+        string $Behavior = '',
+        string $TTL = '',
+        string $Namespace = '',
+        array $Checks = [],
+        array $NodeChecks = [],
+        array $ServiceChecks = [],
+    ) {
+        $this->CreateIndex = $CreateIndex;
+        $this->ID = $ID;
+        $this->Name = $Name;
+        $this->Node = $Node;
+        $this->LockDelay = null === $LockDelay ? new Time\Duration(0) : Time::Duration($LockDelay);
+        $this->Behavior = $Behavior;
+        $this->TTL = $TTL;
+        $this->Namespace = $Namespace;
+        $this->Checks = $Checks;
+        $this->setNodeChecks(...$NodeChecks);
+        $this->setServiceChecks(...$ServiceChecks);
     }
 
     public function getCreateIndex(): int
@@ -119,9 +122,9 @@ class SessionEntry extends AbstractModel
         return $this->LockDelay;
     }
 
-    public function setLockDelay(Time\Duration $LockDelay): self
+    public function setLockDelay(null|string|int|float|\DateInterval|Time\Duration $LockDelay): self
     {
-        $this->LockDelay = $LockDelay;
+        $this->LockDelay = Time::Duration($LockDelay);
         return $this;
     }
 
@@ -158,68 +161,119 @@ class SessionEntry extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getChecks(): array
     {
         return $this->Checks;
     }
 
-    public function setChecks(array $Checks): self
+    public function setChecks(string ...$Checks): self
     {
         $this->Checks = $Checks;
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getNodeChecks(): array
     {
         return $this->NodeChecks;
     }
 
-    public function setNodeChecks(array $NodeChecks): self
+    public function setNodeChecks(string ...$NodeChecks): self
     {
         $this->NodeChecks = $NodeChecks;
         return $this;
     }
 
+    /**
+     * @return array<ServiceCheck>
+     */
     public function getServiceChecks(): array
     {
         return $this->ServiceChecks;
     }
 
-    public function setServiceChecks(array $ServiceChecks): self
+    public function setServiceChecks(ServiceCheck ...$ServiceChecks): self
     {
         $this->ServiceChecks = $ServiceChecks;
         return $this;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function _toAPIPayload(): array
     {
         $out = [];
 
         if ('' !== $this->Name) {
-            $out[self::FIELD_NAME] = $this->Name;
+            $out['Name'] = $this->Name;
         }
         if ('' !== $this->Node) {
-            $out[self::FIELD_NODE] = $this->Node;
+            $out['Node'] = $this->Node;
         }
         if (0 < $this->LockDelay->Nanoseconds()) {
-            $out[self::FIELD_LOCK_DELAY] = dur_to_millisecond($this->LockDelay);
+            $out['LockDelay'] = dur_to_millisecond($this->LockDelay);
         }
         if ([] !== $this->Checks) {
-            $out[self::FIELD_CHECKS] = $this->Checks;
+            $out['Checks'] = $this->Checks;
         }
         if ([] !== $this->NodeChecks) {
-            $out[self::FIELD_NODE_CHECKS] = $this->NodeChecks;
+            $out['NodeChecks'] = $this->NodeChecks;
         }
         if ([] !== $this->ServiceChecks) {
-            $out[self::FIELD_SERVICE_CHECKS] = $this->ServiceChecks;
+            $out['ServiceChecks'] = $this->ServiceChecks;
         }
         if ('' !== $this->Behavior) {
-            $out[self::FIELD_BEHAVIOR] = $this->Behavior;
+            $out['Behavior'] = $this->Behavior;
         }
         if ('' !== $this->TTL) {
-            $out[self::FIELD_TTL] = $this->TTL;
+            $out['TTL'] = $this->TTL;
         }
 
+        return $out;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('LockDelay' === $k) {
+                $n->LockDelay = Time::Duration($v);
+            } elseif ('ServiceChecks' === $k) {
+                $n->ServiceChecks = [];
+                if (null !== $v) {
+                    foreach ($v as $sc) {
+                        $n->ServiceChecks[] = ServiceCheck::jsonUnserialize($sc);
+                    }
+                }
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->CreateIndex = $this->CreateIndex;
+        $out->ID = $this->ID;
+        $out->Name = $this->Name;
+        $out->Node = $this->Node;
+        $out->LockDelay = (string)$this->LockDelay;
+        $out->Behavior = $this->Behavior;
+        $out->TTL = $this->TTL;
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        $out->Checks = $this->Checks;
+        $out->NodeChecks = $this->NodeChecks;
+        $out->ServiceChecks = $this->ServiceChecks;
         return $out;
     }
 }

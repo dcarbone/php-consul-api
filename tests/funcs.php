@@ -50,7 +50,7 @@ function determine_param_hint(Compound $compoundHint): array
             $others[] = $hint;
         }
     }
-    if (1 === \count($others)) {
+    if (1 === count($others)) {
         $out[1] = $others[0];
     }
     return $out;

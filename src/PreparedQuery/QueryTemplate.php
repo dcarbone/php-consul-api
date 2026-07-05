@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\PreparedQuery;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,12 +20,20 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class QueryTemplate extends AbstractModel
+class QueryTemplate extends AbstractType
 {
-    public string $Type = '';
-    public string $Regexp = '';
+    public string $Type;
+    public string $Regexp;
+
+    public function __construct(
+        string $Type = '',
+        string $Regexp = '',
+    ) {
+        $this->Type = $Type;
+        $this->Regexp = $Regexp;
+    }
 
     public function getType(): string
     {
@@ -47,5 +55,22 @@ class QueryTemplate extends AbstractModel
     {
         $this->Regexp = $Regexp;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Type = $this->Type;
+        $out->Regexp = $this->Regexp;
+        return $out;
     }
 }

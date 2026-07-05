@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Status;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,14 +20,14 @@ namespace DCarbone\PHPConsulAPI\Status;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractClient;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractClient;
+use DCarbone\PHPConsulAPI\PHPLib\ValuedStringResponse;
+use DCarbone\PHPConsulAPI\PHPLib\ValuedStringsResponse;
 use DCarbone\PHPConsulAPI\QueryOptions;
-use DCarbone\PHPConsulAPI\ValuedStringResponse;
-use DCarbone\PHPConsulAPI\ValuedStringsResponse;
 
 class StatusClient extends AbstractClient
 {
-    public function LeaderWithQueryOptions(?QueryOptions $opts): ValuedStringResponse
+    public function LeaderWithQueryOptions(null|QueryOptions $opts): ValuedStringResponse
     {
         $resp = $this->_requireOK($this->_doGet('v1/status/leader', $opts));
         $ret  = new ValuedStringResponse();
@@ -40,7 +40,7 @@ class StatusClient extends AbstractClient
         return $this->LeaderWithQueryOptions(null);
     }
 
-    public function PeersWithQueryOptions(?QueryOptions $opts): ValuedStringsResponse
+    public function PeersWithQueryOptions(null|QueryOptions $opts): ValuedStringsResponse
     {
         $resp = $this->_requireOK($this->_doGet('v1/status/peers', $opts));
         $ret  = new ValuedStringsResponse();

@@ -1,10 +1,22 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-TMPDIR=${DIR}/../tmp
+DIR="$(cd "$(dirname "$0")" && pwd)"
+TMPDIR="${DIR}/../tmp"
+PIDFILE="${TMPDIR}/consul.pid"
+LOGFILE="${TMPDIR}/consul.log"
 
-consul_args=("$@")
+echo "Starting Single consul instance with flags \"$*\""
 
-echo Starting Single consul instance with flags \""${consul_args[*]}"\"
+mkdir -p "${TMPDIR}"
 
-/usr/bin/env consul agent "${consul_args[@]}" >> "${TMPDIR}"/consul.log 2>&1 & echo $! > "${TMPDIR}"/consul.pid
+if [ -e "${PIDFILE}" ]; then
+    PID="$(cat "${PIDFILE}")"
+    if [ -n "${PID}" ] && kill -0 "${PID}" 2>/dev/null; then
+        echo "Consul already running with PID ${PID}"
+        exit 0
+    fi
+    rm -f "${PIDFILE}"
+fi
+
+/usr/bin/env consul agent "$@" >> "${LOGFILE}" 2>&1 &
+echo $! > "${PIDFILE}"

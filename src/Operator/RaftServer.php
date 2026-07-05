@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Operator;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,16 +20,35 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class RaftServer extends AbstractModel
+class RaftServer extends AbstractType
 {
-    public string $ID = '';
-    public string $Node = '';
-    public string $Address = '';
-    public bool $Leader = false;
-    public string $ProtocolVersion = '';
-    public bool $Voter = false;
+    public string $ID;
+    public string $Node;
+    public string $Address;
+    public bool $Leader;
+    public string $ProtocolVersion;
+    public bool $Voter;
+    public int $LastIndex;
+
+    public function __construct(
+        string $ID = '',
+        string $Node = '',
+        string $Address = '',
+        bool $Leader = false,
+        string $ProtocolVersion = '',
+        bool $Voter = false,
+        int $LastIndex = 0,
+    ) {
+        $this->ID = $ID;
+        $this->Node = $Node;
+        $this->Address = $Address;
+        $this->Leader = $Leader;
+        $this->ProtocolVersion = $ProtocolVersion;
+        $this->Voter = $Voter;
+        $this->LastIndex = $LastIndex;
+    }
 
     public function getID(): string
     {
@@ -95,5 +114,38 @@ class RaftServer extends AbstractModel
     {
         $this->Voter = $Voter;
         return $this;
+    }
+
+    public function getLastIndex(): int
+    {
+        return $this->LastIndex;
+    }
+
+    public function setLastIndex(int $LastIndex): self
+    {
+        $this->LastIndex = $LastIndex;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->ID = $this->ID;
+        $out->Node = $this->Node;
+        $out->Address = $this->Address;
+        $out->Leader = $this->Leader;
+        $out->ProtocolVersion = $this->ProtocolVersion;
+        $out->Voter = $this->Voter;
+        $out->LastIndex = $this->LastIndex;
+        return $out;
     }
 }

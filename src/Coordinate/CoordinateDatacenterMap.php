@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Coordinate;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,28 +20,37 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class CoordinateDatacenterMap extends AbstractModel
+class CoordinateDatacenterMap extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_COORDINATES => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => Coordinate::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-        ],
-    ];
+    public string $Datacenter;
+    public string $AreaID;
+    /** @var array<\DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry> */
+    public array $Coordinates;
 
-    private const FIELD_COORDINATES = 'Coordinates';
-
-    public string $Datacenter = '';
-    public string $AreaID = '';
-    public array $Coordinates = [];
+    /**
+     * @param array<\DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry> $Coordinates
+     */
+    public function __construct(
+        string $Datacenter = '',
+        string $AreaID = '',
+        array $Coordinates = [],
+    ) {
+        $this->Datacenter = $Datacenter;
+        $this->AreaID = $AreaID;
+        $this->setCoordinates(...$Coordinates);
+    }
 
     public function getDatacenter(): string
     {
         return $this->Datacenter;
+    }
+
+    public function setDatacenter(string $Datacenter): self
+    {
+        $this->Datacenter = $Datacenter;
+        return $this;
     }
 
     public function getAreaID(): string
@@ -49,8 +58,48 @@ class CoordinateDatacenterMap extends AbstractModel
         return $this->AreaID;
     }
 
+    public function setAreaID(string $AreaID): self
+    {
+        $this->AreaID = $AreaID;
+        return $this;
+    }
+
+    /**
+     * @return \DCarbone\PHPConsulAPI\Coordinate\CoordinateEntry[]
+     */
     public function getCoordinates(): array
     {
         return $this->Coordinates;
+    }
+
+    public function setCoordinates(CoordinateEntry ...$Coordinates): self
+    {
+        $this->Coordinates = $Coordinates;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('Coordinates' === $k) {
+                $n->Coordinates = [];
+                foreach ($v as $vv) {
+                    $n->Coordinates[] = CoordinateEntry::jsonUnserialize($vv);
+                }
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Datacenter = $this->Datacenter;
+        $out->AreaID = $this->AreaID;
+        $out->Coordinates = $this->Coordinates;
+        return $out;
     }
 }

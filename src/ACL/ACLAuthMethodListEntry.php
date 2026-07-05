@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\ACL;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -21,43 +21,44 @@ namespace DCarbone\PHPConsulAPI\ACL;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class ACLAuthMethodListEntry extends AbstractModel
+class ACLAuthMethodListEntry extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_DISPLAY_NAME  => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_DESCRIPTION   => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_MAX_TOKEN_TTL => [
-            Transcoding::FIELD_MARSHAL_AS         => Transcoding::STRING,
-            Transcoding::FIELD_OMITEMPTY          => true,
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_DURATION,
-        ],
-        self::FIELD_TOKEN_LOCALITY => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_NAMESPACE      => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
-
-    private const FIELD_DISPLAY_NAME   = 'DisplayName';
-    private const FIELD_DESCRIPTION    = 'Description';
-    private const FIELD_MAX_TOKEN_TTL  = 'MaxTokenTTL';
-    private const FIELD_TOKEN_LOCALITY = 'TokenLocality';
-    private const FIELD_NAMESPACE      = 'Namespace';
-
-    public string $Name = '';
-    public string $Type = '';
-    public string $DisplayName = '';
-    public string $Description = '';
+    public string $Name;
+    public string $Type;
+    public string $DisplayName;
+    public string $Description;
     public Time\Duration $MaxTokenTTL;
-    /**
-     * TokenLocality defines the kind of token that this auth method produces.
-     * This can be either 'local' or 'global'. If empty 'local' is assumed.
-     * @var string
-     */
     public string $TokenLocality;
-    public int $CreateIndex = 0;
-    public int $ModifyIndex = 0;
-    public string $Namespace = '';
+    public int $CreateIndex;
+    public int $ModifyIndex;
+    public string $Namespace;
+    public string $Partition;
+
+    public function __construct(
+        string $Name = '',
+        string $Type = '',
+        string $DisplayName = '',
+        string $Description = '',
+        null|int|float|string|\DateInterval|Time\Duration $MaxTokenTTL = null,
+        string $TokenLocality = '',
+        int $CreateIndex = 0,
+        int $ModifyIndex = 0,
+        string $Namespace = '',
+        string $Partition = '',
+    ) {
+        $this->Name = $Name;
+        $this->Type = $Type;
+        $this->DisplayName = $DisplayName;
+        $this->Description = $Description;
+        $this->setMaxTokenTTL($MaxTokenTTL);
+        $this->TokenLocality = $TokenLocality;
+        $this->CreateIndex = $CreateIndex;
+        $this->ModifyIndex = $ModifyIndex;
+        $this->Namespace = $Namespace;
+        $this->Partition = $Partition;
+    }
 
     public function getName(): string
     {
@@ -108,30 +109,17 @@ class ACLAuthMethodListEntry extends AbstractModel
         return $this->MaxTokenTTL;
     }
 
-    public function setMaxTokenTTL(Time\Duration $MaxTokenTTL): self
+    public function setMaxTokenTTL(null|int|float|string|\DateInterval|Time\Duration $MaxTokenTTL): self
     {
-        $this->MaxTokenTTL = $MaxTokenTTL;
+        $this->MaxTokenTTL = Time::Duration($MaxTokenTTL);
         return $this;
     }
 
-    /**
-     * TokenLocality defines the kind of token that this auth method produces.
-     * This can be either 'local' or 'global'. If empty 'local' is assumed.
-     *
-     * @return string
-     */
     public function getTokenLocality(): string
     {
         return $this->TokenLocality;
     }
 
-    /**
-     * TokenLocality defines the kind of token that this auth method produces.
-     * This can be either 'local' or 'global'. If empty 'local' is assumed.
-     *
-     * @param string $TokenLocality
-     * @return \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodListEntry
-     */
     public function setTokenLocality(string $TokenLocality): self
     {
         $this->TokenLocality = $TokenLocality;
@@ -171,13 +159,54 @@ class ACLAuthMethodListEntry extends AbstractModel
         return $this;
     }
 
-    public function jsonSerialize(): array
+    public function getPartition(): string
     {
-        $out = parent::jsonSerialize();
-        if (!isset($this->MaxTokenTTL) || 0 === $this->MaxTokenTTL->Nanoseconds()) {
-            $out[self::FIELD_MAX_TOKEN_TTL] = '';
-        } else {
-            $out[self::FIELD_MAX_TOKEN_TTL] = (string)$this->MaxTokenTTL;
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('MaxTokenTTL' === $k) {
+                $n->setMaxTokenTTL($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Name = $this->Name;
+        $out->Type = $this->Type;
+        if ('' !== $this->DisplayName) {
+            $out->DisplayName = $this->DisplayName;
+        }
+        if ('' !== $this->Description) {
+            $out->Description = $this->Description;
+        }
+        if (0 !== $this->MaxTokenTTL->Nanoseconds()) {
+            $out->MaxTokenTTL = (string)$this->MaxTokenTTL;
+        }
+        if ('' !== $this->TokenLocality) {
+            $out->TokenLocality = $this->TokenLocality;
+        }
+        $out->CreateIndex = $this->CreateIndex;
+        $out->ModifyIndex = $this->ModifyIndex;
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
         }
         return $out;
     }

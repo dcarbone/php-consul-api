@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Operator;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -21,36 +21,43 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class SerfMember extends AbstractModel
+class SerfMember extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_RTT => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_DURATION,
-        ],
-    ];
-
-    private const FIELD_RTT = 'RTT';
-
-    public string $ID = '';
-    public string $Name = '';
-    public string $Addr = '';
-    public int $Port = 0;
-    public string $Datacenter = '';
-    public string $Role = '';
-    public string $Build = '';
-    public int $Protocol = 0;
-    public string $Status = '';
+    public string $ID;
+    public string $Name;
+    public string $Addr;
+    public int $Port;
+    public string $Datacenter;
+    public string $Role;
+    public string $Build;
+    public int $Protocol;
+    public string $Status;
     public Time\Duration $RTT;
 
-    public function __construct(?array $data = [])
-    {
-        parent::__construct($data);
-        if (!isset($this->RTT)) {
-            $this->RTT = new Time\Duration(0);
-        }
+    public function __construct(
+        string $ID = '',
+        string $Name = '',
+        string $Addr = '',
+        int $Port = 0,
+        string $Datacenter = '',
+        string $Role = '',
+        string $Build = '',
+        int $Protocol = 0,
+        string $Status = '',
+        null|string|int|float|\DateInterval|Time\Duration $RTT = null,
+    ) {
+        $this->ID = $ID;
+        $this->Name = $Name;
+        $this->Addr = $Addr;
+        $this->Port = $Port;
+        $this->Datacenter = $Datacenter;
+        $this->Role = $Role;
+        $this->Build = $Build;
+        $this->Protocol = $Protocol;
+        $this->Status = $Status;
+        $this->RTT = null === $RTT ? new Time\Duration(0) : Time::Duration($RTT);
     }
 
     public function getID(): string
@@ -157,9 +164,38 @@ class SerfMember extends AbstractModel
         return $this->RTT;
     }
 
-    public function setRTT(Time\Duration $RTT): self
+    public function setRTT(null|string|int|float|\DateInterval|Time\Duration $RTT): self
     {
-        $this->RTT = $RTT;
+        $this->RTT = Time::Duration($RTT);
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('RTT' === $k) {
+                $n->RTT = Time::Duration($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->ID = $this->ID;
+        $out->Name = $this->Name;
+        $out->Addr = $this->Addr;
+        $out->Port = $this->Port;
+        $out->Datacenter = $this->Datacenter;
+        $out->Role = $this->Role;
+        $out->Build = $this->Build;
+        $out->Protocol = $this->Protocol;
+        $out->Status = $this->Status;
+        $out->RTT = (string)$this->RTT;
+        return $out;
     }
 }

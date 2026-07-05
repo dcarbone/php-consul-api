@@ -1,50 +1,57 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <phpunit
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/10.5/phpunit.xsd"
-        bootstrap="./vendor/autoload.php"
-        colors="true"
-        stopOnFailure="true"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/10.5/phpunit.xsd"
+    bootstrap="./vendor/autoload.php"
+    colors="true"
+    stopOnFailure="true"
 >
 
     <php>
-        <env name="CONSUL_HTTP_ADDR" value="127.0.0.1:8500"/>
-        <env name="CONSUL_HTTP_SSL" value="0"/>
+        <env name="CONSUL_HTTP_ADDR" value="127.0.0.1:8500" force="true"/>
+        <env name="CONSUL_HTTP_SSL" value="0" force="true"/>
     </php>
 
     <testsuites>
+        <testsuite name="unit">
+            <directory>./tests/Unit</directory>
+        </testsuite>
+
         <testsuite name="usage-config">
-            <file>./tests/Usage/ConfigUsageTest.php</file>
+            <file>./tests/Integration/ConfigTest.php</file>
         </testsuite>
         <testsuite name="usage-request">
-            <file>./tests/Usage/RequestUsageTest.php</file>
+            <file>./tests/Integration/RequestTest.php</file>
         </testsuite>
 
-        <!--<testsuite name="usage-acl">-->
-            <!--<directory>./tests/Usage/ACL</directory>-->
-        <!--</testsuite>-->
+        <testsuite name="usage-acl">
+            <directory>./tests/Integration/ACL</directory>
+        </testsuite>
 
         <testsuite name="usage-agent">
-            <directory>./tests/Usage/Agent</directory>
+            <directory>./tests/Integration/Agent</directory>
         </testsuite>
         <testsuite name="usage-catalog">
-            <directory>./tests/Usage/Catalog</directory>
+            <directory>./tests/Integration/Catalog</directory>
         </testsuite>
         <testsuite name="usage-coordinate">
-            <directory>./tests/Usage/Coordinate</directory>
+            <directory>./tests/Integration/Coordinate</directory>
+        </testsuite>
+        <testsuite name="usage-event">
+            <directory>./tests/Integration/Event</directory>
         </testsuite>
         <testsuite name="usage-kv">
-            <directory>./tests/Usage/KV</directory>
+            <directory>./tests/Integration/KV</directory>
         </testsuite>
         <testsuite name="usage-operator">
-            <directory>./tests/Usage/Operator</directory>
+            <directory>./tests/Integration/Operator</directory>
         </testsuite>
         <testsuite name="usage-session">
-            <directory>./tests/Usage/Session</directory>
+            <directory>./tests/Integration/Session</directory>
         </testsuite>
 
         <testsuite name="usage-random">
-            <directory>./tests/Usage/Random</directory>
+            <directory>./tests/Integration/Random</directory>
         </testsuite>
     </testsuites>
 </phpunit>

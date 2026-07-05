@@ -1,0 +1,104 @@
+<?php
+
+declare(strict_types=1);
+
+namespace DCarbone\PHPConsulAPI\Txn;
+
+/*
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ */
+
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+
+class TxnResponse extends AbstractType
+{
+    /** @var array<TxnResult> */
+    public array $Results;
+    /** @var array<TxnError> */
+    public array $Errors;
+
+    /**
+     * @param array<TxnResult> $Results
+     * @param array<TxnError> $Errors
+     */
+    public function __construct(
+        array $Results = [],
+        array $Errors = [],
+    ) {
+        $this->setResults(...$Results);
+        $this->setErrors(...$Errors);
+    }
+
+    /**
+     * @return array<TxnResult>
+     */
+    public function getResults(): array
+    {
+        return $this->Results;
+    }
+
+    public function setResults(TxnResult ...$Results): self
+    {
+        $this->Results = $Results;
+        return $this;
+    }
+
+    /**
+     * @return array<TxnError>
+     */
+    public function getErrors(): array
+    {
+        return $this->Errors;
+    }
+
+    public function setErrors(TxnError ...$Errors): self
+    {
+        $this->Errors = $Errors;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('Results' === $k) {
+                $n->Results = [];
+                if (null !== $v) {
+                    foreach ($v as $vv) {
+                        $n->Results[] = TxnResult::jsonUnserialize($vv);
+                    }
+                }
+            } elseif ('Errors' === $k) {
+                $n->Errors = [];
+                if (null !== $v) {
+                    foreach ($v as $vv) {
+                        $n->Errors[] = TxnError::jsonUnserialize($vv);
+                    }
+                }
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Results = $this->Results;
+        $out->Errors = $this->Errors;
+        return $out;
+    }
+}

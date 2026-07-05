@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Operator;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -21,43 +21,51 @@ namespace DCarbone\PHPConsulAPI\Operator;
  */
 
 use DCarbone\Go\Time;
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class ServerHealth extends AbstractModel
+use function DCarbone\PHPConsulAPI\PHPLib\parse_time;
+
+class ServerHealth extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_LAST_CONTACT => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => [ReadableDuration::class, 'unmarshalJSON'],
-            Transcoding::FIELD_NULLABLE           => true,
-        ],
-        self::FIELD_STABLE_SINCE => [
-            Transcoding::FIELD_UNMARSHAL_CALLBACK => Transcoding::UNMARSHAL_TIME,
-        ],
-    ];
-
-    private const FIELD_LAST_CONTACT = 'LastContact';
-    private const FIELD_STABLE_SINCE = 'StableSince';
-
-    public string $ID = '';
-    public string $Name = '';
-    public string $Address = '';
-    public string $SerfStatus = '';
-    public string $Version = '';
-    public bool $Leader = false;
-    public ?ReadableDuration $LastContact = null;
-    public int $LastTerm = 0;
-    public int $LastIndex = 0;
-    public bool $Healthy = false;
-    public bool $Voter = false;
+    public string $ID;
+    public string $Name;
+    public string $Address;
+    public string $SerfStatus;
+    public string $Version;
+    public bool $Leader;
+    public null|Time\Duration $LastContact;
+    public int $LastTerm;
+    public int $LastIndex;
+    public bool $Healthy;
+    public bool $Voter;
     public Time\Time $StableSince;
 
-    public function __construct(?array $data = [])
-    {
-        parent::__construct($data);
-        if (!isset($this->StableSince)) {
-            $this->StableSince = Time::New();
-        }
+    public function __construct(
+        string $ID = '',
+        string $Name = '',
+        string $Address = '',
+        string $SerfStatus = '',
+        string $Version = '',
+        bool $Leader = false,
+        null|string|int|float|\DateInterval|Time\Duration $LastContact = null,
+        int $LastTerm = 0,
+        int $LastIndex = 0,
+        bool $Healthy = false,
+        bool $Voter = false,
+        null|Time\Time $StableSince = null,
+    ) {
+        $this->ID = $ID;
+        $this->Name = $Name;
+        $this->Address = $Address;
+        $this->SerfStatus = $SerfStatus;
+        $this->Version = $Version;
+        $this->Leader = $Leader;
+        $this->setLastContact($LastContact);
+        $this->LastTerm = $LastTerm;
+        $this->LastIndex = $LastIndex;
+        $this->Healthy = $Healthy;
+        $this->Voter = $Voter;
+        $this->StableSince = $StableSince ?? Time::New();
     }
 
     public function getID(): string
@@ -126,14 +134,18 @@ class ServerHealth extends AbstractModel
         return $this;
     }
 
-    public function getLastContact(): ?ReadableDuration
+    public function getLastContact(): null|Time\Duration
     {
         return $this->LastContact;
     }
 
-    public function setLastContact(?ReadableDuration $LastContact): self
+    public function setLastContact(null|string|int|float|\DateInterval|Time\Duration $LastContact): self
     {
-        $this->LastContact = $LastContact;
+        if (null === $LastContact) {
+            $this->LastContact = null;
+            return $this;
+        }
+        $this->LastContact = Time::Duration($LastContact);
         return $this;
     }
 
@@ -190,5 +202,40 @@ class ServerHealth extends AbstractModel
     {
         $this->StableSince = $StableSince;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('LastContact' === $k) {
+                $n->setLastContact($v);
+            } elseif ('StableSince' === $k) {
+                $n->StableSince = parse_time($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->ID = $this->ID;
+        $out->Name = $this->Name;
+        $out->Address = $this->Address;
+        $out->SerfStatus = $this->SerfStatus;
+        $out->Version = $this->Version;
+        $out->Leader = $this->Leader;
+        if (null !== $this->LastContact) {
+            $out->LastContact = (string)$this->LastContact;
+        }
+        $out->LastTerm = $this->LastTerm;
+        $out->LastIndex = $this->LastIndex;
+        $out->Healthy = $this->Healthy;
+        $out->Voter = $this->Voter;
+        $out->StableSince = $this->StableSince;
+        return $out;
     }
 }

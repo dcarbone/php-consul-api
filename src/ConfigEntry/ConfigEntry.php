@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,9 +20,6 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\FakeMap;
-use DCarbone\PHPConsulAPI\Transcoding;
-
 /**
  * Interface ConfigEntry
  *
@@ -31,21 +28,16 @@ use DCarbone\PHPConsulAPI\Transcoding;
  */
 interface ConfigEntry
 {
-    public const INTERFACE_FIELDS = [
-        self::FIELD_NAMESPACE         => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_META              => Transcoding::MAP_FIELD,
-    ];
-
-    public const FIELD_NAMESPACE = 'Namespace';
-    public const FIELD_META      = 'Meta';
-
     public function GetKind(): string;
 
     public function GetName(): string;
 
     public function GetNamespace(): string;
 
-    public function GetMeta(): ?FakeMap;
+    /**
+     * @return array<string,mixed>|null
+     */
+    public function GetMeta(): null|array;
 
     public function GetCreateIndex(): int;
 

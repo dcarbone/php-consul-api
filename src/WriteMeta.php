@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -24,10 +24,21 @@ use DCarbone\Go\Time;
 
 class WriteMeta
 {
-    public ?Time\Duration $RequestTime = null;
+    public Time\Duration $RequestTime;
 
-    public function getRequestTime(): ?Time\Duration
+    public function __construct(null|string|int|float|\DateInterval|Time\Duration $RequestTime)
+    {
+        $this->RequestTime = Time::Duration($RequestTime);
+    }
+
+    public function getRequestTime(): Time\Duration
     {
         return $this->RequestTime;
+    }
+
+    public function setRequestTime(null|string|int|float|\DateInterval|Time\Duration $RequestTime): self
+    {
+        $this->RequestTime = Time::Duration($RequestTime);
+        return $this;
     }
 }

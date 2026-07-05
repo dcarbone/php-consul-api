@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Operator;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,30 +20,34 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class RaftConfiguration extends AbstractModel
+class RaftConfiguration extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_SERVERS => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS      => RaftServer::class,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::OBJECT,
-        ],
-    ];
+    /** @var array<RaftServer> */
+    public array $Servers;
+    public int $Index;
 
-    private const FIELD_SERVERS = 'Servers';
+    /**
+     * @param array<RaftServer> $Servers
+     */
+    public function __construct(
+        array $Servers = [],
+        int $Index = 0,
+    ) {
+        $this->setServers(...$Servers);
+        $this->Index = $Index;
+    }
 
-    public array $Servers = [];
-    public int $Index = 0;
-
+    /**
+     * @return array<RaftServer>
+     */
     public function getServers(): array
     {
         return $this->Servers;
     }
 
-    public function setServers(array $Servers): self
+    public function setServers(RaftServer ...$Servers): self
     {
         $this->Servers = $Servers;
         return $this;
@@ -58,5 +62,29 @@ class RaftConfiguration extends AbstractModel
     {
         $this->Index = $Index;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('Servers' === $k) {
+                $n->Servers = [];
+                foreach ($v as $sv) {
+                    $n->Servers[] = RaftServer::jsonUnserialize($sv);
+                }
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Servers = $this->Servers;
+        $out->Index = $this->Index;
+        return $out;
     }
 }

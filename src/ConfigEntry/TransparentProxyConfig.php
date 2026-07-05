@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\ConfigEntry;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,21 +20,20 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class TransparentProxyConfig extends AbstractModel
+class TransparentProxyConfig extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_OUTBOUND_LISTENER_PORT => Transcoding::OMITEMPTY_STRING_FIELD,
-        self::FIELD_DIALED_DIRECTLY        => Transcoding::OMITEMPTY_BOOLEAN_FIELD,
-    ];
+    public int $OutboundListenerPort;
+    public bool $DialedDirectly;
 
-    private const FIELD_OUTBOUND_LISTENER_PORT = 'OutboundListenerPort';
-    private const FIELD_DIALED_DIRECTLY        = 'DialedDirectly';
-
-    public int $OutboundListenerPort = 0;
-    public bool $DialedDirectly = false;
+    public function __construct(
+        int $OutboundListenerPort = 0,
+        bool $DialedDirectly = false
+    ) {
+        $this->OutboundListenerPort = $OutboundListenerPort;
+        $this->DialedDirectly = $DialedDirectly;
+    }
 
     public function getOutboundListenerPort(): int
     {
@@ -56,5 +55,26 @@ class TransparentProxyConfig extends AbstractModel
     {
         $this->DialedDirectly = $DialedDirectly;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        if (0 !== $this->OutboundListenerPort) {
+            $out->OutboundListenerPort = $this->OutboundListenerPort;
+        }
+        if ($this->DialedDirectly) {
+            $out->DialedDirectly = $this->DialedDirectly;
+        }
+        return $out;
     }
 }

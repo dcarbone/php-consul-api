@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Operator;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,47 +20,51 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class AutopilotState extends AbstractModel
+class AutopilotState extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_SERVERS         => [
-            Transcoding::FIELD_TYPE  => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS => AutopilotServer::class,
-        ],
-        self::FIELD_READ_REPLICAS   => [
-            Transcoding::FIELD_TYPE       => Transcoding::ARRAY,
-            Transcoding::FIELD_ARRAY_TYPE => Transcoding::STRING,
-            Transcoding::FIELD_OMITEMPTY  => true,
-        ],
-        self::FIELD_REDUNDANCY_ZONE => [
-            Transcoding::FIELD_TYPE      => Transcoding::ARRAY,
-            Transcoding::FIELD_CLASS     => AutopilotZone::class,
-            Transcoding::FIELD_OMITEMPTY => true,
-        ],
-        self::FIELD_UPGRADE         => [
-            Transcoding::FIELD_TYPE      => Transcoding::OBJECT,
-            Transcoding::FIELD_CLASS     => AutopilotUpgrade::class,
-            Transcoding::FIELD_OMITEMPTY => true,
-        ],
-    ];
+    public bool $Healthy;
+    public int $FailureTolerance;
+    public int $OptimisticFailureTolerance;
+    /** @var array<string, AutopilotServer> */
+    public array $Servers;
+    public string $Leader;
+    /** @var array<string> */
+    public array $Voters;
+    /** @var array<string> */
+    public array $ReadReplicas;
+    /** @var array<string, AutopilotZone> */
+    public array $RedundancyZone;
+    public null|AutopilotUpgrade $Upgrade;
 
-    private const FIELD_SERVERS         = 'Servers';
-    private const FIELD_READ_REPLICAS   = 'ReadReplicas';
-    private const FIELD_REDUNDANCY_ZONE = 'RedundancyZone';
-    private const FIELD_UPGRADE         = 'Upgrade';
-
-    public bool $Healthy = false;
-    public int $FailureTolerance = 0;
-    public int $OptimisticFailureTolerance = 0;
-    public array $Servers = [];
-    public string $Leader = '';
-    public array $Voters = [];
-    public array $ReadReplicas = [];
-    public array $RedundancyZone = [];
-    public ?AutopilotUpgrade $Upgrade = null;
+    /**
+     * @param array<string, AutopilotServer> $Servers
+     * @param array<string> $Voters
+     * @param array<string> $ReadReplicas
+     * @param array<string, AutopilotZone> $RedundancyZone
+     */
+    public function __construct(
+        bool $Healthy = false,
+        int $FailureTolerance = 0,
+        int $OptimisticFailureTolerance = 0,
+        array $Servers = [],
+        string $Leader = '',
+        array $Voters = [],
+        array $ReadReplicas = [],
+        array $RedundancyZone = [],
+        null|AutopilotUpgrade $Upgrade = null,
+    ) {
+        $this->Healthy = $Healthy;
+        $this->FailureTolerance = $FailureTolerance;
+        $this->OptimisticFailureTolerance = $OptimisticFailureTolerance;
+        $this->Servers = $Servers;
+        $this->Leader = $Leader;
+        $this->setVoters(...$Voters);
+        $this->setReadReplicas(...$ReadReplicas);
+        $this->RedundancyZone = $RedundancyZone;
+        $this->Upgrade = $Upgrade;
+    }
 
     public function isHealthy(): bool
     {
@@ -95,11 +99,17 @@ class AutopilotState extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return array<string, AutopilotServer>
+     */
     public function getServers(): array
     {
         return $this->Servers;
     }
 
+    /**
+     * @param array<string, AutopilotServer> $Servers
+     */
     public function setServers(array $Servers): self
     {
         $this->Servers = $Servers;
@@ -117,47 +127,103 @@ class AutopilotState extends AbstractModel
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getVoters(): array
     {
         return $this->Voters;
     }
 
-    public function setVoters(array $Voters): self
+    public function setVoters(string ...$Voters): self
     {
         $this->Voters = $Voters;
         return $this;
     }
 
+    /**
+     * @return array<string>
+     */
     public function getReadReplicas(): array
     {
         return $this->ReadReplicas;
     }
 
-    public function setReadReplicas(array $ReadReplicas): self
+    public function setReadReplicas(string ...$ReadReplicas): self
     {
         $this->ReadReplicas = $ReadReplicas;
         return $this;
     }
 
+    /**
+     * @return array<string, AutopilotZone>
+     */
     public function getRedundancyZone(): array
     {
         return $this->RedundancyZone;
     }
 
+    /**
+     * @param array<string, AutopilotZone> $RedundancyZone
+     */
     public function setRedundancyZone(array $RedundancyZone): self
     {
         $this->RedundancyZone = $RedundancyZone;
         return $this;
     }
 
-    public function getUpgrade(): ?AutopilotUpgrade
+    public function getUpgrade(): null|AutopilotUpgrade
     {
         return $this->Upgrade;
     }
 
-    public function setUpgrade(?AutopilotUpgrade $Upgrade): self
+    public function setUpgrade(null|AutopilotUpgrade $Upgrade): self
     {
         $this->Upgrade = $Upgrade;
         return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('Servers' === $k) {
+                $n->Servers = [];
+                foreach ($v as $sk => $sv) {
+                    $n->Servers[$sk] = AutopilotServer::jsonUnserialize($sv);
+                }
+            } elseif ('RedundancyZone' === $k) {
+                $n->RedundancyZone = [];
+                foreach ($v as $zk => $zv) {
+                    $n->RedundancyZone[$zk] = AutopilotZone::jsonUnserialize($zv);
+                }
+            } elseif ('Upgrade' === $k) {
+                $n->Upgrade = null === $v ? null : AutopilotUpgrade::jsonUnserialize($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Healthy = $this->Healthy;
+        $out->FailureTolerance = $this->FailureTolerance;
+        $out->OptimisticFailureTolerance = $this->OptimisticFailureTolerance;
+        $out->Servers = $this->Servers;
+        $out->Leader = $this->Leader;
+        $out->Voters = $this->Voters;
+        if ([] !== $this->ReadReplicas) {
+            $out->ReadReplicas = $this->ReadReplicas;
+        }
+        if ([] !== $this->RedundancyZone) {
+            $out->RedundancyZone = $this->RedundancyZone;
+        }
+        if (null !== $this->Upgrade) {
+            $out->Upgrade = $this->Upgrade;
+        }
+        return $out;
     }
 }

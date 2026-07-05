@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\ACL;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,26 +20,47 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
-use DCarbone\PHPConsulAPI\Transcoding;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class ACLBindingRule extends AbstractModel
+class ACLBindingRule extends AbstractType
 {
-    protected const FIELDS = [
-        self::FIELD_NAMESPACE => Transcoding::OMITEMPTY_STRING_FIELD,
-    ];
+    public string $ID;
+    public string $Description;
+    public string $AuthMethod;
+    public string $Selector;
+    public BindingRuleBindType $BindType;
+    public string $BindName;
+    public null|ACLTemplatedPolicyVariables $BindVars;
+    public int $CreateIndex;
+    public int $ModifyIndex;
+    public string $Namespace;
+    public string $Partition;
 
-    private const FIELD_NAMESPACE = 'Namespace';
-
-    public string $ID = '';
-    public string $Description = '';
-    public string $AuthMethod = '';
-    public string $Selector = '';
-    public string $BindType = '';
-    public string $BindName = '';
-    public int $CreateIndex = 0;
-    public int $ModifyIndex = 0;
-    public string $Namespace = '';
+    public function __construct(
+        string $ID = '',
+        string $Description = '',
+        string $AuthMethod = '',
+        string $Selector = '',
+        string|BindingRuleBindType $BindType = BindingRuleBindType::UNDEFINED,
+        string $BindName = '',
+        null|ACLTemplatedPolicyVariables $BindVars = null,
+        int $CreateIndex = 0,
+        int $ModifyIndex = 0,
+        string $Namespace = '',
+        string $Partition = '',
+    ) {
+        $this->ID = $ID;
+        $this->Description = $Description;
+        $this->AuthMethod = $AuthMethod;
+        $this->Selector = $Selector;
+        $this->BindType = ($BindType instanceof BindingRuleBindType) ? $BindType : BindingRuleBindType::from($BindType);
+        $this->BindName = $BindName;
+        $this->BindVars = $BindVars;
+        $this->CreateIndex = $CreateIndex;
+        $this->ModifyIndex = $ModifyIndex;
+        $this->Namespace = $Namespace;
+        $this->Partition = $Partition;
+    }
 
     public function getID(): string
     {
@@ -85,14 +106,14 @@ class ACLBindingRule extends AbstractModel
         return $this;
     }
 
-    public function getBindType(): string
+    public function getBindType(): BindingRuleBindType
     {
         return $this->BindType;
     }
 
-    public function setBindType(string $BindType): self
+    public function setBindType(string|BindingRuleBindType $BindType): self
     {
-        $this->BindType = $BindType;
+        $this->BindType = ($BindType instanceof BindingRuleBindType) ? $BindType : BindingRuleBindType::from($BindType);
         return $this;
     }
 
@@ -104,6 +125,17 @@ class ACLBindingRule extends AbstractModel
     public function setBindName(string $BindName): self
     {
         $this->BindName = $BindName;
+        return $this;
+    }
+
+    public function getBindVars(): null|ACLTemplatedPolicyVariables
+    {
+        return $this->BindVars;
+    }
+
+    public function setBindVars(null|ACLTemplatedPolicyVariables $BindVars): self
+    {
+        $this->BindVars = $BindVars;
         return $this;
     }
 
@@ -138,5 +170,52 @@ class ACLBindingRule extends AbstractModel
     {
         $this->Namespace = $Namespace;
         return $this;
+    }
+
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('BindVars' === $k && null !== $v) {
+                $n->BindVars = ACLTemplatedPolicyVariables::jsonUnserialize($v);
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->ID = $this->ID;
+        $out->Description = $this->Description;
+        $out->AuthMethod = $this->AuthMethod;
+        $out->Selector = $this->Selector;
+        $out->BindType = $this->BindType;
+        $out->BindName = $this->BindName;
+        if (null !== $this->BindVars) {
+            $out->BindVars = $this->BindVars;
+        }
+        $out->CreateIndex = $this->CreateIndex;
+        $out->ModifyIndex = $this->ModifyIndex;
+        if ('' !== $this->Namespace) {
+            $out->Namespace = $this->Namespace;
+        }
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
+        }
+        return $out;
     }
 }

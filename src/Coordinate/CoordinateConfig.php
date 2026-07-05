@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\Coordinate;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,9 +20,10 @@ namespace DCarbone\PHPConsulAPI\Coordinate;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\Metrics\Label;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class CoordinateConfig extends AbstractModel
+class CoordinateConfig extends AbstractType
 {
     public const DefaultDimensionality       = 8;
     public const DefaultVivaldiErrorMax      = 1.5;
@@ -33,29 +34,50 @@ class CoordinateConfig extends AbstractModel
     public const DefaultLatencyFilterSize    = 3;
     public const DefaultGravityRho           = 150.0;
 
-    public int $Dimensionality = 0;
-    public float $VivaldiErrorMax = 0.0;
-    public float $VivaldiCE = 0.0;
-    public float $VivaldiCC = 0.0;
-    public int $AdjustmentWindowSize = 0;
-    public float $HeightMin = 0.0;
-    public int $LatencyFilterSize = 0;
-    public float $GravityRho = 0.0;
+    public int $Dimensionality;
+    public float $VivaldiErrorMax;
+    public float $VivaldiCE;
+    public float $VivaldiCC;
+    public int $AdjustmentWindowSize;
+    public float $HeightMin;
+    public int $LatencyFilterSize;
+    public float $GravityRho;
+    /** @var array<\DCarbone\PHPConsulAPI\Metrics\Label> */
+    public array $MetricsLabels;
 
+    /**
+     * @param array<\DCarbone\PHPConsulAPI\Metrics\Label> $MetricsLabels
+     */
+    public function __construct(
+        int $Dimensionality = self::DefaultDimensionality,
+        float $VivaldiErrorMax = self::DefaultVivaldiErrorMax,
+        float $VivaldiCE = self::DefaultVivaldiCE,
+        float $VivaldiCC = self::DefaultVivaldiCC,
+        int $AdjustmentWindowSize = self::DefaultAdjustmentWindowSize,
+        float $HeightMin = self::DefaultHeightMin,
+        int $LatencyFilterSize = self::DefaultLatencyFilterSize,
+        float $GravityRho = self::DefaultGravityRho,
+        array $MetricsLabels = [],
+    ) {
+        $this->Dimensionality = $Dimensionality;
+        $this->VivaldiErrorMax = $VivaldiErrorMax;
+        $this->VivaldiCE = $VivaldiCE;
+        $this->VivaldiCC = $VivaldiCC;
+        $this->AdjustmentWindowSize = $AdjustmentWindowSize;
+        $this->HeightMin = $HeightMin;
+        $this->LatencyFilterSize = $LatencyFilterSize;
+        $this->GravityRho = $GravityRho;
+        $this->setMetricsLabels(...$MetricsLabels);
+    }
+
+    /**
+     * Create a new CoordinateConfig with default values.
+     *
+     * @deprecated Just call new CoordinateConfig() instead.
+     */
     public static function Default(): self
     {
-        return new static(
-            [
-                'Dimensionality'       => static::DefaultDimensionality,
-                'VivaldiErrorMax'      => static::DefaultVivaldiErrorMax,
-                'VivaldiCE'            => static::DefaultVivaldiCE,
-                'VivaldiCC'            => static::DefaultVivaldiCC,
-                'AdjustmentWindowSize' => static::DefaultAdjustmentWindowSize,
-                'HeightMin'            => static::DefaultHeightMin,
-                'LatencyFilterSize'    => static::DefaultLatencyFilterSize,
-                'GravityRho'           => static::DefaultGravityRho,
-            ]
-        );
+        return new self();
     }
 
     public function getDimensionality(): int
@@ -63,9 +85,9 @@ class CoordinateConfig extends AbstractModel
         return $this->Dimensionality;
     }
 
-    public function setDimensionality(int $dimensionality): self
+    public function setDimensionality(int $Dimensionality): self
     {
-        $this->Dimensionality = $dimensionality;
+        $this->Dimensionality = $Dimensionality;
         return $this;
     }
 
@@ -74,9 +96,9 @@ class CoordinateConfig extends AbstractModel
         return $this->VivaldiErrorMax;
     }
 
-    public function setVivaldiErrorMax(float $vivaldiErrorMax): self
+    public function setVivaldiErrorMax(float $VivaldiErrorMax): self
     {
-        $this->VivaldiErrorMax = $vivaldiErrorMax;
+        $this->VivaldiErrorMax = $VivaldiErrorMax;
         return $this;
     }
 
@@ -85,9 +107,9 @@ class CoordinateConfig extends AbstractModel
         return $this->VivaldiCE;
     }
 
-    public function setVivaldiCE(float $vivaldiCE): self
+    public function setVivaldiCE(float $VivaldiCE): self
     {
-        $this->VivaldiCE = $vivaldiCE;
+        $this->VivaldiCE = $VivaldiCE;
         return $this;
     }
 
@@ -96,9 +118,9 @@ class CoordinateConfig extends AbstractModel
         return $this->VivaldiCC;
     }
 
-    public function setVivaldiCC(float $vivaldiCC): self
+    public function setVivaldiCC(float $VivaldiCC): self
     {
-        $this->VivaldiCC = $vivaldiCC;
+        $this->VivaldiCC = $VivaldiCC;
         return $this;
     }
 
@@ -107,9 +129,9 @@ class CoordinateConfig extends AbstractModel
         return $this->AdjustmentWindowSize;
     }
 
-    public function setAdjustmentWindowSize(int $adjustmentWindowSize): self
+    public function setAdjustmentWindowSize(int $AdjustmentWindowSize): self
     {
-        $this->AdjustmentWindowSize = $adjustmentWindowSize;
+        $this->AdjustmentWindowSize = $AdjustmentWindowSize;
         return $this;
     }
 
@@ -118,9 +140,9 @@ class CoordinateConfig extends AbstractModel
         return $this->HeightMin;
     }
 
-    public function setHeightMin(float $heightMin): self
+    public function setHeightMin(float $HeightMin): self
     {
-        $this->HeightMin = $heightMin;
+        $this->HeightMin = $HeightMin;
         return $this;
     }
 
@@ -129,9 +151,9 @@ class CoordinateConfig extends AbstractModel
         return $this->LatencyFilterSize;
     }
 
-    public function setLatencyFilterSize(int $latencyFilterSize): self
+    public function setLatencyFilterSize(int $LatencyFilterSize): self
     {
-        $this->LatencyFilterSize = $latencyFilterSize;
+        $this->LatencyFilterSize = $LatencyFilterSize;
         return $this;
     }
 
@@ -140,9 +162,54 @@ class CoordinateConfig extends AbstractModel
         return $this->GravityRho;
     }
 
-    public function setGravityRho(float $gravityRho): self
+    public function setGravityRho(float $GravityRho): self
     {
-        $this->GravityRho = $gravityRho;
+        $this->GravityRho = $GravityRho;
         return $this;
+    }
+
+    /**
+     * @return array<\DCarbone\PHPConsulAPI\Metrics\Label>
+     */
+    public function getMetricsLabels(): array
+    {
+        return $this->MetricsLabels;
+    }
+
+    public function setMetricsLabels(Label ...$MetricsLabels): self
+    {
+        $this->MetricsLabels = $MetricsLabels;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            if ('MetricsLabels' === $k) {
+                $n->MetricsLabels = [];
+                foreach ($v as $vv) {
+                    $n->MetricsLabels[] = Label::jsonUnserialize($vv);
+                }
+            } else {
+                $n->{$k} = $v;
+            }
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Dimensionality = $this->Dimensionality;
+        $out->VivaldiErrorMax = $this->VivaldiErrorMax;
+        $out->VivaldiCE = $this->VivaldiCE;
+        $out->VivaldiCC = $this->VivaldiCC;
+        $out->AdjustmentWindowSize = $this->AdjustmentWindowSize;
+        $out->HeightMin = $this->HeightMin;
+        $out->LatencyFilterSize = $this->LatencyFilterSize;
+        $out->GravityRho = $this->GravityRho;
+        $out->MetricsLabels = $this->MetricsLabels;
+        return $out;
     }
 }

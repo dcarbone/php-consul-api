@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DCarbone\PHPConsulAPI\ACL;
 
 /*
-   Copyright 2016-2025 Daniel Carbone (daniel.p.carbone@gmail.com)
+   Copyright 2016-2026 Daniel Carbone (daniel.p.carbone@gmail.com)
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -20,20 +20,55 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
-use DCarbone\PHPConsulAPI\AbstractModel;
+use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
-class ACLLink extends AbstractModel
+class ACLLink extends AbstractType
 {
-    public string $ID = '';
-    public string $Name = '';
+    public string $ID;
+    public string $Name;
+
+    public function __construct(string $ID = '', string $Name = '')
+    {
+        $this->ID = $ID;
+        $this->Name = $Name;
+    }
 
     public function getID(): string
     {
         return $this->ID;
     }
 
+    public function setID(string $ID): self
+    {
+        $this->ID = $ID;
+        return $this;
+    }
+
     public function getName(): string
     {
         return $this->Name;
+    }
+
+    public function setName(string $Name): self
+    {
+        $this->Name = $Name;
+        return $this;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
+        return $n;
+    }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->ID = $this->ID;
+        $out->Name = $this->Name;
+        return $out;
     }
 }

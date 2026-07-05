@@ -1,7 +1,9 @@
-/composer.phar
-/vendor/
-/.idea
-/*.iml
-/consul.log
-/.phpunit.result.cache
+.idea/
+.junie/
+.php-cs-fixer.cache
 .php_cs.cache
+.phpunit.result.cache
+/composer.phar
+vendor/
+*.iml
+consul.log
