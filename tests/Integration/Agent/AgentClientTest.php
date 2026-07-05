@@ -26,8 +26,8 @@ use DCarbone\PHPConsulAPI\Agent\AgentService;
 use DCarbone\PHPConsulAPI\Agent\AgentServiceCheck;
 use DCarbone\PHPConsulAPI\Agent\AgentServiceConnectProxyConfig;
 use DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration;
-use DCarbone\PHPConsulAPI\Agent\MemberOpts;
 use DCarbone\PHPConsulAPI\Agent\MetricsInfo;
+use DCarbone\PHPConsulAPI\Agent\MembersOpts;
 use DCarbone\PHPConsulAPI\Agent\ServiceRegisterOpts;
 use DCarbone\PHPConsulAPI\Consul;
 use DCarbone\PHPConsulAPI\PHPLib\Error;
@@ -279,8 +279,8 @@ final class AgentClientTest extends AbstractIntegrationTestCase
     public function testCanGetMemberOpts(): void
     {
         $client = new AgentClient(ConsulManager::testConfig());
-        [$members, $err] = $client->MemberOpts(new MemberOpts());
-        self::assertNull($err, sprintf('AgentClient::memberOpts returned error: %s', $err));
+        [$members, $err] = $client->MembersOpts(new MembersOpts());
+        self::assertNull($err, sprintf('AgentClient::membersOpts returned error: %s', $err));
         self::assertIsArray($members);
         self::assertContainsOnlyInstancesOf(AgentMember::class, $members);
         self::assertCount(1, $members);

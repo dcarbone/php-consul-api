@@ -20,6 +20,24 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-class MemberOpts extends MembersOpts
+use DCarbone\PHPConsulAPI\PHPLib\AbstractValuedQueryResponse;
+use DCarbone\PHPConsulAPI\PHPLib\UnmarshalledResponseInterface;
+
+class ConnectCARootsResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
+    public null|CARootList $CARoots = null;
+
+    public function getValue(): null|CARootList
+    {
+        return $this->CARoots;
+    }
+
+    public function unmarshalValue(mixed $decoded): void
+    {
+        if (null === $decoded) {
+            $this->CARoots = null;
+            return;
+        }
+        $this->CARoots = CARootList::jsonUnserialize($decoded);
+    }
 }

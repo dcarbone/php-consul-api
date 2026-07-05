@@ -20,6 +20,24 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-class MemberOpts extends MembersOpts
+use DCarbone\PHPConsulAPI\PHPLib\AbstractValuedQueryResponse;
+use DCarbone\PHPConsulAPI\PHPLib\UnmarshalledResponseInterface;
+
+class ConnectCALeafResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
+    public null|LeafCert $LeafCert = null;
+
+    public function getValue(): null|LeafCert
+    {
+        return $this->LeafCert;
+    }
+
+    public function unmarshalValue(mixed $decoded): void
+    {
+        if (null === $decoded) {
+            $this->LeafCert = null;
+            return;
+        }
+        $this->LeafCert = LeafCert::jsonUnserialize($decoded);
+    }
 }

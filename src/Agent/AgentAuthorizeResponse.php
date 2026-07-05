@@ -20,6 +20,24 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
-class MemberOpts extends MembersOpts
+use DCarbone\PHPConsulAPI\PHPLib\AbstractValuedResponse;
+use DCarbone\PHPConsulAPI\PHPLib\UnmarshalledResponseInterface;
+
+class AgentAuthorizeResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
+    public null|AgentAuthorize $Authorize = null;
+
+    public function getValue(): null|AgentAuthorize
+    {
+        return $this->Authorize;
+    }
+
+    public function unmarshalValue(mixed $decoded): void
+    {
+        if (null === $decoded) {
+            $this->Authorize = null;
+            return;
+        }
+        $this->Authorize = AgentAuthorize::jsonUnserialize($decoded);
+    }
 }
