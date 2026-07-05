@@ -258,8 +258,8 @@ final class AgentClientTest extends AbstractIntegrationTestCase
         self::assertIsArray($checks);
         self::assertContainsOnlyInstancesOf(AgentCheck::class, $checks);
 
-        [$filtered, $err] = $client->ChecksWithFilter('');
-        self::assertNull($err, sprintf('AgentClient::checksWithFilter returned error: %s', $err));
+        [$filtered, $err] = $client->Checks('');
+        self::assertNull($err, sprintf('AgentClient::checks with empty filter returned error: %s', $err));
         self::assertIsArray($filtered);
         self::assertContainsOnlyInstancesOf(AgentCheck::class, $filtered);
     }
@@ -269,8 +269,8 @@ final class AgentClientTest extends AbstractIntegrationTestCase
     {
         $client = new AgentClient(ConsulManager::testConfig());
 
-        [$services, $err] = $client->ServicesWithFilter('');
-        self::assertNull($err, sprintf('AgentClient::servicesWithFilter returned error: %s', $err));
+        [$services, $err] = $client->Services('');
+        self::assertNull($err, sprintf('AgentClient::services with empty filter returned error: %s', $err));
         self::assertIsArray($services);
         self::assertContainsOnlyInstancesOf(AgentService::class, $services);
     }

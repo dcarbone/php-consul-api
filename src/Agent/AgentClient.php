@@ -105,52 +105,31 @@ class AgentClient extends AbstractClient
         return $ret;
     }
 
-    public function ChecksWithFilter(string $filter): AgentChecksResponse
-    {
-        return $this->ChecksWithFilterOpts($filter, null);
-    }
-
-    public function ChecksWithFilterOpts(string $filter, null|QueryOptions $opts = null): AgentChecksResponse
+    public function Checks(string $filter = '', null|QueryOptions $opts = null): AgentChecksResponse
     {
         $r = $this->_newGetRequest('v1/agent/checks', $opts);
-        $r->filterQuery($filter);
+        if ('' !== $filter) {
+            $r->filterQuery($filter);
+        }
         $resp = $this->_requireOK($this->_do($r));
         $ret  = new AgentChecksResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
-    public function Checks(): AgentChecksResponse
-    {
-        return $this->ChecksWithFilter('');
-    }
-
-    public function ServicesWithFilter(string $filter): AgentServicesResponse
-    {
-        return $this->ServicesWithFilterOpts($filter, null);
-    }
-
-    public function ServicesWithFilterOpts(string $filter, null|QueryOptions $opts = null): AgentServicesResponse
+    public function Services(string $filter = '', null|QueryOptions $opts = null): AgentServicesResponse
     {
         $r = $this->_newGetRequest('v1/agent/services', $opts);
-        $r->filterQuery($filter);
+        if ('' !== $filter) {
+            $r->filterQuery($filter);
+        }
         $resp = $this->_requireOK($this->_do($r));
         $ret  = new AgentServicesResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
-    public function Services(): AgentServicesResponse
-    {
-        return $this->ServicesWithFilter('');
-    }
-
-    public function AgentHealthServiceByID(string $id): AgentHealthServiceResponse
-    {
-        return $this->AgentHealthServiceByIDOpts($id, null);
-    }
-
-    public function AgentHealthServiceByIDOpts(string $id, null|QueryOptions $opts = null): AgentHealthServiceResponse
+    public function AgentHealthServiceByID(string $id, null|QueryOptions $opts = null): AgentHealthServiceResponse
     {
         $r    = $this->_prepAgentHealthServiceRequest(sprintf('v1/agent/health/service/id/%s', $id), $opts);
         $resp = $this->_requireOK($this->_do($r));
@@ -178,12 +157,7 @@ class AgentClient extends AbstractClient
         return new AgentHealthServiceResponse($status, $dec->Decoded, null);
     }
 
-    public function AgentHealthServiceByName(string $service): AgentHealthServicesResponse
-    {
-        return $this->AgentHealthServiceByNameOpts($service, null);
-    }
-
-    public function AgentHealthServiceByNameOpts(string $service, null|QueryOptions $opts = null): AgentHealthServicesResponse
+    public function AgentHealthServiceByName(string $service, null|QueryOptions $opts = null): AgentHealthServicesResponse
     {
         $r    = $this->_prepAgentHealthServiceRequest(sprintf('v1/agent/health/service/name/%s', urlencode($service)), $opts);
         $resp = $this->_requireOK($this->_do($r));
@@ -259,12 +233,7 @@ class AgentClient extends AbstractClient
         return $this->ServiceRegisterOpts($service, new ServiceRegisterOpts(ReplaceExistingChecks: false));
     }
 
-    public function ServiceDeregister(string $serviceID): null|Error
-    {
-        return $this->ServiceDeregisterOpts($serviceID, null);
-    }
-
-    public function ServiceDeregisterOpts(string $serviceID, null|QueryOptions $opts = null): null|Error
+    public function ServiceDeregister(string $serviceID, null|QueryOptions $opts = null): null|Error
     {
         $r = $this->_newPutRequest(sprintf('v1/agent/service/deregister/%s', $serviceID), null, $opts);
         return $this->_requireOK($this->_do($r))->Err;
@@ -285,12 +254,7 @@ class AgentClient extends AbstractClient
         return $this->UpdateTTL($checkID, $note, 'fail');
     }
 
-    public function UpdateTTL(string $checkID, string $output, string $status): null|Error
-    {
-        return $this->UpdateTTLOpts($checkID, $output, $status, null);
-    }
-
-    public function UpdateTTLOpts(string $checkID, string $output, string $status, null|QueryOptions $opts = null): null|Error
+    public function UpdateTTL(string $checkID, string $output, string $status, null|QueryOptions $opts = null): null|Error
     {
         switch ($status) {
             case Consul::HealthPassing:
@@ -319,23 +283,13 @@ class AgentClient extends AbstractClient
         return $this->_requireOK($this->_do($r))->Err;
     }
 
-    public function CheckRegister(AgentCheckRegistration $check): null|Error
-    {
-        return $this->CheckRegisterOpts($check, null);
-    }
-
-    public function CheckRegisterOpts(AgentCheckRegistration $check, null|QueryOptions $opts = null): null|Error
+    public function CheckRegister(AgentCheckRegistration $check, null|QueryOptions $opts = null): null|Error
     {
         $r = $this->_newPutRequest('v1/agent/check/register', $check, $opts);
         return $this->_requireOK($this->_do($r))->Err;
     }
 
-    public function CheckDeregister(string $checkID): null|Error
-    {
-        return $this->CheckDeregisterOpts($checkID, null);
-    }
-
-    public function CheckDeregisterOpts(string $checkID, null|QueryOptions $opts = null): null|Error
+    public function CheckDeregister(string $checkID, null|QueryOptions $opts = null): null|Error
     {
         $r = $this->_newPutRequest(sprintf('v1/agent/check/deregister/%s', $checkID), null, $opts);
         return $this->_requireOK($this->_do($r))->Err;
@@ -355,31 +309,22 @@ class AgentClient extends AbstractClient
         return $this->_executePut('v1/agent/leave', null, null)->Err;
     }
 
-    public function ForceLeave(string $node): null|Error
+    public function ForceLeave(string $node, null|ForceLeaveOpts $opts = null, null|QueryOptions $qOpts = null): null|Error
     {
-        return $this->ForceLeaveOptions($node, new ForceLeaveOpts(), null);
+        $forceLeaveOpts = $opts ?? new ForceLeaveOpts();
+        $r = $this->_newPutRequest(sprintf('v1/agent/force-leave/%s', $node), null, $qOpts);
+        if ($forceLeaveOpts->Prune) {
+            $r->params->set('prune', '1');
+        }
+        if ($forceLeaveOpts->WAN) {
+            $r->params->set('wan', '1');
+        }
+        return $this->_requireOK($this->_do($r))->Err;
     }
 
     public function ForceLeavePrune(string $node): null|Error
     {
-        return $this->ForceLeaveOptions($node, new ForceLeaveOpts(Prune: true), null);
-    }
-
-    public function ForceLeaveOpts(string $node, ForceLeaveOpts $opts, null|QueryOptions $qOpts = null): null|Error
-    {
-        return $this->ForceLeaveOptions($node, $opts, $qOpts);
-    }
-
-    public function ForceLeaveOptions(string $node, ForceLeaveOpts $opts, null|QueryOptions $qOpts = null): null|Error
-    {
-        $r = $this->_newPutRequest(sprintf('v1/agent/force-leave/%s', $node), null, $qOpts);
-        if ($opts->Prune) {
-            $r->params->set('prune', '1');
-        }
-        if ($opts->WAN) {
-            $r->params->set('wan', '1');
-        }
-        return $this->_requireOK($this->_do($r))->Err;
+        return $this->ForceLeave($node, new ForceLeaveOpts(Prune: true));
     }
 
     public function ConnectAuthorize(AgentAuthorizeParams $auth): AgentAuthorizeResponse
@@ -406,12 +351,7 @@ class AgentClient extends AbstractClient
         return $ret;
     }
 
-    public function EnableServiceMaintenance(string $serviceID, string $reason = ''): null|Error
-    {
-        return $this->EnableServiceMaintenanceOpts($serviceID, $reason, null);
-    }
-
-    public function EnableServiceMaintenanceOpts(string $serviceID, string $reason = '', null|QueryOptions $opts = null): null|Error
+    public function EnableServiceMaintenance(string $serviceID, string $reason = '', null|QueryOptions $opts = null): null|Error
     {
         $r = $this->_newPutRequest(sprintf('v1/agent/service/maintenance/%s', $serviceID), null, $opts);
         $r->params->set('enable', 'true');
@@ -419,24 +359,14 @@ class AgentClient extends AbstractClient
         return $this->_requireOK($this->_do($r))->Err;
     }
 
-    public function DisableServiceMaintenance(string $serviceID): null|Error
-    {
-        return $this->DisableServiceMaintenanceOpts($serviceID, null);
-    }
-
-    public function DisableServiceMaintenanceOpts(string $serviceID, null|QueryOptions $opts = null): null|Error
+    public function DisableServiceMaintenance(string $serviceID, null|QueryOptions $opts = null): null|Error
     {
         $r = $this->_newPutRequest(sprintf('v1/agent/service/maintenance/%s', $serviceID), null, $opts);
         $r->params->set('enable', 'false');
         return $this->_requireOK($this->_do($r))->Err;
     }
 
-    public function EnableNodeMaintenance(string $reason = ''): null|Error
-    {
-        return $this->EnableNodeMaintenanceOpts($reason, null);
-    }
-
-    public function EnableNodeMaintenanceOpts(string $reason = '', null|QueryOptions $opts = null): null|Error
+    public function EnableNodeMaintenance(string $reason = '', null|QueryOptions $opts = null): null|Error
     {
         $r = $this->_newPutRequest('v1/agent/maintenance', null, $opts);
         $r->params->set('enable', 'true');
@@ -444,12 +374,7 @@ class AgentClient extends AbstractClient
         return $this->_requireOK($this->_do($r))->Err;
     }
 
-    public function DisableNodeMaintenance(): null|Error
-    {
-        return $this->DisableNodeMaintenanceOpts(null);
-    }
-
-    public function DisableNodeMaintenanceOpts(null|QueryOptions $opts = null): null|Error
+    public function DisableNodeMaintenance(null|QueryOptions $opts = null): null|Error
     {
         $r = $this->_newPutRequest('v1/agent/maintenance', null, $opts);
         $r->params->set('enable', 'false');

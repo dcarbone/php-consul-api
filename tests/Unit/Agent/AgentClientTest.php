@@ -51,8 +51,8 @@ final class AgentClientTest extends TestCase
     public static function queryVariantProvider(): array
     {
         return [
-            'checks with filter opts' => [
-                'ChecksWithFilterOpts',
+            'checks with filter' => [
+                'Checks',
                 ['Status == "passing"', new QueryOptions(Datacenter: 'dc1', Token: 'query-token', Pretty: true)],
                 'GET',
                 '/v1/agent/checks',
@@ -74,8 +74,8 @@ final class AgentClientTest extends TestCase
                 null,
                 [],
             ],
-            'services with filter opts' => [
-                'ServicesWithFilterOpts',
+            'services with filter' => [
+                'Services',
                 ['Service == "web"', new QueryOptions(Datacenter: 'dc1', Token: 'query-token', Pretty: true)],
                 'GET',
                 '/v1/agent/services',
@@ -94,8 +94,8 @@ final class AgentClientTest extends TestCase
                 null,
                 [],
             ],
-            'health by id opts' => [
-                'AgentHealthServiceByIDOpts',
+            'health by id' => [
+                'AgentHealthServiceByID',
                 ['svc-1', new QueryOptions(Datacenter: 'dc1', Token: 'query-token', Pretty: true)],
                 'GET',
                 '/v1/agent/health/service/id/svc-1',
@@ -116,8 +116,8 @@ final class AgentClientTest extends TestCase
                 null,
                 [],
             ],
-            'health by name opts' => [
-                'AgentHealthServiceByNameOpts',
+            'health by name' => [
+                'AgentHealthServiceByName',
                 ['web', new QueryOptions(Datacenter: 'dc1', Token: 'query-token', Pretty: true)],
                 'GET',
                 '/v1/agent/health/service/name/web',
@@ -140,8 +140,8 @@ final class AgentClientTest extends TestCase
                 null,
                 [],
             ],
-            'service deregister opts' => [
-                'ServiceDeregisterOpts',
+            'service deregister' => [
+                'ServiceDeregister',
                 ['svc-1', new QueryOptions(Datacenter: 'dc1', Token: 'query-token', Pretty: true)],
                 'PUT',
                 '/v1/agent/service/deregister/svc-1',
@@ -150,8 +150,8 @@ final class AgentClientTest extends TestCase
                 null,
                 [],
             ],
-            'update ttl opts' => [
-                'UpdateTTLOpts',
+            'update ttl' => [
+                'UpdateTTL',
                 ['check-1', 'ok', 'pass', new QueryOptions(Datacenter: 'dc1', Token: 'query-token', Pretty: true)],
                 'PUT',
                 '/v1/agent/check/update/check-1',
@@ -160,8 +160,8 @@ final class AgentClientTest extends TestCase
                 AgentCheckUpdate::class,
                 ['Status' => 'passing', 'Output' => 'ok'],
             ],
-            'check register opts' => [
-                'CheckRegisterOpts',
+            'check register' => [
+                'CheckRegister',
                 [new AgentCheckRegistration(ID: 'check-1', Name: 'check-1', TTL: '30s'), new QueryOptions(Datacenter: 'dc1', Token: 'query-token', Pretty: true)],
                 'PUT',
                 '/v1/agent/check/register',
@@ -170,8 +170,8 @@ final class AgentClientTest extends TestCase
                 AgentCheckRegistration::class,
                 ['ID' => 'check-1', 'Name' => 'check-1', 'TTL' => '30s'],
             ],
-            'check deregister opts' => [
-                'CheckDeregisterOpts',
+            'check deregister' => [
+                'CheckDeregister',
                 ['check-1', new QueryOptions(Datacenter: 'dc1', Token: 'query-token', Pretty: true)],
                 'PUT',
                 '/v1/agent/check/deregister/check-1',
@@ -180,8 +180,8 @@ final class AgentClientTest extends TestCase
                 null,
                 [],
             ],
-            'enable service maintenance opts' => [
-                'EnableServiceMaintenanceOpts',
+            'enable service maintenance' => [
+                'EnableServiceMaintenance',
                 ['svc-1', 'maintenance', new QueryOptions(Datacenter: 'dc1', Token: 'query-token', Pretty: true)],
                 'PUT',
                 '/v1/agent/service/maintenance/svc-1',
@@ -190,8 +190,8 @@ final class AgentClientTest extends TestCase
                 null,
                 [],
             ],
-            'disable service maintenance opts' => [
-                'DisableServiceMaintenanceOpts',
+            'disable service maintenance' => [
+                'DisableServiceMaintenance',
                 ['svc-1', new QueryOptions(Datacenter: 'dc1', Token: 'query-token', Pretty: true)],
                 'PUT',
                 '/v1/agent/service/maintenance/svc-1',
@@ -200,8 +200,8 @@ final class AgentClientTest extends TestCase
                 null,
                 [],
             ],
-            'enable node maintenance opts' => [
-                'EnableNodeMaintenanceOpts',
+            'enable node maintenance' => [
+                'EnableNodeMaintenance',
                 ['maintenance', new QueryOptions(Datacenter: 'dc1', Token: 'query-token', Pretty: true)],
                 'PUT',
                 '/v1/agent/maintenance',
@@ -210,8 +210,8 @@ final class AgentClientTest extends TestCase
                 null,
                 [],
             ],
-            'disable node maintenance opts' => [
-                'DisableNodeMaintenanceOpts',
+            'disable node maintenance' => [
+                'DisableNodeMaintenance',
                 [new QueryOptions(Datacenter: 'dc1', Token: 'query-token', Pretty: true)],
                 'PUT',
                 '/v1/agent/maintenance',
@@ -220,18 +220,8 @@ final class AgentClientTest extends TestCase
                 null,
                 [],
             ],
-            'force leave opts alias' => [
-                'ForceLeaveOpts',
-                ['node-1', new ForceLeaveOpts(Prune: true, WAN: true), new QueryOptions(Datacenter: 'dc1', Token: 'query-token', Pretty: true)],
-                'PUT',
-                '/v1/agent/force-leave/node-1',
-                ['dc' => 'dc1', 'pretty' => '', 'prune' => '1', 'wan' => '1'],
-                '',
-                null,
-                [],
-            ],
-            'force leave options alias' => [
-                'ForceLeaveOptions',
+            'force leave with opts' => [
+                'ForceLeave',
                 ['node-1', new ForceLeaveOpts(Prune: true, WAN: true), new QueryOptions(Datacenter: 'dc1', Token: 'query-token', Pretty: true)],
                 'PUT',
                 '/v1/agent/force-leave/node-1',
@@ -401,6 +391,49 @@ final class AgentClientTest extends TestCase
         } else {
             self::assertSame('', (string)$request->getBody());
         }
+    }
+
+    public function testBaseMethodsWithoutQueryOptionsWorkCorrectly(): void
+    {
+        $history = [];
+        $client = $this->newClient([
+            new Response(200, [], json_encode([], JSON_THROW_ON_ERROR)),
+            new Response(200, [], json_encode([], JSON_THROW_ON_ERROR)),
+            new Response(200, [], json_encode([], JSON_THROW_ON_ERROR)),
+            new Response(200, [], json_encode([], JSON_THROW_ON_ERROR)),
+            new Response(200, [], json_encode([], JSON_THROW_ON_ERROR)),
+            new Response(200, [], json_encode([], JSON_THROW_ON_ERROR)),
+        ], $history);
+
+        $client->Checks();
+        self::assertSame('/v1/agent/checks', $history[0]['request']->getUri()->getPath());
+        self::assertSame('GET', $history[0]['request']->getMethod());
+
+        $client->Services();
+        self::assertSame('/v1/agent/services', $history[1]['request']->getUri()->getPath());
+        self::assertSame('GET', $history[1]['request']->getMethod());
+
+        $err = $client->ServiceDeregister('svc-1');
+        self::assertNull($err);
+        self::assertSame('/v1/agent/service/deregister/svc-1', $history[2]['request']->getUri()->getPath());
+        self::assertSame('PUT', $history[2]['request']->getMethod());
+
+        $err = $client->CheckDeregister('check-1');
+        self::assertNull($err);
+        self::assertSame('/v1/agent/check/deregister/check-1', $history[3]['request']->getUri()->getPath());
+        self::assertSame('PUT', $history[3]['request']->getMethod());
+
+        $err = $client->ForceLeave('node-1');
+        self::assertNull($err);
+        self::assertSame('/v1/agent/force-leave/node-1', $history[4]['request']->getUri()->getPath());
+        self::assertSame('PUT', $history[4]['request']->getMethod());
+
+        $err = $client->ForceLeavePrune('node-1');
+        self::assertNull($err);
+        self::assertSame('/v1/agent/force-leave/node-1', $history[5]['request']->getUri()->getPath());
+        parse_str($history[5]['request']->getUri()->getQuery(), $params);
+        self::assertArrayHasKey('prune', $params);
+        self::assertSame('1', $params['prune']);
     }
 
     public function testMembersOptsRenameDoesNotBreakExistingCode(): void
