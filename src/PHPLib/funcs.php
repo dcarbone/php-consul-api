@@ -21,13 +21,15 @@ namespace DCarbone\PHPConsulAPI\PHPLib;
  */
 
 use DCarbone\Go\Time;
+use JetBrains\PhpStorm\Pure;
 
 /**
  * Parses an RFC3339 timestamp from Consul, which may contain nanosecond-precision
  * fractional seconds that PHP's DateTime cannot handle. Truncates to microseconds.
  *
  * @param string $ts RFC3339 timestamp string (e.g. "2026-04-03T20:02:59.892792592-05:00")
- * @return null|\DCarbone\Go\Time
+ * @return null|\DCarbone\Go\Time\Time
+ * @throws \Exception
  */
 function parse_time(string $ts): null|Time\Time
 {
