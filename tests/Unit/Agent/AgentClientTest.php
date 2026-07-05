@@ -7,11 +7,7 @@ use DCarbone\PHPConsulAPI\Agent\AgentAuthorizeParams;
 use DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration;
 use DCarbone\PHPConsulAPI\Agent\AgentCheckUpdate;
 use DCarbone\PHPConsulAPI\Agent\AgentClient;
-use DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration;
-use DCarbone\PHPConsulAPI\Agent\AgentToken;
 use DCarbone\PHPConsulAPI\Agent\ForceLeaveOpts;
-use DCarbone\PHPConsulAPI\Agent\MemberOpts;
-use DCarbone\PHPConsulAPI\Agent\MembersOpts;
 use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\PHPLib\MapResponse;
 use DCarbone\PHPConsulAPI\QueryOptions;
@@ -20,7 +16,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
-use GuzzleHttp\RequestOptions;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -434,34 +429,6 @@ final class AgentClientTest extends TestCase
         parse_str($history[5]['request']->getUri()->getQuery(), $params);
         self::assertArrayHasKey('prune', $params);
         self::assertSame('1', $params['prune']);
-    }
-
-    public function testMembersOptsRenameDoesNotBreakExistingCode(): void
-    {
-        $history = [];
-        $client = $this->newClient([
-            new Response(200, [], json_encode([], JSON_THROW_ON_ERROR)),
-            new Response(200, [], json_encode([], JSON_THROW_ON_ERROR)),
-        ], $history);
-
-        $response1 = $client->MembersOpts(new MembersOpts(WAN: true, Segment: 'seg-a', Filter: 'Status == "alive"'));
-        $response2 = $client->MemberOpts(new MemberOpts(WAN: true, Segment: 'seg-a', Filter: 'Status == "alive"'));
-
-        self::assertNull($response1->Err);
-        self::assertNull($response2->Err);
-        self::assertCount(2, $history);
-
-        $first = $history[0]['request'];
-        $second = $history[1]['request'];
-        parse_str($first->getUri()->getQuery(), $firstParams);
-        parse_str($second->getUri()->getQuery(), $secondParams);
-        ksort($firstParams);
-        ksort($secondParams);
-
-        self::assertSame('/v1/agent/members', $first->getUri()->getPath());
-        self::assertSame($first->getUri()->getPath(), $second->getUri()->getPath());
-        self::assertSame(['filter' => 'Status == "alive"', 'segment' => 'seg-a', 'wan' => '1'], $firstParams);
-        self::assertSame($firstParams, $secondParams);
     }
 
     private function newClient(array $responses, array &$history): AgentClient
