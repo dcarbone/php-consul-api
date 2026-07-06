@@ -4,25 +4,28 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a95ad291b182eb2527dd68c8ce162b87",
+    "content-hash": "73518a620143d22794a27e38d5759ab3",
     "packages": [
         {
             "name": "dcarbone/gohttp",
-            "version": "v0.3.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dcarbone/gohttp.git",
-                "reference": "11aec71d7099d1399f434aad16b6b973c1109f26"
+                "reference": "56dec46f46e6e6d2d05a641668958c68fc55b914"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dcarbone/gohttp/zipball/11aec71d7099d1399f434aad16b6b973c1109f26",
-                "reference": "11aec71d7099d1399f434aad16b6b973c1109f26",
+                "url": "https://api.github.com/repos/dcarbone/gohttp/zipball/56dec46f46e6e6d2d05a641668958c68fc55b914",
+                "reference": "56dec46f46e6e6d2d05a641668958c68fc55b914",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "php": ">=7.0"
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^11.5"
             },
             "type": "library",
             "autoload": {
@@ -47,13 +50,13 @@
                     "email": "daniel.p.carbone@gmail.com"
                 }
             ],
-            "description": "Golang-like http class(es) for PHP 7.0+",
+            "description": "Golang-like http class(es) for PHP 8.2+",
             "homepage": "https://github.com/dcarbone/gohttp",
             "support": {
                 "issues": "https://github.com/dcarbone/gohttp/issues",
-                "source": "https://github.com/dcarbone/gohttp/tree/v0.3.0"
+                "source": "https://github.com/dcarbone/gohttp/tree/v1.0.1"
             },
-            "time": "2020-01-28T15:42:34+00:00"
+            "time": "2026-07-02T22:42:12+00:00"
         },
         {
             "name": "dcarbone/gotime",
@@ -2590,5 +2593,5 @@
         "ext-json": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
