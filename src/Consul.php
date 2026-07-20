@@ -115,6 +115,7 @@ class Consul
     public const _headerConsulContentHash        = self::_headerConsulPrefix . 'ContentHash';
     public const _headerConsulKnownLeader        = self::_headerConsulPrefix . 'KnownLeader';
     public const _headerConsulLastContact        = self::_headerConsulPrefix . 'LastContact';
+    public const _headerConsulKVWarning          = self::_headerConsulPrefix . 'KV-Warning';
     public const _headerConsulTranslateAddresses = self::_headerConsulPrefix . 'Translate-Addresses';
     public const _headerCache                    = 'X-Cache';
 
