@@ -6,6 +6,7 @@ use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\Health\HealthChecksResponse;
 use DCarbone\PHPConsulAPI\Health\HealthClient;
 use DCarbone\PHPConsulAPI\Health\ServiceEntriesResponse;
+use DCarbone\PHPConsulAPI\QueryOptions;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
@@ -88,6 +89,21 @@ final class HealthClientTest extends TestCase
         self::assertSame('/v1/health/ingress/web', $history[0]['request']->getUri()->getPath());
         self::assertArrayNotHasKey('tag', $query);
         self::assertSame('1', $query['passing']);
+    }
+
+    public function testIngressSupportsGoStyleSignatureWithOptions(): void
+    {
+        $history = [];
+        $client = $this->mockClient(200, json_encode([], JSON_THROW_ON_ERROR), $history);
+
+        $response = $client->Ingress('web', true, new QueryOptions(Pretty: true));
+
+        self::assertInstanceOf(ServiceEntriesResponse::class, $response);
+        parse_str($history[0]['request']->getUri()->getQuery(), $query);
+        self::assertSame('/v1/health/ingress/web', $history[0]['request']->getUri()->getPath());
+        self::assertArrayNotHasKey('tag', $query);
+        self::assertSame('1', $query['passing']);
+        self::assertArrayHasKey('pretty', $query);
     }
 
     public function testIngressRetainsLegacyTagSupport(): void

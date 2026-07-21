@@ -112,8 +112,18 @@ class KVClient extends AbstractClient
         return $ret;
     }
 
-    public function Keys(string $prefix = '', string $separator = '', null|QueryOptions $opts = null): ValuedQueryStringsResponse
-    {
+    public function Keys(
+        string $prefix = '',
+        string|QueryOptions $separatorOrOpts = '',
+        null|QueryOptions $opts = null
+    ): ValuedQueryStringsResponse {
+        if ($separatorOrOpts instanceof QueryOptions) {
+            $separator = '';
+            $opts = $separatorOrOpts;
+        } else {
+            $separator = $separatorOrOpts;
+        }
+
         $r = $this->_newGetRequest($this->_readPath($prefix), $opts);
         $r->params->set('keys', '');
         if ('' !== $separator) {

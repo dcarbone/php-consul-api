@@ -76,7 +76,7 @@ class HealthClient extends AbstractClient
     public function Ingress(
         string $service,
         string|bool $tagOrPassingOnly = false,
-        bool|null|QueryOptions $passingOnlyOrOpts = false,
+        bool|QueryOptions $passingOnlyOrOpts = false,
         null|QueryOptions $opts = null
     ): ServiceEntriesResponse {
         $tags = [];

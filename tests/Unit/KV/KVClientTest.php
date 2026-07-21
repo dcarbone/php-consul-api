@@ -11,6 +11,7 @@ use DCarbone\PHPConsulAPI\KV\KVPairsResponse;
 use DCarbone\PHPConsulAPI\PHPLib\ValuedQueryStringsResponse;
 use DCarbone\PHPConsulAPI\PHPLib\ValuedWriteBoolResponse;
 use DCarbone\PHPConsulAPI\PHPLib\WriteResponse;
+use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Txn\KVOp;
 use DCarbone\PHPConsulAPI\Txn\KVTxnAPIResponse;
 use DCarbone\PHPConsulAPI\Txn\KVTxnOp;
@@ -112,6 +113,23 @@ final class KVClientTest extends TestCase
         parse_str($history[0]['request']->getUri()->getQuery(), $query);
         self::assertArrayHasKey('keys', $query);
         self::assertSame('/', $query['separator']);
+    }
+
+    public function testKeysSecondArgumentQueryOptionsForBC(): void
+    {
+        $keys = ['test/key1'];
+        $history = [];
+        $client = $this->mockClient(200, json_encode($keys, JSON_THROW_ON_ERROR), $history);
+
+        $response = $client->Keys('test/', new QueryOptions(Pretty: true));
+
+        self::assertInstanceOf(ValuedQueryStringsResponse::class, $response);
+        self::assertCount(1, $history);
+
+        parse_str($history[0]['request']->getUri()->getQuery(), $query);
+        self::assertArrayHasKey('keys', $query);
+        self::assertArrayNotHasKey('separator', $query);
+        self::assertArrayHasKey('pretty', $query);
     }
 
     public function testPutSimple(): void
