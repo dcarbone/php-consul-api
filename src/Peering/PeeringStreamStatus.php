@@ -42,4 +42,15 @@ class PeeringStreamStatus extends AbstractType
         }
         return $n;
     }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->ImportedServices = $this->ImportedServices;
+        $out->ExportedServices = $this->ExportedServices;
+        $out->LastHeartbeat = $this->LastHeartbeat;
+        $out->LastReceive = $this->LastReceive;
+        $out->LastSend = $this->LastSend;
+        return $out;
+    }
 }

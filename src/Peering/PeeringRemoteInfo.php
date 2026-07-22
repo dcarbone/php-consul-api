@@ -34,4 +34,13 @@ class PeeringRemoteInfo extends AbstractType
         }
         return $n;
     }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Partition = $this->Partition;
+        $out->Datacenter = $this->Datacenter;
+        $out->Locality = $this->Locality;
+        return $out;
+    }
 }

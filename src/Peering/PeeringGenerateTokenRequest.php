@@ -30,4 +30,16 @@ class PeeringGenerateTokenRequest extends AbstractType
         $this->Meta = $Meta;
         $this->ServerExternalAddresses = $ServerExternalAddresses;
     }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->PeerName = $this->PeerName;
+        $out->Partition = $this->Partition;
+        if (null !== $this->Meta) {
+            $out->Meta = $this->Meta;
+        }
+        $out->ServerExternalAddresses = $this->ServerExternalAddresses;
+        return $out;
+    }
 }

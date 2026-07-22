@@ -77,4 +77,26 @@ class Peering extends AbstractType
         }
         return $n;
     }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->ID = $this->ID;
+        $out->Name = $this->Name;
+        $out->Partition = $this->Partition;
+        $out->DeletedAt = $this->DeletedAt;
+        if (null !== $this->Meta) {
+            $out->Meta = $this->Meta;
+        }
+        $out->State = $this->State;
+        $out->PeerID = $this->PeerID;
+        $out->PeerCAPems = $this->PeerCAPems;
+        $out->PeerServerName = $this->PeerServerName;
+        $out->PeerServerAddresses = $this->PeerServerAddresses;
+        $out->StreamStatus = $this->StreamStatus;
+        $out->CreateIndex = $this->CreateIndex;
+        $out->ModifyIndex = $this->ModifyIndex;
+        $out->Remote = $this->Remote;
+        return $out;
+    }
 }

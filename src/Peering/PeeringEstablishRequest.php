@@ -28,4 +28,16 @@ class PeeringEstablishRequest extends AbstractType
         $this->Partition = $Partition;
         $this->Meta = $Meta;
     }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->PeerName = $this->PeerName;
+        $out->PeeringToken = $this->PeeringToken;
+        $out->Partition = $this->Partition;
+        if (null !== $this->Meta) {
+            $out->Meta = $this->Meta;
+        }
+        return $out;
+    }
 }

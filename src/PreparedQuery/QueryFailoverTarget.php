@@ -33,4 +33,14 @@ class QueryFailoverTarget extends AbstractType
         }
         return $n;
     }
+
+    public function jsonSerialize(): \stdClass
+    {
+        $out = $this->_startJsonSerialize();
+        $out->Peer = $this->Peer;
+        $out->Datacenter = $this->Datacenter;
+        $out->Partition = $this->Partition;
+        $out->Namespace = $this->Namespace;
+        return $out;
+    }
 }
