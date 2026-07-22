@@ -148,7 +148,16 @@ class KVClient extends AbstractClient
         return $ret;
     }
 
-    public function Acquire(KVPair $p, null|WriteOptions $opts = null): ValuedWriteBoolResponse
+    public function Acquire(KVPair $p, null|WriteOptions $opts = null): WriteResponse
+    {
+        $resp = $this->AcquireBool($p, $opts);
+        $ret = new WriteResponse();
+        $ret->WriteMeta = $resp->WriteMeta;
+        $ret->Err = $resp->Err;
+        return $ret;
+    }
+
+    public function AcquireBool(KVPair $p, null|WriteOptions $opts = null): ValuedWriteBoolResponse
     {
         $r = $this->_newPutRequest($this->_writePath($p->Key), $p->Value, $opts);
         $r->params->set('acquire', $p->Session);
@@ -171,7 +180,16 @@ class KVClient extends AbstractClient
         return $ret;
     }
 
-    public function Release(KVPair $p, null|WriteOptions $opts = null): ValuedWriteBoolResponse
+    public function Release(KVPair $p, null|WriteOptions $opts = null): WriteResponse
+    {
+        $resp = $this->ReleaseBool($p, $opts);
+        $ret = new WriteResponse();
+        $ret->WriteMeta = $resp->WriteMeta;
+        $ret->Err = $resp->Err;
+        return $ret;
+    }
+
+    public function ReleaseBool(KVPair $p, null|WriteOptions $opts = null): ValuedWriteBoolResponse
     {
         $r = $this->_newPutRequest($this->_writePath($p->Key), $p->Value, $opts);
         $r->params->set('release', $p->Session);

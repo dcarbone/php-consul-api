@@ -487,7 +487,7 @@ final class KVClientTest extends AbstractIntegrationTestCase
         $key = 'test/lockable';
 
         $kv = new KVPair(Key: $key, Value: 'locked-value', Session: $id);
-        [$ok, $wm, $err] = $kvClient->Acquire($kv);
+        [$ok, $wm, $err] = $kvClient->AcquireBool($kv);
         self::assertNull($err);
         self::assertTrue($ok);
         self::assertInstanceOf(WriteMeta::class, $wm);
@@ -500,7 +500,7 @@ final class KVClientTest extends AbstractIntegrationTestCase
         self::assertGreaterThan(0, $kv->LockIndex);
 
         $kv->Session = $id;
-        [$ok, $wm, $err] = $kvClient->Release($kv);
+        [$ok, $wm, $err] = $kvClient->ReleaseBool($kv);
         self::assertNull($err);
         self::assertTrue($ok);
         self::assertInstanceOf(WriteMeta::class, $wm);
@@ -541,7 +541,7 @@ final class KVClientTest extends AbstractIntegrationTestCase
         $key = 'test/lock-conflict';
 
         $kv = new KVPair(Key: $key, Value: 'session1', Session: $session1);
-        [$ok, $wm, $err] = $kvClient->Acquire($kv);
+        [$ok, $wm, $err] = $kvClient->AcquireBool($kv);
         self::assertNull($err);
         self::assertTrue($ok);
         self::assertInstanceOf(WriteMeta::class, $wm);
@@ -551,7 +551,7 @@ final class KVClientTest extends AbstractIntegrationTestCase
         self::assertSame($session1, $kv->Session);
 
         $kv2 = new KVPair(Key: $key, Value: 'session2', Session: $session2);
-        [$ok, , $err] = $kvClient->Acquire($kv2);
+        [$ok, , $err] = $kvClient->AcquireBool($kv2);
         self::assertFalse($ok);
         self::assertNull($err);
 
@@ -578,7 +578,7 @@ final class KVClientTest extends AbstractIntegrationTestCase
 
         $key = 'test/lock-flags';
         $kv = new KVPair(Key: $key, Flags: 77, Value: 'flagged', Session: $id);
-        [$ok, , $err] = $kvClient->Acquire($kv);
+        [$ok, , $err] = $kvClient->AcquireBool($kv);
         self::assertTrue($ok);
         self::assertNull($err);
 

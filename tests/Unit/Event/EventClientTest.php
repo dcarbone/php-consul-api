@@ -109,4 +109,15 @@ final class EventClientTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $client->IDToIndex('not-a-uuid');
     }
+
+    public function testIDToIndexHandlesSignBitDeterministically(): void
+    {
+        if (8 > PHP_INT_SIZE) {
+            self::markTestSkipped('Requires 64-bit PHP integer support.');
+        }
+
+        $client = $this->mockClient([]);
+        $index = $client->IDToIndex('80000000-0000-0000-0000-000000000000');
+        self::assertSame(PHP_INT_MIN, $index);
+    }
 }

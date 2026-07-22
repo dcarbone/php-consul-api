@@ -49,4 +49,14 @@ final class PreparedQueryClientTest extends TestCase
         self::assertNull($resp->Err);
         self::assertSame('/v1/query/query-abc', $this->history[0]['request']->getUri()->getPath());
     }
+
+    public function testUpdateRejectsEmptyQueryID(): void
+    {
+        $client = $this->mockClient([]);
+
+        $resp = $client->Update(new PreparedQueryDefinition(ID: '', Name: 'q'));
+
+        self::assertNotNull($resp->Err);
+        self::assertStringContainsString('cannot be empty', $resp->Err->getMessage());
+    }
 }

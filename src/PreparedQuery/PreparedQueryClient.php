@@ -21,6 +21,7 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
  */
 
 use DCarbone\PHPConsulAPI\PHPLib\AbstractClient;
+use DCarbone\PHPConsulAPI\PHPLib\Error;
 use DCarbone\PHPConsulAPI\PHPLib\RequestResponse;
 use DCarbone\PHPConsulAPI\PHPLib\ValuedWriteStringResponse;
 use DCarbone\PHPConsulAPI\PHPLib\WriteResponse;
@@ -36,6 +37,11 @@ class PreparedQueryClient extends AbstractClient
 
     public function Update(PreparedQueryDefinition $query, null|WriteOptions $opts = null): WriteResponse
     {
+        if ('' === $query->ID) {
+            $ret = new WriteResponse();
+            $ret->Err = new Error('prepared query ID cannot be empty');
+            return $ret;
+        }
         return $this->_executePut(sprintf('v1/query/%s', urlencode($query->ID)), $query, $opts);
     }
 

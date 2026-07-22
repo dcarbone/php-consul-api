@@ -62,6 +62,9 @@ class EventClient extends AbstractClient
         if (!preg_match('/^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/', $uuid)) {
             throw new \InvalidArgumentException("{$uuid} is not a valid UUID");
         }
+        if (8 > PHP_INT_SIZE) {
+            throw new \RuntimeException('IDToIndex requires 64-bit PHP integer support');
+        }
 
         $lower  = sprintf('%s%s%s', substr($uuid, 0, 8), substr($uuid, 9, 4), substr($uuid, 14, 4));
         $upper  = sprintf('%s%s', substr($uuid, 19, 4), substr($uuid, 24, 12));
@@ -71,6 +74,12 @@ class EventClient extends AbstractClient
         $upperHi = intval(substr($upper, 0, 8), 16);
         $upperLo = intval(substr($upper, 8, 8), 16);
 
-        return (($lowerHi ^ $upperHi) << 32) | ($lowerLo ^ $upperLo);
+        $xorHi = ($lowerHi ^ $upperHi) & 0xffffffff;
+        $xorLo = ($lowerLo ^ $upperLo) & 0xffffffff;
+        $low63 = (($xorHi & 0x7fffffff) << 32) | $xorLo;
+        if (0 !== ($xorHi & 0x80000000)) {
+            return PHP_INT_MIN | $low63;
+        }
+        return $low63;
     }
 }

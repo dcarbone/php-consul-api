@@ -25,7 +25,10 @@ use PHPUnit\Framework\TestCase;
 
 final class KVClientTest extends TestCase
 {
-    private function mockClient(int $statusCode, string $body, array &$history, array $headers = []): KVClient
+    /**
+     * @param array<string, array<int, string>> $headers
+     */
+    private function mockClient(int $statusCode, string $body, mixed &$history, array $headers = []): KVClient
     {
         $history = [];
         $stack = HandlerStack::create(new MockHandler([new Response($statusCode, $headers, $body)]));
@@ -249,6 +252,16 @@ final class KVClientTest extends TestCase
 
         $response = $client->Acquire(new KVPair(Key: 'test/lock', Value: 'locked', Session: 'session-id'));
 
+        self::assertInstanceOf(WriteResponse::class, $response);
+    }
+
+    public function testAcquireBoolLock(): void
+    {
+        $history = [];
+        $client = $this->mockClient(200, 'true', $history);
+
+        $response = $client->AcquireBool(new KVPair(Key: 'test/lock', Value: 'locked', Session: 'session-id'));
+
         self::assertInstanceOf(ValuedWriteBoolResponse::class, $response);
         self::assertTrue($response->getValue());
     }
@@ -259,6 +272,16 @@ final class KVClientTest extends TestCase
         $client = $this->mockClient(200, 'true', $history);
 
         $response = $client->Release(new KVPair(Key: 'test/lock', Value: 'released', Session: 'session-id'));
+
+        self::assertInstanceOf(WriteResponse::class, $response);
+    }
+
+    public function testReleaseBoolLock(): void
+    {
+        $history = [];
+        $client = $this->mockClient(200, 'true', $history);
+
+        $response = $client->ReleaseBool(new KVPair(Key: 'test/lock', Value: 'released', Session: 'session-id'));
 
         self::assertInstanceOf(ValuedWriteBoolResponse::class, $response);
         self::assertTrue($response->getValue());
