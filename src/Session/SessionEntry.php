@@ -203,36 +203,33 @@ class SessionEntry extends AbstractType
         return $this;
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    public function _toAPIPayload(): array
+    public function _toAPIPayload(): \stdClass
     {
-        $out = [];
+        $out = new \stdClass();
 
         if ('' !== $this->Name) {
-            $out['Name'] = $this->Name;
+            $out->Name = $this->Name;
         }
         if ('' !== $this->Node) {
-            $out['Node'] = $this->Node;
+            $out->Node = $this->Node;
         }
         if (0 < $this->LockDelay->Nanoseconds()) {
-            $out['LockDelay'] = dur_to_millisecond($this->LockDelay);
+            $out->LockDelay = dur_to_millisecond($this->LockDelay);
         }
         if ([] !== $this->Checks) {
-            $out['Checks'] = $this->Checks;
+            $out->Checks = $this->Checks;
         }
         if ([] !== $this->NodeChecks) {
-            $out['NodeChecks'] = $this->NodeChecks;
+            $out->NodeChecks = $this->NodeChecks;
         }
         if ([] !== $this->ServiceChecks) {
-            $out['ServiceChecks'] = $this->ServiceChecks;
+            $out->ServiceChecks = $this->ServiceChecks;
         }
         if ('' !== $this->Behavior) {
-            $out['Behavior'] = $this->Behavior;
+            $out->Behavior = $this->Behavior;
         }
         if ('' !== $this->TTL) {
-            $out['TTL'] = $this->TTL;
+            $out->TTL = $this->TTL;
         }
 
         return $out;

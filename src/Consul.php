@@ -34,6 +34,7 @@ use DCarbone\PHPConsulAPI\Peering\PeeringClient;
 use DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryClient;
 use DCarbone\PHPConsulAPI\Session\SessionClient;
 use DCarbone\PHPConsulAPI\Status\StatusClient;
+use DCarbone\PHPConsulAPI\Txn\TxnClient;
 
 class Consul
 {
@@ -68,6 +69,7 @@ class Consul
     public const KVLock           = 'lock';
     public const KVUnlock         = 'unlock';
     public const KVGet            = 'get';
+    public const KVGetOrEmpty     = 'get-or-empty';
     public const KVGetTree        = 'get-tree';
     public const KVCheckSession   = 'check-session';
     public const KVCheckIndex     = 'check-index';
@@ -147,6 +149,7 @@ class Consul
     public PreparedQueryClient $PreparedQuery;
     public SessionClient $Session;
     public StatusClient $Status;
+    public TxnClient $Txn;
 
     public function __construct(null|Config $config = null)
     {
@@ -181,6 +184,7 @@ class Consul
         $this->PreparedQuery = new PreparedQueryClient($config);
         $this->Session       = new SessionClient($config);
         $this->Status        = new StatusClient($config);
+        $this->Txn           = new TxnClient($config);
     }
 
     public function ACL(): ACLClient
@@ -261,6 +265,11 @@ class Consul
     public function Status(): StatusClient
     {
         return $this->Status;
+    }
+
+    public function Txn(): TxnClient
+    {
+        return $this->Txn;
     }
 
     public static function MakeConfigEntry(string $kind, string $name): ConfigEntry\ConfigEntry

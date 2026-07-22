@@ -331,4 +331,21 @@ final class KVClientTest extends TestCase
         self::assertInstanceOf(KVTxnAPIResponse::class, $response);
         self::assertTrue($response->OK);
     }
+
+    public function testTxnConflictSetsOKFalse(): void
+    {
+        $txnResponse = [
+            'Results' => [],
+            'Errors' => [['OpIndex' => 0, 'What' => 'conflict']],
+        ];
+        $history = [];
+        $client = $this->mockClient(409, json_encode($txnResponse, JSON_THROW_ON_ERROR), $history);
+
+        $response = $client->Txn(null, new TxnOp(KV: new KVTxnOp(Verb: KVOp::KVSet, Key: 'test/key', Value: 'test')));
+
+        self::assertInstanceOf(KVTxnAPIResponse::class, $response);
+        self::assertFalse($response->OK);
+        self::assertNotNull($response->KVTxnResponse);
+        self::assertCount(1, $response->KVTxnResponse->Errors);
+    }
 }

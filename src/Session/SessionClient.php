@@ -32,17 +32,12 @@ class SessionClient extends AbstractClient
 {
     public function CreateNoChecks(null|SessionEntry $sessionEntry = null, null|WriteOptions $opts = null): ValuedWriteStringResponse
     {
-        if (null === $sessionEntry) {
-            $body = new SessionEntry();
-        } else {
-            $body = clone $sessionEntry;
-        }
-
-        $body->Checks        = [];
-        $body->NodeChecks    = [];
+        $body = null === $sessionEntry ? new SessionEntry() : clone $sessionEntry;
+        $body->Checks = [];
+        $body->NodeChecks = [];
         $body->ServiceChecks = [];
 
-        return $this->_create('v1/session/create', $body, $opts);
+        return $this->_create(path: 'v1/session/create', entry: $body, opts: $opts, includeEmptyNodeChecks: true);
     }
 
     public function Create(null|SessionEntry $sessionEntry = null, null|WriteOptions $opts = null): ValuedWriteStringResponse
@@ -110,9 +105,21 @@ class SessionClient extends AbstractClient
         return $ret;
     }
 
-    private function _create(string $path, SessionEntry $entry, null|WriteOptions $opts): ValuedWriteStringResponse
-    {
-        $resp = $this->_requireOK($this->_doPut($path, $entry->_toAPIPayload(), $opts));
+    private function _create(
+        string $path,
+        null|SessionEntry $entry,
+        null|WriteOptions $opts,
+        bool $includeEmptyNodeChecks = false
+    ): ValuedWriteStringResponse {
+        $body = null;
+        if (null !== $entry) {
+            $body = $entry->_toAPIPayload();
+            if ($includeEmptyNodeChecks && !property_exists($body, 'NodeChecks')) {
+                $body->NodeChecks = [];
+            }
+        }
+
+        $resp = $this->_requireOK($this->_doPut($path, $body, $opts));
         $ret  = new ValuedWriteStringResponse();
 
         if (null !== $resp->Err) {
