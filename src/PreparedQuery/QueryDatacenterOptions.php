@@ -27,16 +27,21 @@ class QueryDatacenterOptions extends AbstractType
     public int $NearestN;
     /** @var array<string> */
     public array $Datacenters;
+    /** @var array<QueryFailoverTarget> */
+    public array $Targets;
 
     /**
      * @param array<string> $Datacenters
+     * @param array<QueryFailoverTarget> $Targets
      */
     public function __construct(
         int $NearestN = 0,
         array $Datacenters = [],
+        array $Targets = [],
     ) {
         $this->NearestN = $NearestN;
         $this->setDatacenters(...$Datacenters);
+        $this->setTargets(...$Targets);
     }
 
     public function getNearestN(): int
@@ -70,11 +75,32 @@ class QueryDatacenterOptions extends AbstractType
         return $this;
     }
 
+    /**
+     * @return array<QueryFailoverTarget>
+     */
+    public function getTargets(): array
+    {
+        return $this->Targets;
+    }
+
+    public function setTargets(QueryFailoverTarget ...$Targets): self
+    {
+        $this->Targets = $Targets;
+        return $this;
+    }
+
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
         foreach ((array)$decoded as $k => $v) {
-            $n->{$k} = $v;
+            if ('Targets' === $k) {
+                $n->Targets = [];
+                foreach ($v as $vv) {
+                    $n->Targets[] = QueryFailoverTarget::jsonUnserialize($vv);
+                }
+            } else {
+                $n->{$k} = $v;
+            }
         }
         return $n;
     }
@@ -84,6 +110,7 @@ class QueryDatacenterOptions extends AbstractType
         $out = $this->_startJsonSerialize();
         $out->NearestN = $this->NearestN;
         $out->Datacenters = $this->Datacenters;
+        $out->Targets = $this->Targets;
         return $out;
     }
 }

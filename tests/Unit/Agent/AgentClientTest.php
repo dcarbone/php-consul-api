@@ -468,6 +468,22 @@ final class AgentClientTest extends TestCase
         self::assertSame('register-token', $request->getHeaderLine('X-Consul-Token'));
     }
 
+    public function testMetricsStreamUsesExpectedEndpoint(): void
+    {
+        $history = [];
+        $client = $this->newClient([
+            new Response(200, [], 'stream-data'),
+        ], $history);
+
+        $resp = $client->MetricsStream();
+
+        self::assertNull($resp->Err);
+        self::assertSame('stream-data', $resp->Value);
+        [$request, , ] = $this->requestData($history);
+        self::assertSame('GET', $request->getMethod());
+        self::assertSame('/v1/agent/metrics/stream', $request->getUri()->getPath());
+    }
+
     private function newClient(array $responses, array &$history): AgentClient
     {
         $history = [];

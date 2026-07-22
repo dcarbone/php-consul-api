@@ -30,6 +30,7 @@ use DCarbone\PHPConsulAPI\Event\EventClient;
 use DCarbone\PHPConsulAPI\Health\HealthClient;
 use DCarbone\PHPConsulAPI\KV\KVClient;
 use DCarbone\PHPConsulAPI\Operator\OperatorClient;
+use DCarbone\PHPConsulAPI\Peering\PeeringClient;
 use DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryClient;
 use DCarbone\PHPConsulAPI\Session\SessionClient;
 use DCarbone\PHPConsulAPI\Status\StatusClient;
@@ -142,6 +143,7 @@ class Consul
     public HealthClient $Health;
     public KVClient $KV;
     public OperatorClient $Operator;
+    public PeeringClient $Peering;
     public PreparedQueryClient $PreparedQuery;
     public SessionClient $Session;
     public StatusClient $Status;
@@ -175,6 +177,7 @@ class Consul
         $this->Health        = new HealthClient($config);
         $this->KV            = new KVClient($config);
         $this->Operator      = new OperatorClient($config);
+        $this->Peering       = new PeeringClient($config);
         $this->PreparedQuery = new PreparedQueryClient($config);
         $this->Session       = new SessionClient($config);
         $this->Status        = new StatusClient($config);
@@ -238,6 +241,16 @@ class Consul
     public function PreparedQuery(): PreparedQueryClient
     {
         return $this->PreparedQuery;
+    }
+
+    public function Peering(): PeeringClient
+    {
+        return $this->Peering;
+    }
+
+    public function Peerings(): PeeringClient
+    {
+        return $this->Peering;
     }
 
     public function Session(): SessionClient

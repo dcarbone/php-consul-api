@@ -86,6 +86,18 @@ class AgentClient extends AbstractClient
         return $ret;
     }
 
+    public function MetricsStream(): ValuedStringResponse
+    {
+        $ret = new ValuedStringResponse();
+        $resp = $this->_requireOK($this->_doGet('v1/agent/metrics/stream', null));
+        if (null !== $resp->Err) {
+            $ret->Err = $resp->Err;
+            return $ret;
+        }
+        $ret->Value = (string)$resp->Response->getBody();
+        return $ret;
+    }
+
     public function Reload(): null|Error
     {
         return $this->_executePut('v1/agent/reload', null, null)->Err;

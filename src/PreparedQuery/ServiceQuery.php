@@ -25,7 +25,9 @@ use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 class ServiceQuery extends AbstractType
 {
     public string $Service;
+    public string $SamenessGroup;
     public string $Namespace;
+    public string $Partition;
     public string $Near;
     /** @var array<string> */
     public array $Tags;
@@ -47,7 +49,9 @@ class ServiceQuery extends AbstractType
      */
     public function __construct(
         string $Service = '',
+        string $SamenessGroup = '',
         string $Namespace = '',
+        string $Partition = '',
         string $Near = '',
         array $Tags = [],
         array $IgnoreCheckIDs = [],
@@ -58,7 +62,9 @@ class ServiceQuery extends AbstractType
         bool $Connect = false,
     ) {
         $this->Service = $Service;
+        $this->SamenessGroup = $SamenessGroup;
         $this->Namespace = $Namespace;
+        $this->Partition = $Partition;
         $this->Near = $Near;
         $this->setTags(...$Tags);
         $this->setIgnoreCheckIDs(...$IgnoreCheckIDs);
@@ -88,6 +94,28 @@ class ServiceQuery extends AbstractType
     public function setNamespace(string $Namespace): self
     {
         $this->Namespace = $Namespace;
+        return $this;
+    }
+
+    public function getSamenessGroup(): string
+    {
+        return $this->SamenessGroup;
+    }
+
+    public function setSamenessGroup(string $SamenessGroup): self
+    {
+        $this->SamenessGroup = $SamenessGroup;
+        return $this;
+    }
+
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
         return $this;
     }
 
@@ -216,8 +244,14 @@ class ServiceQuery extends AbstractType
     {
         $out = $this->_startJsonSerialize();
         $out->Service = $this->Service;
+        if ('' !== $this->SamenessGroup) {
+            $out->SamenessGroup = $this->SamenessGroup;
+        }
         if ('' !== $this->Namespace) {
             $out->Namespace = $this->Namespace;
+        }
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
         }
         $out->Near = $this->Near;
         $out->Tags = $this->Tags;
