@@ -23,6 +23,7 @@ namespace DCarbone\PHPConsulAPI;
 use DCarbone\PHPConsulAPI\ACL\ACLClient;
 use DCarbone\PHPConsulAPI\Agent\AgentClient;
 use DCarbone\PHPConsulAPI\Catalog\CatalogClient;
+use DCarbone\PHPConsulAPI\ConfigEntry\ConfigEntryClient;
 use DCarbone\PHPConsulAPI\Coordinate\CoordinateClient;
 use DCarbone\PHPConsulAPI\Event\EventClient;
 use DCarbone\PHPConsulAPI\Health\HealthClient;
@@ -104,9 +105,20 @@ class Consul
     public const MeshConfigMesh = 'mesh';
     public const APIGateway = "api-gateway";
     public const TCPRoute = "tcp-route";
+    public const FileSystemCertificate = 'file-system-certificate';
     public const InlineCertificate = 'inline-certificate';
     public const HTTPRoute = 'http-route';
+    public const RateLimit = 'rate-limit';
     public const JWTProvider = 'jwt-provider';
+
+    public const BuiltinAWSLambdaExtension         = 'builtin/aws/lambda';
+    public const BuiltinExtAuthzExtension          = 'builtin/ext-authz';
+    public const BuiltinExtProcExtension           = 'builtin/ext-proc';
+    public const BuiltinLuaExtension               = 'builtin/lua';
+    public const BuiltinOTELAccessLoggingExtension = 'builtin/otel-access-logging';
+    public const BuiltinPropertyOverrideExtension  = 'builtin/property-override';
+    public const BuiltinWasmExtension              = 'builtin/wasm';
+    public const BuiltinValidateExtension          = 'builtin/proxy/validate';
 
     // "private" constants
 
@@ -122,6 +134,7 @@ class Consul
     public ACLClient $ACL;
     public AgentClient $Agent;
     public CatalogClient $Catalog;
+    public ConfigEntryClient $ConfigEntry;
     public CoordinateClient $Coordinate;
     public EventClient $Event;
     public HealthClient $Health;
@@ -153,6 +166,7 @@ class Consul
         $this->ACL           = new ACLClient($config);
         $this->Agent         = new AgentClient($config);
         $this->Catalog       = new CatalogClient($config);
+        $this->ConfigEntry   = new ConfigEntryClient($config);
         $this->Coordinate    = new CoordinateClient($config);
         $this->Event         = new EventClient($config);
         $this->Health        = new HealthClient($config);
@@ -181,6 +195,16 @@ class Consul
     public function Coordinate(): CoordinateClient
     {
         return $this->Coordinate;
+    }
+
+    public function ConfigEntry(): ConfigEntryClient
+    {
+        return $this->ConfigEntry;
+    }
+
+    public function ConfigEntries(): ConfigEntryClient
+    {
+        return $this->ConfigEntry;
     }
 
     public function Event(): EventClient

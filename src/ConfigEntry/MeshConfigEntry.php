@@ -71,6 +71,17 @@ class MeshConfigEntry extends AbstractType implements ConfigEntry
         return Consul::MeshConfigMesh;
     }
 
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
+    }
+
     public function getTransparentProxy(): TransparentProxyMeshConfig
     {
         return $this->TransparentProxy;

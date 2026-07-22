@@ -20,28 +20,23 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
-/**
- * Interface ConfigEntry
- *
- * NOTE: I'm being a bit lazy here and relying on the case-insensitive
- *      nature of class methods to make implementations of this interface work.
- */
-interface ConfigEntry
+use DCarbone\PHPConsulAPI\PHPLib\AbstractValuedQueryResponse;
+use DCarbone\PHPConsulAPI\PHPLib\UnmarshalledResponseInterface;
+
+class ConfigEntryQueryResponse extends AbstractValuedQueryResponse implements UnmarshalledResponseInterface
 {
-    public function GetKind(): string;
+    public null|ConfigEntry $Entry = null;
 
-    public function GetName(): string;
+    public function getValue(): null|ConfigEntry
+    {
+        return $this->Entry;
+    }
 
-    public function GetPartition(): string;
-
-    public function GetNamespace(): string;
-
-    /**
-     * @return array<string,mixed>|null
-     */
-    public function GetMeta(): null|array;
-
-    public function GetCreateIndex(): int;
-
-    public function GetModifyIndex(): int;
+    public function unmarshalValue(mixed $decoded): void
+    {
+        if (!($decoded instanceof \stdClass)) {
+            throw new \RuntimeException('Config entry get response must decode to an object');
+        }
+        $this->Entry = ConfigEntryFactory::decode($decoded);
+    }
 }
