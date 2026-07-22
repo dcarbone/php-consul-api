@@ -20,76 +20,51 @@ namespace DCarbone\PHPConsulAPI\Debug;
    limitations under the License.
  */
 
-use DCarbone\Go\HTTP;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractClient;
-use DCarbone\PHPConsulAPI\PHPLib\Error;
 use DCarbone\PHPConsulAPI\PHPLib\ValuedStringResponse;
 
 class DebugClient extends AbstractClient
 {
     public function Heap(): ValuedStringResponse
     {
-        $ret  = new ValuedStringResponse();
-        $resp = $this->_doGet('/debug/pprof/heap', null);
-        if (null !== $resp->Err) {
-            $ret->Err = $resp->Err;
-            return $ret;
-        }
-        if (HTTP\StatusOK !== $resp->Response->getStatusCode()) {
-            $ret->Err = Error::unexpectedResponseCodeError($resp);
-        }
-        $this->_unmarshalResponse($resp, $ret);
-        return $ret;
+        return $this->_pprofRequest('/debug/pprof/heap');
     }
 
     public function Profile(int $seconds): ValuedStringResponse
     {
-        $ret = new ValuedStringResponse();
-        $req = $this->_newGetRequest('/debug/pprof/profile', null);
-        $req->params->set('seconds', (string)$seconds);
-        $resp = $this->_do($req);
-        if (null !== $resp->Err) {
-            $ret->Err = $resp->Err;
-            return $ret;
-        }
-        if (HTTP\StatusOK !== $resp->Response->getStatusCode()) {
-            $ret->Err = Error::unexpectedResponseCodeError($resp);
-            return $ret;
-        }
-        $this->_unmarshalResponse($resp, $ret);
-        return $ret;
+        return $this->_pprofRequest('/debug/pprof/profile', $seconds);
     }
 
     public function Trace(int $seconds): ValuedStringResponse
     {
-        $ret = new ValuedStringResponse();
-        $req = $this->_newGetRequest('/debug/pprof/trace', null);
-        $req->params->set('seconds', (string)$seconds);
-        $resp = $this->_do($req);
-        if (null !== $resp->Err) {
-            $ret->Err = $resp->Err;
-            return $ret;
-        }
-        if (HTTP\StatusOK !== $resp->Response->getStatusCode()) {
-            $ret->Err = Error::unexpectedResponseCodeError($resp);
-            return $ret;
-        }
-        $this->_unmarshalResponse($resp, $ret);
-        return $ret;
+        return $this->_pprofRequest('/debug/pprof/trace', $seconds);
     }
 
     public function Goroutine(): ValuedStringResponse
     {
-        $ret  = new ValuedStringResponse();
-        $resp = $this->_doGet('/debug/pprof/goroutine', null);
+        return $this->_pprofRequest('/debug/pprof/goroutine');
+    }
+
+    public function PProf(string $name, int $seconds): ValuedStringResponse
+    {
+        return $this->_pprofRequest(sprintf('/debug/pprof/%s', trim($name, '/')), $seconds);
+    }
+
+    private function _pprofRequest(string $path, null|int $seconds = null): ValuedStringResponse
+    {
+        $ret = new ValuedStringResponse();
+        $r = $this->_newGetRequest($path, null);
+        if (null !== $seconds) {
+            $r->params->set('seconds', (string)$seconds);
+        }
+
+        $resp = $this->_requireOK($this->_do($r));
         if (null !== $resp->Err) {
             $ret->Err = $resp->Err;
             return $ret;
         }
-        if (HTTP\StatusOK !== $resp->Response->getStatusCode()) {
-            $ret->Err = Error::unexpectedResponseCodeError($resp);
-        }
-        $this->_unmarshalResponse($resp, $ret);
+
+        $ret->Value = (string)$resp->Response->getBody();
         return $ret;
     }
 }

@@ -25,6 +25,7 @@ use DCarbone\PHPConsulAPI\Agent\AgentClient;
 use DCarbone\PHPConsulAPI\Catalog\CatalogClient;
 use DCarbone\PHPConsulAPI\ConfigEntry\ConfigEntryClient;
 use DCarbone\PHPConsulAPI\Coordinate\CoordinateClient;
+use DCarbone\PHPConsulAPI\Debug\DebugClient;
 use DCarbone\PHPConsulAPI\Event\EventClient;
 use DCarbone\PHPConsulAPI\Health\HealthClient;
 use DCarbone\PHPConsulAPI\KV\KVClient;
@@ -136,6 +137,7 @@ class Consul
     public CatalogClient $Catalog;
     public ConfigEntryClient $ConfigEntry;
     public CoordinateClient $Coordinate;
+    public DebugClient $Debug;
     public EventClient $Event;
     public HealthClient $Health;
     public KVClient $KV;
@@ -168,6 +170,7 @@ class Consul
         $this->Catalog       = new CatalogClient($config);
         $this->ConfigEntry   = new ConfigEntryClient($config);
         $this->Coordinate    = new CoordinateClient($config);
+        $this->Debug         = new DebugClient($config);
         $this->Event         = new EventClient($config);
         $this->Health        = new HealthClient($config);
         $this->KV            = new KVClient($config);
@@ -210,6 +213,11 @@ class Consul
     public function Event(): EventClient
     {
         return $this->Event;
+    }
+
+    public function Debug(): DebugClient
+    {
+        return $this->Debug;
     }
 
     public function Health(): HealthClient
