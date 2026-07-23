@@ -30,6 +30,13 @@ final class EventClientTest extends TestCase
         return new EventClient(new Config(HttpClient: $httpClient));
     }
 
+    private function require64BitPHP(): void
+    {
+        if (8 > PHP_INT_SIZE) {
+            self::markTestSkipped('Requires 64-bit PHP integer support.');
+        }
+    }
+
     public function testFireSetsFiltersAndContentType(): void
     {
         $client = $this->mockClient(
@@ -87,6 +94,7 @@ final class EventClientTest extends TestCase
 
     public function testIDToIndexUsesHexDecoding(): void
     {
+        $this->require64BitPHP();
         $client = $this->mockClient([]);
 
         $index = $client->IDToIndex('12345678-9012-3456-7890-123456789012');
@@ -96,6 +104,7 @@ final class EventClientTest extends TestCase
 
     public function testIDToIndexParsesHexCharactersCorrectly(): void
     {
+        $this->require64BitPHP();
         $client = $this->mockClient([]);
 
         $index = $client->IDToIndex('abcdefab-cdef-abcd-efab-cdefabcdefab');
@@ -112,10 +121,7 @@ final class EventClientTest extends TestCase
 
     public function testIDToIndexHandlesSignBitDeterministically(): void
     {
-        if (8 > PHP_INT_SIZE) {
-            self::markTestSkipped('Requires 64-bit PHP integer support.');
-        }
-
+        $this->require64BitPHP();
         $client = $this->mockClient([]);
         $index = $client->IDToIndex('80000000-0000-0000-0000-000000000000');
         self::assertSame(PHP_INT_MIN, $index);
