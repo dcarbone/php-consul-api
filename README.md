@@ -31,10 +31,9 @@ There are a couple breaking changes between v2 and v3:
 1. The `FakeMap` class has been removed.
 2. The `FakeSlice` class has been removed.
 3. The `ReadableDuration` class has been removed.
-4. All models now have parameterized constructors. 
-    * For the life of V3 I will continue to support construction from associative arrays, but the parameterized 
-      constructors are the preferred method of construction.
-    * Construction via associative array will be removed entirely in V4 (whenever I get around to that).
+4. All models now have parameterized constructors.
+    * The preferred construction style in v3 is constructor named parameters.
+    * Legacy construction via associative arrays (`new Model(data: [...])`) is deprecated and will be removed in v4.
 5. All of that `Transcoding` nonsense has been removed.
 6. The root `Config` class may no longer be constructed with a map.  You must use constructor parameters.
 7. Map-like fields are represented in PHP as associative arrays (for example, `array<string,mixed>`); some JSON object inputs may still be accepted as `\stdClass` at setter boundaries.
@@ -146,6 +145,31 @@ var_dump($kvResp->Value);
 ### Method Naming Note
 
 Unlike the Go SDK, this client generally uses a single base method with an optional `$opts` argument instead of duplicated `*Opts` method variants.
+
+## Model Construction (v3)
+
+Use named constructor parameters for normal model creation.
+
+```php
+use DCarbone\PHPConsulAPI\KV\KVPair;
+
+$pair = new KVPair(
+    Key: 'app/config',
+    Value: 'example',
+    Flags: 0,
+);
+```
+
+Associative-array construction through `$data` remains available for legacy code paths but is deprecated and scheduled for removal in v4.
+
+```php
+// Deprecated in v3, removed in v4:
+$pair = new KVPair(data: [
+    'Key' => 'app/config',
+    'Value' => base64_encode('example'),
+    'Flags' => 0,
+]);
+```
 
 ## Current Clients
 
