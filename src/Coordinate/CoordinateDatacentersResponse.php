@@ -39,6 +39,9 @@ class CoordinateDatacentersResponse extends AbstractValuedResponse implements Un
     public function unmarshalValue(mixed $decoded): void
     {
         $this->DatacenterMap = [];
+        if (!is_array($decoded)) {
+            return;
+        }
         foreach ($decoded as $item) {
             $this->DatacenterMap[] = CoordinateDatacenterMap::jsonUnserialize($item);
         }

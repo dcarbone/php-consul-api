@@ -39,6 +39,9 @@ class OperatorAreasResponse extends AbstractValuedQueryResponse implements Unmar
     public function unmarshalValue(mixed $decoded): void
     {
         $this->Areas = [];
+        if (!is_array($decoded)) {
+            return;
+        }
         foreach ($decoded as $area) {
             $this->Areas[] = Area::jsonUnserialize($area);
         }

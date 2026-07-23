@@ -51,5 +51,13 @@ final class AgentChecksResponseTest extends TestCase
         self::assertSame([], $r[0]);
         self::assertNull($r[1]);
     }
-}
 
+    public function testUnmarshalValueScalarKeepsDefaultArray(): void
+    {
+        $r = new AgentChecksResponse();
+        $r->unmarshalValue('nope');
+
+        self::assertSame([], $r->Checks);
+        self::assertSame([], $r->getValue());
+    }
+}

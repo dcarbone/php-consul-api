@@ -39,6 +39,9 @@ class GatewayServicesResponse extends AbstractValuedQueryResponse implements Unm
     public function unmarshalValue(mixed $decoded): void
     {
         $this->GatewayServices = [];
+        if (!is_array($decoded)) {
+            return;
+        }
         foreach ($decoded as $service) {
             $this->GatewayServices[] = GatewayService::jsonUnserialize($service);
         }

@@ -39,6 +39,9 @@ class CoordinateEntriesResponse extends AbstractValuedQueryResponse implements U
     public function unmarshalValue(mixed $decoded): void
     {
         $this->Nodes = [];
+        if (!is_array($decoded)) {
+            return;
+        }
         foreach ($decoded as $node) {
             $this->Nodes[] = CoordinateEntry::jsonUnserialize($node);
         }

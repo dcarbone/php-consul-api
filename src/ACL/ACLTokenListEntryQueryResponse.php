@@ -39,6 +39,9 @@ class ACLTokenListEntryQueryResponse extends AbstractValuedQueryResponse impleme
     public function unmarshalValue(mixed $decoded): void
     {
         $this->ACLTokenListEntries = [];
+        if (!is_array($decoded)) {
+            return;
+        }
         foreach ($decoded as $datum) {
             $this->ACLTokenListEntries[] = ACLTokenListEntry::jsonUnserialize($datum);
         }

@@ -39,6 +39,9 @@ class AgentChecksResponse extends AbstractValuedResponse implements Unmarshalled
     public function unmarshalValue(mixed $decoded): void
     {
         $this->Checks = [];
+        if (!(is_array($decoded) || $decoded instanceof \stdClass)) {
+            return;
+        }
         foreach ($decoded as $k => $v) {
             $this->Checks[$k] = AgentCheck::jsonUnserialize($v);
         }

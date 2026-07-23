@@ -39,6 +39,9 @@ class CatalogServicesResponse extends AbstractValuedQueryResponse implements Unm
     public function unmarshalValue(mixed $decoded): void
     {
         $this->Services = [];
+        if (!is_array($decoded)) {
+            return;
+        }
         foreach ($decoded as $node) {
             $this->Services[] = CatalogService::jsonUnserialize($node);
         }

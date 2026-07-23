@@ -39,6 +39,9 @@ class OperatorKeyringListResponse extends AbstractValuedResponse implements Unma
     public function unmarshalValue(mixed $decoded): void
     {
         $this->Keyrings = [];
+        if (!is_array($decoded)) {
+            return;
+        }
         foreach ($decoded as $keyring) {
             $this->Keyrings[] = (array)$keyring;
         }

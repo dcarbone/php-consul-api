@@ -39,6 +39,9 @@ class NodesResponse extends AbstractValuedQueryResponse implements UnmarshalledR
     public function unmarshalValue(mixed $decoded): void
     {
         $this->Nodes = [];
+        if (!is_array($decoded)) {
+            return;
+        }
         foreach ($decoded as $node) {
             $this->Nodes[] = Node::jsonUnserialize($node);
         }

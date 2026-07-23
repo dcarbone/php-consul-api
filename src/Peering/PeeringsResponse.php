@@ -23,6 +23,9 @@ class PeeringsResponse extends AbstractValuedQueryResponse implements Unmarshall
     public function unmarshalValue(mixed $decoded): void
     {
         $this->Peerings = [];
+        if (!is_array($decoded)) {
+            return;
+        }
         foreach ($decoded as $peering) {
             $this->Peerings[] = Peering::jsonUnserialize($peering);
         }

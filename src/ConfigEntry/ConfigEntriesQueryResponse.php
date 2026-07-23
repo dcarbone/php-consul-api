@@ -38,10 +38,10 @@ class ConfigEntriesQueryResponse extends AbstractValuedQueryResponse implements 
 
     public function unmarshalValue(mixed $decoded): void
     {
-        if (!is_array($decoded)) {
-            throw new \RuntimeException('Config entries list response must decode to an array');
-        }
         $this->Entries = [];
+        if (!is_array($decoded)) {
+            return;
+        }
         foreach ($decoded as $entry) {
             if (!($entry instanceof \stdClass)) {
                 throw new \RuntimeException('Config entries list contained a non-object entry');
