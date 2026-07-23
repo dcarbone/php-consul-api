@@ -135,6 +135,22 @@ final class KVClientTest extends TestCase
         self::assertArrayHasKey('pretty', $query);
     }
 
+    public function testKeysSecondArgumentNullForBC(): void
+    {
+        $keys = ['test/key1'];
+        $history = [];
+        $client = $this->mockClient(200, json_encode($keys, JSON_THROW_ON_ERROR), $history);
+
+        $response = $client->Keys('test/', null);
+
+        self::assertInstanceOf(ValuedQueryStringsResponse::class, $response);
+        self::assertCount(1, $history);
+
+        parse_str($history[0]['request']->getUri()->getQuery(), $query);
+        self::assertArrayHasKey('keys', $query);
+        self::assertArrayNotHasKey('separator', $query);
+    }
+
     public function testPutSimple(): void
     {
         $history = [];

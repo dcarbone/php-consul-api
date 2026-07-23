@@ -120,6 +120,20 @@ final class HealthClientTest extends TestCase
         self::assertSame('1', $query['passing']);
     }
 
+    public function testIngressAcceptsNullPassingOnlyForBC(): void
+    {
+        $history = [];
+        $client = $this->mockClient(200, json_encode([], JSON_THROW_ON_ERROR), $history);
+
+        $response = $client->Ingress('web', 'blue', null);
+
+        self::assertInstanceOf(ServiceEntriesResponse::class, $response);
+        parse_str($history[0]['request']->getUri()->getQuery(), $query);
+        self::assertSame('/v1/health/ingress/web', $history[0]['request']->getUri()->getPath());
+        self::assertSame('blue', $query['tag']);
+        self::assertArrayNotHasKey('passing', $query);
+    }
+
     public function testStateRejectsUnknown(): void
     {
         $history = [];

@@ -82,6 +82,20 @@ final class ACLClientTest extends TestCase
         self::assertArrayHasKey('pretty', $query);
     }
 
+    public function testBindingRuleListSupportsLegacyNullFirstArgument(): void
+    {
+        $history = [];
+        $client = $this->mockClient(200, '[]', $history);
+
+        $response = $client->BindingRuleList(null);
+
+        self::assertInstanceOf(ACLBindingRulesQueryResponse::class, $response);
+        self::assertCount(1, $history);
+
+        parse_str($history[0]['request']->getUri()->getQuery(), $query);
+        self::assertArrayNotHasKey('authmethod', $query);
+    }
+
     public function testRulesTranslateReturnsDeprecatedErrorWithoutRequest(): void
     {
         $history = [];

@@ -448,6 +448,21 @@ final class AgentClientTest extends TestCase
         self::assertSame(['wan' => '1'], $params);
     }
 
+    public function testMembersNullConstructsExpectedRequest(): void
+    {
+        $history = [];
+        $client = $this->newClient([
+            new Response(200, [], json_encode([], JSON_THROW_ON_ERROR)),
+        ], $history);
+
+        $client->Members(null);
+
+        [$request, , $params] = $this->requestData($history);
+        self::assertSame('GET', $request->getMethod());
+        self::assertSame('/v1/agent/members', $request->getUri()->getPath());
+        self::assertSame([], $params);
+    }
+
     public function testServiceRegisterUsesRegisterTokenHeader(): void
     {
         $history = [];

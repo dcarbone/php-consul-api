@@ -373,12 +373,15 @@ class ACLClient extends AbstractClient
      * Passing a string sets the `authmethod` filter.
      * Passing QueryOptions as the first argument is equivalent to
      * `BindingRuleList('', $opts)`.
+     * Passing null as the first argument is equivalent to `BindingRuleList()`.
      */
-    public function BindingRuleList(string|QueryOptions $methodNameOrOpts = '', null|QueryOptions $opts = null): ACLBindingRulesQueryResponse
+    public function BindingRuleList(null|string|QueryOptions $methodNameOrOpts = '', null|QueryOptions $opts = null): ACLBindingRulesQueryResponse
     {
         if ($methodNameOrOpts instanceof QueryOptions) {
             $methodName = '';
             $opts = $methodNameOrOpts;
+        } elseif (null === $methodNameOrOpts) {
+            $methodName = '';
         } else {
             $methodName = $methodNameOrOpts;
         }

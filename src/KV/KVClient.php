@@ -117,15 +117,18 @@ class KVClient extends AbstractClient
      *
      * Passing QueryOptions as the second argument is equivalent to
      * `Keys($prefix, '', $opts)`.
+     * Passing null as the second argument is equivalent to `Keys($prefix)`.
      */
     public function Keys(
         string $prefix = '',
-        string|QueryOptions $separatorOrOpts = '',
+        null|string|QueryOptions $separatorOrOpts = '',
         null|QueryOptions $opts = null
     ): ValuedQueryStringsResponse {
         if ($separatorOrOpts instanceof QueryOptions) {
             $separator = '';
             $opts = $separatorOrOpts;
+        } elseif (null === $separatorOrOpts) {
+            $separator = '';
         } else {
             $separator = $separatorOrOpts;
         }

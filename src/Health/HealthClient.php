@@ -77,11 +77,12 @@ class HealthClient extends AbstractClient
      * Supports legacy and expanded call shapes:
      * - `$tagOrPassingOnly` as bool toggles passing-only behavior directly.
      * - `$passingOnlyOrOpts` as QueryOptions is equivalent to passing `$opts`.
+     * - `$passingOnlyOrOpts` as null is treated as `false` for backward compatibility.
      */
     public function Ingress(
         string $service,
         string|bool $tagOrPassingOnly = false,
-        bool|QueryOptions $passingOnlyOrOpts = false,
+        null|bool|QueryOptions $passingOnlyOrOpts = false,
         null|QueryOptions $opts = null
     ): ServiceEntriesResponse {
         $tags = [];
@@ -99,7 +100,7 @@ class HealthClient extends AbstractClient
             if ($passingOnlyOrOpts instanceof QueryOptions) {
                 $opts = $passingOnlyOrOpts;
             } else {
-                $passingOnly = $passingOnlyOrOpts;
+                $passingOnly = $passingOnlyOrOpts ?? false;
             }
         }
 

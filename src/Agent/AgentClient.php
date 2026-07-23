@@ -222,15 +222,16 @@ class AgentClient extends AbstractClient
      *
      * Passing `true` is equivalent to `new MembersOpts(WAN: true)`.
      * Passing `false` is equivalent to `new MembersOpts()`.
+     * Passing `null` is also treated as `false` for backward compatibility.
      */
-    public function Members(bool|MembersOpts $opts = false): AgentMembersResponse
+    public function Members(null|bool|MembersOpts $opts = false): AgentMembersResponse
     {
         $memberOpts = null;
         if ($opts instanceof MembersOpts) {
             $memberOpts = $opts;
             $wan = $memberOpts->WAN;
         } else {
-            $wan = $opts;
+            $wan = $opts ?? false;
         }
 
         $r = $this->_newGetRequest('v1/agent/members', null);
