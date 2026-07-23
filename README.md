@@ -143,20 +143,27 @@ var_dump($kvResp->Value);
 
 ...as an example.
 
+### Method Naming Note
+
+Unlike the Go SDK, this client generally uses a single base method with an optional `$opts` argument instead of duplicated `*Opts` method variants.
+
 ## Current Clients
 
 - [ACL](./src/ACL/ACLClient.php)
 - [Agent](./src/Agent/AgentClient.php)
 - [Catalog](./src/Catalog/CatalogClient.php)
+- [ConfigEntry](./src/ConfigEntry/ConfigEntryClient.php)
 - [Coordinate](./src/Coordinate/CoordinateClient.php)
+- [Debug](./src/Debug/DebugClient.php)
 - [Event](./src/Event/EventClient.php)
 - [Health](./src/Health/HealthClient.php)
 - [KV](./src/KV/KVClient.php)
 - [Operator](./src/Operator/OperatorClient.php)
+- [Peering](./src/Peering/PeeringClient.php)
+- [PreparedQuery](./src/PreparedQuery/PreparedQueryClient.php)
 - [Session](./src/Session/SessionClient.php)
 - [Status](./src/Status/StatusClient.php)
-
-More will be added as time goes on!
+- [Txn](./src/Txn/TxnClient.php)
 
 ## Tests
 

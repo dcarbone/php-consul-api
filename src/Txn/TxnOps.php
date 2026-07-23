@@ -32,10 +32,20 @@ class TxnOps extends AbstractType implements \Countable, \ArrayAccess, \Iterator
     private array $ops = [];
 
     /**
+     * @param null|array<int,\stdClass> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      * @param array<TxnOp> $ops
      */
-    public function __construct(array $ops = [])
+    public function __construct(null|array $data = null, array $ops = [])
     {
+        if (null !== $data) {
+            if ([] === $data || $data[array_key_first($data)] instanceof TxnOp) {
+                /** @var array<TxnOp> $data */
+                $this->ops = $data;
+                return;
+            }
+            self::_hydrateFromDecoded($data, $this);
+            return;
+        }
         $this->ops = $ops;
     }
 
@@ -90,10 +100,18 @@ class TxnOps extends AbstractType implements \Countable, \ArrayAccess, \Iterator
     public static function jsonUnserialize(array $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    /**
+     * @param array<\stdClass> $decoded
+     */
+    protected static function _hydrateFromDecoded(array $decoded, self $n): void
+    {
         foreach ($decoded as $v) {
             $n->ops[] = TxnOp::jsonUnserialize($v);
         }
-        return $n;
     }
 
     /**

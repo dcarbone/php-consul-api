@@ -32,10 +32,15 @@ class IntentionJWTClaimVerification extends AbstractType
     public string $Value;
 
     /**
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      * @param array<string> $Path
      */
-    public function __construct(array $Path = [], string $Value = '')
+    public function __construct(null|array $data = null, array $Path = [], string $Value = '')
     {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->setPath(...$Path);
         $this->Value = $Value;
     }

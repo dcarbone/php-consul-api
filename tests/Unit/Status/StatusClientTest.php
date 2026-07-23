@@ -29,11 +29,11 @@ final class StatusClientTest extends TestCase
         return new StatusClient(new Config(HttpClient: $httpClient));
     }
 
-    public function testLeaderWithQueryOptionsUsesExpectedEndpoint(): void
+    public function testLeaderUsesExpectedEndpoint(): void
     {
         $client = $this->mockClient([new Response(200, [], json_encode('127.0.0.1:8300', JSON_THROW_ON_ERROR))]);
 
-        $resp = $client->LeaderWithQueryOptions(new QueryOptions(Pretty: true));
+        $resp = $client->Leader(new QueryOptions(Pretty: true));
 
         self::assertNull($resp->Err);
         self::assertSame('127.0.0.1:8300', $resp->Value);

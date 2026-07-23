@@ -43,11 +43,13 @@ class SessionEntry extends AbstractType
     public array $ServiceChecks;
 
     /**
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      * @param array<string> $Checks
      * @param array<string> $NodeChecks
      * @param array<ServiceCheck> $ServiceChecks
      */
     public function __construct(
+        null|array $data = null,
         int $CreateIndex = 0,
         string $ID = '',
         string $Name = '',
@@ -60,6 +62,10 @@ class SessionEntry extends AbstractType
         array $NodeChecks = [],
         array $ServiceChecks = [],
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->CreateIndex = $CreateIndex;
         $this->ID = $ID;
         $this->Name = $Name;
@@ -238,6 +244,12 @@ class SessionEntry extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('LockDelay' === $k) {
                 $n->LockDelay = Time::Duration($v);
@@ -252,7 +264,6 @@ class SessionEntry extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

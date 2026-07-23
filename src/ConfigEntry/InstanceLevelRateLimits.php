@@ -31,12 +31,18 @@ class InstanceLevelRateLimits extends AbstractType
 
     /**
      * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\InstanceLevelRouteRateLimits> $Routes
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         int $RequestsPerSecond = 0,
         int $RequestsMaxBurst = 0,
         array $Routes = []
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->RequestsPerSecond = $RequestsPerSecond;
         $this->RequestsMaxBurst = $RequestsMaxBurst;
         $this->setRoutes(...$Routes);
@@ -81,6 +87,12 @@ class InstanceLevelRateLimits extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('requests_per_second' === $k) {
                 $n->RequestsPerSecond = $v;
@@ -95,7 +107,6 @@ class InstanceLevelRateLimits extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

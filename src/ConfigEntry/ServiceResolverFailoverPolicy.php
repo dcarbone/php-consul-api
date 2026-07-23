@@ -30,9 +30,17 @@ class ServiceResolverFailoverPolicy extends AbstractType
 
     /**
      * @param array<string> $Regions
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
-    public function __construct(string $Mode = '', array $Regions = [])
-    {
+    public function __construct(
+        null|array $data = null,
+        string $Mode = '',
+        array $Regions = []
+    ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->Mode = $Mode;
         $this->Regions = $Regions;
     }
@@ -65,10 +73,15 @@ class ServiceResolverFailoverPolicy extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             $n->{$k} = $v;
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

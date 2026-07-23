@@ -31,7 +31,11 @@ class ServiceResolverFailoverTarget extends AbstractType
     public string $Datacenter;
     public string $Peer;
 
+    /**
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
     public function __construct(
+        null|array $data = null,
         string $Service = '',
         string $ServiceSubset = '',
         string $Partition = '',
@@ -39,6 +43,10 @@ class ServiceResolverFailoverTarget extends AbstractType
         string $Datacenter = '',
         string $Peer = ''
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->Service = $Service;
         $this->ServiceSubset = $ServiceSubset;
         $this->Partition = $Partition;
@@ -116,6 +124,12 @@ class ServiceResolverFailoverTarget extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('service_subset' === $k) {
                 $n->ServiceSubset = $v;
@@ -123,7 +137,6 @@ class ServiceResolverFailoverTarget extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

@@ -29,11 +29,19 @@ class CookieConfig extends AbstractType
     public Time\Duration $TTL;
     public string $Path;
 
+    /**
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
     public function __construct(
+        null|array $data = null,
         bool $Session = false,
         null|string|int|float|\DateInterval|Time\Duration $TTL = null,
         string $Path = ''
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->Session = $Session;
         $this->TTL = Time::Duration($TTL);
         $this->Path = $Path;
@@ -75,6 +83,12 @@ class CookieConfig extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('TTL' === $k) {
                 $n->TTL = Time::Duration($v);
@@ -82,7 +96,6 @@ class CookieConfig extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

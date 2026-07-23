@@ -32,8 +32,19 @@ class HealthChecks extends AbstractType implements \IteratorAggregate, \Countabl
     /** @var \DCarbone\PHPConsulAPI\Health\HealthCheck[] */
     protected array $Checks = [];
 
-    public function __construct(HealthCheck ...$Checks)
+    /**
+     * @param null|array<int,\stdClass> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
+    public function __construct(null|array|HealthCheck $data = null, HealthCheck ...$Checks)
     {
+        if (null !== $data) {
+            if ($data instanceof HealthCheck) {
+                $this->Checks = array_merge([$data], $Checks);
+                return;
+            }
+            self::_hydrateFromDecoded($data, $this);
+            return;
+        }
         $this->Checks = $Checks;
     }
 
@@ -125,10 +136,18 @@ class HealthChecks extends AbstractType implements \IteratorAggregate, \Countabl
     public static function jsonUnserialize(array $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    /**
+     * @param array<\stdClass> $decoded
+     */
+    protected static function _hydrateFromDecoded(array $decoded, self $n): void
+    {
         foreach ($decoded as $d) {
             $n->Checks[] = HealthCheck::jsonUnserialize($d);
         }
-        return $n;
     }
 
     /**

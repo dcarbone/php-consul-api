@@ -36,7 +36,11 @@ class ACLBindingRule extends AbstractType
     public string $Namespace;
     public string $Partition;
 
+    /**
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
     public function __construct(
+        null|array $data = null,
         string $ID = '',
         string $Description = '',
         string $AuthMethod = '',
@@ -49,6 +53,10 @@ class ACLBindingRule extends AbstractType
         string $Namespace = '',
         string $Partition = '',
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->ID = $ID;
         $this->Description = $Description;
         $this->AuthMethod = $AuthMethod;
@@ -186,6 +194,12 @@ class ACLBindingRule extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('BindVars' === $k && null !== $v) {
                 $n->BindVars = ACLTemplatedPolicyVariables::jsonUnserialize($v);
@@ -193,7 +207,6 @@ class ACLBindingRule extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

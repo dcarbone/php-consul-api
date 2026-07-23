@@ -38,8 +38,10 @@ class ACLPolicy extends AbstractType
 
     /**
      * @param array<string> $Datacenters
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         string $ID = '',
         string $Name = '',
         string $Description = '',
@@ -51,6 +53,10 @@ class ACLPolicy extends AbstractType
         string $Namespace = '',
         string $Partition = '',
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->ID = $ID;
         $this->Name = $Name;
         $this->Description = $Description;
@@ -179,6 +185,12 @@ class ACLPolicy extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('Datacenters' === $k) {
                 $n->setDatacenters(...$v);
@@ -186,7 +198,6 @@ class ACLPolicy extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

@@ -35,14 +35,20 @@ class IntentionHTTPPermission extends AbstractType
     /**
      * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\IntentionHTTPHeaderPermission> $Header
      * @param array<string> $Methods
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         string $PathExact = '',
         string $PathPrefix = '',
         string $PathRegex = '',
         array $Header = [],
         array $Methods = []
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->PathExact = $PathExact;
         $this->PathPrefix = $PathPrefix;
         $this->PathRegex = $PathRegex;
@@ -114,6 +120,12 @@ class IntentionHTTPPermission extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('path_exact' === $k) {
                 $n->PathExact = $v;
@@ -130,7 +142,6 @@ class IntentionHTTPPermission extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

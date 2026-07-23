@@ -36,7 +36,11 @@ class SerfMember extends AbstractType
     public string $Status;
     public Time\Duration $RTT;
 
+    /**
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
     public function __construct(
+        null|array $data = null,
         string $ID = '',
         string $Name = '',
         string $Addr = '',
@@ -48,6 +52,10 @@ class SerfMember extends AbstractType
         string $Status = '',
         null|string|int|float|\DateInterval|Time\Duration $RTT = null,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->ID = $ID;
         $this->Name = $Name;
         $this->Addr = $Addr;
@@ -173,6 +181,12 @@ class SerfMember extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('RTT' === $k) {
                 $n->RTT = Time::Duration($v);
@@ -180,7 +194,6 @@ class SerfMember extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

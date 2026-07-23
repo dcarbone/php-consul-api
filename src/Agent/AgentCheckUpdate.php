@@ -27,8 +27,18 @@ class AgentCheckUpdate extends AbstractType
     public string $Status;
     public string $Output;
 
-    public function __construct(string $Status = '', string $Output = '')
-    {
+    /**
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
+    public function __construct(
+        null|array $data = null,
+        string $Status = '',
+        string $Output = ''
+    ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->Status = $Status;
         $this->Output = $Output;
     }
@@ -58,10 +68,15 @@ class AgentCheckUpdate extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             $n->{$k} = $v;
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

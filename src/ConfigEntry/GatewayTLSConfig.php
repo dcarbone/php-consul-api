@@ -33,14 +33,20 @@ class GatewayTLSConfig extends AbstractType
 
     /**
      * @param array<string> $CipherSuites
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         bool $Enabled = false,
         null|GatewayTLSSDSConfig $SDS = null,
         string $TLSMinVersion = '',
         string $TLSMaxVersion = '',
         array $CipherSuites = []
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->Enabled = $Enabled;
         $this->SDS = $SDS;
         $this->TLSMinVersion = $TLSMinVersion;
@@ -109,6 +115,12 @@ class GatewayTLSConfig extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('tls_min_version' === $k) {
                 $n->TLSMinVersion = (string)$v;
@@ -122,7 +134,6 @@ class GatewayTLSConfig extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

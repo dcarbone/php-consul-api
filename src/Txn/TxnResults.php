@@ -32,10 +32,20 @@ class TxnResults extends AbstractType implements \Countable, \ArrayAccess, \Iter
     private array $results = [];
 
     /**
+     * @param null|array<int,\stdClass> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      * @param array<TxnResult> $results
      */
-    public function __construct(array $results = [])
+    public function __construct(null|array $data = null, array $results = [])
     {
+        if (null !== $data) {
+            if ([] === $data || $data[array_key_first($data)] instanceof TxnResult) {
+                /** @var array<TxnResult> $data */
+                $this->results = $data;
+                return;
+            }
+            self::_hydrateFromDecoded($data, $this);
+            return;
+        }
         $this->results = $results;
     }
 
@@ -90,10 +100,18 @@ class TxnResults extends AbstractType implements \Countable, \ArrayAccess, \Iter
     public static function jsonUnserialize(array $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    /**
+     * @param array<\stdClass> $decoded
+     */
+    protected static function _hydrateFromDecoded(array $decoded, self $n): void
+    {
         foreach ($decoded as $v) {
             $n->results[] = TxnResult::jsonUnserialize($v);
         }
-        return $n;
     }
 
     /**

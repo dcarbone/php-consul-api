@@ -28,11 +28,19 @@ class IntentionPermission extends AbstractType
     public null|IntentionHTTPPermission $HTTP;
     public null|IntentionJWTRequirement $JWT;
 
+    /**
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
     public function __construct(
+        null|array $data = null,
         string|IntentionAction $Action = IntentionAction::UNDEFINED,
         null|IntentionHTTPPermission $HTTP = null,
         null|IntentionJWTRequirement $JWT = null,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->Action = $Action instanceof IntentionAction ? $Action : IntentionAction::from($Action);
         $this->HTTP = $HTTP;
         $this->JWT = $JWT;
@@ -74,6 +82,12 @@ class IntentionPermission extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ($k === 'Action') {
                 $n->{$k} = IntentionAction::from($v);
@@ -85,7 +99,6 @@ class IntentionPermission extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

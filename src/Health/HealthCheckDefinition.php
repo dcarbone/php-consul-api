@@ -45,8 +45,10 @@ class HealthCheckDefinition extends AbstractType implements \JsonSerializable
 
     /**
      * @param array<string,array<string>>|\DCarbone\PHPConsulAPI\PHPLib\Values|null $Header
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         string $HTTP = '',
         null|array|\stdClass|Values $Header = null,
         string $Method = '',
@@ -64,6 +66,10 @@ class HealthCheckDefinition extends AbstractType implements \JsonSerializable
         null|int|float|string|\DateInterval|Time\Duration $DeregisterCriticalServiceAfterDuration = null,
         string $SessionName = '',
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->HTTP = $HTTP;
         $this->setHeader($Header);
         $this->Method = $Method;
@@ -273,6 +279,12 @@ class HealthCheckDefinition extends AbstractType implements \JsonSerializable
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('Interval' === $k || 'IntervalDuration' === $k) {
                 $n->IntervalDuration = Time::Duration($v);
@@ -286,7 +298,6 @@ class HealthCheckDefinition extends AbstractType implements \JsonSerializable
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

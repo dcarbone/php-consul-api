@@ -37,8 +37,10 @@ class ServiceResolverFailover extends AbstractType
     /**
      * @param array<string> $Datacenters
      * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverFailoverTarget> $Targets
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         string $Service = '',
         string $ServiceSubset = '',
         string $Namespace = '',
@@ -47,6 +49,10 @@ class ServiceResolverFailover extends AbstractType
         null|ServiceResolverFailoverPolicy $Policy = null,
         string $SamenessGroup = ''
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->Service = $Service;
         $this->ServiceSubset = $ServiceSubset;
         $this->Namespace = $Namespace;
@@ -142,6 +148,12 @@ class ServiceResolverFailover extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('Targtes' === $k) {
                 $n->Targets = [];
@@ -156,7 +168,6 @@ class ServiceResolverFailover extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

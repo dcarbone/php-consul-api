@@ -48,8 +48,10 @@ class AutopilotServer extends AbstractType
 
     /**
      * @param \stdClass|array<string,string>|null $Meta
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         string $ID = '',
         string $Name = '',
         string $Address = '',
@@ -67,6 +69,10 @@ class AutopilotServer extends AbstractType
         null|\stdClass|array $Meta = null,
         string|AutopilotServerType $NodeType = AutopilotServerType::UNDEFINED,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->ID = $ID;
         $this->Name = $Name;
         $this->Address = $Address;
@@ -257,6 +263,12 @@ class AutopilotServer extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('lastContact' === $k) {
                 $n->setLastContact($v);
@@ -272,7 +284,6 @@ class AutopilotServer extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

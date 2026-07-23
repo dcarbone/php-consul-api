@@ -33,13 +33,21 @@ class PassiveHealthCheck extends AbstractType
 
     public null|Time\Duration $BaseEjectionTime;
 
+    /**
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
     public function __construct(
+        null|array $data = null,
         null|string|int|float|\DateInterval|Time\Duration $Interval = null,
         int $MaxFailures = 0,
         null|int $EnforcingConsecutive5xx = null,
         null|int $MaxEjectionPercent = null,
         null|string|int|float|\DateInterval|Time\Duration $BaseEjectionTime = null,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->Interval = Time::Duration($Interval);
         $this->MaxFailures = $MaxFailures;
         $this->EnforcingConsecutive5xx = $EnforcingConsecutive5xx;
@@ -105,6 +113,12 @@ class PassiveHealthCheck extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('Interval' === $k) {
                 $n->Interval = Time::ParseDuration($v);
@@ -120,7 +134,6 @@ class PassiveHealthCheck extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

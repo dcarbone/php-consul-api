@@ -448,14 +448,14 @@ final class AgentClientTest extends TestCase
         self::assertSame(['wan' => '1'], $params);
     }
 
-    public function testServiceRegisterOptsUsesRegisterTokenHeader(): void
+    public function testServiceRegisterUsesRegisterTokenHeader(): void
     {
         $history = [];
         $client = $this->newClient([
             new Response(200, [], ''),
         ], $history);
 
-        $err = $client->ServiceRegisterOpts(
+        $err = $client->ServiceRegister(
             new AgentServiceRegistration(Name: 'web', Address: '127.0.0.1', Port: 8080),
             new ServiceRegisterOpts(ReplaceExistingChecks: true, Token: 'register-token'),
         );

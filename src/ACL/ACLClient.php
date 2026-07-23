@@ -367,6 +367,13 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
+    /**
+     * Accepts either an auth method name shortcut or QueryOptions.
+     *
+     * Passing a string sets the `authmethod` filter.
+     * Passing QueryOptions as the first argument is equivalent to
+     * `BindingRuleList('', $opts)`.
+     */
     public function BindingRuleList(string|QueryOptions $methodNameOrOpts = '', null|QueryOptions $opts = null): ACLBindingRulesQueryResponse
     {
         if ($methodNameOrOpts instanceof QueryOptions) {

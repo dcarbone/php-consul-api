@@ -27,7 +27,7 @@ use DCarbone\PHPConsulAPI\QueryOptions;
 
 class StatusClient extends AbstractClient
 {
-    public function LeaderWithQueryOptions(null|QueryOptions $opts): ValuedStringResponse
+    public function Leader(null|QueryOptions $opts = null): ValuedStringResponse
     {
         $resp = $this->_requireOK($this->_doGet('v1/status/leader', $opts));
         $ret  = new ValuedStringResponse();
@@ -35,21 +35,11 @@ class StatusClient extends AbstractClient
         return $ret;
     }
 
-    public function Leader(): ValuedStringResponse
-    {
-        return $this->LeaderWithQueryOptions(null);
-    }
-
-    public function PeersWithQueryOptions(null|QueryOptions $opts): ValuedStringsResponse
+    public function Peers(null|QueryOptions $opts = null): ValuedStringsResponse
     {
         $resp = $this->_requireOK($this->_doGet('v1/status/peers', $opts));
         $ret  = new ValuedStringsResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
-    }
-
-    public function Peers(): ValuedStringsResponse
-    {
-        return $this->PeersWithQueryOptions(null);
     }
 }

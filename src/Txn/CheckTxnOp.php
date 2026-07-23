@@ -28,8 +28,18 @@ class CheckTxnOp extends AbstractType
     public CheckOp $Verb;
     public HealthCheck $Check;
 
-    public function __construct(CheckOp|string $Verb = CheckOp::UNDEFINED, null|HealthCheck $Check = null)
-    {
+    /**
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
+    public function __construct(
+        null|array $data = null,
+        CheckOp|string $Verb = CheckOp::UNDEFINED,
+        null|HealthCheck $Check = null
+    ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->setVerb($Verb);
         if (null === $Check) {
             $Check = new HealthCheck();
@@ -65,6 +75,12 @@ class CheckTxnOp extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('Check' === $k) {
                 $n->Check = HealthCheck::jsonUnserialize($v);
@@ -74,7 +90,6 @@ class CheckTxnOp extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

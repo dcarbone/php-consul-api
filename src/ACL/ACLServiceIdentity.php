@@ -30,9 +30,17 @@ class ACLServiceIdentity extends AbstractType
 
     /**
      * @param array<string> $Datacenters
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
-    public function __construct(string $ServiceName = '', array $Datacenters = [])
-    {
+    public function __construct(
+        null|array $data = null,
+        string $ServiceName = '',
+        array $Datacenters = []
+    ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->ServiceName = $ServiceName;
         $this->setDatacenters(...$Datacenters);
     }
@@ -65,6 +73,12 @@ class ACLServiceIdentity extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('Datacenters' === $k) {
                 $n->setDatacenters(...$v);
@@ -72,7 +86,6 @@ class ACLServiceIdentity extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

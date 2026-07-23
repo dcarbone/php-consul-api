@@ -27,10 +27,18 @@ class ServiceRoute extends AbstractType
     public null|ServiceRouteMatch $Match;
     public null|ServiceRouteDestination $Destination;
 
+    /**
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
     public function __construct(
+        null|array $data = null,
         null|ServiceRouteMatch $Match = null,
         null|ServiceRouteDestination $Destination = null,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->Match = $Match;
         $this->Destination = $Destination;
     }
@@ -60,6 +68,12 @@ class ServiceRoute extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('Match' === $k) {
                 $n->Match = null === $v ? null : ServiceRouteMatch::jsonUnserialize($v);
@@ -69,7 +83,6 @@ class ServiceRoute extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

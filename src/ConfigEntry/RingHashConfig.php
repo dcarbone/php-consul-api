@@ -27,8 +27,18 @@ class RingHashConfig extends AbstractType
     public int $MinimumRingSize = 0;
     public int $MaximumRingSize = 0;
 
-    public function __construct(int $MinimumRingSize = 0, int $MaximumRingSize = 0)
-    {
+    /**
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
+    public function __construct(
+        null|array $data = null,
+        int $MinimumRingSize = 0,
+        int $MaximumRingSize = 0
+    ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->MinimumRingSize = $MinimumRingSize;
         $this->MaximumRingSize = $MaximumRingSize;
     }
@@ -58,6 +68,12 @@ class RingHashConfig extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('minimum_ring_size' === $k) {
                 $n->MinimumRingSize = $v;
@@ -67,7 +83,6 @@ class RingHashConfig extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

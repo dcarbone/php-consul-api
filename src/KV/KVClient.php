@@ -112,6 +112,12 @@ class KVClient extends AbstractClient
         return $ret;
     }
 
+    /**
+     * Accepts either a separator shortcut or QueryOptions as the second argument.
+     *
+     * Passing QueryOptions as the second argument is equivalent to
+     * `Keys($prefix, '', $opts)`.
+     */
     public function Keys(
         string $prefix = '',
         string|QueryOptions $separatorOrOpts = '',

@@ -134,11 +134,6 @@ class AgentClient extends AbstractClient
         return $this->Checks($filter);
     }
 
-    public function ChecksWithFilterOpts(string $filter = '', null|QueryOptions $opts = null): AgentChecksResponse
-    {
-        return $this->Checks($filter, $opts);
-    }
-
     public function Services(string $filter = '', null|QueryOptions $opts = null): AgentServicesResponse
     {
         $r = $this->_newGetRequest('v1/agent/services', $opts);
@@ -156,10 +151,6 @@ class AgentClient extends AbstractClient
         return $this->Services($filter);
     }
 
-    public function ServicesWithFilterOpts(string $filter = '', null|QueryOptions $opts = null): AgentServicesResponse
-    {
-        return $this->Services($filter, $opts);
-    }
 
     public function AgentHealthServiceByID(string $id, null|QueryOptions $opts = null): AgentHealthServiceResponse
     {
@@ -189,10 +180,6 @@ class AgentClient extends AbstractClient
         return new AgentHealthServiceResponse($status, $dec->Decoded, null);
     }
 
-    public function AgentHealthServiceByIDOpts(string $id, null|QueryOptions $opts = null): AgentHealthServiceResponse
-    {
-        return $this->AgentHealthServiceByID($id, $opts);
-    }
 
     public function AgentHealthServiceByName(string $service, null|QueryOptions $opts = null): AgentHealthServicesResponse
     {
@@ -221,10 +208,6 @@ class AgentClient extends AbstractClient
         return new AgentHealthServicesResponse($status, $dec->Decoded, null);
     }
 
-    public function AgentHealthServiceByNameOpts(string $service, null|QueryOptions $opts = null): AgentHealthServicesResponse
-    {
-        return $this->AgentHealthServiceByName($service, $opts);
-    }
 
     public function Service(string $serviceID, null|QueryOptions $opts = null): AgentServiceResponse
     {
@@ -234,39 +217,47 @@ class AgentClient extends AbstractClient
         return $ret;
     }
 
-    public function Members(bool $wan = false): AgentMembersResponse
+    /**
+     * Accepts either a boolean WAN shortcut or a full MembersOpts object.
+     *
+     * Passing `true` is equivalent to `new MembersOpts(WAN: true)`.
+     * Passing `false` is equivalent to `new MembersOpts()`.
+     */
+    public function Members(bool|MembersOpts $opts = false): AgentMembersResponse
     {
+        $memberOpts = null;
+        if ($opts instanceof MembersOpts) {
+            $memberOpts = $opts;
+            $wan = $memberOpts->WAN;
+        } else {
+            $wan = $opts;
+        }
+
         $r = $this->_newGetRequest('v1/agent/members', null);
+        if (null !== $memberOpts && '' !== $memberOpts->Segment) {
+            $r->params->set('segment', $memberOpts->Segment);
+        }
         if ($wan) {
             $r->params->set('wan', '1');
         }
-        $resp = $this->_requireOK($this->_do($r));
-        $ret  = new AgentMembersResponse();
-        $this->_unmarshalResponse($resp, $ret);
-        return $ret;
-    }
-
-    public function MembersOpts(MembersOpts $memberOpts): AgentMembersResponse
-    {
-        $r = $this->_newGetRequest('v1/agent/members', null);
-        $r->params->set('segment', $memberOpts->Segment);
-        if ($memberOpts->WAN) {
-            $r->params->set('wan', '1');
+        if (null !== $memberOpts && '' !== $memberOpts->Filter) {
+            $r->filterQuery($memberOpts->Filter);
         }
-        $r->filterQuery($memberOpts->Filter);
         $resp = $this->_requireOK($this->_do($r));
         $ret  = new AgentMembersResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
-    public function MemberOpts(MembersOpts $memberOpts): AgentMembersResponse
-    {
-        return $this->MembersOpts($memberOpts);
-    }
-
-    public function ServiceRegisterOpts(AgentServiceRegistration $service, ServiceRegisterOpts $registerOpts): null|Error
-    {
+    /**
+     * When `$opts` is null, default registration options are used
+     * (equivalent to `new ServiceRegisterOpts()`).
+     */
+    public function ServiceRegister(
+        AgentServiceRegistration $service,
+        null|ServiceRegisterOpts $opts = null
+    ): null|Error {
+        $registerOpts = $opts ?? new ServiceRegisterOpts();
         $r = $this->_newPutRequest('v1/agent/service/register', $service, null);
         if ($registerOpts->ReplaceExistingChecks) {
             $r->params->set('replace-existing-checks', 'true');
@@ -277,21 +268,12 @@ class AgentClient extends AbstractClient
         return $this->_requireOK($this->_do($r))->Err;
     }
 
-    public function ServiceRegister(AgentServiceRegistration $service): null|Error
-    {
-        return $this->ServiceRegisterOpts($service, new ServiceRegisterOpts(ReplaceExistingChecks: false));
-    }
-
     public function ServiceDeregister(string $serviceID, null|QueryOptions $opts = null): null|Error
     {
         $r = $this->_newPutRequest(sprintf('v1/agent/service/deregister/%s', $serviceID), null, $opts);
         return $this->_requireOK($this->_do($r))->Err;
     }
 
-    public function ServiceDeregisterOpts(string $serviceID, null|QueryOptions $opts = null): null|Error
-    {
-        return $this->ServiceDeregister($serviceID, $opts);
-    }
 
     public function PassTTL(string $checkID, string $note): null|Error
     {
@@ -337,10 +319,6 @@ class AgentClient extends AbstractClient
         return $this->_requireOK($this->_do($r))->Err;
     }
 
-    public function UpdateTTLOpts(string $checkID, string $output, string $status, null|QueryOptions $opts = null): null|Error
-    {
-        return $this->UpdateTTL($checkID, $output, $status, $opts);
-    }
 
     public function CheckRegister(AgentCheckRegistration $check, null|QueryOptions $opts = null): null|Error
     {
@@ -348,10 +326,6 @@ class AgentClient extends AbstractClient
         return $this->_requireOK($this->_do($r))->Err;
     }
 
-    public function CheckRegisterOpts(AgentCheckRegistration $check, null|QueryOptions $opts = null): null|Error
-    {
-        return $this->CheckRegister($check, $opts);
-    }
 
     public function CheckDeregister(string $checkID, null|QueryOptions $opts = null): null|Error
     {
@@ -359,10 +333,6 @@ class AgentClient extends AbstractClient
         return $this->_requireOK($this->_do($r))->Err;
     }
 
-    public function CheckDeregisterOpts(string $checkID, null|QueryOptions $opts = null): null|Error
-    {
-        return $this->CheckDeregister($checkID, $opts);
-    }
 
     public function Join(string $addr, bool $wan = false): null|Error
     {
@@ -389,11 +359,6 @@ class AgentClient extends AbstractClient
             $r->params->set('wan', '1');
         }
         return $this->_requireOK($this->_do($r))->Err;
-    }
-
-    public function ForceLeaveOpts(string $node, ForceLeaveOpts $opts): null|Error
-    {
-        return $this->ForceLeave($node, $opts);
     }
 
     public function ForceLeaveOptions(string $node, ForceLeaveOpts $opts, null|QueryOptions $qOpts = null): null|Error
@@ -438,10 +403,6 @@ class AgentClient extends AbstractClient
         return $this->_requireOK($this->_do($r))->Err;
     }
 
-    public function EnableServiceMaintenanceOpts(string $serviceID, string $reason = '', null|QueryOptions $opts = null): null|Error
-    {
-        return $this->EnableServiceMaintenance($serviceID, $reason, $opts);
-    }
 
     public function DisableServiceMaintenance(string $serviceID, null|QueryOptions $opts = null): null|Error
     {
@@ -450,10 +411,6 @@ class AgentClient extends AbstractClient
         return $this->_requireOK($this->_do($r))->Err;
     }
 
-    public function DisableServiceMaintenanceOpts(string $serviceID, null|QueryOptions $opts = null): null|Error
-    {
-        return $this->DisableServiceMaintenance($serviceID, $opts);
-    }
 
     public function EnableNodeMaintenance(string $reason = '', null|QueryOptions $opts = null): null|Error
     {
@@ -463,21 +420,12 @@ class AgentClient extends AbstractClient
         return $this->_requireOK($this->_do($r))->Err;
     }
 
-    public function EnableNodeMaintenanceOpts(string $reason = '', null|QueryOptions $opts = null): null|Error
-    {
-        return $this->EnableNodeMaintenance($reason, $opts);
-    }
 
     public function DisableNodeMaintenance(null|QueryOptions $opts = null): null|Error
     {
         $r = $this->_newPutRequest('v1/agent/maintenance', null, $opts);
         $r->params->set('enable', 'false');
         return $this->_requireOK($this->_do($r))->Err;
-    }
-
-    public function DisableNodeMaintenanceOpts(null|QueryOptions $opts = null): null|Error
-    {
-        return $this->DisableNodeMaintenance($opts);
     }
 
     public function UpdateACLToken(string $token, null|WriteOptions $opts = null): null|Error

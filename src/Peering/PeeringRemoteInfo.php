@@ -12,11 +12,19 @@ class PeeringRemoteInfo extends AbstractType
     public string $Datacenter;
     public null|Locality $Locality;
 
+    /**
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
     public function __construct(
+        null|array $data = null,
         string $Partition = '',
         string $Datacenter = '',
         null|Locality $Locality = null,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->Partition = $Partition;
         $this->Datacenter = $Datacenter;
         $this->Locality = $Locality;
@@ -25,6 +33,12 @@ class PeeringRemoteInfo extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('Locality' === $k) {
                 $n->Locality = null === $v ? null : Locality::jsonUnserialize($v);
@@ -32,7 +46,6 @@ class PeeringRemoteInfo extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

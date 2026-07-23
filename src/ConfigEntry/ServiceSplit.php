@@ -32,7 +32,11 @@ class ServiceSplit extends AbstractType
     public null|HTTPHeaderModifiers $RequestHeaders;
     public null|HTTPHeaderModifiers $ResponseHeaders;
 
+    /**
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
     public function __construct(
+        null|array $data = null,
         float $Weight = 0.0,
         string $Service = '',
         string $ServiceSubset = '',
@@ -41,6 +45,10 @@ class ServiceSplit extends AbstractType
         null|HTTPHeaderModifiers $RequestHeaders = null,
         null|HTTPHeaderModifiers $ResponseHeaders = null
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->Weight = $Weight;
         $this->Service = $Service;
         $this->ServiceSubset = $ServiceSubset;
@@ -130,6 +138,12 @@ class ServiceSplit extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('service_subset' === $k) {
                 $n->ServiceSubset = $v;
@@ -141,7 +155,6 @@ class ServiceSplit extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

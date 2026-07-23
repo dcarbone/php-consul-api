@@ -31,8 +31,19 @@ class KVPairs extends AbstractType implements \IteratorAggregate, \Countable, \A
     /** @var array<\DCarbone\PHPConsulAPI\KV\KVPair> */
     protected array $KVPairs = [];
 
-    public function __construct(KVPair ...$KVPairs)
+    /**
+     * @param null|array<int,\stdClass> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
+    public function __construct(null|array|KVPair $data = null, KVPair ...$KVPairs)
     {
+        if (null !== $data) {
+            if ($data instanceof KVPair) {
+                $this->KVPairs = array_merge([$data], $KVPairs);
+                return;
+            }
+            self::_hydrateFromDecoded($data, $this);
+            return;
+        }
         $this->KVPairs = $KVPairs;
     }
 
@@ -95,10 +106,18 @@ class KVPairs extends AbstractType implements \IteratorAggregate, \Countable, \A
     public static function jsonUnserialize(\stdClass ...$decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    /**
+     * @param array<int,\stdClass> $decoded
+     */
+    protected static function _hydrateFromDecoded(array $decoded, self $n): void
+    {
         foreach ($decoded as $kv) {
             $n->KVPairs[] = KVPair::jsonUnserialize($kv);
         }
-        return $n;
     }
 
     /**

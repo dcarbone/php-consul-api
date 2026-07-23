@@ -29,11 +29,19 @@ class ServiceTxnOp extends AbstractType
     public string $Node;
     public AgentService $Service;
 
+    /**
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
     public function __construct(
+        null|array $data = null,
         string|ServiceOp $Verb = ServiceOp::UNDEFINED,
         string $Node = '',
         null|AgentService $Service = null,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->setVerb($Verb);
         $this->Node = $Node;
         $this->Service = $Service ?? new AgentService();
@@ -78,6 +86,12 @@ class ServiceTxnOp extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('Verb' === $k) {
                 $n->setVerb($v);
@@ -87,7 +101,6 @@ class ServiceTxnOp extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

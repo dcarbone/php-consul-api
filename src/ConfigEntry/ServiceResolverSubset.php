@@ -27,8 +27,18 @@ class ServiceResolverSubset extends AbstractType
     public string $Filter;
     public bool $OnlyPassing;
 
-    public function __construct(string $Filter = '', bool $OnlyPassing = false)
-    {
+    /**
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
+    public function __construct(
+        null|array $data = null,
+        string $Filter = '',
+        bool $OnlyPassing = false
+    ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->Filter = $Filter;
         $this->OnlyPassing = $OnlyPassing;
     }
@@ -58,6 +68,12 @@ class ServiceResolverSubset extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('only_passing' === $k) {
                 $n->OnlyPassing = $v;
@@ -65,7 +81,6 @@ class ServiceResolverSubset extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

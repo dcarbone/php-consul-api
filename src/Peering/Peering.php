@@ -30,8 +30,10 @@ class Peering extends AbstractType
      * @param null|array<string,string> $Meta
      * @param array<string> $PeerCAPems
      * @param array<string> $PeerServerAddresses
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         string $ID = '',
         string $Name = '',
         string $Partition = '',
@@ -47,6 +49,10 @@ class Peering extends AbstractType
         int $ModifyIndex = 0,
         null|PeeringRemoteInfo $Remote = null,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->ID = $ID;
         $this->Name = $Name;
         $this->Partition = $Partition;
@@ -66,6 +72,12 @@ class Peering extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('StreamStatus' === $k) {
                 $n->StreamStatus = PeeringStreamStatus::jsonUnserialize($v);
@@ -75,7 +87,6 @@ class Peering extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

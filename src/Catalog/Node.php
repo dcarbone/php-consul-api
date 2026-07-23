@@ -43,8 +43,10 @@ class Node extends AbstractType
     /**
      * @param array<string,string> $TaggedAddresses
      * @param array<string,string> $Meta
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         string $ID = '',
         string $Node = '',
         string $Address = '',
@@ -57,6 +59,10 @@ class Node extends AbstractType
         string $PeerName = '',
         null|Locality $Locality = null,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->ID = $ID;
         $this->Node = $Node;
         $this->Address = $Address;
@@ -172,6 +178,12 @@ class Node extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('Locality' === $k) {
                 $n->Locality = Locality::jsonUnserialize($v);
@@ -183,7 +195,6 @@ class Node extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

@@ -40,8 +40,10 @@ class GatewayService extends AbstractType
 
     /**
      * @param array<string> $Hosts
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         null|CompoundServiceName $Gateway = null,
         null|CompoundServiceName $Service = null,
         string|ServiceKind $GatewayKind = '',
@@ -54,6 +56,10 @@ class GatewayService extends AbstractType
         string $SNI = '',
         bool $FromWildcard = false,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->Gateway = $Gateway ?? new CompoundServiceName();
         $this->Service = $Service ?? new CompoundServiceName();
         $this->GatewayKind = $GatewayKind instanceof ServiceKind ? $GatewayKind : ServiceKind::from($GatewayKind);
@@ -194,6 +200,12 @@ class GatewayService extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('Gateway' === $k) {
                 $n->Gateway = CompoundServiceName::jsonUnserialize($v);
@@ -207,7 +219,6 @@ class GatewayService extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
 

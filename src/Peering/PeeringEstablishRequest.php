@@ -15,18 +15,38 @@ class PeeringEstablishRequest extends AbstractType
     public null|array $Meta;
 
     /**
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      * @param null|array<string,string> $Meta
      */
     public function __construct(
+        null|array $data = null,
         string $PeerName = '',
         string $PeeringToken = '',
         string $Partition = '',
         null|array $Meta = null,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->PeerName = $PeerName;
         $this->PeeringToken = $PeeringToken;
         $this->Partition = $Partition;
         $this->Meta = $Meta;
+    }
+
+    public static function jsonUnserialize(\stdClass $decoded): self
+    {
+        $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
+        foreach ((array)$decoded as $k => $v) {
+            $n->{$k} = $v;
+        }
     }
 
     public function jsonSerialize(): \stdClass

@@ -30,13 +30,21 @@ class ExposePath extends AbstractType
     public string $Protocol;
     public bool $ParsedFromCheck;
 
+    /**
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
     public function __construct(
+        null|array $data = null,
         int $ListenerPort = 0,
         string $Path = '',
         int $LocalPathPort = 0,
         string $Protocol = '',
         bool $ParsedFromCheck = false
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->ListenerPort = $ListenerPort;
         $this->Path = $Path;
         $this->LocalPathPort = $LocalPathPort;
@@ -99,9 +107,15 @@ class ExposePath extends AbstractType
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $n = null): self
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $n ?? new self();
+        $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('listener_port' === $k) {
                 $n->ListenerPort = $v;
@@ -111,7 +125,6 @@ class ExposePath extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

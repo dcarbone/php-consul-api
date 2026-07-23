@@ -37,7 +37,11 @@ class CARoot extends AbstractType
     public int $CreateIndex;
     public int $ModifyIndex;
 
+    /**
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
     public function __construct(
+        null|array $data = null,
         string $ID = '',
         string $Name = '',
         string $RootCertPEM = '',
@@ -48,6 +52,10 @@ class CARoot extends AbstractType
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->ID = $ID;
         $this->Name = $Name;
         $this->RootCertPEM = $RootCertPEM;
@@ -161,6 +169,12 @@ class CARoot extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('NotBefore' === $k || 'NotAfter' === $k) {
                 $n->{$k} = null === $v ? null : parse_time($v);
@@ -172,7 +186,6 @@ class CARoot extends AbstractType
             }
             $n->{$k} = $v;
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

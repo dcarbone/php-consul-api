@@ -279,7 +279,7 @@ final class AgentClientTest extends AbstractIntegrationTestCase
     public function testCanGetMemberOpts(): void
     {
         $client = new AgentClient(ConsulManager::testConfig());
-        [$members, $err] = $client->MembersOpts(new MembersOpts());
+        [$members, $err] = $client->Members(new MembersOpts());
         self::assertNull($err, sprintf('AgentClient::membersOpts returned error: %s', $err));
         self::assertIsArray($members);
         self::assertContainsOnlyInstancesOf(AgentMember::class, $members);
@@ -301,7 +301,7 @@ final class AgentClientTest extends AbstractIntegrationTestCase
             ->setCheck(new AgentServiceCheck(TTL: '30s'));
 
         try {
-            $err = $client->ServiceRegisterOpts($service, new ServiceRegisterOpts(ReplaceExistingChecks: true));
+            $err = $client->ServiceRegister($service, new ServiceRegisterOpts(ReplaceExistingChecks: true));
             self::assertNull($err, sprintf('AgentClient::serviceRegisterOpts returned error: %s', $err));
 
             [$svc, $err] = $client->Service($serviceID);

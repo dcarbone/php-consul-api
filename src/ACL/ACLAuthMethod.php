@@ -43,8 +43,10 @@ class ACLAuthMethod extends AbstractType
     /**
      * @param array<string,mixed> $Config
      * @param array<\DCarbone\PHPConsulAPI\ACL\ACLAuthMethodNamespaceRule> $NamespaceRules
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         string $Name = '',
         string $Type = '',
         string $DisplayName = '',
@@ -58,6 +60,10 @@ class ACLAuthMethod extends AbstractType
         string $Namespace = '',
         string $Partition = '',
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->Name = $Name;
         $this->Type = $Type;
         $this->DisplayName = $DisplayName;
@@ -228,6 +234,12 @@ class ACLAuthMethod extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('MaxTokenTTL' === $k) {
                 $n->setMaxTokenTTL($v);
@@ -242,7 +254,6 @@ class ACLAuthMethod extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

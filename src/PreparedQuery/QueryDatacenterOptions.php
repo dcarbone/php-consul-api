@@ -33,12 +33,18 @@ class QueryDatacenterOptions extends AbstractType
     /**
      * @param array<string> $Datacenters
      * @param array<QueryFailoverTarget> $Targets
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         int $NearestN = 0,
         array $Datacenters = [],
         array $Targets = [],
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->NearestN = $NearestN;
         $this->setDatacenters(...$Datacenters);
         $this->setTargets(...$Targets);
@@ -92,6 +98,12 @@ class QueryDatacenterOptions extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('Targets' === $k) {
                 $n->Targets = [];
@@ -102,7 +114,6 @@ class QueryDatacenterOptions extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

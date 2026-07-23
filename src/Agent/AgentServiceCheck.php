@@ -59,8 +59,10 @@ class AgentServiceCheck extends AbstractType
     /**
      * @param array<string> $Args
      * @param null|array<string,array<string>>|\DCarbone\PHPConsulAPI\PHPLib\Values $Header
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         string $CheckID = '',
         string $Name = '',
         array $Args = [],
@@ -91,6 +93,10 @@ class AgentServiceCheck extends AbstractType
         int $FailuresBeforeCritical = 0,
         string $DeregisterCriticalServiceAfter = '',
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->CheckID = $CheckID;
         $this->Name = $Name;
         $this->Args = [];
@@ -459,6 +465,12 @@ class AgentServiceCheck extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('ScriptArgs' === $k) {
                 $n->Args = $v;
@@ -468,7 +480,6 @@ class AgentServiceCheck extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

@@ -50,8 +50,10 @@ class AgentMember extends AbstractType
 
     /**
      * @param null|\stdClass|array<string,string> $Tags
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         string $Name = '',
         string $Addr = '',
         int $Port = 0,
@@ -64,6 +66,10 @@ class AgentMember extends AbstractType
         int $DelegateMax = 0,
         int $DelegateCur = 0,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->Name = $Name;
         $this->Addr = $Addr;
         $this->Port = $Port;
@@ -151,6 +157,12 @@ class AgentMember extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('Tags' === $k) {
                 if (null !== $v) {
@@ -162,7 +174,6 @@ class AgentMember extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

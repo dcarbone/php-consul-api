@@ -73,6 +73,11 @@ class HealthClient extends AbstractClient
         return $this->_getServiceEntries($service, $tags, $passingOnly, $opts, self::ingressHealth);
     }
 
+    /**
+     * Supports legacy and expanded call shapes:
+     * - `$tagOrPassingOnly` as bool toggles passing-only behavior directly.
+     * - `$passingOnlyOrOpts` as QueryOptions is equivalent to passing `$opts`.
+     */
     public function Ingress(
         string $service,
         string|bool $tagOrPassingOnly = false,

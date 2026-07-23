@@ -31,12 +31,18 @@ class OIDCClientAssertion extends AbstractType
 
     /**
      * @param array<string> $Audience
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         array $Audience = [],
         null|OIDCClientAssertionKey $PrivateKey = null,
         string $KeyAlgorithm = '',
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->setAudience(...$Audience);
         $this->PrivateKey = $PrivateKey;
         $this->KeyAlgorithm = $KeyAlgorithm;
@@ -81,6 +87,12 @@ class OIDCClientAssertion extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('PrivateKey' === $k) {
                 $n->PrivateKey = null !== $v ? OIDCClientAssertionKey::jsonUnserialize($v) : null;
@@ -90,7 +102,6 @@ class OIDCClientAssertion extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

@@ -29,12 +29,20 @@ class CoordinateEntry extends AbstractType
     public string $Partition;
     public null|Coordinate $Coord;
 
+    /**
+     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
     public function __construct(
+        null|array $data = null,
         string $Node = '',
         string $Segment = '',
         string $Partition = '',
         null|Coordinate $Coord = null,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->Node = $Node;
         $this->Segment = $Segment;
         $this->Partition = $Partition;
@@ -88,6 +96,12 @@ class CoordinateEntry extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('Coord' === $k) {
                 $n->Coord = Coordinate::jsonUnserialize($v);
@@ -95,7 +109,6 @@ class CoordinateEntry extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass
