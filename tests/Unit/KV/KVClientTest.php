@@ -3,6 +3,7 @@
 namespace DCarbone\PHPConsulAPITests\Unit\KV;
 
 use DCarbone\PHPConsulAPI\Config;
+use DCarbone\PHPConsulAPI\Consul;
 use DCarbone\PHPConsulAPI\KV\KVClient;
 use DCarbone\PHPConsulAPI\KV\KVPair;
 use DCarbone\PHPConsulAPI\KV\KVPairResponse;
@@ -10,6 +11,7 @@ use DCarbone\PHPConsulAPI\KV\KVPairsResponse;
 use DCarbone\PHPConsulAPI\PHPLib\ValuedQueryStringsResponse;
 use DCarbone\PHPConsulAPI\PHPLib\ValuedWriteBoolResponse;
 use DCarbone\PHPConsulAPI\PHPLib\WriteResponse;
+use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\Txn\KVOp;
 use DCarbone\PHPConsulAPI\Txn\KVTxnAPIResponse;
 use DCarbone\PHPConsulAPI\Txn\KVTxnOp;
@@ -23,10 +25,13 @@ use PHPUnit\Framework\TestCase;
 
 final class KVClientTest extends TestCase
 {
-    private function mockClient(int $statusCode, string $body, array &$history): KVClient
+    /**
+     * @param array<string, array<int, string>> $headers
+     */
+    private function mockClient(int $statusCode, string $body, mixed &$history, array $headers = []): KVClient
     {
         $history = [];
-        $stack = HandlerStack::create(new MockHandler([new Response($statusCode, [], $body)]));
+        $stack = HandlerStack::create(new MockHandler([new Response($statusCode, $headers, $body)]));
         $stack->push(Middleware::history($history));
         $httpClient = new Client(['handler' => $stack]);
         return new KVClient(new Config(HttpClient: $httpClient));
@@ -97,6 +102,55 @@ final class KVClientTest extends TestCase
         self::assertCount(1, $history);
     }
 
+    public function testKeysWithSeparator(): void
+    {
+        $keys = ['test/folder/'];
+        $history = [];
+        $client = $this->mockClient(200, json_encode($keys, JSON_THROW_ON_ERROR), $history);
+
+        $response = $client->Keys('test/', '/');
+
+        self::assertInstanceOf(ValuedQueryStringsResponse::class, $response);
+        self::assertCount(1, $history);
+
+        parse_str($history[0]['request']->getUri()->getQuery(), $query);
+        self::assertArrayHasKey('keys', $query);
+        self::assertSame('/', $query['separator']);
+    }
+
+    public function testKeysSecondArgumentQueryOptionsForBC(): void
+    {
+        $keys = ['test/key1'];
+        $history = [];
+        $client = $this->mockClient(200, json_encode($keys, JSON_THROW_ON_ERROR), $history);
+
+        $response = $client->Keys('test/', new QueryOptions(Pretty: true));
+
+        self::assertInstanceOf(ValuedQueryStringsResponse::class, $response);
+        self::assertCount(1, $history);
+
+        parse_str($history[0]['request']->getUri()->getQuery(), $query);
+        self::assertArrayHasKey('keys', $query);
+        self::assertArrayNotHasKey('separator', $query);
+        self::assertArrayHasKey('pretty', $query);
+    }
+
+    public function testKeysSecondArgumentNullForBC(): void
+    {
+        $keys = ['test/key1'];
+        $history = [];
+        $client = $this->mockClient(200, json_encode($keys, JSON_THROW_ON_ERROR), $history);
+
+        $response = $client->Keys('test/', null);
+
+        self::assertInstanceOf(ValuedQueryStringsResponse::class, $response);
+        self::assertCount(1, $history);
+
+        parse_str($history[0]['request']->getUri()->getQuery(), $query);
+        self::assertArrayHasKey('keys', $query);
+        self::assertArrayNotHasKey('separator', $query);
+    }
+
     public function testPutSimple(): void
     {
         $history = [];
@@ -108,6 +162,21 @@ final class KVClientTest extends TestCase
         self::assertCount(1, $history);
     }
 
+    public function testPutCapturesKVWarnings(): void
+    {
+        $history = [];
+        $client = $this->mockClient(
+            200,
+            'true',
+            $history,
+            [Consul::_headerConsulKVWarning => ['warning-1', 'warning-2']],
+        );
+
+        $response = $client->Put(new KVPair(Key: 'test/key', Value: 'test value'));
+
+        self::assertSame(['warning-1', 'warning-2'], $response->getWriteMeta()?->getWarnings());
+    }
+
     public function testPutWithFlags(): void
     {
         $history = [];
@@ -116,6 +185,17 @@ final class KVClientTest extends TestCase
         $response = $client->Put(new KVPair(Key: 'test/key', Value: 'test value', Flags: 42));
 
         self::assertInstanceOf(WriteResponse::class, $response);
+    }
+
+    public function testPutRejectsLeadingSlash(): void
+    {
+        $history = [];
+        $client = $this->mockClient(200, 'true', $history);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid key. Key must not begin with a '/': /test/key");
+
+        $client->Put(new KVPair(Key: '/test/key', Value: 'test value'));
     }
 
     public function testCasSuccessful(): void
@@ -191,6 +271,17 @@ final class KVClientTest extends TestCase
         self::assertInstanceOf(WriteResponse::class, $response);
     }
 
+    public function testAcquireBoolLock(): void
+    {
+        $history = [];
+        $client = $this->mockClient(200, 'true', $history);
+
+        $response = $client->AcquireBool(new KVPair(Key: 'test/lock', Value: 'locked', Session: 'session-id'));
+
+        self::assertInstanceOf(ValuedWriteBoolResponse::class, $response);
+        self::assertTrue($response->getValue());
+    }
+
     public function testReleaseLock(): void
     {
         $history = [];
@@ -199,6 +290,37 @@ final class KVClientTest extends TestCase
         $response = $client->Release(new KVPair(Key: 'test/lock', Value: 'released', Session: 'session-id'));
 
         self::assertInstanceOf(WriteResponse::class, $response);
+    }
+
+    public function testReleaseBoolLock(): void
+    {
+        $history = [];
+        $client = $this->mockClient(200, 'true', $history);
+
+        $response = $client->ReleaseBool(new KVPair(Key: 'test/lock', Value: 'released', Session: 'session-id'));
+
+        self::assertInstanceOf(ValuedWriteBoolResponse::class, $response);
+        self::assertTrue($response->getValue());
+    }
+
+    public function testGetTrimsLeadingSlash(): void
+    {
+        $kvPair = [
+            'Key' => 'test/key',
+            'CreateIndex' => 100,
+            'ModifyIndex' => 101,
+            'LockIndex' => 0,
+            'Flags' => 42,
+            'Value' => base64_encode('test value'),
+            'Session' => '',
+        ];
+        $history = [];
+        $client = $this->mockClient(200, json_encode([$kvPair], JSON_THROW_ON_ERROR), $history);
+
+        $response = $client->Get('/test/key');
+
+        self::assertInstanceOf(KVPairResponse::class, $response);
+        self::assertSame('/v1/kv/test/key', $history[0]['request']->getUri()->getPath());
     }
 
     public function testTxnGetOperation(): void
@@ -247,5 +369,22 @@ final class KVClientTest extends TestCase
 
         self::assertInstanceOf(KVTxnAPIResponse::class, $response);
         self::assertTrue($response->OK);
+    }
+
+    public function testTxnConflictSetsOKFalse(): void
+    {
+        $txnResponse = [
+            'Results' => [],
+            'Errors' => [['OpIndex' => 0, 'What' => 'conflict']],
+        ];
+        $history = [];
+        $client = $this->mockClient(409, json_encode($txnResponse, JSON_THROW_ON_ERROR), $history);
+
+        $response = $client->Txn(null, new TxnOp(KV: new KVTxnOp(Verb: KVOp::KVSet, Key: 'test/key', Value: 'test')));
+
+        self::assertInstanceOf(KVTxnAPIResponse::class, $response);
+        self::assertFalse($response->OK);
+        self::assertNotNull($response->KVTxnResponse);
+        self::assertCount(1, $response->KVTxnResponse->Errors);
     }
 }

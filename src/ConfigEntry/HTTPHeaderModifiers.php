@@ -32,15 +32,21 @@ class HTTPHeaderModifiers extends AbstractType
     public array $Remove = [];
 
     /**
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      * @param null|array<string,string> $Add
      * @param null|array<string,string> $Set
      * @param null|array<string> $Remove
      */
     public function __construct(
+        null|array $data = null,
         null|array $Add = null,
         null|array $Set = null,
         null|array $Remove = null,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->setAdd($Add);
         $this->setSet($Set);
         if (null !== $Remove) {
@@ -123,6 +129,12 @@ class HTTPHeaderModifiers extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('Set' === $k) {
                 $n->setSet($v);
@@ -136,7 +148,6 @@ class HTTPHeaderModifiers extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

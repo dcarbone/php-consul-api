@@ -35,7 +35,11 @@ class IntentionHTTPHeaderPermission extends AbstractType
     public string $Regex;
     public bool $Invert;
 
+    /**
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
     public function __construct(
+        null|array $data = null,
         string $Name = '',
         bool $Present = false,
         string $Exact = '',
@@ -44,6 +48,10 @@ class IntentionHTTPHeaderPermission extends AbstractType
         string $Regex = '',
         bool $Invert = false,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->Name = $Name;
         $this->Present = $Present;
         $this->Exact = $Exact;

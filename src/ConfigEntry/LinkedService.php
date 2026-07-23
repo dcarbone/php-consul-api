@@ -31,7 +31,11 @@ class LinkedService extends AbstractType
     public string $KeyFile;
     public string $SNI;
 
+    /**
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
     public function __construct(
+        null|array $data = null,
         string $Namespace = '',
         string $Name = '',
         string $CAFile = '',
@@ -39,6 +43,10 @@ class LinkedService extends AbstractType
         string $KeyFile = '',
         string $SNI = ''
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->Namespace = $Namespace;
         $this->Name = $Name;
         $this->CAFile = $CAFile;
@@ -116,6 +124,12 @@ class LinkedService extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('ca_file' === $k) {
                 $n->CAFile = $v;
@@ -127,7 +141,6 @@ class LinkedService extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

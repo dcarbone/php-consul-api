@@ -39,6 +39,9 @@ class OperatorSerfMembersResponse extends AbstractValuedQueryResponse implements
     public function unmarshalValue(mixed $decoded): void
     {
         $this->SerfMembers = [];
+        if (!is_array($decoded)) {
+            return;
+        }
         foreach ($decoded as $datum) {
             $this->SerfMembers[] = SerfMember::jsonUnserialize($datum);
         }

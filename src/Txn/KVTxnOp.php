@@ -33,7 +33,11 @@ class KVTxnOp extends AbstractType
     public string $Namespace;
     public string $Partition;
 
+    /**
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
     public function __construct(
+        null|array $data = null,
         string|KVOp $Verb = KVOp::UNDEFINED,
         string $Key = '',
         string $Value = '',
@@ -43,6 +47,10 @@ class KVTxnOp extends AbstractType
         string $Namespace = '',
         string $Partition = '',
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         if (is_string($Verb)) {
             $Verb = KVOp::from($Verb);
         }
@@ -150,6 +158,12 @@ class KVTxnOp extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('Verb' === $k) {
                 $n->Verb = KVOp::from($v);
@@ -167,7 +181,6 @@ class KVTxnOp extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

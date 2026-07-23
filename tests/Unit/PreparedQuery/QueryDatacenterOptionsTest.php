@@ -3,6 +3,7 @@
 namespace DCarbone\PHPConsulAPITests\Unit\PreparedQuery;
 
 use DCarbone\PHPConsulAPI\PreparedQuery\QueryDatacenterOptions;
+use DCarbone\PHPConsulAPI\PreparedQuery\QueryFailoverTarget;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -17,6 +18,8 @@ final class QueryDatacenterOptionsTest extends TestCase
         self::assertSame(0, $opts->NearestN);
         self::assertSame([], $opts->getDatacenters());
         self::assertSame([], $opts->Datacenters);
+        self::assertSame([], $opts->getTargets());
+        self::assertSame([], $opts->Targets);
     }
 
     public function testConstructorWithValues(): void
@@ -24,11 +27,14 @@ final class QueryDatacenterOptionsTest extends TestCase
         $opts = new QueryDatacenterOptions(
             NearestN: 3,
             Datacenters: ['dc1', 'dc2', 'dc3'],
+            Targets: [new QueryFailoverTarget(Peer: 'peer-a', Partition: 'default', Datacenter: 'dc4')],
         );
         self::assertSame(3, $opts->getNearestN());
         self::assertSame(3, $opts->NearestN);
         self::assertSame(['dc1', 'dc2', 'dc3'], $opts->getDatacenters());
         self::assertSame(['dc1', 'dc2', 'dc3'], $opts->Datacenters);
+        self::assertCount(1, $opts->getTargets());
+        self::assertSame('peer-a', $opts->Targets[0]->Peer);
     }
 
     public function testFluentSetters(): void
@@ -36,13 +42,16 @@ final class QueryDatacenterOptionsTest extends TestCase
         $opts = new QueryDatacenterOptions();
         $result = $opts
             ->setNearestN(5)
-            ->setDatacenters('us-east', 'us-west');
+            ->setDatacenters('us-east', 'us-west')
+            ->setTargets(new QueryFailoverTarget(Peer: 'peer-b', Partition: 'default', Datacenter: 'dc6'));
 
         self::assertSame($opts, $result);
         self::assertSame(5, $opts->getNearestN());
         self::assertSame(5, $opts->NearestN);
         self::assertSame(['us-east', 'us-west'], $opts->getDatacenters());
         self::assertSame(['us-east', 'us-west'], $opts->Datacenters);
+        self::assertCount(1, $opts->getTargets());
+        self::assertSame('peer-b', $opts->Targets[0]->Peer);
     }
 
     public function testVariadicSetDatacentersReplacesExisting(): void
@@ -92,6 +101,7 @@ final class QueryDatacenterOptionsTest extends TestCase
         $decoded = new \stdClass();
         $decoded->NearestN = 4;
         $decoded->Datacenters = ['x', 'y'];
+        $decoded->Targets = [(object)['Peer' => 'peer-z', 'Partition' => 'default', 'Datacenter' => 'z']];
 
         $opts = QueryDatacenterOptions::jsonUnserialize($decoded);
 
@@ -99,6 +109,8 @@ final class QueryDatacenterOptionsTest extends TestCase
         self::assertSame(4, $opts->NearestN);
         self::assertSame(['x', 'y'], $opts->getDatacenters());
         self::assertSame(['x', 'y'], $opts->Datacenters);
+        self::assertCount(1, $opts->getTargets());
+        self::assertSame('peer-z', $opts->Targets[0]->Peer);
     }
 
     public function testJsonRoundTrip(): void
@@ -114,4 +126,3 @@ final class QueryDatacenterOptionsTest extends TestCase
         self::assertSame($original->getDatacenters(), $restored->getDatacenters());
     }
 }
-

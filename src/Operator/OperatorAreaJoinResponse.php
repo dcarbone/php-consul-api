@@ -39,6 +39,9 @@ class OperatorAreaJoinResponse extends AbstractValuedWriteResponse implements Un
     public function unmarshalValue(mixed $decoded): void
     {
         $this->AreaJoinResponses = [];
+        if (!is_array($decoded)) {
+            return;
+        }
         foreach ($decoded as $area) {
             $this->AreaJoinResponses[] = AreaJoinResponse::jsonUnserialize($area);
         }

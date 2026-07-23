@@ -106,6 +106,18 @@ final class RequestResponse
 
     public function buildWriteMeta(): WriteMeta
     {
-        return new WriteMeta($this->Duration);
+        if (null === $this->Response) {
+            return new WriteMeta($this->Duration);
+        }
+
+        return new WriteMeta(
+            $this->Duration,
+            ...array_values(
+                array_filter(
+                    $this->Response->getHeader(Consul::_headerConsulKVWarning),
+                    static fn (string $warning): bool => '' !== $warning,
+                )
+            ),
+        );
     }
 }

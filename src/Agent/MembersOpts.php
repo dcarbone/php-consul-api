@@ -28,11 +28,19 @@ class MembersOpts extends AbstractType
     public string $Segment;
     public string $Filter;
 
+    /**
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
     public function __construct(
+        null|array $data = null,
         bool $WAN = false,
         string $Segment = '',
         string $Filter = '',
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->WAN = $WAN;
         $this->Segment = $Segment;
         $this->Filter = $Filter;
@@ -74,10 +82,15 @@ class MembersOpts extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             $n->{$k} = $v;
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

@@ -29,12 +29,20 @@ class IngressServiceConfig extends AbstractType
     public null|int $MaxConcurrentRequests;
     public null|PassiveHealthCheck $PassiveHealthCheck;
 
+    /**
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
     public function __construct(
+        null|array $data = null,
         null|int $MaxConnections = null,
         null|int $MaxPendingRequests = null,
         null|int $MaxConcurrentRequests = null,
         null|PassiveHealthCheck $PassiveHealthCheck = null,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->MaxConnections = $MaxConnections;
         $this->MaxPendingRequests = $MaxPendingRequests;
         $this->MaxConcurrentRequests = $MaxConcurrentRequests;
@@ -88,6 +96,12 @@ class IngressServiceConfig extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('PassiveHealthCheck' === $k || 'passive_health_check' === $k) {
                 $n->PassiveHealthCheck = null === $v ? null : PassiveHealthCheck::jsonUnserialize($v);
@@ -95,7 +109,6 @@ class IngressServiceConfig extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

@@ -30,13 +30,21 @@ class HashPolicy extends AbstractType
     public bool $SourceIP;
     public bool $Terminal;
 
+    /**
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
     public function __construct(
+        null|array $data = null,
         string $Field = '',
         string $FieldValue = '',
         null|CookieConfig $CookieConfig = null,
         bool $SourceIP = false,
         bool $Terminal = false
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->Field = $Field;
         $this->FieldValue = $FieldValue;
         $this->CookieConfig = $CookieConfig;
@@ -102,6 +110,12 @@ class HashPolicy extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('field_value' === $k) {
                 $n->FieldValue = $v;
@@ -113,7 +127,6 @@ class HashPolicy extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

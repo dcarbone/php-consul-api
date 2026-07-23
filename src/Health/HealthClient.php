@@ -73,13 +73,38 @@ class HealthClient extends AbstractClient
         return $this->_getServiceEntries($service, $tags, $passingOnly, $opts, self::ingressHealth);
     }
 
+    /**
+     * Supports legacy and expanded call shapes:
+     * - `$tagOrPassingOnly` as bool toggles passing-only behavior directly.
+     * - `$passingOnlyOrOpts` as QueryOptions is equivalent to passing `$opts`.
+     * - `$passingOnlyOrOpts` as null is treated as `false` for backward compatibility.
+     */
     public function Ingress(
         string $service,
-        string $tag = '',
-        bool $passingOnly = false,
+        string|bool $tagOrPassingOnly = false,
+        null|bool|QueryOptions $passingOnlyOrOpts = false,
         null|QueryOptions $opts = null
     ): ServiceEntriesResponse {
-        return $this->IngressMultipleTags($service, '' !== $tag ? [$tag] : [], $passingOnly, $opts);
+        $tags = [];
+        $passingOnly = false;
+
+        if (is_bool($tagOrPassingOnly)) {
+            $passingOnly = $tagOrPassingOnly;
+            if ($passingOnlyOrOpts instanceof QueryOptions) {
+                $opts = $passingOnlyOrOpts;
+            }
+        } else {
+            if ('' !== $tagOrPassingOnly) {
+                $tags[] = $tagOrPassingOnly;
+            }
+            if ($passingOnlyOrOpts instanceof QueryOptions) {
+                $opts = $passingOnlyOrOpts;
+            } else {
+                $passingOnly = $passingOnlyOrOpts ?? false;
+            }
+        }
+
+        return $this->_getServiceEntries($service, $tags, $passingOnly, $opts, self::ingressHealth);
     }
 
     /**
@@ -105,7 +130,7 @@ class HealthClient extends AbstractClient
 
     public function State(string $state, null|QueryOptions $opts = null): HealthChecksResponse
     {
-        static $validStates = ['any', 'warning', 'critical', 'passing', 'unknown'];
+        static $validStates = ['any', 'warning', 'critical', 'passing'];
 
         if (!in_array($state, $validStates, true)) {
             $ret      = new HealthChecksResponse();

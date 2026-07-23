@@ -43,6 +43,9 @@ class AgentServicesResponse extends AbstractValuedResponse implements Unmarshall
             return;
         }
         $this->Services = [];
+        if (!(is_array($decoded) || $decoded instanceof \stdClass)) {
+            return;
+        }
         foreach ($decoded as $k => $v) {
             $this->Services[$k] = AgentService::jsonUnserialize($v);
         }

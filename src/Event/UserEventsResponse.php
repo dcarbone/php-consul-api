@@ -39,6 +39,9 @@ class UserEventsResponse extends AbstractValuedQueryResponse implements Unmarsha
     public function unmarshalValue(mixed $decoded): void
     {
         $this->UserEvents = [];
+        if (!is_array($decoded)) {
+            return;
+        }
         foreach ($decoded as $datum) {
             $this->UserEvents[] = UserEvent::jsonUnserialize($datum);
         }

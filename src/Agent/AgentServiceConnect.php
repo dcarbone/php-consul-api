@@ -27,10 +27,18 @@ class AgentServiceConnect extends AbstractType
     public bool $Native;
     public null|AgentServiceRegistration $SidecarService;
 
+    /**
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
     public function __construct(
+        null|array $data = null,
         bool $Native = false,
         null|AgentServiceRegistration $SidecarService = null,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->Native = $Native;
         $this->SidecarService = $SidecarService;
     }
@@ -60,6 +68,12 @@ class AgentServiceConnect extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('SidecarService' === $k) {
                 $n->SidecarService = AgentServiceRegistration::jsonUnserialize($v);
@@ -67,7 +81,6 @@ class AgentServiceConnect extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

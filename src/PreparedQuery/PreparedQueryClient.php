@@ -21,6 +21,8 @@ namespace DCarbone\PHPConsulAPI\PreparedQuery;
  */
 
 use DCarbone\PHPConsulAPI\PHPLib\AbstractClient;
+use DCarbone\PHPConsulAPI\PHPLib\Error;
+use DCarbone\PHPConsulAPI\PHPLib\RequestResponse;
 use DCarbone\PHPConsulAPI\PHPLib\ValuedWriteStringResponse;
 use DCarbone\PHPConsulAPI\PHPLib\WriteResponse;
 use DCarbone\PHPConsulAPI\QueryOptions;
@@ -30,20 +32,22 @@ class PreparedQueryClient extends AbstractClient
 {
     public function Create(PreparedQueryDefinition $query, null|WriteOptions $opts = null): ValuedWriteStringResponse
     {
-        $resp = $this->_requireOK($this->_doPost('v1/query', $query, $opts));
-        $ret  = new ValuedWriteStringResponse();
-        $this->_unmarshalResponse($resp, $ret);
-        return $ret;
+        return $this->_writeIDResponse($this->_requireOK($this->_doPost('v1/query', $query, $opts)));
     }
 
     public function Update(PreparedQueryDefinition $query, null|WriteOptions $opts = null): WriteResponse
     {
-        return $this->_executePut('v1/query', $query, $opts);
+        if ('' === $query->ID) {
+            $ret = new WriteResponse();
+            $ret->Err = new Error('prepared query ID cannot be empty');
+            return $ret;
+        }
+        return $this->_executePut(sprintf('v1/query/%s', urlencode($query->ID)), $query, $opts);
     }
 
     public function List(null|QueryOptions $opts = null): PreparedQueryDefinitionsResponse
     {
-        $resp = $this->_doGet('v1/query', $opts);
+        $resp = $this->_requireOK($this->_doGet('v1/query', $opts));
         $ret  = new PreparedQueryDefinitionsResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
@@ -51,7 +55,7 @@ class PreparedQueryClient extends AbstractClient
 
     public function Get(string $queryID, null|QueryOptions $opts = null): PreparedQueryDefinitionsResponse
     {
-        $resp = $this->_doGet(sprintf('v1/query/%s', $queryID), $opts);
+        $resp = $this->_requireOK($this->_doGet(sprintf('v1/query/%s', urlencode($queryID)), $opts));
         $ret  = new PreparedQueryDefinitionsResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
@@ -64,9 +68,30 @@ class PreparedQueryClient extends AbstractClient
 
     public function Execute(string $queryIDOrName, null|QueryOptions $opts = null): PreparedQueryExecuteResponseResponse
     {
-        $resp = $this->_doGet(sprintf('v1/query/%s/execute', $queryIDOrName), $opts);
+        $resp = $this->_requireOK($this->_doGet(sprintf('v1/query/%s/execute', urlencode($queryIDOrName)), $opts));
         $ret  = new PreparedQueryExecuteResponseResponse();
         $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    private function _writeIDResponse(RequestResponse $resp): ValuedWriteStringResponse
+    {
+        $ret = new ValuedWriteStringResponse();
+        if (null !== $resp->Err) {
+            $ret->Err = $resp->Err;
+            return $ret;
+        }
+        $ret->WriteMeta = $resp->buildWriteMeta();
+        $dec = $this->_decodeBody($resp->Response->getBody());
+        if (null !== $dec->Err) {
+            $ret->Err = $dec->Err;
+            return $ret;
+        }
+        if ($dec->Decoded instanceof \stdClass && isset($dec->Decoded->ID)) {
+            $ret->Value = (string)$dec->Decoded->ID;
+        } else {
+            $ret->Value = '';
+        }
         return $ret;
     }
 }

@@ -188,5 +188,32 @@ final class KVPairsTest extends TestCase
         self::assertSame('k2', $pairs[1]->getKey());
         self::assertSame('v2', $pairs[1]->getValue());
     }
-}
 
+    public function testConstructorHydratesAssociativeDataArray(): void
+    {
+        $obj1 = new \stdClass();
+        $obj1->Key = 'k1';
+        $obj1->Value = base64_encode('v1');
+        $obj1->CreateIndex = 0;
+        $obj1->ModifyIndex = 0;
+        $obj1->LockIndex = 0;
+        $obj1->Flags = 0;
+        $obj1->Session = '';
+
+        $obj2 = new \stdClass();
+        $obj2->Key = 'k2';
+        $obj2->Value = base64_encode('v2');
+        $obj2->CreateIndex = 0;
+        $obj2->ModifyIndex = 0;
+        $obj2->LockIndex = 0;
+        $obj2->Flags = 0;
+        $obj2->Session = '';
+
+        $pairs = new KVPairs(data: ['first' => $obj1, 'second' => $obj2]);
+        self::assertCount(2, $pairs);
+        self::assertSame('k1', $pairs[0]->getKey());
+        self::assertSame('v1', $pairs[0]->getValue());
+        self::assertSame('k2', $pairs[1]->getKey());
+        self::assertSame('v2', $pairs[1]->getValue());
+    }
+}

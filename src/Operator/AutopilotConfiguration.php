@@ -36,7 +36,11 @@ class AutopilotConfiguration extends AbstractType
     public int $CreateIndex;
     public int $ModifyIndex;
 
+    /**
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
     public function __construct(
+        null|array $data = null,
         bool $CleanupDeadServers = false,
         null|string|int|float|\DateInterval|Time\Duration $LastContactThreshold = null,
         int $MaxTrailingLogs = 0,
@@ -48,6 +52,10 @@ class AutopilotConfiguration extends AbstractType
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->CleanupDeadServers = $CleanupDeadServers;
         $this->setLastContactThreshold($LastContactThreshold);
         $this->MaxTrailingLogs = $MaxTrailingLogs;
@@ -181,6 +189,12 @@ class AutopilotConfiguration extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('LastContactThreshold' === $k) {
                 $n->setLastContactThreshold($v);
@@ -190,7 +204,6 @@ class AutopilotConfiguration extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

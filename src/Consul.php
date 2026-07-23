@@ -23,14 +23,18 @@ namespace DCarbone\PHPConsulAPI;
 use DCarbone\PHPConsulAPI\ACL\ACLClient;
 use DCarbone\PHPConsulAPI\Agent\AgentClient;
 use DCarbone\PHPConsulAPI\Catalog\CatalogClient;
+use DCarbone\PHPConsulAPI\ConfigEntry\ConfigEntryClient;
 use DCarbone\PHPConsulAPI\Coordinate\CoordinateClient;
+use DCarbone\PHPConsulAPI\Debug\DebugClient;
 use DCarbone\PHPConsulAPI\Event\EventClient;
 use DCarbone\PHPConsulAPI\Health\HealthClient;
 use DCarbone\PHPConsulAPI\KV\KVClient;
 use DCarbone\PHPConsulAPI\Operator\OperatorClient;
+use DCarbone\PHPConsulAPI\Peering\PeeringClient;
 use DCarbone\PHPConsulAPI\PreparedQuery\PreparedQueryClient;
 use DCarbone\PHPConsulAPI\Session\SessionClient;
 use DCarbone\PHPConsulAPI\Status\StatusClient;
+use DCarbone\PHPConsulAPI\Txn\TxnClient;
 
 class Consul
 {
@@ -65,6 +69,7 @@ class Consul
     public const KVLock           = 'lock';
     public const KVUnlock         = 'unlock';
     public const KVGet            = 'get';
+    public const KVGetOrEmpty     = 'get-or-empty';
     public const KVGetTree        = 'get-tree';
     public const KVCheckSession   = 'check-session';
     public const KVCheckIndex     = 'check-index';
@@ -104,9 +109,20 @@ class Consul
     public const MeshConfigMesh = 'mesh';
     public const APIGateway = "api-gateway";
     public const TCPRoute = "tcp-route";
+    public const FileSystemCertificate = 'file-system-certificate';
     public const InlineCertificate = 'inline-certificate';
     public const HTTPRoute = 'http-route';
+    public const RateLimit = 'rate-limit';
     public const JWTProvider = 'jwt-provider';
+
+    public const BuiltinAWSLambdaExtension         = 'builtin/aws/lambda';
+    public const BuiltinExtAuthzExtension          = 'builtin/ext-authz';
+    public const BuiltinExtProcExtension           = 'builtin/ext-proc';
+    public const BuiltinLuaExtension               = 'builtin/lua';
+    public const BuiltinOTELAccessLoggingExtension = 'builtin/otel-access-logging';
+    public const BuiltinPropertyOverrideExtension  = 'builtin/property-override';
+    public const BuiltinWasmExtension              = 'builtin/wasm';
+    public const BuiltinValidateExtension          = 'builtin/proxy/validate';
 
     // "private" constants
 
@@ -115,20 +131,25 @@ class Consul
     public const _headerConsulContentHash        = self::_headerConsulPrefix . 'ContentHash';
     public const _headerConsulKnownLeader        = self::_headerConsulPrefix . 'KnownLeader';
     public const _headerConsulLastContact        = self::_headerConsulPrefix . 'LastContact';
+    public const _headerConsulKVWarning          = self::_headerConsulPrefix . 'KV-Warning';
     public const _headerConsulTranslateAddresses = self::_headerConsulPrefix . 'Translate-Addresses';
     public const _headerCache                    = 'X-Cache';
 
     public ACLClient $ACL;
     public AgentClient $Agent;
     public CatalogClient $Catalog;
+    public ConfigEntryClient $ConfigEntry;
     public CoordinateClient $Coordinate;
+    public DebugClient $Debug;
     public EventClient $Event;
     public HealthClient $Health;
     public KVClient $KV;
     public OperatorClient $Operator;
+    public PeeringClient $Peering;
     public PreparedQueryClient $PreparedQuery;
     public SessionClient $Session;
     public StatusClient $Status;
+    public TxnClient $Txn;
 
     public function __construct(null|Config $config = null)
     {
@@ -152,14 +173,18 @@ class Consul
         $this->ACL           = new ACLClient($config);
         $this->Agent         = new AgentClient($config);
         $this->Catalog       = new CatalogClient($config);
+        $this->ConfigEntry   = new ConfigEntryClient($config);
         $this->Coordinate    = new CoordinateClient($config);
+        $this->Debug         = new DebugClient($config);
         $this->Event         = new EventClient($config);
         $this->Health        = new HealthClient($config);
         $this->KV            = new KVClient($config);
         $this->Operator      = new OperatorClient($config);
+        $this->Peering       = new PeeringClient($config);
         $this->PreparedQuery = new PreparedQueryClient($config);
         $this->Session       = new SessionClient($config);
         $this->Status        = new StatusClient($config);
+        $this->Txn           = new TxnClient($config);
     }
 
     public function ACL(): ACLClient
@@ -182,9 +207,24 @@ class Consul
         return $this->Coordinate;
     }
 
+    public function ConfigEntry(): ConfigEntryClient
+    {
+        return $this->ConfigEntry;
+    }
+
+    public function ConfigEntries(): ConfigEntryClient
+    {
+        return $this->ConfigEntry;
+    }
+
     public function Event(): EventClient
     {
         return $this->Event;
+    }
+
+    public function Debug(): DebugClient
+    {
+        return $this->Debug;
     }
 
     public function Health(): HealthClient
@@ -207,6 +247,16 @@ class Consul
         return $this->PreparedQuery;
     }
 
+    public function Peering(): PeeringClient
+    {
+        return $this->Peering;
+    }
+
+    public function Peerings(): PeeringClient
+    {
+        return $this->Peering;
+    }
+
     public function Session(): SessionClient
     {
         return $this->Session;
@@ -215,6 +265,11 @@ class Consul
     public function Status(): StatusClient
     {
         return $this->Status;
+    }
+
+    public function Txn(): TxnClient
+    {
+        return $this->Txn;
     }
 
     public static function MakeConfigEntry(string $kind, string $name): ConfigEntry\ConfigEntry

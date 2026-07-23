@@ -73,5 +73,13 @@ final class UserEventsResponseTest extends TestCase
         $r->unmarshalValue([]);
         self::assertSame([], $r->UserEvents);
     }
-}
 
+    public function testUnmarshalValueNullKeepsDefaultArray(): void
+    {
+        $r = new UserEventsResponse();
+        $r->unmarshalValue(null);
+
+        self::assertSame([], $r->UserEvents);
+        self::assertSame([], $r->getValue());
+    }
+}

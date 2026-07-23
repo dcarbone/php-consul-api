@@ -51,8 +51,10 @@ class AgentServiceConnectProxyConfig extends AbstractType
      * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension> $EnvoyExtensions
      * @param array<string,mixed> $Config
      * @param array<\DCarbone\PHPConsulAPI\Agent\Upstream> $Upstreams
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         iterable $EnvoyExtensions = [],
         string $DestinationServiceName = '',
         string $DestinationServiceID = '',
@@ -67,6 +69,10 @@ class AgentServiceConnectProxyConfig extends AbstractType
         null|ExposeConfig $Expose = null,
         null|AccessLogsConfig $AccessLogs = null,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->setEnvoyExtensions(...$EnvoyExtensions);
         $this->DestinationServiceName = $DestinationServiceName;
         $this->DestinationServiceID = $DestinationServiceID;
@@ -254,6 +260,12 @@ class AgentServiceConnectProxyConfig extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('EnvoyExtensions' === $k) {
                 foreach ($v as $vv) {
@@ -279,7 +291,6 @@ class AgentServiceConnectProxyConfig extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

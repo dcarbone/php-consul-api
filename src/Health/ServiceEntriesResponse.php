@@ -44,6 +44,9 @@ class ServiceEntriesResponse extends AbstractValuedQueryResponse implements Unma
     public function unmarshalValue(mixed $decoded): void
     {
         $this->ServiceEntries = [];
+        if (!is_array($decoded)) {
+            return;
+        }
         foreach ($decoded as $entry) {
             $this->ServiceEntries[] = ServiceEntry::jsonUnserialize($entry);
         }

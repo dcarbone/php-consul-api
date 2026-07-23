@@ -58,8 +58,10 @@ class ACLTokenListEntry extends AbstractType
      * @param array<\DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity> $ServiceIdentities
      * @param array<\DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity> $NodeIdentities
      * @param array<\DCarbone\PHPConsulAPI\ACL\ACLTemplatedPolicy> $TemplatedPolicies
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
         string $AccessorID = '',
@@ -80,6 +82,10 @@ class ACLTokenListEntry extends AbstractType
         string $Partition = '',
         string $AuthMethodNamespace = '',
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->CreateIndex = $CreateIndex;
         $this->ModifyIndex = $ModifyIndex;
         $this->AccessorID = $AccessorID;
@@ -328,6 +334,12 @@ class ACLTokenListEntry extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('Policies' === $k) {
                 foreach ($v as $vv) {
@@ -357,7 +369,6 @@ class ACLTokenListEntry extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

@@ -43,11 +43,13 @@ class SessionEntry extends AbstractType
     public array $ServiceChecks;
 
     /**
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      * @param array<string> $Checks
      * @param array<string> $NodeChecks
      * @param array<ServiceCheck> $ServiceChecks
      */
     public function __construct(
+        null|array $data = null,
         int $CreateIndex = 0,
         string $ID = '',
         string $Name = '',
@@ -60,6 +62,10 @@ class SessionEntry extends AbstractType
         array $NodeChecks = [],
         array $ServiceChecks = [],
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->CreateIndex = $CreateIndex;
         $this->ID = $ID;
         $this->Name = $Name;
@@ -203,36 +209,33 @@ class SessionEntry extends AbstractType
         return $this;
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    public function _toAPIPayload(): array
+    public function _toAPIPayload(): \stdClass
     {
-        $out = [];
+        $out = new \stdClass();
 
         if ('' !== $this->Name) {
-            $out['Name'] = $this->Name;
+            $out->Name = $this->Name;
         }
         if ('' !== $this->Node) {
-            $out['Node'] = $this->Node;
+            $out->Node = $this->Node;
         }
         if (0 < $this->LockDelay->Nanoseconds()) {
-            $out['LockDelay'] = dur_to_millisecond($this->LockDelay);
+            $out->LockDelay = dur_to_millisecond($this->LockDelay);
         }
         if ([] !== $this->Checks) {
-            $out['Checks'] = $this->Checks;
+            $out->Checks = $this->Checks;
         }
         if ([] !== $this->NodeChecks) {
-            $out['NodeChecks'] = $this->NodeChecks;
+            $out->NodeChecks = $this->NodeChecks;
         }
         if ([] !== $this->ServiceChecks) {
-            $out['ServiceChecks'] = $this->ServiceChecks;
+            $out->ServiceChecks = $this->ServiceChecks;
         }
         if ('' !== $this->Behavior) {
-            $out['Behavior'] = $this->Behavior;
+            $out->Behavior = $this->Behavior;
         }
         if ('' !== $this->TTL) {
-            $out['TTL'] = $this->TTL;
+            $out->TTL = $this->TTL;
         }
 
         return $out;
@@ -241,6 +244,12 @@ class SessionEntry extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('LockDelay' === $k) {
                 $n->LockDelay = Time::Duration($v);
@@ -255,7 +264,6 @@ class SessionEntry extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

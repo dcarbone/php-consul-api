@@ -33,12 +33,20 @@ class TxnResult extends AbstractType
     public null|CatalogService $Service;
     public null|HealthCheck $Check;
 
+    /**
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
     public function __construct(
+        null|array $data = null,
         null|KVPair $KV = null,
         null|Node $Node = null,
         null|CatalogService $Service = null,
         null|HealthCheck $Check = null,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->KV = $KV;
         $this->Node = $Node;
         $this->Service = $Service;
@@ -92,6 +100,12 @@ class TxnResult extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('KV' === $k) {
                 $n->KV = null === $v ? null : KVPair::jsonUnserialize($v);
@@ -105,7 +119,6 @@ class TxnResult extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

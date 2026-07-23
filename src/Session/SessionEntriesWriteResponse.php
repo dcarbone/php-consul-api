@@ -39,6 +39,9 @@ class SessionEntriesWriteResponse extends AbstractValuedWriteResponse implements
     public function unmarshalValue(mixed $decoded): void
     {
         $this->SessionEntries = [];
+        if (!is_array($decoded)) {
+            return;
+        }
         foreach ($decoded as $datum) {
             $this->SessionEntries[] = SessionEntry::jsonUnserialize($datum);
         }

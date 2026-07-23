@@ -32,6 +32,8 @@ interface ConfigEntry
 
     public function GetName(): string;
 
+    public function GetPartition(): string;
+
     public function GetNamespace(): string;
 
     /**

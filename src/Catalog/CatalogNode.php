@@ -31,11 +31,17 @@ class CatalogNode extends AbstractType
 
     /**
      * @param array<string,\DCarbone\PHPConsulAPI\Agent\AgentService> $Services
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         null|Node $Node = null,
         array $Services = [],
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->Node = $Node;
         $this->Services = $Services;
     }
@@ -71,6 +77,12 @@ class CatalogNode extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('Node' === $k) {
                 $n->Node = null === $v ? null : Node::jsonUnserialize($v);
@@ -83,7 +95,6 @@ class CatalogNode extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

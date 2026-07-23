@@ -38,6 +38,7 @@ class EventClient extends AbstractClient
         if ('' !== ($tf = $event->TagFilter)) {
             $r->params->set('tag', $tf);
         }
+        $r->header->set('Content-Type', 'application/octet-stream');
         $resp = $this->_requireOK($this->_do($r));
         $ret  = new UserEventResponse();
         $this->_unmarshalResponse($resp, $ret);
@@ -58,21 +59,27 @@ class EventClient extends AbstractClient
 
     public function IDToIndex(string $uuid): int
     {
-        if (36 !== strlen($uuid)) {
+        if (!preg_match('/^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/', $uuid)) {
             throw new \InvalidArgumentException("{$uuid} is not a valid UUID");
+        }
+        if (8 > PHP_INT_SIZE) {
+            throw new \RuntimeException('IDToIndex requires 64-bit PHP integer support');
         }
 
         $lower  = sprintf('%s%s%s', substr($uuid, 0, 8), substr($uuid, 9, 4), substr($uuid, 14, 4));
         $upper  = sprintf('%s%s', substr($uuid, 19, 4), substr($uuid, 24, 12));
-        $lowVal = intval($lower, 10);
-        if (0 >= $lowVal) {
-            throw new \InvalidArgumentException("{$lower} is not greater than 0");
-        }
-        $highVal = intval($upper, 10);
-        if (0 >= $highVal) {
-            throw new \InvalidArgumentException("{$upper} is not greater than 0");
-        }
 
-        return $lowVal ^ $highVal;
+        $lowerHi = intval(substr($lower, 0, 8), 16);
+        $lowerLo = intval(substr($lower, 8, 8), 16);
+        $upperHi = intval(substr($upper, 0, 8), 16);
+        $upperLo = intval(substr($upper, 8, 8), 16);
+
+        $xorHi = ($lowerHi ^ $upperHi) & 0xffffffff;
+        $xorLo = ($lowerLo ^ $upperLo) & 0xffffffff;
+        $low63 = (($xorHi & 0x7fffffff) << 32) | $xorLo;
+        if (0 !== ($xorHi & 0x80000000)) {
+            return PHP_INT_MIN | $low63;
+        }
+        return $low63;
     }
 }

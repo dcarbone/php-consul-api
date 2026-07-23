@@ -49,8 +49,10 @@ class AutopilotUpgrade extends AbstractType
      * @param array<string> $OtherVersionNonVoters
      * @param array<string> $OtherVersionReadReplicas
      * @param array<string, AutopilotZoneUpgradeVersions> $RedundancyZones
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         string $Status = '',
         string $TargetVersion = '',
         array $TargetVersionVoters = [],
@@ -61,6 +63,10 @@ class AutopilotUpgrade extends AbstractType
         array $OtherVersionReadReplicas = [],
         array $RedundancyZones = [],
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->Status = $Status;
         $this->TargetVersion = $TargetVersion;
         $this->setTargetVersionVoters(...$TargetVersionVoters);
@@ -198,6 +204,12 @@ class AutopilotUpgrade extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('RedundancyZones' === $k) {
                 $n->RedundancyZones = [];
@@ -208,7 +220,6 @@ class AutopilotUpgrade extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

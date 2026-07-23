@@ -45,8 +45,10 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
      * @param null|array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverSubset> $Subsets
      * @param null|array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverFailover> $Failover
      * @param null|array<string,mixed> $Meta
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         string $Kind = '',
         string $Name = '',
         string $Partition = '',
@@ -63,6 +65,10 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
         int $CreateIndex = 0,
         int $ModifyIndex = 0,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->Kind = $Kind;
         $this->Name = $Name;
         $this->Partition = $Partition;
@@ -247,6 +253,12 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('default_subset' === $k) {
                 $n->DefaultSubset = $v;
@@ -274,7 +286,6 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

@@ -39,6 +39,9 @@ class ACLRolesQueryResponse extends AbstractValuedQueryResponse implements Unmar
     public function unmarshalValue(mixed $decoded): void
     {
         $this->ACLRoles = [];
+        if (!is_array($decoded)) {
+            return;
+        }
         foreach ($decoded as $datum) {
             $this->ACLRoles[] = ACLRole::jsonUnserialize($datum);
         }

@@ -32,7 +32,11 @@ class PreparedQueryDefinition extends AbstractType
     public QueryDNSOptions $DNS;
     public QueryTemplate $Template;
 
+    /**
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
     public function __construct(
+        null|array $data = null,
         string $ID = '',
         string $Name = '',
         string $Session = '',
@@ -41,6 +45,10 @@ class PreparedQueryDefinition extends AbstractType
         null|QueryDNSOptions $DNS = null,
         null|QueryTemplate $Template = null,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->ID = $ID;
         $this->Name = $Name;
         $this->Session = $Session;
@@ -130,6 +138,12 @@ class PreparedQueryDefinition extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('Service' === $k) {
                 $n->Service = ServiceQuery::jsonUnserialize($v);
@@ -141,7 +155,6 @@ class PreparedQueryDefinition extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

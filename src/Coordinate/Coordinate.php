@@ -37,14 +37,20 @@ class Coordinate extends AbstractType
 
     /**
      * @param array<float> $Vec
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         null|CoordinateConfig $config = null,
         array $Vec = [],
         float $Error = 0.0,
         float $Adjustment = 0.0,
         float $Height = 0.0,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         if (null !== $config) {
             $this->Vec = array_fill(0, $config->Dimensionality, 0.0);
             $this->Error = $config->VivaldiErrorMax;
@@ -257,6 +263,12 @@ class Coordinate extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('Vec' === $k) {
                 $n->Vec = (array)$v;
@@ -264,7 +276,6 @@ class Coordinate extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

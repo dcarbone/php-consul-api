@@ -47,8 +47,10 @@ class CatalogRegistration extends AbstractType
     /**
      * @param array<string,string> $TaggedAddresses
      * @param array<string,string> $NodeMeta
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         string $ID = '',
         string $Node = '',
         string $Address = '',
@@ -62,6 +64,10 @@ class CatalogRegistration extends AbstractType
         string $Partition = '',
         null|Locality $Locality = null,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->ID = $ID;
         $this->Node = $Node;
         $this->Address = $Address;
@@ -189,6 +195,12 @@ class CatalogRegistration extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('TaggedAddresses' === $k) {
                 $n->setTaggedAddresses($v);
@@ -206,7 +218,6 @@ class CatalogRegistration extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

@@ -25,10 +25,13 @@ use DCarbone\Go\Time;
 class WriteMeta
 {
     public Time\Duration $RequestTime;
+    /** @var string[] */
+    public array $Warnings;
 
-    public function __construct(null|string|int|float|\DateInterval|Time\Duration $RequestTime)
+    public function __construct(null|string|int|float|\DateInterval|Time\Duration $RequestTime, string ...$Warnings)
     {
         $this->RequestTime = Time::Duration($RequestTime);
+        $this->Warnings = $Warnings;
     }
 
     public function getRequestTime(): Time\Duration
@@ -39,6 +42,20 @@ class WriteMeta
     public function setRequestTime(null|string|int|float|\DateInterval|Time\Duration $RequestTime): self
     {
         $this->RequestTime = Time::Duration($RequestTime);
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getWarnings(): array
+    {
+        return $this->Warnings;
+    }
+
+    public function setWarnings(string ...$Warnings): self
+    {
+        $this->Warnings = $Warnings;
         return $this;
     }
 }

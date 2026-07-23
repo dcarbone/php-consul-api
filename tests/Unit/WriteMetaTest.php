@@ -54,5 +54,19 @@ final class WriteMetaTest extends TestCase
         $wm->setRequestTime(7000000000);
         self::assertSame(7.0, $wm->getRequestTime()->Seconds());
     }
-}
 
+    public function testConstructorWithWarnings(): void
+    {
+        $wm = new WriteMeta('1s', 'warn-1', 'warn-2');
+        self::assertSame(['warn-1', 'warn-2'], $wm->getWarnings());
+        self::assertSame(['warn-1', 'warn-2'], $wm->Warnings);
+    }
+
+    public function testSetWarnings(): void
+    {
+        $wm = new WriteMeta(RequestTime: null);
+        $result = $wm->setWarnings('warn-1', 'warn-2');
+        self::assertSame($wm, $result);
+        self::assertSame(['warn-1', 'warn-2'], $wm->getWarnings());
+    }
+}

@@ -30,11 +30,17 @@ class UpstreamConfiguration extends AbstractType
 
     /**
      * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\UpstreamConfig> $Overrides
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         array $Overrides = [],
         null|UpstreamConfig $Defaults = null
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->setOverrides(...$Overrides);
         $this->Defaults = $Defaults;
     }
@@ -67,6 +73,12 @@ class UpstreamConfiguration extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('Overrides' === $k) {
                 $n->Overrides = [];
@@ -79,7 +91,6 @@ class UpstreamConfiguration extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

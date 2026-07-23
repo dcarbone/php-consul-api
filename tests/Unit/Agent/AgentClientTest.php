@@ -7,7 +7,9 @@ use DCarbone\PHPConsulAPI\Agent\AgentAuthorizeParams;
 use DCarbone\PHPConsulAPI\Agent\AgentCheckRegistration;
 use DCarbone\PHPConsulAPI\Agent\AgentCheckUpdate;
 use DCarbone\PHPConsulAPI\Agent\AgentClient;
+use DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration;
 use DCarbone\PHPConsulAPI\Agent\ForceLeaveOpts;
+use DCarbone\PHPConsulAPI\Agent\ServiceRegisterOpts;
 use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\PHPLib\MapResponse;
 use DCarbone\PHPConsulAPI\QueryOptions;
@@ -429,6 +431,72 @@ final class AgentClientTest extends TestCase
         parse_str($history[5]['request']->getUri()->getQuery(), $params);
         self::assertArrayHasKey('prune', $params);
         self::assertSame('1', $params['prune']);
+    }
+
+    public function testMembersWanConstructsExpectedRequest(): void
+    {
+        $history = [];
+        $client = $this->newClient([
+            new Response(200, [], json_encode([], JSON_THROW_ON_ERROR)),
+        ], $history);
+
+        $client->Members(true);
+
+        [$request, , $params] = $this->requestData($history);
+        self::assertSame('GET', $request->getMethod());
+        self::assertSame('/v1/agent/members', $request->getUri()->getPath());
+        self::assertSame(['wan' => '1'], $params);
+    }
+
+    public function testMembersNullConstructsExpectedRequest(): void
+    {
+        $history = [];
+        $client = $this->newClient([
+            new Response(200, [], json_encode([], JSON_THROW_ON_ERROR)),
+        ], $history);
+
+        $client->Members(null);
+
+        [$request, , $params] = $this->requestData($history);
+        self::assertSame('GET', $request->getMethod());
+        self::assertSame('/v1/agent/members', $request->getUri()->getPath());
+        self::assertSame([], $params);
+    }
+
+    public function testServiceRegisterUsesRegisterTokenHeader(): void
+    {
+        $history = [];
+        $client = $this->newClient([
+            new Response(200, [], ''),
+        ], $history);
+
+        $err = $client->ServiceRegister(
+            new AgentServiceRegistration(Name: 'web', Address: '127.0.0.1', Port: 8080),
+            new ServiceRegisterOpts(ReplaceExistingChecks: true, Token: 'register-token'),
+        );
+
+        self::assertNull($err);
+        [$request, , $params] = $this->requestData($history);
+        self::assertSame('PUT', $request->getMethod());
+        self::assertSame('/v1/agent/service/register', $request->getUri()->getPath());
+        self::assertSame(['replace-existing-checks' => 'true'], $params);
+        self::assertSame('register-token', $request->getHeaderLine('X-Consul-Token'));
+    }
+
+    public function testMetricsStreamUsesExpectedEndpoint(): void
+    {
+        $history = [];
+        $client = $this->newClient([
+            new Response(200, [], 'stream-data'),
+        ], $history);
+
+        $resp = $client->MetricsStream();
+
+        self::assertNull($resp->Err);
+        self::assertSame('stream-data', $resp->Value);
+        [$request, , ] = $this->requestData($history);
+        self::assertSame('GET', $request->getMethod());
+        self::assertSame('/v1/agent/metrics/stream', $request->getUri()->getPath());
     }
 
     private function newClient(array $responses, array &$history): AgentClient

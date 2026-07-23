@@ -29,12 +29,20 @@ class ACLOIDCCallbackParams extends AbstractType
     public string $Code;
     public string $ClientNonce;
 
+    /**
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
     public function __construct(
+        null|array $data = null,
         string $AuthMethod = '',
         string $State = '',
         string $Code = '',
         string $ClientNonce = '',
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->AuthMethod = $AuthMethod;
         $this->State = $State;
         $this->Code = $Code;
@@ -88,10 +96,15 @@ class ACLOIDCCallbackParams extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             $n->{$k} = $v;
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

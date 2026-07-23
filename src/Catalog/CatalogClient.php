@@ -71,6 +71,11 @@ class CatalogClient extends AbstractClient
         return $ret;
     }
 
+    public function NodeServiceList(string $node, null|QueryOptions $opts = null): CatalogNodeServicesListResponse
+    {
+        return $this->NodeServicesList($node, $opts);
+    }
+
     /**
      * @param array<string> $tags
      */
@@ -92,6 +97,29 @@ class CatalogClient extends AbstractClient
     public function Service(string $service, string $tag = '', null|QueryOptions $opts = null): CatalogServicesResponse
     {
         return $this->ServiceMultipleTags($service, '' !== $tag ? [$tag] : [], $opts);
+    }
+
+    /**
+     * @param array<string> $tags
+     */
+    public function ConnectMultipleTags(
+        string $service,
+        array $tags,
+        null|QueryOptions $opts = null
+    ): CatalogServicesResponse {
+        $r = $this->_newGetRequest(sprintf('v1/catalog/connect/%s', $service), $opts);
+        if ([] !== $tags) {
+            $r->params->set('tag', ...$tags);
+        }
+        $resp = $this->_requireOK($this->_do($r));
+        $ret  = new CatalogServicesResponse();
+        $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    public function Connect(string $service, string $tag = '', null|QueryOptions $opts = null): CatalogServicesResponse
+    {
+        return $this->ConnectMultipleTags($service, '' !== $tag ? [$tag] : [], $opts);
     }
 
     public function Node(string $node, null|QueryOptions $opts = null): CatalogNodeResponse

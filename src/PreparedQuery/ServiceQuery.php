@@ -25,7 +25,9 @@ use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 class ServiceQuery extends AbstractType
 {
     public string $Service;
+    public string $SamenessGroup;
     public string $Namespace;
+    public string $Partition;
     public string $Near;
     /** @var array<string> */
     public array $Tags;
@@ -44,10 +46,14 @@ class ServiceQuery extends AbstractType
      * @param array<string> $IgnoreCheckIDs
      * @param array<string, string> $NodeMeta
      * @param array<string, string> $ServiceMeta
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         string $Service = '',
+        string $SamenessGroup = '',
         string $Namespace = '',
+        string $Partition = '',
         string $Near = '',
         array $Tags = [],
         array $IgnoreCheckIDs = [],
@@ -57,8 +63,14 @@ class ServiceQuery extends AbstractType
         array $ServiceMeta = [],
         bool $Connect = false,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->Service = $Service;
+        $this->SamenessGroup = $SamenessGroup;
         $this->Namespace = $Namespace;
+        $this->Partition = $Partition;
         $this->Near = $Near;
         $this->setTags(...$Tags);
         $this->setIgnoreCheckIDs(...$IgnoreCheckIDs);
@@ -88,6 +100,28 @@ class ServiceQuery extends AbstractType
     public function setNamespace(string $Namespace): self
     {
         $this->Namespace = $Namespace;
+        return $this;
+    }
+
+    public function getSamenessGroup(): string
+    {
+        return $this->SamenessGroup;
+    }
+
+    public function setSamenessGroup(string $SamenessGroup): self
+    {
+        $this->SamenessGroup = $SamenessGroup;
+        return $this;
+    }
+
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
         return $this;
     }
 
@@ -200,6 +234,12 @@ class ServiceQuery extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('Failover' === $k) {
                 $n->Failover = QueryDatacenterOptions::jsonUnserialize($v);
@@ -209,15 +249,20 @@ class ServiceQuery extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass
     {
         $out = $this->_startJsonSerialize();
         $out->Service = $this->Service;
+        if ('' !== $this->SamenessGroup) {
+            $out->SamenessGroup = $this->SamenessGroup;
+        }
         if ('' !== $this->Namespace) {
             $out->Namespace = $this->Namespace;
+        }
+        if ('' !== $this->Partition) {
+            $out->Partition = $this->Partition;
         }
         $out->Near = $this->Near;
         $out->Tags = $this->Tags;

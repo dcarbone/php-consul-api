@@ -28,11 +28,19 @@ class UpstreamLimits extends AbstractType
     public null|int $MaxPendingRequests;
     public null|int $MaxConcurrentRequests;
 
+    /**
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
     public function __construct(
+        null|array $data = null,
         null|int $MaxConnections = null,
         null|int $MaxPendingRequests = null,
         null|int $MaxConcurrentRequests = null,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->MaxConnections = $MaxConnections;
         $this->MaxPendingRequests = $MaxPendingRequests;
         $this->MaxConcurrentRequests = $MaxConcurrentRequests;
@@ -74,6 +82,12 @@ class UpstreamLimits extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('max_connections' === $k) {
                 $n->MaxConnections = $v;
@@ -85,7 +99,6 @@ class UpstreamLimits extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

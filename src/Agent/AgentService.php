@@ -58,8 +58,10 @@ class AgentService extends AbstractType
      * @param array<string,string> $Meta
      * @param array<ServicePort> $Ports
      * @param array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress> $TaggedAddresses
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         string|ServiceKind $Kind = '',
         string $ID = '',
         string $Service = '',
@@ -83,6 +85,10 @@ class AgentService extends AbstractType
         string $Datacenter = '',
         null|Locality $Locality = null,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->Kind = is_string($Kind) ? ServiceKind::from($Kind) : $Kind;
         $this->ID = $ID;
         $this->Service = $Service;
@@ -347,6 +353,12 @@ class AgentService extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('Kind' === $k) {
                 $n->Kind = ServiceKind::from($v);
@@ -375,7 +387,6 @@ class AgentService extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

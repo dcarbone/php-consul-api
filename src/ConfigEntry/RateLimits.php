@@ -26,8 +26,17 @@ class RateLimits extends AbstractType
 {
     public InstanceLevelRateLimits $InstanceLevel;
 
-    public function __construct(null|InstanceLevelRateLimits $instanceLevel = null)
-    {
+    /**
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
+    public function __construct(
+        null|array $data = null,
+        null|InstanceLevelRateLimits $instanceLevel = null
+    ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->InstanceLevel = $instanceLevel ?? new InstanceLevelRateLimits();
     }
 
@@ -45,6 +54,12 @@ class RateLimits extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('InstanceLevel' === $k || 'instance_level' === $k) {
                 $n->InstanceLevel = InstanceLevelRateLimits::jsonUnserialize($v);
@@ -52,7 +67,6 @@ class RateLimits extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

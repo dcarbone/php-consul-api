@@ -42,8 +42,10 @@ class Upstream extends AbstractType
 
     /**
      * @param array<string,mixed> $Config
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         string|UpstreamDestType $DestinationType = UpstreamDestType::UNDEFINED,
         string $DestinationPartition = '',
         string $DestinationNamespace = '',
@@ -58,6 +60,10 @@ class Upstream extends AbstractType
         null|MeshGatewayConfig $MeshGateway = null,
         bool $CentrallyConfigured = false,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->setDestinationType($DestinationType);
         $this->DestinationPartition = $DestinationPartition;
         $this->DestinationNamespace = $DestinationNamespace;
@@ -233,6 +239,12 @@ class Upstream extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('DestinationType' === $k) {
                 $n->setDestinationType($v);
@@ -244,7 +256,6 @@ class Upstream extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

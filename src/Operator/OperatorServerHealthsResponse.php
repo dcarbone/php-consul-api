@@ -39,6 +39,9 @@ class OperatorServerHealthsResponse extends AbstractValuedResponse implements Un
     public function unmarshalValue(mixed $decoded): void
     {
         $this->ServerHealths = [];
+        if (!is_array($decoded)) {
+            return;
+        }
         foreach ($decoded as $datum) {
             $this->ServerHealths[] = ServerHealth::jsonUnserialize($datum);
         }

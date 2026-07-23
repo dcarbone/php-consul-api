@@ -64,8 +64,10 @@ class OIDCAuthMethodConfig extends AbstractType
      * @param array<string> $OIDCACRValues
      * @param array<string> $AllowedRedirectURIs
      * @param array<string> $JWTValidationPubKeys
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         array $JWTSupportedAlgs = [],
         array $BoundAudiences = [],
         array $ClaimMappings = [],
@@ -88,6 +90,10 @@ class OIDCAuthMethodConfig extends AbstractType
         null|int|float|string|\DateInterval|Time\Duration $NotBeforeLeeway = null,
         null|int|float|string|\DateInterval|Time\Duration $ClockSkewLeeway = null,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->setJWTSupportedAlgs(...$JWTSupportedAlgs);
         $this->setBoundAudiences(...$BoundAudiences);
         $this->setClaimMappings($ClaimMappings);
@@ -399,6 +405,12 @@ class OIDCAuthMethodConfig extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('JWTSupportedAlgs' === $k) {
                 $n->setJWTSupportedAlgs(...$v);
@@ -428,7 +440,6 @@ class OIDCAuthMethodConfig extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

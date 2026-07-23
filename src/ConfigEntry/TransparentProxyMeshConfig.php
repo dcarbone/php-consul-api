@@ -26,8 +26,17 @@ class TransparentProxyMeshConfig extends AbstractType
 {
     public bool $MeshDestinationsOnly;
 
-    public function __construct(bool $MeshDestinationsOnly = false)
-    {
+    /**
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
+    public function __construct(
+        null|array $data = null,
+        bool $MeshDestinationsOnly = false
+    ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->MeshDestinationsOnly = $MeshDestinationsOnly;
     }
 
@@ -45,6 +54,12 @@ class TransparentProxyMeshConfig extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('mesh_destinations_only' === $k) {
                 $n->MeshDestinationsOnly = $v;
@@ -52,7 +67,6 @@ class TransparentProxyMeshConfig extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

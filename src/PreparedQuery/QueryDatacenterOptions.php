@@ -27,16 +27,27 @@ class QueryDatacenterOptions extends AbstractType
     public int $NearestN;
     /** @var array<string> */
     public array $Datacenters;
+    /** @var array<QueryFailoverTarget> */
+    public array $Targets;
 
     /**
      * @param array<string> $Datacenters
+     * @param array<QueryFailoverTarget> $Targets
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         int $NearestN = 0,
         array $Datacenters = [],
+        array $Targets = [],
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->NearestN = $NearestN;
         $this->setDatacenters(...$Datacenters);
+        $this->setTargets(...$Targets);
     }
 
     public function getNearestN(): int
@@ -70,13 +81,39 @@ class QueryDatacenterOptions extends AbstractType
         return $this;
     }
 
+    /**
+     * @return array<QueryFailoverTarget>
+     */
+    public function getTargets(): array
+    {
+        return $this->Targets;
+    }
+
+    public function setTargets(QueryFailoverTarget ...$Targets): self
+    {
+        $this->Targets = $Targets;
+        return $this;
+    }
+
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
-        foreach ((array)$decoded as $k => $v) {
-            $n->{$k} = $v;
-        }
+        self::_hydrateFromDecoded($decoded, $n);
         return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
+        foreach ((array)$decoded as $k => $v) {
+            if ('Targets' === $k) {
+                $n->Targets = [];
+                foreach ($v as $vv) {
+                    $n->Targets[] = QueryFailoverTarget::jsonUnserialize($vv);
+                }
+            } else {
+                $n->{$k} = $v;
+            }
+        }
     }
 
     public function jsonSerialize(): \stdClass
@@ -84,6 +121,7 @@ class QueryDatacenterOptions extends AbstractType
         $out = $this->_startJsonSerialize();
         $out->NearestN = $this->NearestN;
         $out->Datacenters = $this->Datacenters;
+        $out->Targets = $this->Targets;
         return $out;
     }
 }

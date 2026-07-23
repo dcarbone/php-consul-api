@@ -104,7 +104,7 @@ final class CoordinateClientTest extends AbstractIntegrationTestCase
     public function testCanConstructCoordinateWithDefaultConfig(): void
     {
         $config = CoordinateConfig::Default();
-        $coord  = new Coordinate($config);
+        $coord  = new Coordinate(config: $config);
 
         self::assertIsArray($coord->Vec);
         self::assertCount($config->Dimensionality, $coord->Vec);
@@ -130,7 +130,7 @@ final class CoordinateClientTest extends AbstractIntegrationTestCase
     #[Depends('testCanConstructCoordinateWithDefaultConfig')]
     public function testIsValidStates(): void
     {
-        $coord = new Coordinate(CoordinateConfig::Default());
+        $coord = new Coordinate(config: CoordinateConfig::Default());
 
         self::assertTrue($coord->IsValid());
 
@@ -168,11 +168,11 @@ final class CoordinateClientTest extends AbstractIntegrationTestCase
         $conf = CoordinateConfig::Default();
 
         $conf->Dimensionality = 3;
-        $coord1               = new Coordinate($conf);
-        $coord2               = new Coordinate($conf);
+        $coord1               = new Coordinate(config: $conf);
+        $coord2               = new Coordinate(config: $conf);
 
         $conf->Dimensionality = 2;
-        $alien                = new Coordinate($conf);
+        $alien                = new Coordinate(config: $conf);
 
         self::assertTrue($coord1->IsCompatibleWith($coord2), 'coord1 should be compatible with coord2');
         self::assertFalse($coord1->IsCompatibleWith($alien), 'coord1 should NOT be compatible with alien');
@@ -187,14 +187,14 @@ final class CoordinateClientTest extends AbstractIntegrationTestCase
         $config->Dimensionality = 3;
         $config->HeightMin      = 0;
 
-        $origin = new Coordinate($config);
+        $origin = new Coordinate(config: $config);
 
-        $above      = new Coordinate($config);
+        $above      = new Coordinate(config: $config);
         $above->Vec = [0.0, 0.0, 2.9];
         $c          = $origin->ApplyForce($config, 5.3, $above);
         $this->verifyEqualVectors($c->Vec, [0.0, 0.0, -5.3]);
 
-        $right      = new Coordinate($config);
+        $right      = new Coordinate(config: $config);
         $right->Vec = [3.4, 0.0, -5.3];
         $c          = $c->ApplyForce($config, 2.0, $right);
         $this->verifyEqualVectors($c->Vec, [-2.0, 0.0, -5.3]);
@@ -203,7 +203,7 @@ final class CoordinateClientTest extends AbstractIntegrationTestCase
         $this->verifyEqualFloats($origin->DistanceTo($c)->Seconds(), 1.0);
 
         $config->HeightMin = 10.0e-6;
-        $origin            = new Coordinate($config);
+        $origin            = new Coordinate(config: $config);
         $c                 = $origin->ApplyForce($config, 5.3, $above);
         $this->verifyEqualVectors($c->Vec, [0.0, 0.0, -5.3]);
         $this->verifyEqualFloats($c->Height, $config->HeightMin + 5.3 * $config->HeightMin / 2.9);
@@ -225,8 +225,8 @@ final class CoordinateClientTest extends AbstractIntegrationTestCase
         $config->Dimensionality = 3;
         $config->HeightMin      = 0;
 
-        $c1      = new Coordinate($config);
-        $c2      = new Coordinate($config);
+        $c1      = new Coordinate(config: $config);
+        $c2      = new Coordinate(config: $config);
         $c1->Vec = [-0.5, 1.3, 2.4];
         $c2->Vec = [1.2, -2.3, 3.4];
 

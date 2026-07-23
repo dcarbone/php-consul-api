@@ -29,12 +29,20 @@ class TxnOp extends AbstractType
     public null|ServiceTxnOp $Service;
     public null|CheckTxnOp $Check;
 
+    /**
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     */
     public function __construct(
+        null|array $data = null,
         null|KVTxnOp $KV = null,
         null|NodeTxnOp $Node = null,
         null|ServiceTxnOp $Service = null,
         null|CheckTxnOp $Check = null,
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->KV = $KV;
         $this->Node = $Node;
         $this->Service = $Service;
@@ -88,6 +96,12 @@ class TxnOp extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('KV' === $k) {
                 $n->KV = null === $v ? null : KVTxnOp::jsonUnserialize($v);
@@ -101,7 +115,6 @@ class TxnOp extends AbstractType
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

@@ -39,6 +39,9 @@ class PreparedQueryDefinitionsResponse extends AbstractValuedQueryResponse imple
     public function unmarshalValue(mixed $decoded): void
     {
         $this->PreparedQueryDefinitions = [];
+        if (!is_array($decoded)) {
+            return;
+        }
         foreach ($decoded as $datum) {
             $this->PreparedQueryDefinitions[] = PreparedQueryDefinition::jsonUnserialize($datum);
         }

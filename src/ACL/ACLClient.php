@@ -311,12 +311,12 @@ class ACLClient extends AbstractClient
 
     public function AuthMethodDelete(string $authMethodID, null|WriteOptions $opts = null): WriteResponse
     {
-        return $this->_executeDelete(sprintf('/v1/acl/authMethod/%s', $authMethodID), $opts);
+        return $this->_executeDelete(sprintf('/v1/acl/auth-method/%s', $authMethodID), $opts);
     }
 
     public function AuthMethodRead(string $authMethodID, null|QueryOptions $opts = null): ACLAuthMethodQueryResponse
     {
-        $resp = $this->_requireNotFoundOrOK($this->_doGet(sprintf('/v1/acl/authMethod/%s', $authMethodID), $opts));
+        $resp = $this->_requireNotFoundOrOK($this->_doGet(sprintf('/v1/acl/auth-method/%s', $authMethodID), $opts));
         $ret  = new ACLAuthMethodQueryResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
@@ -367,9 +367,31 @@ class ACLClient extends AbstractClient
         return $ret;
     }
 
-    public function BindingRuleList(null|QueryOptions $opts = null): ACLBindingRulesQueryResponse
+    /**
+     * Accepts either an auth method name shortcut or QueryOptions.
+     *
+     * Passing a string sets the `authmethod` filter.
+     * Passing QueryOptions as the first argument is equivalent to
+     * `BindingRuleList('', $opts)`.
+     * Passing null as the first argument is equivalent to `BindingRuleList()`.
+     */
+    public function BindingRuleList(null|string|QueryOptions $methodNameOrOpts = '', null|QueryOptions $opts = null): ACLBindingRulesQueryResponse
     {
-        $resp = $this->_requireOK($this->_doGet('/v1/acl/binding-rules', $opts));
+        if ($methodNameOrOpts instanceof QueryOptions) {
+            $methodName = '';
+            $opts = $methodNameOrOpts;
+        } elseif (null === $methodNameOrOpts) {
+            $methodName = '';
+        } else {
+            $methodName = $methodNameOrOpts;
+        }
+
+        $r = $this->_newGetRequest('/v1/acl/binding-rules', $opts);
+        if ('' !== $methodName) {
+            $r->params->set('authmethod', $methodName);
+        }
+
+        $resp = $this->_requireOK($this->_do($r));
         $ret  = new ACLBindingRulesQueryResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
@@ -433,6 +455,20 @@ class ACLClient extends AbstractClient
         $resp = $this->_requireOK($this->_doPost(sprintf('/v1/acl/templated-policy/preview/%s', $tp->TemplateName), $tp->TemplateVariables, $opts));
         $ret  = new ACLPolicyWriteResponse();
         $this->_unmarshalResponse($resp, $ret);
+        return $ret;
+    }
+
+    public function RulesTranslate(string $rules): ValuedWriteStringResponse
+    {
+        $ret = new ValuedWriteStringResponse();
+        $ret->Err = new Error('Legacy ACL rules were deprecated in Consul 1.4');
+        return $ret;
+    }
+
+    public function RulesTranslateToken(string $tokenID): ValuedWriteStringResponse
+    {
+        $ret = new ValuedWriteStringResponse();
+        $ret->Err = new Error('Legacy ACL tokens and rules were deprecated in Consul 1.4');
         return $ret;
     }
 }

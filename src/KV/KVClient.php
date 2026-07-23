@@ -37,7 +37,7 @@ class KVClient extends AbstractClient
 {
     public function Get(string $key, null|QueryOptions $opts = null): KVPairResponse
     {
-        $resp = $this->_doGet(sprintf('v1/kv/%s', $key), $opts);
+        $resp = $this->_doGet($this->_readPath($key), $opts);
         $ret = new KVPairResponse();
         $ret->Err = $resp->Err;
         if (null !== $resp->Err) {
@@ -65,7 +65,7 @@ class KVClient extends AbstractClient
 
     public function Put(KVPair $p, null|WriteOptions $opts = null): WriteResponse
     {
-        $r = $this->_newPutRequest(sprintf('v1/kv/%s', $p->Key), $p->Value, $opts);
+        $r = $this->_newPutRequest($this->_writePath($p->Key), $p->Value, $opts);
         if (0 !== $p->Flags) {
             $r->params->set('flags', (string)$p->Flags);
         }
@@ -78,12 +78,12 @@ class KVClient extends AbstractClient
 
     public function Delete(string $key, null|WriteOptions $opts = null): WriteResponse
     {
-        return $this->_executeDelete(sprintf('v1/kv/%s', $key), $opts);
+        return $this->_executeDelete($this->_readPath($key), $opts);
     }
 
     public function List(string $prefix = '', null|QueryOptions $opts = null): KVPairsResponse
     {
-        $r = $this->_newGetRequest(sprintf('v1/kv/%s', $prefix), $opts);
+        $r = $this->_newGetRequest($this->_readPath($prefix), $opts);
         $r->params->set('recurse', '');
         $resp = $this->_do($r);
         $ret = new KVPairsResponse();
@@ -112,10 +112,32 @@ class KVClient extends AbstractClient
         return $ret;
     }
 
-    public function Keys(string $prefix = '', null|QueryOptions $opts = null): ValuedQueryStringsResponse
-    {
-        $r = $this->_newGetRequest(sprintf('v1/kv/%s', $prefix), $opts);
+    /**
+     * Accepts either a separator shortcut or QueryOptions as the second argument.
+     *
+     * Passing QueryOptions as the second argument is equivalent to
+     * `Keys($prefix, '', $opts)`.
+     * Passing null as the second argument is equivalent to `Keys($prefix)`.
+     */
+    public function Keys(
+        string $prefix = '',
+        null|string|QueryOptions $separatorOrOpts = '',
+        null|QueryOptions $opts = null
+    ): ValuedQueryStringsResponse {
+        if ($separatorOrOpts instanceof QueryOptions) {
+            $separator = '';
+            $opts = $separatorOrOpts;
+        } elseif (null === $separatorOrOpts) {
+            $separator = '';
+        } else {
+            $separator = $separatorOrOpts;
+        }
+
+        $r = $this->_newGetRequest($this->_readPath($prefix), $opts);
         $r->params->set('keys', '');
+        if ('' !== $separator) {
+            $r->params->set('separator', $separator);
+        }
         $ret = new ValuedQueryStringsResponse();
         $resp = $this->_requireOK($this->_do($r));
         $this->_unmarshalResponse($resp, $ret);
@@ -124,7 +146,7 @@ class KVClient extends AbstractClient
 
     public function CAS(KVPair $p, null|WriteOptions $opts = null): ValuedWriteBoolResponse
     {
-        $r = $this->_newPutRequest(sprintf('v1/kv/%s', $p->Key), $p->Value, $opts);
+        $r = $this->_newPutRequest($this->_writePath($p->Key), $p->Value, $opts);
         $r->params->set('cas', (string)$p->ModifyIndex);
         if (0 !== $p->Flags) {
             $r->params->set('flags', (string)$p->Flags);
@@ -137,20 +159,29 @@ class KVClient extends AbstractClient
 
     public function Acquire(KVPair $p, null|WriteOptions $opts = null): WriteResponse
     {
-        $r = $this->_newPutRequest(sprintf('v1/kv/%s', $p->Key), $p->Value, $opts);
+        $resp = $this->AcquireBool($p, $opts);
+        $ret = new WriteResponse();
+        $ret->WriteMeta = $resp->WriteMeta;
+        $ret->Err = $resp->Err;
+        return $ret;
+    }
+
+    public function AcquireBool(KVPair $p, null|WriteOptions $opts = null): ValuedWriteBoolResponse
+    {
+        $r = $this->_newPutRequest($this->_writePath($p->Key), $p->Value, $opts);
         $r->params->set('acquire', $p->Session);
         if (0 !== $p->Flags) {
             $r->params->set('flags', (string)$p->Flags);
         }
         $resp = $this->_requireOK($this->_do($r));
-        $ret = new WriteResponse();
+        $ret = new ValuedWriteBoolResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
     public function DeleteCAS(KVPair $p, null|WriteOptions $opts = null): ValuedWriteBoolResponse
     {
-        $r = $this->_newDeleteRequest(sprintf('v1/kv/%s', ltrim($p->Key, '/')), $opts);
+        $r = $this->_newDeleteRequest($this->_readPath($p->Key), $opts);
         $r->params->set('cas', (string)$p->ModifyIndex);
         $resp = $this->_requireOK($this->_do($r));
         $ret = new ValuedWriteBoolResponse();
@@ -160,20 +191,29 @@ class KVClient extends AbstractClient
 
     public function Release(KVPair $p, null|WriteOptions $opts = null): WriteResponse
     {
-        $r = $this->_newPutRequest(sprintf('v1/kv/%s', $p->Key), $p->Value, $opts);
+        $resp = $this->ReleaseBool($p, $opts);
+        $ret = new WriteResponse();
+        $ret->WriteMeta = $resp->WriteMeta;
+        $ret->Err = $resp->Err;
+        return $ret;
+    }
+
+    public function ReleaseBool(KVPair $p, null|WriteOptions $opts = null): ValuedWriteBoolResponse
+    {
+        $r = $this->_newPutRequest($this->_writePath($p->Key), $p->Value, $opts);
         $r->params->set('release', $p->Session);
         if (0 !== $p->Flags) {
             $r->params->set('flags', (string)$p->Flags);
         }
         $resp = $this->_requireOK($this->_do($r));
-        $ret  = new WriteResponse();
+        $ret = new ValuedWriteBoolResponse();
         $this->_unmarshalResponse($resp, $ret);
         return $ret;
     }
 
     public function DeleteTree(string $prefix, null|WriteOptions $opts = null): WriteResponse
     {
-        $r = $this->_newDeleteRequest(sprintf('v1/kv/%s', $prefix), $opts);
+        $r = $this->_newDeleteRequest($this->_readPath($prefix), $opts);
         $r->params->set('recurse', '');
         $resp = $this->_requireOK($this->_do($r));
         $ret = new WriteResponse();
@@ -203,7 +243,6 @@ class KVClient extends AbstractClient
                 $ret->Err = $dec->Err;
                 return $ret;
             }
-            $ret->OK = true;
             // TODO: Maybe go straight to actual response?  What is the benefit of this...
             $internal = TxnResponse::jsonUnserialize($dec->Decoded);
             $kvr = new KVTxnResponse();
@@ -220,5 +259,19 @@ class KVClient extends AbstractClient
 
         $ret->Err = new Error('Failed request: ' . $body);
         return $ret;
+    }
+
+    private function _readPath(string $key): string
+    {
+        return sprintf('v1/kv/%s', ltrim($key, '/'));
+    }
+
+    private function _writePath(string $key): string
+    {
+        if (str_starts_with($key, '/')) {
+            throw new \InvalidArgumentException(sprintf("Invalid key. Key must not begin with a '/': %s", $key));
+        }
+
+        return sprintf('v1/kv/%s', $key);
     }
 }

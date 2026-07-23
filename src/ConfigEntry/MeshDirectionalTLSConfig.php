@@ -31,12 +31,18 @@ class MeshDirectionalTLSConfig extends AbstractType
 
     /**
      * @param array<string> $CipherSuites
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
+        null|array $data = null,
         string $TLSMinVersion = '',
         string $TLSMaxVersion = '',
         array $CipherSuites = [],
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->TLSMinVersion = $TLSMinVersion;
         $this->TLSMaxVersion = $TLSMaxVersion;
         $this->setCipherSuites(...$CipherSuites);
@@ -81,6 +87,12 @@ class MeshDirectionalTLSConfig extends AbstractType
     public static function jsonUnserialize(\stdClass $decoded): self
     {
         $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('CipherSuites' === $k || 'cipher_suites' === $k) {
                 $n->setCipherSuites(...$v);
@@ -92,7 +104,6 @@ class MeshDirectionalTLSConfig extends AbstractType
                 $n->{$k} = (string)$v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass

@@ -35,9 +35,11 @@ class MeshConfigEntry extends AbstractType implements ConfigEntry
     public null|PeeringMeshConfig $Peering;
 
     /**
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      * @param array<string,string> $Meta
      */
     public function __construct(
+        null|array $data = null,
         string $Partition = '',
         string $Namespace = '',
         null|TransparentProxyMeshConfig $TransparentProxy = null,
@@ -49,6 +51,10 @@ class MeshConfigEntry extends AbstractType implements ConfigEntry
         int $CreateIndex = 0,
         int $ModifyIndex = 0
     ) {
+        if (null !== $data) {
+            self::_hydrateFromDecoded((object)$data, $this);
+            return;
+        }
         $this->Partition = $Partition;
         $this->Namespace = $Namespace;
         $this->setMeta($Meta);
@@ -69,6 +75,17 @@ class MeshConfigEntry extends AbstractType implements ConfigEntry
     public function getName(): string
     {
         return Consul::MeshConfigMesh;
+    }
+
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
+        return $this;
     }
 
     public function getTransparentProxy(): TransparentProxyMeshConfig
@@ -126,9 +143,15 @@ class MeshConfigEntry extends AbstractType implements ConfigEntry
         return $this;
     }
 
-    public static function jsonUnserialize(\stdClass $decoded, null|self $n = null): self
+    public static function jsonUnserialize(\stdClass $decoded): self
     {
-        $n = $n ?? new self();
+        $n = new self();
+        self::_hydrateFromDecoded($decoded, $n);
+        return $n;
+    }
+
+    protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
+    {
         foreach ((array)$decoded as $k => $v) {
             if ('TransparentProxy' === $k || 'transparent_proxy' === $k) {
                 $n->TransparentProxy = null === $v ? new TransparentProxyMeshConfig() : TransparentProxyMeshConfig::jsonUnserialize($v);
@@ -146,7 +169,6 @@ class MeshConfigEntry extends AbstractType implements ConfigEntry
                 $n->{$k} = $v;
             }
         }
-        return $n;
     }
 
     public function jsonSerialize(): \stdClass
