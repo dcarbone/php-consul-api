@@ -39,7 +39,7 @@ class MetricsInfo extends AbstractType
      * @param array<\DCarbone\PHPConsulAPI\Agent\PointValue> $Points
      * @param array<\DCarbone\PHPConsulAPI\Agent\SampledValue> $Counters
      * @param array<\DCarbone\PHPConsulAPI\Agent\SampledValue> $Samples
-     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
         null|array $data = null,

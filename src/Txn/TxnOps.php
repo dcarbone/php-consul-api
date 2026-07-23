@@ -32,7 +32,7 @@ class TxnOps extends AbstractType implements \Countable, \ArrayAccess, \Iterator
     private array $ops = [];
 
     /**
-     * @param null|array<int,\stdClass> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      * @param array<TxnOp> $ops
      */
     public function __construct(null|array $data = null, array $ops = [])

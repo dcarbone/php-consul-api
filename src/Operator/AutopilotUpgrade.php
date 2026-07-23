@@ -49,7 +49,7 @@ class AutopilotUpgrade extends AbstractType
      * @param array<string> $OtherVersionNonVoters
      * @param array<string> $OtherVersionReadReplicas
      * @param array<string, AutopilotZoneUpgradeVersions> $RedundancyZones
-     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
         null|array $data = null,

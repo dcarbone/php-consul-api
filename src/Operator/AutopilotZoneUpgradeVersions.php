@@ -38,7 +38,7 @@ class AutopilotZoneUpgradeVersions extends AbstractType
      * @param array<string> $TargetVersionNonVoters
      * @param array<string> $OtherVersionVoters
      * @param array<string> $OtherVersionNonVoters
-     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
         null|array $data = null,

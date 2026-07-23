@@ -32,7 +32,7 @@ class KVPairs extends AbstractType implements \IteratorAggregate, \Countable, \A
     protected array $KVPairs = [];
 
     /**
-     * @param null|array<int,\stdClass> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(null|array|KVPair $data = null, KVPair ...$KVPairs)
     {
@@ -41,7 +41,9 @@ class KVPairs extends AbstractType implements \IteratorAggregate, \Countable, \A
                 $this->KVPairs = array_merge([$data], $KVPairs);
                 return;
             }
-            self::_hydrateFromDecoded($data, $this);
+            /** @var array<int,\stdClass> $decoded */
+            $decoded = array_values($data);
+            self::_hydrateFromDecoded($decoded, $this);
             return;
         }
         $this->KVPairs = $KVPairs;

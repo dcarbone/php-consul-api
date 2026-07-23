@@ -33,7 +33,7 @@ class HealthChecks extends AbstractType implements \IteratorAggregate, \Countabl
     protected array $Checks = [];
 
     /**
-     * @param null|array<int,\stdClass> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(null|array|HealthCheck $data = null, HealthCheck ...$Checks)
     {

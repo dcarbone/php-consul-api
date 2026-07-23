@@ -32,7 +32,7 @@ class TxnResults extends AbstractType implements \Countable, \ArrayAccess, \Iter
     private array $results = [];
 
     /**
-     * @param null|array<int,\stdClass> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      * @param array<TxnResult> $results
      */
     public function __construct(null|array $data = null, array $results = [])

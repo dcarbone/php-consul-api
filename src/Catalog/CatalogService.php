@@ -62,7 +62,7 @@ class CatalogService extends AbstractType
      * @param array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress> $ServiceTaggedAddresses
      * @param array<string> $ServiceTags
      * @param array<string,string> $ServiceMeta
-     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
         null|array $data = null,

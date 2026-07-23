@@ -47,7 +47,7 @@ class CoordinateConfig extends AbstractType
 
     /**
      * @param array<\DCarbone\PHPConsulAPI\Metrics\Label> $MetricsLabels
-     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
         null|array $data = null,

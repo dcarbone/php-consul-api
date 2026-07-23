@@ -30,7 +30,7 @@ class Peering extends AbstractType
      * @param null|array<string,string> $Meta
      * @param array<string> $PeerCAPems
      * @param array<string> $PeerServerAddresses
-     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
         null|array $data = null,

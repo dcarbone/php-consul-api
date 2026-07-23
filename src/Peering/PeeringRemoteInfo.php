@@ -13,7 +13,7 @@ class PeeringRemoteInfo extends AbstractType
     public null|Locality $Locality;
 
     /**
-     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
         null|array $data = null,

@@ -45,7 +45,7 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
      * @param null|array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverSubset> $Subsets
      * @param null|array<string,\DCarbone\PHPConsulAPI\ConfigEntry\ServiceResolverFailover> $Failover
      * @param null|array<string,mixed> $Meta
-     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
         null|array $data = null,

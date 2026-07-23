@@ -51,7 +51,7 @@ class AgentServiceConnectProxyConfig extends AbstractType
      * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension> $EnvoyExtensions
      * @param array<string,mixed> $Config
      * @param array<\DCarbone\PHPConsulAPI\Agent\Upstream> $Upstreams
-     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
         null|array $data = null,

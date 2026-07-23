@@ -37,7 +37,7 @@ class IngressGatewayConfigEntry extends AbstractType implements ConfigEntry
     /**
      * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\IngressListener> $Listeners
      * @param array<string,string> $Meta
-     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
         null|array $data = null,

@@ -56,7 +56,7 @@ class AgentServiceRegistration extends AbstractType
      * @param array<ServicePort> $Ports
      * @param array<string,\DCarbone\PHPConsulAPI\Catalog\ServiceAddress> $TaggedAddresses
      * @param array<string,string> $Meta
-     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
         null|array $data = null,

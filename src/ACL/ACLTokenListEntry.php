@@ -58,7 +58,7 @@ class ACLTokenListEntry extends AbstractType
      * @param array<\DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity> $ServiceIdentities
      * @param array<\DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity> $NodeIdentities
      * @param array<\DCarbone\PHPConsulAPI\ACL\ACLTemplatedPolicy> $TemplatedPolicies
-     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
         null|array $data = null,

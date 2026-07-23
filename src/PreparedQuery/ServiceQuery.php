@@ -46,7 +46,7 @@ class ServiceQuery extends AbstractType
      * @param array<string> $IgnoreCheckIDs
      * @param array<string, string> $NodeMeta
      * @param array<string, string> $ServiceMeta
-     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
         null|array $data = null,

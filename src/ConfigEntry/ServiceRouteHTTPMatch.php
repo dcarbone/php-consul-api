@@ -39,7 +39,7 @@ class ServiceRouteHTTPMatch extends AbstractType
      * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\ServiceRouteHTTPMatchHeader> $Header
      * @param array<\DCarbone\PHPConsulAPI\ConfigEntry\ServiceRouteHTTPMatchQueryParam> $QueryParam
      * @param array<string> $Methods
-     * @param null|array $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
+     * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
         null|array $data = null,
