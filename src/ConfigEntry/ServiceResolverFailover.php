@@ -155,7 +155,7 @@ class ServiceResolverFailover extends AbstractType
     protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
     {
         foreach ((array)$decoded as $k => $v) {
-            if ('Targtes' === $k) {
+            if ('Targets' === $k) {
                 $n->Targets = [];
                 foreach ($v as $vv) {
                     $n->Targets[] = ServiceResolverFailoverTarget::jsonUnserialize($vv);

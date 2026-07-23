@@ -63,4 +63,19 @@ final class ServiceResolverFailoverTest extends TestCase
         self::assertSame('sg', $f->getSamenessGroup());
     }
 
+    public function testJsonUnserializeHydratesTargets(): void
+    {
+        $target = new \stdClass();
+        $target->Datacenter = 'dc2';
+
+        $decoded = new \stdClass();
+        $decoded->Service = 'web';
+        $decoded->Targets = [$target];
+
+        $f = ServiceResolverFailover::jsonUnserialize($decoded);
+        self::assertSame('web', $f->getService());
+        self::assertCount(1, $f->getTargets());
+        self::assertSame('dc2', $f->getTargets()[0]->getDatacenter());
+    }
+
 }
