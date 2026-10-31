@@ -34,4 +34,23 @@ final class HeadersTest extends TestCase
         self::assertSame('', $headers->get('Content-Type'));
         self::assertSame([], $headers->toPsr7Array());
     }
+
+    public function testNormalizedKeyCacheRemainsValidWhenEntriesAreRemoved(): void
+    {
+        $headers = new Headers();
+        $headers->set('Content-Type', 'application/json');
+        $headers->set('X-Request-Id', 'abc');
+        $headers->delete('content-type');
+        $headers->set('content-type', 'application/custom');
+
+        self::assertSame('abc', $headers->get('x-request-id'));
+        self::assertSame('application/custom', $headers->get('CONTENT-TYPE'));
+        self::assertSame(
+            [
+                'X-Request-Id' => ['abc'],
+                'content-type' => ['application/custom'],
+            ],
+            $headers->toPsr7Array()
+        );
+    }
 }

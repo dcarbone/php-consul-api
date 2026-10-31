@@ -22,6 +22,14 @@ namespace DCarbone\PHPConsulAPI\PHPLib;
 
 class Headers extends Values
 {
+    /** @var array<string,int> */
+    private array $normalizedKeys = [];
+
+    /** @var array<int,string> */
+    private array $keysByIndex = [];
+
+    private int $nextKeyIndex = 0;
+
     /**
      * @param array<string,array<string>> $values
      */
@@ -36,12 +44,53 @@ class Headers extends Values
 
     protected function findKey(string $key): null|string
     {
-        foreach (array_keys($this->values) as $storedKey) {
-            if (0 === strcasecmp((string)$storedKey, $key)) {
-                return $storedKey;
-            }
+        $normalizedKey = strtolower($key);
+        if (isset($this->normalizedKeys[$normalizedKey])) {
+            return $this->keysByIndex[$this->normalizedKeys[$normalizedKey]];
         }
 
         return null;
+    }
+
+    public function set(string $key, string ...$value): void
+    {
+        $storedKey = $this->findKey($key);
+        parent::set($storedKey ?? $key, ...$value);
+        if (null === $storedKey) {
+            $this->storeKey($key);
+        }
+    }
+
+    public function add(string $key, string ...$value): void
+    {
+        $storedKey = $this->findKey($key);
+        parent::add($storedKey ?? $key, ...$value);
+        if (null === $storedKey) {
+            $this->storeKey($key);
+        }
+    }
+
+    public function delete(string $key): void
+    {
+        $storedKey = $this->findKey($key);
+        if (null === $storedKey) {
+            return;
+        }
+
+        parent::delete($storedKey);
+        $normalizedKey = strtolower($storedKey);
+        $index = $this->normalizedKeys[$normalizedKey];
+        unset($this->normalizedKeys[$normalizedKey]);
+        unset($this->keysByIndex[$index]);
+        if ([] === $this->normalizedKeys) {
+            $this->nextKeyIndex = 0;
+        }
+    }
+
+    private function storeKey(string $key): void
+    {
+        $index = $this->nextKeyIndex++;
+        $this->normalizedKeys[strtolower($key)] = $index;
+        $this->keysByIndex[$index] = $key;
     }
 }
