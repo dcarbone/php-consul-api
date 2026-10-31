@@ -56,12 +56,12 @@ class Values implements \IteratorAggregate, \ArrayAccess, \Countable, \JsonSeria
 
     public function set(string $key, string ...$value): void
     {
-       $this->_set($key, $value);
+       $this->_set($key, ...$value);
     }
 
     public function add(string $key, string ...$value): void
     {
-       $this->_add($key, $value);
+       $this->_add($key, ...$value);
     }
 
     public function delete(string $key): void
