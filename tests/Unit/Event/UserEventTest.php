@@ -2,6 +2,7 @@
 
 namespace DCarbone\PHPConsulAPITests\Unit\Event;
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\Event\UserEvent;
 use PHPUnit\Framework\TestCase;
 
@@ -27,8 +28,8 @@ final class UserEventTest extends TestCase
         self::assertSame('', $e->TagFilter);
         self::assertSame(0, $e->getVersion());
         self::assertSame(0, $e->Version);
-        self::assertSame(0, $e->getLTime());
-        self::assertSame(0, $e->LTime);
+        self::assertSame('0', (string)$e->getLTime());
+        self::assertSame('0', (string)$e->LTime);
     }
 
     public function testConstructorWithValues(): void
@@ -57,8 +58,8 @@ final class UserEventTest extends TestCase
         self::assertSame('v1', $e->TagFilter);
         self::assertSame(3, $e->getVersion());
         self::assertSame(3, $e->Version);
-        self::assertSame(42, $e->getLTime());
-        self::assertSame(42, $e->LTime);
+        self::assertSame('42', (string)$e->getLTime());
+        self::assertSame('42', (string)$e->LTime);
     }
 
     public function testSettersWithDirectFieldAccess(): void
@@ -94,8 +95,8 @@ final class UserEventTest extends TestCase
         self::assertSame(1, $e->Version);
 
         $e->setLTime(2);
-        self::assertSame(2, $e->getLTime());
-        self::assertSame(2, $e->LTime);
+        self::assertSame('2', (string)$e->getLTime());
+        self::assertSame('2', (string)$e->LTime);
     }
 
     public function testFluentSetters(): void
@@ -118,7 +119,7 @@ final class UserEventTest extends TestCase
         self::assertSame('sf', $e->ServiceFilter);
         self::assertSame('tf', $e->TagFilter);
         self::assertSame(1, $e->Version);
-        self::assertSame(2, $e->LTime);
+        self::assertSame('2', (string)$e->LTime);
     }
 
     public function testJsonSerialize(): void
@@ -129,7 +130,7 @@ final class UserEventTest extends TestCase
         self::assertSame('x', $out->ID);
         self::assertSame('test', $out->Name);
         self::assertSame(5, $out->Version);
-        self::assertSame(10, $out->LTime);
+        self::assertSame('10', (string)$out->LTime);
     }
 
     public function testJsonUnserialize(): void
@@ -148,7 +149,7 @@ final class UserEventTest extends TestCase
         self::assertSame('ev', $e->Name);
         self::assertSame('p', $e->Payload);
         self::assertSame(2, $e->Version);
-        self::assertSame(7, $e->LTime);
+        self::assertSame('7', (string)$e->LTime);
     }
 
     public function testJsonRoundTrip(): void
@@ -159,7 +160,32 @@ final class UserEventTest extends TestCase
         self::assertSame($original->Name, $restored->Name);
         self::assertSame($original->Payload, $restored->Payload);
         self::assertSame($original->Version, $restored->Version);
-        self::assertSame($original->LTime, $restored->LTime);
+        self::assertTrue($original->LTime->isEqualTo($restored->LTime));
+    }
+
+    public function testUint64LTime(): void
+    {
+        $max = '18446744073709551615';
+        self::assertSame('1', (string)(new UserEvent(LTime: 1))->LTime);
+        self::assertSame('2', (string)(new UserEvent(LTime: '2'))->getLTime());
+        self::assertSame($max, (string)(new UserEvent(LTime: BigInteger::of($max)))->getLTime());
+
+        $e = new UserEvent();
+        $e->setLTime(3);
+        self::assertSame('3', (string)$e->getLTime());
+        $e->setLTime('4');
+        self::assertSame('4', (string)$e->LTime);
+        $e->setLTime(BigInteger::of($max));
+        self::assertSame($max, (string)$e->getLTime());
+
+        $d = new \stdClass();
+        $d->LTime = $max;
+        $e = UserEvent::jsonUnserialize($d);
+        self::assertSame($max, (string)$e->getLTime());
+        self::assertSame($max, (string)$e->jsonSerialize()->LTime);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $e->setLTime('18446744073709551616');
     }
 }
 

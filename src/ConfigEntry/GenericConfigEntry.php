@@ -20,7 +20,10 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class GenericConfigEntry extends AbstractType implements ConfigEntry
 {
@@ -39,8 +42,8 @@ class GenericConfigEntry extends AbstractType implements ConfigEntry
         string $Name = '',
         string $Partition = '',
         string $Namespace = '',
-        int $CreateIndex = 0,
-        int $ModifyIndex = 0,
+        int|string|BigInteger $CreateIndex = 0,
+        int|string|BigInteger $ModifyIndex = 0,
     ) {
         if (null !== $data) {
             self::_hydrateFromDecoded((object)$data, $this);
@@ -50,8 +53,8 @@ class GenericConfigEntry extends AbstractType implements ConfigEntry
         $this->Name = $Name;
         $this->Partition = $Partition;
         $this->Namespace = $Namespace;
-        $this->CreateIndex = $CreateIndex;
-        $this->ModifyIndex = $ModifyIndex;
+        $this->CreateIndex = uint64($CreateIndex);
+        $this->ModifyIndex = uint64($ModifyIndex);
     }
 
     /** @var array<string, mixed> */
@@ -128,9 +131,9 @@ class GenericConfigEntry extends AbstractType implements ConfigEntry
             } elseif ('Namespace' === $k || 'namespace' === $k) {
                 $n->Namespace = $v;
             } elseif ('CreateIndex' === $k || 'create_index' === $k) {
-                $n->CreateIndex = $v;
+                $n->CreateIndex = uint64($v);
             } elseif ('ModifyIndex' === $k || 'modify_index' === $k) {
-                $n->ModifyIndex = $v;
+                $n->ModifyIndex = uint64($v);
             } else {
                 $n->Data[$k] = $v;
             }

@@ -2,6 +2,7 @@
 
 namespace DCarbone\PHPConsulAPITests\Unit\ACL;
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\ACL\ACLNodeIdentity;
 use DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity;
 use DCarbone\PHPConsulAPI\ACL\ACLTemplatedPolicy;
@@ -27,8 +28,8 @@ final class ACLTokenListEntryTest extends TestCase
         self::assertSame([], $e->getNodeIdentities());
         self::assertSame([], $e->getTemplatedPolicies());
         self::assertFalse($e->isLocal());
-        self::assertSame(0, $e->getCreateIndex());
-        self::assertSame(0, $e->getModifyIndex());
+        self::assertSame('0', (string)$e->getCreateIndex());
+        self::assertSame('0', (string)$e->getModifyIndex());
         self::assertFalse($e->isLegacy());
         self::assertSame('', $e->getNamespace());
         self::assertSame('', $e->getPartition());
@@ -79,9 +80,9 @@ final class ACLTokenListEntryTest extends TestCase
             ->setAuthMethodNamespace('amns-set');
 
         self::assertSame($e, $result);
-        self::assertSame(10, $e->getCreateIndex());
-        self::assertSame(10, $e->CreateIndex);
-        self::assertSame(20, $e->getModifyIndex());
+        self::assertSame('10', (string)$e->getCreateIndex());
+        self::assertSame('10', (string)$e->CreateIndex);
+        self::assertSame('20', (string)$e->getModifyIndex());
         self::assertSame('acc-set', $e->getAccessorID());
         self::assertSame('acc-set', $e->AccessorID);
         self::assertSame('sec-set', $e->getSecretID());
@@ -132,6 +133,29 @@ final class ACLTokenListEntryTest extends TestCase
         self::assertTrue($e->isLocal());
         self::assertCount(1, $e->getPolicies());
         self::assertInstanceOf(ACLTokenPolicyLink::class, $e->getPolicies()[0]);
+        self::assertSame('5', (string)$e->getCreateIndex());
+        self::assertSame('10', (string)$e->getModifyIndex());
+    }
+
+    public function testUint64Fields(): void
+    {
+        $max = '18446744073709551615';
+        $e = new ACLTokenListEntry(CreateIndex: 1, ModifyIndex: '2');
+        self::assertSame('1', (string)$e->CreateIndex);
+        self::assertSame('2', (string)$e->getModifyIndex());
+        $e = new ACLTokenListEntry(CreateIndex: BigInteger::of($max));
+        self::assertSame($max, (string)$e->getCreateIndex());
+
+        $e->setCreateIndex('3')->setModifyIndex(BigInteger::of(4));
+        self::assertSame('3', (string)$e->getCreateIndex());
+        self::assertSame('4', (string)$e->ModifyIndex);
+
+        $d = new \stdClass();
+        $d->CreateIndex = $max;
+        $d->ModifyIndex = 9;
+        $e = ACLTokenListEntry::jsonUnserialize($d);
+        self::assertSame($max, (string)$e->getCreateIndex());
+        self::assertSame('9', (string)$e->getModifyIndex());
     }
 }
 

@@ -40,7 +40,7 @@ final class UserEventResponseTest extends TestCase
         self::assertSame('deploy', $r->UserEvent->Name);
         self::assertSame('data', $r->UserEvent->Payload);
         self::assertSame(1, $r->UserEvent->Version);
-        self::assertSame(5, $r->UserEvent->LTime);
+        self::assertSame('5', (string)$r->UserEvent->LTime);
     }
 
     public function testUnmarshalValueWithNull(): void

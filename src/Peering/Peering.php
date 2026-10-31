@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace DCarbone\PHPConsulAPI\Peering;
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class Peering extends AbstractType
 {
@@ -22,8 +25,8 @@ class Peering extends AbstractType
     /** @var array<string> */
     public array $PeerServerAddresses;
     public PeeringStreamStatus $StreamStatus;
-    public int $CreateIndex;
-    public int $ModifyIndex;
+    public BigInteger $CreateIndex;
+    public BigInteger $ModifyIndex;
     public PeeringRemoteInfo $Remote;
 
     /**
@@ -45,8 +48,8 @@ class Peering extends AbstractType
         string $PeerServerName = '',
         array $PeerServerAddresses = [],
         null|PeeringStreamStatus $StreamStatus = null,
-        int $CreateIndex = 0,
-        int $ModifyIndex = 0,
+        int|string|BigInteger $CreateIndex = 0,
+        int|string|BigInteger $ModifyIndex = 0,
         null|PeeringRemoteInfo $Remote = null,
     ) {
         if (null !== $data) {
@@ -64,8 +67,8 @@ class Peering extends AbstractType
         $this->PeerServerName = $PeerServerName;
         $this->PeerServerAddresses = $PeerServerAddresses;
         $this->StreamStatus = $StreamStatus ?? new PeeringStreamStatus();
-        $this->CreateIndex = $CreateIndex;
-        $this->ModifyIndex = $ModifyIndex;
+        $this->CreateIndex = uint64($CreateIndex);
+        $this->ModifyIndex = uint64($ModifyIndex);
         $this->Remote = $Remote ?? new PeeringRemoteInfo();
     }
 
@@ -83,6 +86,8 @@ class Peering extends AbstractType
                 $n->StreamStatus = PeeringStreamStatus::jsonUnserialize($v);
             } elseif ('Remote' === $k) {
                 $n->Remote = PeeringRemoteInfo::jsonUnserialize($v);
+            } elseif ('CreateIndex' === $k || 'ModifyIndex' === $k) {
+                $n->{$k} = uint64($v);
             } else {
                 $n->{$k} = $v;
             }

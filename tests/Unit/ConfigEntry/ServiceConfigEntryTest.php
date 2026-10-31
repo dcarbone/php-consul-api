@@ -2,6 +2,7 @@
 
 namespace DCarbone\PHPConsulAPITests\Unit\ConfigEntry;
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\ConfigEntry\ServiceConfigEntry;
 use DCarbone\PHPConsulAPI\ConfigEntry\ProxyMode;
 use DCarbone\PHPConsulAPI\ConfigEntry\MutualTLSMode;
@@ -87,5 +88,61 @@ final class ServiceConfigEntryTest extends TestCase
         $e = new ServiceConfigEntry(Mode: 'transparent', MutualTLSMode: 'strict');
         self::assertSame(ProxyMode::Transparent, $e->getMode());
         self::assertSame(MutualTLSMode::Strict, $e->getMutualTLSMode());
+    }
+
+    public function testIndexDefaults(): void
+    {
+        $e = new ServiceConfigEntry();
+        self::assertTrue($e->getCreateIndex()->isZero());
+        self::assertTrue($e->CreateIndex->isZero());
+        self::assertTrue($e->getModifyIndex()->isZero());
+        self::assertTrue($e->ModifyIndex->isZero());
+    }
+
+    public function testConstructorIndexesAcceptIntStringAndBigInteger(): void
+    {
+        $e = new ServiceConfigEntry(CreateIndex: 5, ModifyIndex: '18446744073709551615');
+        self::assertSame('5', (string)$e->getCreateIndex());
+        self::assertSame('5', (string)$e->CreateIndex);
+        self::assertSame('18446744073709551615', (string)$e->getModifyIndex());
+        self::assertSame('18446744073709551615', (string)$e->ModifyIndex);
+
+        $big = BigInteger::of('9223372036854775808');
+        $e = new ServiceConfigEntry(CreateIndex: $big, ModifyIndex: $big);
+        self::assertTrue($e->CreateIndex->isEqualTo($big));
+        self::assertTrue($e->ModifyIndex->isEqualTo($big));
+    }
+
+    public function testIndexSettersAcceptIntStringAndBigInteger(): void
+    {
+        $e = new ServiceConfigEntry();
+        self::assertSame($e, $e->setCreateIndex(3));
+        self::assertSame('3', (string)$e->CreateIndex);
+        $e->setCreateIndex('18446744073709551615');
+        self::assertSame('18446744073709551615', (string)$e->getCreateIndex());
+        self::assertSame($e, $e->setModifyIndex(BigInteger::of(7)));
+        self::assertSame('7', (string)$e->ModifyIndex);
+    }
+
+    public function testIndexSetterRejectsOutOfRange(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        (new ServiceConfigEntry())->setModifyIndex(-1);
+    }
+
+    public function testJsonUnserializeLargeIndexes(): void
+    {
+        $decoded = new \stdClass();
+        $decoded->Kind = 'service-defaults';
+        $decoded->Name = 'web';
+        $decoded->CreateIndex = '18446744073709551615';
+        $decoded->ModifyIndex = 12;
+        $e = ServiceConfigEntry::jsonUnserialize($decoded);
+        self::assertSame('18446744073709551615', (string)$e->CreateIndex);
+        self::assertSame('12', (string)$e->ModifyIndex);
+
+        $out = $e->jsonSerialize();
+        self::assertInstanceOf(BigInteger::class, $out->CreateIndex);
+        self::assertSame('18446744073709551615', (string)$out->CreateIndex);
     }
 }

@@ -20,14 +20,16 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\Go\Time;
 
 use function DCarbone\PHPConsulAPI\PHPLib\parse_time;
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 trait ACLTokenFields
 {
-    public int $CreateIndex;
-    public int $ModifyIndex;
+    public BigInteger $CreateIndex;
+    public BigInteger $ModifyIndex;
     public string $AccessorID;
     public string $SecretID;
     public string $Description;
@@ -53,25 +55,25 @@ trait ACLTokenFields
 
     public string $Rules;
 
-    public function getCreateIndex(): int
+    public function getCreateIndex(): BigInteger
     {
         return $this->CreateIndex;
     }
 
-    public function setCreateIndex(int $CreateIndex): self
+    public function setCreateIndex(int|string|BigInteger $CreateIndex): self
     {
-        $this->CreateIndex = $CreateIndex;
+        $this->CreateIndex = uint64($CreateIndex);
         return $this;
     }
 
-    public function getModifyIndex(): int
+    public function getModifyIndex(): BigInteger
     {
         return $this->ModifyIndex;
     }
 
-    public function setModifyIndex(int $ModifyIndex): self
+    public function setModifyIndex(int|string|BigInteger $ModifyIndex): self
     {
-        $this->ModifyIndex = $ModifyIndex;
+        $this->ModifyIndex = uint64($ModifyIndex);
         return $this;
     }
 
@@ -290,7 +292,9 @@ trait ACLTokenFields
 
     protected function _jsonUnserializeField(string $k, mixed $v, self $n): bool
     {
-        if ('Policies' === $k) {
+        if ('CreateIndex' === $k || 'ModifyIndex' === $k) {
+            $n->{$k} = uint64($v);
+        } elseif ('Policies' === $k) {
             foreach ($v as $vv) {
                 $n->Policies[] = ACLTokenPolicyLink::jsonUnserialize($vv);
             }

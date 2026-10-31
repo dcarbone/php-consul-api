@@ -20,6 +20,7 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\Go\Time;
 
 class ACLTokenExpanded extends ACLToken
@@ -55,8 +56,8 @@ class ACLTokenExpanded extends ACLToken
         string $AgentACLDefaultPolicy = '',
         string $AgentACLDownPolicy = '',
         string $ResolvedByAgent = '',
-        int $CreateIndex = 0,
-        int $ModifyIndex = 0,
+        int|string|BigInteger $CreateIndex = 0,
+        int|string|BigInteger $ModifyIndex = 0,
         string $AccessorID = '',
         string $SecretID = '',
         string $Description = '',

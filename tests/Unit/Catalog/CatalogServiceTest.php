@@ -2,6 +2,7 @@
 
 namespace DCarbone\PHPConsulAPITests\Unit\Catalog;
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\Catalog\CatalogService;
 use DCarbone\PHPConsulAPI\Catalog\Weights;
 use DCarbone\PHPConsulAPI\Health\HealthChecks;
@@ -29,8 +30,8 @@ final class CatalogServiceTest extends TestCase
         self::assertFalse($s->isServiceEnableTagOverride());
         self::assertNull($s->getServiceProxy());
         self::assertNull($s->getServiceLocality());
-        self::assertSame(0, $s->getCreateIndex());
-        self::assertSame(0, $s->getModifyIndex());
+        self::assertTrue($s->getCreateIndex()->isZero());
+        self::assertTrue($s->getModifyIndex()->isZero());
         self::assertInstanceOf(HealthChecks::class, $s->getChecks());
         self::assertSame('', $s->getNamespace());
         self::assertSame('', $s->getPartition());
@@ -57,7 +58,8 @@ final class CatalogServiceTest extends TestCase
         self::assertSame('web', $s->getServiceName());
         self::assertSame(8080, $s->getServicePort());
         self::assertSame(['v1'], $s->getServiceTags());
-        self::assertSame(1, $s->getCreateIndex());
+        self::assertSame('1', (string)$s->getCreateIndex());
+        self::assertSame('2', (string)$s->ModifyIndex);
         self::assertSame('ns', $s->getNamespace());
     }
 
@@ -136,6 +138,33 @@ final class CatalogServiceTest extends TestCase
         self::assertSame(8080, $s->getServicePort());
         self::assertSame(['v1'], $s->getServiceTags());
         self::assertSame(10, $s->getServiceWeights()->getPassing());
+        self::assertSame('1', (string)$s->CreateIndex);
+        self::assertSame('2', (string)$s->getModifyIndex());
+    }
+
+    public function testUint64FieldsAcceptIntStringAndBigInteger(): void
+    {
+        $s = new CatalogService(CreateIndex: BigInteger::of(1), ModifyIndex: '18446744073709551615');
+        self::assertSame('1', (string)$s->CreateIndex);
+        self::assertSame('18446744073709551615', (string)$s->getModifyIndex());
+
+        $s->setCreateIndex('9223372036854775808')->setModifyIndex(BigInteger::of(8));
+        self::assertSame('9223372036854775808', (string)$s->getCreateIndex());
+        self::assertTrue($s->ModifyIndex->isEqualTo(8));
+
+        $s->setModifyIndex(9);
+        self::assertSame('9', (string)$s->ModifyIndex);
+
+        $out = $s->jsonSerialize();
+        self::assertSame($s->CreateIndex, $out->CreateIndex);
+        self::assertSame($s->ModifyIndex, $out->ModifyIndex);
+    }
+
+    public function testJsonUnserializeLargeIndexes(): void
+    {
+        $s = CatalogService::jsonUnserialize(json_decode('{"ServiceID":"web","CreateIndex":"9223372036854775808","ModifyIndex":18446744073709551615}', flags: JSON_BIGINT_AS_STRING | JSON_THROW_ON_ERROR));
+        self::assertSame('9223372036854775808', (string)$s->CreateIndex);
+        self::assertSame('18446744073709551615', (string)$s->ModifyIndex);
     }
 }
 

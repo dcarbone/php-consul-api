@@ -37,6 +37,12 @@ There are a couple breaking changes between v2 and v3:
 5. All of that `Transcoding` nonsense has been removed.
 6. The root `Config` class may no longer be constructed with a map.  You must use constructor parameters.
 7. Map-like fields are represented in PHP as associative arrays (for example, `array<string,mixed>`); some JSON object inputs may still be accepted as `\stdClass` at setter boundaries.
+8. Fields that are `uint64` in Consul (`CreateIndex`, `ModifyIndex`, `Flags`, `LastIndex`, `WaitIndex`, etc.) are
+   now [`Brick\Math\BigInteger`](https://github.com/brick/math) instances.
+    * Constructors and setters accept `int`, numeric `string`, or `BigInteger`; negative or out-of-range values throw
+      `\InvalidArgumentException`.
+    * Use `\DCarbone\PHPConsulAPI\PHPLib\encode_json()` instead of `json_encode()` to serialize models, so these
+      values are written as JSON numbers rather than strings.
 
 ## Composer
 

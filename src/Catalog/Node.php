@@ -20,10 +20,13 @@ namespace DCarbone\PHPConsulAPI\Catalog;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\Peering\Locality;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 use DCarbone\PHPConsulAPI\PHPLib\MetaField;
 use DCarbone\PHPConsulAPI\PHPLib\TaggedAddressField;
+
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class Node extends AbstractType
 {
@@ -34,8 +37,8 @@ class Node extends AbstractType
     public string $Node;
     public string $Address;
     public string $Datacenter;
-    public int $CreateIndex;
-    public int $ModifyIndex;
+    public BigInteger $CreateIndex;
+    public BigInteger $ModifyIndex;
     public string $Partition;
     public string $PeerName;
     public null|Locality $Locality;
@@ -53,8 +56,8 @@ class Node extends AbstractType
         string $Datacenter = '',
         array $TaggedAddresses = [],
         array $Meta = [],
-        int $CreateIndex = 0,
-        int $ModifyIndex = 0,
+        int|string|BigInteger $CreateIndex = 0,
+        int|string|BigInteger $ModifyIndex = 0,
         string $Partition = '',
         string $PeerName = '',
         null|Locality $Locality = null,
@@ -69,8 +72,8 @@ class Node extends AbstractType
         $this->Datacenter = $Datacenter;
         $this->setTaggedAddresses($TaggedAddresses);
         $this->setMeta($Meta);
-        $this->CreateIndex = $CreateIndex;
-        $this->ModifyIndex = $ModifyIndex;
+        $this->CreateIndex = uint64($CreateIndex);
+        $this->ModifyIndex = uint64($ModifyIndex);
         $this->Partition = $Partition;
         $this->PeerName = $PeerName;
         $this->Locality = $Locality;
@@ -120,25 +123,25 @@ class Node extends AbstractType
         return $this;
     }
 
-    public function getCreateIndex(): int
+    public function getCreateIndex(): BigInteger
     {
         return $this->CreateIndex;
     }
 
-    public function setCreateIndex(int $CreateIndex): self
+    public function setCreateIndex(int|string|BigInteger $CreateIndex): self
     {
-        $this->CreateIndex = $CreateIndex;
+        $this->CreateIndex = uint64($CreateIndex);
         return $this;
     }
 
-    public function getModifyIndex(): int
+    public function getModifyIndex(): BigInteger
     {
         return $this->ModifyIndex;
     }
 
-    public function setModifyIndex(int $ModifyIndex): self
+    public function setModifyIndex(int|string|BigInteger $ModifyIndex): self
     {
-        $this->ModifyIndex = $ModifyIndex;
+        $this->ModifyIndex = uint64($ModifyIndex);
         return $this;
     }
 
@@ -191,6 +194,8 @@ class Node extends AbstractType
                 $n->setMeta($v);
             } elseif ('TaggedAddresses' === $k) {
                 $n->setTaggedAddresses($v);
+            } elseif ('CreateIndex' === $k || 'ModifyIndex' === $k) {
+                $n->{$k} = uint64($v);
             } else {
                 $n->{$k} = $v;
             }

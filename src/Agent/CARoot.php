@@ -20,10 +20,12 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 use function DCarbone\PHPConsulAPI\PHPLib\parse_time;
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class CARoot extends AbstractType
 {
@@ -34,8 +36,8 @@ class CARoot extends AbstractType
     public null|Time\Time $NotBefore;
     public null|Time\Time $NotAfter;
     public null|int $DaysRemaining;
-    public int $CreateIndex;
-    public int $ModifyIndex;
+    public BigInteger $CreateIndex;
+    public BigInteger $ModifyIndex;
 
     /**
      * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
@@ -49,8 +51,8 @@ class CARoot extends AbstractType
         null|Time\Time $NotBefore = null,
         null|Time\Time $NotAfter = null,
         null|int $DaysRemaining = null,
-        int $CreateIndex = 0,
-        int $ModifyIndex = 0,
+        int|string|BigInteger $CreateIndex = 0,
+        int|string|BigInteger $ModifyIndex = 0,
     ) {
         if (null !== $data) {
             self::_hydrateFromDecoded((object)$data, $this);
@@ -63,8 +65,8 @@ class CARoot extends AbstractType
         $this->NotBefore = $NotBefore;
         $this->NotAfter = $NotAfter;
         $this->DaysRemaining = $DaysRemaining;
-        $this->CreateIndex = $CreateIndex;
-        $this->ModifyIndex = $ModifyIndex;
+        $this->CreateIndex = uint64($CreateIndex);
+        $this->ModifyIndex = uint64($ModifyIndex);
     }
 
     public function getID(): string
@@ -144,25 +146,25 @@ class CARoot extends AbstractType
         return $this;
     }
 
-    public function getCreateIndex(): int
+    public function getCreateIndex(): BigInteger
     {
         return $this->CreateIndex;
     }
 
-    public function setCreateIndex(int $CreateIndex): self
+    public function setCreateIndex(int|string|BigInteger $CreateIndex): self
     {
-        $this->CreateIndex = $CreateIndex;
+        $this->CreateIndex = uint64($CreateIndex);
         return $this;
     }
 
-    public function getModifyIndex(): int
+    public function getModifyIndex(): BigInteger
     {
         return $this->ModifyIndex;
     }
 
-    public function setModifyIndex(int $ModifyIndex): self
+    public function setModifyIndex(int|string|BigInteger $ModifyIndex): self
     {
-        $this->ModifyIndex = $ModifyIndex;
+        $this->ModifyIndex = uint64($ModifyIndex);
         return $this;
     }
 
@@ -182,6 +184,10 @@ class CARoot extends AbstractType
             }
             if ('RootCert' === $k) {
                 $n->RootCertPEM = $v;
+                continue;
+            }
+            if ('CreateIndex' === $k || 'ModifyIndex' === $k) {
+                $n->{$k} = uint64($v);
                 continue;
             }
             $n->{$k} = $v;

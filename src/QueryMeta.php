@@ -20,12 +20,15 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\Go\Time;
+
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class QueryMeta
 {
     public string $RequestUrl;
-    public int $LastIndex;
+    public BigInteger $LastIndex;
     public string $LastContentHash;
     public int $LastContact;
     public bool $KnownLeader;
@@ -37,7 +40,7 @@ class QueryMeta
     public function __construct(
         string $RequestUrl,
         null|string|int|float|\DateInterval|Time\Duration $RequestTime,
-        int $LastIndex = 0,
+        int|string|BigInteger $LastIndex = 0,
         string $LastContentHash = '',
         int $LastContact = 0,
         bool $KnownLeader = false,
@@ -48,7 +51,7 @@ class QueryMeta
         $this->RequestUrl = $RequestUrl;
         $this->RequestTime = Time::Duration($RequestTime);
 
-        $this->LastIndex = $LastIndex;
+        $this->LastIndex = uint64($LastIndex);
         $this->LastContentHash = $LastContentHash;
         $this->LastContact = $LastContact;
         $this->KnownLeader = $KnownLeader;
@@ -68,14 +71,14 @@ class QueryMeta
         return $this;
     }
 
-    public function getLastIndex(): int
+    public function getLastIndex(): BigInteger
     {
         return $this->LastIndex;
     }
 
-    public function setLastIndex(int $LastIndex): self
+    public function setLastIndex(int|string|BigInteger $LastIndex): self
     {
-        $this->LastIndex = $LastIndex;
+        $this->LastIndex = uint64($LastIndex);
         return $this;
     }
 

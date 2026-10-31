@@ -2,6 +2,7 @@
 
 namespace DCarbone\PHPConsulAPITests\Unit\ACL;
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\ACL\ACLToken;
 use DCarbone\PHPConsulAPI\ACL\ACLTokenPolicyLink;
 use DCarbone\PHPConsulAPI\ACL\ACLTokenRoleLink;
@@ -18,8 +19,8 @@ final class ACLTokenTest extends TestCase
     public function testConstructorDefaults(): void
     {
         $t = new ACLToken();
-        self::assertSame(0, $t->getCreateIndex());
-        self::assertSame(0, $t->getModifyIndex());
+        self::assertSame('0', (string)$t->getCreateIndex());
+        self::assertSame('0', (string)$t->getModifyIndex());
         self::assertSame('', $t->getAccessorID());
         self::assertSame('', $t->getSecretID());
         self::assertSame('', $t->getDescription());
@@ -57,7 +58,7 @@ final class ACLTokenTest extends TestCase
             Partition: 'pt',
             AuthMethodNamespace: 'amns',
         );
-        self::assertSame(1, $t->getCreateIndex());
+        self::assertSame('1', (string)$t->getCreateIndex());
         self::assertSame('accessor-1', $t->getAccessorID());
         self::assertSame('secret-1', $t->getSecretID());
         self::assertCount(1, $t->getPolicies());
@@ -143,10 +144,10 @@ final class ACLTokenTest extends TestCase
             ->setAuthMethodNamespace('amns-set');
 
         self::assertSame($t, $result);
-        self::assertSame(10, $t->getCreateIndex());
-        self::assertSame(10, $t->CreateIndex);
-        self::assertSame(20, $t->getModifyIndex());
-        self::assertSame(20, $t->ModifyIndex);
+        self::assertSame('10', (string)$t->getCreateIndex());
+        self::assertSame('10', (string)$t->CreateIndex);
+        self::assertSame('20', (string)$t->getModifyIndex());
+        self::assertSame('20', (string)$t->ModifyIndex);
         self::assertSame('acc-set', $t->getAccessorID());
         self::assertSame('acc-set', $t->AccessorID);
         self::assertSame('sec-set', $t->getSecretID());
@@ -177,6 +178,35 @@ final class ACLTokenTest extends TestCase
         self::assertSame('pt-set', $t->Partition);
         self::assertSame('amns-set', $t->getAuthMethodNamespace());
         self::assertSame('amns-set', $t->AuthMethodNamespace);
+    }
+
+    public function testUint64Fields(): void
+    {
+        $max = '18446744073709551615';
+        $t = new ACLToken(CreateIndex: 1, ModifyIndex: '2');
+        self::assertSame('1', (string)$t->CreateIndex);
+        self::assertSame('2', (string)$t->getModifyIndex());
+        $t = new ACLToken(CreateIndex: BigInteger::of($max), ModifyIndex: BigInteger::of(3));
+        self::assertSame($max, (string)$t->getCreateIndex());
+        self::assertSame('3', (string)$t->ModifyIndex);
+
+        $t->setCreateIndex(4)->setModifyIndex('5');
+        self::assertSame('4', (string)$t->getCreateIndex());
+        self::assertSame('5', (string)$t->getModifyIndex());
+        $t->setCreateIndex(BigInteger::of(6))->setModifyIndex($max);
+        self::assertSame('6', (string)$t->CreateIndex);
+        self::assertSame($max, (string)$t->ModifyIndex);
+
+        $d = new \stdClass();
+        $d->CreateIndex = $max;
+        $d->ModifyIndex = '7';
+        $t = ACLToken::jsonUnserialize($d);
+        self::assertSame($max, (string)$t->getCreateIndex());
+        self::assertSame('7', (string)$t->getModifyIndex());
+        self::assertSame($max, (string)$t->jsonSerialize()->CreateIndex);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $t->setModifyIndex('18446744073709551616');
     }
 }
 

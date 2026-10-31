@@ -17,8 +17,8 @@ final class QueryMetaTest extends TestCase
         self::assertSame('http://localhost/v1/kv/test', $qm->getRequestUrl());
         self::assertSame('http://localhost/v1/kv/test', $qm->RequestUrl);
         self::assertSame(5.0, $qm->getRequestTime()->Seconds());
-        self::assertSame(0, $qm->getLastIndex());
-        self::assertSame(0, $qm->LastIndex);
+        self::assertSame('0', (string)$qm->getLastIndex());
+        self::assertSame('0', (string)$qm->LastIndex);
         self::assertSame('', $qm->getLastContentHash());
         self::assertSame('', $qm->LastContentHash);
         self::assertSame(0, $qm->getLastContact());
@@ -47,8 +47,8 @@ final class QueryMetaTest extends TestCase
         );
         self::assertSame('http://localhost/v1/catalog/services', $qm->getRequestUrl());
         self::assertSame(10.0, $qm->getRequestTime()->Seconds());
-        self::assertSame(42, $qm->getLastIndex());
-        self::assertSame(42, $qm->LastIndex);
+        self::assertSame('42', (string)$qm->getLastIndex());
+        self::assertSame('42', (string)$qm->LastIndex);
         self::assertSame('abc123', $qm->getLastContentHash());
         self::assertSame('abc123', $qm->LastContentHash);
         self::assertSame(15, $qm->getLastContact());
@@ -68,7 +68,7 @@ final class QueryMetaTest extends TestCase
         $result = $qm
             ->setRequestUrl('http://localhost/v1/agent/self')
             ->setRequestTime('2s')
-            ->setLastIndex(100)
+            ->setLastIndex('18446744073709551615')
             ->setLastContentHash('hash')
             ->setLastContact(5)
             ->setKnownLeader(true)
@@ -80,8 +80,8 @@ final class QueryMetaTest extends TestCase
         self::assertSame('http://localhost/v1/agent/self', $qm->getRequestUrl());
         self::assertSame('http://localhost/v1/agent/self', $qm->RequestUrl);
         self::assertSame(2.0, $qm->getRequestTime()->Seconds());
-        self::assertSame(100, $qm->getLastIndex());
-        self::assertSame(100, $qm->LastIndex);
+        self::assertSame('18446744073709551615', (string)$qm->getLastIndex());
+        self::assertSame('18446744073709551615', (string)$qm->LastIndex);
         self::assertSame('hash', $qm->getLastContentHash());
         self::assertSame('hash', $qm->LastContentHash);
         self::assertSame(5, $qm->getLastContact());

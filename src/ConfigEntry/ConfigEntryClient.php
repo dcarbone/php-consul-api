@@ -20,12 +20,15 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractClient;
 use DCarbone\PHPConsulAPI\PHPLib\Error;
 use DCarbone\PHPConsulAPI\PHPLib\ValuedWriteBoolResponse;
 use DCarbone\PHPConsulAPI\PHPLib\WriteResponse;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\WriteOptions;
+
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class ConfigEntryClient extends AbstractClient
 {
@@ -63,10 +66,10 @@ class ConfigEntryClient extends AbstractClient
         return $ret;
     }
 
-    public function CAS(ConfigEntry $entry, int $index, null|WriteOptions $opts = null): ValuedWriteBoolResponse
+    public function CAS(ConfigEntry $entry, int|string|BigInteger $index, null|WriteOptions $opts = null): ValuedWriteBoolResponse
     {
         $r = $this->_newPutRequest('v1/config', $entry, $opts);
-        $r->params->set('cas', (string)$index);
+        $r->params->set('cas', uint64($index)->toString());
         $resp = $this->_requireOK($this->_do($r));
         $ret  = new ValuedWriteBoolResponse();
         $this->_unmarshalResponse($resp, $ret);
@@ -83,7 +86,7 @@ class ConfigEntryClient extends AbstractClient
         return $this->_executeDelete(sprintf('v1/config/%s/%s', urlencode($kind), urlencode($name)), $opts);
     }
 
-    public function DeleteCAS(string $kind, string $name, int $index, null|WriteOptions $opts = null): ValuedWriteBoolResponse
+    public function DeleteCAS(string $kind, string $name, int|string|BigInteger $index, null|WriteOptions $opts = null): ValuedWriteBoolResponse
     {
         $ret = new ValuedWriteBoolResponse();
         if ('' === $kind || '' === $name) {
@@ -92,7 +95,7 @@ class ConfigEntryClient extends AbstractClient
         }
 
         $r = $this->_newDeleteRequest(sprintf('v1/config/%s/%s', urlencode($kind), urlencode($name)), $opts);
-        $r->params->set('cas', (string)$index);
+        $r->params->set('cas', uint64($index)->toString());
         $resp = $this->_requireOK($this->_do($r));
         $this->_unmarshalResponse($resp, $ret);
         return $ret;

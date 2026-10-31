@@ -2,6 +2,7 @@
 
 namespace DCarbone\PHPConsulAPITests\Unit\Agent;
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\Agent\AgentService;
 use DCarbone\PHPConsulAPI\Agent\ServiceKind;
 use PHPUnit\Framework\TestCase;
@@ -19,8 +20,8 @@ final class AgentServiceTest extends TestCase
         self::assertSame('', $s->getService());
         self::assertSame(0, $s->getPort());
         self::assertSame('', $s->getAddress());
-        self::assertSame(0, $s->getCreateIndex());
-        self::assertSame(0, $s->getModifyIndex());
+        self::assertTrue($s->getCreateIndex()->isZero());
+        self::assertTrue($s->getModifyIndex()->isZero());
     }
 
     public function testConstructorWithParams(): void
@@ -53,6 +54,33 @@ final class AgentServiceTest extends TestCase
         self::assertSame('svc', $out->ID);
         self::assertSame('web', $out->Service);
         self::assertSame(80, $out->Port);
+        self::assertFalse(property_exists($out, 'CreateIndex'));
+        self::assertFalse(property_exists($out, 'ModifyIndex'));
+    }
+
+    public function testUint64FieldsAcceptIntStringAndBigInteger(): void
+    {
+        $s = new AgentService(CreateIndex: 5, ModifyIndex: '18446744073709551615');
+        self::assertSame('5', (string)$s->CreateIndex);
+        self::assertSame('18446744073709551615', (string)$s->getModifyIndex());
+
+        $s->setCreateIndex(BigInteger::of(9))->setModifyIndex(10);
+        self::assertTrue($s->getCreateIndex()->isEqualTo(9));
+        self::assertSame('10', (string)$s->ModifyIndex);
+
+        $s->setCreateIndex('9223372036854775808');
+        self::assertSame('9223372036854775808', (string)$s->CreateIndex);
+
+        $out = $s->jsonSerialize();
+        self::assertSame($s->CreateIndex, $out->CreateIndex);
+        self::assertSame($s->ModifyIndex, $out->ModifyIndex);
+    }
+
+    public function testJsonUnserializeLargeIndexes(): void
+    {
+        $s = AgentService::jsonUnserialize(json_decode('{"ID":"svc","Service":"web","CreateIndex":18446744073709551615,"ModifyIndex":"42"}', flags: JSON_BIGINT_AS_STRING | JSON_THROW_ON_ERROR));
+        self::assertSame('18446744073709551615', (string)$s->CreateIndex);
+        self::assertSame('42', (string)$s->ModifyIndex);
     }
 }
 

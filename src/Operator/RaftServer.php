@@ -20,7 +20,10 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class RaftServer extends AbstractType
 {
@@ -30,7 +33,7 @@ class RaftServer extends AbstractType
     public bool $Leader;
     public string $ProtocolVersion;
     public bool $Voter;
-    public int $LastIndex;
+    public BigInteger $LastIndex;
 
     /**
      * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
@@ -43,7 +46,7 @@ class RaftServer extends AbstractType
         bool $Leader = false,
         string $ProtocolVersion = '',
         bool $Voter = false,
-        int $LastIndex = 0,
+        int|string|BigInteger $LastIndex = 0,
     ) {
         if (null !== $data) {
             self::_hydrateFromDecoded((object)$data, $this);
@@ -55,7 +58,7 @@ class RaftServer extends AbstractType
         $this->Leader = $Leader;
         $this->ProtocolVersion = $ProtocolVersion;
         $this->Voter = $Voter;
-        $this->LastIndex = $LastIndex;
+        $this->LastIndex = uint64($LastIndex);
     }
 
     public function getID(): string
@@ -124,14 +127,14 @@ class RaftServer extends AbstractType
         return $this;
     }
 
-    public function getLastIndex(): int
+    public function getLastIndex(): BigInteger
     {
         return $this->LastIndex;
     }
 
-    public function setLastIndex(int $LastIndex): self
+    public function setLastIndex(int|string|BigInteger $LastIndex): self
     {
-        $this->LastIndex = $LastIndex;
+        $this->LastIndex = uint64($LastIndex);
         return $this;
     }
 
@@ -145,7 +148,11 @@ class RaftServer extends AbstractType
     protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
     {
         foreach ((array)$decoded as $k => $v) {
-            $n->{$k} = $v;
+            if ('LastIndex' === $k) {
+                $n->LastIndex = uint64($v);
+            } else {
+                $n->{$k} = $v;
+            }
         }
     }
 

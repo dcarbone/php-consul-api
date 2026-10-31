@@ -74,7 +74,10 @@ abstract class AbstractClient
             if (is_scalar($body)) {
                 $opts[GuzzleRequestOptions::BODY] = $body;
             } else {
-                $opts[GuzzleRequestOptions::JSON] = $body;
+                $opts[GuzzleRequestOptions::BODY] = encode_json(value: $body, flags: $this->_config->JSONEncodeOpts);
+                if ('' === $r->header->get('Content-Type') && '' === $r->header->get('content-type')) {
+                    $opts[GuzzleRequestOptions::HEADERS] = ['Content-Type' => 'application/json'];
+                }
             }
         }
 
@@ -218,7 +221,7 @@ abstract class AbstractClient
             json: (string)$body,
             associative: false,
             depth: max(1, $this->_config->JSONDecodeMaxDepth),
-            flags: $this->_config->JSONDecodeOpts,
+            flags: $this->_config->JSONDecodeOpts | \JSON_BIGINT_AS_STRING,
         );
 
         $jsonErr = json_last_error();

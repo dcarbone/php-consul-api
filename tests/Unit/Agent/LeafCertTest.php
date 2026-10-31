@@ -2,6 +2,7 @@
 
 namespace DCarbone\PHPConsulAPITests\Unit\Agent;
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\Agent\LeafCert;
 use function DCarbone\PHPConsulAPI\PHPLib\parse_time;
 use PHPUnit\Framework\TestCase;
@@ -22,8 +23,8 @@ final class LeafCertTest extends TestCase
         self::assertSame('key', $leaf->getPrivateKeyPEM());
         self::assertSame('web', $leaf->Service);
         self::assertSame('spiffe://web', $leaf->getServiceURI());
-        self::assertSame(1, $leaf->CreateIndex);
-        self::assertSame(2, $leaf->ModifyIndex);
+        self::assertSame('1', (string)$leaf->CreateIndex);
+        self::assertSame('2', (string)$leaf->ModifyIndex);
 
         $result = $leaf
             ->setSerialNumber('456')
@@ -39,8 +40,32 @@ final class LeafCertTest extends TestCase
         self::assertSame($leaf, $result);
         self::assertSame('456', $leaf->SerialNumber);
         self::assertSame('api', $leaf->getService());
-        self::assertSame(3, $leaf->getCreateIndex());
-        self::assertSame(4, $leaf->ModifyIndex);
+        self::assertSame('3', (string)$leaf->getCreateIndex());
+        self::assertSame('4', (string)$leaf->ModifyIndex);
+    }
+
+    public function testUint64FieldsAcceptIntStringAndBigInteger(): void
+    {
+        $leaf = new LeafCert(CreateIndex: '18446744073709551615', ModifyIndex: BigInteger::of(7));
+        self::assertSame('18446744073709551615', (string)$leaf->CreateIndex);
+        self::assertSame('7', (string)$leaf->getModifyIndex());
+
+        $leaf->setCreateIndex(BigInteger::of(5))->setModifyIndex('9223372036854775808');
+        self::assertTrue($leaf->getCreateIndex()->isEqualTo(5));
+        self::assertSame('9223372036854775808', (string)$leaf->ModifyIndex);
+
+        $leaf->setModifyIndex(11);
+        self::assertSame('11', (string)$leaf->ModifyIndex);
+    }
+
+    public function testJsonUnserializeLargeIndexes(): void
+    {
+        $leaf = LeafCert::jsonUnserialize(json_decode('{"SerialNumber":"1","CreateIndex":18446744073709551615,"ModifyIndex":3}', flags: JSON_BIGINT_AS_STRING | JSON_THROW_ON_ERROR));
+        self::assertSame('18446744073709551615', (string)$leaf->CreateIndex);
+        self::assertSame('3', (string)$leaf->ModifyIndex);
+
+        $out = $leaf->jsonSerialize();
+        self::assertSame('18446744073709551615', (string)$out->CreateIndex);
     }
 
     public function testJsonUnserializeAndSerialize(): void

@@ -2,8 +2,11 @@
 
 namespace DCarbone\PHPConsulAPITests\Unit\Operator;
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\Operator\AutopilotConfiguration;
 use PHPUnit\Framework\TestCase;
+
+use function DCarbone\PHPConsulAPI\PHPLib\encode_json;
 
 /**
  * @internal
@@ -17,8 +20,8 @@ final class AutopilotConfigurationTest extends TestCase
         self::assertFalse($c->CleanupDeadServers);
         self::assertNull($c->getLastContactThreshold());
         self::assertNull($c->LastContactThreshold);
-        self::assertSame(0, $c->getMaxTrailingLogs());
-        self::assertSame(0, $c->MaxTrailingLogs);
+        self::assertTrue($c->getMaxTrailingLogs()->isZero());
+        self::assertTrue($c->MaxTrailingLogs->isZero());
         self::assertSame(0, $c->getMinQuorum());
         self::assertSame(0, $c->MinQuorum);
         self::assertNull($c->getServerStabilizationTime());
@@ -29,10 +32,10 @@ final class AutopilotConfigurationTest extends TestCase
         self::assertFalse($c->DisableUpgradeMigration);
         self::assertSame('', $c->getUpgradeVersionTag());
         self::assertSame('', $c->UpgradeVersionTag);
-        self::assertSame(0, $c->getCreateIndex());
-        self::assertSame(0, $c->CreateIndex);
-        self::assertSame(0, $c->getModifyIndex());
-        self::assertSame(0, $c->ModifyIndex);
+        self::assertTrue($c->getCreateIndex()->isZero());
+        self::assertTrue($c->CreateIndex->isZero());
+        self::assertTrue($c->getModifyIndex()->isZero());
+        self::assertTrue($c->ModifyIndex->isZero());
     }
 
     public function testConstructorWithValues(): void
@@ -53,8 +56,8 @@ final class AutopilotConfigurationTest extends TestCase
         self::assertTrue($c->CleanupDeadServers);
         self::assertNotNull($c->getLastContactThreshold());
         self::assertNotNull($c->LastContactThreshold);
-        self::assertSame(250, $c->getMaxTrailingLogs());
-        self::assertSame(250, $c->MaxTrailingLogs);
+        self::assertSame('250', (string)$c->getMaxTrailingLogs());
+        self::assertSame('250', (string)$c->MaxTrailingLogs);
         self::assertSame(3, $c->getMinQuorum());
         self::assertSame(3, $c->MinQuorum);
         self::assertNotNull($c->getServerStabilizationTime());
@@ -65,10 +68,10 @@ final class AutopilotConfigurationTest extends TestCase
         self::assertTrue($c->DisableUpgradeMigration);
         self::assertSame('build', $c->getUpgradeVersionTag());
         self::assertSame('build', $c->UpgradeVersionTag);
-        self::assertSame(5, $c->getCreateIndex());
-        self::assertSame(5, $c->CreateIndex);
-        self::assertSame(10, $c->getModifyIndex());
-        self::assertSame(10, $c->ModifyIndex);
+        self::assertSame('5', (string)$c->getCreateIndex());
+        self::assertSame('5', (string)$c->CreateIndex);
+        self::assertSame('10', (string)$c->getModifyIndex());
+        self::assertSame('10', (string)$c->ModifyIndex);
     }
 
     public function testFluentSetters(): void
@@ -87,13 +90,13 @@ final class AutopilotConfigurationTest extends TestCase
             ->setModifyIndex(2);
         self::assertSame($c, $result);
         self::assertTrue($c->CleanupDeadServers);
-        self::assertSame(100, $c->MaxTrailingLogs);
+        self::assertSame('100', (string)$c->MaxTrailingLogs);
         self::assertSame(1, $c->MinQuorum);
         self::assertSame('rz', $c->RedundancyZoneTag);
         self::assertTrue($c->DisableUpgradeMigration);
         self::assertSame('uv', $c->UpgradeVersionTag);
-        self::assertSame(1, $c->CreateIndex);
-        self::assertSame(2, $c->ModifyIndex);
+        self::assertSame('1', (string)$c->CreateIndex);
+        self::assertSame('2', (string)$c->ModifyIndex);
     }
 
     public function testNullDurationSetters(): void
@@ -113,7 +116,8 @@ final class AutopilotConfigurationTest extends TestCase
         $out = $c->jsonSerialize();
         self::assertInstanceOf(\stdClass::class, $out);
         self::assertTrue($out->CleanupDeadServers);
-        self::assertSame(100, $out->MaxTrailingLogs);
+        self::assertSame($c->MaxTrailingLogs, $out->MaxTrailingLogs);
+        self::assertSame('100', (string)$out->MaxTrailingLogs);
     }
 
     public function testJsonSerializeOmitsEmptyOptionals(): void
@@ -143,10 +147,11 @@ final class AutopilotConfigurationTest extends TestCase
         $c = AutopilotConfiguration::jsonUnserialize($decoded);
         self::assertTrue($c->isCleanupDeadServers());
         self::assertNotNull($c->getLastContactThreshold());
-        self::assertSame(250, $c->getMaxTrailingLogs());
+        self::assertSame('250', (string)$c->getMaxTrailingLogs());
         self::assertSame(3, $c->getMinQuorum());
         self::assertNotNull($c->getServerStabilizationTime());
-        self::assertSame(5, $c->getCreateIndex());
+        self::assertSame('5', (string)$c->getCreateIndex());
+        self::assertSame('10', (string)$c->getModifyIndex());
     }
 
     public function testJsonRoundTrip(): void
@@ -157,12 +162,43 @@ final class AutopilotConfigurationTest extends TestCase
             CreateIndex: 7,
             ModifyIndex: 14,
         );
-        $json = json_encode($original);
-        $restored = AutopilotConfiguration::jsonUnserialize(json_decode($json, false));
+        $json = encode_json($original);
+        $restored = AutopilotConfiguration::jsonUnserialize(json_decode($json, false, flags: JSON_BIGINT_AS_STRING));
         self::assertSame($original->isCleanupDeadServers(), $restored->isCleanupDeadServers());
-        self::assertSame($original->getMaxTrailingLogs(), $restored->getMaxTrailingLogs());
-        self::assertSame($original->getCreateIndex(), $restored->getCreateIndex());
-        self::assertSame($original->getModifyIndex(), $restored->getModifyIndex());
+        self::assertTrue($original->getMaxTrailingLogs()->isEqualTo($restored->getMaxTrailingLogs()));
+        self::assertTrue($original->getCreateIndex()->isEqualTo($restored->getCreateIndex()));
+        self::assertTrue($original->getModifyIndex()->isEqualTo($restored->getModifyIndex()));
+    }
+
+    public function testUint64FieldsAcceptIntStringAndBigInteger(): void
+    {
+        $c = new AutopilotConfiguration(
+            MaxTrailingLogs: '18446744073709551615',
+            CreateIndex: BigInteger::of(3),
+            ModifyIndex: 4,
+        );
+        self::assertSame('18446744073709551615', (string)$c->MaxTrailingLogs);
+        self::assertSame('3', (string)$c->CreateIndex);
+        self::assertSame('4', (string)$c->ModifyIndex);
+
+        $c->setMaxTrailingLogs(BigInteger::of(5))
+            ->setCreateIndex('9223372036854775808')
+            ->setModifyIndex(BigInteger::of('18446744073709551615'));
+        self::assertTrue($c->getMaxTrailingLogs()->isEqualTo(5));
+        self::assertSame('9223372036854775808', (string)$c->getCreateIndex());
+        self::assertSame('18446744073709551615', (string)$c->getModifyIndex());
+    }
+
+    public function testJsonUnserializeLargeValues(): void
+    {
+        $c = AutopilotConfiguration::jsonUnserialize(json_decode(
+            '{"CleanupDeadServers":true,"MaxTrailingLogs":18446744073709551615,"CreateIndex":"9223372036854775808","ModifyIndex":18446744073709551615}',
+            flags: JSON_BIGINT_AS_STRING | JSON_THROW_ON_ERROR,
+        ));
+        self::assertSame('18446744073709551615', (string)$c->MaxTrailingLogs);
+        self::assertSame('9223372036854775808', (string)$c->CreateIndex);
+        self::assertSame('18446744073709551615', (string)$c->ModifyIndex);
+        self::assertStringContainsString('"MaxTrailingLogs":18446744073709551615', encode_json($c));
     }
 }
 

@@ -20,11 +20,13 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\PHPLib\Request;
 use DCarbone\PHPConsulAPI\PHPLib\RequestOptions;
 
 use function DCarbone\PHPConsulAPI\PHPLib\dur_to_millisecond;
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class QueryOptions implements RequestOptions
 {
@@ -35,7 +37,7 @@ class QueryOptions implements RequestOptions
     public bool $UseCache;
     public Time\Duration $MaxAge;
     public Time\Duration $StaleIfError;
-    public int $WaitIndex;
+    public BigInteger $WaitIndex;
     public string $WaitHash;
     public Time\Duration $WaitTime;
     public string $Token;
@@ -62,7 +64,7 @@ class QueryOptions implements RequestOptions
         bool $UseCache = false,
         null|int|float|string|\DateInterval|Time\Duration $MaxAge = null,
         null|int|float|string|\DateInterval|Time\Duration $StaleIfError = null,
-        int $WaitIndex = 0,
+        int|string|BigInteger $WaitIndex = 0,
         string $WaitHash = '',
         null|int|float|string|\DateInterval|Time\Duration $WaitTime = null,
         string $Token = '',
@@ -82,7 +84,7 @@ class QueryOptions implements RequestOptions
         $this->UseCache = $UseCache;
         $this->MaxAge = Time::Duration($MaxAge);
         $this->StaleIfError = Time::Duration($StaleIfError);
-        $this->WaitIndex = $WaitIndex;
+        $this->WaitIndex = uint64($WaitIndex);
         $this->WaitHash = $WaitHash;
         $this->WaitTime = Time::Duration($WaitTime);
         $this->Token = $Token;
@@ -173,14 +175,14 @@ class QueryOptions implements RequestOptions
         return $this;
     }
 
-    public function getWaitIndex(): int
+    public function getWaitIndex(): BigInteger
     {
         return $this->WaitIndex;
     }
 
-    public function setWaitIndex(int $waitIndex): self
+    public function setWaitIndex(int|string|BigInteger $WaitIndex): self
     {
-        $this->WaitIndex = $waitIndex;
+        $this->WaitIndex = uint64($WaitIndex);
         return $this;
     }
 
@@ -325,8 +327,8 @@ class QueryOptions implements RequestOptions
         if ($this->RequireConsistent) {
             $r->params->set('consistent', '');
         }
-        if (0 !== $this->WaitIndex) {
-            $r->params->set('index', (string)$this->WaitIndex);
+        if (!$this->WaitIndex->isZero()) {
+            $r->params->set('index', $this->WaitIndex->toString());
         }
         if (0 < $this->WaitTime->Microseconds()) {
             $r->params->set('wait', dur_to_millisecond($this->WaitTime));

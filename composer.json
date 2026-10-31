@@ -21,7 +21,8 @@
     "dcarbone/gotime": "^v2.0",
     "dcarbone/gohttp": "^v1.0.0",
     "guzzlehttp/guzzle": "^7.4",
-    "guzzlehttp/psr7": "^2.4"
+    "guzzlehttp/psr7": "^2.4",
+    "brick/math": "^1.0"
   },
   "autoload": {
     "files": [

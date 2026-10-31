@@ -2,6 +2,7 @@
 
 namespace DCarbone\PHPConsulAPITests\Unit\Agent;
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\Agent\CARoot;
 use function DCarbone\PHPConsulAPI\PHPLib\parse_time;
 use PHPUnit\Framework\TestCase;
@@ -22,8 +23,8 @@ final class CARootTest extends TestCase
         self::assertSame('pem', $root->getRootCertPEM());
         self::assertTrue($root->isActive());
         self::assertSame(365, $root->DaysRemaining);
-        self::assertSame(1, $root->getCreateIndex());
-        self::assertSame(2, $root->ModifyIndex);
+        self::assertSame('1', (string)$root->getCreateIndex());
+        self::assertSame('2', (string)$root->ModifyIndex);
 
         $result = $root
             ->setID('id-2')
@@ -42,8 +43,36 @@ final class CARootTest extends TestCase
         self::assertSame('pem-2', $root->RootCertPEM);
         self::assertFalse($root->Active);
         self::assertSame(42, $root->getDaysRemaining());
-        self::assertSame(3, $root->CreateIndex);
-        self::assertSame(4, $root->getModifyIndex());
+        self::assertSame('3', (string)$root->CreateIndex);
+        self::assertSame('4', (string)$root->getModifyIndex());
+    }
+
+    public function testUint64FieldsAcceptIntStringAndBigInteger(): void
+    {
+        $root = new CARoot(CreateIndex: '18446744073709551615', ModifyIndex: BigInteger::of(7));
+        self::assertSame('18446744073709551615', (string)$root->CreateIndex);
+        self::assertSame('7', (string)$root->getModifyIndex());
+
+        $root->setCreateIndex(5)->setModifyIndex('18446744073709551614');
+        self::assertTrue($root->getCreateIndex()->isEqualTo(5));
+        self::assertSame('18446744073709551614', (string)$root->ModifyIndex);
+
+        $root->setCreateIndex(BigInteger::of('9223372036854775808'));
+        self::assertSame('9223372036854775808', (string)$root->CreateIndex);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $root->setModifyIndex(-1);
+    }
+
+    public function testJsonUnserializeLargeIndexes(): void
+    {
+        $root = CARoot::jsonUnserialize(json_decode('{"ID":"r","CreateIndex":18446744073709551615,"ModifyIndex":"9223372036854775808"}', flags: JSON_BIGINT_AS_STRING | JSON_THROW_ON_ERROR));
+        self::assertSame('18446744073709551615', (string)$root->CreateIndex);
+        self::assertSame('9223372036854775808', (string)$root->ModifyIndex);
+
+        $out = $root->jsonSerialize();
+        self::assertSame($root->CreateIndex, $out->CreateIndex);
+        self::assertSame('9223372036854775808', (string)$out->ModifyIndex);
     }
 
     public function testJsonUnserializeAndSerialize(): void

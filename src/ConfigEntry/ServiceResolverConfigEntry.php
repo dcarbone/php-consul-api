@@ -20,8 +20,11 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
 {
@@ -62,8 +65,8 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
         null|ServiceResolverPrioritizeByLocality $PrioritizeByLocality = null,
         null|LoadBalancer $LoadBalancer = null,
         null|array $Meta = null,
-        int $CreateIndex = 0,
-        int $ModifyIndex = 0,
+        int|string|BigInteger $CreateIndex = 0,
+        int|string|BigInteger $ModifyIndex = 0,
     ) {
         if (null !== $data) {
             self::_hydrateFromDecoded((object)$data, $this);
@@ -82,8 +85,8 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
         $this->PrioritizeByLocality = $PrioritizeByLocality;
         $this->LoadBalancer = $LoadBalancer;
         $this->setMeta($Meta);
-        $this->CreateIndex = $CreateIndex;
-        $this->ModifyIndex = $ModifyIndex;
+        $this->CreateIndex = uint64($CreateIndex);
+        $this->ModifyIndex = uint64($ModifyIndex);
     }
 
     public function getKind(): string
@@ -278,6 +281,8 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
                 $n->LoadBalancer = LoadBalancer::jsonUnserialize($v);
             } elseif ('Meta' === $k) {
                 $n->setMeta($v);
+            } elseif ('CreateIndex' === $k || 'ModifyIndex' === $k) {
+                $n->{$k} = uint64($v);
             } else {
                 $n->{$k} = $v;
             }

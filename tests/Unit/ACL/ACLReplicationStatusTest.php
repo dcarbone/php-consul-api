@@ -2,6 +2,7 @@
 
 namespace DCarbone\PHPConsulAPITests\Unit\ACL;
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\ACL\ACLReplicationStatus;
 use DCarbone\Go\Time;
 use PHPUnit\Framework\TestCase;
@@ -17,9 +18,9 @@ final class ACLReplicationStatusTest extends TestCase
         self::assertFalse($s->isEnabled());
         self::assertFalse($s->isRunning());
         self::assertSame('', $s->getSourceDatacenter());
-        self::assertSame(0, $s->getReplicatedIndex());
-        self::assertSame(0, $s->getReplicatedRoleIndex());
-        self::assertSame(0, $s->getReplicatedTokenIndex());
+        self::assertSame('0', (string)$s->getReplicatedIndex());
+        self::assertSame('0', (string)$s->getReplicatedRoleIndex());
+        self::assertSame('0', (string)$s->getReplicatedTokenIndex());
         self::assertInstanceOf(Time\Time::class, $s->getLastSuccess());
         self::assertInstanceOf(Time\Time::class, $s->getLastError());
     }
@@ -37,9 +38,9 @@ final class ACLReplicationStatusTest extends TestCase
         self::assertTrue($s->isEnabled());
         self::assertTrue($s->isRunning());
         self::assertSame('dc1', $s->getSourceDatacenter());
-        self::assertSame(10, $s->getReplicatedIndex());
-        self::assertSame(5, $s->getReplicatedRoleIndex());
-        self::assertSame(7, $s->getReplicatedTokenIndex());
+        self::assertSame('10', (string)$s->getReplicatedIndex());
+        self::assertSame('5', (string)$s->getReplicatedRoleIndex());
+        self::assertSame('7', (string)$s->getReplicatedTokenIndex());
     }
 
     public function testFluentSetters(): void
@@ -74,7 +75,31 @@ final class ACLReplicationStatusTest extends TestCase
         $s = ACLReplicationStatus::jsonUnserialize($d);
         self::assertTrue($s->isEnabled());
         self::assertFalse($s->isRunning());
-        self::assertSame(10, $s->getReplicatedIndex());
+        self::assertSame('10', (string)$s->getReplicatedIndex());
+    }
+
+    public function testUint64Fields(): void
+    {
+        $max = '18446744073709551615';
+        $s = new ACLReplicationStatus(ReplicatedIndex: 1, ReplicatedRoleIndex: '2', ReplicatedTokenIndex: BigInteger::of($max));
+        self::assertSame('1', (string)$s->ReplicatedIndex);
+        self::assertSame('2', (string)$s->getReplicatedRoleIndex());
+        self::assertSame($max, (string)$s->getReplicatedTokenIndex());
+
+        $s->setReplicatedIndex(BigInteger::of(3))->setReplicatedRoleIndex(4)->setReplicatedTokenIndex('5');
+        self::assertSame('3', (string)$s->getReplicatedIndex());
+        self::assertSame('4', (string)$s->ReplicatedRoleIndex);
+        self::assertSame('5', (string)$s->ReplicatedTokenIndex);
+
+        $d = new \stdClass();
+        $d->ReplicatedIndex = $max;
+        $d->ReplicatedRoleIndex = $max;
+        $d->ReplicatedTokenIndex = 6;
+        $s = ACLReplicationStatus::jsonUnserialize($d);
+        self::assertSame($max, (string)$s->getReplicatedIndex());
+        self::assertSame($max, (string)$s->getReplicatedRoleIndex());
+        self::assertSame('6', (string)$s->getReplicatedTokenIndex());
+        self::assertSame($max, (string)$s->jsonSerialize()->ReplicatedIndex);
     }
 }
 

@@ -20,8 +20,11 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class ACLToken extends AbstractType
 {
@@ -37,8 +40,8 @@ class ACLToken extends AbstractType
      */
     public function __construct(
         null|array $data = null,
-        int $CreateIndex = 0,
-        int $ModifyIndex = 0,
+        int|string|BigInteger $CreateIndex = 0,
+        int|string|BigInteger $ModifyIndex = 0,
         string $AccessorID = '',
         string $SecretID = '',
         string $Description = '',
@@ -62,8 +65,8 @@ class ACLToken extends AbstractType
             self::_hydrateFromDecoded((object)$data, $this);
             return;
         }
-        $this->CreateIndex = $CreateIndex;
-        $this->ModifyIndex = $ModifyIndex;
+        $this->CreateIndex = uint64($CreateIndex);
+        $this->ModifyIndex = uint64($ModifyIndex);
         $this->AccessorID = $AccessorID;
         $this->SecretID = $SecretID;
         $this->Description = $Description;

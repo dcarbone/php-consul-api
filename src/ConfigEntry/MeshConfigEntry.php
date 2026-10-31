@@ -20,8 +20,11 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\Consul;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class MeshConfigEntry extends AbstractType implements ConfigEntry
 {
@@ -48,8 +51,8 @@ class MeshConfigEntry extends AbstractType implements ConfigEntry
         null|MeshHTTPConfig $HTTP = null,
         null|PeeringMeshConfig $Peering = null,
         array $Meta = [],
-        int $CreateIndex = 0,
-        int $ModifyIndex = 0
+        int|string|BigInteger $CreateIndex = 0,
+        int|string|BigInteger $ModifyIndex = 0
     ) {
         if (null !== $data) {
             self::_hydrateFromDecoded((object)$data, $this);
@@ -58,8 +61,8 @@ class MeshConfigEntry extends AbstractType implements ConfigEntry
         $this->Partition = $Partition;
         $this->Namespace = $Namespace;
         $this->setMeta($Meta);
-        $this->CreateIndex = $CreateIndex;
-        $this->ModifyIndex = $ModifyIndex;
+        $this->CreateIndex = uint64($CreateIndex);
+        $this->ModifyIndex = uint64($ModifyIndex);
         $this->TransparentProxy = $TransparentProxy ?? new TransparentProxyMeshConfig();
         $this->AllowEnablingPermissiveMutualTLS = $AllowEnablingPermissiveMutualTLS;
         $this->TLS = $TLS;
@@ -165,6 +168,8 @@ class MeshConfigEntry extends AbstractType implements ConfigEntry
                 $n->AllowEnablingPermissiveMutualTLS = $v;
             } elseif ('Meta' === $k) {
                 $n->setMeta($v);
+            } elseif ('CreateIndex' === $k || 'ModifyIndex' === $k) {
+                $n->{$k} = uint64($v);
             } else {
                 $n->{$k} = $v;
             }

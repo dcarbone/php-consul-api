@@ -20,10 +20,12 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\Consul;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 use function DCarbone\PHPConsulAPI\PHPLib\_enc_obj_if_valued;
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class ProxyConfigEntry extends AbstractType implements ConfigEntry
 {
@@ -69,8 +71,8 @@ class ProxyConfigEntry extends AbstractType implements ConfigEntry
         null|ServiceResolverPrioritizeByLocality $PrioritizeByLocality = null,
         string $Namespace = '',
         array $Meta = [],
-        int $CreateIndex = 0,
-        int $ModifyIndex = 0,
+        int|string|BigInteger $CreateIndex = 0,
+        int|string|BigInteger $ModifyIndex = 0,
     ) {
         if (null !== $data) {
             self::_hydrateFromDecoded((object)$data, $this);
@@ -91,8 +93,8 @@ class ProxyConfigEntry extends AbstractType implements ConfigEntry
         $this->FailoverPolicy = $FailoverPolicy;
         $this->PrioritizeByLocality = $PrioritizeByLocality;
         $this->setMeta($Meta);
-        $this->CreateIndex = $CreateIndex;
-        $this->ModifyIndex = $ModifyIndex;
+        $this->CreateIndex = uint64($CreateIndex);
+        $this->ModifyIndex = uint64($ModifyIndex);
     }
 
     public function getKind(): string
@@ -287,6 +289,8 @@ class ProxyConfigEntry extends AbstractType implements ConfigEntry
                 $n->setConfig($v);
             } elseif ('Meta' === $k) {
                 $n->setMeta($v);
+            } elseif ('CreateIndex' === $k || 'ModifyIndex' === $k) {
+                $n->{$k} = uint64($v);
             } else {
                 $n->{$k} = $v;
             }

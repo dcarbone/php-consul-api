@@ -20,6 +20,8 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
+
 /**
  * Interface ConfigEntry
  *
@@ -41,7 +43,7 @@ interface ConfigEntry
      */
     public function GetMeta(): null|array;
 
-    public function GetCreateIndex(): int;
+    public function GetCreateIndex(): BigInteger;
 
-    public function GetModifyIndex(): int;
+    public function GetModifyIndex(): BigInteger;
 }

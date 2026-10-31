@@ -102,7 +102,7 @@ class OperatorClient extends AbstractClient
         null|WriteOptions $opts = null
     ): ValuedBoolResponse {
         $r = $this->_newPutRequest('v1/operator/autopilot/configuration', $conf, $opts);
-        $r->params->set('cas', (string)$conf->ModifyIndex);
+        $r->params->set('cas', $conf->ModifyIndex->toString());
         $resp = $this->_requireOK($this->_do($r));
         $ret  = new ValuedBoolResponse();
         $this->_unmarshalResponse($resp, $ret);

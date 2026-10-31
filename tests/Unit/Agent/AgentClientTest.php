@@ -298,10 +298,12 @@ final class AgentClientTest extends TestCase
 
         self::assertNull($response->Err);
         self::assertNotNull($response->QueryMeta);
-        self::assertSame(7, $response->QueryMeta->LastIndex);
+        self::assertSame('7', (string)$response->QueryMeta->LastIndex);
         self::assertSame('root-1', $response->CARoots->ActiveRootID);
         self::assertCount(1, $response->CARoots->Roots);
         self::assertSame('root-1', $response->CARoots->Roots[0]->ID);
+        self::assertSame('1', (string)$response->CARoots->Roots[0]->CreateIndex);
+        self::assertSame('2', (string)$response->CARoots->Roots[0]->ModifyIndex);
         [$request, , $params] = $this->requestData($history);
         self::assertSame('GET', $request->getMethod());
         self::assertSame('/v1/agent/connect/ca/roots', $request->getUri()->getPath());
@@ -332,7 +334,7 @@ final class AgentClientTest extends TestCase
 
         self::assertNull($response->Err);
         self::assertNotNull($response->QueryMeta);
-        self::assertSame(8, $response->QueryMeta->LastIndex);
+        self::assertSame('8', (string)$response->QueryMeta->LastIndex);
         self::assertSame('1234', $response->LeafCert->SerialNumber);
         self::assertSame('web', $response->LeafCert->Service);
         [$request, , $params] = $this->requestData($history);

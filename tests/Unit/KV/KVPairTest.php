@@ -3,6 +3,7 @@
 
 namespace DCarbone\PHPConsulAPITests\Unit\KV;
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\KV\KVPair;
 use PHPUnit\Framework\TestCase;
 
@@ -16,14 +17,14 @@ final class KVPairTest extends TestCase
         $kvp = new KVPair();
         self::assertSame('', $kvp->getKey());
         self::assertSame('', $kvp->Key);
-        self::assertSame(0, $kvp->getCreateIndex());
-        self::assertSame(0, $kvp->CreateIndex);
-        self::assertSame(0, $kvp->getModifyIndex());
-        self::assertSame(0, $kvp->ModifyIndex);
-        self::assertSame(0, $kvp->getLockIndex());
-        self::assertSame(0, $kvp->LockIndex);
-        self::assertSame(0, $kvp->getFlags());
-        self::assertSame(0, $kvp->Flags);
+        self::assertSame('0', (string)$kvp->getCreateIndex());
+        self::assertSame('0', (string)$kvp->CreateIndex);
+        self::assertSame('0', (string)$kvp->getModifyIndex());
+        self::assertSame('0', (string)$kvp->ModifyIndex);
+        self::assertSame('0', (string)$kvp->getLockIndex());
+        self::assertSame('0', (string)$kvp->LockIndex);
+        self::assertSame('0', (string)$kvp->getFlags());
+        self::assertSame('0', (string)$kvp->Flags);
         self::assertSame('', $kvp->getValue());
         self::assertSame('', $kvp->Value);
         self::assertSame('', $kvp->getSession());
@@ -39,9 +40,9 @@ final class KVPairTest extends TestCase
         $kvp = new KVPair(
             Key: 'test/key',
             CreateIndex: 10,
-            ModifyIndex: 20,
-            LockIndex: 3,
-            Flags: 42,
+            ModifyIndex: '20',
+            LockIndex: BigInteger::of(3),
+            Flags: '18446744073709551615',
             Value: 'hello',
             Session: 'sess-1',
             Namespace: 'ns',
@@ -49,14 +50,14 @@ final class KVPairTest extends TestCase
         );
         self::assertSame('test/key', $kvp->getKey());
         self::assertSame('test/key', $kvp->Key);
-        self::assertSame(10, $kvp->getCreateIndex());
-        self::assertSame(10, $kvp->CreateIndex);
-        self::assertSame(20, $kvp->getModifyIndex());
-        self::assertSame(20, $kvp->ModifyIndex);
-        self::assertSame(3, $kvp->getLockIndex());
-        self::assertSame(3, $kvp->LockIndex);
-        self::assertSame(42, $kvp->getFlags());
-        self::assertSame(42, $kvp->Flags);
+        self::assertSame('10', (string)$kvp->getCreateIndex());
+        self::assertSame('10', (string)$kvp->CreateIndex);
+        self::assertSame('20', (string)$kvp->getModifyIndex());
+        self::assertSame('20', (string)$kvp->ModifyIndex);
+        self::assertSame('3', (string)$kvp->getLockIndex());
+        self::assertSame('3', (string)$kvp->LockIndex);
+        self::assertSame('18446744073709551615', (string)$kvp->getFlags());
+        self::assertSame('18446744073709551615', (string)$kvp->Flags);
         self::assertSame('hello', $kvp->getValue());
         self::assertSame('hello', $kvp->Value);
         self::assertSame('sess-1', $kvp->getSession());
@@ -73,9 +74,9 @@ final class KVPairTest extends TestCase
         $result = $kvp
             ->setKey('k')
             ->setCreateIndex(1)
-            ->setModifyIndex(2)
-            ->setLockIndex(3)
-            ->setFlags(4)
+            ->setModifyIndex('2')
+            ->setLockIndex(BigInteger::of(3))
+            ->setFlags('18446744073709551615')
             ->setValue('v')
             ->setSession('s')
             ->setNamespace('ns')
@@ -84,14 +85,14 @@ final class KVPairTest extends TestCase
         self::assertSame($kvp, $result);
         self::assertSame('k', $kvp->getKey());
         self::assertSame('k', $kvp->Key);
-        self::assertSame(1, $kvp->getCreateIndex());
-        self::assertSame(1, $kvp->CreateIndex);
-        self::assertSame(2, $kvp->getModifyIndex());
-        self::assertSame(2, $kvp->ModifyIndex);
-        self::assertSame(3, $kvp->getLockIndex());
-        self::assertSame(3, $kvp->LockIndex);
-        self::assertSame(4, $kvp->getFlags());
-        self::assertSame(4, $kvp->Flags);
+        self::assertSame('1', (string)$kvp->getCreateIndex());
+        self::assertSame('1', (string)$kvp->CreateIndex);
+        self::assertSame('2', (string)$kvp->getModifyIndex());
+        self::assertSame('2', (string)$kvp->ModifyIndex);
+        self::assertSame('3', (string)$kvp->getLockIndex());
+        self::assertSame('3', (string)$kvp->LockIndex);
+        self::assertSame('18446744073709551615', (string)$kvp->getFlags());
+        self::assertSame('18446744073709551615', (string)$kvp->Flags);
         self::assertSame('v', $kvp->getValue());
         self::assertSame('v', $kvp->Value);
         self::assertSame('s', $kvp->getSession());
@@ -110,7 +111,20 @@ final class KVPairTest extends TestCase
         self::assertInstanceOf(\stdClass::class, $out);
         self::assertSame('foo', $out->Key);
         self::assertSame('bar', $out->Value);
-        self::assertSame(1, $out->Flags);
+        self::assertInstanceOf(BigInteger::class, $out->Flags);
+        self::assertSame('1', (string)$out->Flags);
+    }
+
+    public function testInvalidUint64Rejected(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        new KVPair(Flags: -1);
+    }
+
+    public function testSetterRejectsOverflow(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        (new KVPair())->setModifyIndex('18446744073709551616');
     }
 
     public function testJsonSerializeOmitsEmptyNamespaceAndPartition(): void
@@ -137,7 +151,7 @@ final class KVPairTest extends TestCase
         $decoded->Key = 'test';
         $decoded->Value = base64_encode('hello world');
         $decoded->CreateIndex = 10;
-        $decoded->ModifyIndex = 20;
+        $decoded->ModifyIndex = '18446744073709551615';
         $decoded->LockIndex = 0;
         $decoded->Flags = 0;
         $decoded->Session = '';
@@ -146,8 +160,8 @@ final class KVPairTest extends TestCase
 
         self::assertSame('test', $kvp->getKey());
         self::assertSame('hello world', $kvp->getValue());
-        self::assertSame(10, $kvp->getCreateIndex());
-        self::assertSame(20, $kvp->getModifyIndex());
+        self::assertSame('10', (string)$kvp->getCreateIndex());
+        self::assertSame('18446744073709551615', (string)$kvp->getModifyIndex());
     }
 
     public function testJsonUnserializeThrowsOnInvalidBase64(): void
@@ -206,10 +220,10 @@ final class KVPairTest extends TestCase
         $restored = KVPair::jsonUnserialize($serialized);
 
         self::assertSame($original->getKey(), $restored->getKey());
-        self::assertSame($original->getCreateIndex(), $restored->getCreateIndex());
-        self::assertSame($original->getModifyIndex(), $restored->getModifyIndex());
-        self::assertSame($original->getLockIndex(), $restored->getLockIndex());
-        self::assertSame($original->getFlags(), $restored->getFlags());
+        self::assertTrue($original->getCreateIndex()->isEqualTo($restored->getCreateIndex()));
+        self::assertTrue($original->getModifyIndex()->isEqualTo($restored->getModifyIndex()));
+        self::assertTrue($original->getLockIndex()->isEqualTo($restored->getLockIndex()));
+        self::assertTrue($original->getFlags()->isEqualTo($restored->getFlags()));
         self::assertSame($original->getValue(), $restored->getValue());
         self::assertSame($original->getSession(), $restored->getSession());
     }

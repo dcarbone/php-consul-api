@@ -20,15 +20,18 @@ namespace DCarbone\PHPConsulAPI\KV;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class KVPair extends AbstractType
 {
     public string $Key;
-    public int $CreateIndex;
-    public int $ModifyIndex;
-    public int $LockIndex;
-    public int $Flags;
+    public BigInteger $CreateIndex;
+    public BigInteger $ModifyIndex;
+    public BigInteger $LockIndex;
+    public BigInteger $Flags;
     public string $Value;
     public string $Session;
     public string $Namespace;
@@ -40,10 +43,10 @@ class KVPair extends AbstractType
     public function __construct(
         null|array $data = null,
         string $Key = '',
-        int $CreateIndex = 0,
-        int $ModifyIndex = 0,
-        int $LockIndex = 0,
-        int $Flags = 0,
+        int|string|BigInteger $CreateIndex = 0,
+        int|string|BigInteger $ModifyIndex = 0,
+        int|string|BigInteger $LockIndex = 0,
+        int|string|BigInteger $Flags = 0,
         string $Value = '',
         string $Session = '',
         string $Namespace = '',
@@ -54,10 +57,10 @@ class KVPair extends AbstractType
             return;
         }
         $this->Key = $Key;
-        $this->CreateIndex = $CreateIndex;
-        $this->ModifyIndex = $ModifyIndex;
-        $this->LockIndex = $LockIndex;
-        $this->Flags = $Flags;
+        $this->CreateIndex = uint64($CreateIndex);
+        $this->ModifyIndex = uint64($ModifyIndex);
+        $this->LockIndex = uint64($LockIndex);
+        $this->Flags = uint64($Flags);
         $this->Value = $Value;
         $this->Session = $Session;
         $this->Namespace = $Namespace;
@@ -75,47 +78,47 @@ class KVPair extends AbstractType
         return $this;
     }
 
-    public function getCreateIndex(): int
+    public function getCreateIndex(): BigInteger
     {
         return $this->CreateIndex;
     }
 
-    public function setCreateIndex(int $CreateIndex): self
+    public function setCreateIndex(int|string|BigInteger $CreateIndex): self
     {
-        $this->CreateIndex = $CreateIndex;
+        $this->CreateIndex = uint64($CreateIndex);
         return $this;
     }
 
-    public function getModifyIndex(): int
+    public function getModifyIndex(): BigInteger
     {
         return $this->ModifyIndex;
     }
 
-    public function setModifyIndex(int $ModifyIndex): self
+    public function setModifyIndex(int|string|BigInteger $ModifyIndex): self
     {
-        $this->ModifyIndex = $ModifyIndex;
+        $this->ModifyIndex = uint64($ModifyIndex);
         return $this;
     }
 
-    public function getLockIndex(): int
+    public function getLockIndex(): BigInteger
     {
         return $this->LockIndex;
     }
 
-    public function setLockIndex(int $LockIndex): self
+    public function setLockIndex(int|string|BigInteger $LockIndex): self
     {
-        $this->LockIndex = $LockIndex;
+        $this->LockIndex = uint64($LockIndex);
         return $this;
     }
 
-    public function getFlags(): int
+    public function getFlags(): BigInteger
     {
         return $this->Flags;
     }
 
-    public function setFlags(int $Flags): self
+    public function setFlags(int|string|BigInteger $Flags): self
     {
-        $this->Flags = $Flags;
+        $this->Flags = uint64($Flags);
         return $this;
     }
 
@@ -188,6 +191,8 @@ class KVPair extends AbstractType
                     throw new \DomainException(sprintf('Could not base64 decode value "%s"', $v));
                 }
                 $n->Value = $val;
+            } elseif ('CreateIndex' === $k || 'ModifyIndex' === $k || 'LockIndex' === $k || 'Flags' === $k) {
+                $n->{$k} = uint64($v);
             } else {
                 $n->{$k} = $v;
             }
