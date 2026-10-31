@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b929c41336514ade20559a6ae27c98a8",
+    "content-hash": "19aac9f015ad2faea52f4e320de03147",
     "packages": [
         {
             "name": "dcarbone/gohttp",
@@ -60,16 +60,16 @@
         },
         {
             "name": "dcarbone/gotime",
-            "version": "v1.0.1",
+            "version": "v2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dcarbone/gotime.git",
-                "reference": "22a627906d4bf6c30802955ca26fcbdd3503283d"
+                "reference": "b015c019b9cbc4d3bf1a6a31033cebe00b1b04d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dcarbone/gotime/zipball/22a627906d4bf6c30802955ca26fcbdd3503283d",
-                "reference": "22a627906d4bf6c30802955ca26fcbdd3503283d",
+                "url": "https://api.github.com/repos/dcarbone/gotime/zipball/b015c019b9cbc4d3bf1a6a31033cebe00b1b04d5",
+                "reference": "b015c019b9cbc4d3bf1a6a31033cebe00b1b04d5",
                 "shasum": ""
             },
             "require": {
@@ -81,9 +81,6 @@
             },
             "type": "library",
             "autoload": {
-                "files": [
-                    "src/precision.php"
-                ],
                 "psr-4": {
                     "DCarbone\\Go\\": "src/"
                 }
@@ -106,9 +103,9 @@
             "homepage": "https://github.com/dcarbone/gotime",
             "support": {
                 "issues": "https://github.com/dcarbone/gotime/issues",
-                "source": "https://github.com/dcarbone/gotime/tree/v1.0.1"
+                "source": "https://github.com/dcarbone/gotime/tree/v2.0.0"
             },
-            "time": "2026-07-02T21:57:10+00:00"
+            "time": "2026-10-31T03:55:52+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",

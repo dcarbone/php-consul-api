@@ -182,7 +182,7 @@ final class KVClientTest extends TestCase
         $history = [];
         $client = $this->mockClient(200, 'true', $history);
 
-        $response = $client->Put(new KVPair(Key: 'test/key', Value: 'test value', Flags: 42));
+        $response = $client->Put(new KVPair(Key: 'test/key', Flags: 42, Value: 'test value'));
 
         self::assertInstanceOf(WriteResponse::class, $response);
     }
@@ -203,7 +203,7 @@ final class KVClientTest extends TestCase
         $history = [];
         $client = $this->mockClient(200, 'true', $history);
 
-        $response = $client->CAS(new KVPair(Key: 'test/key', Value: 'new value', ModifyIndex: 101));
+        $response = $client->CAS(new KVPair(Key: 'test/key', ModifyIndex: 101, Value: 'new value'));
 
         self::assertInstanceOf(ValuedWriteBoolResponse::class, $response);
         self::assertTrue($response->getValue());
@@ -214,7 +214,7 @@ final class KVClientTest extends TestCase
         $history = [];
         $client = $this->mockClient(200, 'false', $history);
 
-        $response = $client->CAS(new KVPair(Key: 'test/key', Value: 'new value', ModifyIndex: 99));
+        $response = $client->CAS(new KVPair(Key: 'test/key', ModifyIndex: 99, Value: 'new value'));
 
         self::assertInstanceOf(ValuedWriteBoolResponse::class, $response);
         self::assertFalse($response->getValue());

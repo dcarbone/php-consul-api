@@ -33,9 +33,7 @@ class AgentHealthServicesResponse extends AbstractResponse
     public array $AgentServiceChecksInfos;
 
     /**
-     * @param string $aggregatedStatus
      * @param \stdClass[] $checkInfos
-     * @param \DCarbone\PHPConsulAPI\PHPLib\Error|null $err
      */
     public function __construct(string $aggregatedStatus, array $checkInfos, null|Error $err)
     {
@@ -66,7 +64,6 @@ class AgentHealthServicesResponse extends AbstractResponse
     }
 
     /**
-     * @param mixed $offset
      * @return string|\DCarbone\PHPConsulAPI\Agent\AgentServiceChecksInfo[]|\DCarbone\PHPConsulAPI\PHPLib\Error|null
      */
     public function offsetGet(mixed $offset): string|array|Error|null

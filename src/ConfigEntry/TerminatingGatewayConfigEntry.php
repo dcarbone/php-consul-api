@@ -92,9 +92,6 @@ class TerminatingGatewayConfigEntry extends AbstractType implements ConfigEntry
         return $this->Services;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\ConfigEntry\LinkedService ...$Services
-     */
     public function setServices(LinkedService ...$Services): self
     {
         $this->Services = $Services;

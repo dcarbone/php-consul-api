@@ -23,28 +23,20 @@ namespace DCarbone\PHPConsulAPI\PHPLib;
 use DCarbone\Go\Time;
 
 /**
- * Parses an RFC3339 timestamp from Consul, which may contain nanosecond-precision
- * fractional seconds that PHP's DateTime cannot handle. Truncates to microseconds.
+ * Parses an RFC3339 timestamp from Consul, retaining nanosecond-precision fractional seconds.
  *
  * @param string $ts RFC3339 timestamp string (e.g. "2026-04-03T20:02:59.892792592-05:00")
- * @return null|\DCarbone\Go\Time\Time
- * @throws \Exception
  */
 function parse_time(string $ts): null|Time\Time
 {
-    // Truncate fractional seconds beyond 6 digits (microseconds) since PHP
-    // cannot parse nanoseconds.
-    $fixed = preg_replace('/(\.\d{6})\d+/', '$1', $ts);
-
-    // Try microsecond-precision first, then fall back to no fractional seconds
-    $dt = \DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s.uP', $fixed);
-    if (false !== $dt) {
-        return new Time\Time($dt->format('Y-m-d H:i:s.u O'));
+    $t = Time\Time::createFromFormat(format: 'Y-m-d\TH:i:s.uP', datetime: $ts);
+    if (false !== $t) {
+        return $t;
     }
 
-    $dt = \DateTimeImmutable::createFromFormat(\DATE_RFC3339, $fixed);
-    if (false !== $dt) {
-        return new Time\Time($dt->format('Y-m-d H:i:s O'));
+    $t = Time\Time::createFromFormat(format: \DATE_RFC3339, datetime: $ts);
+    if (false !== $t) {
+        return $t;
     }
 
     return null;

@@ -27,7 +27,7 @@ final class QueryDatacenterOptionsTest extends TestCase
         $opts = new QueryDatacenterOptions(
             NearestN: 3,
             Datacenters: ['dc1', 'dc2', 'dc3'],
-            Targets: [new QueryFailoverTarget(Peer: 'peer-a', Partition: 'default', Datacenter: 'dc4')],
+            Targets: [new QueryFailoverTarget(Peer: 'peer-a', Datacenter: 'dc4', Partition: 'default')],
         );
         self::assertSame(3, $opts->getNearestN());
         self::assertSame(3, $opts->NearestN);
@@ -43,7 +43,7 @@ final class QueryDatacenterOptionsTest extends TestCase
         $result = $opts
             ->setNearestN(5)
             ->setDatacenters('us-east', 'us-west')
-            ->setTargets(new QueryFailoverTarget(Peer: 'peer-b', Partition: 'default', Datacenter: 'dc6'));
+            ->setTargets(new QueryFailoverTarget(Peer: 'peer-b', Datacenter: 'dc6', Partition: 'default'));
 
         self::assertSame($opts, $result);
         self::assertSame(5, $opts->getNearestN());

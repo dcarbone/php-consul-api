@@ -222,24 +222,24 @@ final class ConfigTest extends TestCase
 
     public function testEnvInsecureSkipVerifySupportsNumericTrueString(): void
     {
-        self::setEnv(name: Consul::HTTPSSLVerifyEnvName, value: '1');
+        $this->setEnv(name: Consul::HTTPSSLVerifyEnvName, value: '1');
         try {
             $c = new Config();
             self::assertTrue($c->isInsecureSkipVerify());
         } finally {
-            self::clearEnv(Consul::HTTPSSLVerifyEnvName);
+            $this->clearEnv(Consul::HTTPSSLVerifyEnvName);
         }
     }
 
     public function testEnvInsecureSkipVerifySupportsTruthyStringValues(): void
     {
         foreach (['true', 'yes', 'on'] as $value) {
-            self::setEnv(name: Consul::HTTPSSLVerifyEnvName, value: $value);
+            $this->setEnv(name: Consul::HTTPSSLVerifyEnvName, value: $value);
             try {
                 $c = new Config();
                 self::assertTrue($c->isInsecureSkipVerify(), sprintf('Expected "%s" to coerce to true', $value));
             } finally {
-                self::clearEnv(Consul::HTTPSSLVerifyEnvName);
+                $this->clearEnv(Consul::HTTPSSLVerifyEnvName);
             }
         }
     }
@@ -247,68 +247,68 @@ final class ConfigTest extends TestCase
     public function testEnvInsecureSkipVerifySupportsFalsyStringValues(): void
     {
         foreach (['0', 'false', 'no', 'off'] as $value) {
-            self::setEnv(name: Consul::HTTPSSLVerifyEnvName, value: $value);
+            $this->setEnv(name: Consul::HTTPSSLVerifyEnvName, value: $value);
             try {
                 $c = new Config();
                 self::assertFalse($c->isInsecureSkipVerify(), sprintf('Expected "%s" to coerce to false', $value));
             } finally {
-                self::clearEnv(Consul::HTTPSSLVerifyEnvName);
+                $this->clearEnv(Consul::HTTPSSLVerifyEnvName);
             }
         }
     }
 
     public function testExplicitDefaultAddressIsNotOverriddenByEnv(): void
     {
-        self::setEnv(name: Consul::HTTPAddrEnvName, value: '192.168.99.99:8500');
+        $this->setEnv(name: Consul::HTTPAddrEnvName, value: '192.168.99.99:8500');
         try {
             $c = new Config(Address: Config::DEFAULT_ADDRESS);
             self::assertSame(Config::DEFAULT_ADDRESS, $c->getAddress());
         } finally {
-            self::clearEnv(Consul::HTTPAddrEnvName);
+            $this->clearEnv(Consul::HTTPAddrEnvName);
         }
     }
 
     public function testExplicitDefaultSchemeIsNotOverriddenByEnv(): void
     {
-        self::setEnv(name: Consul::HTTPSSLEnvName, value: '1');
+        $this->setEnv(name: Consul::HTTPSSLEnvName, value: '1');
         try {
             $c = new Config(Scheme: Config::DEFAULT_SCHEME);
             self::assertSame(Config::DEFAULT_SCHEME, $c->getScheme());
         } finally {
-            self::clearEnv(Consul::HTTPSSLEnvName);
+            $this->clearEnv(Consul::HTTPSSLEnvName);
         }
     }
 
     public function testExplicitEmptyTokenIsNotOverriddenByEnv(): void
     {
-        self::setEnv(name: Consul::HTTPTokenEnvName, value: 'env-token');
+        $this->setEnv(name: Consul::HTTPTokenEnvName, value: 'env-token');
         try {
             $c = new Config(Token: '');
             self::assertSame('', $c->getToken());
         } finally {
-            self::clearEnv(Consul::HTTPTokenEnvName);
+            $this->clearEnv(Consul::HTTPTokenEnvName);
         }
     }
 
     public function testExplicitFalseSkipVerifyOverridesEnv(): void
     {
-        self::setEnv(name: Consul::HTTPSSLVerifyEnvName, value: '1');
+        $this->setEnv(name: Consul::HTTPSSLVerifyEnvName, value: '1');
         try {
             $c = new Config(InsecureSkipVerify: false);
             self::assertFalse($c->isInsecureSkipVerify());
         } finally {
-            self::clearEnv(Consul::HTTPSSLVerifyEnvName);
+            $this->clearEnv(Consul::HTTPSSLVerifyEnvName);
         }
     }
 
-    private static function setEnv(string $name, string $value): void
+    private function setEnv(string $name, string $value): void
     {
         putenv(sprintf('%s=%s', $name, $value));
         $_ENV[$name] = $value;
         $_SERVER[$name] = $value;
     }
 
-    private static function clearEnv(string $name): void
+    private function clearEnv(string $name): void
     {
         putenv($name);
         unset($_ENV[$name], $_SERVER[$name]);

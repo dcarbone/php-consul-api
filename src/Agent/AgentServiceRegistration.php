@@ -209,9 +209,7 @@ class AgentServiceRegistration extends AbstractType
 
     public function setTaggedAddress(string $Tag, ServiceAddress $Address): self
     {
-        if (null === $this->TaggedAddresses) {
-            $this->TaggedAddresses = [];
-        }
+        $this->TaggedAddresses ??= [];
         $this->TaggedAddresses[$Tag] = $Address;
         return $this;
     }

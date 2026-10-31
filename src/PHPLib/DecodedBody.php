@@ -24,7 +24,7 @@ final class DecodedBody
 {
     use ErrorField;
 
-    public mixed $Decoded = null;
+    public mixed $Decoded;
 
     public function __construct(mixed $decoded, null|Error $err)
     {

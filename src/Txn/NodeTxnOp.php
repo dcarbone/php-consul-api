@@ -41,9 +41,7 @@ class NodeTxnOp extends AbstractType
             return;
         }
         $this->setVerb($Verb);
-        if (null === $Node) {
-            $Node = new Node();
-        }
+        $Node ??= new Node();
         $this->Node = $Node;
     }
 

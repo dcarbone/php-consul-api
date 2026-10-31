@@ -204,9 +204,7 @@ class CatalogService extends AbstractType
 
     public function setServiceTaggedAddress(string $Tag, ServiceAddress $ServiceAddress): self
     {
-        if (null === $this->ServiceTaggedAddresses) {
-            $this->ServiceTaggedAddresses = [];
-        }
+        $this->ServiceTaggedAddresses ??= [];
         $this->ServiceTaggedAddresses[$Tag] = $ServiceAddress;
         return $this;
     }

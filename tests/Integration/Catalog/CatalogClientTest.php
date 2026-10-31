@@ -44,7 +44,6 @@ final class CatalogClientTest extends AbstractIntegrationTestCase
     public const ServiceAddress = '10.2.3.4';
     public const ServiceTag     = 'tagged';
 
-    /** @var bool */
     protected static bool $singlePerClass = true;
 
     public function testCanConstructClient(): void
@@ -123,9 +122,9 @@ final class CatalogClientTest extends AbstractIntegrationTestCase
             foreach ($service as $s) {
                 self::assertInstanceOf(CatalogService::class, $s);
             }
-        } catch (AssertionFailedError $e) {
+        } catch (AssertionFailedError $assertionFailedError) {
             var_dump($service);
-            throw $e;
+            throw $assertionFailedError;
         }
     }
 
@@ -157,9 +156,9 @@ final class CatalogClientTest extends AbstractIntegrationTestCase
             self::assertIsArray($services);
             self::assertCount(2, $services);
             self::assertContainsOnly('array', $services);
-        } catch (AssertionFailedError $e) {
+        } catch (AssertionFailedError $assertionFailedError) {
             var_dump($services);
-            throw $e;
+            throw $assertionFailedError;
         }
     }
 
@@ -199,9 +198,9 @@ final class CatalogClientTest extends AbstractIntegrationTestCase
             self::assertIsArray($dcs);
             self::assertCount(1, $dcs);
             self::assertSame('dc1', $dcs[0]);
-        } catch (AssertionFailedError $e) {
+        } catch (AssertionFailedError $assertionFailedError) {
             var_dump($dcs);
-            throw $e;
+            throw $assertionFailedError;
         }
     }
 
@@ -218,9 +217,9 @@ final class CatalogClientTest extends AbstractIntegrationTestCase
             // TODO: figure out why there are 2 nodes returned by this call...
             self::assertCount(2, $nodes);
             self::assertContainsOnlyInstancesOf(Node::class, $nodes);
-        } catch (AssertionFailedError $e) {
+        } catch (AssertionFailedError $assertionFailedError) {
             var_dump($nodes);
-            throw $e;
+            throw $assertionFailedError;
         }
     }
 
@@ -244,9 +243,9 @@ final class CatalogClientTest extends AbstractIntegrationTestCase
             }
 
             self::assertNotNull($id, 'Unable to get node with ID');
-        } catch (AssertionFailedError $e) {
+        } catch (AssertionFailedError $assertionFailedError) {
             var_dump($nodes);
-            throw $e;
+            throw $assertionFailedError;
         }
 
         [$node, $qm, $err] = $client->Node($id);
@@ -254,9 +253,9 @@ final class CatalogClientTest extends AbstractIntegrationTestCase
             self::assertNull($err, 'CatalogClient::node returned error: ' . $err);
             self::assertInstanceOf(QueryMeta::class, $qm);
             self::assertInstanceOf(CatalogNode::class, $node);
-        } catch (AssertionFailedError $e) {
+        } catch (AssertionFailedError $assertionFailedError) {
             var_dump($node);
-            throw $e;
+            throw $assertionFailedError;
         }
     }
 

@@ -119,13 +119,13 @@ class Coordinate extends AbstractType
     public function IsValid(): bool
     {
         foreach ($this->Vec as $vec) {
-            if (!self::_componentIsValid($vec)) {
+            if (!$this->_componentIsValid($vec)) {
                 return false;
             }
         }
-        return self::_componentIsValid($this->Error) &&
-            self::_componentIsValid($this->Adjustment) &&
-            self::_componentIsValid($this->Height);
+        return $this->_componentIsValid($this->Error) &&
+            $this->_componentIsValid($this->Adjustment) &&
+            $this->_componentIsValid($this->Height);
     }
 
     public function IsCompatibleWith(self $other): bool
@@ -168,7 +168,7 @@ class Coordinate extends AbstractType
         return self::_magnitude(self::_diff($this->Vec, $other->Vec)) + $this->Height + $other->Height;
     }
 
-    private static function _componentIsValid(float $f): bool
+    private function _componentIsValid(float $f): bool
     {
         return !is_nan($f) && is_finite($f);
     }
@@ -216,12 +216,11 @@ class Coordinate extends AbstractType
 
     /**
      * @param array<float> $vec
-     * @return float
      */
     public static function _magnitude(array $vec): float
     {
         $sum = 0.0;
-        foreach ($vec as $k => $v) {
+        foreach ($vec as $v) {
             $sum += ($v * $v);
         }
         return sqrt($sum);
@@ -239,7 +238,7 @@ class Coordinate extends AbstractType
             return new CoordinateUnitVectorAt(vec: self::_mul($ret, 1.0 / $mag), mag: $mag);
         }
 
-        foreach ($ret as $k => &$v) {
+        foreach ($ret as &$v) {
             $v = self::_randomFloat() - 0.5;
         }
 
@@ -255,6 +254,7 @@ class Coordinate extends AbstractType
     private static function _randomFloat(): float
     {
         if (PHP_VERSION_ID >= 80300) {
+            // @phpstan-ignore method.notFound (guarded by PHP_VERSION_ID; analysis runs against PHP 8.2)
             return (new \Random\Randomizer())->getFloat(0.0, 1.0);
         }
         return mt_rand() / mt_getrandmax();

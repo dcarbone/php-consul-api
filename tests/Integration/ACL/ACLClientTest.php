@@ -40,14 +40,14 @@ final class ACLClientTest extends AbstractIntegrationTestCase
         ConsulManager::startSingleDevACL();
     }
 
-    private static function managementClient(): ACLClient
+    private function managementClient(): ACLClient
     {
         return new ACLClient(ConsulManager::testConfig(ConsulManager::MANAGEMENT_TOKEN));
     }
 
     public function testTokenReadSelf(): void
     {
-        $client = self::managementClient();
+        $client = $this->managementClient();
 
         [$token, $qm, $err] = $client->TokenReadSelf();
         self::assertNull($err, 'TokenReadSelf() returned error: ' . $err);
@@ -62,7 +62,7 @@ final class ACLClientTest extends AbstractIntegrationTestCase
      */
     public function testPolicyCreate(): string
     {
-        $client = self::managementClient();
+        $client = $this->managementClient();
 
         $policy = new ACLPolicy(
             Name: 'php-consul-api-test-policy',
@@ -86,7 +86,7 @@ final class ACLClientTest extends AbstractIntegrationTestCase
     #[Depends('testPolicyCreate')]
     public function testTokenCreate(string $policyID): array
     {
-        $client = self::managementClient();
+        $client = $this->managementClient();
 
         $token = new ACLToken(
             Description: 'php-consul-api-test-token',
@@ -113,7 +113,7 @@ final class ACLClientTest extends AbstractIntegrationTestCase
     {
         [$accessorID] = $ids;
 
-        $client = self::managementClient();
+        $client = $this->managementClient();
 
         [$token, $qm, $err] = $client->TokenRead($accessorID);
         self::assertNull($err, 'TokenRead() returned error: ' . $err);
@@ -132,7 +132,7 @@ final class ACLClientTest extends AbstractIntegrationTestCase
     #[Depends('testTokenRead')]
     public function testTokenList(array $ids): array
     {
-        $client = self::managementClient();
+        $client = $this->managementClient();
 
         [$entries, $qm, $err] = $client->TokenList();
         self::assertNull($err, 'TokenList() returned error: ' . $err);
@@ -152,7 +152,7 @@ final class ACLClientTest extends AbstractIntegrationTestCase
     {
         [$accessorID, $policyID] = $ids;
 
-        $client = self::managementClient();
+        $client = $this->managementClient();
 
         [$wm, $err] = $client->TokenDelete($accessorID);
         self::assertNull($err, 'TokenDelete() returned error: ' . $err);
@@ -164,7 +164,7 @@ final class ACLClientTest extends AbstractIntegrationTestCase
     #[Depends('testTokenDelete')]
     public function testPolicyDelete(string $policyID): void
     {
-        $client = self::managementClient();
+        $client = $this->managementClient();
 
         [$wm, $err] = $client->PolicyDelete($policyID);
         self::assertNull($err, 'PolicyDelete() returned error: ' . $err);

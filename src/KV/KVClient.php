@@ -40,7 +40,7 @@ class KVClient extends AbstractClient
         $resp = $this->_doGet($this->_readPath($key), $opts);
         $ret = new KVPairResponse();
         $ret->Err = $resp->Err;
-        if (null !== $resp->Err) {
+        if ($resp->hasErr()) {
             return $ret;
         }
 
@@ -88,7 +88,7 @@ class KVClient extends AbstractClient
         $resp = $this->_do($r);
         $ret = new KVPairsResponse();
 
-        if (null !== $resp->Err) {
+        if ($resp->hasErr()) {
             $ret->setErr($resp->Err);
             return $ret;
         }
@@ -227,7 +227,7 @@ class KVClient extends AbstractClient
         $ret = new KVTxnAPIResponse();
 
         $resp = $this->_doPut('v1/txn', $txn, $opts);
-        if (null !== $resp->Err) {
+        if ($resp->hasErr()) {
             $ret->Err = $resp->Err;
             return $ret;
         }

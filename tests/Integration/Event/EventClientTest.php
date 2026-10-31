@@ -28,7 +28,6 @@ use PHPUnit\Framework\Attributes\Depends;
 
 final class EventClientTest extends AbstractIntegrationTestCase
 {
-    /** @var bool */
     protected static bool $singlePerClass = true;
 
     public function testCanConstructClient(): void

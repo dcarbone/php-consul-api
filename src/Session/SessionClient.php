@@ -55,7 +55,7 @@ class SessionClient extends AbstractClient
         $ret = new SessionEntriesWriteResponse();
 
         $resp = $this->_doPut(sprintf('v1/session/renew/%s', $id), null, $opts);
-        if (null !== $resp->Err) {
+        if ($resp->hasErr()) {
             $ret->Err = $resp->Err;
             return $ret;
         }
@@ -122,7 +122,7 @@ class SessionClient extends AbstractClient
         $resp = $this->_requireOK($this->_doPut($path, $body, $opts));
         $ret  = new ValuedWriteStringResponse();
 
-        if (null !== $resp->Err) {
+        if ($resp->hasErr()) {
             $ret->Err = $resp->Err;
             return $ret;
         }

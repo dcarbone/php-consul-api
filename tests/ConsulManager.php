@@ -41,8 +41,6 @@ final class ConsulManager
 
     /**
      * Start up single instance of Consul Agent with specified flags
-     *
-     * @param string $flags
      */
     public static function startSingle(string $flags): void
     {
@@ -89,10 +87,6 @@ final class ConsulManager
         }
     }
 
-    /**
-     * @param string $Token
-     * @return \DCarbone\PHPConsulAPI\Config
-     */
     public static function testConfig(string $Token = ''): Config
     {
         return new Config(

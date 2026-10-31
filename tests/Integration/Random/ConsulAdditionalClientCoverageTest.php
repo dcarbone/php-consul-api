@@ -34,7 +34,6 @@ use PHPUnit\Framework\Attributes\Depends;
  */
 final class ConsulAdditionalClientCoverageTest extends AbstractIntegrationTestCase
 {
-    /** @var bool */
     protected static bool $singlePerClass = true;
 
     public function testCanConstructViaConsulForAdditionalClients(): void

@@ -40,7 +40,6 @@ final class AgentClientTest extends AbstractIntegrationTestCase
 {
     public const Service1Name = 'test_1_service';
     public const Service2Name = 'test_2_service';
-    /** @var bool */
     protected static bool $singlePerClass = true;
 
     public function testCanConstructAgentClient(): void
@@ -149,12 +148,12 @@ final class AgentClientTest extends AbstractIntegrationTestCase
 
             // NOTE: will always contain "consul" service
             self::assertCount(2, $svcs);
-        } catch (AssertionFailedError $e) {
+        } catch (AssertionFailedError $assertionFailedError) {
             echo "\nservices list:\n";
             var_dump($svcs);
             echo "\n";
 
-            throw $e;
+            throw $assertionFailedError;
         }
     }
 
@@ -173,12 +172,12 @@ final class AgentClientTest extends AbstractIntegrationTestCase
             self::assertIsArray($svcs);
             self::assertContainsOnlyInstancesOf(AgentService::class, $svcs);
             self::assertCount(1, $svcs);
-        } catch (AssertionFailedError $e) {
+        } catch (AssertionFailedError $assertionFailedError) {
             echo "\nservices list:\n";
             var_dump($svcs);
             echo "\n";
 
-            throw $e;
+            throw $assertionFailedError;
         }
     }
 
@@ -209,12 +208,12 @@ final class AgentClientTest extends AbstractIntegrationTestCase
             self::assertIsArray($svcs);
             self::assertContainsOnlyInstancesOf(AgentService::class, $svcs);
             self::assertCount(2, $svcs);
-        } catch (AssertionFailedError $e) {
+        } catch (AssertionFailedError $assertionFailedError) {
             echo "\nservices list:\n";
             var_dump($svcs);
             echo "\n";
 
-            throw $e;
+            throw $assertionFailedError;
         }
 
         $err = $client->ServiceDeregister(self::Service1Name);

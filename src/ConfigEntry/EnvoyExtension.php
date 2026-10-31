@@ -86,9 +86,7 @@ class EnvoyExtension extends AbstractType
 
     public function setArgument(string $k, mixed $v): self
     {
-        if (null === $this->Arguments) {
-            $this->Arguments = [];
-        }
+        $this->Arguments ??= [];
         $this->Arguments[$k] = $v;
         return $this;
     }
@@ -103,7 +101,7 @@ class EnvoyExtension extends AbstractType
             return $this;
         }
         $this->Arguments = [];
-        foreach ($Arguments as $k => $v) {
+        foreach ((array)$Arguments as $k => $v) {
             $this->setArgument($k, $v);
         }
         return $this;

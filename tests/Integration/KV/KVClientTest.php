@@ -63,7 +63,7 @@ final class KVClientTest extends AbstractIntegrationTestCase
     {
         $client = new KVClient(ConsulManager::testConfig());
 
-        [$wm, $err] = $client->Put(new KVPair(Key: 'test/flags', Value: 'flagged', Flags: 42));
+        [$wm, $err] = $client->Put(new KVPair(Key: 'test/flags', Flags: 42, Value: 'flagged'));
         self::assertNull($err);
         self::assertInstanceOf(WriteMeta::class, $wm);
 

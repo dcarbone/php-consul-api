@@ -54,8 +54,8 @@ final class HealthClientTest extends AbstractIntegrationTestCase
             ID: self::ServiceID,
             Name: self::ServiceName,
             Tags: ['blue', 'v1'],
-            Address: '127.0.0.1',
             Port: 12345,
+            Address: '127.0.0.1',
             Check: new AgentServiceCheck(
                 CheckID: self::CheckID,
                 TTL: '30s',

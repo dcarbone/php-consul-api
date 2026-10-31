@@ -86,8 +86,8 @@ final class AgentCheckRegistrationTest extends TestCase
             ID: 'chk-1',
             ServiceID: 'svc-1',
             CheckID: 'cid',
-            HTTP: 'http://localhost/health',
             Interval: '5s',
+            HTTP: 'http://localhost/health',
             Namespace: 'ns',
             Partition: 'pt',
         );

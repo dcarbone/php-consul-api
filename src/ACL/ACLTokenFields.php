@@ -288,7 +288,7 @@ trait ACLTokenFields
         return $this;
     }
 
-    protected function _jsonUnserializeField(string $k, mixed $v, object $n): bool
+    protected function _jsonUnserializeField(string $k, mixed $v, self $n): bool
     {
         if ('Policies' === $k) {
             foreach ($v as $vv) {
@@ -353,10 +353,10 @@ trait ACLTokenFields
             $out->ExpirationTTL = $this->ExpirationTTL;
         }
         if (null !== $this->ExpirationTime) {
-            $out->ExpirationTime = $this->ExpirationTime->format(DATE_RFC3339);
+            $out->ExpirationTime = $this->ExpirationTime->RFC3339Nano();
         }
         if (null !== $this->CreateTime && !$this->CreateTime->isZero()) {
-            $out->CreateTime = $this->CreateTime->format(DATE_RFC3339);
+            $out->CreateTime = $this->CreateTime->RFC3339Nano();
         }
         $out->Hash = $this->Hash;
         if ('' !== $this->Rules) {

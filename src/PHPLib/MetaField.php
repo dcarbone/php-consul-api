@@ -35,9 +35,7 @@ trait MetaField
 
     public function setMetaKey(string $k, string $v): self
     {
-        if (null === $this->Meta) {
-            $this->Meta = [];
-        }
+        $this->Meta ??= [];
         $this->Meta[$k] = $v;
         return $this;
     }

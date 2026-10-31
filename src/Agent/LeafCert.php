@@ -197,10 +197,10 @@ class LeafCert extends AbstractType
         $out->Service = $this->Service;
         $out->ServiceURI = $this->ServiceURI;
         if (null !== $this->ValidAfter && !$this->ValidAfter->isZero()) {
-            $out->ValidAfter = $this->ValidAfter->format(DATE_RFC3339);
+            $out->ValidAfter = $this->ValidAfter->RFC3339Nano();
         }
         if (null !== $this->ValidBefore && !$this->ValidBefore->isZero()) {
-            $out->ValidBefore = $this->ValidBefore->format(DATE_RFC3339);
+            $out->ValidBefore = $this->ValidBefore->RFC3339Nano();
         }
         $out->CreateIndex = $this->CreateIndex;
         $out->ModifyIndex = $this->ModifyIndex;

@@ -23,9 +23,7 @@ use PHPUnit\Framework\TestCase;
 
 abstract class AbstractIntegrationTestCase extends TestCase
 {
-    /** @var bool */
     protected static bool $singlePerClass = false;
-    /** @var bool */
     protected bool $singlePerTest = false;
 
     public static function setUpBeforeClass(): void

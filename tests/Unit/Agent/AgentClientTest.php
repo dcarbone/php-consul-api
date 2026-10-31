@@ -471,7 +471,7 @@ final class AgentClientTest extends TestCase
         ], $history);
 
         $err = $client->ServiceRegister(
-            new AgentServiceRegistration(Name: 'web', Address: '127.0.0.1', Port: 8080),
+            new AgentServiceRegistration(Name: 'web', Port: 8080, Address: '127.0.0.1'),
             new ServiceRegisterOpts(ReplaceExistingChecks: true, Token: 'register-token'),
         );
 

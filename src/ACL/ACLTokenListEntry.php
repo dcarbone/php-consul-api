@@ -399,10 +399,10 @@ class ACLTokenListEntry extends AbstractType
             $out->AuthMethod = $this->AuthMethod;
         }
         if (null !== $this->ExpirationTime) {
-            $out->ExpirationTime = $this->ExpirationTime->format(DATE_RFC3339);
+            $out->ExpirationTime = $this->ExpirationTime->RFC3339Nano();
         }
         if (null !== $this->CreateTime) {
-            $out->CreateTime = $this->CreateTime->format(DATE_RFC3339);
+            $out->CreateTime = $this->CreateTime->RFC3339Nano();
         }
         $out->Hash = $this->Hash;
         if ('' !== $this->Namespace) {

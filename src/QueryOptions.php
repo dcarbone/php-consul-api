@@ -343,10 +343,8 @@ class QueryOptions implements RequestOptions
         if ('' !== $this->Filter) {
             $r->params->set('filter', $this->Filter);
         }
-        if ([] !== $this->NodeMeta) {
-            foreach ($this->NodeMeta as $k => $v) {
-                $r->params->add('node-meta', "{$k}:{$v}");
-            }
+        foreach ($this->NodeMeta as $k => $v) {
+            $r->params->add('node-meta', "{$k}:{$v}");
         }
         if (0 !== $this->RelayFactor) {
             $r->params->set('relay-factor', (string)$this->RelayFactor);

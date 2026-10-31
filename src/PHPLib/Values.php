@@ -24,14 +24,13 @@ namespace DCarbone\PHPConsulAPI\PHPLib;
  * @implements \IteratorAggregate<string,array<string>>
  * @implements \ArrayAccess<string,array<string>>
  */
-class Values implements \IteratorAggregate, \ArrayAccess, \Countable, \JsonSerializable
+class Values implements \IteratorAggregate, \ArrayAccess, \Countable, \JsonSerializable, \Stringable
 {
     /** @var array<string,array<string>> */
     private array $values = [];
 
     /**
      * @param array<string,array<string>> $values
-     * @return self
      */
     public static function fromArray(array $values): self
     {
@@ -52,16 +51,11 @@ class Values implements \IteratorAggregate, \ArrayAccess, \Countable, \JsonSeria
     }
 
     /**
-     * @param string $key
      * @return array<string>
      */
     public function getAll(string $key): array
     {
-        if (isset($this->values[$key])) {
-            return $this->values[$key];
-        }
-
-        return [];
+        return $this->values[$key] ?? [];
     }
 
     public function set(string $key, string ...$value): void
@@ -114,7 +108,6 @@ class Values implements \IteratorAggregate, \ArrayAccess, \Countable, \JsonSeria
     }
 
     /**
-     * @param mixed $offset
      * @return array<string>
      */
     public function offsetGet(mixed $offset): array
@@ -125,7 +118,6 @@ class Values implements \IteratorAggregate, \ArrayAccess, \Countable, \JsonSeria
     /**
      * @param string $offset
      * @param array<string> $value
-     * @return void
      */
     public function offsetSet(mixed $offset, mixed $value): void
     {

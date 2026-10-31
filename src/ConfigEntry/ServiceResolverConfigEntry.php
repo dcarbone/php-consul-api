@@ -141,9 +141,7 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
 
     public function setSubsetKey(string $key, ServiceResolverSubset $subset): self
     {
-        if (null === $this->Subsets) {
-            $this->Subsets = [];
-        }
+        $this->Subsets ??= [];
         $this->Subsets[$key] = $subset;
         return $this;
     }
@@ -184,9 +182,7 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
 
     public function setFailoverKey(string $key, ServiceResolverFailover $failover): self
     {
-        if (null === $this->Failover) {
-            $this->Failover = [];
-        }
+        $this->Failover ??= [];
         $this->Failover[$key] = $failover;
         return $this;
     }

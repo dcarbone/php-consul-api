@@ -273,7 +273,7 @@ class AutopilotServer extends AbstractType
             if ('lastContact' === $k) {
                 $n->setLastContact($v);
             } elseif ('StableSince' === $k) {
-                $n->StableSince = parse_time($v);
+                $n->StableSince = parse_time($v) ?? new Time\Time();
             } elseif ('Meta' === $k) {
                 $n->setMeta($v);
             } elseif ('Status' === $k) {

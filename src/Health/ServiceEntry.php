@@ -77,9 +77,7 @@ class ServiceEntry extends AbstractType
 
     public function setChecks(null|HealthChecks $Checks): self
     {
-        if (null === $Checks) {
-            $Checks = new HealthChecks();
-        }
+        $Checks ??= new HealthChecks();
         $this->Checks = $Checks;
         return $this;
     }

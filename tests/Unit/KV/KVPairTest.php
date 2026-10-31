@@ -104,7 +104,7 @@ final class KVPairTest extends TestCase
 
     public function testJsonSerialize(): void
     {
-        $kvp = new KVPair(Key: 'foo', Value: 'bar', Flags: 1);
+        $kvp = new KVPair(Key: 'foo', Flags: 1, Value: 'bar');
         $out = $kvp->jsonSerialize();
 
         self::assertInstanceOf(\stdClass::class, $out);

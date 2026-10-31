@@ -196,10 +196,10 @@ class CARoot extends AbstractType
         $out->RootCert = $this->RootCertPEM;
         $out->Active = $this->Active;
         if (null !== $this->NotBefore && !$this->NotBefore->isZero()) {
-            $out->NotBefore = $this->NotBefore->format(DATE_RFC3339);
+            $out->NotBefore = $this->NotBefore->RFC3339Nano();
         }
         if (null !== $this->NotAfter && !$this->NotAfter->isZero()) {
-            $out->NotAfter = $this->NotAfter->format(DATE_RFC3339);
+            $out->NotAfter = $this->NotAfter->RFC3339Nano();
         }
         if (null !== $this->DaysRemaining) {
             $out->DaysRemaining = $this->DaysRemaining;

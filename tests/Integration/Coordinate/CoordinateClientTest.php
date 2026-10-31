@@ -32,7 +32,6 @@ final class CoordinateClientTest extends AbstractIntegrationTestCase
 {
     public const ZeroThreshold = 1.0e-6;
 
-    /** @var bool */
     protected static bool $singlePerClass = true;
 
     public function testCanConstructClient(): void
@@ -267,9 +266,9 @@ final class CoordinateClientTest extends AbstractIntegrationTestCase
             foreach ($vec1 as $k => $v) {
                 $this->verifyEqualFloats($v, $vec2[$k]);
             }
-        } catch (AssertionFailedError $e) {
+        } catch (AssertionFailedError $assertionFailedError) {
             var_dump($vec1, $vec2);
-            throw $e;
+            throw $assertionFailedError;
         }
     }
 }

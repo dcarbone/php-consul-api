@@ -168,7 +168,7 @@ class OIDCAuthMethodConfig extends AbstractType
         if (null === $ClaimMappings) {
             return $this;
         }
-        foreach ($ClaimMappings as $k => $v) {
+        foreach ((array)$ClaimMappings as $k => $v) {
             $this->setClaimMapping($k, $v);
         }
         return $this;
@@ -197,7 +197,7 @@ class OIDCAuthMethodConfig extends AbstractType
         if (null === $ListClaimMappings) {
             return $this;
         }
-        foreach ($ListClaimMappings as $k => $v) {
+        foreach ((array)$ListClaimMappings as $k => $v) {
             $this->setListClaimMapping($k, $v);
         }
         return $this;

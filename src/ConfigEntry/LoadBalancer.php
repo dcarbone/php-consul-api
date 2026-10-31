@@ -87,16 +87,13 @@ class LoadBalancer extends AbstractType
     }
 
     /**
-     * @return array<\DCarbone\PHPConsulAPI\ConfigEntry\HashPolicy>
+     * @return null|array<\DCarbone\PHPConsulAPI\ConfigEntry\HashPolicy>
      */
-    public function getHashPolicies(): array
+    public function getHashPolicies(): null|array
     {
         return $this->HashPolicies;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\ConfigEntry\HashPolicy ...$HashPolicies
-     */
     public function setHashPolicies(HashPolicy ...$HashPolicies): self
     {
         $this->HashPolicies = $HashPolicies;

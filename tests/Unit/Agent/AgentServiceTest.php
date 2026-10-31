@@ -29,9 +29,9 @@ final class AgentServiceTest extends TestCase
             Kind: ServiceKind::ConnectProxy,
             ID: 'svc-1',
             Service: 'web',
+            Tags: ['v1'],
             Port: 8080,
             Address: '10.0.0.1',
-            Tags: ['v1'],
         );
         self::assertSame(ServiceKind::ConnectProxy, $s->getKind());
         self::assertSame('svc-1', $s->getID());

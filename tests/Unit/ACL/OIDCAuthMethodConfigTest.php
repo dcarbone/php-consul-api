@@ -46,14 +46,14 @@ final class OIDCAuthMethodConfigTest extends TestCase
             KeyAlgorithm: 'RS256',
         );
         $c = new OIDCAuthMethodConfig(
+            BoundAudiences: ['aud1'],
+            ClaimMappings: ['sub' => 'name'],
             OIDCDiscoveryURL: 'https://oidc.example.com',
             OIDCClientID: 'client-id',
             OIDCClientSecret: 'client-secret',
             OIDCClientAssertion: $assertion,
             OIDCClientUsePKCE: true,
             AllowedRedirectURIs: ['https://example.com/callback'],
-            BoundAudiences: ['aud1'],
-            ClaimMappings: ['sub' => 'name'],
         );
         self::assertSame('https://oidc.example.com', $c->getOIDCDiscoveryURL());
         self::assertSame('client-id', $c->getOIDCClientID());

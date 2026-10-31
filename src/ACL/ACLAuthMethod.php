@@ -160,7 +160,7 @@ class ACLAuthMethod extends AbstractType
     {
         $this->Config = [];
         if (null !== $Config) {
-            foreach ($Config as $k => $v) {
+            foreach ((array)$Config as $k => $v) {
                 $this->Config[$k] = $v;
             }
         }

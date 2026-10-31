@@ -30,7 +30,6 @@ class CatalogNodeServiceList extends AbstractType
     public array $Services;
 
     /**
-     * @param \DCarbone\PHPConsulAPI\Catalog\Node|null $Node
      * @param array<\DCarbone\PHPConsulAPI\Agent\AgentService> $Services
      * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */

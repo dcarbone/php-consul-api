@@ -225,7 +225,7 @@ class ServerHealth extends AbstractType
             if ('LastContact' === $k) {
                 $n->setLastContact($v);
             } elseif ('StableSince' === $k) {
-                $n->StableSince = parse_time($v);
+                $n->StableSince = parse_time($v) ?? Time::New();
             } else {
                 $n->{$k} = $v;
             }

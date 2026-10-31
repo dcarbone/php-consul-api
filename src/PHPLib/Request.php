@@ -35,13 +35,13 @@ class Request
 
     public null|Time\Duration $timeout = null;
 
-    private string $scheme;
-    private string $address;
-    private string $path;
+    private readonly string $scheme;
+    private readonly string $address;
+    private readonly string $path;
 
-    private string $method;
+    private readonly string $method;
 
-    private mixed $body;
+    private readonly mixed $body;
 
     public function __construct(string $method, string $path, Config $config, mixed $body)
     {
@@ -122,16 +122,13 @@ class Request
 
     /**
      * Constructs a Psr7 compliant request for use in a Psr7 client.
-     *
-     * @return \Psr\Http\Message\RequestInterface
      */
     public function toPsrRequest(): RequestInterface
     {
         return new Psr7Request(
             $this->method,
             $this->getUri(),
-            $this->header->toPsr7Array(),
-            null
+            $this->header->toPsr7Array()
         );
     }
 

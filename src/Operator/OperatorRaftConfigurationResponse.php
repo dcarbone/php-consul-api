@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\PHPLib\UnmarshalledResponseInterface;
 
 class OperatorRaftConfigurationResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
-    public null|RaftConfiguration $RaftConfiguration;
+    public null|RaftConfiguration $RaftConfiguration = null;
 
     public function getValue(): null|RaftConfiguration
     {

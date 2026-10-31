@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\PHPLib\UnmarshalledResponseInterface;
 
 class AutopilotStateResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
-    public null|AutopilotState $AutopilotState;
+    public null|AutopilotState $AutopilotState = null;
 
     public function getValue(): null|AutopilotState
     {

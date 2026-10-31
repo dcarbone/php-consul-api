@@ -120,9 +120,6 @@ class IngressGatewayConfigEntry extends AbstractType implements ConfigEntry
         return $this->Listeners;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\ConfigEntry\IngressListener ...$Listeners
-     */
     public function setListeners(IngressListener ...$Listeners): self
     {
         $this->Listeners = $Listeners;

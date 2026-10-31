@@ -222,7 +222,7 @@ class OperatorClient extends AbstractClient
         $r = $this->_newGetRequest('v1/operator/license', $opts);
         $r->params->set('signed', '1');
         $resp = $this->_requireOK($this->_do($r));
-        if (null !== $resp->Err) {
+        if ($resp->hasErr()) {
             $ret->Err = $resp->Err;
             return $ret;
         }
@@ -256,7 +256,7 @@ class OperatorClient extends AbstractClient
     {
         $ret = new ValuedWriteStringResponse();
 
-        if (null !== $resp->Err) {
+        if ($resp->hasErr()) {
             $ret->Err = $resp->Err;
             return $ret;
         }
@@ -283,7 +283,7 @@ class OperatorClient extends AbstractClient
     private function _executeBooleanFieldResponse(RequestResponse $resp, string $field): ValuedBoolResponse
     {
         $ret = new ValuedBoolResponse();
-        if (null !== $resp->Err) {
+        if ($resp->hasErr()) {
             $ret->Err = $resp->Err;
             return $ret;
         }
@@ -308,7 +308,7 @@ class OperatorClient extends AbstractClient
     private function _executeStringFieldResponse(RequestResponse $resp, string $field): ValuedStringResponse
     {
         $ret = new ValuedStringResponse();
-        if (null !== $resp->Err) {
+        if ($resp->hasErr()) {
             $ret->Err = $resp->Err;
             return $ret;
         }

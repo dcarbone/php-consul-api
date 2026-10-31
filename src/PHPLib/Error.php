@@ -22,11 +22,11 @@ namespace DCarbone\PHPConsulAPI\PHPLib;
 
 use DCarbone\Go\Time;
 
-class Error implements \JsonSerializable
+class Error implements \JsonSerializable, \Stringable
 {
-    private Time\Time $time;
+    private readonly Time\Time $time;
 
-    private string $message;
+    private readonly string $message;
 
     public function __construct(string $message)
     {
@@ -36,6 +36,9 @@ class Error implements \JsonSerializable
 
     public static function unexpectedResponseCodeError(RequestResponse $resp): self
     {
+        if (null === $resp->Response) {
+            return new self('unexpected response code: no response received');
+        }
         return new self(
             sprintf(
                 'unexpected response code: %d (%s)',

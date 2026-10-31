@@ -31,7 +31,7 @@ final class RequestResponse
 {
     public RequestMeta $RequestMeta;
     public Time\Duration $Duration;
-    public null|ResponseInterface $Response = null;
+    public null|ResponseInterface $Response;
     public null|Error $Err;
 
     public function __construct(RequestMeta $meta, null|string|int|float|\DateInterval|Time\Duration $dur, null|ResponseInterface $resp, null|Error $err)
@@ -60,6 +60,15 @@ final class RequestResponse
     public function getErr(): null|Error
     {
         return $this->Err;
+    }
+
+    /**
+     * @phpstan-assert-if-false null $this->Err
+     * @phpstan-assert-if-false !null $this->Response
+     */
+    public function hasErr(): bool
+    {
+        return null !== $this->Err || null === $this->Response;
     }
 
     public function buildQueryMeta(): QueryMeta

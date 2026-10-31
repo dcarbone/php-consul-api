@@ -13,7 +13,6 @@ use DCarbone\PHPConsulAPITests\Integration\AbstractIntegrationTestCase;
 
 final class SessionClientTest extends AbstractIntegrationTestCase
 {
-    /** @var bool */
     protected static bool $singlePerClass = true;
 
     public function testNoChecksLifecycle(): void

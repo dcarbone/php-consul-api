@@ -68,4 +68,20 @@ final class CARootTest extends TestCase
         self::assertSame('pem', $out->RootCert);
         self::assertSame(365, $out->DaysRemaining);
     }
+
+    public function testNanosecondTimestampsRoundTrip(): void
+    {
+        $obj = new \stdClass();
+        $obj->ID = 'id-1';
+        $obj->NotBefore = '2026-04-03T20:02:59.892792592-05:00';
+        $obj->NotAfter = '2027-01-01T00:00:00.000000001Z';
+
+        $root = CARoot::jsonUnserialize($obj);
+        self::assertNotNull($root->NotBefore);
+        self::assertSame(892792592, $root->NotBefore->Nanosecond());
+
+        $out = $root->jsonSerialize();
+        self::assertSame('2026-04-03T20:02:59.892792592-05:00', $out->NotBefore);
+        self::assertSame('2027-01-01T00:00:00.000000001Z', $out->NotAfter);
+    }
 }

@@ -191,9 +191,9 @@ class ACLReplicationStatus extends AbstractType
     {
         foreach ((array)$decoded as $k => $v) {
             if ('LastSuccess' === $k) {
-                $n->LastSuccess = parse_time($v);
+                $n->LastSuccess = parse_time($v) ?? Time::New();
             } elseif ('LastError' === $k) {
-                $n->LastError = parse_time($v);
+                $n->LastError = parse_time($v) ?? Time::New();
             } else {
                 $n->{$k} = $v;
             }
@@ -210,8 +210,8 @@ class ACLReplicationStatus extends AbstractType
         $out->ReplicatedIndex = $this->ReplicatedIndex;
         $out->ReplicatedRoleIndex = $this->ReplicatedRoleIndex;
         $out->ReplicatedTokenIndex = $this->ReplicatedTokenIndex;
-        $out->LastSuccess = $this->LastSuccess->format(DATE_RFC3339);
-        $out->LastError = $this->LastError->format(DATE_RFC3339);
+        $out->LastSuccess = $this->LastSuccess->RFC3339Nano();
+        $out->LastError = $this->LastError->RFC3339Nano();
         $out->LastErrorMessage = $this->LastErrorMessage;
         return $out;
     }

@@ -50,7 +50,10 @@ class HealthChecks extends AbstractType implements \IteratorAggregate, \Countabl
 
     public function AggregatedStatus(): string
     {
-        $passing = $warning = $critical = $maintenance = false;
+        $passing = false;
+        $warning = false;
+        $critical = false;
+        $maintenance = false;
         foreach ($this->Checks as $check) {
             if (Consul::NodeMaint === $check->CheckID || str_starts_with($check->CheckID, Consul::ServiceMaintPrefix)) {
                 // TODO: Maybe just return maintenance right now...?
@@ -81,9 +84,6 @@ class HealthChecks extends AbstractType implements \IteratorAggregate, \Countabl
         }
         if ($warning) {
             return Consul::HealthWarning;
-        }
-        if ($passing) {
-            return Consul::HealthPassing;
         }
         return Consul::HealthPassing;
     }

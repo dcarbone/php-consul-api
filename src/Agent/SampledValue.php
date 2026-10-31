@@ -159,7 +159,7 @@ class SampledValue extends AbstractType
             return $this;
         }
         $this->Labels = [];
-        foreach ($Labels as $k => $v) {
+        foreach ((array)$Labels as $k => $v) {
             $this->Labels[$k] = $v;
         }
         return $this;

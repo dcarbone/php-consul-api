@@ -77,7 +77,7 @@ class PreparedQueryClient extends AbstractClient
     private function _writeIDResponse(RequestResponse $resp): ValuedWriteStringResponse
     {
         $ret = new ValuedWriteStringResponse();
-        if (null !== $resp->Err) {
+        if ($resp->hasErr()) {
             $ret->Err = $resp->Err;
             return $ret;
         }
