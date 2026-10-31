@@ -226,7 +226,7 @@ class AgentServiceRegistration extends AbstractType
         }
         $this->TaggedAddresses = [];
         foreach ($TaggedAddresses as $k => $v) {
-            $this->setTaggedAddress($k, $v);
+            $this->setTaggedAddress((string)$k, $v);
         }
         return $this;
     }

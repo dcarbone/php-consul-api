@@ -50,7 +50,7 @@ trait ServiceMetaField
             return $this;
         }
         foreach ((array)$ServiceMeta as $k => $v) {
-            $this->setServiceMetaValue($k, $v);
+            $this->setServiceMetaValue((string)$k, $v);
         }
         return $this;
     }

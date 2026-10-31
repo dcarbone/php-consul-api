@@ -50,7 +50,7 @@ trait MetaField
             return $this;
         }
         foreach ((array)$Meta as $k => $v) {
-            $this->setMetaKey($k, $v);
+            $this->setMetaKey((string)$k, $v);
         }
         return $this;
     }

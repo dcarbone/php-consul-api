@@ -50,7 +50,7 @@ trait TaggedAddressField
             return $this;
         }
         foreach ((array)$TaggedAddresses as $k => $v) {
-            $this->setTaggedAddress($k, $v);
+            $this->setTaggedAddress((string)$k, $v);
         }
         return $this;
     }

@@ -36,7 +36,7 @@ class Values implements \IteratorAggregate, \ArrayAccess, \Countable, \JsonSeria
     {
         $out = new self();
         foreach ($values as $hdr => $vals) {
-            $out->add($hdr, ...(array)$vals);
+            $out->add((string)$hdr, ...(array)$vals);
         }
         return $out;
     }

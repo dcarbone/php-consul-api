@@ -159,7 +159,7 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
             return $this;
         }
         foreach ($Subsets as $k => $v) {
-            $this->setSubsetKey($k, $v);
+            $this->setSubsetKey((string)$k, $v);
         }
         return $this;
     }
@@ -200,7 +200,7 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
             return $this;
         }
         foreach ($Failover as $k => $v) {
-            $this->setFailoverKey($k, $v);
+            $this->setFailoverKey((string)$k, $v);
         }
         return $this;
     }
@@ -263,13 +263,13 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
                 $n->DefaultSubset = $v;
             } elseif ('Subsets' === $k) {
                 foreach ($v as $kk => $vv) {
-                    $n->setSubsetKey($kk, ServiceResolverSubset::jsonUnserialize($vv));
+                    $n->setSubsetKey((string)$kk, ServiceResolverSubset::jsonUnserialize($vv));
                 }
             } elseif ('Redirect' === $k) {
                 $n->Redirect = ServiceResolverRedirect::jsonUnserialize($v);
             } elseif ('Failover' === $k) {
                 foreach ($v as $kk => $vv) {
-                    $n->setFailoverKey($kk, ServiceResolverFailover::jsonUnserialize($vv));
+                    $n->setFailoverKey((string)$kk, ServiceResolverFailover::jsonUnserialize($vv));
                 }
             } elseif ('ConnectTimeout' === $k || 'connect_timeout' === $k) {
                 $n->ConnectTimeout = Time::ParseDuration($v);

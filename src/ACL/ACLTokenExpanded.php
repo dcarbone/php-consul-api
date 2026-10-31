@@ -201,7 +201,7 @@ class ACLTokenExpanded extends ACLToken
     {
         $n = new self();
         foreach ((array)$decoded as $k => $v) {
-            if ($n->_jsonUnserializeField($k, $v, $n)) {
+            if ($n->_jsonUnserializeField((string)$k, $v, $n)) {
                 continue;
             }
 

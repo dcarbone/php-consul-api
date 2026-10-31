@@ -50,7 +50,7 @@ trait NodeMetaField
             return $this;
         }
         foreach ((array)$NodeMeta as $k => $v) {
-            $this->setNodeMetaKey($k, $v);
+            $this->setNodeMetaKey((string)$k, $v);
         }
         return $this;
     }

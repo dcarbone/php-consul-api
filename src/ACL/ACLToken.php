@@ -97,7 +97,7 @@ class ACLToken extends AbstractType
     protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
     {
         foreach ((array)$decoded as $k => $v) {
-            if (!$n->_jsonUnserializeField($k, $v, $n)) {
+            if (!$n->_jsonUnserializeField((string)$k, $v, $n)) {
                 $n->{$k} = $v;
             }
         }

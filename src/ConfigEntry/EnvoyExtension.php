@@ -102,7 +102,7 @@ class EnvoyExtension extends AbstractType
         }
         $this->Arguments = [];
         foreach ((array)$Arguments as $k => $v) {
-            $this->setArgument($k, $v);
+            $this->setArgument((string)$k, $v);
         }
         return $this;
     }

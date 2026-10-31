@@ -169,7 +169,7 @@ class OIDCAuthMethodConfig extends AbstractType
             return $this;
         }
         foreach ((array)$ClaimMappings as $k => $v) {
-            $this->setClaimMapping($k, $v);
+            $this->setClaimMapping((string)$k, $v);
         }
         return $this;
     }
@@ -198,7 +198,7 @@ class OIDCAuthMethodConfig extends AbstractType
             return $this;
         }
         foreach ((array)$ListClaimMappings as $k => $v) {
-            $this->setListClaimMapping($k, $v);
+            $this->setListClaimMapping((string)$k, $v);
         }
         return $this;
     }
