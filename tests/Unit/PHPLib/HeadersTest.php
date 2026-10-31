@@ -53,4 +53,18 @@ final class HeadersTest extends TestCase
             $headers->toPsr7Array()
         );
     }
+
+    public function testArrayAccessRemainsCaseInsensitive(): void
+    {
+        $headers = new Headers();
+        $headers['Content-Type'] = ['application/json'];
+
+        self::assertSame(['application/json'], $headers['content-type']);
+        self::assertTrue(isset($headers['CONTENT-TYPE']));
+
+        unset($headers['content-TYPE']);
+
+        self::assertFalse(isset($headers['Content-Type']));
+        self::assertSame([], $headers->toPsr7Array());
+    }
 }

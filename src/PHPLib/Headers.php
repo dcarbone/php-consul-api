@@ -22,13 +22,8 @@ namespace DCarbone\PHPConsulAPI\PHPLib;
 
 class Headers extends Values
 {
-    /** @var array<string,int> */
+    /** @var array<string,string> */
     private array $normalizedKeys = [];
-
-    /** @var array<int,string> */
-    private array $keysByIndex = [];
-
-    private int $nextKeyIndex = 0;
 
     /**
      * @param array<string,array<string>> $values
@@ -45,11 +40,7 @@ class Headers extends Values
     protected function findKey(string $key): null|string
     {
         $normalizedKey = strtolower($key);
-        if (isset($this->normalizedKeys[$normalizedKey])) {
-            return $this->keysByIndex[$this->normalizedKeys[$normalizedKey]];
-        }
-
-        return null;
+        return $this->normalizedKeys[$normalizedKey] ?? null;
     }
 
     public function set(string $key, string ...$value): void
@@ -79,18 +70,11 @@ class Headers extends Values
 
         parent::delete($storedKey);
         $normalizedKey = strtolower($storedKey);
-        $index = $this->normalizedKeys[$normalizedKey];
         unset($this->normalizedKeys[$normalizedKey]);
-        unset($this->keysByIndex[$index]);
-        if ([] === $this->normalizedKeys) {
-            $this->nextKeyIndex = 0;
-        }
     }
 
     private function storeKey(string $key): void
     {
-        $index = $this->nextKeyIndex++;
-        $this->normalizedKeys[strtolower($key)] = $index;
-        $this->keysByIndex[$index] = $key;
+        $this->normalizedKeys[strtolower($key)] = $key;
     }
 }
