@@ -48,7 +48,7 @@ final class HeadersTest extends TestCase
         self::assertSame(
             [
                 'X-Request-Id' => ['abc'],
-                'content-type' => ['application/custom'],
+                'Content-Type' => ['application/custom'],
             ],
             $headers->toPsr7Array()
         );
