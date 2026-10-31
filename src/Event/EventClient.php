@@ -20,6 +20,7 @@ namespace DCarbone\PHPConsulAPI\Event;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractClient;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\WriteOptions;
@@ -57,7 +58,7 @@ class EventClient extends AbstractClient
         return $ret;
     }
 
-    public function IDToIndex(string $uuid): int
+    public function IDToIndex(string $uuid): BigInteger
     {
         if (!preg_match('/^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/', $uuid)) {
             throw new \InvalidArgumentException("{$uuid} is not a valid UUID");
@@ -76,10 +77,6 @@ class EventClient extends AbstractClient
 
         $xorHi = ($lowerHi ^ $upperHi) & 0xffffffff;
         $xorLo = ($lowerLo ^ $upperLo) & 0xffffffff;
-        $low63 = (($xorHi & 0x7fffffff) << 32) | $xorLo;
-        if (0 !== ($xorHi & 0x80000000)) {
-            return PHP_INT_MIN | $low63;
-        }
-        return $low63;
+        return BigInteger::fromBase(sprintf('%08x%08x', $xorHi, $xorLo), 16);
     }
 }

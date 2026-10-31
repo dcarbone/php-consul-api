@@ -99,7 +99,7 @@ final class EventClientTest extends TestCase
 
         $index = $client->IDToIndex('12345678-9012-3456-7890-123456789012');
 
-        self::assertSame(7684341960737989700, $index);
+        self::assertSame('7684341960737989700', (string)$index);
     }
 
     public function testIDToIndexParsesHexCharactersCorrectly(): void
@@ -109,7 +109,7 @@ final class EventClientTest extends TestCase
 
         $index = $client->IDToIndex('abcdefab-cdef-abcd-efab-cdefabcdefab');
 
-        self::assertSame(4928664519370228838, $index);
+        self::assertSame('4928664519370228838', (string)$index);
     }
 
     public function testIDToIndexRejectsInvalidUUID(): void
@@ -124,6 +124,17 @@ final class EventClientTest extends TestCase
         $this->require64BitPHP();
         $client = $this->mockClient([]);
         $index = $client->IDToIndex('80000000-0000-0000-0000-000000000000');
-        self::assertSame(PHP_INT_MIN, $index);
+        self::assertSame('9223372036854775808', (string)$index);
+    }
+
+    public function testHighBitIDToIndexCanBeUsedAsQueryWaitIndex(): void
+    {
+        $this->require64BitPHP();
+        $client = $this->mockClient([]);
+        $index = $client->IDToIndex('00000000-0000-4000-8000-000000000000');
+
+        self::assertSame('9223372036854792192', (string)$index);
+        self::assertSame((string)$index, (string)(new QueryOptions(WaitIndex: $index))->getWaitIndex());
+        self::assertSame((string)$index, (string)(new QueryOptions())->setWaitIndex($index)->getWaitIndex());
     }
 }

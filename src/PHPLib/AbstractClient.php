@@ -75,7 +75,7 @@ abstract class AbstractClient
                 $opts[GuzzleRequestOptions::BODY] = $body;
             } else {
                 $opts[GuzzleRequestOptions::BODY] = encode_json(value: $body, flags: $this->_config->JSONEncodeOpts);
-                if ('' === $r->header->get('Content-Type') && '' === $r->header->get('content-type')) {
+                if (!array_key_exists('content-type', array_change_key_case($r->header->toPsr7Array(), CASE_LOWER))) {
                     $opts[GuzzleRequestOptions::HEADERS] = ['Content-Type' => 'application/json'];
                 }
             }
