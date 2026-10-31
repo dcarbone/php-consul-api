@@ -43,7 +43,7 @@ class Values implements \IteratorAggregate, \ArrayAccess, \Countable, \JsonSeria
 
     public function get(string $key): string
     {
-        return $this->_get($key);
+        return $this->_get($key) ?? '';
     }
 
     /**
