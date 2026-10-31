@@ -29,11 +29,6 @@ class Values implements \IteratorAggregate, \ArrayAccess, \Countable, \JsonSeria
     /** @var array<string,array<string>> */
     protected array $values = [];
 
-    protected function findKey(string $key): null|string
-    {
-        return array_key_exists($key, $this->values) ? $key : null;
-    }
-
     /**
      * @param array<string,array<string>> $values
      */
@@ -41,18 +36,14 @@ class Values implements \IteratorAggregate, \ArrayAccess, \Countable, \JsonSeria
     {
         $out = new self();
         foreach ($values as $hdr => $vals) {
-            $out->add((string)$hdr, ...(array)$vals);
+            $out->_set((string)$hdr, ...(array)$vals);
         }
         return $out;
     }
 
     public function get(string $key): string
     {
-        if (null !== ($storedKey = $this->findKey($key))) {
-            return $this->values[$storedKey][0];
-        }
-
-        return '';
+        return $this->_get($key);
     }
 
     /**
@@ -60,42 +51,64 @@ class Values implements \IteratorAggregate, \ArrayAccess, \Countable, \JsonSeria
      */
     public function getAll(string $key): array
     {
-        return $this->values[$this->findKey($key) ?? $key] ?? [];
+       return $this->_getAll($key);
     }
 
     public function set(string $key, string ...$value): void
     {
-        $this->values[$this->findKey($key) ?? $key] = $value;
+       $this->_set($key, $value);
     }
 
     public function add(string $key, string ...$value): void
     {
-        $storedKey = $this->findKey($key) ?? $key;
-        if (isset($this->values[$storedKey])) {
-            $this->values[$storedKey] = array_merge($this->values[$storedKey], $value);
-        } else {
-            $this->values[$storedKey] = $value;
-        }
+       $this->_add($key, $value);
     }
 
     public function delete(string $key): void
     {
-        if (null !== ($storedKey = $this->findKey($key))) {
-            unset($this->values[$storedKey]);
+        $this->_delete($key);
+    }
+
+    protected function encode(string $v): string
+    {
+        return $v;
+    }
+
+    protected function _get(string $key): null|string
+    {
+        if (isset($this->values[$key]) && count($this->values[$key]) > 0) {
+            return $this->values[$key][0];
         }
+        return null;
+    }
+
+    protected function _getAll(string $key): array
+    {
+        return $this->values[$key] ?? [];
+    }
+
+    protected function _set(string $key, string ...$value): void
+    {
+        $this->values[$key] = $value;
+    }
+
+    protected function _add(string $key, string ...$value): void
+    {
+        if (isset($this->values[$key])) {
+            $this->values[$key] = array_merge($this->values[$key], $value);
+        } else {
+            $this->values[$key] = $value;
+        }
+    }
+
+    protected function _delete(string $key): void
+    {
+        unset($this->values[$key]);
     }
 
     public function count(): int
     {
         return count($this->values);
-    }
-
-    /**
-     * @return array<string,array<string>>
-     */
-    public function toPsr7Array(): array
-    {
-        return $this->values;
     }
 
     /**
@@ -112,11 +125,7 @@ class Values implements \IteratorAggregate, \ArrayAccess, \Countable, \JsonSeria
 
     public function offsetExists(mixed $offset): bool
     {
-        if (is_string($offset)) {
-            return null !== $this->findKey($offset);
-        }
-
-        return array_key_exists($offset, $this->values);
+        return null !== $this->_get((string)$offset);
     }
 
     /**
@@ -124,11 +133,7 @@ class Values implements \IteratorAggregate, \ArrayAccess, \Countable, \JsonSeria
      */
     public function offsetGet(mixed $offset): array
     {
-        if (is_string($offset)) {
-            return $this->values[$this->findKey($offset) ?? $offset] ?? [];
-        }
-
-        return $this->values[$offset] ?? [];
+        return $this->_getAll((string)$offset);
     }
 
     /**
@@ -137,12 +142,12 @@ class Values implements \IteratorAggregate, \ArrayAccess, \Countable, \JsonSeria
      */
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        $this->set($offset, ...(array)$value);
+        $this->_set((string)$offset, ...(array)$value);
     }
 
     public function offsetUnset(mixed $offset): void
     {
-        $this->delete($offset);
+        $this->_delete((string)$offset);
     }
 
     /**
@@ -151,11 +156,6 @@ class Values implements \IteratorAggregate, \ArrayAccess, \Countable, \JsonSeria
     public function jsonSerialize(): array
     {
         return $this->values;
-    }
-
-    protected function encode(string $v): string
-    {
-        return $v;
     }
 
     public function __toString(): string

@@ -22,59 +22,49 @@ namespace DCarbone\PHPConsulAPI\PHPLib;
 
 class Headers extends Values
 {
-    /** @var array<string,string> */
-    private array $normalizedKeys = [];
+    private function _canonicalizeHeaderKey(string $key): string {
+        return str_replace(' ', '-', ucwords(str_replace(['-', '_'], ' ', strtolower($key))));
+    }
+
+    protected function _get(string $key): null|string
+    {
+        $key = $this->_canonicalizeHeaderKey($key);
+        if (isset($this->values[$key]) && count($this->values[$key]) > 0) {
+            return $this->values[$key][0];
+        }
+        return null;
+    }
+
+    protected function _getAll(string $key): array
+    {
+        return $this->values[$this->_canonicalizeHeaderKey($key)] ?? [];
+    }
+
+    protected function _set(string $key, string ...$value): void
+    {
+        $this->values[$this->_canonicalizeHeaderKey($key)] = $value;
+    }
+
+    protected function _add(string $key, string ...$value): void
+    {
+        $key = $this->_canonicalizeHeaderKey($key);
+        if (isset($this->values[$key])) {
+            $this->values[$key] = array_merge($this->values[$key], $value);
+        } else {
+            $this->values[$key] = $value;
+        }
+    }
+
+    protected function _delete(string $key): void
+    {
+        unset($this->values[$this->_canonicalizeHeaderKey($key)]);
+    }
 
     /**
-     * @param array<string,array<string>> $values
+     * @return array<string,array<string>>
      */
-    public static function fromArray(array $values): self
+    public function toPsr7Array(): array
     {
-        $out = new self();
-        foreach ($values as $header => $items) {
-            $out->add((string)$header, ...(array)$items);
-        }
-        return $out;
-    }
-
-    protected function findKey(string $key): null|string
-    {
-        $normalizedKey = strtolower($key);
-        return $this->normalizedKeys[$normalizedKey] ?? null;
-    }
-
-    public function set(string $key, string ...$value): void
-    {
-        $storedKey = $this->findKey($key);
-        parent::set($storedKey ?? $key, ...$value);
-        if (null === $storedKey) {
-            $this->storeKey($key);
-        }
-    }
-
-    public function add(string $key, string ...$value): void
-    {
-        $storedKey = $this->findKey($key);
-        parent::add($storedKey ?? $key, ...$value);
-        if (null === $storedKey) {
-            $this->storeKey($key);
-        }
-    }
-
-    public function delete(string $key): void
-    {
-        $storedKey = $this->findKey($key);
-        if (null === $storedKey) {
-            return;
-        }
-
-        parent::delete($storedKey);
-        $normalizedKey = strtolower($storedKey);
-        unset($this->normalizedKeys[$normalizedKey]);
-    }
-
-    private function storeKey(string $key): void
-    {
-        $this->normalizedKeys[strtolower($key)] = $key;
+        return $this->values;
     }
 }
