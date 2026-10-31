@@ -2,7 +2,6 @@
 
 namespace DCarbone\PHPConsulAPITests\Unit;
 
-use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\Consul;
 use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\HttpAuth;

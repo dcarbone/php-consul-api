@@ -22,6 +22,18 @@ namespace DCarbone\PHPConsulAPI\PHPLib;
 
 class Headers extends Values
 {
+    /**
+     * @param array<string,array<string>> $values
+     */
+    public static function fromArray(array $values): self
+    {
+        $out = new self();
+        foreach ($values as $k => $v) {
+            $out->_set((string)$k, ...(array)$v);
+        }
+        return $out;
+    }
+
     private function _canonicalizeHeaderKey(string $key): string {
         return str_replace(' ', '-', ucwords(str_replace(['-', '_'], ' ', strtolower($key))));
     }
