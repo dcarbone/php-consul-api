@@ -30,7 +30,7 @@ use Psr\Http\Message\UriInterface;
 
 class Request
 {
-    public Values $header;
+    public Headers $header;
     public Params $params;
 
     public null|Time\Duration $timeout = null;
@@ -51,7 +51,7 @@ class Request
         $this->method = strtoupper($method);
         $this->path   = ltrim(rtrim($path, " \t\n\r\0\x0B&?"), " \t\n\r\0\x0B/");
 
-        $this->header = new Values();
+        $this->header = new Headers();
         $this->params = new Params();
 
         if ('' !== $config->Datacenter) {

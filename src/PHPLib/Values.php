@@ -27,7 +27,12 @@ namespace DCarbone\PHPConsulAPI\PHPLib;
 class Values implements \IteratorAggregate, \ArrayAccess, \Countable, \JsonSerializable, \Stringable
 {
     /** @var array<string,array<string>> */
-    private array $values = [];
+    protected array $values = [];
+
+    protected function findKey(string $key): null|string
+    {
+        return array_key_exists($key, $this->values) ? $key : null;
+    }
 
     /**
      * @param array<string,array<string>> $values
@@ -43,8 +48,8 @@ class Values implements \IteratorAggregate, \ArrayAccess, \Countable, \JsonSeria
 
     public function get(string $key): string
     {
-        if (isset($this->values[$key])) {
-            return $this->values[$key][0];
+        if (null !== ($storedKey = $this->findKey($key))) {
+            return $this->values[$storedKey][0];
         }
 
         return '';
@@ -55,26 +60,29 @@ class Values implements \IteratorAggregate, \ArrayAccess, \Countable, \JsonSeria
      */
     public function getAll(string $key): array
     {
-        return $this->values[$key] ?? [];
+        return $this->values[$this->findKey($key) ?? $key] ?? [];
     }
 
     public function set(string $key, string ...$value): void
     {
-        $this->values[$key] = $value;
+        $this->values[$this->findKey($key) ?? $key] = $value;
     }
 
     public function add(string $key, string ...$value): void
     {
-        if (isset($this->values[$key])) {
-            $this->values[$key] = array_merge($this->values[$key], $value);
+        $storedKey = $this->findKey($key) ?? $key;
+        if (isset($this->values[$storedKey])) {
+            $this->values[$storedKey] = array_merge($this->values[$storedKey], $value);
         } else {
-            $this->values[$key] = $value;
+            $this->values[$storedKey] = $value;
         }
     }
 
     public function delete(string $key): void
     {
-        unset($this->values[$key]);
+        if (null !== ($storedKey = $this->findKey($key))) {
+            unset($this->values[$storedKey]);
+        }
     }
 
     public function count(): int
@@ -104,6 +112,10 @@ class Values implements \IteratorAggregate, \ArrayAccess, \Countable, \JsonSeria
 
     public function offsetExists(mixed $offset): bool
     {
+        if (is_string($offset)) {
+            return null !== $this->findKey($offset);
+        }
+
         return array_key_exists($offset, $this->values);
     }
 
@@ -112,6 +124,10 @@ class Values implements \IteratorAggregate, \ArrayAccess, \Countable, \JsonSeria
      */
     public function offsetGet(mixed $offset): array
     {
+        if (is_string($offset)) {
+            return $this->values[$this->findKey($offset) ?? $offset] ?? [];
+        }
+
         return $this->values[$offset] ?? [];
     }
 

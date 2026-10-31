@@ -30,6 +30,7 @@ final class AbstractClientTest extends TestCase
             $options = $client->buildGuzzleRequestOptions($request);
 
             self::assertArrayNotHasKey(GuzzleRequestOptions::HEADERS, $options);
+            self::assertSame('application/custom', $request->header->get('Content-Type'));
             self::assertSame('application/custom', $request->toPsrRequest()->getHeaderLine('Content-Type'));
         }
     }
