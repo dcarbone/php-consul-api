@@ -30,7 +30,7 @@ class Values implements \IteratorAggregate, \ArrayAccess, \Countable, \JsonSeria
     protected array $values = [];
 
     /**
-     * @param array<string,array<int,string>> $values
+     * @param array<string,array<string>> $values
      */
     public static function fromArray(array $values): self
     {
@@ -82,6 +82,9 @@ class Values implements \IteratorAggregate, \ArrayAccess, \Countable, \JsonSeria
         return null;
     }
 
+    /**
+     * @return array<string>
+     */
     protected function _getAll(string $key): array
     {
         return $this->values[$key] ?? [];
