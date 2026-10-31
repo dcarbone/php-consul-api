@@ -30,7 +30,7 @@ class Values implements \IteratorAggregate, \ArrayAccess, \Countable, \JsonSeria
     protected array $values = [];
 
     /**
-     * @param array<string,array<string>> $values
+     * @param array<string,array<int,string>> $values
      */
     public static function fromArray(array $values): self
     {

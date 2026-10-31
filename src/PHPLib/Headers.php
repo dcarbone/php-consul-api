@@ -36,7 +36,7 @@ class Headers extends Values
     }
 
     /**
-     * @return array<string,<array<string>>
+     * @return array<string,array<int,string>>
      */
     protected function _getAll(string $key): array
     {
