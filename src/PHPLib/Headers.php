@@ -35,6 +35,9 @@ class Headers extends Values
         return null;
     }
 
+    /**
+     * @return array<string,<array<string>>
+     */
     protected function _getAll(string $key): array
     {
         return $this->values[$this->_canonicalizeHeaderKey($key)] ?? [];
