@@ -20,8 +20,11 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
 {
@@ -62,8 +65,8 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
         null|ServiceResolverPrioritizeByLocality $PrioritizeByLocality = null,
         null|LoadBalancer $LoadBalancer = null,
         null|array $Meta = null,
-        int $CreateIndex = 0,
-        int $ModifyIndex = 0,
+        int|string|BigInteger $CreateIndex = 0,
+        int|string|BigInteger $ModifyIndex = 0,
     ) {
         if (null !== $data) {
             self::_hydrateFromDecoded((object)$data, $this);
@@ -82,8 +85,8 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
         $this->PrioritizeByLocality = $PrioritizeByLocality;
         $this->LoadBalancer = $LoadBalancer;
         $this->setMeta($Meta);
-        $this->CreateIndex = $CreateIndex;
-        $this->ModifyIndex = $ModifyIndex;
+        $this->CreateIndex = uint64($CreateIndex);
+        $this->ModifyIndex = uint64($ModifyIndex);
     }
 
     public function getKind(): string
@@ -141,9 +144,7 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
 
     public function setSubsetKey(string $key, ServiceResolverSubset $subset): self
     {
-        if (null === $this->Subsets) {
-            $this->Subsets = [];
-        }
+        $this->Subsets ??= [];
         $this->Subsets[$key] = $subset;
         return $this;
     }
@@ -158,7 +159,7 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
             return $this;
         }
         foreach ($Subsets as $k => $v) {
-            $this->setSubsetKey($k, $v);
+            $this->setSubsetKey((string)$k, $v);
         }
         return $this;
     }
@@ -184,9 +185,7 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
 
     public function setFailoverKey(string $key, ServiceResolverFailover $failover): self
     {
-        if (null === $this->Failover) {
-            $this->Failover = [];
-        }
+        $this->Failover ??= [];
         $this->Failover[$key] = $failover;
         return $this;
     }
@@ -201,7 +200,7 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
             return $this;
         }
         foreach ($Failover as $k => $v) {
-            $this->setFailoverKey($k, $v);
+            $this->setFailoverKey((string)$k, $v);
         }
         return $this;
     }
@@ -264,13 +263,13 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
                 $n->DefaultSubset = $v;
             } elseif ('Subsets' === $k) {
                 foreach ($v as $kk => $vv) {
-                    $n->setSubsetKey($kk, ServiceResolverSubset::jsonUnserialize($vv));
+                    $n->setSubsetKey((string)$kk, ServiceResolverSubset::jsonUnserialize($vv));
                 }
             } elseif ('Redirect' === $k) {
                 $n->Redirect = ServiceResolverRedirect::jsonUnserialize($v);
             } elseif ('Failover' === $k) {
                 foreach ($v as $kk => $vv) {
-                    $n->setFailoverKey($kk, ServiceResolverFailover::jsonUnserialize($vv));
+                    $n->setFailoverKey((string)$kk, ServiceResolverFailover::jsonUnserialize($vv));
                 }
             } elseif ('ConnectTimeout' === $k || 'connect_timeout' === $k) {
                 $n->ConnectTimeout = Time::ParseDuration($v);
@@ -282,6 +281,8 @@ class ServiceResolverConfigEntry extends AbstractType implements ConfigEntry
                 $n->LoadBalancer = LoadBalancer::jsonUnserialize($v);
             } elseif ('Meta' === $k) {
                 $n->setMeta($v);
+            } elseif ('CreateIndex' === $k || 'ModifyIndex' === $k) {
+                $n->{$k} = uint64($v);
             } else {
                 $n->{$k} = $v;
             }

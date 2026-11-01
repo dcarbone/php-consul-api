@@ -2,6 +2,7 @@
 
 namespace DCarbone\PHPConsulAPITests\Unit\ACL;
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\ACL\ACLAuthMethod;
 use DCarbone\PHPConsulAPI\ACL\ACLAuthMethodNamespaceRule;
 use PHPUnit\Framework\TestCase;
@@ -21,8 +22,8 @@ final class ACLAuthMethodTest extends TestCase
         self::assertSame(0, $m->getMaxTokenTTL()->Nanoseconds());
         self::assertSame('', $m->getTokenLocality());
         self::assertSame([], $m->getConfig());
-        self::assertSame(0, $m->getCreateIndex());
-        self::assertSame(0, $m->getModifyIndex());
+        self::assertSame('0', (string)$m->getCreateIndex());
+        self::assertSame('0', (string)$m->getModifyIndex());
         self::assertSame([], $m->getNamespaceRules());
         self::assertSame('', $m->getNamespace());
         self::assertSame('', $m->getPartition());
@@ -116,6 +117,33 @@ final class ACLAuthMethodTest extends TestCase
         self::assertSame('kubernetes', $m->getType());
         self::assertCount(1, $m->getNamespaceRules());
         self::assertInstanceOf(ACLAuthMethodNamespaceRule::class, $m->getNamespaceRules()[0]);
+        self::assertSame('10', (string)$m->getCreateIndex());
+        self::assertSame('20', (string)$m->getModifyIndex());
+    }
+
+    public function testUint64Fields(): void
+    {
+        $max = '18446744073709551615';
+        $m = new ACLAuthMethod(CreateIndex: 1, ModifyIndex: '2');
+        self::assertSame('1', (string)$m->CreateIndex);
+        self::assertSame('2', (string)$m->getModifyIndex());
+        $m = new ACLAuthMethod(CreateIndex: BigInteger::of($max), ModifyIndex: BigInteger::of(3));
+        self::assertSame($max, (string)$m->getCreateIndex());
+        self::assertSame('3', (string)$m->ModifyIndex);
+
+        $m->setCreateIndex(4)->setModifyIndex('5');
+        self::assertSame('4', (string)$m->getCreateIndex());
+        self::assertSame('5', (string)$m->getModifyIndex());
+        $m->setCreateIndex(BigInteger::of(6))->setModifyIndex($max);
+        self::assertSame('6', (string)$m->CreateIndex);
+        self::assertSame($max, (string)$m->ModifyIndex);
+
+        $d = new \stdClass();
+        $d->CreateIndex = $max;
+        $d->ModifyIndex = 7;
+        $m = ACLAuthMethod::jsonUnserialize($d);
+        self::assertSame($max, (string)$m->getCreateIndex());
+        self::assertSame('7', (string)$m->getModifyIndex());
     }
 }
 

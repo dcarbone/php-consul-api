@@ -208,7 +208,7 @@ class Upstream extends AbstractType
             return $this;
         }
         $this->Config = [];
-        foreach ($Config as $k => $v) {
+        foreach ((array)$Config as $k => $v) {
             $this->Config[$k] = $v;
         }
         return $this;

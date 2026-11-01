@@ -2,6 +2,7 @@
 
 namespace DCarbone\PHPConsulAPITests\Unit\ACL;
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\ACL\ACLPolicy;
 use PHPUnit\Framework\TestCase;
 
@@ -19,8 +20,8 @@ final class ACLPolicyTest extends TestCase
         self::assertSame('', $p->getRules());
         self::assertSame([], $p->getDatacenters());
         self::assertSame('', $p->getHash());
-        self::assertSame(0, $p->getCreateIndex());
-        self::assertSame(0, $p->getModifyIndex());
+        self::assertSame('0', (string)$p->getCreateIndex());
+        self::assertSame('0', (string)$p->getModifyIndex());
         self::assertSame('', $p->getNamespace());
         self::assertSame('', $p->getPartition());
     }
@@ -45,8 +46,8 @@ final class ACLPolicyTest extends TestCase
         self::assertSame('key "" { policy = "read" }', $p->getRules());
         self::assertSame(['dc1', 'dc2'], $p->getDatacenters());
         self::assertSame('abc', $p->getHash());
-        self::assertSame(1, $p->getCreateIndex());
-        self::assertSame(2, $p->getModifyIndex());
+        self::assertSame('1', (string)$p->getCreateIndex());
+        self::assertSame('2', (string)$p->getModifyIndex());
         self::assertSame('ns', $p->getNamespace());
         self::assertSame('pt', $p->getPartition());
     }
@@ -92,7 +93,30 @@ final class ACLPolicyTest extends TestCase
         $p = ACLPolicy::jsonUnserialize($d);
         self::assertSame('id-1', $p->getID());
         self::assertSame(['dc1'], $p->getDatacenters());
-        self::assertSame(3, $p->getCreateIndex());
+        self::assertSame('3', (string)$p->getCreateIndex());
+    }
+
+    public function testUint64Fields(): void
+    {
+        $max = '18446744073709551615';
+        $p = new ACLPolicy(CreateIndex: 1, ModifyIndex: '2');
+        self::assertSame('1', (string)$p->CreateIndex);
+        self::assertSame('2', (string)$p->getModifyIndex());
+        $p = new ACLPolicy(CreateIndex: BigInteger::of($max));
+        self::assertSame($max, (string)$p->getCreateIndex());
+
+        $p->setCreateIndex('4')->setModifyIndex(BigInteger::of(5));
+        self::assertSame('4', (string)$p->getCreateIndex());
+        self::assertSame('5', (string)$p->getModifyIndex());
+        $p->setModifyIndex(6);
+        self::assertSame('6', (string)$p->ModifyIndex);
+
+        $d = new \stdClass();
+        $d->CreateIndex = $max;
+        $d->ModifyIndex = 9;
+        $p = ACLPolicy::jsonUnserialize($d);
+        self::assertSame($max, (string)$p->getCreateIndex());
+        self::assertSame('9', (string)$p->getModifyIndex());
     }
 }
 

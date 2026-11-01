@@ -20,8 +20,11 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class ACLAuthMethod extends AbstractType
 {
@@ -33,8 +36,8 @@ class ACLAuthMethod extends AbstractType
     public string $TokenLocality;
     /** @var array<string,mixed> */
     public array $Config;
-    public int $CreateIndex;
-    public int $ModifyIndex;
+    public BigInteger $CreateIndex;
+    public BigInteger $ModifyIndex;
     /** @var \DCarbone\PHPConsulAPI\ACL\ACLAuthMethodNamespaceRule[] */
     public array $NamespaceRules;
     public string $Namespace;
@@ -54,8 +57,8 @@ class ACLAuthMethod extends AbstractType
         null|int|float|string|\DateInterval|Time\Duration $MaxTokenTTL = null,
         string $TokenLocality = '',
         array $Config = [],
-        int $CreateIndex = 0,
-        int $ModifyIndex = 0,
+        int|string|BigInteger $CreateIndex = 0,
+        int|string|BigInteger $ModifyIndex = 0,
         array $NamespaceRules = [],
         string $Namespace = '',
         string $Partition = '',
@@ -71,8 +74,8 @@ class ACLAuthMethod extends AbstractType
         $this->MaxTokenTTL = Time::Duration($MaxTokenTTL);
         $this->TokenLocality = $TokenLocality;
         $this->setConfig($Config);
-        $this->CreateIndex = $CreateIndex;
-        $this->ModifyIndex = $ModifyIndex;
+        $this->CreateIndex = uint64($CreateIndex);
+        $this->ModifyIndex = uint64($ModifyIndex);
         $this->setNamespaceRules(...$NamespaceRules);
         $this->Namespace = $Namespace;
         $this->Partition = $Partition;
@@ -160,32 +163,32 @@ class ACLAuthMethod extends AbstractType
     {
         $this->Config = [];
         if (null !== $Config) {
-            foreach ($Config as $k => $v) {
+            foreach ((array)$Config as $k => $v) {
                 $this->Config[$k] = $v;
             }
         }
         return $this;
     }
 
-    public function getCreateIndex(): int
+    public function getCreateIndex(): BigInteger
     {
         return $this->CreateIndex;
     }
 
-    public function setCreateIndex(int $CreateIndex): self
+    public function setCreateIndex(int|string|BigInteger $CreateIndex): self
     {
-        $this->CreateIndex = $CreateIndex;
+        $this->CreateIndex = uint64($CreateIndex);
         return $this;
     }
 
-    public function getModifyIndex(): int
+    public function getModifyIndex(): BigInteger
     {
         return $this->ModifyIndex;
     }
 
-    public function setModifyIndex(int $ModifyIndex): self
+    public function setModifyIndex(int|string|BigInteger $ModifyIndex): self
     {
-        $this->ModifyIndex = $ModifyIndex;
+        $this->ModifyIndex = uint64($ModifyIndex);
         return $this;
     }
 
@@ -241,7 +244,9 @@ class ACLAuthMethod extends AbstractType
     protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
     {
         foreach ((array)$decoded as $k => $v) {
-            if ('MaxTokenTTL' === $k) {
+            if ('CreateIndex' === $k || 'ModifyIndex' === $k) {
+                $n->{$k} = uint64($v);
+            } elseif ('MaxTokenTTL' === $k) {
                 $n->setMaxTokenTTL($v);
             } elseif ('NamespaceRules' === $k) {
                 $n->NamespaceRules = [];

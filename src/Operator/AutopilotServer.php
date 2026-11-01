@@ -20,11 +20,13 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 use DCarbone\PHPConsulAPI\PHPLib\MetaField;
 
 use function DCarbone\PHPConsulAPI\PHPLib\parse_time;
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class AutopilotServer extends AbstractType
 {
@@ -36,8 +38,8 @@ class AutopilotServer extends AbstractType
     public string $NodeStatus;
     public string $Version;
     public null|Time\Duration $LastContact = null;
-    public int $LastTerm;
-    public int $LastIndex;
+    public BigInteger $LastTerm;
+    public BigInteger $LastIndex;
     public bool $Healthy;
     public Time\Time $StableSince;
     public string $RedundancyZone;
@@ -58,8 +60,8 @@ class AutopilotServer extends AbstractType
         string $NodeStatus = '',
         string $Version = '',
         null|string|int|float|\DateInterval|Time\Duration $LastContact = null,
-        int $LastTerm = 0,
-        int $LastIndex = 0,
+        int|string|BigInteger $LastTerm = 0,
+        int|string|BigInteger $LastIndex = 0,
         bool $Healthy = false,
         null|Time\Time $StableSince = null,
         string $RedundancyZone = '',
@@ -79,8 +81,8 @@ class AutopilotServer extends AbstractType
         $this->NodeStatus = $NodeStatus;
         $this->Version = $Version;
         $this->setLastContact($LastContact);
-        $this->LastTerm = $LastTerm;
-        $this->LastIndex = $LastIndex;
+        $this->LastTerm = uint64($LastTerm);
+        $this->LastIndex = uint64($LastIndex);
         $this->Healthy = $Healthy;
         $this->StableSince = $StableSince ?? new TIme\Time();
         $this->RedundancyZone = $RedundancyZone;
@@ -161,25 +163,25 @@ class AutopilotServer extends AbstractType
         return $this;
     }
 
-    public function getLastTerm(): int
+    public function getLastTerm(): BigInteger
     {
         return $this->LastTerm;
     }
 
-    public function setLastTerm(int $LastTerm): self
+    public function setLastTerm(int|string|BigInteger $LastTerm): self
     {
-        $this->LastTerm = $LastTerm;
+        $this->LastTerm = uint64($LastTerm);
         return $this;
     }
 
-    public function getLastIndex(): int
+    public function getLastIndex(): BigInteger
     {
         return $this->LastIndex;
     }
 
-    public function setLastIndex(int $LastIndex): self
+    public function setLastIndex(int|string|BigInteger $LastIndex): self
     {
-        $this->LastIndex = $LastIndex;
+        $this->LastIndex = uint64($LastIndex);
         return $this;
     }
 
@@ -270,16 +272,18 @@ class AutopilotServer extends AbstractType
     protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
     {
         foreach ((array)$decoded as $k => $v) {
-            if ('lastContact' === $k) {
+            if ('LastContact' === $k) {
                 $n->setLastContact($v);
             } elseif ('StableSince' === $k) {
-                $n->StableSince = parse_time($v);
+                $n->StableSince = parse_time($v) ?? new Time\Time();
             } elseif ('Meta' === $k) {
                 $n->setMeta($v);
             } elseif ('Status' === $k) {
                 $n->setStatus($v);
             } elseif ('NodeType' === $k) {
                 $n->setNodeType($v);
+            } elseif ('LastTerm' === $k || 'LastIndex' === $k) {
+                $n->{$k} = uint64($v);
             } else {
                 $n->{$k} = $v;
             }
@@ -294,7 +298,7 @@ class AutopilotServer extends AbstractType
         $out->Address = $this->Address;
         $out->NodeStatus = $this->NodeStatus;
         $out->Version = $this->Version;
-        $out->lastContact = null !== $this->LastContact ? (string)$this->LastContact : null;
+        $out->LastContact = null !== $this->LastContact ? (string)$this->LastContact : null;
         $out->LastTerm = $this->LastTerm;
         $out->LastIndex = $this->LastIndex;
         $out->Healthy = $this->Healthy;

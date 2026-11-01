@@ -25,7 +25,7 @@ use DCarbone\PHPConsulAPI\PHPLib\UnmarshalledResponseInterface;
 
 class OperatorHealthReplyResponse extends AbstractValuedResponse implements UnmarshalledResponseInterface
 {
-    public null|OperatorHealthReply $OperatorHealthReply;
+    public null|OperatorHealthReply $OperatorHealthReply = null;
 
     public function getValue(): null|OperatorHealthReply
     {

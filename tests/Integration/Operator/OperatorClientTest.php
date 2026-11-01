@@ -54,10 +54,10 @@ final class OperatorClientTest extends AbstractIntegrationTestCase
     {
         $client = new OperatorClient(ConsulManager::testConfig());
 
-        [$current]               = $client->AutopilotGetConfiguration();
-        $new                     = clone $current;
+        [$current] = $client->AutopilotGetConfiguration();
+        $new = clone $current;
         $new->CleanupDeadServers = !$current->CleanupDeadServers;
-        $err                     = $client->AutopilotSetConfiguration($new);
+        $err = $client->AutopilotSetConfiguration($new);
         self::assertNull($err, 'Unable to update Autopilot configuration: ' . $err);
         [$updated, $err] = $client->AutopilotGetConfiguration();
         self::assertNull($err, 'Unable to get updated Autopilot configuration: ' . $err);
@@ -73,10 +73,10 @@ final class OperatorClientTest extends AbstractIntegrationTestCase
     public function testCanCASAutopilotConfiguration(): void
     {
         $client = new OperatorClient(ConsulManager::testConfig());
-        [$current]               = $client->AutopilotGetConfiguration();
-        $new                     = clone $current;
+        [$current] = $client->AutopilotGetConfiguration();
+        $new = clone $current;
         $new->CleanupDeadServers = !$current->CleanupDeadServers;
-        [$ok, $err]              = $client->AutopilotCASConfiguration($new);
+        [$ok, $err] = $client->AutopilotCASConfiguration($new);
         self::assertNull($err, 'Unable to update Autopilot configuration: ' . $err);
         self::assertTrue($ok);
         [$updated, $err] = $client->AutopilotGetConfiguration();
@@ -98,10 +98,5 @@ final class OperatorClientTest extends AbstractIntegrationTestCase
         self::assertNull($err, 'Unable to get Autopilot server health: %s' . $err);
         self::assertInstanceOf(OperatorHealthReply::class, $healths);
         self::assertCount(1, $healths->Servers);
-    }
-
-    public function testReadableJsonEncoding(): void
-    {
-        self::markTestSkipped('ReadableDuration class was removed during modernization');
     }
 }

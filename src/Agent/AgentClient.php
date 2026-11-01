@@ -36,7 +36,6 @@ class AgentClient extends AbstractClient
     private null|MapResponse $_self = null;
 
     /**
-     * @param bool $refresh
      * @return \DCarbone\PHPConsulAPI\PHPLib\MapResponse<mixed>
      * @throws \Exception
      */
@@ -90,7 +89,7 @@ class AgentClient extends AbstractClient
     {
         $ret = new ValuedStringResponse();
         $resp = $this->_requireOK($this->_doGet('v1/agent/metrics/stream', null));
-        if (null !== $resp->Err) {
+        if ($resp->hasErr()) {
             $ret->Err = $resp->Err;
             return $ret;
         }
@@ -157,7 +156,7 @@ class AgentClient extends AbstractClient
         $r    = $this->_prepAgentHealthServiceRequest(sprintf('v1/agent/health/service/id/%s', $id), $opts);
         $resp = $this->_requireOK($this->_do($r));
 
-        if (null !== $resp->Err) {
+        if ($resp->hasErr()) {
             return new AgentHealthServiceResponse(Consul::HealthCritical, null, $resp->Err);
         }
 
@@ -186,7 +185,7 @@ class AgentClient extends AbstractClient
         $r    = $this->_prepAgentHealthServiceRequest(sprintf('v1/agent/health/service/name/%s', urlencode($service)), $opts);
         $resp = $this->_requireOK($this->_do($r));
 
-        if (null !== $resp->Err) {
+        if ($resp->hasErr()) {
             return new AgentHealthServicesResponse(Consul::HealthCritical, [], $resp->Err);
         }
 

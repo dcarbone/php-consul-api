@@ -164,7 +164,7 @@ class Consul
                     )
                 );
             }
-            $data = trim(file_get_contents($config->TokenFile));
+            $data = trim((string)file_get_contents($config->TokenFile));
             if ('' === $config->Token && '' !== $data) {
                 $config->Token = $data;
             }

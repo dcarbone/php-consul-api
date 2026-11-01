@@ -46,8 +46,8 @@ final class KVPairResponseTest extends TestCase
         self::assertInstanceOf(KVPair::class, $resp->KVPair);
         self::assertSame('foo/bar', $resp->KVPair->getKey());
         self::assertSame('hello world', $resp->KVPair->getValue());
-        self::assertSame(10, $resp->KVPair->getCreateIndex());
-        self::assertSame(20, $resp->KVPair->getModifyIndex());
+        self::assertSame('10', (string)$resp->KVPair->getCreateIndex());
+        self::assertSame('20', (string)$resp->KVPair->getModifyIndex());
     }
 
     public function testGetValueReturnsSameAsKVPairField(): void

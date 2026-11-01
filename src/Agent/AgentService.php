@@ -20,9 +20,12 @@ namespace DCarbone\PHPConsulAPI\Agent;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\Peering\Locality;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 use DCarbone\PHPConsulAPI\PHPLib\MetaField;
+
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class AgentService extends AbstractType
 {
@@ -42,8 +45,8 @@ class AgentService extends AbstractType
     public null|array $TaggedAddresses = null;
     public AgentWeights $Weights;
     public bool $EnableTagOverride;
-    public int $CreateIndex;
-    public int $ModifyIndex;
+    public BigInteger $CreateIndex;
+    public BigInteger $ModifyIndex;
     public string $ContentHash;
     public null|AgentServiceConnectProxyConfig $Proxy;
     public null|AgentServiceConnect $Connect;
@@ -74,8 +77,8 @@ class AgentService extends AbstractType
         array $TaggedAddresses = [],
         null|AgentWeights $Weights = null,
         bool $EnableTagOverride = false,
-        int $CreateIndex = 0,
-        int $ModifyIndex = 0,
+        int|string|BigInteger $CreateIndex = 0,
+        int|string|BigInteger $ModifyIndex = 0,
         string $ContentHash = '',
         null|AgentServiceConnectProxyConfig $Proxy = null,
         null|AgentServiceConnect $Connect = null,
@@ -101,8 +104,8 @@ class AgentService extends AbstractType
         $this->setTaggedAddresses($TaggedAddresses ?: null);
         $this->Weights = $Weights ?? new AgentWeights();
         $this->EnableTagOverride = $EnableTagOverride;
-        $this->CreateIndex = $CreateIndex;
-        $this->ModifyIndex = $ModifyIndex;
+        $this->CreateIndex = uint64($CreateIndex);
+        $this->ModifyIndex = uint64($ModifyIndex);
         $this->ContentHash = $ContentHash;
         $this->Proxy = $Proxy;
         $this->Connect = $Connect;
@@ -240,25 +243,25 @@ class AgentService extends AbstractType
         return $this;
     }
 
-    public function getCreateIndex(): int
+    public function getCreateIndex(): BigInteger
     {
         return $this->CreateIndex;
     }
 
-    public function setCreateIndex(int $CreateIndex): self
+    public function setCreateIndex(int|string|BigInteger $CreateIndex): self
     {
-        $this->CreateIndex = $CreateIndex;
+        $this->CreateIndex = uint64($CreateIndex);
         return $this;
     }
 
-    public function getModifyIndex(): int
+    public function getModifyIndex(): BigInteger
     {
         return $this->ModifyIndex;
     }
 
-    public function setModifyIndex(int $ModifyIndex): self
+    public function setModifyIndex(int|string|BigInteger $ModifyIndex): self
     {
-        $this->ModifyIndex = $ModifyIndex;
+        $this->ModifyIndex = uint64($ModifyIndex);
         return $this;
     }
 
@@ -383,6 +386,8 @@ class AgentService extends AbstractType
                 $n->Locality = null === $v ? null : Locality::jsonUnserialize($v);
             } elseif ('Meta' === $k) {
                 $n->setMeta($v);
+            } elseif ('CreateIndex' === $k || 'ModifyIndex' === $k) {
+                $n->{$k} = uint64($v);
             } else {
                 $n->{$k} = $v;
             }
@@ -412,10 +417,10 @@ class AgentService extends AbstractType
         }
         $out->Weights = $this->Weights;
         $out->EnableTagOverride = $this->EnableTagOverride;
-        if (0 !== $this->CreateIndex) {
+        if (!$this->CreateIndex->isZero()) {
             $out->CreateIndex = $this->CreateIndex;
         }
-        if (0 !== $this->ModifyIndex) {
+        if (!$this->ModifyIndex->isZero()) {
             $out->ModifyIndex = $this->ModifyIndex;
         }
         if ('' !== $this->ContentHash) {

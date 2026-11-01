@@ -63,14 +63,14 @@ final class KVClientTest extends AbstractIntegrationTestCase
     {
         $client = new KVClient(ConsulManager::testConfig());
 
-        [$wm, $err] = $client->Put(new KVPair(Key: 'test/flags', Value: 'flagged', Flags: 42));
+        [$wm, $err] = $client->Put(new KVPair(Key: 'test/flags', Flags: 42, Value: 'flagged'));
         self::assertNull($err);
         self::assertInstanceOf(WriteMeta::class, $wm);
 
         [$kv, , $err] = $client->Get('test/flags');
         self::assertNull($err);
         self::assertInstanceOf(KVPair::class, $kv);
-        self::assertSame(42, $kv->Flags);
+        self::assertSame(42, $kv->Flags->toInt());
         self::assertSame('flagged', $kv->Value);
     }
 
@@ -90,12 +90,12 @@ final class KVClientTest extends AbstractIntegrationTestCase
         self::assertInstanceOf(QueryMeta::class, $qm);
         self::assertSame($key, $kv->Key);
         self::assertSame($value, $kv->Value);
-        self::assertGreaterThan(0, $kv->CreateIndex);
-        self::assertGreaterThan(0, $kv->ModifyIndex);
-        self::assertSame(0, $kv->LockIndex);
-        self::assertSame(0, $kv->Flags);
+        self::assertGreaterThan(0, $kv->CreateIndex->toInt());
+        self::assertGreaterThan(0, $kv->ModifyIndex->toInt());
+        self::assertSame(0, $kv->LockIndex->toInt());
+        self::assertSame(0, $kv->Flags->toInt());
         self::assertSame('', $kv->Session);
-        self::assertGreaterThan(0, $qm->LastIndex);
+        self::assertGreaterThan(0, $qm->LastIndex->toInt());
     }
 
     public function testGetNotExist(): void
@@ -285,7 +285,7 @@ final class KVClientTest extends AbstractIntegrationTestCase
         [$kv2, , $err] = $client->Get($key);
         self::assertNull($err);
         self::assertSame('updated', $kv2->Value);
-        self::assertGreaterThan($kv1->ModifyIndex, $kv2->ModifyIndex);
+        self::assertGreaterThan($kv1->ModifyIndex->toInt(), $kv2->ModifyIndex->toInt());
     }
 
     public function testPutEmptyValue(): void
@@ -370,7 +370,7 @@ final class KVClientTest extends AbstractIntegrationTestCase
         self::assertInstanceOf(KVPair::class, $kv);
 
         $kv->Value = 'v2';
-        $kv->Flags = 99;
+        $kv->setFlags(Flags: 99);
         [$ok, , $err] = $client->CAS($kv);
         self::assertNull($err);
         self::assertTrue($ok);
@@ -378,7 +378,7 @@ final class KVClientTest extends AbstractIntegrationTestCase
         [$kv2, , $err] = $client->Get('test/cas-flags');
         self::assertNull($err);
         self::assertSame('v2', $kv2->Value);
-        self::assertSame(99, $kv2->Flags);
+        self::assertSame(99, $kv2->Flags->toInt());
     }
 
     public function testDeleteCASSuccess(): void
@@ -459,7 +459,7 @@ final class KVClientTest extends AbstractIntegrationTestCase
         [$kv, , $err] = $client->Get($key);
         self::assertNull($err);
         self::assertInstanceOf(KVPair::class, $kv);
-        self::assertNotSame($originalModifyIndex, $kv->ModifyIndex);
+        self::assertNotSame($originalModifyIndex->toInt(), $kv->ModifyIndex->toInt());
         self::assertSame('updated', $kv->Value);
 
         [$ok, , $err] = $client->DeleteCAS($kv);
@@ -497,7 +497,7 @@ final class KVClientTest extends AbstractIntegrationTestCase
         self::assertInstanceOf(KVPair::class, $kv);
         self::assertSame($id, $kv->Session);
         self::assertSame('locked-value', $kv->Value);
-        self::assertGreaterThan(0, $kv->LockIndex);
+        self::assertGreaterThan(0, $kv->LockIndex->toInt());
 
         $kv->Session = $id;
         [$ok, $wm, $err] = $kvClient->ReleaseBool($kv);
@@ -585,7 +585,7 @@ final class KVClientTest extends AbstractIntegrationTestCase
         [$kv, , $err] = $kvClient->Get($key);
         self::assertNull($err);
         self::assertInstanceOf(KVPair::class, $kv);
-        self::assertSame(77, $kv->Flags);
+        self::assertSame(77, $kv->Flags->toInt());
         self::assertSame($id, $kv->Session);
     }
 
@@ -842,7 +842,7 @@ final class KVClientTest extends AbstractIntegrationTestCase
         self::assertNull($err);
         self::assertInstanceOf(KVPair::class, $kv);
         self::assertSame('flagged', $kv->Value);
-        self::assertSame(123, $kv->Flags);
+        self::assertSame(123, $kv->Flags->toInt());
     }
 
     public function testTxnGetOrEmptyMissingKey(): void

@@ -20,7 +20,10 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class ACLPolicyListEntry extends AbstractType
 {
@@ -30,8 +33,8 @@ class ACLPolicyListEntry extends AbstractType
     /** @var array<string> */
     public array $Datacenters;
     public string $Hash;
-    public int $CreateIndex;
-    public int $ModifyIndex;
+    public BigInteger $CreateIndex;
+    public BigInteger $ModifyIndex;
     public string $Namespace;
     public string $Partition;
 
@@ -46,8 +49,8 @@ class ACLPolicyListEntry extends AbstractType
         string $Description = '',
         array $Datacenters = [],
         string $Hash = '',
-        int $CreateIndex = 0,
-        int $ModifyIndex = 0,
+        int|string|BigInteger $CreateIndex = 0,
+        int|string|BigInteger $ModifyIndex = 0,
         string $Namespace = '',
         string $Partition = '',
     ) {
@@ -60,8 +63,8 @@ class ACLPolicyListEntry extends AbstractType
         $this->Description = $Description;
         $this->setDatacenters(...$Datacenters);
         $this->Hash = $Hash;
-        $this->CreateIndex = $CreateIndex;
-        $this->ModifyIndex = $ModifyIndex;
+        $this->CreateIndex = uint64($CreateIndex);
+        $this->ModifyIndex = uint64($ModifyIndex);
         $this->Namespace = $Namespace;
         $this->Partition = $Partition;
     }
@@ -124,25 +127,25 @@ class ACLPolicyListEntry extends AbstractType
         return $this;
     }
 
-    public function getCreateIndex(): int
+    public function getCreateIndex(): BigInteger
     {
         return $this->CreateIndex;
     }
 
-    public function setCreateIndex(int $CreateIndex): self
+    public function setCreateIndex(int|string|BigInteger $CreateIndex): self
     {
-        $this->CreateIndex = $CreateIndex;
+        $this->CreateIndex = uint64($CreateIndex);
         return $this;
     }
 
-    public function getModifyIndex(): int
+    public function getModifyIndex(): BigInteger
     {
         return $this->ModifyIndex;
     }
 
-    public function setModifyIndex(int $ModifyIndex): self
+    public function setModifyIndex(int|string|BigInteger $ModifyIndex): self
     {
-        $this->ModifyIndex = $ModifyIndex;
+        $this->ModifyIndex = uint64($ModifyIndex);
         return $this;
     }
 
@@ -178,7 +181,9 @@ class ACLPolicyListEntry extends AbstractType
     protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
     {
         foreach ((array)$decoded as $k => $v) {
-            if ('Datacenters' === $k) {
+            if ('CreateIndex' === $k || 'ModifyIndex' === $k) {
+                $n->{$k} = uint64($v);
+            } elseif ('Datacenters' === $k) {
                 $n->setDatacenters(...$v);
             } else {
                 $n->{$k} = $v;

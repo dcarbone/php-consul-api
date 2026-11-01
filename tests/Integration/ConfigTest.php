@@ -27,7 +27,7 @@ use PHPUnit\Framework\TestCase;
 final class ConfigTest extends TestCase
 {
     public const DEFAULT_ADDRESS = '127.0.0.1:8500';
-    public const DEFAULT_SCHEME  = 'http';
+    public const DEFAULT_SCHEME = 'http';
 
     public function testCanConstructConfig(): void
     {
@@ -40,8 +40,10 @@ final class ConfigTest extends TestCase
     {
         $config = new Config();
 
-        $expectedAddress = $_ENV[Consul::HTTPAddrEnvName] ?: self::DEFAULT_ADDRESS;
-        $expectedScheme  = $_ENV[Consul::HTTPSSLEnvName] ? 'https' : self::DEFAULT_SCHEME;
+        $expectedAddress = $_ENV[Consul::HTTPAddrEnvName] ?? self::DEFAULT_ADDRESS;
+        $expectedScheme = in_array(strtolower($_ENV[Consul::HTTPSSLEnvName] ?? ''), ['true', '1'], true)
+            ? 'https'
+            : self::DEFAULT_SCHEME;
 
         self::assertSame(
             $expectedAddress,

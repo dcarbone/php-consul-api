@@ -20,7 +20,10 @@ namespace DCarbone\PHPConsulAPI\Event;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class UserEvent extends AbstractType
 {
@@ -31,7 +34,7 @@ class UserEvent extends AbstractType
     public string $ServiceFilter;
     public string $TagFilter;
     public int $Version;
-    public int $LTime;
+    public BigInteger $LTime;
 
     /**
      * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
@@ -45,7 +48,7 @@ class UserEvent extends AbstractType
         string $ServiceFilter = '',
         string $TagFilter = '',
         int $Version = 0,
-        int $LTime = 0,
+        int|string|BigInteger $LTime = 0,
     ) {
         if (null !== $data) {
             self::_hydrateFromDecoded((object)$data, $this);
@@ -58,7 +61,7 @@ class UserEvent extends AbstractType
         $this->ServiceFilter = $ServiceFilter;
         $this->TagFilter = $TagFilter;
         $this->Version = $Version;
-        $this->LTime = $LTime;
+        $this->LTime = uint64($LTime);
     }
 
     public function getID(): string
@@ -138,14 +141,14 @@ class UserEvent extends AbstractType
         return $this;
     }
 
-    public function getLTime(): int
+    public function getLTime(): BigInteger
     {
         return $this->LTime;
     }
 
-    public function setLTime(int $LTime): self
+    public function setLTime(int|string|BigInteger $LTime): self
     {
-        $this->LTime = $LTime;
+        $this->LTime = uint64($LTime);
         return $this;
     }
 
@@ -159,7 +162,11 @@ class UserEvent extends AbstractType
     protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
     {
         foreach ((array)$decoded as $k => $v) {
-            $n->{$k} = $v;
+            if ('LTime' === $k) {
+                $n->LTime = uint64($v);
+            } else {
+                $n->{$k} = $v;
+            }
         }
     }
 

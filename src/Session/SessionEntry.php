@@ -20,14 +20,16 @@ namespace DCarbone\PHPConsulAPI\Session;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 use function DCarbone\PHPConsulAPI\PHPLib\dur_to_millisecond;
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class SessionEntry extends AbstractType
 {
-    public int $CreateIndex;
+    public BigInteger $CreateIndex;
     public string $ID;
     public string $Name;
     public string $Node;
@@ -50,7 +52,7 @@ class SessionEntry extends AbstractType
      */
     public function __construct(
         null|array $data = null,
-        int $CreateIndex = 0,
+        int|string|BigInteger $CreateIndex = 0,
         string $ID = '',
         string $Name = '',
         string $Node = '',
@@ -66,7 +68,7 @@ class SessionEntry extends AbstractType
             self::_hydrateFromDecoded((object)$data, $this);
             return;
         }
-        $this->CreateIndex = $CreateIndex;
+        $this->CreateIndex = uint64($CreateIndex);
         $this->ID = $ID;
         $this->Name = $Name;
         $this->Node = $Node;
@@ -79,14 +81,14 @@ class SessionEntry extends AbstractType
         $this->setServiceChecks(...$ServiceChecks);
     }
 
-    public function getCreateIndex(): int
+    public function getCreateIndex(): BigInteger
     {
         return $this->CreateIndex;
     }
 
-    public function setCreateIndex(int $CreateIndex): self
+    public function setCreateIndex(int|string|BigInteger $CreateIndex): self
     {
-        $this->CreateIndex = $CreateIndex;
+        $this->CreateIndex = uint64($CreateIndex);
         return $this;
     }
 
@@ -251,7 +253,9 @@ class SessionEntry extends AbstractType
     protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
     {
         foreach ((array)$decoded as $k => $v) {
-            if ('LockDelay' === $k) {
+            if ('CreateIndex' === $k) {
+                $n->CreateIndex = uint64($v);
+            } elseif ('LockDelay' === $k) {
                 $n->LockDelay = Time::Duration($v);
             } elseif ('ServiceChecks' === $k) {
                 $n->ServiceChecks = [];

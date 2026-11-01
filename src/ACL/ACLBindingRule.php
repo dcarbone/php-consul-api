@@ -20,7 +20,10 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class ACLBindingRule extends AbstractType
 {
@@ -31,8 +34,8 @@ class ACLBindingRule extends AbstractType
     public BindingRuleBindType $BindType;
     public string $BindName;
     public null|ACLTemplatedPolicyVariables $BindVars;
-    public int $CreateIndex;
-    public int $ModifyIndex;
+    public BigInteger $CreateIndex;
+    public BigInteger $ModifyIndex;
     public string $Namespace;
     public string $Partition;
 
@@ -48,8 +51,8 @@ class ACLBindingRule extends AbstractType
         string|BindingRuleBindType $BindType = BindingRuleBindType::UNDEFINED,
         string $BindName = '',
         null|ACLTemplatedPolicyVariables $BindVars = null,
-        int $CreateIndex = 0,
-        int $ModifyIndex = 0,
+        int|string|BigInteger $CreateIndex = 0,
+        int|string|BigInteger $ModifyIndex = 0,
         string $Namespace = '',
         string $Partition = '',
     ) {
@@ -64,8 +67,8 @@ class ACLBindingRule extends AbstractType
         $this->BindType = ($BindType instanceof BindingRuleBindType) ? $BindType : BindingRuleBindType::from($BindType);
         $this->BindName = $BindName;
         $this->BindVars = $BindVars;
-        $this->CreateIndex = $CreateIndex;
-        $this->ModifyIndex = $ModifyIndex;
+        $this->CreateIndex = uint64($CreateIndex);
+        $this->ModifyIndex = uint64($ModifyIndex);
         $this->Namespace = $Namespace;
         $this->Partition = $Partition;
     }
@@ -147,25 +150,25 @@ class ACLBindingRule extends AbstractType
         return $this;
     }
 
-    public function getCreateIndex(): int
+    public function getCreateIndex(): BigInteger
     {
         return $this->CreateIndex;
     }
 
-    public function setCreateIndex(int $CreateIndex): self
+    public function setCreateIndex(int|string|BigInteger $CreateIndex): self
     {
-        $this->CreateIndex = $CreateIndex;
+        $this->CreateIndex = uint64($CreateIndex);
         return $this;
     }
 
-    public function getModifyIndex(): int
+    public function getModifyIndex(): BigInteger
     {
         return $this->ModifyIndex;
     }
 
-    public function setModifyIndex(int $ModifyIndex): self
+    public function setModifyIndex(int|string|BigInteger $ModifyIndex): self
     {
-        $this->ModifyIndex = $ModifyIndex;
+        $this->ModifyIndex = uint64($ModifyIndex);
         return $this;
     }
 
@@ -201,7 +204,9 @@ class ACLBindingRule extends AbstractType
     protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
     {
         foreach ((array)$decoded as $k => $v) {
-            if ('BindVars' === $k && null !== $v) {
+            if ('CreateIndex' === $k || 'ModifyIndex' === $k) {
+                $n->{$k} = uint64($v);
+            } elseif ('BindVars' === $k && null !== $v) {
                 $n->BindVars = ACLTemplatedPolicyVariables::jsonUnserialize($v);
             } else {
                 $n->{$k} = $v;

@@ -77,7 +77,7 @@ class HTTPHeaderModifiers extends AbstractType
         if (null === $Add) {
             return $this;
         }
-        foreach ($Add as $k => $v) {
+        foreach ((array)$Add as $k => $v) {
             $this->Add[$k] = $v;
         }
         return $this;
@@ -106,7 +106,7 @@ class HTTPHeaderModifiers extends AbstractType
         if (null === $Set) {
             return $this;
         }
-        foreach ($Set as $k => $v) {
+        foreach ((array)$Set as $k => $v) {
             $this->Set[$k] = $v;
         }
         return $this;

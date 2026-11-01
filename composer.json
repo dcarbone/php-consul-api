@@ -18,10 +18,11 @@
   "require": {
     "php": "^8.2",
     "ext-json": "*",
-    "dcarbone/gotime": "^v1.0.1",
+    "dcarbone/gotime": "^v2.0",
     "dcarbone/gohttp": "^v1.0.0",
     "guzzlehttp/guzzle": "^7.4",
-    "guzzlehttp/psr7": "^2.4"
+    "guzzlehttp/psr7": "^2.4",
+    "brick/math": "^1.0"
   },
   "autoload": {
     "files": [
@@ -44,7 +45,7 @@
     }
   },
   "scripts": {
-    "php-cs-fixer": "tools/php-cs-fixer/vendor/bin/php-cs-fixer fix --config .php-cs-fixer.php src/",
+    "rector": "@php tools/rector/vendor/bin/rector process --config rector.php --no-progress-bar",
     "phpstan": "tools/phpstan/vendor/bin/phpstan analyze -c phpstan.neon --memory-limit=512M --no-progress",
     "psalm": "tools/psalm/vendor/bin/psalm --config=psalm.xml --no-progress"
   }

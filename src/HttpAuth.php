@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI;
    limitations under the License.
  */
 
-class HttpAuth implements \JsonSerializable
+class HttpAuth implements \JsonSerializable, \Stringable
 {
     public string $username;
     public string $password;

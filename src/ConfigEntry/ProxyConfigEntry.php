@@ -20,10 +20,12 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\Consul;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 use function DCarbone\PHPConsulAPI\PHPLib\_enc_obj_if_valued;
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class ProxyConfigEntry extends AbstractType implements ConfigEntry
 {
@@ -69,32 +71,30 @@ class ProxyConfigEntry extends AbstractType implements ConfigEntry
         null|ServiceResolverPrioritizeByLocality $PrioritizeByLocality = null,
         string $Namespace = '',
         array $Meta = [],
-        int $CreateIndex = 0,
-        int $ModifyIndex = 0,
+        int|string|BigInteger $CreateIndex = 0,
+        int|string|BigInteger $ModifyIndex = 0,
     ) {
         if (null !== $data) {
             self::_hydrateFromDecoded((object)$data, $this);
             return;
         }
-        {
-            $this->Kind = $Kind;
-            $this->Name = $Name;
-            $this->Partition = $Partition;
-            $this->Namespace = $Namespace;
-            $this->Mode = $Mode instanceof ProxyMode ? $Mode : ProxyMode::from($Mode);
-            $this->TransparentProxy = $TransparentProxy;
-            $this->MutualTLSMode = $MutualTLSMode instanceof MutualTLSMode ? $MutualTLSMode : MutualTLSMode::from($MutualTLSMode);
-            $this->setConfig($Config);
-            $this->MeshGateway = $MeshGateway ?? new MeshGatewayConfig();
-            $this->Expose = $Expose ?? new ExposeConfig();
-            $this->AccessLogs = $AccessLogs;
-            $this->setEnvoyExtensions(...$EnvoyExtensions);
-            $this->FailoverPolicy = $FailoverPolicy;
-            $this->PrioritizeByLocality = $PrioritizeByLocality;
-            $this->setMeta($Meta);
-            $this->CreateIndex = $CreateIndex;
-            $this->ModifyIndex = $ModifyIndex;
-        }
+        $this->Kind = $Kind;
+        $this->Name = $Name;
+        $this->Partition = $Partition;
+        $this->Namespace = $Namespace;
+        $this->Mode = $Mode instanceof ProxyMode ? $Mode : ProxyMode::from($Mode);
+        $this->TransparentProxy = $TransparentProxy;
+        $this->MutualTLSMode = $MutualTLSMode instanceof MutualTLSMode ? $MutualTLSMode : MutualTLSMode::from($MutualTLSMode);
+        $this->setConfig($Config);
+        $this->MeshGateway = $MeshGateway ?? new MeshGatewayConfig();
+        $this->Expose = $Expose ?? new ExposeConfig();
+        $this->AccessLogs = $AccessLogs;
+        $this->setEnvoyExtensions(...$EnvoyExtensions);
+        $this->FailoverPolicy = $FailoverPolicy;
+        $this->PrioritizeByLocality = $PrioritizeByLocality;
+        $this->setMeta($Meta);
+        $this->CreateIndex = uint64($CreateIndex);
+        $this->ModifyIndex = uint64($ModifyIndex);
     }
 
     public function getKind(): string
@@ -130,7 +130,7 @@ class ProxyConfigEntry extends AbstractType implements ConfigEntry
         return $this;
     }
 
-    public function getMode(): ProxyMode
+    public function getMode(): null|ProxyMode
     {
         return $this->Mode;
     }
@@ -179,7 +179,7 @@ class ProxyConfigEntry extends AbstractType implements ConfigEntry
     {
         $this->Config = [];
         if (null !== $Config) {
-            foreach ($Config as $k => $v) {
+            foreach ((array)$Config as $k => $v) {
                 $this->Config[$k] = $v;
             }
         }
@@ -227,9 +227,6 @@ class ProxyConfigEntry extends AbstractType implements ConfigEntry
         return $this->EnvoyExtensions;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\ConfigEntry\EnvoyExtension ...$EnvoyExtensions
-     */
     public function setEnvoyExtensions(EnvoyExtension ...$EnvoyExtensions): self
     {
         $this->EnvoyExtensions = $EnvoyExtensions;
@@ -268,7 +265,7 @@ class ProxyConfigEntry extends AbstractType implements ConfigEntry
     protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
     {
         foreach ((array)$decoded as $k => $v) {
-            if ('ProxyMode' === $k) {
+            if ('Mode' === $k) {
                 $n->Mode = ProxyMode::from($v);
             } elseif ('TransparentProxy' === $k || 'transparent_proxy' === $k) {
                 $n->TransparentProxy = TransparentProxyConfig::jsonUnserialize($v);
@@ -292,6 +289,8 @@ class ProxyConfigEntry extends AbstractType implements ConfigEntry
                 $n->setConfig($v);
             } elseif ('Meta' === $k) {
                 $n->setMeta($v);
+            } elseif ('CreateIndex' === $k || 'ModifyIndex' === $k) {
+                $n->{$k} = uint64($v);
             } else {
                 $n->{$k} = $v;
             }
@@ -306,8 +305,8 @@ class ProxyConfigEntry extends AbstractType implements ConfigEntry
         if ('' !== $this->Partition) {
             $out->Partition = $this->Partition;
         }
-        if (ProxyMode::Default !== $this->Mode) {
-            $out->ProxyMode = $this->Mode->value;
+        if (null !== $this->Mode && ProxyMode::Default !== $this->Mode) {
+            $out->Mode = $this->Mode->value;
         }
         if (null !== $this->TransparentProxy) {
             $out->TransparentProxy = $this->TransparentProxy;

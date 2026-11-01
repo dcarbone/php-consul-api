@@ -2,6 +2,7 @@
 
 namespace DCarbone\PHPConsulAPITests\Unit\ACL;
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\ACL\ACLRole;
 use DCarbone\PHPConsulAPI\ACL\ACLRolePolicyLink;
 use DCarbone\PHPConsulAPI\ACL\ACLServiceIdentity;
@@ -25,8 +26,8 @@ final class ACLRoleTest extends TestCase
         self::assertSame([], $r->getNodeIdentities());
         self::assertSame([], $r->getTemplatedPolicies());
         self::assertSame('', $r->getHash());
-        self::assertSame(0, $r->getCreateIndex());
-        self::assertSame(0, $r->getModifyIndex());
+        self::assertSame('0', (string)$r->getCreateIndex());
+        self::assertSame('0', (string)$r->getModifyIndex());
         self::assertSame('', $r->getNamespace());
         self::assertSame('', $r->getPartition());
     }
@@ -106,6 +107,31 @@ final class ACLRoleTest extends TestCase
         self::assertInstanceOf(ACLRolePolicyLink::class, $r->getPolicies()[0]);
         self::assertCount(1, $r->getServiceIdentities());
         self::assertInstanceOf(ACLServiceIdentity::class, $r->getServiceIdentities()[0]);
+        self::assertSame('5', (string)$r->getCreateIndex());
+        self::assertSame('10', (string)$r->getModifyIndex());
+    }
+
+    public function testUint64Fields(): void
+    {
+        $max = '18446744073709551615';
+        $r = new ACLRole(CreateIndex: 1, ModifyIndex: '2');
+        self::assertSame('1', (string)$r->CreateIndex);
+        self::assertSame('2', (string)$r->getModifyIndex());
+        $r = new ACLRole(ModifyIndex: BigInteger::of($max));
+        self::assertSame($max, (string)$r->getModifyIndex());
+
+        $r->setCreateIndex(BigInteger::of(4))->setModifyIndex(5);
+        self::assertSame('4', (string)$r->getCreateIndex());
+        self::assertSame('5', (string)$r->getModifyIndex());
+        $r->setCreateIndex('6');
+        self::assertSame('6', (string)$r->CreateIndex);
+
+        $d = new \stdClass();
+        $d->CreateIndex = $max;
+        $d->ModifyIndex = '8';
+        $r = ACLRole::jsonUnserialize($d);
+        self::assertSame($max, (string)$r->getCreateIndex());
+        self::assertSame('8', (string)$r->getModifyIndex());
     }
 }
 

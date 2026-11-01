@@ -20,10 +20,12 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 use function DCarbone\PHPConsulAPI\PHPLib\parse_time;
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class ServerHealth extends AbstractType
 {
@@ -34,8 +36,8 @@ class ServerHealth extends AbstractType
     public string $Version;
     public bool $Leader;
     public null|Time\Duration $LastContact;
-    public int $LastTerm;
-    public int $LastIndex;
+    public BigInteger $LastTerm;
+    public BigInteger $LastIndex;
     public bool $Healthy;
     public bool $Voter;
     public Time\Time $StableSince;
@@ -52,8 +54,8 @@ class ServerHealth extends AbstractType
         string $Version = '',
         bool $Leader = false,
         null|string|int|float|\DateInterval|Time\Duration $LastContact = null,
-        int $LastTerm = 0,
-        int $LastIndex = 0,
+        int|string|BigInteger $LastTerm = 0,
+        int|string|BigInteger $LastIndex = 0,
         bool $Healthy = false,
         bool $Voter = false,
         null|Time\Time $StableSince = null,
@@ -69,8 +71,8 @@ class ServerHealth extends AbstractType
         $this->Version = $Version;
         $this->Leader = $Leader;
         $this->setLastContact($LastContact);
-        $this->LastTerm = $LastTerm;
-        $this->LastIndex = $LastIndex;
+        $this->LastTerm = uint64($LastTerm);
+        $this->LastIndex = uint64($LastIndex);
         $this->Healthy = $Healthy;
         $this->Voter = $Voter;
         $this->StableSince = $StableSince ?? Time::New();
@@ -157,25 +159,25 @@ class ServerHealth extends AbstractType
         return $this;
     }
 
-    public function getLastTerm(): int
+    public function getLastTerm(): BigInteger
     {
         return $this->LastTerm;
     }
 
-    public function setLastTerm(int $LastTerm): self
+    public function setLastTerm(int|string|BigInteger $LastTerm): self
     {
-        $this->LastTerm = $LastTerm;
+        $this->LastTerm = uint64($LastTerm);
         return $this;
     }
 
-    public function getLastIndex(): int
+    public function getLastIndex(): BigInteger
     {
         return $this->LastIndex;
     }
 
-    public function setLastIndex(int $LastIndex): self
+    public function setLastIndex(int|string|BigInteger $LastIndex): self
     {
-        $this->LastIndex = $LastIndex;
+        $this->LastIndex = uint64($LastIndex);
         return $this;
     }
 
@@ -225,7 +227,9 @@ class ServerHealth extends AbstractType
             if ('LastContact' === $k) {
                 $n->setLastContact($v);
             } elseif ('StableSince' === $k) {
-                $n->StableSince = parse_time($v);
+                $n->StableSince = parse_time($v) ?? Time::New();
+            } elseif ('LastTerm' === $k || 'LastIndex' === $k) {
+                $n->{$k} = uint64($v);
             } else {
                 $n->{$k} = $v;
             }

@@ -16,7 +16,7 @@ class TxnClient extends AbstractClient
         $ret = new TxnAPIResponse();
 
         $resp = $this->_doPut('v1/txn', $txn, $opts);
-        if (null !== $resp->Err) {
+        if ($resp->hasErr()) {
             $ret->Err = $resp->Err;
             return $ret;
         }

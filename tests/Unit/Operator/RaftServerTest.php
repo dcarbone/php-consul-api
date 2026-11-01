@@ -2,6 +2,7 @@
 
 namespace DCarbone\PHPConsulAPITests\Unit\Operator;
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\Operator\RaftServer;
 use PHPUnit\Framework\TestCase;
 
@@ -25,8 +26,8 @@ final class RaftServerTest extends TestCase
         self::assertSame('', $r->ProtocolVersion);
         self::assertFalse($r->isVoter());
         self::assertFalse($r->Voter);
-        self::assertSame(0, $r->getLastIndex());
-        self::assertSame(0, $r->LastIndex);
+        self::assertTrue($r->getLastIndex()->isZero());
+        self::assertTrue($r->LastIndex->isZero());
     }
 
     public function testConstructorWithValues(): void
@@ -52,8 +53,8 @@ final class RaftServerTest extends TestCase
         self::assertSame('3', $r->ProtocolVersion);
         self::assertTrue($r->isVoter());
         self::assertTrue($r->Voter);
-        self::assertSame(42, $r->getLastIndex());
-        self::assertSame(42, $r->LastIndex);
+        self::assertSame('42', (string)$r->getLastIndex());
+        self::assertSame('42', (string)$r->LastIndex);
     }
 
     public function testFluentSetters(): void
@@ -74,7 +75,7 @@ final class RaftServerTest extends TestCase
         self::assertTrue($r->Leader);
         self::assertSame('2', $r->ProtocolVersion);
         self::assertTrue($r->Voter);
-        self::assertSame(99, $r->LastIndex);
+        self::assertSame('99', (string)$r->LastIndex);
     }
 
     public function testJsonSerialize(): void
@@ -84,7 +85,8 @@ final class RaftServerTest extends TestCase
         self::assertInstanceOf(\stdClass::class, $out);
         self::assertSame('x', $out->ID);
         self::assertTrue($out->Leader);
-        self::assertSame(55, $out->LastIndex);
+        self::assertSame($r->LastIndex, $out->LastIndex);
+        self::assertSame('55', (string)$out->LastIndex);
     }
 
     public function testJsonUnserialize(): void
@@ -101,7 +103,7 @@ final class RaftServerTest extends TestCase
         self::assertSame('r1', $r->getID());
         self::assertSame('n1', $r->getNode());
         self::assertTrue($r->isVoter());
-        self::assertSame(123, $r->getLastIndex());
+        self::assertSame('123', (string)$r->getLastIndex());
     }
 
     public function testJsonRoundTrip(): void
@@ -111,7 +113,31 @@ final class RaftServerTest extends TestCase
         self::assertSame($original->getID(), $restored->getID());
         self::assertSame($original->getNode(), $restored->getNode());
         self::assertSame($original->isLeader(), $restored->isLeader());
-        self::assertSame($original->getLastIndex(), $restored->getLastIndex());
+        self::assertTrue($original->getLastIndex()->isEqualTo($restored->getLastIndex()));
+    }
+
+    public function testLastIndexAcceptsIntStringAndBigInteger(): void
+    {
+        $r = new RaftServer(LastIndex: '18446744073709551615');
+        self::assertSame('18446744073709551615', (string)$r->LastIndex);
+
+        $r = new RaftServer(LastIndex: BigInteger::of(5));
+        self::assertSame('5', (string)$r->getLastIndex());
+
+        $r->setLastIndex('9223372036854775808');
+        self::assertSame('9223372036854775808', (string)$r->LastIndex);
+
+        $r->setLastIndex(BigInteger::of(1));
+        self::assertTrue($r->LastIndex->isEqualTo(1));
+
+        $r->setLastIndex(2);
+        self::assertSame('2', (string)$r->LastIndex);
+    }
+
+    public function testJsonUnserializeLargeLastIndex(): void
+    {
+        $r = RaftServer::jsonUnserialize(json_decode('{"ID":"a","LastIndex":18446744073709551615}', flags: JSON_BIGINT_AS_STRING | JSON_THROW_ON_ERROR));
+        self::assertSame('18446744073709551615', (string)$r->LastIndex);
     }
 }
 

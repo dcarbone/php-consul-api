@@ -32,9 +32,6 @@ use phpDocumentor\Reflection\Types\Null_;
  *  - must typehint nothing [true, null]
  * 3. parameter is one of multiple concrete types
  *  - must typehint nothing [false, null]
- *
- * @param \phpDocumentor\Reflection\Types\Compound $compoundHint
- * @return array
  */
 function determine_param_hint(Compound $compoundHint): array
 {

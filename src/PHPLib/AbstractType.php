@@ -20,7 +20,7 @@ namespace DCarbone\PHPConsulAPI\PHPLib;
    limitations under the License.
  */
 
-abstract class AbstractType implements \JsonSerializable
+abstract class AbstractType implements \JsonSerializable, \Stringable
 {
     /** @var array<string,mixed> */
     private array $_dyn = [];

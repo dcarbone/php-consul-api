@@ -35,9 +35,7 @@ trait TaggedAddressField
 
     public function setTaggedAddress(string $k, string $v): self
     {
-        if (null === $this->TaggedAddresses) {
-            $this->TaggedAddresses = [];
-        }
+        $this->TaggedAddresses ??= [];
         $this->TaggedAddresses[$k] = $v;
         return $this;
     }
@@ -51,8 +49,8 @@ trait TaggedAddressField
         if (null === $TaggedAddresses) {
             return $this;
         }
-        foreach ($TaggedAddresses as $k => $v) {
-            $this->setTaggedAddress($k, $v);
+        foreach ((array)$TaggedAddresses as $k => $v) {
+            $this->setTaggedAddress((string)$k, $v);
         }
         return $this;
     }

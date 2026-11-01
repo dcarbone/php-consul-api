@@ -1,4 +1,4 @@
-php-cs-fixer/vendor
 phpstan/vendor
+rector/vendor
 psalm/vendor
 psalm/.cache

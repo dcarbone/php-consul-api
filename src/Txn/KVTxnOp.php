@@ -20,15 +20,18 @@ namespace DCarbone\PHPConsulAPI\Txn;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class KVTxnOp extends AbstractType
 {
     public KVOp $Verb;
     public string $Key;
     public string $Value;
-    public int $Flags;
-    public int $Index;
+    public BigInteger $Flags;
+    public BigInteger $Index;
     public string $Session;
     public string $Namespace;
     public string $Partition;
@@ -41,8 +44,8 @@ class KVTxnOp extends AbstractType
         string|KVOp $Verb = KVOp::UNDEFINED,
         string $Key = '',
         string $Value = '',
-        int $Flags = 0,
-        int $Index = 0,
+        int|string|BigInteger $Flags = 0,
+        int|string|BigInteger $Index = 0,
         string $Session = '',
         string $Namespace = '',
         string $Partition = '',
@@ -57,8 +60,8 @@ class KVTxnOp extends AbstractType
         $this->Verb = $Verb;
         $this->Key = $Key;
         $this->Value = $Value;
-        $this->Flags = $Flags;
-        $this->Index = $Index;
+        $this->Flags = uint64($Flags);
+        $this->Index = uint64($Index);
         $this->Session = $Session;
         $this->Namespace = $Namespace;
         $this->Partition = $Partition;
@@ -100,25 +103,25 @@ class KVTxnOp extends AbstractType
         return $this;
     }
 
-    public function getFlags(): int
+    public function getFlags(): BigInteger
     {
         return $this->Flags;
     }
 
-    public function setFlags(int $Flags): self
+    public function setFlags(int|string|BigInteger $Flags): self
     {
-        $this->Flags = $Flags;
+        $this->Flags = uint64($Flags);
         return $this;
     }
 
-    public function getIndex(): int
+    public function getIndex(): BigInteger
     {
         return $this->Index;
     }
 
-    public function setIndex(int $Index): self
+    public function setIndex(int|string|BigInteger $Index): self
     {
-        $this->Index = $Index;
+        $this->Index = uint64($Index);
         return $this;
     }
 
@@ -177,6 +180,8 @@ class KVTxnOp extends AbstractType
                     throw new \DomainException(sprintf('Could not base64 decode value "%s"', $v));
                 }
                 $n->Value = $val;
+            } elseif ('Flags' === $k || 'Index' === $k) {
+                $n->{$k} = uint64($v);
             } else {
                 $n->{$k} = $v;
             }

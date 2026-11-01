@@ -2,6 +2,7 @@
 
 namespace DCarbone\PHPConsulAPITests\Unit\Operator;
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\Operator\AutopilotServer;
 use DCarbone\PHPConsulAPI\Operator\AutopilotServerStatus;
 use DCarbone\PHPConsulAPI\Operator\AutopilotServerType;
@@ -27,10 +28,10 @@ final class AutopilotServerTest extends TestCase
         self::assertSame('', $s->Version);
         self::assertNull($s->getLastContact());
         self::assertNull($s->LastContact);
-        self::assertSame(0, $s->getLastTerm());
-        self::assertSame(0, $s->LastTerm);
-        self::assertSame(0, $s->getLastIndex());
-        self::assertSame(0, $s->LastIndex);
+        self::assertTrue($s->getLastTerm()->isZero());
+        self::assertTrue($s->LastTerm->isZero());
+        self::assertTrue($s->getLastIndex()->isZero());
+        self::assertTrue($s->LastIndex->isZero());
         self::assertFalse($s->isHealthy());
         self::assertFalse($s->Healthy);
         self::assertSame('', $s->getRedundancyZone());
@@ -65,6 +66,8 @@ final class AutopilotServerTest extends TestCase
         );
         self::assertSame('srv-1', $s->getID());
         self::assertSame('srv-1', $s->ID);
+        self::assertSame('3', (string)$s->getLastTerm());
+        self::assertSame('100', (string)$s->LastIndex);
         self::assertTrue($s->isHealthy());
         self::assertTrue($s->Healthy);
         self::assertSame(AutopilotServerStatus::Leader, $s->getStatus());
@@ -107,8 +110,8 @@ final class AutopilotServerTest extends TestCase
         self::assertSame('a', $s->Address);
         self::assertSame('ns', $s->NodeStatus);
         self::assertSame('v', $s->Version);
-        self::assertSame(1, $s->LastTerm);
-        self::assertSame(50, $s->LastIndex);
+        self::assertSame('1', (string)$s->LastTerm);
+        self::assertSame('50', (string)$s->LastIndex);
         self::assertTrue($s->Healthy);
         self::assertSame('z', $s->RedundancyZone);
         self::assertSame('uv', $s->UpgradeVersion);
@@ -161,6 +164,42 @@ final class AutopilotServerTest extends TestCase
         self::assertTrue($s->isHealthy());
         self::assertSame(AutopilotServerStatus::Voter, $s->getStatus());
         self::assertSame(AutopilotServerType::Voter, $s->getNodeType());
+        self::assertSame('3', (string)$s->LastTerm);
+        self::assertSame('100', (string)$s->LastIndex);
+    }
+
+    public function testLastContactRoundTrip(): void
+    {
+        $s = AutopilotServer::jsonUnserialize(decoded: json_decode('{"ID":"x","LastContact":"10ms"}', false));
+        self::assertSame(10000000, $s->getLastContact()->Nanoseconds());
+        $out = $s->jsonSerialize();
+        self::assertSame('10ms', $out->LastContact);
+        self::assertObjectNotHasProperty('lastContact', $out);
+    }
+
+    public function testUint64FieldsAcceptIntStringAndBigInteger(): void
+    {
+        $s = new AutopilotServer(LastTerm: BigInteger::of(4), LastIndex: '18446744073709551615');
+        self::assertSame('4', (string)$s->getLastTerm());
+        self::assertSame('18446744073709551615', (string)$s->LastIndex);
+
+        $s->setLastTerm('9223372036854775808')->setLastIndex(BigInteger::of(6));
+        self::assertSame('9223372036854775808', (string)$s->LastTerm);
+        self::assertTrue($s->getLastIndex()->isEqualTo(6));
+
+        $s->setLastTerm(1);
+        self::assertSame('1', (string)$s->LastTerm);
+
+        $out = $s->jsonSerialize();
+        self::assertSame($s->LastTerm, $out->LastTerm);
+        self::assertSame($s->LastIndex, $out->LastIndex);
+    }
+
+    public function testJsonUnserializeLargeValues(): void
+    {
+        $s = AutopilotServer::jsonUnserialize(json_decode('{"ID":"a","LastTerm":"9223372036854775808","LastIndex":18446744073709551615}', flags: JSON_BIGINT_AS_STRING | JSON_THROW_ON_ERROR));
+        self::assertSame('9223372036854775808', (string)$s->LastTerm);
+        self::assertSame('18446744073709551615', (string)$s->LastIndex);
     }
 }
 

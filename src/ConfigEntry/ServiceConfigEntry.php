@@ -20,9 +20,11 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 use function DCarbone\PHPConsulAPI\PHPLib\_enc_obj_if_valued;
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class ServiceConfigEntry extends AbstractType implements ConfigEntry
 {
@@ -76,8 +78,8 @@ class ServiceConfigEntry extends AbstractType implements ConfigEntry
         null|RateLimits $RateLimits = null,
         array $EnvoyExtensions = [],
         array $Meta = [],
-        int $CreateIndex = 0,
-        int $ModifyIndex = 0,
+        int|string|BigInteger $CreateIndex = 0,
+        int|string|BigInteger $ModifyIndex = 0,
     ) {
         if (null !== $data) {
             self::_hydrateFromDecoded((object)$data, $this);
@@ -103,8 +105,8 @@ class ServiceConfigEntry extends AbstractType implements ConfigEntry
         $this->RateLimits = $RateLimits;
         $this->setEnvoyExtensions(...$EnvoyExtensions);
         $this->setMeta($Meta);
-        $this->CreateIndex = $CreateIndex;
-        $this->ModifyIndex = $ModifyIndex;
+        $this->CreateIndex = uint64($CreateIndex);
+        $this->ModifyIndex = uint64($ModifyIndex);
     }
 
     public function getKind(): string
@@ -350,6 +352,8 @@ class ServiceConfigEntry extends AbstractType implements ConfigEntry
                 }
             } elseif ('Meta' === $k) {
                 $n->setMeta($v);
+            } elseif ('CreateIndex' === $k || 'ModifyIndex' === $k) {
+                $n->{$k} = uint64($v);
             } else {
                 $n->{$k} = $v;
             }

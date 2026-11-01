@@ -41,9 +41,7 @@ class CheckTxnOp extends AbstractType
             return;
         }
         $this->setVerb($Verb);
-        if (null === $Check) {
-            $Check = new HealthCheck();
-        }
+        $Check ??= new HealthCheck();
         $this->Check = $Check;
     }
 

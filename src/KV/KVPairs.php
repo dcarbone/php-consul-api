@@ -108,7 +108,7 @@ class KVPairs extends AbstractType implements \IteratorAggregate, \Countable, \A
     public static function jsonUnserialize(\stdClass ...$decoded): self
     {
         $n = new self();
-        self::_hydrateFromDecoded($decoded, $n);
+        self::_hydrateFromDecoded(array_values($decoded), $n);
         return $n;
     }
 

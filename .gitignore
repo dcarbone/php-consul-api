@@ -1,7 +1,6 @@
+.codex/
 .idea/
 .junie/
-.php-cs-fixer.cache
-.php_cs.cache
 .phpunit.result.cache
 /composer.phar
 vendor/

@@ -71,7 +71,6 @@ class MeshGatewayConfig extends AbstractType
 
     public function jsonSerialize(): \stdClass
     {
-        $out = $this->_startJsonSerialize();
-        return $out;
+        return $this->_startJsonSerialize();
     }
 }

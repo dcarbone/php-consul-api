@@ -2,6 +2,7 @@
 
 namespace DCarbone\PHPConsulAPITests\Unit\Operator;
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\Operator\ServerHealth;
 use PHPUnit\Framework\TestCase;
 
@@ -27,10 +28,10 @@ final class ServerHealthTest extends TestCase
         self::assertFalse($s->Leader);
         self::assertNull($s->getLastContact());
         self::assertNull($s->LastContact);
-        self::assertSame(0, $s->getLastTerm());
-        self::assertSame(0, $s->LastTerm);
-        self::assertSame(0, $s->getLastIndex());
-        self::assertSame(0, $s->LastIndex);
+        self::assertTrue($s->getLastTerm()->isZero());
+        self::assertTrue($s->LastTerm->isZero());
+        self::assertTrue($s->getLastIndex()->isZero());
+        self::assertTrue($s->LastIndex->isZero());
         self::assertFalse($s->isHealthy());
         self::assertFalse($s->Healthy);
         self::assertFalse($s->isVoter());
@@ -60,10 +61,10 @@ final class ServerHealthTest extends TestCase
         self::assertTrue($s->Leader);
         self::assertNotNull($s->getLastContact());
         self::assertNotNull($s->LastContact);
-        self::assertSame(3, $s->getLastTerm());
-        self::assertSame(3, $s->LastTerm);
-        self::assertSame(100, $s->getLastIndex());
-        self::assertSame(100, $s->LastIndex);
+        self::assertSame('3', (string)$s->getLastTerm());
+        self::assertSame('3', (string)$s->LastTerm);
+        self::assertSame('100', (string)$s->getLastIndex());
+        self::assertSame('100', (string)$s->LastIndex);
         self::assertTrue($s->isHealthy());
         self::assertTrue($s->Healthy);
         self::assertTrue($s->isVoter());
@@ -92,8 +93,8 @@ final class ServerHealthTest extends TestCase
         self::assertSame('alive', $s->SerfStatus);
         self::assertSame('v', $s->Version);
         self::assertTrue($s->Leader);
-        self::assertSame(1, $s->LastTerm);
-        self::assertSame(50, $s->LastIndex);
+        self::assertSame('1', (string)$s->LastTerm);
+        self::assertSame('50', (string)$s->LastIndex);
         self::assertTrue($s->Healthy);
         self::assertTrue($s->Voter);
     }
@@ -135,6 +136,33 @@ final class ServerHealthTest extends TestCase
         self::assertSame('sh1', $s->getID());
         self::assertTrue($s->isLeader());
         self::assertTrue($s->isHealthy());
+        self::assertSame('3', (string)$s->LastTerm);
+        self::assertSame('100', (string)$s->LastIndex);
+    }
+
+    public function testUint64FieldsAcceptIntStringAndBigInteger(): void
+    {
+        $s = new ServerHealth(LastTerm: '18446744073709551615', LastIndex: BigInteger::of(7));
+        self::assertSame('18446744073709551615', (string)$s->LastTerm);
+        self::assertSame('7', (string)$s->getLastIndex());
+
+        $s->setLastTerm(BigInteger::of(2))->setLastIndex('9223372036854775808');
+        self::assertTrue($s->getLastTerm()->isEqualTo(2));
+        self::assertSame('9223372036854775808', (string)$s->LastIndex);
+
+        $s->setLastIndex(8);
+        self::assertSame('8', (string)$s->LastIndex);
+
+        $out = $s->jsonSerialize();
+        self::assertSame($s->LastTerm, $out->LastTerm);
+        self::assertSame($s->LastIndex, $out->LastIndex);
+    }
+
+    public function testJsonUnserializeLargeValues(): void
+    {
+        $s = ServerHealth::jsonUnserialize(json_decode('{"ID":"a","LastTerm":18446744073709551615,"LastIndex":"18446744073709551614"}', flags: JSON_BIGINT_AS_STRING | JSON_THROW_ON_ERROR));
+        self::assertSame('18446744073709551615', (string)$s->LastTerm);
+        self::assertSame('18446744073709551614', (string)$s->LastIndex);
     }
 }
 

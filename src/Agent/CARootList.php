@@ -78,9 +78,6 @@ class CARootList extends AbstractType
         return $this->Roots;
     }
 
-    /**
-     * @param CARoot ...$Roots
-     */
     public function setRoots(CARoot ...$Roots): self
     {
         $this->Roots = $Roots;

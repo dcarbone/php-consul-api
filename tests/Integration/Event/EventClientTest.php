@@ -18,6 +18,7 @@ namespace DCarbone\PHPConsulAPITests\Integration\Event;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\Event\EventClient;
 use DCarbone\PHPConsulAPI\Event\UserEvent;
 use DCarbone\PHPConsulAPI\QueryMeta;
@@ -28,7 +29,6 @@ use PHPUnit\Framework\Attributes\Depends;
 
 final class EventClientTest extends AbstractIntegrationTestCase
 {
-    /** @var bool */
     protected static bool $singlePerClass = true;
 
     public function testCanConstructClient(): void
@@ -106,8 +106,8 @@ final class EventClientTest extends AbstractIntegrationTestCase
 
         $index = $client->IDToIndex('12345678-9012-3456-7890-123456789012');
 
-        self::assertIsInt($index);
-        self::assertGreaterThan(0, $index);
+        self::assertInstanceOf(BigInteger::class, $index);
+        self::assertSame('7684341960737989700', (string)$index);
     }
 
 }

@@ -35,9 +35,7 @@ trait NodeMetaField
 
     public function setNodeMetaKey(string $k, string $v): self
     {
-        if (null === $this->NodeMeta) {
-            $this->NodeMeta = [];
-        }
+        $this->NodeMeta ??= [];
         $this->NodeMeta[$k] = $v;
         return $this;
     }
@@ -51,8 +49,8 @@ trait NodeMetaField
         if (null === $NodeMeta) {
             return $this;
         }
-        foreach ($NodeMeta as $k => $v) {
-            $this->setNodeMetaKey($k, $v);
+        foreach ((array)$NodeMeta as $k => $v) {
+            $this->setNodeMetaKey((string)$k, $v);
         }
         return $this;
     }

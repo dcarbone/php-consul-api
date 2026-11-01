@@ -38,9 +38,9 @@ final class AgentServiceCheckTest extends TestCase
         $c = new AgentServiceCheck(
             CheckID: 'chk-1',
             Name: 'http-check',
-            HTTP: 'http://localhost:8080/health',
             Interval: '10s',
             Timeout: '5s',
+            HTTP: 'http://localhost:8080/health',
             Status: 'critical',
         );
         self::assertSame('chk-1', $c->getCheckID());

@@ -20,13 +20,16 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class RaftConfiguration extends AbstractType
 {
     /** @var array<RaftServer> */
     public array $Servers;
-    public int $Index;
+    public BigInteger $Index;
 
     /**
      * @param array<RaftServer> $Servers
@@ -35,14 +38,14 @@ class RaftConfiguration extends AbstractType
     public function __construct(
         null|array $data = null,
         array $Servers = [],
-        int $Index = 0,
+        int|string|BigInteger $Index = 0,
     ) {
         if (null !== $data) {
             self::_hydrateFromDecoded((object)$data, $this);
             return;
         }
         $this->setServers(...$Servers);
-        $this->Index = $Index;
+        $this->Index = uint64($Index);
     }
 
     /**
@@ -59,14 +62,14 @@ class RaftConfiguration extends AbstractType
         return $this;
     }
 
-    public function getIndex(): int
+    public function getIndex(): BigInteger
     {
         return $this->Index;
     }
 
-    public function setIndex(int $Index): self
+    public function setIndex(int|string|BigInteger $Index): self
     {
-        $this->Index = $Index;
+        $this->Index = uint64($Index);
         return $this;
     }
 
@@ -85,6 +88,8 @@ class RaftConfiguration extends AbstractType
                 foreach ($v as $sv) {
                     $n->Servers[] = RaftServer::jsonUnserialize($sv);
                 }
+            } elseif ('Index' === $k) {
+                $n->Index = uint64($v);
             } else {
                 $n->{$k} = $v;
             }

@@ -2,6 +2,7 @@
 
 namespace DCarbone\PHPConsulAPITests\Unit\ACL;
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\ACL\ACLBindingRule;
 use DCarbone\PHPConsulAPI\ACL\BindingRuleBindType;
 use PHPUnit\Framework\TestCase;
@@ -21,8 +22,8 @@ final class ACLBindingRuleTest extends TestCase
         self::assertSame(BindingRuleBindType::UNDEFINED, $b->getBindType());
         self::assertSame('', $b->getBindType()->value);
         self::assertSame('', $b->getBindName());
-        self::assertSame(0, $b->getCreateIndex());
-        self::assertSame(0, $b->getModifyIndex());
+        self::assertSame('0', (string)$b->getCreateIndex());
+        self::assertSame('0', (string)$b->getModifyIndex());
         self::assertSame('', $b->getNamespace());
     }
 
@@ -85,6 +86,33 @@ final class ACLBindingRuleTest extends TestCase
         self::assertSame('id-1', $b->getID());
         self::assertSame('web', $b->getBindName());
         self::assertSame(BindingRuleBindType::Service, $b->getBindType());
+        self::assertSame('5', (string)$b->getCreateIndex());
+        self::assertSame('10', (string)$b->getModifyIndex());
+    }
+
+    public function testUint64Fields(): void
+    {
+        $max = '18446744073709551615';
+        $b = new ACLBindingRule(CreateIndex: 1, ModifyIndex: '2');
+        self::assertSame('1', (string)$b->CreateIndex);
+        self::assertSame('2', (string)$b->getModifyIndex());
+        $b = new ACLBindingRule(CreateIndex: BigInteger::of($max), ModifyIndex: BigInteger::of(3));
+        self::assertSame($max, (string)$b->getCreateIndex());
+        self::assertSame('3', (string)$b->ModifyIndex);
+
+        $b->setCreateIndex(4)->setModifyIndex('5');
+        self::assertSame('4', (string)$b->getCreateIndex());
+        self::assertSame('5', (string)$b->getModifyIndex());
+        $b->setCreateIndex(BigInteger::of(6))->setModifyIndex($max);
+        self::assertSame('6', (string)$b->CreateIndex);
+        self::assertSame($max, (string)$b->ModifyIndex);
+
+        $d = new \stdClass();
+        $d->CreateIndex = $max;
+        $d->ModifyIndex = 7;
+        $b = ACLBindingRule::jsonUnserialize($d);
+        self::assertSame($max, (string)$b->getCreateIndex());
+        self::assertSame('7', (string)$b->getModifyIndex());
     }
 
     public function testConstructorWithStringBindType(): void

@@ -2,6 +2,7 @@
 
 namespace DCarbone\PHPConsulAPITests\Unit\Health;
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\Health\HealthCheck;
 use DCarbone\PHPConsulAPI\Health\HealthCheckDefinition;
 use PHPUnit\Framework\TestCase;
@@ -44,10 +45,10 @@ final class HealthCheckTest extends TestCase
         self::assertSame('', $hc->PeerName);
         self::assertInstanceOf(HealthCheckDefinition::class, $hc->getDefinition());
         self::assertInstanceOf(HealthCheckDefinition::class, $hc->Definition);
-        self::assertSame(0, $hc->getCreateIndex());
-        self::assertSame(0, $hc->CreateIndex);
-        self::assertSame(0, $hc->getModifyIndex());
-        self::assertSame(0, $hc->ModifyIndex);
+        self::assertTrue($hc->getCreateIndex()->isZero());
+        self::assertTrue($hc->CreateIndex->isZero());
+        self::assertTrue($hc->getModifyIndex()->isZero());
+        self::assertTrue($hc->ModifyIndex->isZero());
     }
 
     public function testConstructorWithValues(): void
@@ -102,10 +103,43 @@ final class HealthCheckTest extends TestCase
         self::assertSame('peer-1', $hc->PeerName);
         self::assertSame($def, $hc->getDefinition());
         self::assertSame($def, $hc->Definition);
-        self::assertSame(5, $hc->getCreateIndex());
-        self::assertSame(5, $hc->CreateIndex);
-        self::assertSame(10, $hc->getModifyIndex());
-        self::assertSame(10, $hc->ModifyIndex);
+        self::assertSame('5', (string)$hc->getCreateIndex());
+        self::assertSame('5', (string)$hc->CreateIndex);
+        self::assertSame('10', (string)$hc->getModifyIndex());
+        self::assertSame('10', (string)$hc->ModifyIndex);
+    }
+
+    public function testConstructorAcceptsStringAndBigInteger(): void
+    {
+        $hc = new HealthCheck(CreateIndex: '18446744073709551615', ModifyIndex: BigInteger::of(42));
+        self::assertSame('18446744073709551615', (string)$hc->getCreateIndex());
+        self::assertSame('42', (string)$hc->getModifyIndex());
+    }
+
+    public function testSettersAcceptStringAndBigInteger(): void
+    {
+        $hc = new HealthCheck();
+        $hc->setCreateIndex('18446744073709551615');
+        self::assertSame('18446744073709551615', (string)$hc->CreateIndex);
+        $big = BigInteger::of('9223372036854775808');
+        $hc->setModifyIndex($big);
+        self::assertTrue($hc->ModifyIndex->isEqualTo($big));
+    }
+
+    public function testSetterRejectsOutOfRange(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        (new HealthCheck())->setCreateIndex('18446744073709551616');
+    }
+
+    public function testJsonUnserializeLargeIndexes(): void
+    {
+        $decoded = new \stdClass();
+        $decoded->CreateIndex = '18446744073709551615';
+        $decoded->ModifyIndex = 7;
+        $hc = HealthCheck::jsonUnserialize($decoded);
+        self::assertSame('18446744073709551615', (string)$hc->CreateIndex);
+        self::assertSame('7', (string)$hc->ModifyIndex);
     }
 
     public function testSettersWithDirectFieldAccess(): void
@@ -174,12 +208,12 @@ final class HealthCheckTest extends TestCase
         self::assertSame($def, $hc->Definition);
 
         $hc->setCreateIndex(1);
-        self::assertSame(1, $hc->getCreateIndex());
-        self::assertSame(1, $hc->CreateIndex);
+        self::assertSame('1', (string)$hc->getCreateIndex());
+        self::assertSame('1', (string)$hc->CreateIndex);
 
         $hc->setModifyIndex(2);
-        self::assertSame(2, $hc->getModifyIndex());
-        self::assertSame(2, $hc->ModifyIndex);
+        self::assertSame('2', (string)$hc->getModifyIndex());
+        self::assertSame('2', (string)$hc->ModifyIndex);
     }
 
     public function testFluentSetters(): void
@@ -288,8 +322,8 @@ final class HealthCheckTest extends TestCase
         self::assertSame('peer', $hc->PeerName);
         self::assertInstanceOf(HealthCheckDefinition::class, $hc->Definition);
         self::assertSame('http://test', $hc->Definition->HTTP);
-        self::assertSame(5, $hc->CreateIndex);
-        self::assertSame(10, $hc->ModifyIndex);
+        self::assertSame('5', (string)$hc->CreateIndex);
+        self::assertSame('10', (string)$hc->ModifyIndex);
     }
 
     public function testJsonRoundTrip(): void
@@ -313,8 +347,8 @@ final class HealthCheckTest extends TestCase
         self::assertSame($original->Name, $restored->Name);
         self::assertSame($original->Status, $restored->Status);
         self::assertSame($original->ServiceTags, $restored->ServiceTags);
-        self::assertSame($original->CreateIndex, $restored->CreateIndex);
-        self::assertSame($original->ModifyIndex, $restored->ModifyIndex);
+        self::assertTrue($original->CreateIndex->isEqualTo($restored->CreateIndex));
+        self::assertTrue($original->ModifyIndex->isEqualTo($restored->ModifyIndex));
     }
 }
 

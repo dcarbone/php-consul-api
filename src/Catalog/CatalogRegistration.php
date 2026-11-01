@@ -148,7 +148,7 @@ class CatalogRegistration extends AbstractType
         return $this;
     }
 
-    public function getChecks(): HealthChecks
+    public function getChecks(): null|HealthChecks
     {
         return $this->Checks;
     }

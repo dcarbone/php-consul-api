@@ -22,7 +22,7 @@ final class QueryOptionsTest extends TestCase
         self::assertFalse($qo->isUseCache());
         self::assertSame(0.0, $qo->getMaxAge()->Seconds());
         self::assertSame(0.0, $qo->getStaleIfError()->Seconds());
-        self::assertSame(0, $qo->getWaitIndex());
+        self::assertSame('0', (string)$qo->getWaitIndex());
         self::assertSame('', $qo->getWaitHash());
         self::assertSame(0.0, $qo->getWaitTime()->Seconds());
         self::assertSame('', $qo->getToken());
@@ -71,7 +71,7 @@ final class QueryOptionsTest extends TestCase
             ->setUseCache(true)
             ->setMaxAge('30s')
             ->setStaleIfError('60s')
-            ->setWaitIndex(100)
+            ->setWaitIndex('18446744073709551615')
             ->setWaitHash('abc')
             ->setWaitTime('5s')
             ->setToken('my-token')
@@ -92,7 +92,7 @@ final class QueryOptionsTest extends TestCase
         self::assertTrue($qo->isUseCache());
         self::assertSame(30.0, $qo->getMaxAge()->Seconds());
         self::assertSame(60.0, $qo->getStaleIfError()->Seconds());
-        self::assertSame(100, $qo->getWaitIndex());
+        self::assertSame('18446744073709551615', (string)$qo->getWaitIndex());
         self::assertSame('abc', $qo->getWaitHash());
         self::assertSame(5.0, $qo->getWaitTime()->Seconds());
         self::assertSame('my-token', $qo->getToken());

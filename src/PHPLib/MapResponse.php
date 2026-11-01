@@ -45,10 +45,10 @@ class MapResponse extends AbstractValuedResponse implements UnmarshalledResponse
             return;
         }
         $this->Map = [];
-        if (!(is_array($decoded) || $decoded instanceof \stdClass)) {
+        if (!is_array($decoded) && !$decoded instanceof \stdClass) {
             return;
         }
-        foreach ($decoded as $k => $v) {
+        foreach ((array)$decoded as $k => $v) {
             $this->Map[$k] = $v;
         }
     }

@@ -20,15 +20,17 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 use function DCarbone\PHPConsulAPI\PHPLib\parse_time;
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class ACLTokenListEntry extends AbstractType
 {
-    public int $CreateIndex;
-    public int $ModifyIndex;
+    public BigInteger $CreateIndex;
+    public BigInteger $ModifyIndex;
     public string $AccessorID;
     public string $SecretID;
     public string $Description;
@@ -62,8 +64,8 @@ class ACLTokenListEntry extends AbstractType
      */
     public function __construct(
         null|array $data = null,
-        int $CreateIndex = 0,
-        int $ModifyIndex = 0,
+        int|string|BigInteger $CreateIndex = 0,
+        int|string|BigInteger $ModifyIndex = 0,
         string $AccessorID = '',
         string $SecretID = '',
         string $Description = '',
@@ -86,8 +88,8 @@ class ACLTokenListEntry extends AbstractType
             self::_hydrateFromDecoded((object)$data, $this);
             return;
         }
-        $this->CreateIndex = $CreateIndex;
-        $this->ModifyIndex = $ModifyIndex;
+        $this->CreateIndex = uint64($CreateIndex);
+        $this->ModifyIndex = uint64($ModifyIndex);
         $this->AccessorID = $AccessorID;
         $this->SecretID = $SecretID;
         $this->Description = $Description;
@@ -107,25 +109,25 @@ class ACLTokenListEntry extends AbstractType
         $this->AuthMethodNamespace = $AuthMethodNamespace;
     }
 
-    public function getCreateIndex(): int
+    public function getCreateIndex(): BigInteger
     {
         return $this->CreateIndex;
     }
 
-    public function setCreateIndex(int $CreateIndex): self
+    public function setCreateIndex(int|string|BigInteger $CreateIndex): self
     {
-        $this->CreateIndex = $CreateIndex;
+        $this->CreateIndex = uint64($CreateIndex);
         return $this;
     }
 
-    public function getModifyIndex(): int
+    public function getModifyIndex(): BigInteger
     {
         return $this->ModifyIndex;
     }
 
-    public function setModifyIndex(int $ModifyIndex): self
+    public function setModifyIndex(int|string|BigInteger $ModifyIndex): self
     {
-        $this->ModifyIndex = $ModifyIndex;
+        $this->ModifyIndex = uint64($ModifyIndex);
         return $this;
     }
 
@@ -341,7 +343,9 @@ class ACLTokenListEntry extends AbstractType
     protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
     {
         foreach ((array)$decoded as $k => $v) {
-            if ('Policies' === $k) {
+            if ('CreateIndex' === $k || 'ModifyIndex' === $k) {
+                $n->{$k} = uint64($v);
+            } elseif ('Policies' === $k) {
                 foreach ($v as $vv) {
                     $n->Policies[] = ACLTokenPolicyLink::jsonUnserialize($vv);
                 }
@@ -399,10 +403,10 @@ class ACLTokenListEntry extends AbstractType
             $out->AuthMethod = $this->AuthMethod;
         }
         if (null !== $this->ExpirationTime) {
-            $out->ExpirationTime = $this->ExpirationTime->format(DATE_RFC3339);
+            $out->ExpirationTime = $this->ExpirationTime->RFC3339Nano();
         }
         if (null !== $this->CreateTime) {
-            $out->CreateTime = $this->CreateTime->format(DATE_RFC3339);
+            $out->CreateTime = $this->CreateTime->RFC3339Nano();
         }
         $out->Hash = $this->Hash;
         if ('' !== $this->Namespace) {

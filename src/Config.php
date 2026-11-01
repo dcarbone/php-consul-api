@@ -38,8 +38,6 @@ class Config
 
     /**
      * The address, including port, of your Consul Agent
-     *
-     * @var string
      */
     public string $Address;
 
@@ -51,8 +49,6 @@ class Config
 
     /**
      * HTTP authentication, if used
-     *
-     * @var \DCarbone\PHPConsulAPI\HttpAuth|null
      */
     public null|HttpAuth $HttpAuth;
 
@@ -64,8 +60,6 @@ class Config
      * File containing the current token to use for this client.
      *
      * If provided, it is read once at startup and never again
-     *
-     * @var string
      */
     public string $TokenFile;
 
@@ -73,15 +67,11 @@ class Config
 
     /**
      * Optional path to certificate.  If set, KeyFile must also be set
-     *
-     * @var string
      */
     public string $CertFile;
 
     /**
      * Optional path to private key.  If set, CertFile must also be set
-     *
-     * @var string
      */
     public string $KeyFile;
 
@@ -254,7 +244,7 @@ class Config
         return $this;
     }
 
-    public function getWaitTime(): Time\Duration
+    public function getWaitTime(): null|Time\Duration
     {
         return $this->WaitTime;
     }
@@ -298,7 +288,7 @@ class Config
         return $this;
     }
 
-    public function getHttpAuth(): HttpAuth
+    public function getHttpAuth(): null|HttpAuth
     {
         return $this->HttpAuth;
     }
@@ -412,9 +402,11 @@ class Config
         if ($env !== '') {
             if (isset($_ENV[$env])) {
                 return $_ENV[$env];
-            } elseif (false !== ($value = getenv($env))) {
+            }
+            if (false !== ($value = getenv($env))) {
                 return $value;
-            } elseif (isset($_SERVER[$env])) {
+            }
+            if (isset($_SERVER[$env])) {
                 return $_SERVER[$env];
             }
         }

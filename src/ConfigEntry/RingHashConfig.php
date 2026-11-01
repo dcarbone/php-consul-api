@@ -20,48 +20,50 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class RingHashConfig extends AbstractType
 {
-    public int $MinimumRingSize = 0;
-    public int $MaximumRingSize = 0;
+    public BigInteger $MinimumRingSize;
+    public BigInteger $MaximumRingSize;
 
     /**
      * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
         null|array $data = null,
-        int $MinimumRingSize = 0,
-        int $MaximumRingSize = 0
+        int|string|BigInteger $MinimumRingSize = 0,
+        int|string|BigInteger $MaximumRingSize = 0
     ) {
+        $this->MinimumRingSize = uint64($MinimumRingSize);
+        $this->MaximumRingSize = uint64($MaximumRingSize);
         if (null !== $data) {
             self::_hydrateFromDecoded((object)$data, $this);
-            return;
         }
-        $this->MinimumRingSize = $MinimumRingSize;
-        $this->MaximumRingSize = $MaximumRingSize;
     }
 
-    public function getMinimumRingSize(): int
+    public function getMinimumRingSize(): BigInteger
     {
         return $this->MinimumRingSize;
     }
 
-    public function setMinimumRingSize(int $MinimumRingSize): self
+    public function setMinimumRingSize(int|string|BigInteger $MinimumRingSize): self
     {
-        $this->MinimumRingSize = $MinimumRingSize;
+        $this->MinimumRingSize = uint64($MinimumRingSize);
         return $this;
     }
 
-    public function getMaximumRingSize(): int
+    public function getMaximumRingSize(): BigInteger
     {
         return $this->MaximumRingSize;
     }
 
-    public function setMaximumRingSize(int $MaximumRingSize): self
+    public function setMaximumRingSize(int|string|BigInteger $MaximumRingSize): self
     {
-        $this->MaximumRingSize = $MaximumRingSize;
+        $this->MaximumRingSize = uint64($MaximumRingSize);
         return $this;
     }
 
@@ -75,10 +77,10 @@ class RingHashConfig extends AbstractType
     protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
     {
         foreach ((array)$decoded as $k => $v) {
-            if ('minimum_ring_size' === $k) {
-                $n->MinimumRingSize = $v;
-            } elseif ('maximum_ring_size' === $k) {
-                $n->MaximumRingSize = $v;
+            if ('MinimumRingSize' === $k || 'minimum_ring_size' === $k) {
+                $n->MinimumRingSize = uint64($v);
+            } elseif ('MaximumRingSize' === $k || 'maximum_ring_size' === $k) {
+                $n->MaximumRingSize = uint64($v);
             } else {
                 $n->{$k} = $v;
             }
@@ -88,10 +90,10 @@ class RingHashConfig extends AbstractType
     public function jsonSerialize(): \stdClass
     {
         $out = $this->_startJsonSerialize();
-        if (0 !== $this->MinimumRingSize) {
+        if (!$this->MinimumRingSize->isZero()) {
             $out->MinimumRingSize = $this->MinimumRingSize;
         }
-        if (0 !== $this->MaximumRingSize) {
+        if (!$this->MaximumRingSize->isZero()) {
             $out->MaximumRingSize = $this->MaximumRingSize;
         }
         return $out;

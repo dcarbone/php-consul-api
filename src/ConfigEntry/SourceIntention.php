@@ -310,10 +310,10 @@ class SourceIntention extends AbstractType
             $out->LegacyMeta = $this->LegacyMeta;
         }
         if (null !== $this->LegacyCreateTime) {
-            $out->LegacyCreateTime = $this->LegacyCreateTime->format(DATE_RFC3339);
+            $out->LegacyCreateTime = $this->LegacyCreateTime->RFC3339Nano();
         }
         if (null !== $this->LegacyUpdateTime) {
-            $out->LegacyUpdateTime = $this->LegacyUpdateTime->format(DATE_RFC3339);
+            $out->LegacyUpdateTime = $this->LegacyUpdateTime->RFC3339Nano();
         }
         return $out;
     }

@@ -20,6 +20,7 @@ namespace DCarbone\PHPConsulAPI\Catalog;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\Agent\AgentServiceConnectProxyConfig;
 use DCarbone\PHPConsulAPI\Health\HealthChecks;
 use DCarbone\PHPConsulAPI\Peering\Locality;
@@ -27,6 +28,8 @@ use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 use DCarbone\PHPConsulAPI\PHPLib\NodeMetaField;
 use DCarbone\PHPConsulAPI\PHPLib\ServiceMetaField;
 use DCarbone\PHPConsulAPI\PHPLib\TaggedAddressField;
+
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class CatalogService extends AbstractType
 {
@@ -50,9 +53,9 @@ class CatalogService extends AbstractType
     public bool $ServiceEnableTagOverride;
     public null|AgentServiceConnectProxyConfig $ServiceProxy;
     public null|Locality $ServiceLocality;
-    public int $CreateIndex;
+    public BigInteger $CreateIndex;
     public HealthChecks $Checks;
-    public int $ModifyIndex;
+    public BigInteger $ModifyIndex;
     public string $Namespace;
     public string $Partition;
 
@@ -83,8 +86,8 @@ class CatalogService extends AbstractType
         bool $ServiceEnableTagOverride = false,
         null|AgentServiceConnectProxyConfig $ServiceProxy = null,
         null|Locality $ServiceLocality = null,
-        int $CreateIndex = 0,
-        int $ModifyIndex = 0,
+        int|string|BigInteger $CreateIndex = 0,
+        int|string|BigInteger $ModifyIndex = 0,
         null|HealthChecks $Checks = null,
         string $Namespace = '',
         string $Partition = '',
@@ -110,9 +113,9 @@ class CatalogService extends AbstractType
         $this->ServiceEnableTagOverride = $ServiceEnableTagOverride;
         $this->ServiceProxy = $ServiceProxy;
         $this->ServiceLocality = $ServiceLocality;
-        $this->CreateIndex = $CreateIndex;
+        $this->CreateIndex = uint64($CreateIndex);
         $this->Checks = $Checks ?? new HealthChecks();
-        $this->ModifyIndex = $ModifyIndex;
+        $this->ModifyIndex = uint64($ModifyIndex);
         $this->Namespace = $Namespace;
         $this->Partition = $Partition;
     }
@@ -204,9 +207,7 @@ class CatalogService extends AbstractType
 
     public function setServiceTaggedAddress(string $Tag, ServiceAddress $ServiceAddress): self
     {
-        if (null === $this->ServiceTaggedAddresses) {
-            $this->ServiceTaggedAddresses = [];
-        }
+        $this->ServiceTaggedAddresses ??= [];
         $this->ServiceTaggedAddresses[$Tag] = $ServiceAddress;
         return $this;
     }
@@ -216,13 +217,12 @@ class CatalogService extends AbstractType
      */
     public function setServiceTaggedAddresses(null|array $ServiceTaggedAddresses): self
     {
+        $this->ServiceTaggedAddresses = null;
         if (null === $ServiceTaggedAddresses) {
-            $this->TaggedAddresses = null;
             return $this;
         }
-        $this->TaggedAddresses = null;
         foreach ($ServiceTaggedAddresses as $k => $v) {
-            $this->setServiceTaggedAddress($k, $v);
+            $this->setServiceTaggedAddress((string)$k, $v);
         }
         return $this;
     }
@@ -296,14 +296,14 @@ class CatalogService extends AbstractType
         return $this;
     }
 
-    public function getCreateIndex(): int
+    public function getCreateIndex(): BigInteger
     {
         return $this->CreateIndex;
     }
 
-    public function setCreateIndex(int $CreateIndex): self
+    public function setCreateIndex(int|string|BigInteger $CreateIndex): self
     {
-        $this->CreateIndex = $CreateIndex;
+        $this->CreateIndex = uint64($CreateIndex);
         return $this;
     }
 
@@ -318,14 +318,14 @@ class CatalogService extends AbstractType
         return $this;
     }
 
-    public function getModifyIndex(): int
+    public function getModifyIndex(): BigInteger
     {
         return $this->ModifyIndex;
     }
 
-    public function setModifyIndex(int $ModifyIndex): self
+    public function setModifyIndex(int|string|BigInteger $ModifyIndex): self
     {
-        $this->ModifyIndex = $ModifyIndex;
+        $this->ModifyIndex = uint64($ModifyIndex);
         return $this;
     }
 
@@ -367,7 +367,7 @@ class CatalogService extends AbstractType
                 $n->setNodeMeta($v);
             } elseif ('ServiceTaggedAddresses' === $k) {
                 foreach ($v as $kk => $vv) {
-                    $n->setServiceTaggedAddress($kk, ServiceAddress::jsonUnserialize($vv));
+                    $n->setServiceTaggedAddress((string)$kk, ServiceAddress::jsonUnserialize($vv));
                 }
             } elseif ('Weights' === $k || 'ServiceWeights' === $k) {
                 $n->ServiceWeights = Weights::jsonUnserialize($v);
@@ -385,6 +385,8 @@ class CatalogService extends AbstractType
                 }
             } elseif ('ServiceMeta' === $k) {
                 $n->setServiceMeta($v);
+            } elseif ('CreateIndex' === $k || 'ModifyIndex' === $k) {
+                $n->{$k} = uint64($v);
             } else {
                 $n->{$k} = $v;
             }

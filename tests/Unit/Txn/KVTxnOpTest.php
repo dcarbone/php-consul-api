@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DCarbone\PHPConsulAPITests\Unit\Txn;
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\Txn\KVOp;
 use DCarbone\PHPConsulAPI\Txn\KVTxnOp;
 use PHPUnit\Framework\TestCase;
@@ -19,8 +20,8 @@ final class KVTxnOpTest extends TestCase
         self::assertSame(KVOp::UNDEFINED, $op->getVerb());
         self::assertSame('', $op->getKey());
         self::assertSame('', $op->getValue());
-        self::assertSame(0, $op->getFlags());
-        self::assertSame(0, $op->getIndex());
+        self::assertTrue($op->getFlags()->isZero());
+        self::assertTrue($op->getIndex()->isZero());
         self::assertSame('', $op->getSession());
         self::assertSame('', $op->getNamespace());
         self::assertSame('', $op->getPartition());
@@ -70,8 +71,8 @@ final class KVTxnOpTest extends TestCase
         self::assertSame($op, $result);
         self::assertSame('my/key', $op->getKey());
         self::assertSame('my-value', $op->getValue());
-        self::assertSame(5, $op->getFlags());
-        self::assertSame(10, $op->getIndex());
+        self::assertSame('5', (string)$op->getFlags());
+        self::assertSame('10', (string)$op->getIndex());
         self::assertSame('sess-1', $op->getSession());
         self::assertSame('ns', $op->getNamespace());
         self::assertSame('pt', $op->getPartition());
@@ -106,6 +107,43 @@ final class KVTxnOpTest extends TestCase
         $op = KVTxnOp::jsonUnserialize($decoded);
         self::assertSame(KVOp::KVSet, $op->getVerb());
         self::assertSame('hello', $op->getValue());
+        self::assertTrue($op->Flags->isZero());
+        self::assertTrue($op->Index->isZero());
+    }
+
+    public function testUint64FieldsAcceptIntStringAndBigInteger(): void
+    {
+        $op = new KVTxnOp(Flags: '18446744073709551615', Index: BigInteger::of(3));
+        self::assertSame('18446744073709551615', (string)$op->Flags);
+        self::assertSame('3', (string)$op->getIndex());
+
+        $op = new KVTxnOp(Flags: 1, Index: '9223372036854775808');
+        self::assertSame('1', (string)$op->getFlags());
+        self::assertSame('9223372036854775808', (string)$op->Index);
+
+        $op->setFlags(BigInteger::of(2))->setIndex(4);
+        self::assertTrue($op->Flags->isEqualTo(2));
+        self::assertTrue($op->Index->isEqualTo(4));
+
+        $op->setFlags('18446744073709551615');
+        self::assertSame('18446744073709551615', (string)$op->getFlags());
+
+        $out = $op->jsonSerialize();
+        self::assertSame($op->Flags, $out->Flags);
+        self::assertSame($op->Index, $out->Index);
+    }
+
+    public function testJsonUnserializeLargeValues(): void
+    {
+        $op = KVTxnOp::jsonUnserialize(json_decode('{"Verb":"cas","Key":"k","Flags":18446744073709551615,"Index":"9223372036854775808"}', flags: JSON_BIGINT_AS_STRING | JSON_THROW_ON_ERROR));
+        self::assertSame('18446744073709551615', (string)$op->Flags);
+        self::assertSame('9223372036854775808', (string)$op->Index);
+    }
+
+    public function testSetFlagsRejectsOutOfRange(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        (new KVTxnOp())->setFlags('18446744073709551616');
     }
 
     public function testJsonUnserializeThrowsOnInvalidBase64(): void

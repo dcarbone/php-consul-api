@@ -2,6 +2,7 @@
 
 namespace DCarbone\PHPConsulAPITests\Unit\KV;
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\Config;
 use DCarbone\PHPConsulAPI\Consul;
 use DCarbone\PHPConsulAPI\KV\KVClient;
@@ -182,7 +183,7 @@ final class KVClientTest extends TestCase
         $history = [];
         $client = $this->mockClient(200, 'true', $history);
 
-        $response = $client->Put(new KVPair(Key: 'test/key', Value: 'test value', Flags: 42));
+        $response = $client->Put(new KVPair(Key: 'test/key', Flags: 42, Value: 'test value'));
 
         self::assertInstanceOf(WriteResponse::class, $response);
     }
@@ -203,7 +204,7 @@ final class KVClientTest extends TestCase
         $history = [];
         $client = $this->mockClient(200, 'true', $history);
 
-        $response = $client->CAS(new KVPair(Key: 'test/key', Value: 'new value', ModifyIndex: 101));
+        $response = $client->CAS(new KVPair(Key: 'test/key', ModifyIndex: 101, Value: 'new value'));
 
         self::assertInstanceOf(ValuedWriteBoolResponse::class, $response);
         self::assertTrue($response->getValue());
@@ -214,7 +215,7 @@ final class KVClientTest extends TestCase
         $history = [];
         $client = $this->mockClient(200, 'false', $history);
 
-        $response = $client->CAS(new KVPair(Key: 'test/key', Value: 'new value', ModifyIndex: 99));
+        $response = $client->CAS(new KVPair(Key: 'test/key', ModifyIndex: 99, Value: 'new value'));
 
         self::assertInstanceOf(ValuedWriteBoolResponse::class, $response);
         self::assertFalse($response->getValue());
@@ -386,5 +387,84 @@ final class KVClientTest extends TestCase
         self::assertFalse($response->OK);
         self::assertNotNull($response->KVTxnResponse);
         self::assertCount(1, $response->KVTxnResponse->Errors);
+    }
+
+    public function testGetDecodesUint64Values(): void
+    {
+        $body = '[{"Key":"test/key","CreateIndex":9223372036854775808,"ModifyIndex":18446744073709551614,'
+            . '"LockIndex":7,"Flags":18446744073709551615,"Value":"","Session":""}]';
+        $history = [];
+        $client = $this->mockClient(200, $body, $history, ['X-Consul-Index' => ['18446744073709551615']]);
+
+        $response = $client->Get('test/key');
+
+        self::assertNull($response->Err);
+        $pair = $response->getValue();
+        self::assertNotNull($pair);
+        self::assertSame('9223372036854775808', $pair->CreateIndex->toString());
+        self::assertSame('18446744073709551614', $pair->ModifyIndex->toString());
+        self::assertSame('7', $pair->LockIndex->toString());
+        self::assertSame('18446744073709551615', $pair->Flags->toString());
+        self::assertNotNull($response->QueryMeta);
+        self::assertSame('18446744073709551615', $response->QueryMeta->LastIndex->toString());
+    }
+
+    public function testInvalidIndexHeaderLeavesLastIndexZero(): void
+    {
+        $history = [];
+        $client = $this->mockClient(404, '', $history, ['X-Consul-Index' => ['not-a-number']]);
+
+        $response = $client->Get('test/key');
+
+        self::assertNotNull($response->QueryMeta);
+        self::assertTrue($response->QueryMeta->LastIndex->isZero());
+    }
+
+    public function testPutAndCASEncodeUint64QueryParams(): void
+    {
+        $history = [];
+        $client = $this->mockClient(200, 'true', $history);
+
+        $client->CAS(new KVPair(Key: 'test/key', ModifyIndex: '9223372036854775808', Flags: BigInteger::of('18446744073709551615'), Value: 'v'));
+
+        parse_str($history[0]['request']->getUri()->getQuery(), $query);
+        self::assertSame('18446744073709551615', $query['flags']);
+        self::assertSame('9223372036854775808', $query['cas']);
+    }
+
+    public function testPutOmitsZeroFlags(): void
+    {
+        $history = [];
+        $client = $this->mockClient(200, 'true', $history);
+
+        $client->Put(new KVPair(Key: 'test/key', Value: 'v'));
+
+        parse_str($history[0]['request']->getUri()->getQuery(), $query);
+        self::assertArrayNotHasKey('flags', $query);
+    }
+
+    public function testWaitIndexEncodedAsUint64(): void
+    {
+        $history = [];
+        $client = $this->mockClient(404, '', $history);
+
+        $client->Get('test/key', new QueryOptions(WaitIndex: '18446744073709551615'));
+
+        parse_str($history[0]['request']->getUri()->getQuery(), $query);
+        self::assertSame('18446744073709551615', $query['index']);
+    }
+
+    public function testTxnEncodesUint64Body(): void
+    {
+        $history = [];
+        $client = $this->mockClient(200, '{"Results":[],"Errors":[]}', $history);
+
+        $client->Txn(null, new TxnOp(KV: new KVTxnOp(Verb: KVOp::KVCAS, Key: 'test/key', Value: 'v', Flags: '18446744073709551615', Index: '9223372036854775808')));
+
+        $request = $history[0]['request'];
+        self::assertSame('application/json', $request->getHeaderLine('Content-Type'));
+        $body = (string)$request->getBody();
+        self::assertStringContainsString('"Flags":18446744073709551615', $body);
+        self::assertStringContainsString('"Index":9223372036854775808', $body);
     }
 }

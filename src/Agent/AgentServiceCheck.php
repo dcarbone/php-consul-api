@@ -58,7 +58,7 @@ class AgentServiceCheck extends AbstractType
 
     /**
      * @param array<string> $Args
-     * @param null|array<string,array<string>>|\DCarbone\PHPConsulAPI\PHPLib\Values $Header
+     * @param null|\stdClass|array<string,array<string>>|\DCarbone\PHPConsulAPI\PHPLib\Values $Header
      * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
      */
     public function __construct(
@@ -72,7 +72,7 @@ class AgentServiceCheck extends AbstractType
         string $Timeout = '',
         string $TTL = '',
         string $HTTP = '',
-        null|array|Values $Header = null,
+        null|\stdClass|array|Values $Header = null,
         string $Method = '',
         string $Body = '',
         string $TCP = '',

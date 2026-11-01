@@ -59,7 +59,7 @@ class DebugClient extends AbstractClient
         }
 
         $resp = $this->_requireOK($this->_do($r));
-        if (null !== $resp->Err) {
+        if ($resp->hasErr()) {
             $ret->Err = $resp->Err;
             return $ret;
         }

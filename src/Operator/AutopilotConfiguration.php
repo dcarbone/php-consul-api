@@ -20,21 +20,24 @@ namespace DCarbone\PHPConsulAPI\Operator;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class AutopilotConfiguration extends AbstractType
 {
     public bool $CleanupDeadServers;
     public null|Time\Duration $LastContactThreshold;
-    public int $MaxTrailingLogs;
+    public BigInteger $MaxTrailingLogs;
     public int $MinQuorum;
     public null|Time\Duration $ServerStabilizationTime;
     public string $RedundancyZoneTag;
     public bool $DisableUpgradeMigration;
     public string $UpgradeVersionTag;
-    public int $CreateIndex;
-    public int $ModifyIndex;
+    public BigInteger $CreateIndex;
+    public BigInteger $ModifyIndex;
 
     /**
      * @param null|array<string,mixed> $data Deprecated: constructor hydration via $data; use self::jsonUnserialize instead.
@@ -43,14 +46,14 @@ class AutopilotConfiguration extends AbstractType
         null|array $data = null,
         bool $CleanupDeadServers = false,
         null|string|int|float|\DateInterval|Time\Duration $LastContactThreshold = null,
-        int $MaxTrailingLogs = 0,
+        int|string|BigInteger $MaxTrailingLogs = 0,
         int $MinQuorum = 0,
         null|string|int|float|\DateInterval|Time\Duration $ServerStabilizationTime = null,
         string $RedundancyZoneTag = '',
         bool $DisableUpgradeMigration = false,
         string $UpgradeVersionTag = '',
-        int $CreateIndex = 0,
-        int $ModifyIndex = 0,
+        int|string|BigInteger $CreateIndex = 0,
+        int|string|BigInteger $ModifyIndex = 0,
     ) {
         if (null !== $data) {
             self::_hydrateFromDecoded((object)$data, $this);
@@ -58,14 +61,14 @@ class AutopilotConfiguration extends AbstractType
         }
         $this->CleanupDeadServers = $CleanupDeadServers;
         $this->setLastContactThreshold($LastContactThreshold);
-        $this->MaxTrailingLogs = $MaxTrailingLogs;
+        $this->MaxTrailingLogs = uint64($MaxTrailingLogs);
         $this->MinQuorum = $MinQuorum;
         $this->setServerStabilizationTime($ServerStabilizationTime);
         $this->RedundancyZoneTag = $RedundancyZoneTag;
         $this->DisableUpgradeMigration = $DisableUpgradeMigration;
         $this->UpgradeVersionTag = $UpgradeVersionTag;
-        $this->CreateIndex = $CreateIndex;
-        $this->ModifyIndex = $ModifyIndex;
+        $this->CreateIndex = uint64($CreateIndex);
+        $this->ModifyIndex = uint64($ModifyIndex);
     }
 
     public function isCleanupDeadServers(): bool
@@ -94,14 +97,14 @@ class AutopilotConfiguration extends AbstractType
         return $this;
     }
 
-    public function getMaxTrailingLogs(): int
+    public function getMaxTrailingLogs(): BigInteger
     {
         return $this->MaxTrailingLogs;
     }
 
-    public function setMaxTrailingLogs(int $MaxTrailingLogs): self
+    public function setMaxTrailingLogs(int|string|BigInteger $MaxTrailingLogs): self
     {
-        $this->MaxTrailingLogs = $MaxTrailingLogs;
+        $this->MaxTrailingLogs = uint64($MaxTrailingLogs);
         return $this;
     }
 
@@ -164,25 +167,25 @@ class AutopilotConfiguration extends AbstractType
         return $this;
     }
 
-    public function getCreateIndex(): int
+    public function getCreateIndex(): BigInteger
     {
         return $this->CreateIndex;
     }
 
-    public function setCreateIndex(int $CreateIndex): self
+    public function setCreateIndex(int|string|BigInteger $CreateIndex): self
     {
-        $this->CreateIndex = $CreateIndex;
+        $this->CreateIndex = uint64($CreateIndex);
         return $this;
     }
 
-    public function getModifyIndex(): int
+    public function getModifyIndex(): BigInteger
     {
         return $this->ModifyIndex;
     }
 
-    public function setModifyIndex(int $ModifyIndex): self
+    public function setModifyIndex(int|string|BigInteger $ModifyIndex): self
     {
-        $this->ModifyIndex = $ModifyIndex;
+        $this->ModifyIndex = uint64($ModifyIndex);
         return $this;
     }
 
@@ -200,6 +203,8 @@ class AutopilotConfiguration extends AbstractType
                 $n->setLastContactThreshold($v);
             } elseif ('ServerStabilizationTime' === $k) {
                 $n->setServerStabilizationTime($v);
+            } elseif ('MaxTrailingLogs' === $k || 'CreateIndex' === $k || 'ModifyIndex' === $k) {
+                $n->{$k} = uint64($v);
             } else {
                 $n->{$k} = $v;
             }

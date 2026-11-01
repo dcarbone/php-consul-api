@@ -23,7 +23,7 @@ class PeeringClient extends AbstractClient
         }
 
         $resp = $this->_requireNotFoundOrOK($this->_doGet(sprintf('v1/peering/%s', urlencode($name)), $opts));
-        if (null !== $resp->Err) {
+        if ($resp->hasErr()) {
             $ret->Err = $resp->Err;
             $ret->setQueryMeta($resp->buildQueryMeta());
             return $ret;
@@ -63,7 +63,7 @@ class PeeringClient extends AbstractClient
         }
 
         $resp = $this->_requireOK($this->_doPost('v1/peering/token', $request, $opts));
-        if (null !== $resp->Err) {
+        if ($resp->hasErr()) {
             $ret->Err = $resp->Err;
             return $ret;
         }

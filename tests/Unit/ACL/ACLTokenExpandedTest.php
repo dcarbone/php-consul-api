@@ -2,6 +2,7 @@
 
 namespace DCarbone\PHPConsulAPITests\Unit\ACL;
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\ACL\ACLPolicy;
 use DCarbone\PHPConsulAPI\ACL\ACLRole;
 use DCarbone\PHPConsulAPI\ACL\ACLTokenExpanded;
@@ -32,7 +33,7 @@ final class ACLTokenExpandedTest extends TestCase
         self::assertSame('', $t->getResolvedByAgent());
         self::assertSame('', $t->ResolvedByAgent);
         // inherited from ACLToken
-        self::assertSame(0, $t->getCreateIndex());
+        self::assertSame('0', (string)$t->getCreateIndex());
         self::assertSame('', $t->getAccessorID());
         self::assertSame([], $t->getPolicies());
     }
@@ -72,7 +73,7 @@ final class ACLTokenExpandedTest extends TestCase
         self::assertSame('allow', $t->AgentACLDefaultPolicy);
         self::assertSame('deny', $t->getAgentACLDownPolicy());
         self::assertSame('agent-1', $t->getResolvedByAgent());
-        self::assertSame(1, $t->getCreateIndex());
+        self::assertSame('1', (string)$t->getCreateIndex());
         self::assertSame('acc-1', $t->getAccessorID());
         self::assertCount(1, $t->getPolicies());
         self::assertTrue($t->isLocal());
@@ -179,6 +180,25 @@ final class ACLTokenExpandedTest extends TestCase
         self::assertCount(1, $t->getExpandedRoles());
         self::assertInstanceOf(ACLRole::class, $t->getExpandedRoles()[0]);
         self::assertSame('er1', $t->getExpandedRoles()[0]->getID());
+        self::assertSame('5', (string)$t->getCreateIndex());
+        self::assertSame('10', (string)$t->getModifyIndex());
+    }
+
+    public function testUint64Fields(): void
+    {
+        $max = '18446744073709551615';
+        $t = new ACLTokenExpanded(CreateIndex: 1, ModifyIndex: '2');
+        self::assertSame('1', (string)$t->CreateIndex);
+        self::assertSame('2', (string)$t->getModifyIndex());
+        $t = new ACLTokenExpanded(CreateIndex: BigInteger::of($max));
+        self::assertSame($max, (string)$t->getCreateIndex());
+
+        $d = new \stdClass();
+        $d->CreateIndex = $max;
+        $d->ModifyIndex = $max;
+        $t = ACLTokenExpanded::jsonUnserialize($d);
+        self::assertSame($max, (string)$t->getCreateIndex());
+        self::assertSame($max, (string)$t->getModifyIndex());
     }
 }
 

@@ -22,7 +22,7 @@ namespace DCarbone\PHPConsulAPI;
 
 use Psr\Http\Message\UriInterface;
 
-class RequestMeta
+class RequestMeta implements \Stringable
 {
     public string $method;
     public UriInterface $uri;

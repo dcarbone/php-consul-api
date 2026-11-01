@@ -20,7 +20,10 @@ namespace DCarbone\PHPConsulAPI\Health;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class HealthCheck extends AbstractType
 {
@@ -40,8 +43,8 @@ class HealthCheck extends AbstractType
     public int $ExposedPort;
     public string $PeerName;
     public HealthCheckDefinition $Definition;
-    public int $CreateIndex;
-    public int $ModifyIndex;
+    public BigInteger $CreateIndex;
+    public BigInteger $ModifyIndex;
 
     /**
      * @param array<string> $ServiceTags
@@ -64,8 +67,8 @@ class HealthCheck extends AbstractType
         int $ExposedPort = 0,
         string $PeerName = '',
         null|HealthCheckDefinition $Definition = null,
-        int $CreateIndex = 0,
-        int $ModifyIndex = 0,
+        int|string|BigInteger $CreateIndex = 0,
+        int|string|BigInteger $ModifyIndex = 0,
     ) {
         if (null !== $data) {
             self::_hydrateFromDecoded((object)$data, $this);
@@ -86,8 +89,8 @@ class HealthCheck extends AbstractType
         $this->ExposedPort = $ExposedPort;
         $this->PeerName = $PeerName;
         $this->Definition = $Definition ?? new HealthCheckDefinition();
-        $this->CreateIndex = $CreateIndex;
-        $this->ModifyIndex = $ModifyIndex;
+        $this->CreateIndex = uint64($CreateIndex);
+        $this->ModifyIndex = uint64($ModifyIndex);
     }
 
     public function getNode(): string
@@ -258,25 +261,25 @@ class HealthCheck extends AbstractType
         return $this;
     }
 
-    public function getCreateIndex(): int
+    public function getCreateIndex(): BigInteger
     {
         return $this->CreateIndex;
     }
 
-    public function setCreateIndex(int $CreateIndex): self
+    public function setCreateIndex(int|string|BigInteger $CreateIndex): self
     {
-        $this->CreateIndex = $CreateIndex;
+        $this->CreateIndex = uint64($CreateIndex);
         return $this;
     }
 
-    public function getModifyIndex(): int
+    public function getModifyIndex(): BigInteger
     {
         return $this->ModifyIndex;
     }
 
-    public function setModifyIndex(int $ModifyIndex): self
+    public function setModifyIndex(int|string|BigInteger $ModifyIndex): self
     {
-        $this->ModifyIndex = $ModifyIndex;
+        $this->ModifyIndex = uint64($ModifyIndex);
         return $this;
     }
 
@@ -294,6 +297,8 @@ class HealthCheck extends AbstractType
                 $n->Definition = HealthCheckDefinition::jsonUnserialize($v);
             } elseif ('ServiceTags' === $k) {
                 $n->setServiceTags(...$v);
+            } elseif ('CreateIndex' === $k || 'ModifyIndex' === $k) {
+                $n->{$k} = uint64($v);
             } else {
                 $n->{$k} = $v;
             }

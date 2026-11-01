@@ -31,7 +31,7 @@ final class RequestResponse
 {
     public RequestMeta $RequestMeta;
     public Time\Duration $Duration;
-    public null|ResponseInterface $Response = null;
+    public null|ResponseInterface $Response;
     public null|Error $Err;
 
     public function __construct(RequestMeta $meta, null|string|int|float|\DateInterval|Time\Duration $dur, null|ResponseInterface $resp, null|Error $err)
@@ -62,6 +62,15 @@ final class RequestResponse
         return $this->Err;
     }
 
+    /**
+     * @phpstan-assert-if-false null $this->Err
+     * @phpstan-assert-if-false !null $this->Response
+     */
+    public function hasErr(): bool
+    {
+        return null !== $this->Err || null === $this->Response;
+    }
+
     public function buildQueryMeta(): QueryMeta
     {
         // set some always-defined values
@@ -79,7 +88,10 @@ final class RequestResponse
         // populate query meta fields based on response
 
         if ('' !== ($h = $this->Response->getHeaderLine(Consul::_headerConsulIndex))) {
-            $qm->LastIndex = (int)$h;
+            try {
+                $qm->LastIndex = uint64($h);
+            } catch (\InvalidArgumentException) {
+            }
         }
 
         $qm->LastContentHash = $this->Response->getHeaderLine(Consul::_headerConsulContentHash);

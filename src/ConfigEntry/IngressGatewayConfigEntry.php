@@ -20,7 +20,10 @@ namespace DCarbone\PHPConsulAPI\ConfigEntry;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
+
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class IngressGatewayConfigEntry extends AbstractType implements ConfigEntry
 {
@@ -49,8 +52,8 @@ class IngressGatewayConfigEntry extends AbstractType implements ConfigEntry
         array $Listeners = [],
         array $Meta = [],
         null|IngressServiceConfig $Defaults = null,
-        int $CreateIndex = 0,
-        int $ModifyIndex = 0,
+        int|string|BigInteger $CreateIndex = 0,
+        int|string|BigInteger $ModifyIndex = 0,
     ) {
         if (null !== $data) {
             self::_hydrateFromDecoded((object)$data, $this);
@@ -64,8 +67,8 @@ class IngressGatewayConfigEntry extends AbstractType implements ConfigEntry
         $this->setListeners(...$Listeners);
         $this->setMeta($Meta);
         $this->Defaults = $Defaults;
-        $this->CreateIndex = $CreateIndex;
-        $this->ModifyIndex = $ModifyIndex;
+        $this->CreateIndex = uint64($CreateIndex);
+        $this->ModifyIndex = uint64($ModifyIndex);
     }
 
     public function getKind(): string
@@ -120,9 +123,6 @@ class IngressGatewayConfigEntry extends AbstractType implements ConfigEntry
         return $this->Listeners;
     }
 
-    /**
-     * @param \DCarbone\PHPConsulAPI\ConfigEntry\IngressListener ...$Listeners
-     */
     public function setListeners(IngressListener ...$Listeners): self
     {
         $this->Listeners = $Listeners;
@@ -161,6 +161,8 @@ class IngressGatewayConfigEntry extends AbstractType implements ConfigEntry
                 $n->Defaults = null === $v ? null : IngressServiceConfig::jsonUnserialize($v);
             } elseif ('Meta' === $k) {
                 $n->setMeta($v);
+            } elseif ('CreateIndex' === $k || 'ModifyIndex' === $k) {
+                $n->{$k} = uint64($v);
             } else {
                 $n->{$k} = $v;
             }

@@ -24,11 +24,10 @@ on:
       - '**.php'
       - 'composer.json'
       - 'composer.lock'
-      - '.php-cs-fixer.php'
       - 'phpstan.neon'
       - 'psalm.xml'
-      - 'tools/php-cs-fixer/composer.json'
-      - 'tools/php-cs-fixer/composer.lock'
+      - 'tools/rector/composer.json'
+      - 'tools/rector/composer.lock'
       - 'tools/phpstan/composer.json'
       - 'tools/phpstan/composer.lock'
       - 'tools/psalm/composer.json'
@@ -42,11 +41,10 @@ on:
       - '**.php'
       - 'composer.json'
       - 'composer.lock'
-      - '.php-cs-fixer.php'
       - 'phpstan.neon'
       - 'psalm.xml'
-      - 'tools/php-cs-fixer/composer.json'
-      - 'tools/php-cs-fixer/composer.lock'
+      - 'tools/rector/composer.json'
+      - 'tools/rector/composer.lock'
       - 'tools/phpstan/composer.json'
       - 'tools/phpstan/composer.lock'
       - 'tools/psalm/composer.json'
@@ -83,16 +81,16 @@ jobs:
         uses: actions/cache/restore@v6
         with:
           path: |
-            tools/php-cs-fixer/vendor
+            tools/rector/vendor
             tools/phpstan/vendor
             tools/psalm/vendor
-          key: "tool-vendor-${{ runner.os }}-8.3-${{ hashFiles('tools/php-cs-fixer/composer.lock', 'tools/phpstan/composer.lock', 'tools/psalm/composer.lock') }}"
+          key: "tool-vendor-${{ runner.os }}-8.3-${{ hashFiles('tools/rector/composer.lock', 'tools/phpstan/composer.lock', 'tools/psalm/composer.lock') }}"
 
       - name: 'Install tool composer deps'
         shell: bash -e {0}
         # language=sh
         run: |
-          composer install --working-dir tools/php-cs-fixer --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+          composer install --working-dir tools/rector --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
           composer install --working-dir tools/phpstan --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
           composer install --working-dir tools/psalm --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
@@ -101,15 +99,15 @@ jobs:
         uses: actions/cache/save@v6
         with:
           path: |
-            tools/php-cs-fixer/vendor
+            tools/rector/vendor
             tools/phpstan/vendor
             tools/psalm/vendor
-          key: "tool-vendor-${{ runner.os }}-8.3-${{ hashFiles('tools/php-cs-fixer/composer.lock', 'tools/phpstan/composer.lock', 'tools/psalm/composer.lock') }}"
+          key: "tool-vendor-${{ runner.os }}-8.3-${{ hashFiles('tools/rector/composer.lock', 'tools/phpstan/composer.lock', 'tools/psalm/composer.lock') }}"
 
-      - name: 'Execute php-cs-fixer'
+      - name: 'Execute rector'
         # language=bash
         run: |
-          composer php-cs-fixer -- --dry-run --diff
+          composer rector -- --dry-run
 
       - name: 'Execute phpstan'
         # language=bash

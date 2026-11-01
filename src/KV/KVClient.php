@@ -40,7 +40,7 @@ class KVClient extends AbstractClient
         $resp = $this->_doGet($this->_readPath($key), $opts);
         $ret = new KVPairResponse();
         $ret->Err = $resp->Err;
-        if (null !== $resp->Err) {
+        if ($resp->hasErr()) {
             return $ret;
         }
 
@@ -66,8 +66,8 @@ class KVClient extends AbstractClient
     public function Put(KVPair $p, null|WriteOptions $opts = null): WriteResponse
     {
         $r = $this->_newPutRequest($this->_writePath($p->Key), $p->Value, $opts);
-        if (0 !== $p->Flags) {
-            $r->params->set('flags', (string)$p->Flags);
+        if (!$p->Flags->isZero()) {
+            $r->params->set('flags', $p->Flags->toString());
         }
         $r->header->set('Content-Type', 'application/octet-stream');
         $resp = $this->_requireOK($this->_do($r));
@@ -88,7 +88,7 @@ class KVClient extends AbstractClient
         $resp = $this->_do($r);
         $ret = new KVPairsResponse();
 
-        if (null !== $resp->Err) {
+        if ($resp->hasErr()) {
             $ret->setErr($resp->Err);
             return $ret;
         }
@@ -147,9 +147,9 @@ class KVClient extends AbstractClient
     public function CAS(KVPair $p, null|WriteOptions $opts = null): ValuedWriteBoolResponse
     {
         $r = $this->_newPutRequest($this->_writePath($p->Key), $p->Value, $opts);
-        $r->params->set('cas', (string)$p->ModifyIndex);
-        if (0 !== $p->Flags) {
-            $r->params->set('flags', (string)$p->Flags);
+        $r->params->set('cas', $p->ModifyIndex->toString());
+        if (!$p->Flags->isZero()) {
+            $r->params->set('flags', $p->Flags->toString());
         }
         $resp = $this->_requireOK($this->_do($r));
         $ret = new ValuedWriteBoolResponse();
@@ -170,8 +170,8 @@ class KVClient extends AbstractClient
     {
         $r = $this->_newPutRequest($this->_writePath($p->Key), $p->Value, $opts);
         $r->params->set('acquire', $p->Session);
-        if (0 !== $p->Flags) {
-            $r->params->set('flags', (string)$p->Flags);
+        if (!$p->Flags->isZero()) {
+            $r->params->set('flags', $p->Flags->toString());
         }
         $resp = $this->_requireOK($this->_do($r));
         $ret = new ValuedWriteBoolResponse();
@@ -182,7 +182,7 @@ class KVClient extends AbstractClient
     public function DeleteCAS(KVPair $p, null|WriteOptions $opts = null): ValuedWriteBoolResponse
     {
         $r = $this->_newDeleteRequest($this->_readPath($p->Key), $opts);
-        $r->params->set('cas', (string)$p->ModifyIndex);
+        $r->params->set('cas', $p->ModifyIndex->toString());
         $resp = $this->_requireOK($this->_do($r));
         $ret = new ValuedWriteBoolResponse();
         $this->_unmarshalResponse($resp, $ret);
@@ -202,8 +202,8 @@ class KVClient extends AbstractClient
     {
         $r = $this->_newPutRequest($this->_writePath($p->Key), $p->Value, $opts);
         $r->params->set('release', $p->Session);
-        if (0 !== $p->Flags) {
-            $r->params->set('flags', (string)$p->Flags);
+        if (!$p->Flags->isZero()) {
+            $r->params->set('flags', $p->Flags->toString());
         }
         $resp = $this->_requireOK($this->_do($r));
         $ret = new ValuedWriteBoolResponse();
@@ -227,7 +227,7 @@ class KVClient extends AbstractClient
         $ret = new KVTxnAPIResponse();
 
         $resp = $this->_doPut('v1/txn', $txn, $opts);
-        if (null !== $resp->Err) {
+        if ($resp->hasErr()) {
             $ret->Err = $resp->Err;
             return $ret;
         }

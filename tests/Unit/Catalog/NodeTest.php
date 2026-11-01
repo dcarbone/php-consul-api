@@ -2,6 +2,7 @@
 
 namespace DCarbone\PHPConsulAPITests\Unit\Catalog;
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\Catalog\Node;
 use PHPUnit\Framework\TestCase;
 
@@ -18,8 +19,8 @@ final class NodeTest extends TestCase
         self::assertSame('', $n->getNode());
         self::assertSame('', $n->getAddress());
         self::assertSame('', $n->getDatacenter());
-        self::assertSame(0, $n->getCreateIndex());
-        self::assertSame(0, $n->getModifyIndex());
+        self::assertTrue($n->getCreateIndex()->isZero());
+        self::assertTrue($n->getModifyIndex()->isZero());
         self::assertSame('', $n->getPartition());
         self::assertSame('', $n->getPeerName());
         self::assertNull($n->getLocality());
@@ -41,8 +42,8 @@ final class NodeTest extends TestCase
         self::assertSame('node1', $n->getNode());
         self::assertSame('10.0.0.1', $n->getAddress());
         self::assertSame('dc1', $n->getDatacenter());
-        self::assertSame(1, $n->getCreateIndex());
-        self::assertSame(2, $n->getModifyIndex());
+        self::assertSame('1', (string)$n->getCreateIndex());
+        self::assertSame('2', (string)$n->getModifyIndex());
         self::assertSame('pt', $n->getPartition());
         self::assertSame('peer1', $n->getPeerName());
     }
@@ -102,7 +103,32 @@ final class NodeTest extends TestCase
         self::assertInstanceOf(Node::class, $n);
         self::assertSame('id', $n->getID());
         self::assertSame('node', $n->getNode());
-        self::assertSame(5, $n->getCreateIndex());
+        self::assertSame('5', (string)$n->getCreateIndex());
+        self::assertSame('10', (string)$n->ModifyIndex);
+    }
+
+    public function testUint64FieldsAcceptIntStringAndBigInteger(): void
+    {
+        $n = new Node(CreateIndex: '18446744073709551615', ModifyIndex: BigInteger::of(3));
+        self::assertSame('18446744073709551615', (string)$n->CreateIndex);
+        self::assertSame('3', (string)$n->getModifyIndex());
+
+        $n->setCreateIndex(4)->setModifyIndex('9223372036854775808');
+        self::assertTrue($n->getCreateIndex()->isEqualTo(4));
+        self::assertSame('9223372036854775808', (string)$n->ModifyIndex);
+
+        $n->setCreateIndex(BigInteger::of(6));
+        self::assertSame('6', (string)$n->CreateIndex);
+
+        $out = $n->jsonSerialize();
+        self::assertSame($n->CreateIndex, $out->CreateIndex);
+    }
+
+    public function testJsonUnserializeLargeIndexes(): void
+    {
+        $n = Node::jsonUnserialize(json_decode('{"ID":"id","Node":"n","CreateIndex":18446744073709551615,"ModifyIndex":"9223372036854775808"}', flags: JSON_BIGINT_AS_STRING | JSON_THROW_ON_ERROR));
+        self::assertSame('18446744073709551615', (string)$n->CreateIndex);
+        self::assertSame('9223372036854775808', (string)$n->ModifyIndex);
     }
 }
 

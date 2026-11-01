@@ -35,9 +35,7 @@ trait MetaField
 
     public function setMetaKey(string $k, string $v): self
     {
-        if (null === $this->Meta) {
-            $this->Meta = [];
-        }
+        $this->Meta ??= [];
         $this->Meta[$k] = $v;
         return $this;
     }
@@ -52,7 +50,7 @@ trait MetaField
             return $this;
         }
         foreach ((array)$Meta as $k => $v) {
-            $this->setMetaKey($k, $v);
+            $this->setMetaKey((string)$k, $v);
         }
         return $this;
     }

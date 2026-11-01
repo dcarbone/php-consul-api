@@ -45,7 +45,6 @@ abstract class AbstractClient
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\PHPLib\Request $r
      * @return array<string,mixed>
      */
     protected function _buildGuzzleRequestOptions(Request $r): array
@@ -75,7 +74,10 @@ abstract class AbstractClient
             if (is_scalar($body)) {
                 $opts[GuzzleRequestOptions::BODY] = $body;
             } else {
-                $opts[GuzzleRequestOptions::JSON] = $body;
+                $opts[GuzzleRequestOptions::BODY] = encode_json(value: $body, flags: $this->_config->JSONEncodeOpts);
+                if ('' === $r->header->get('Content-Type')) {
+                    $opts[GuzzleRequestOptions::HEADERS] = ['Content-Type' => 'application/json'];
+                }
             }
         }
 
@@ -110,8 +112,6 @@ abstract class AbstractClient
     }
 
     /**
-     * @param \DCarbone\PHPConsulAPI\PHPLib\Request $r
-     * @return \DCarbone\PHPConsulAPI\PHPLib\RequestResponse
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     protected function _do(Request $r): RequestResponse
@@ -131,14 +131,14 @@ abstract class AbstractClient
             else {
                 throw new \RuntimeException('Unable to execute query as no HttpClient has been defined.');
             }
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
             // If there has been an exception of any kind, catch it and create Error object
             $err = new Error(
                 sprintf(
                     '%s - Error seen while executing "%s".  Message: "%s"',
                     static::class,
                     $r->getUri(),
-                    $e->getMessage()
+                    $exception->getMessage()
                 )
             );
         }
@@ -220,8 +220,8 @@ abstract class AbstractClient
         $data = @json_decode(
             json: (string)$body,
             associative: false,
-            depth: $this->_config->JSONDecodeMaxDepth,
-            flags: $this->_config->JSONDecodeOpts,
+            depth: max(1, $this->_config->JSONDecodeMaxDepth),
+            flags: $this->_config->JSONDecodeOpts | \JSON_BIGINT_AS_STRING,
         );
 
         $jsonErr = json_last_error();
@@ -296,7 +296,6 @@ abstract class AbstractClient
     /**
      * todo: move into Unmarshaller?
      *
-     * @param \DCarbone\PHPConsulAPI\PHPLib\RequestResponse $resp
      * @param \DCarbone\PHPConsulAPI\PHPLib\AbstractResponse<mixed> $ret
      * @throws \Exception
      */
@@ -310,7 +309,7 @@ abstract class AbstractClient
         }
 
         // if there was an error in the response, set and return
-        if (null !== $resp->Err) {
+        if ($resp->hasErr()) {
             $ret->setErr($resp->Err);
             return;
         }

@@ -35,9 +35,7 @@ trait ServiceMetaField
 
     public function setServiceMetaValue(string $k, string $v): self
     {
-        if (null === $this->ServiceMeta) {
-            $this->ServiceMeta = [];
-        }
+        $this->ServiceMeta ??= [];
         $this->ServiceMeta[$k] = $v;
         return $this;
     }
@@ -51,8 +49,8 @@ trait ServiceMetaField
         if (null === $ServiceMeta) {
             return $this;
         }
-        foreach ($ServiceMeta as $k => $v) {
-            $this->setServiceMetaValue($k, $v);
+        foreach ((array)$ServiceMeta as $k => $v) {
+            $this->setServiceMetaValue((string)$k, $v);
         }
         return $this;
     }

@@ -20,10 +20,12 @@ namespace DCarbone\PHPConsulAPI\ACL;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
 use DCarbone\Go\Time;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractType;
 
 use function DCarbone\PHPConsulAPI\PHPLib\parse_time;
+use function DCarbone\PHPConsulAPI\PHPLib\uint64;
 
 class ACLReplicationStatus extends AbstractType
 {
@@ -31,9 +33,9 @@ class ACLReplicationStatus extends AbstractType
     public bool $Running;
     public string $SourceDatacenter;
     public string $ReplicationType;
-    public int $ReplicatedIndex;
-    public int $ReplicatedRoleIndex;
-    public int $ReplicatedTokenIndex;
+    public BigInteger $ReplicatedIndex;
+    public BigInteger $ReplicatedRoleIndex;
+    public BigInteger $ReplicatedTokenIndex;
     public Time\Time $LastSuccess;
     public Time\Time $LastError;
     public string $LastErrorMessage;
@@ -47,9 +49,9 @@ class ACLReplicationStatus extends AbstractType
         bool $Running = false,
         string $SourceDatacenter = '',
         string $ReplicationType = '',
-        int $ReplicatedIndex = 0,
-        int $ReplicatedRoleIndex = 0,
-        int $ReplicatedTokenIndex = 0,
+        int|string|BigInteger $ReplicatedIndex = 0,
+        int|string|BigInteger $ReplicatedRoleIndex = 0,
+        int|string|BigInteger $ReplicatedTokenIndex = 0,
         null|Time\Time $LastSuccess = null,
         null|Time\Time $LastError = null,
         string $LastErrorMessage = '',
@@ -62,9 +64,9 @@ class ACLReplicationStatus extends AbstractType
         $this->Running = $Running;
         $this->SourceDatacenter = $SourceDatacenter;
         $this->ReplicationType = $ReplicationType;
-        $this->ReplicatedIndex = $ReplicatedIndex;
-        $this->ReplicatedRoleIndex = $ReplicatedRoleIndex;
-        $this->ReplicatedTokenIndex = $ReplicatedTokenIndex;
+        $this->ReplicatedIndex = uint64($ReplicatedIndex);
+        $this->ReplicatedRoleIndex = uint64($ReplicatedRoleIndex);
+        $this->ReplicatedTokenIndex = uint64($ReplicatedTokenIndex);
         $this->LastSuccess = $LastSuccess ?? Time::New();
         $this->LastError = $LastError ?? Time::New();
         $this->LastErrorMessage = $LastErrorMessage;
@@ -114,36 +116,36 @@ class ACLReplicationStatus extends AbstractType
         return $this;
     }
 
-    public function getReplicatedIndex(): int
+    public function getReplicatedIndex(): BigInteger
     {
         return $this->ReplicatedIndex;
     }
 
-    public function setReplicatedIndex(int $ReplicatedIndex): self
+    public function setReplicatedIndex(int|string|BigInteger $ReplicatedIndex): self
     {
-        $this->ReplicatedIndex = $ReplicatedIndex;
+        $this->ReplicatedIndex = uint64($ReplicatedIndex);
         return $this;
     }
 
-    public function getReplicatedRoleIndex(): int
+    public function getReplicatedRoleIndex(): BigInteger
     {
         return $this->ReplicatedRoleIndex;
     }
 
-    public function setReplicatedRoleIndex(int $ReplicatedRoleIndex): self
+    public function setReplicatedRoleIndex(int|string|BigInteger $ReplicatedRoleIndex): self
     {
-        $this->ReplicatedRoleIndex = $ReplicatedRoleIndex;
+        $this->ReplicatedRoleIndex = uint64($ReplicatedRoleIndex);
         return $this;
     }
 
-    public function getReplicatedTokenIndex(): int
+    public function getReplicatedTokenIndex(): BigInteger
     {
         return $this->ReplicatedTokenIndex;
     }
 
-    public function setReplicatedTokenIndex(int $ReplicatedTokenIndex): self
+    public function setReplicatedTokenIndex(int|string|BigInteger $ReplicatedTokenIndex): self
     {
-        $this->ReplicatedTokenIndex = $ReplicatedTokenIndex;
+        $this->ReplicatedTokenIndex = uint64($ReplicatedTokenIndex);
         return $this;
     }
 
@@ -190,10 +192,12 @@ class ACLReplicationStatus extends AbstractType
     protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
     {
         foreach ((array)$decoded as $k => $v) {
-            if ('LastSuccess' === $k) {
-                $n->LastSuccess = parse_time($v);
+            if ('ReplicatedIndex' === $k || 'ReplicatedRoleIndex' === $k || 'ReplicatedTokenIndex' === $k) {
+                $n->{$k} = uint64($v);
+            } elseif ('LastSuccess' === $k) {
+                $n->LastSuccess = parse_time($v) ?? Time::New();
             } elseif ('LastError' === $k) {
-                $n->LastError = parse_time($v);
+                $n->LastError = parse_time($v) ?? Time::New();
             } else {
                 $n->{$k} = $v;
             }
@@ -210,8 +214,8 @@ class ACLReplicationStatus extends AbstractType
         $out->ReplicatedIndex = $this->ReplicatedIndex;
         $out->ReplicatedRoleIndex = $this->ReplicatedRoleIndex;
         $out->ReplicatedTokenIndex = $this->ReplicatedTokenIndex;
-        $out->LastSuccess = $this->LastSuccess->format(DATE_RFC3339);
-        $out->LastError = $this->LastError->format(DATE_RFC3339);
+        $out->LastSuccess = $this->LastSuccess->RFC3339Nano();
+        $out->LastError = $this->LastError->RFC3339Nano();
         $out->LastErrorMessage = $this->LastErrorMessage;
         return $out;
     }

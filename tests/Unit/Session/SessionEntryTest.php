@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DCarbone\PHPConsulAPITests\Unit\Session;
 
+use Brick\Math\BigInteger;
 use DCarbone\PHPConsulAPI\Session\ServiceCheck;
 use DCarbone\PHPConsulAPI\Session\SessionEntry;
 use PHPUnit\Framework\TestCase;
@@ -16,7 +17,7 @@ final class SessionEntryTest extends TestCase
     public function testConstructorDefaults(): void
     {
         $se = new SessionEntry();
-        self::assertSame(0, $se->getCreateIndex());
+        self::assertSame('0', (string)$se->getCreateIndex());
         self::assertSame('', $se->getID());
         self::assertSame('', $se->getName());
         self::assertSame('', $se->getNode());
@@ -44,7 +45,7 @@ final class SessionEntryTest extends TestCase
             ServiceChecks: [$sc],
         );
 
-        self::assertSame(10, $se->getCreateIndex());
+        self::assertSame('10', (string)$se->getCreateIndex());
         self::assertSame('sess-1', $se->getID());
         self::assertSame('my-session', $se->getName());
         self::assertSame('node-1', $se->getNode());
@@ -142,7 +143,7 @@ final class SessionEntryTest extends TestCase
         $out = $se->jsonSerialize();
 
         self::assertInstanceOf(\stdClass::class, $out);
-        self::assertSame(5, $out->CreateIndex);
+        self::assertSame('5', (string)$out->CreateIndex);
         self::assertSame('sess-x', $out->ID);
         self::assertSame('test', $out->Name);
         self::assertSame('release', $out->Behavior);
@@ -188,7 +189,7 @@ final class SessionEntryTest extends TestCase
 
         $se = SessionEntry::jsonUnserialize($decoded);
 
-        self::assertSame(20, $se->getCreateIndex());
+        self::assertSame('20', (string)$se->getCreateIndex());
         self::assertSame('sess-from-json', $se->getID());
         self::assertSame('json-session', $se->getName());
         self::assertSame('json-node', $se->getNode());
@@ -223,6 +224,31 @@ final class SessionEntryTest extends TestCase
 
         self::assertSame($se, $result);
         self::assertSame(5.0, $se->getLockDelay()->Seconds());
+    }
+
+    public function testUint64CreateIndex(): void
+    {
+        $max = '18446744073709551615';
+        self::assertSame('1', (string)(new SessionEntry(CreateIndex: 1))->CreateIndex);
+        self::assertSame('2', (string)(new SessionEntry(CreateIndex: '2'))->getCreateIndex());
+        self::assertSame($max, (string)(new SessionEntry(CreateIndex: BigInteger::of($max)))->getCreateIndex());
+
+        $se = new SessionEntry();
+        $se->setCreateIndex(3);
+        self::assertSame('3', (string)$se->getCreateIndex());
+        $se->setCreateIndex('4');
+        self::assertSame('4', (string)$se->CreateIndex);
+        $se->setCreateIndex(BigInteger::of($max));
+        self::assertSame($max, (string)$se->getCreateIndex());
+
+        $d = new \stdClass();
+        $d->CreateIndex = $max;
+        $se = SessionEntry::jsonUnserialize($d);
+        self::assertSame($max, (string)$se->getCreateIndex());
+        self::assertSame($max, (string)$se->jsonSerialize()->CreateIndex);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $se->setCreateIndex(-1);
     }
 }
 

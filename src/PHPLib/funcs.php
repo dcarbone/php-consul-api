@@ -20,34 +20,106 @@ namespace DCarbone\PHPConsulAPI\PHPLib;
    limitations under the License.
  */
 
+use Brick\Math\BigInteger;
+use Brick\Math\Exception\MathException;
+use Brick\Math\NumberSyntax;
 use DCarbone\Go\Time;
 
 /**
- * Parses an RFC3339 timestamp from Consul, which may contain nanosecond-precision
- * fractional seconds that PHP's DateTime cannot handle. Truncates to microseconds.
+ * Parses an RFC3339 timestamp from Consul, retaining nanosecond-precision fractional seconds.
  *
  * @param string $ts RFC3339 timestamp string (e.g. "2026-04-03T20:02:59.892792592-05:00")
- * @return null|\DCarbone\Go\Time\Time
- * @throws \Exception
  */
 function parse_time(string $ts): null|Time\Time
 {
-    // Truncate fractional seconds beyond 6 digits (microseconds) since PHP
-    // cannot parse nanoseconds.
-    $fixed = preg_replace('/(\.\d{6})\d+/', '$1', $ts);
-
-    // Try microsecond-precision first, then fall back to no fractional seconds
-    $dt = \DateTimeImmutable::createFromFormat('Y-m-d\TH:i:s.uP', $fixed);
-    if (false !== $dt) {
-        return new Time\Time($dt->format('Y-m-d H:i:s.u O'));
+    $t = Time\Time::createFromFormat(format: 'Y-m-d\TH:i:s.uP', datetime: $ts);
+    if (false !== $t) {
+        return $t;
     }
 
-    $dt = \DateTimeImmutable::createFromFormat(\DATE_RFC3339, $fixed);
-    if (false !== $dt) {
-        return new Time\Time($dt->format('Y-m-d H:i:s O'));
+    $t = Time\Time::createFromFormat(format: \DATE_RFC3339, datetime: $ts);
+    if (false !== $t) {
+        return $t;
     }
 
     return null;
+}
+
+const UINT64_MAX = '18446744073709551615';
+
+/**
+ * Converts a value into a BigInteger, ensuring it is within the uint64 range.
+ *
+ * @throws \InvalidArgumentException
+ */
+function uint64(int|string|BigInteger $v): BigInteger
+{
+    try {
+        $b = match (true) {
+            $v instanceof BigInteger => $v,
+            \is_int($v) => BigInteger::of($v),
+            default => BigInteger::parse(value: $v, allowedSyntax: NumberSyntax::INTEGER, maxDigits: \strlen(UINT64_MAX)),
+        };
+    } catch (MathException $mathException) {
+        throw new \InvalidArgumentException(sprintf('"%s" is not a valid uint64 value', $v), $mathException->getCode(), previous: $mathException);
+    }
+    if ($b->isNegative() || $b->isGreaterThan(UINT64_MAX)) {
+        throw new \InvalidArgumentException(sprintf('%s is outside the uint64 range', $b));
+    }
+    return $b;
+}
+
+/**
+ * Encodes a value as JSON, writing BigInteger values as JSON numbers rather than strings.
+ *
+ * JSON_PRETTY_PRINT is not supported.
+ *
+ * @throws \JsonException
+ */
+function encode_json(mixed $value, int $flags = 0, int $depth = 512): string
+{
+    if ($value instanceof BigInteger) {
+        return $value->toString();
+    }
+    if ($value instanceof \JsonSerializable) {
+        return encode_json(value: $value->jsonSerialize(), flags: $flags, depth: $depth);
+    }
+    if (is_array($value)) {
+        if (0 === ($flags & \JSON_FORCE_OBJECT) && array_is_list($value)) {
+            if (0 >= $depth) {
+                throw new \JsonException('Maximum stack depth exceeded', \JSON_ERROR_DEPTH);
+            }
+            $parts = [];
+            foreach ($value as $v) {
+                $parts[] = encode_json(value: $v, flags: $flags, depth: $depth - 1);
+            }
+            return '[' . implode(',', $parts) . ']';
+        }
+        return _encode_json_object(fields: $value, flags: $flags, depth: $depth);
+    }
+    if (is_object($value) && !$value instanceof \UnitEnum) {
+        return _encode_json_object(fields: get_object_vars($value), flags: $flags, depth: $depth);
+    }
+    return json_encode(value: $value, flags: $flags | \JSON_THROW_ON_ERROR);
+}
+
+/**
+ * @param array<mixed> $fields
+ *
+ * @throws \JsonException
+ */
+function _encode_json_object(array $fields, int $flags, int $depth): string
+{
+    if (0 >= $depth) {
+        throw new \JsonException('Maximum stack depth exceeded', \JSON_ERROR_DEPTH);
+    }
+    $parts = [];
+    foreach ($fields as $k => $v) {
+        $parts[] = json_encode(value: (string)$k, flags: ($flags & ~\JSON_NUMERIC_CHECK) | \JSON_THROW_ON_ERROR)
+            . ':'
+            . encode_json(value: $v, flags: $flags, depth: $depth - 1);
+    }
+    return '{' . implode(',', $parts) . '}';
 }
 
 function dur_to_millisecond(Time\Duration $dur): string

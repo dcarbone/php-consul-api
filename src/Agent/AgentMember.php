@@ -38,7 +38,6 @@ class AgentMember extends AbstractType
      *      AgentMemberLeaving = 2
      *      AgentMemberLeft    = 3
      *      AgentMemberFailed  = 4
-     * @var int
      */
     public int $Status;
     public int $ProtocolMin;
@@ -75,7 +74,7 @@ class AgentMember extends AbstractType
         $this->Port = $Port;
         $this->Tags = [];
         if (null !== $Tags) {
-            foreach ($Tags as $k => $v) {
+            foreach ((array)$Tags as $k => $v) {
                 $this->Tags[$k]  = $v;
             }
         }
