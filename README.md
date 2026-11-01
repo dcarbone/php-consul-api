@@ -37,12 +37,9 @@ There are a couple breaking changes between v2 and v3:
 5. All of that `Transcoding` nonsense has been removed.
 6. The root `Config` class may no longer be constructed with a map.  You must use constructor parameters.
 7. Map-like fields are represented in PHP as associative arrays (for example, `array<string,mixed>`); some JSON object inputs may still be accepted as `\stdClass` at setter boundaries.
-8. Fields that are `uint64` in Consul (`CreateIndex`, `ModifyIndex`, `Flags`, `LastIndex`, `WaitIndex`, etc.) are
-   now [`Brick\Math\BigInteger`](https://github.com/brick/math) instances.
-    * Constructors and setters accept `int`, numeric `string`, or `BigInteger`; negative or out-of-range values throw
-      `\InvalidArgumentException`.
-    * Use `\DCarbone\PHPConsulAPI\PHPLib\encode_json()` instead of `json_encode()` to serialize models, so these
-      values are written as JSON numbers rather than strings.
+8. **(v3.1.0)** Fields that are `uint64` in Consul (`CreateIndex`, `ModifyIndex`, `Flags`, `LastIndex`, `WaitIndex`,
+   etc.) are now [`Brick\Math\BigInteger`](https://github.com/brick/math) instances.  See [Big Integers (uint64)](#big-integers-uint64).
+9. **(v3.1.0)** [`dcarbone/gotime`](https://github.com/dcarbone/gotime) has been upgraded to `v2`.
 
 ## Composer
 
@@ -176,6 +173,59 @@ $pair = new KVPair(data: [
     'Flags' => 0,
 ]);
 ```
+
+## Big Integers (uint64)
+
+As of **v3.1.0**, every field that Consul defines as a `uint64` is represented as a
+[`Brick\Math\BigInteger`](https://github.com/brick/math).  PHP's `int` is a signed 64-bit integer, so values above
+`PHP_INT_MAX` (e.g. large `Flags` or `EventClient::IDToIndex()` results) previously overflowed or lost precision.
+
+Affected fields include, but are not limited to:
+
+- `CreateIndex`, `ModifyIndex`, `LockIndex` and similar indexes on all models
+- `QueryMeta::$LastIndex` and `QueryOptions::$WaitIndex`
+- `KVPair::$Flags`
+- Raft / Autopilot indexes and terms in the `Operator` package
+- The return value of `EventClient::IDToIndex()`
+
+### Setting values
+
+Constructors and setters accept a non-negative `int`, a numeric `string`, or a `BigInteger`.  Strings are parsed with
+`BigInteger::parse()`, so untrusted input is strictly validated.  Negative, non-integer, or out-of-range
+(`> 18446744073709551615`) values throw `\InvalidArgumentException`.
+
+```php
+use Brick\Math\BigInteger;
+use DCarbone\PHPConsulAPI\KV\KVPair;
+
+$pair = new KVPair(Key: 'app/config', Flags: 42);
+$pair->setFlags(Flags: '18446744073709551615');
+$pair->setFlags(Flags: BigInteger::of(7));
+```
+
+### Reading values
+
+Getters return `BigInteger`.  Compare and convert using its API rather than PHP's `int` operators:
+
+```php
+[$pair, $qm, $err] = $client->KV()->Get(key: 'app/config');
+
+if ($pair->getFlags()->isEqualTo(42)) {
+    // ...
+}
+
+$index = (string)$qm->LastIndex; // safe for any uint64 value
+$small = $pair->getFlags()->toInt(); // throws if the value does not fit in a PHP int
+```
+
+The `\DCarbone\PHPConsulAPI\PHPLib\uint64()` helper performs the same validation and may be used to build values
+yourself.
+
+### JSON
+
+Responses from Consul are decoded with `JSON_BIGINT_AS_STRING`, so no precision is lost.  When serializing models
+yourself, use `\DCarbone\PHPConsulAPI\PHPLib\encode_json()` instead of `json_encode()`; it writes `BigInteger` values
+as JSON numbers, whereas `json_encode()` writes them as strings.
 
 ## Current Clients
 
