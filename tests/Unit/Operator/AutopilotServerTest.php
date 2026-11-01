@@ -168,6 +168,15 @@ final class AutopilotServerTest extends TestCase
         self::assertSame('100', (string)$s->LastIndex);
     }
 
+    public function testLastContactRoundTrip(): void
+    {
+        $s = AutopilotServer::jsonUnserialize(decoded: json_decode('{"ID":"x","LastContact":"10ms"}', false));
+        self::assertSame(10000000, $s->getLastContact()->Nanoseconds());
+        $out = $s->jsonSerialize();
+        self::assertSame('10ms', $out->LastContact);
+        self::assertObjectNotHasProperty('lastContact', $out);
+    }
+
     public function testUint64FieldsAcceptIntStringAndBigInteger(): void
     {
         $s = new AutopilotServer(LastTerm: BigInteger::of(4), LastIndex: '18446744073709551615');

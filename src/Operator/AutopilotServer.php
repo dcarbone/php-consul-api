@@ -272,7 +272,7 @@ class AutopilotServer extends AbstractType
     protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
     {
         foreach ((array)$decoded as $k => $v) {
-            if ('lastContact' === $k) {
+            if ('LastContact' === $k) {
                 $n->setLastContact($v);
             } elseif ('StableSince' === $k) {
                 $n->StableSince = parse_time($v) ?? new Time\Time();
@@ -298,7 +298,7 @@ class AutopilotServer extends AbstractType
         $out->Address = $this->Address;
         $out->NodeStatus = $this->NodeStatus;
         $out->Version = $this->Version;
-        $out->lastContact = null !== $this->LastContact ? (string)$this->LastContact : null;
+        $out->LastContact = null !== $this->LastContact ? (string)$this->LastContact : null;
         $out->LastTerm = $this->LastTerm;
         $out->LastIndex = $this->LastIndex;
         $out->Healthy = $this->Healthy;

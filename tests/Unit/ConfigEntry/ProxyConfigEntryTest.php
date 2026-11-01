@@ -77,4 +77,13 @@ final class ProxyConfigEntryTest extends TestCase
         self::assertSame(ProxyMode::Transparent, $e->getMode());
         self::assertSame(MutualTLSMode::Strict, $e->getMutualTLSMode());
     }
+
+    public function testModeJsonRoundTrip(): void
+    {
+        $e = ProxyConfigEntry::jsonUnserialize(decoded: json_decode('{"Kind":"proxy-defaults","Name":"global","Mode":"transparent"}', false));
+        self::assertSame(ProxyMode::Transparent, $e->getMode());
+        $out = $e->jsonSerialize();
+        self::assertSame('transparent', $out->Mode);
+        self::assertObjectNotHasProperty('ProxyMode', $out);
+    }
 }

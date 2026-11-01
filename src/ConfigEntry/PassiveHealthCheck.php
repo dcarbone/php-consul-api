@@ -121,15 +121,15 @@ class PassiveHealthCheck extends AbstractType
     {
         foreach ((array)$decoded as $k => $v) {
             if ('Interval' === $k) {
-                $n->Interval = Time::ParseDuration($v);
+                $n->Interval = Time::Duration($v);
             } elseif ('max_failures' === $k) {
                 $n->MaxFailures = $v;
             } elseif ('enforcing_consecutive_5xx' === $k) {
                 $n->EnforcingConsecutive5xx = $v;
             } elseif ('max_ejection_percent' === $k) {
                 $n->MaxEjectionPercent = $v;
-            } elseif ('base_ejection_time' === $k) {
-                $n->BaseEjectionTime = Time::ParseDuration($v);
+            } elseif ('BaseEjectionTime' === $k || 'base_ejection_time' === $k) {
+                $n->BaseEjectionTime = null !== $v ? Time::Duration($v) : null;
             } else {
                 $n->{$k} = $v;
             }

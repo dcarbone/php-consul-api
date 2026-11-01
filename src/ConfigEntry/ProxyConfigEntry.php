@@ -265,7 +265,7 @@ class ProxyConfigEntry extends AbstractType implements ConfigEntry
     protected static function _hydrateFromDecoded(\stdClass $decoded, self $n): void
     {
         foreach ((array)$decoded as $k => $v) {
-            if ('ProxyMode' === $k) {
+            if ('Mode' === $k) {
                 $n->Mode = ProxyMode::from($v);
             } elseif ('TransparentProxy' === $k || 'transparent_proxy' === $k) {
                 $n->TransparentProxy = TransparentProxyConfig::jsonUnserialize($v);
@@ -306,7 +306,7 @@ class ProxyConfigEntry extends AbstractType implements ConfigEntry
             $out->Partition = $this->Partition;
         }
         if (null !== $this->Mode && ProxyMode::Default !== $this->Mode) {
-            $out->ProxyMode = $this->Mode->value;
+            $out->Mode = $this->Mode->value;
         }
         if (null !== $this->TransparentProxy) {
             $out->TransparentProxy = $this->TransparentProxy;
