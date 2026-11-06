@@ -219,9 +219,9 @@ final class ConfigTest extends TestCase
         self::assertSame(Config::DEFAULT_SCHEME, $c->getScheme());
     }
 
-    public function testEnvInsecureSkipVerifySupportsNumericTrueString(): void
+    public function testEnvSSLVerifyNumericFalseStringSkipsVerify(): void
     {
-        $this->setEnv(name: Consul::HTTPSSLVerifyEnvName, value: '1');
+        $this->setEnv(name: Consul::HTTPSSLVerifyEnvName, value: '0');
         try {
             $c = new Config();
             self::assertTrue($c->isInsecureSkipVerify());
@@ -230,29 +230,40 @@ final class ConfigTest extends TestCase
         }
     }
 
-    public function testEnvInsecureSkipVerifySupportsTruthyStringValues(): void
+    public function testEnvSSLVerifyTruthyStringValuesKeepVerify(): void
     {
-        foreach (['true', 'yes', 'on'] as $value) {
+        foreach (['1', 'true', 'yes', 'on'] as $value) {
             $this->setEnv(name: Consul::HTTPSSLVerifyEnvName, value: $value);
             try {
                 $c = new Config();
-                self::assertTrue($c->isInsecureSkipVerify(), sprintf('Expected "%s" to coerce to true', $value));
+                self::assertFalse($c->isInsecureSkipVerify(), sprintf('Expected "%s" to keep verification enabled', $value));
             } finally {
                 $this->clearEnv(Consul::HTTPSSLVerifyEnvName);
             }
         }
     }
 
-    public function testEnvInsecureSkipVerifySupportsFalsyStringValues(): void
+    public function testEnvSSLVerifyFalsyStringValuesSkipVerify(): void
     {
         foreach (['0', 'false', 'no', 'off'] as $value) {
             $this->setEnv(name: Consul::HTTPSSLVerifyEnvName, value: $value);
             try {
                 $c = new Config();
-                self::assertFalse($c->isInsecureSkipVerify(), sprintf('Expected "%s" to coerce to false', $value));
+                self::assertTrue($c->isInsecureSkipVerify(), sprintf('Expected "%s" to skip verification', $value));
             } finally {
                 $this->clearEnv(Consul::HTTPSSLVerifyEnvName);
             }
+        }
+    }
+
+    public function testEnvSSLVerifyEmptyStringKeepsVerify(): void
+    {
+        $this->setEnv(name: Consul::HTTPSSLVerifyEnvName, value: '');
+        try {
+            $c = new Config();
+            self::assertFalse($c->isInsecureSkipVerify());
+        } finally {
+            $this->clearEnv(Consul::HTTPSSLVerifyEnvName);
         }
     }
 
@@ -291,10 +302,21 @@ final class ConfigTest extends TestCase
 
     public function testExplicitFalseSkipVerifyOverridesEnv(): void
     {
-        $this->setEnv(name: Consul::HTTPSSLVerifyEnvName, value: '1');
+        $this->setEnv(name: Consul::HTTPSSLVerifyEnvName, value: 'false');
         try {
             $c = new Config(InsecureSkipVerify: false);
             self::assertFalse($c->isInsecureSkipVerify());
+        } finally {
+            $this->clearEnv(Consul::HTTPSSLVerifyEnvName);
+        }
+    }
+
+    public function testExplicitTrueSkipVerifyOverridesEnv(): void
+    {
+        $this->setEnv(name: Consul::HTTPSSLVerifyEnvName, value: 'true');
+        try {
+            $c = new Config(InsecureSkipVerify: true);
+            self::assertTrue($c->isInsecureSkipVerify());
         } finally {
             $this->clearEnv(Consul::HTTPSSLVerifyEnvName);
         }

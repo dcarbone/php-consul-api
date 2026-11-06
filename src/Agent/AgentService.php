@@ -366,7 +366,7 @@ class AgentService extends AbstractType
             if ('Kind' === $k) {
                 $n->Kind = ServiceKind::from($v);
             } elseif ('Tags' === $k) {
-                $n->setTags(...$v);
+                $n->setTags(...($v ?? []));
             } elseif ('Ports' === $k) {
                 $n->Ports = [];
                 if (null !== $v) {

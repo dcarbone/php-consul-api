@@ -127,7 +127,7 @@ class GatewayTLSConfig extends AbstractType
             } elseif ('tls_max_version' === $k) {
                 $n->TLSMaxVersion = (string)$v;
             } elseif ('CipherSuites' === $k || 'cipher_suites' === $k) {
-                $n->setcipherSuites(...$v);
+                $n->setcipherSuites(...($v ?? []));
             } elseif ('SDS' === $k) {
                 $n->SDS = GatewayTLSSDSConfig::jsonUnserialize($v);
             } else {

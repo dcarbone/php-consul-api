@@ -81,7 +81,7 @@ class ACLServiceIdentity extends AbstractType
     {
         foreach ((array)$decoded as $k => $v) {
             if ('Datacenters' === $k) {
-                $n->setDatacenters(...$v);
+                $n->setDatacenters(...($v ?? []));
             } else {
                 $n->{$k} = $v;
             }

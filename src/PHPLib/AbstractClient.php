@@ -53,10 +53,14 @@ abstract class AbstractClient
 
         $opts = Config::DEFAULT_REQUEST_OPTIONS;
 
-        if (!$this->_config->InsecureSkipVerify) {
+        if ($this->_config->InsecureSkipVerify) {
             $opts[GuzzleRequestOptions::VERIFY] = false;
         } elseif ('' !== ($b = $this->_config->CAFile)) {
             $opts[GuzzleRequestOptions::VERIFY] = $b;
+        }
+
+        if (null !== ($auth = $this->_config->HttpAuth)) {
+            $opts[GuzzleRequestOptions::AUTH] = [$auth->username, $auth->password];
         }
 
         if ('' !== ($c = $this->_config->CertFile)) {

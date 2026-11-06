@@ -413,23 +413,23 @@ class OIDCAuthMethodConfig extends AbstractType
     {
         foreach ((array)$decoded as $k => $v) {
             if ('JWTSupportedAlgs' === $k) {
-                $n->setJWTSupportedAlgs(...$v);
+                $n->setJWTSupportedAlgs(...($v ?? []));
             } elseif ('BoundAudiences' === $k) {
-                $n->setBoundAudiences(...$v);
+                $n->setBoundAudiences(...($v ?? []));
             } elseif ('ClaimMappings' === $k) {
                 $n->setClaimMappings($v);
             } elseif ('ListClaimMappings' === $k) {
                 $n->setListClaimMappings($v);
             } elseif ('OIDCScopes' === $k) {
-                $n->setOIDCScopes(...$v);
+                $n->setOIDCScopes(...($v ?? []));
             } elseif ('OIDCACRValues' === $k) {
-                $n->setOIDCACRValues(...$v);
+                $n->setOIDCACRValues(...($v ?? []));
             } elseif ('AllowedRedirectURIs' === $k) {
-                $n->setAllowedRedirectURIs(...$v);
+                $n->setAllowedRedirectURIs(...($v ?? []));
             } elseif ('OIDCClientAssertion' === $k) {
                 $n->OIDCClientAssertion = null !== $v ? OIDCClientAssertion::jsonUnserialize($v) : null;
             } elseif ('JWTValidationPubKeys' === $k) {
-                $n->setJWTValidationPubKeys(...$v);
+                $n->setJWTValidationPubKeys(...($v ?? []));
             } elseif ('ExpirationLeeway' === $k) {
                 $n->setExpirationLeeway($v);
             } elseif ('NotBeforeLeeway' === $k) {

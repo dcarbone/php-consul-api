@@ -48,7 +48,7 @@ final class EventClientTest extends TestCase
                         [
                             'ID' => 'evt-1',
                             'Name' => 'deploy',
-                            'Payload' => 'payload-data',
+                            'Payload' => base64_encode('payload-data'),
                             'NodeFilter' => 'node-*',
                             'ServiceFilter' => 'api',
                             'TagFilter' => 'v1',

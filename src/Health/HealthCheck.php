@@ -296,7 +296,7 @@ class HealthCheck extends AbstractType
             if ('Definition' === $k) {
                 $n->Definition = HealthCheckDefinition::jsonUnserialize($v);
             } elseif ('ServiceTags' === $k) {
-                $n->setServiceTags(...$v);
+                $n->setServiceTags(...($v ?? []));
             } elseif ('CreateIndex' === $k || 'ModifyIndex' === $k) {
                 $n->{$k} = uint64($v);
             } else {

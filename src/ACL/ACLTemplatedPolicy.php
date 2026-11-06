@@ -97,7 +97,7 @@ class ACLTemplatedPolicy extends AbstractType
             if ('TemplateVariables' === $k) {
                 $n->setTemplateVariables($v);
             } elseif ('Datacenters' === $k) {
-                $n->setDatacenters(...$v);
+                $n->setDatacenters(...($v ?? []));
             } else {
                 $n->{$k} = $v;
             }

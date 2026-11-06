@@ -112,8 +112,13 @@ class Config
         $this->CAFile = self::_resolveValue($CAFile, Consul::HTTPCAFileEnvName, '');
         $this->CertFile = self::_resolveValue($CertFile, Consul::HTTPClientCertEnvName, '');
         $this->KeyFile = self::_resolveValue($KeyFile, Consul::HTTPClientKeyEnvName, '');
-        $skipVerify = self::_resolveValue($InsecureSkipVerify, Consul::HTTPSSLVerifyEnvName, false);
-        $this->InsecureSkipVerify = self::_coerceBool($skipVerify);
+        if (null !== $InsecureSkipVerify) {
+            $this->InsecureSkipVerify = $InsecureSkipVerify;
+        } else {
+            // CONSUL_HTTP_SSL_VERIFY expresses whether to verify, the inverse of InsecureSkipVerify.
+            $sslVerify = self::_resolveValue(null, Consul::HTTPSSLVerifyEnvName, null);
+            $this->InsecureSkipVerify = null !== $sslVerify && '' !== $sslVerify && !self::_coerceBool($sslVerify);
+        }
 
         // quick validation on key/cert combo
         $c = $this->CertFile;

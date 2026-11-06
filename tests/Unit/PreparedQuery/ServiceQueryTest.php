@@ -117,6 +117,39 @@ final class ServiceQueryTest extends TestCase
         $out = $s->jsonSerialize();
         self::assertInstanceOf(\stdClass::class, $out);
         self::assertSame('web', $out->Service);
+        self::assertNull($out->NodeMeta);
+        self::assertNull($out->ServiceMeta);
+    }
+
+    public function testJsonSerializeMetaAsObjects(): void
+    {
+        $s = new ServiceQuery(Service: 'web', NodeMeta: ['env' => 'prod'], ServiceMeta: ['0' => 'zero']);
+        $json = json_encode($s);
+        self::assertStringContainsString('"NodeMeta":{"env":"prod"}', $json);
+        self::assertStringContainsString('"ServiceMeta":{"0":"zero"}', $json);
+    }
+
+    public function testJsonUnserializeMetaAndNullLists(): void
+    {
+        $nodeMeta = new \stdClass();
+        $nodeMeta->env = 'prod';
+        $serviceMeta = new \stdClass();
+        $serviceMeta->{'123'} = 'num';
+        $decoded = new \stdClass();
+        $decoded->Service = 'web';
+        $decoded->Tags = null;
+        $decoded->IgnoreCheckIDs = null;
+        $decoded->NodeMeta = $nodeMeta;
+        $decoded->ServiceMeta = $serviceMeta;
+
+        $s = ServiceQuery::jsonUnserialize($decoded);
+        self::assertSame([], $s->Tags);
+        self::assertSame([], $s->IgnoreCheckIDs);
+        self::assertSame(['env' => 'prod'], $s->getNodeMeta());
+        self::assertSame(['123' => 'num'], $s->ServiceMeta);
+
+        $decoded->NodeMeta = null;
+        self::assertSame([], ServiceQuery::jsonUnserialize($decoded)->NodeMeta);
     }
 
     public function testJsonUnserialize(): void
