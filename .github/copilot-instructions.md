@@ -10,6 +10,9 @@
    `/** @param string[] $items */` for `array $items`).
 * **Never** edit files using sed, awk, or other shell utilities.
 * **Always** limit yourself to POSIX shell syntax when executing shell scripts.
+* **Never** use `${{ }}` expression interpolation inside GitHub Actions `run` blocks.
+   * Instead, pass values into the step via `env:` and reference them as shell variables (e.g.
+     `env: { PHP_VERSION: ${{ matrix.php-version }} }` then `"${PHP_VERSION}"` in `run`).
 * **Always** run phpstan with 512MB of memory when analyzing generated code 
    (e.g. `phpstan analyze -c phpstan.neon --memory-limit=512M src/`).
 * **Always** run Rector (`composer rector`) after making code changes, and re-run it until it reports no changes.

@@ -136,15 +136,17 @@ jobs:
       - name: 'Define vars'
         id: vars
         shell: bash -e {0}
+        env:
+          PHP_VERSION: ${{ matrix.php-version }}
         # language=sh
         run: |
           _phpunit_version=
-          case "${{ matrix.php-version }}" in
+          case "${PHP_VERSION}" in
             8.2) _phpunit_version='11.5' ;;
             8.3) _phpunit_version='12.0' ;;
             8.4) _phpunit_version='12.0' ;;
             8.5) _phpunit_version='12.0' ;;
-            *) echo "Unsupported PHP version: ${{ matrix.php-version }}" && exit 1 ;;
+            *) echo "Unsupported PHP version: ${PHP_VERSION}" && exit 1 ;;
           esac
           echo "phpunit-version=${_phpunit_version}" >> $GITHUB_OUTPUT
 
@@ -162,10 +164,12 @@ jobs:
 
       - name: 'Set composer dep versions'
         shell: bash -e {0}
+        env:
+          PHPUNIT_VERSION: ${{ steps.vars.outputs.phpunit-version }}
         # language=sh
         run: |
           tmpf="$(mktemp)"
-          jq -rcM '."require-dev"."phpunit/phpunit" = "^${{ steps.vars.outputs.phpunit-version }}"' composer.json > "${tmpf}"
+          jq -rcM --arg v "^${PHPUNIT_VERSION}" '."require-dev"."phpunit/phpunit" = $v' composer.json > "${tmpf}"
           mv "${tmpf}" composer.json
 
       - name: 'Get composer cache directory'
@@ -209,7 +213,7 @@ jobs:
         # language=bash
         run: |
           mkdir consul
-          wget -O consul.zip https://releases.hashicorp.com/consul/${{ env.CONSUL_VERSION }}/consul_${{ env.CONSUL_VERSION }}_linux_amd64.zip
+          wget -O consul.zip "https://releases.hashicorp.com/consul/${CONSUL_VERSION}/consul_${CONSUL_VERSION}_linux_amd64.zip"
           unzip 'consul.zip' consul -d consul/
           rm consul.zip
           chmod +x consul/consul

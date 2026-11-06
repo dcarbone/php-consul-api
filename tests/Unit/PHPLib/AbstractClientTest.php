@@ -3,6 +3,7 @@
 namespace DCarbone\PHPConsulAPITests\Unit\PHPLib;
 
 use DCarbone\PHPConsulAPI\Config;
+use DCarbone\PHPConsulAPI\Consul;
 use DCarbone\PHPConsulAPI\HttpAuth;
 use DCarbone\PHPConsulAPI\PHPLib\AbstractClient;
 use DCarbone\PHPConsulAPI\PHPLib\Request;
@@ -74,6 +75,52 @@ final class AbstractClientTest extends TestCase
         self::assertSame('/path/to/ca.pem', $options[GuzzleRequestOptions::VERIFY]);
     }
 
+    public function testConsulPreservesExplicitTLSVerificationOverEnv(): void
+    {
+        $this->setEnv(name: Consul::HTTPSSLVerifyEnvName, value: 'false');
+        try {
+            $options = $this->buildOptionsThroughConsul(new Config(InsecureSkipVerify: false));
+            self::assertArrayNotHasKey(GuzzleRequestOptions::VERIFY, $options);
+        } finally {
+            $this->clearEnv(Consul::HTTPSSLVerifyEnvName);
+        }
+    }
+
+    public function testConsulAppliesEnvSSLVerifyWhenNotExplicit(): void
+    {
+        $this->setEnv(name: Consul::HTTPSSLVerifyEnvName, value: 'false');
+        try {
+            $options = $this->buildOptionsThroughConsul(new Config());
+            self::assertFalse($options[GuzzleRequestOptions::VERIFY]);
+        } finally {
+            $this->clearEnv(Consul::HTTPSSLVerifyEnvName);
+        }
+    }
+
+    public function testConsulPreservesClearedHttpAuthOverEnv(): void
+    {
+        $this->setEnv(name: Consul::HTTPAuthEnvName, value: 'envuser:envpass');
+        try {
+            $config = new Config();
+            $config->setHttpAuth(httpAuth: null);
+            $options = $this->buildOptionsThroughConsul($config);
+            self::assertArrayNotHasKey(GuzzleRequestOptions::AUTH, $options);
+        } finally {
+            $this->clearEnv(Consul::HTTPAuthEnvName);
+        }
+    }
+
+    public function testConsulAppliesEnvHttpAuthWhenNotExplicit(): void
+    {
+        $this->setEnv(name: Consul::HTTPAuthEnvName, value: 'envuser:envpass');
+        try {
+            $options = $this->buildOptionsThroughConsul(new Config());
+            self::assertSame(['envuser', 'envpass'], $options[GuzzleRequestOptions::AUTH]);
+        } finally {
+            $this->clearEnv(Consul::HTTPAuthEnvName);
+        }
+    }
+
     public function testExplicitContentTypeHeaderIsPreservedRegardlessOfCase(): void
     {
         $config = new Config();
@@ -89,5 +136,27 @@ final class AbstractClientTest extends TestCase
             self::assertSame('application/custom', $request->header->get('Content-Type'));
             self::assertSame('application/custom', $request->toPsrRequest()->getHeaderLine('Content-Type'));
         }
+    }
+
+    /**
+     * @return array<string,mixed>
+     */
+    private function buildOptionsThroughConsul(Config $config): array
+    {
+        $merged = (new Consul(config: $config))->KV->getConfig();
+        return $this->makeClient($merged)->buildGuzzleRequestOptions(new Request('GET', 'test', $merged, null));
+    }
+
+    private function setEnv(string $name, string $value): void
+    {
+        putenv(sprintf('%s=%s', $name, $value));
+        $_ENV[$name] = $value;
+        $_SERVER[$name] = $value;
+    }
+
+    private function clearEnv(string $name): void
+    {
+        putenv($name);
+        unset($_ENV[$name], $_SERVER[$name]);
     }
 }

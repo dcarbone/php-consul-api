@@ -159,9 +159,7 @@ class Config
         if ('' !== $inc->Namespace) {
             $actual->Namespace = $inc->Namespace;
         }
-        if (isset($inc->HttpAuth)) {
-            $actual->HttpAuth = clone $inc->HttpAuth;
-        }
+        $actual->HttpAuth = isset($inc->HttpAuth) ? clone $inc->HttpAuth : null;
         if (isset($inc->WaitTime)) {
             $actual->WaitTime = Time::Duration($inc->WaitTime);
         }
@@ -180,9 +178,7 @@ class Config
         if ('' !== $inc->KeyFile) {
             $actual->KeyFile = $inc->KeyFile;
         }
-        if ($inc->InsecureSkipVerify) {
-            $actual->InsecureSkipVerify = true;
-        }
+        $actual->InsecureSkipVerify = $inc->InsecureSkipVerify;
         if (isset($inc->HttpClient)) {
             $actual->HttpClient = $inc->HttpClient;
         }
