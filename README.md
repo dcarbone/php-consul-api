@@ -28,7 +28,7 @@ use DCarbone\PHPConsulAPI\Consul;
 use DCarbone\PHPConsulAPI\KV\KVPair;
 
 // With no arguments, configuration is read from the standard CONSUL_* environment variables,
-// falling back to http://127.0.0.1:8500.
+// falling back to http://localhost:8500.
 $consul = new Consul();
 
 // ...or configure it explicitly.
@@ -53,29 +53,38 @@ echo $qm->LastIndex;   // index to use for blocking queries
 
 ## Configuration
 
-`Config` mirrors the Go client's `api.Config`. Every parameter is optional.
+`Config` mirrors the Go client's `api.Config`, and `new Consul(config: $config)` applies the same defaults and
+precedence as Go's `api.NewClient`. Every parameter is optional.
 
 | Parameter            | Default / Env var                                                   | Description                                           |
 |----------------------|---------------------------------------------------------------------|-------------------------------------------------------|
-| `Address`            | `CONSUL_HTTP_ADDR`, else `127.0.0.1:8500`                           | Agent address (`host:port`)                           |
-| `Scheme`             | `CONSUL_HTTP_SSL` (`true` → `https`), else `http`                   | `http` or `https`                                     |
+| `Address`            | `CONSUL_HTTP_ADDR`, else `localhost:8500`                           | `host:port`, `http://`, `https://` or `unix://` URL   |
+| `Scheme`             | `CONSUL_HTTP_SSL` (true → `https`), else `http`                     | `http` or `https`                                     |
+| `PathPrefix`         | `''`                                                                | Path prefix for every request (reverse proxies)       |
 | `Datacenter`         | `''`                                                                | Default datacenter for requests                       |
-| `Namespace`          | `''`                                                                | Default namespace (Consul Enterprise)                 |
+| `Namespace`          | `CONSUL_NAMESPACE`                                                  | Default namespace (Consul Enterprise)                 |
+| `Partition`          | `CONSUL_PARTITION`                                                  | Default admin partition (Consul Enterprise)           |
 | `HttpAuth`           | `CONSUL_HTTP_AUTH`                                                  | HTTP basic auth, as `user:pass` or an `HttpAuth`      |
 | `WaitTime`           | none                                                                | Default max wait for blocking queries (e.g. `'5m'`)   |
 | `Token`              | `CONSUL_HTTP_TOKEN`                                                 | ACL token                                             |
 | `TokenFile`          | `CONSUL_HTTP_TOKEN_FILE`                                            | File containing the ACL token                         |
 | `CAFile`             | `CONSUL_CACERT`                                                     | CA certificate used to verify the server              |
+| `CAPath`             | `CONSUL_CAPATH`                                                     | Directory of (hashed) CA certificates                 |
 | `CertFile`           | `CONSUL_CLIENT_CERT`                                                | Client certificate (requires `KeyFile`)               |
 | `KeyFile`            | `CONSUL_CLIENT_KEY`                                                 | Client key (requires `CertFile`)                      |
-| `InsecureSkipVerify` | `CONSUL_HTTP_SSL_VERIFY` (`false` → skip), else `false`             | Disable TLS certificate verification                  |
+| `TLSServerName`      | `CONSUL_TLS_SERVER_NAME`                                            | SNI server name (stored only, see wiki)               |
+| `InsecureSkipVerify` | `CONSUL_HTTP_SSL_VERIFY` (false → skip), else `false`               | Disable TLS certificate verification                  |
 | `HttpClient`         | `new GuzzleHttp\Client()`                                           | Any `GuzzleHttp\ClientInterface`                      |
 | `JSONEncodeOpts`     | `JSON_UNESCAPED_SLASHES`                                            | Flags passed to `json_encode`                         |
 | `JSONDecodeMaxDepth` | `512`                                                               | Max depth passed to `json_decode`                     |
 | `JSONDecodeOpts`     | `0`                                                                 | Flags passed to `json_decode`                         |
 
+Boolean env vars are parsed like Go's `strconv.ParseBool` (`1`, `t`, `T`, `TRUE`, `true`, `True` and their false
+equivalents); empty env vars are treated as unset.
+
 For proxies, custom timeouts, middleware, etc., construct your own Guzzle client and pass it as `HttpClient`.
-See [Configuration](https://github.com/dcarbone/php-consul-api/wiki/Configuration) for details.
+See [Configuration](https://github.com/dcarbone/php-consul-api/wiki/Configuration) for address parsing, token
+precedence, TLS and other details.
 
 ## Working with Responses
 
@@ -147,23 +156,23 @@ See [Big Integers](https://github.com/dcarbone/php-consul-api/wiki/Big-Integers)
 
 Each client is available on `Consul` both as a property (`$consul->KV`) and as a method (`$consul->KV()`).
 
-| Client          | Consul API                                                                            | Wiki                                                                   |
-|-----------------|---------------------------------------------------------------------------------------|------------------------------------------------------------------------|
-| `ACL`           | [`/v1/acl`](https://developer.hashicorp.com/consul/api-docs/acl)                      | [ACL](https://github.com/dcarbone/php-consul-api/wiki/ACL)             |
-| `Agent`         | [`/v1/agent`](https://developer.hashicorp.com/consul/api-docs/agent)                  | [Agent](https://github.com/dcarbone/php-consul-api/wiki/Agent)         |
-| `Catalog`       | [`/v1/catalog`](https://developer.hashicorp.com/consul/api-docs/catalog)              | [Catalog](https://github.com/dcarbone/php-consul-api/wiki/Catalog)     |
-| `ConfigEntry`   | [`/v1/config`](https://developer.hashicorp.com/consul/api-docs/config)                | [ConfigEntry](https://github.com/dcarbone/php-consul-api/wiki/ConfigEntry) |
-| `Coordinate`    | [`/v1/coordinate`](https://developer.hashicorp.com/consul/api-docs/coordinate)        | [Coordinate](https://github.com/dcarbone/php-consul-api/wiki/Coordinate) |
-| `Debug`         | `/debug/pprof`                                                                        | [Debug](https://github.com/dcarbone/php-consul-api/wiki/Debug)         |
-| `Event`         | [`/v1/event`](https://developer.hashicorp.com/consul/api-docs/event)                  | [Event](https://github.com/dcarbone/php-consul-api/wiki/Event)         |
-| `Health`        | [`/v1/health`](https://developer.hashicorp.com/consul/api-docs/health)                | [Health](https://github.com/dcarbone/php-consul-api/wiki/Health)       |
-| `KV`            | [`/v1/kv`](https://developer.hashicorp.com/consul/api-docs/kv)                        | [KV](https://github.com/dcarbone/php-consul-api/wiki/KV)               |
-| `Operator`      | [`/v1/operator`](https://developer.hashicorp.com/consul/api-docs/operator)            | [Operator](https://github.com/dcarbone/php-consul-api/wiki/Operator)   |
-| `Peering`       | [`/v1/peering`](https://developer.hashicorp.com/consul/api-docs/peering)              | [Peering](https://github.com/dcarbone/php-consul-api/wiki/Peering)     |
-| `PreparedQuery` | [`/v1/query`](https://developer.hashicorp.com/consul/api-docs/query)                  | [PreparedQuery](https://github.com/dcarbone/php-consul-api/wiki/PreparedQuery) |
-| `Session`       | [`/v1/session`](https://developer.hashicorp.com/consul/api-docs/session)              | [Session](https://github.com/dcarbone/php-consul-api/wiki/Session)     |
-| `Status`        | [`/v1/status`](https://developer.hashicorp.com/consul/api-docs/status)                | [Status](https://github.com/dcarbone/php-consul-api/wiki/Status)       |
-| `Txn`           | [`/v1/txn`](https://developer.hashicorp.com/consul/api-docs/txn)                      | [Txn](https://github.com/dcarbone/php-consul-api/wiki/Txn)             |
+| Client          | Consul API                                                                     | Wiki                                                                           |
+|-----------------|--------------------------------------------------------------------------------|--------------------------------------------------------------------------------|
+| `ACL`           | [`/v1/acl`](https://developer.hashicorp.com/consul/api-docs/acl)               | [ACL](https://github.com/dcarbone/php-consul-api/wiki/ACL)                     |
+| `Agent`         | [`/v1/agent`](https://developer.hashicorp.com/consul/api-docs/agent)           | [Agent](https://github.com/dcarbone/php-consul-api/wiki/Agent)                 |
+| `Catalog`       | [`/v1/catalog`](https://developer.hashicorp.com/consul/api-docs/catalog)       | [Catalog](https://github.com/dcarbone/php-consul-api/wiki/Catalog)             |
+| `ConfigEntry`   | [`/v1/config`](https://developer.hashicorp.com/consul/api-docs/config)         | [ConfigEntry](https://github.com/dcarbone/php-consul-api/wiki/ConfigEntry)     |
+| `Coordinate`    | [`/v1/coordinate`](https://developer.hashicorp.com/consul/api-docs/coordinate) | [Coordinate](https://github.com/dcarbone/php-consul-api/wiki/Coordinate)       |
+| `Debug`         | `/debug/pprof`                                                                 | [Debug](https://github.com/dcarbone/php-consul-api/wiki/Debug)                 |
+| `Event`         | [`/v1/event`](https://developer.hashicorp.com/consul/api-docs/event)           | [Event](https://github.com/dcarbone/php-consul-api/wiki/Event)                 |
+| `Health`        | [`/v1/health`](https://developer.hashicorp.com/consul/api-docs/health)         | [Health](https://github.com/dcarbone/php-consul-api/wiki/Health)               |
+| `KV`            | [`/v1/kv`](https://developer.hashicorp.com/consul/api-docs/kv)                 | [KV](https://github.com/dcarbone/php-consul-api/wiki/KV)                       |
+| `Operator`      | [`/v1/operator`](https://developer.hashicorp.com/consul/api-docs/operator)     | [Operator](https://github.com/dcarbone/php-consul-api/wiki/Operator)           |
+| `Peering`       | [`/v1/peering`](https://developer.hashicorp.com/consul/api-docs/peering)       | [Peering](https://github.com/dcarbone/php-consul-api/wiki/Peering)             |
+| `PreparedQuery` | [`/v1/query`](https://developer.hashicorp.com/consul/api-docs/query)           | [PreparedQuery](https://github.com/dcarbone/php-consul-api/wiki/PreparedQuery) |
+| `Session`       | [`/v1/session`](https://developer.hashicorp.com/consul/api-docs/session)       | [Session](https://github.com/dcarbone/php-consul-api/wiki/Session)             |
+| `Status`        | [`/v1/status`](https://developer.hashicorp.com/consul/api-docs/status)         | [Status](https://github.com/dcarbone/php-consul-api/wiki/Status)               |
+| `Txn`           | [`/v1/txn`](https://developer.hashicorp.com/consul/api-docs/txn)               | [Txn](https://github.com/dcarbone/php-consul-api/wiki/Txn)                     |
 
 Unlike the Go client, there are no separate `*Opts` method variants. Each method takes an optional trailing options
 argument instead.
@@ -220,6 +229,10 @@ capacity, but backwards-compatibility issues with older agents will not be addre
    disabled unless `InsecureSkipVerify` was `true`.
 6. **(next release)** `HttpAuth` / `CONSUL_HTTP_AUTH` credentials are now sent as HTTP basic auth on every request.
    Previously they were parsed but never sent.
+7. **(next release)** `Config` now follows Go's `api.NewClient` exactly: the default address is `localhost:8500`,
+   `Address` may carry a `http://`, `https://` or `unix://` scheme and a path prefix, `TokenFile` follows Go's token
+   precedence, boolean env vars use Go `ParseBool` semantics (`yes`/`no`/`on`/`off` are no longer accepted), and
+   `Partition`, `PathPrefix`, `CAPath` and `TLSServerName` were added.
 
 See [Upgrading](https://github.com/dcarbone/php-consul-api/wiki/Upgrading) for details.
 

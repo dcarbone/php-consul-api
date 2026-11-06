@@ -37,6 +37,7 @@ class Request
 
     private readonly string $scheme;
     private readonly string $address;
+    private readonly string $pathPrefix;
     private readonly string $path;
 
     private readonly string $method;
@@ -47,6 +48,7 @@ class Request
     {
         $this->scheme  = $config->Scheme;
         $this->address = $config->Address;
+        $this->pathPrefix = $config->PathPrefix;
 
         $this->method = strtoupper($method);
         $this->path   = ltrim(rtrim($path, " \t\n\r\0\x0B&?"), " \t\n\r\0\x0B/");
@@ -59,6 +61,9 @@ class Request
         }
         if ('' !== $config->Namespace) {
             $this->params->set('ns', $config->Namespace);
+        }
+        if ('' !== $config->Partition) {
+            $this->params->set('partition', $config->Partition);
         }
         if (null !== $config->WaitTime && $config->WaitTime->Nanoseconds() > 0) {
             $this->params->set('wait', dur_to_millisecond($config->WaitTime));
@@ -78,6 +83,11 @@ class Request
     public function getAddress(): string
     {
         return $this->address;
+    }
+
+    public function getPathPrefix(): string
+    {
+        return $this->pathPrefix;
     }
 
     public function getPath(): string
@@ -113,7 +123,9 @@ class Request
 
     public function getUri(): UriInterface
     {
-        $uri = "{$this->scheme}://{$this->address}/{$this->path}";
+        // unix socket paths are not valid hosts; the socket itself is configured on the HttpClient.
+        $host = str_starts_with($this->address, '/') ? 'localhost' : $this->address;
+        $uri = "{$this->scheme}://{$host}{$this->pathPrefix}/{$this->path}";
         if (0 < count($this->params)) {
             $uri .= "?{$this->params}";
         }

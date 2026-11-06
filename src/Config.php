@@ -32,20 +32,26 @@ class Config
         RequestOptions::DECODE_CONTENT => false,
     ];
 
-    public const DEFAULT_ADDRESS = '127.0.0.1:8500';
+    public const DEFAULT_ADDRESS = 'localhost:8500';
     public const DEFAULT_SCHEME = 'http';
 
-
     /**
-     * The address, including port, of your Consul Agent
+     * The address, including port, of your Consul Agent.  May be prefixed with http://, https://, or unix://.
      */
     public string $Address;
 
     public string $Scheme;
 
+    /**
+     * Prefix for URI paths, used when Consul sits behind a reverse proxy.  Populated from Address by Config::merge().
+     */
+    public string $PathPrefix;
+
     public string $Datacenter;
 
     public string $Namespace;
+
+    public string $Partition;
 
     /**
      * HTTP authentication, if used
@@ -63,7 +69,18 @@ class Config
      */
     public string $TokenFile;
 
+    /**
+     * Name of the server used for SNI.  Retained for parity with the Go client; Guzzle has no SNI override, so this
+     * is not applied to requests.
+     */
+    public string $TLSServerName;
+
     public string $CAFile;
+
+    /**
+     * Path to a directory of CA certificates.  Ignored when CAFile is set.
+     */
+    public string $CAPath;
 
     /**
      * Optional path to certificate.  If set, KeyFile must also be set
@@ -87,7 +104,7 @@ class Config
         null|string $Address = null,
         null|bool|string $Scheme = null,
         string $Datacenter = '',
-        string $Namespace = '',
+        null|string $Namespace = null,
         null|string|HttpAuth $HttpAuth = null,
         null|string|int|float|\DateInterval|Time\Duration $WaitTime = null,
         null|string $Token = null,
@@ -100,39 +117,42 @@ class Config
         int $JSONEncodeOpts = JSON_UNESCAPED_SLASHES,
         int $JSONDecodeMaxDepth = 512,
         int $JSONDecodeOpts = 0,
+        null|string $Partition = null,
+        string $PathPrefix = '',
+        null|string $CAPath = null,
+        null|string $TLSServerName = null,
     ) {
         $this->Address = self::_resolveValue($Address, Consul::HTTPAddrEnvName, self::DEFAULT_ADDRESS);
-        $this->setScheme(self::_resolveValue($Scheme, Consul::HTTPSSLEnvName, self::DEFAULT_SCHEME));
+        if (null !== $Scheme) {
+            $this->setScheme($Scheme);
+        } else {
+            // Unparseable CONSUL_HTTP_SSL values are treated as false, as in the Go client.
+            $ssl = self::_envValue(Consul::HTTPSSLEnvName);
+            $this->Scheme = (null !== $ssl && true === self::_parseBool($ssl)) ? 'https' : self::DEFAULT_SCHEME;
+        }
+        $this->PathPrefix = $PathPrefix;
         $this->Datacenter = $Datacenter;
-        $this->Namespace = $Namespace;
+        $this->Namespace = self::_resolveValue($Namespace, Consul::HTTPNamespaceEnvName, '');
+        $this->Partition = self::_resolveValue($Partition, Consul::HTTPPartitionEnvName, '');
         $this->setHttpAuth(self::_resolveValue($HttpAuth, Consul::HTTPAuthEnvName, null));
         $this->setWaitTime($WaitTime);
         $this->Token = self::_resolveValue($Token, Consul::HTTPTokenEnvName, '');
         $this->TokenFile = self::_resolveValue($TokenFile, Consul::HTTPTokenFileEnvName, '');
+        $this->TLSServerName = self::_resolveValue($TLSServerName, Consul::HTTPTLSServerNameEnvName, '');
         $this->CAFile = self::_resolveValue($CAFile, Consul::HTTPCAFileEnvName, '');
+        $this->CAPath = self::_resolveValue($CAPath, Consul::HTTPCAPathEnvName, '');
         $this->CertFile = self::_resolveValue($CertFile, Consul::HTTPClientCertEnvName, '');
         $this->KeyFile = self::_resolveValue($KeyFile, Consul::HTTPClientKeyEnvName, '');
         if (null !== $InsecureSkipVerify) {
             $this->InsecureSkipVerify = $InsecureSkipVerify;
         } else {
-            // CONSUL_HTTP_SSL_VERIFY expresses whether to verify, the inverse of InsecureSkipVerify.
-            $sslVerify = self::_resolveValue(null, Consul::HTTPSSLVerifyEnvName, null);
-            $this->InsecureSkipVerify = null !== $sslVerify && '' !== $sslVerify && !self::_coerceBool($sslVerify);
+            // CONSUL_HTTP_SSL_VERIFY expresses whether to verify.  As in the Go client, any value that does not
+            // parse as true disables verification.
+            $sslVerify = self::_envValue(Consul::HTTPSSLVerifyEnvName);
+            $this->InsecureSkipVerify = null !== $sslVerify && true !== self::_parseBool($sslVerify);
         }
 
-        // quick validation on key/cert combo
-        $c = $this->CertFile;
-        $k = $this->KeyFile;
-        if (('' !== $k && '' === $c) || ('' !== $c && '' === $k)) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    '%s - CertFile and KeyFile must be both either empty or populated.  Key: %s; Cert: %s',
-                    static::class,
-                    $k,
-                    $c
-                )
-            );
-        }
+        $this->_validateCertAndKey();
 
         $this->HttpClient = $HttpClient ?? new Client();
 
@@ -141,60 +161,142 @@ class Config
         $this->JSONDecodeOpts = $JSONDecodeOpts;
     }
 
+    public function __clone(): void
+    {
+        if (null !== $this->HttpAuth) {
+            $this->HttpAuth = clone $this->HttpAuth;
+        }
+    }
+
+    /**
+     * Produces the config used by a client, mirroring the Go client's NewClient().  Empty values on the incoming
+     * config are populated from the environment-derived defaults, the Address is parsed for a scheme, unix socket,
+     * or path prefix, and the token is resolved from TokenFile / Token per the Go client's precedence rules.
+     *
+     * The incoming config is not modified.
+     */
     public static function merge(null|Config $inc): Config
     {
-        $actual = static::newDefaultConfig();
-        if (null === $inc) {
-            return $actual;
+        $def = static::newDefaultConfig();
+        $config = null === $inc ? clone $def : clone $inc;
+
+        if ('' === $config->Address) {
+            $config->Address = $def->Address;
         }
-        if ('' !== $inc->Address) {
-            $actual->Address = $inc->Address;
+        if ('' === $config->Scheme) {
+            $config->Scheme = $def->Scheme;
         }
-        if ('' !== $inc->Scheme) {
-            $actual->Scheme = $inc->Scheme;
+        if ('' === $config->TLSServerName) {
+            $config->TLSServerName = $def->TLSServerName;
         }
-        if ('' !== $inc->Datacenter) {
-            $actual->Datacenter = $inc->Datacenter;
+        if ('' === $config->CAFile) {
+            $config->CAFile = $def->CAFile;
         }
-        if ('' !== $inc->Namespace) {
-            $actual->Namespace = $inc->Namespace;
+        if ('' === $config->CAPath) {
+            $config->CAPath = $def->CAPath;
         }
-        $actual->HttpAuth = isset($inc->HttpAuth) ? clone $inc->HttpAuth : null;
-        if (isset($inc->WaitTime)) {
-            $actual->WaitTime = Time::Duration($inc->WaitTime);
+        if ('' === $config->CertFile) {
+            $config->CertFile = $def->CertFile;
         }
-        if ('' !== $inc->Token) {
-            $actual->Token = $inc->Token;
+        if ('' === $config->KeyFile) {
+            $config->KeyFile = $def->KeyFile;
         }
-        if ('' !== $inc->TokenFile) {
-            $actual->TokenFile = $inc->TokenFile;
+        if (!$config->InsecureSkipVerify) {
+            $config->InsecureSkipVerify = $def->InsecureSkipVerify;
         }
-        if ('' !== $inc->CAFile) {
-            $actual->CAFile = $inc->CAFile;
+        if ('' === $config->Namespace) {
+            $config->Namespace = $def->Namespace;
         }
-        if ('' !== $inc->CertFile) {
-            $actual->CertFile = $inc->CertFile;
+        if ('' === $config->Partition) {
+            $config->Partition = $def->Partition;
         }
-        if ('' !== $inc->KeyFile) {
-            $actual->KeyFile = $inc->KeyFile;
+        if (0 === $config->JSONEncodeOpts) {
+            $config->JSONEncodeOpts = $def->JSONEncodeOpts;
         }
-        $actual->InsecureSkipVerify = $inc->InsecureSkipVerify;
-        if (isset($inc->HttpClient)) {
-            $actual->HttpClient = $inc->HttpClient;
+        if (0 === $config->JSONDecodeMaxDepth) {
+            $config->JSONDecodeMaxDepth = $def->JSONDecodeMaxDepth;
         }
-        if (0 !== $inc->JSONEncodeOpts) {
-            $actual->JSONEncodeOpts = $inc->JSONEncodeOpts;
+
+        $config->_validateCertAndKey();
+
+        $parts = explode('://', $config->Address, 2);
+        if (2 === count($parts)) {
+            switch ($parts[0]) {
+                case 'http':
+                    // Never revert to http if TLS was explicitly requested.
+                    break;
+                case 'https':
+                    $config->Scheme = 'https';
+                    break;
+                case 'unix':
+                    $config->HttpClient = new Client(['curl' => [\CURLOPT_UNIX_SOCKET_PATH => $parts[1]]]);
+                    break;
+                default:
+                    throw new \InvalidArgumentException(sprintf('Unknown protocol scheme: %s', $parts[0]));
+            }
+            $config->Address = $parts[1];
+
+            if ('http' === $parts[0] || 'https' === $parts[0]) {
+                $hostParts = explode('/', $parts[1], 2);
+                if (2 === count($hostParts)) {
+                    $config->Address = $hostParts[0];
+                    $config->PathPrefix = '/' . $hostParts[1];
+                }
+            }
         }
-        if (0 !== $inc->JSONDecodeMaxDepth) {
-            $actual->JSONDecodeMaxDepth = $inc->JSONDecodeMaxDepth;
+
+        // Token precedence, as in the Go client:
+        // 1. explicit TokenFile
+        // 2. explicit Token
+        // 3. CONSUL_HTTP_TOKEN_FILE environment variable
+        // 4. CONSUL_HTTP_TOKEN environment variable
+        if ('' !== $config->TokenFile && $config->TokenFile !== $def->TokenFile) {
+            $token = self::_readTokenFile($config->TokenFile);
+            if ('' !== $token) {
+                $config->Token = $token;
+            }
+        } elseif ('' !== $config->Token && $config->Token !== $def->Token) {
+            // explicit token wins
+        } elseif ('' !== $def->TokenFile) {
+            $token = self::_readTokenFile($def->TokenFile);
+            if ('' !== $token) {
+                $config->Token = $token;
+                $config->TokenFile = $def->TokenFile;
+            }
+        } else {
+            $config->Token = $def->Token;
         }
-        $actual->JSONDecodeOpts = self::_resolveValue($inc->JSONDecodeOpts, '', $actual->JSONDecodeOpts);
-        return $actual;
+
+        return $config;
     }
 
     public static function newDefaultConfig(): self
     {
         return new self();
+    }
+
+    /**
+     * Returns the environment variables that reproduce this config, mirroring the Go client's GenerateEnv().
+     *
+     * @return string[]
+     */
+    public function generateEnv(): array
+    {
+        return [
+            sprintf('%s=%s', Consul::HTTPAddrEnvName, $this->Address),
+            sprintf('%s=%s', Consul::HTTPTokenEnvName, $this->Token),
+            sprintf('%s=%s', Consul::HTTPTokenFileEnvName, $this->TokenFile),
+            sprintf('%s=%s', Consul::HTTPSSLEnvName, 'https' === $this->Scheme ? 'true' : 'false'),
+            sprintf('%s=%s', Consul::HTTPCAFileEnvName, $this->CAFile),
+            sprintf('%s=%s', Consul::HTTPCAPathEnvName, $this->CAPath),
+            sprintf('%s=%s', Consul::HTTPClientCertEnvName, $this->CertFile),
+            sprintf('%s=%s', Consul::HTTPClientKeyEnvName, $this->KeyFile),
+            sprintf('%s=%s', Consul::HTTPTLSServerNameEnvName, $this->TLSServerName),
+            sprintf('%s=%s', Consul::HTTPSSLVerifyEnvName, $this->InsecureSkipVerify ? 'false' : 'true'),
+            null !== $this->HttpAuth
+                ? sprintf('%s=%s:%s', Consul::HTTPAuthEnvName, $this->HttpAuth->username, $this->HttpAuth->password)
+                : sprintf('%s=', Consul::HTTPAuthEnvName),
+        ];
     }
 
     public function getAddress(): string
@@ -223,6 +325,17 @@ class Config
         return $this;
     }
 
+    public function getPathPrefix(): string
+    {
+        return $this->PathPrefix;
+    }
+
+    public function setPathPrefix(string $PathPrefix): self
+    {
+        $this->PathPrefix = $PathPrefix;
+        return $this;
+    }
+
     public function getDatacenter(): string
     {
         return $this->Datacenter;
@@ -242,6 +355,17 @@ class Config
     public function setNamespace(string $namespace): self
     {
         $this->Namespace = $namespace;
+        return $this;
+    }
+
+    public function getPartition(): string
+    {
+        return $this->Partition;
+    }
+
+    public function setPartition(string $Partition): self
+    {
+        $this->Partition = $Partition;
         return $this;
     }
 
@@ -317,6 +441,17 @@ class Config
         return $this;
     }
 
+    public function getTLSServerName(): string
+    {
+        return $this->TLSServerName;
+    }
+
+    public function setTLSServerName(string $TLSServerName): self
+    {
+        $this->TLSServerName = $TLSServerName;
+        return $this;
+    }
+
     public function getCAFile(): string
     {
         return $this->CAFile;
@@ -325,6 +460,17 @@ class Config
     public function setCAFile(string $caFile): self
     {
         $this->CAFile = $caFile;
+        return $this;
+    }
+
+    public function getCAPath(): string
+    {
+        return $this->CAPath;
+    }
+
+    public function setCAPath(string $CAPath): self
+    {
+        $this->CAPath = $CAPath;
         return $this;
     }
 
@@ -394,41 +540,65 @@ class Config
         return $this;
     }
 
+    protected function _validateCertAndKey(): void
+    {
+        $c = $this->CertFile;
+        $k = $this->KeyFile;
+        if (('' !== $k && '' === $c) || ('' !== $c && '' === $k)) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    '%s - CertFile and KeyFile must be both either empty or populated.  Key: %s; Cert: %s',
+                    static::class,
+                    $k,
+                    $c
+                )
+            );
+        }
+    }
+
+    protected static function _readTokenFile(string $file): string
+    {
+        $data = is_file($file) && is_readable($file) ? file_get_contents($file) : false;
+        if (false === $data) {
+            throw new \RuntimeException(sprintf('Error loading token file %s : file does not exist or is not readable', $file));
+        }
+        return trim($data);
+    }
+
     protected static function _resolveValue(mixed $explicit, string $env, mixed $default): mixed
     {
         if (null !== $explicit) {
             return $explicit;
         }
-
-        if ($env !== '') {
-            if (isset($_ENV[$env])) {
-                return $_ENV[$env];
-            }
-            if (false !== ($value = getenv($env))) {
-                return $value;
-            }
-            if (isset($_SERVER[$env])) {
-                return $_SERVER[$env];
-            }
-        }
-
-        return $default;
+        return self::_envValue($env) ?? $default;
     }
 
-    protected static function _coerceBool(mixed $value): bool
+    /**
+     * Returns the value of an environment variable, or null if it is unset or empty.
+     */
+    protected static function _envValue(string $env): null|string
     {
-        if (is_bool($value)) {
+        if (isset($_ENV[$env]) && is_string($_ENV[$env]) && '' !== $_ENV[$env]) {
+            return $_ENV[$env];
+        }
+        if (false !== ($value = getenv($env)) && '' !== $value) {
             return $value;
         }
-        if (is_string($value)) {
-            $normalized = strtolower(trim($value));
-            if (in_array($normalized, ['1', 'true', 'yes', 'on'], true)) {
-                return true;
-            }
-            if (in_array($normalized, ['0', 'false', 'no', 'off'], true)) {
-                return false;
-            }
+        if (isset($_SERVER[$env]) && is_string($_SERVER[$env]) && '' !== $_SERVER[$env]) {
+            return $_SERVER[$env];
         }
-        return (bool)$value;
+        return null;
+    }
+
+    /**
+     * Mirrors Go's strconv.ParseBool.  Returns null for values Go would reject.
+     */
+    protected static function _parseBool(string $value): null|bool
+    {
+        return match ($value) {
+            '1', 't', 'T', 'TRUE', 'true', 'True' => true,
+            '0', 'f', 'F', 'FALSE', 'false', 'False' => false,
+            default => null,
+        };
     }
 }

@@ -57,6 +57,8 @@ abstract class AbstractClient
             $opts[GuzzleRequestOptions::VERIFY] = false;
         } elseif ('' !== ($b = $this->_config->CAFile)) {
             $opts[GuzzleRequestOptions::VERIFY] = $b;
+        } elseif ('' !== ($b = $this->_config->CAPath)) {
+            $opts[GuzzleRequestOptions::VERIFY] = $b;
         }
 
         if (null !== ($auth = $this->_config->HttpAuth)) {

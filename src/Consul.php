@@ -44,11 +44,15 @@ class Consul
     public const HTTPTokenEnvName      = 'CONSUL_HTTP_TOKEN';
     public const HTTPTokenFileEnvName  = 'CONSUL_HTTP_TOKEN_FILE';
     public const HTTPAuthEnvName       = 'CONSUL_HTTP_AUTH';
-    public const HTTPCAFileEnvName     = 'CONSUL_CACERT';
-    public const HTTPClientCertEnvName = 'CONSUL_CLIENT_CERT';
-    public const HTTPClientKeyEnvName  = 'CONSUL_CLIENT_KEY';
-    public const HTTPSSLEnvName        = 'CONSUL_HTTP_SSL';
-    public const HTTPSSLVerifyEnvName  = 'CONSUL_HTTP_SSL_VERIFY';
+    public const HTTPCAFileEnvName        = 'CONSUL_CACERT';
+    public const HTTPCAPathEnvName        = 'CONSUL_CAPATH';
+    public const HTTPClientCertEnvName    = 'CONSUL_CLIENT_CERT';
+    public const HTTPClientKeyEnvName     = 'CONSUL_CLIENT_KEY';
+    public const HTTPTLSServerNameEnvName = 'CONSUL_TLS_SERVER_NAME';
+    public const HTTPSSLEnvName           = 'CONSUL_HTTP_SSL';
+    public const HTTPSSLVerifyEnvName     = 'CONSUL_HTTP_SSL_VERIFY';
+    public const HTTPNamespaceEnvName     = 'CONSUL_NAMESPACE';
+    public const HTTPPartitionEnvName     = 'CONSUL_PARTITION';
 
     public const HealthAny      = 'any';
     public const HealthPassing  = 'passing';
@@ -154,21 +158,6 @@ class Consul
     public function __construct(null|Config $config = null)
     {
         $config = Config::merge($config);
-
-        if ('' !== $config->TokenFile) {
-            if (!file_exists($config->TokenFile) || !is_readable($config->TokenFile)) {
-                throw new \RuntimeException(
-                    sprintf(
-                        'Provided $TokenFile "%s" either does not exist or is not readable',
-                        $config->TokenFile
-                    )
-                );
-            }
-            $data = trim((string)file_get_contents($config->TokenFile));
-            if ('' === $config->Token && '' !== $data) {
-                $config->Token = $data;
-            }
-        }
 
         $this->ACL           = new ACLClient($config);
         $this->Agent         = new AgentClient($config);
