@@ -86,6 +86,21 @@ For proxies, custom timeouts, middleware, etc., construct your own Guzzle client
 See [Configuration](https://github.com/dcarbone/php-consul-api/wiki/Configuration) for address parsing, token
 precedence, TLS and other details.
 
+### Differences from the Go client
+
+Configuration matches the Go client's `api.NewClient()` except:
+
+- There is no `Transport` or nested `TLSConfig`. TLS fields live directly on `Config`, and in-memory PEM
+  (`CAPem`, `CertPEM`, `KeyPEM`) is not supported.
+- `TLSServerName` is stored but not applied, because Guzzle has no SNI override.
+- TLS, basic auth and timeout are applied per request, so they also apply to a custom `HttpClient`. Go ignores
+  `TLSConfig` when you supply your own client.
+- `unix://` addresses require `ext-curl`, and requests are sent with `Host: localhost`.
+
+Other differences are covered under [Working with Responses](#working-with-responses), [Clients](#clients) and
+[Models](#models). For the full list, including Go features not yet implemented (Connect, Snapshot, Lock/Semaphore,
+etc.), see [Differences from Go](https://github.com/dcarbone/php-consul-api/wiki/Differences-from-Go).
+
 ## Working with Responses
 
 Every API call returns a response object. Responses can be destructured like the multiple return values of the Go
