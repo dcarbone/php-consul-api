@@ -72,4 +72,20 @@ final class TxnClientTest extends TestCase
         self::assertNotNull($resp->TxnResponse);
         self::assertCount(1, $resp->TxnResponse->Errors);
     }
+
+    public function testTxnInvalidNestedValueReturnsErr(): void
+    {
+        $body = json_encode(
+            ['Results' => [['KV' => ['Key' => 'foo', 'Value' => '!!not-base64!!']]], 'Errors' => []],
+            JSON_THROW_ON_ERROR
+        );
+        $client = $this->mockClient([new Response(200, [], $body)]);
+
+        $resp = $client->Txn(null, new TxnOp(KV: new KVTxnOp(Verb: KVOp::KVGet, Key: 'foo')));
+
+        self::assertFalse($resp->OK);
+        self::assertNotNull($resp->Err);
+        self::assertStringContainsString('Could not base64 decode value', $resp->Err->getMessage());
+        self::assertNull($resp->TxnResponse);
+    }
 }
