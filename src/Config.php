@@ -161,7 +161,7 @@ class Config
         $this->JSONDecodeOpts = $JSONDecodeOpts;
     }
 
-    public function __clone(): void
+    public function __clone()
     {
         if (null !== $this->HttpAuth) {
             $this->HttpAuth = clone $this->HttpAuth;
