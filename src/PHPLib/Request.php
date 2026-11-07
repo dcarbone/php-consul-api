@@ -125,11 +125,13 @@ class Request
     {
         // unix socket paths are not valid hosts; the socket itself is configured on the HttpClient.
         $host = str_starts_with($this->address, '/') ? 'localhost' : $this->address;
-        $uri = "{$this->scheme}://{$host}{$this->pathPrefix}/{$this->path}";
-        if (0 < count($this->params)) {
-            $uri .= "?{$this->params}";
+        $path = "{$this->pathPrefix}/{$this->path}";
+        if (!str_starts_with($path, '/')) {
+            $path = "/{$path}";
         }
-        return new Uri($uri);
+        return (new Uri("{$this->scheme}://{$host}"))
+            ->withPath($path)
+            ->withQuery((string)$this->params);
     }
 
     /**

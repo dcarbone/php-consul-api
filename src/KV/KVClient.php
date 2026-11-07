@@ -54,7 +54,11 @@ class KVClient extends AbstractClient
             if (null !== $dec->Err) {
                 $ret->Err = $dec->Err;
             } else {
-                $ret->unmarshalValue($dec->Decoded[0]);
+                try {
+                    $ret->unmarshalValue($dec->Decoded[0]);
+                } catch (\Throwable $e) {
+                    $ret->Err = $this->_hydrationError($e);
+                }
             }
         } elseif (HTTP\StatusNotFound !== $code) {
             $ret->Err = new Error(sprintf('%s: %s', $code, $resp->Response->getReasonPhrase()));
@@ -102,7 +106,11 @@ class KVClient extends AbstractClient
             if (null !== $dec->Err) {
                 $ret->setErr($dec->Err);
             } else {
-                $ret->unmarshalValue($dec->Decoded);
+                try {
+                    $ret->unmarshalValue($dec->Decoded);
+                } catch (\Throwable $e) {
+                    $ret->setErr($this->_hydrationError($e));
+                }
             }
         } elseif (HTTP\StatusNotFound !== $code) {
             $ret->setErr(new Error(sprintf('%s: %s', $code, $resp->Response->getReasonPhrase())));
@@ -244,7 +252,13 @@ class KVClient extends AbstractClient
                 return $ret;
             }
             // TODO: Maybe go straight to actual response?  What is the benefit of this...
-            $internal = TxnResponse::jsonUnserialize($dec->Decoded);
+            try {
+                $internal = TxnResponse::jsonUnserialize($dec->Decoded);
+            } catch (\Throwable $e) {
+                $ret->OK  = false;
+                $ret->Err = $this->_hydrationError($e);
+                return $ret;
+            }
             $kvr = new KVTxnResponse();
             $kvr->Errors = $internal->Errors;
             $kvr->Results = $internal->Results;

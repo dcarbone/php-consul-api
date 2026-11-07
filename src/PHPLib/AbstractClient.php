@@ -332,7 +332,16 @@ abstract class AbstractClient
             return;
         }
 
-        // finally, have response create its value
-        $ret->unmarshalValue($dec->Decoded);
+        // finally, have response create its value.  hydration failures are decode failures, surfaced as Err.
+        try {
+            $ret->unmarshalValue($dec->Decoded);
+        } catch (\Throwable $throwable) {
+            $ret->setErr($this->_hydrationError($throwable));
+        }
+    }
+
+    protected function _hydrationError(\Throwable $e): Error
+    {
+        return new Error(sprintf('%s - Unable to unmarshal response: %s', static::class, $e->getMessage()));
     }
 }

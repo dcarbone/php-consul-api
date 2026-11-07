@@ -467,4 +467,24 @@ final class KVClientTest extends TestCase
         self::assertStringContainsString('"Flags":18446744073709551615', $body);
         self::assertStringContainsString('"Index":9223372036854775808', $body);
     }
+
+    public function testGetInvalidValueReturnsErr(): void
+    {
+        $client = $this->mockClient(200, '[{"Key":"foo","Value":"!!not-base64!!"}]', $history);
+
+        $response = $client->Get('foo');
+
+        self::assertNotNull($response->Err);
+        self::assertStringContainsString('Could not base64 decode value', $response->Err->getMessage());
+    }
+
+    public function testListInvalidValueReturnsErr(): void
+    {
+        $client = $this->mockClient(200, '[{"Key":"foo","Value":"!!not-base64!!"}]', $history);
+
+        $response = $client->List('foo');
+
+        self::assertNotNull($response->Err);
+        self::assertStringContainsString('Could not base64 decode value', $response->Err->getMessage());
+    }
 }

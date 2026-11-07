@@ -9,7 +9,7 @@ use DCarbone\PHPConsulAPI\Consul;
  */
 trait ConsulEnvTrait
 {
-    /** @var array<string,string|false> */
+    /** @var array<string,array{getenv: string|false, env: array{0: bool, 1: mixed}, server: array{0: bool, 1: mixed}}> */
     private array $savedConsulEnv = [];
 
     /**
@@ -38,18 +38,36 @@ trait ConsulEnvTrait
     {
         $this->savedConsulEnv = [];
         foreach (self::consulEnvNames() as $name) {
-            $this->savedConsulEnv[$name] = getenv($name);
+            $this->savedConsulEnv[$name] = [
+                'getenv' => getenv($name),
+                'env'    => [array_key_exists($name, $_ENV), $_ENV[$name] ?? null],
+                'server' => [array_key_exists($name, $_SERVER), $_SERVER[$name] ?? null],
+            ];
             $this->clearEnv($name);
         }
     }
 
     private function restoreConsulEnv(): void
     {
-        foreach ($this->savedConsulEnv as $name => $value) {
-            if (false === $value) {
-                $this->clearEnv($name);
+        foreach ($this->savedConsulEnv as $name => $saved) {
+            if (false === $saved['getenv']) {
+                putenv($name);
             } else {
-                $this->setEnv(name: $name, value: $value);
+                putenv(sprintf('%s=%s', $name, $saved['getenv']));
+            }
+
+            [$present, $value] = $saved['env'];
+            if ($present) {
+                $_ENV[$name] = $value;
+            } else {
+                unset($_ENV[$name]);
+            }
+
+            [$present, $value] = $saved['server'];
+            if ($present) {
+                $_SERVER[$name] = $value;
+            } else {
+                unset($_SERVER[$name]);
             }
         }
         $this->savedConsulEnv = [];
