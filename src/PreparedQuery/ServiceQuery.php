@@ -244,7 +244,14 @@ class ServiceQuery extends AbstractType
             if ('Failover' === $k) {
                 $n->Failover = QueryDatacenterOptions::jsonUnserialize($v);
             } elseif ('Tags' === $k) {
-                $n->setTags(...$v);
+                $n->setTags(...($v ?? []));
+            } elseif ('IgnoreCheckIDs' === $k) {
+                $n->setIgnoreCheckIDs(...($v ?? []));
+            } elseif ('NodeMeta' === $k || 'ServiceMeta' === $k) {
+                $n->{$k} = [];
+                foreach ((array)$v as $mk => $mv) {
+                    $n->{$k}[(string)$mk] = $mv;
+                }
             } else {
                 $n->{$k} = $v;
             }
@@ -269,8 +276,9 @@ class ServiceQuery extends AbstractType
         $out->IgnoreCheckIDs = $this->IgnoreCheckIDs;
         $out->Failover = $this->Failover;
         $out->OnlyPassing = $this->OnlyPassing;
-        $out->NodeMeta = $this->NodeMeta;
-        $out->ServiceMeta = $this->ServiceMeta;
+        // Consul expects JSON objects for these maps; an empty PHP array would encode as [].
+        $out->NodeMeta = [] === $this->NodeMeta ? null : (object)$this->NodeMeta;
+        $out->ServiceMeta = [] === $this->ServiceMeta ? null : (object)$this->ServiceMeta;
         $out->Connect = $this->Connect;
         return $out;
     }

@@ -176,7 +176,11 @@ class AgentClient extends AbstractClient
             default => Consul::HealthCritical,
         };
 
-        return new AgentHealthServiceResponse($status, $dec->Decoded, null);
+        try {
+            return new AgentHealthServiceResponse($status, $dec->Decoded, null);
+        } catch (\Throwable $throwable) {
+            return new AgentHealthServiceResponse(Consul::HealthCritical, null, $this->_hydrationError($throwable));
+        }
     }
 
 
@@ -204,7 +208,11 @@ class AgentClient extends AbstractClient
             default => Consul::HealthCritical,
         };
 
-        return new AgentHealthServicesResponse($status, $dec->Decoded, null);
+        try {
+            return new AgentHealthServicesResponse($status, $dec->Decoded, null);
+        } catch (\Throwable $throwable) {
+            return new AgentHealthServicesResponse(Consul::HealthCritical, [], $this->_hydrationError($throwable));
+        }
     }
 
 

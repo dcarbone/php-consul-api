@@ -133,12 +133,40 @@ final class UserEventTest extends TestCase
         self::assertSame('10', (string)$out->LTime);
     }
 
+    public function testJsonSerializeBase64EncodesPayload(): void
+    {
+        $e = new UserEvent(Name: 'deploy', Payload: 'v1.2.3');
+        self::assertSame('djEuMi4z', $e->jsonSerialize()->Payload);
+    }
+
+    public function testJsonUnserializeBase64DecodesPayload(): void
+    {
+        $decoded = new \stdClass();
+        $decoded->Payload = 'djEuMi4z';
+        self::assertSame('v1.2.3', UserEvent::jsonUnserialize($decoded)->getPayload());
+    }
+
+    public function testJsonUnserializeNullPayload(): void
+    {
+        $decoded = new \stdClass();
+        $decoded->Payload = null;
+        self::assertSame('', UserEvent::jsonUnserialize($decoded)->Payload);
+    }
+
+    public function testJsonUnserializeInvalidPayloadThrows(): void
+    {
+        $decoded = new \stdClass();
+        $decoded->Payload = '!!not base64!!';
+        $this->expectException(\DomainException::class);
+        UserEvent::jsonUnserialize($decoded);
+    }
+
     public function testJsonUnserialize(): void
     {
         $decoded = new \stdClass();
         $decoded->ID = 'e1';
         $decoded->Name = 'ev';
-        $decoded->Payload = 'p';
+        $decoded->Payload = base64_encode('p');
         $decoded->NodeFilter = '';
         $decoded->ServiceFilter = '';
         $decoded->TagFilter = '';

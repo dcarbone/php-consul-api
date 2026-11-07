@@ -23,7 +23,7 @@ final class UserEventsResponseTest extends TestCase
         $ev1 = new \stdClass();
         $ev1->ID = 'e1';
         $ev1->Name = 'deploy';
-        $ev1->Payload = 'p1';
+        $ev1->Payload = base64_encode('p1');
         $ev1->NodeFilter = '';
         $ev1->ServiceFilter = '';
         $ev1->TagFilter = '';
@@ -49,6 +49,7 @@ final class UserEventsResponseTest extends TestCase
         self::assertInstanceOf(UserEvent::class, $r->UserEvents[1]);
         self::assertSame('e1', $r->UserEvents[0]->ID);
         self::assertSame('deploy', $r->UserEvents[0]->Name);
+        self::assertSame('p1', $r->UserEvents[0]->Payload);
         self::assertSame('e2', $r->UserEvents[1]->ID);
         self::assertSame('restart', $r->UserEvents[1]->Name);
         self::assertSame('web', $r->UserEvents[1]->NodeFilter);

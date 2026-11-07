@@ -467,4 +467,40 @@ final class KVClientTest extends TestCase
         self::assertStringContainsString('"Flags":18446744073709551615', $body);
         self::assertStringContainsString('"Index":9223372036854775808', $body);
     }
+
+    public function testGetInvalidValueReturnsErr(): void
+    {
+        $client = $this->mockClient(200, '[{"Key":"foo","Value":"!!not-base64!!"}]', $history);
+
+        $response = $client->Get('foo');
+
+        self::assertNotNull($response->Err);
+        self::assertStringContainsString('Could not base64 decode value', $response->Err->getMessage());
+    }
+
+    public function testListInvalidValueReturnsErr(): void
+    {
+        $client = $this->mockClient(200, '[{"Key":"foo","Value":"!!not-base64!!"}]', $history);
+
+        $response = $client->List('foo');
+
+        self::assertNotNull($response->Err);
+        self::assertStringContainsString('Could not base64 decode value', $response->Err->getMessage());
+    }
+
+    public function testTxnInvalidNestedValueReturnsErr(): void
+    {
+        $body = json_encode(
+            ['Results' => [['KV' => ['Key' => 'foo', 'Value' => '!!not-base64!!']]], 'Errors' => []],
+            JSON_THROW_ON_ERROR
+        );
+        $client = $this->mockClient(200, $body, $history);
+
+        $response = $client->Txn(null, new TxnOp(KV: new KVTxnOp(Verb: KVOp::KVGet, Key: 'foo')));
+
+        self::assertFalse($response->OK);
+        self::assertNotNull($response->Err);
+        self::assertStringContainsString('Could not base64 decode value', $response->Err->getMessage());
+        self::assertNull($response->KVTxnResponse);
+    }
 }

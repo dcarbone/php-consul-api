@@ -36,6 +36,18 @@ final class ConsulManager
     public const CONFIG_FILE = __DIR__ . '/consul.hcl';
     public const MANAGEMENT_TOKEN = '00000000-0000-0000-0000-000000000001';
     public const TEST_ADDRESS = '127.0.0.1:8500';
+
+    public const TEST_HTTPS_PORT       = 8501;
+    public const TEST_HTTPS_ADDRESS    = '127.0.0.1:8501';
+    public const UNIX_SOCKET           = self::TMP_DIR . '/consul.sock';
+    public const TLS_DIR               = self::TMP_DIR . '/tls';
+    public const TLS_CA_PATH_DIR       = self::TLS_DIR . '/capath';
+    public const TLS_CONFIG_FILE       = self::TMP_DIR . '/consul-tls.hcl';
+    public const TLS_CA_FILE           = self::TLS_DIR . '/consul-agent-ca.pem';
+    public const TLS_SERVER_CERT_FILE  = self::TLS_DIR . '/dc1-server-consul-0.pem';
+    public const TLS_SERVER_KEY_FILE   = self::TLS_DIR . '/dc1-server-consul-0-key.pem';
+    public const TLS_CLIENT_CERT_FILE  = self::TLS_DIR . '/dc1-client-consul-0.pem';
+    public const TLS_CLIENT_KEY_FILE   = self::TLS_DIR . '/dc1-client-consul-0-key.pem';
     private const STARTUP_TIMEOUT_SECONDS = 20;
     private const SHUTDOWN_TIMEOUT_SECONDS = 10;
 
@@ -71,6 +83,49 @@ final class ConsulManager
     }
 
     /**
+     * Start a single "-dev" agent with ACLs plus a unix socket listener and an HTTPS listener that requires a client
+     * certificate.  TLS assets are generated into {@see self::TLS_DIR} using the consul binary.
+     */
+    public static function startSingleDevTLS(): void
+    {
+        self::ensureTmpDir();
+        self::generateTLSAssets();
+
+        if (file_exists(self::UNIX_SOCKET)) {
+            unlink(self::UNIX_SOCKET);
+        }
+
+        $hcl = sprintf(
+            <<<HCL
+            addresses {
+              http = "127.0.0.1 unix://%s"
+            }
+            ports {
+              https = %d
+            }
+            tls {
+              https {
+                ca_file         = "%s"
+                cert_file       = "%s"
+                key_file        = "%s"
+                verify_incoming = true
+              }
+            }
+            HCL,
+            self::UNIX_SOCKET,
+            self::TEST_HTTPS_PORT,
+            self::TLS_CA_FILE,
+            self::TLS_SERVER_CERT_FILE,
+            self::TLS_SERVER_KEY_FILE,
+        );
+
+        file_put_contents(self::TLS_CONFIG_FILE, $hcl);
+
+        self::startSingle(sprintf('-dev -config-file=%s -config-file=%s', self::CONFIG_FILE, self::TLS_CONFIG_FILE));
+        self::waitForFile(self::UNIX_SOCKET);
+    }
+
+    /**
      * Stop running instance
      */
     public static function stopSingle(): void
@@ -101,6 +156,78 @@ final class ConsulManager
         if (!is_dir(self::TMP_DIR)) {
             mkdir(self::TMP_DIR, 0775, true);
         }
+    }
+
+    /**
+     * Returns true if a hashed CA directory (for CURLOPT_CAPATH) could be created.
+     */
+    public static function hasCAPathDir(): bool
+    {
+        return is_dir(self::TLS_CA_PATH_DIR) && [] !== glob(self::TLS_CA_PATH_DIR . '/*.0');
+    }
+
+    private static function generateTLSAssets(): void
+    {
+        if (is_dir(self::TLS_DIR)) {
+            self::removeDir(self::TLS_DIR);
+        }
+        mkdir(self::TLS_DIR, 0775, true);
+
+        $cmds = [
+            'consul tls ca create',
+            'consul tls cert create -server -dc dc1',
+            'consul tls cert create -client -dc dc1',
+        ];
+        foreach ($cmds as $cmd) {
+            $out  = [];
+            $code = 0;
+            exec(sprintf('cd %s && %s 2>&1', escapeshellarg(self::TLS_DIR), $cmd), $out, $code);
+            if (0 !== $code) {
+                throw new \RuntimeException(sprintf('"%s" failed: %s', $cmd, implode("\n", $out)));
+            }
+        }
+
+        // CURLOPT_CAPATH requires OpenSSL hash-named files; best effort, tests skip if unavailable.
+        mkdir(self::TLS_CA_PATH_DIR, 0775, true);
+        copy(self::TLS_CA_FILE, self::TLS_CA_PATH_DIR . '/consul-agent-ca.pem');
+        $hash = trim((string)shell_exec(sprintf('openssl x509 -hash -noout -in %s 2>/dev/null', escapeshellarg(self::TLS_CA_FILE))));
+        if ('' !== $hash) {
+            copy(self::TLS_CA_FILE, sprintf('%s/%s.0', self::TLS_CA_PATH_DIR, $hash));
+        }
+    }
+
+    private static function removeDir(string $dir): void
+    {
+        $items = scandir($dir);
+        if (false === $items) {
+            return;
+        }
+        foreach ($items as $item) {
+            if ('.' === $item || '..' === $item) {
+                continue;
+            }
+            $path = $dir . '/' . $item;
+            if (is_dir($path)) {
+                self::removeDir($path);
+            } else {
+                unlink($path);
+            }
+        }
+        rmdir($dir);
+    }
+
+    private static function waitForFile(string $file): void
+    {
+        $deadline = microtime(true) + self::STARTUP_TIMEOUT_SECONDS;
+        while (microtime(true) < $deadline) {
+            clearstatcache(true, $file);
+            if (file_exists($file)) {
+                return;
+            }
+            usleep(100000);
+        }
+
+        throw new \RuntimeException(sprintf('Timed out waiting for "%s"; see %s for details.', $file, self::LOG_FILE));
     }
 
     private static function waitForReady(): void

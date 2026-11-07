@@ -17,6 +17,7 @@
   ],
   "require": {
     "php": "^8.2",
+    "ext-curl": "*",
     "ext-json": "*",
     "dcarbone/gotime": "^v2.0",
     "dcarbone/gohttp": "^v1.0.0",

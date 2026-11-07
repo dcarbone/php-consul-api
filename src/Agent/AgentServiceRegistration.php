@@ -343,7 +343,7 @@ class AgentServiceRegistration extends AbstractType
             if ('Kind' === $k) {
                 $n->setKind($v);
             } elseif ('Tags' === $k) {
-                $n->setTags(...$v);
+                $n->setTags(...($v ?? []));
             } elseif ('Ports' === $k) {
                 $n->Ports = [];
                 if (null !== $v) {

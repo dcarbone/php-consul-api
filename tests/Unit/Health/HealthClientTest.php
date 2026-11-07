@@ -157,4 +157,19 @@ final class HealthClientTest extends TestCase
         self::assertCount(1, $history);
         self::assertSame('/v1/health/state/passing', $history[0]['request']->getUri()->getPath());
     }
+
+    public function testServiceInvalidNestedServiceReturnsErr(): void
+    {
+        $history = [];
+        $body = json_encode(
+            [['Node' => ['Node' => 'n1'], 'Service' => ['ID' => 'svc-1', 'CreateIndex' => -1], 'Checks' => []]],
+            JSON_THROW_ON_ERROR
+        );
+        $client = $this->mockClient(200, $body, $history);
+
+        $response = $client->Service('web');
+
+        self::assertNotNull($response->Err);
+        self::assertStringContainsString('outside the uint64 range', $response->Err->getMessage());
+    }
 }

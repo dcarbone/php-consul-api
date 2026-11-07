@@ -214,9 +214,9 @@ class ACLTokenExpanded extends ACLToken
                     $n->ExpandedRoles[] = ACLRole::jsonUnserialize($vv);
                 }
             } elseif ('NamespaceDefaultPolicyIDs' === $k) {
-                $n->setNamespaceDefaultPolicyIDs(...$v);
+                $n->setNamespaceDefaultPolicyIDs(...($v ?? []));
             } elseif ('NamespaceDefaultRoleIDs' === $k) {
-                $n->setNamespaceDefaultRoleIDs(...$v);
+                $n->setNamespaceDefaultRoleIDs(...($v ?? []));
             } else {
                 $n->{$k} = $v;
             }

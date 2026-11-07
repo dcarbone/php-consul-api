@@ -11,6 +11,7 @@ use DCarbone\PHPConsulAPI\Agent\AgentServiceRegistration;
 use DCarbone\PHPConsulAPI\Agent\ForceLeaveOpts;
 use DCarbone\PHPConsulAPI\Agent\ServiceRegisterOpts;
 use DCarbone\PHPConsulAPI\Config;
+use DCarbone\PHPConsulAPI\Consul;
 use DCarbone\PHPConsulAPI\PHPLib\MapResponse;
 use DCarbone\PHPConsulAPI\QueryOptions;
 use DCarbone\PHPConsulAPI\WriteOptions;
@@ -521,5 +522,39 @@ final class AgentClientTest extends TestCase
         parse_str($request->getUri()->getQuery(), $params);
         ksort($params);
         return [$request, $options, $params];
+    }
+
+    public function testAgentHealthServiceByIDInvalidNestedServiceReturnsErr(): void
+    {
+        $body = json_encode(
+            ['AggregatedStatus' => 'passing', 'Service' => ['ID' => 'svc-1', 'CreateIndex' => -1], 'Checks' => []],
+            JSON_THROW_ON_ERROR
+        );
+        $history = [];
+        $client = $this->newClient([new Response(200, [], $body)], $history);
+
+        $response = $client->AgentHealthServiceByID('svc-1');
+
+        self::assertNotNull($response->Err);
+        self::assertStringContainsString('outside the uint64 range', $response->Err->getMessage());
+        self::assertSame(Consul::HealthCritical, $response->AggregatedStatus);
+        self::assertNull($response->AgentServiceChecksInfo);
+    }
+
+    public function testAgentHealthServiceByNameInvalidNestedServiceReturnsErr(): void
+    {
+        $body = json_encode(
+            [['AggregatedStatus' => 'passing', 'Service' => ['ID' => 'svc-1', 'CreateIndex' => -1], 'Checks' => []]],
+            JSON_THROW_ON_ERROR
+        );
+        $history = [];
+        $client = $this->newClient([new Response(200, [], $body)], $history);
+
+        $response = $client->AgentHealthServiceByName('web');
+
+        self::assertNotNull($response->Err);
+        self::assertStringContainsString('outside the uint64 range', $response->Err->getMessage());
+        self::assertSame(Consul::HealthCritical, $response->AggregatedStatus);
+        self::assertSame([], $response->AgentServiceChecksInfos);
     }
 }

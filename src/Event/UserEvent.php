@@ -164,6 +164,16 @@ class UserEvent extends AbstractType
         foreach ((array)$decoded as $k => $v) {
             if ('LTime' === $k) {
                 $n->LTime = uint64($v);
+            } elseif ('Payload' === $k) {
+                if (null === $v) {
+                    $n->Payload = '';
+                    continue;
+                }
+                $val = base64_decode($v, true);
+                if (false === $val) {
+                    throw new \DomainException(sprintf('Could not base64 decode payload "%s"', $v));
+                }
+                $n->Payload = $val;
             } else {
                 $n->{$k} = $v;
             }
@@ -175,7 +185,7 @@ class UserEvent extends AbstractType
         $out = $this->_startJsonSerialize();
         $out->ID = $this->ID;
         $out->Name = $this->Name;
-        $out->Payload = $this->Payload;
+        $out->Payload = base64_encode($this->Payload);
         $out->NodeFilter = $this->NodeFilter;
         $out->ServiceFilter = $this->ServiceFilter;
         $out->TagFilter = $this->TagFilter;

@@ -214,7 +214,7 @@ class GatewayService extends AbstractType
             } elseif ('GatewayKind' === $k) {
                 $n->GatewayKind = ServiceKind::from($v);
             } elseif ('Hosts' === $k) {
-                $n->setHosts(...$v);
+                $n->setHosts(...($v ?? []));
             } else {
                 $n->{$k} = $v;
             }

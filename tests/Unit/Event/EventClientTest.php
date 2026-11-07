@@ -48,7 +48,7 @@ final class EventClientTest extends TestCase
                         [
                             'ID' => 'evt-1',
                             'Name' => 'deploy',
-                            'Payload' => 'payload-data',
+                            'Payload' => base64_encode('payload-data'),
                             'NodeFilter' => 'node-*',
                             'ServiceFilter' => 'api',
                             'TagFilter' => 'v1',
@@ -136,5 +136,31 @@ final class EventClientTest extends TestCase
         self::assertSame('9223372036854792192', (string)$index);
         self::assertSame((string)$index, (string)(new QueryOptions(WaitIndex: $index))->getWaitIndex());
         self::assertSame((string)$index, (string)(new QueryOptions())->setWaitIndex($index)->getWaitIndex());
+    }
+
+    public function testFireInvalidPayloadReturnsErr(): void
+    {
+        $client = $this->mockClient([new Response(200, [], '{"ID":"evt-1","Name":"deploy","Payload":"!!not-base64!!"}')]);
+
+        $response = $client->Fire(new UserEvent(Name: 'deploy'));
+
+        self::assertNotNull($response->Err);
+        self::assertStringContainsString('Could not base64 decode payload', $response->Err->getMessage());
+    }
+
+    public function testListInvalidPayloadReturnsErr(): void
+    {
+        $client = $this->mockClient([new Response(200, ['X-Consul-Index' => '5'], '[{"ID":"evt-1","Name":"deploy","Payload":"!!not-base64!!"}]')]);
+
+        $response = $client->List();
+
+        self::assertNotNull($response->Err);
+        self::assertStringContainsString('Could not base64 decode payload', $response->Err->getMessage());
+    }
+
+    public function testUserEventJsonUnserializeStillThrowsOnInvalidPayload(): void
+    {
+        $this->expectException(\DomainException::class);
+        UserEvent::jsonUnserialize((object)['Payload' => '!!not-base64!!']);
     }
 }

@@ -1,4 +1,10 @@
 # Everywhere within this repository:
+* **Always** match the behavior of the upstream Go client (`github.com/hashicorp/consul/api`) exactly, including
+   defaults, environment variable handling, precedence rules, and edge cases.
+   * **Never** substitute a subjectively "better" or "safer" behavior for the Go behavior.  If PHP cannot reproduce
+     the Go behavior, document the divergence rather than inventing new semantics.  Divergences **must** be recorded
+     on the wiki page `Differences-from-Go.md` and, for configuration, in the README's "Differences from the Go
+     client" section.
 * **Always** use `null|` in favor of `?` for nullable types (e.g. `?string` instead of `string|null`).
 * **Always** use variadic parameters instead of `array` for lists of items (e.g. `string ...$items` instead
    of `array $items`).
@@ -10,6 +16,9 @@
    `/** @param string[] $items */` for `array $items`).
 * **Never** edit files using sed, awk, or other shell utilities.
 * **Always** limit yourself to POSIX shell syntax when executing shell scripts.
+* **Never** use `${{ }}` expression interpolation inside GitHub Actions `run` blocks.
+   * Instead, pass values into the step via `env:` and reference them as shell variables (e.g.
+     `env: { PHP_VERSION: ${{ matrix.php-version }} }` then `"${PHP_VERSION}"` in `run`).
 * **Always** run phpstan with 512MB of memory when analyzing generated code 
    (e.g. `phpstan analyze -c phpstan.neon --memory-limit=512M src/`).
 * **Always** run Rector (`composer rector`) after making code changes, and re-run it until it reports no changes.

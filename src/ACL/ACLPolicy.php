@@ -198,7 +198,7 @@ class ACLPolicy extends AbstractType
             if ('CreateIndex' === $k || 'ModifyIndex' === $k) {
                 $n->{$k} = uint64($v);
             } elseif ('Datacenters' === $k) {
-                $n->setDatacenters(...$v);
+                $n->setDatacenters(...($v ?? []));
             } else {
                 $n->{$k} = $v;
             }

@@ -41,7 +41,7 @@ final class ConfigTest extends TestCase
         $config = new Config();
 
         $expectedAddress = $_ENV[Consul::HTTPAddrEnvName] ?? self::DEFAULT_ADDRESS;
-        $expectedScheme = in_array(strtolower($_ENV[Consul::HTTPSSLEnvName] ?? ''), ['true', '1'], true)
+        $expectedScheme = in_array($_ENV[Consul::HTTPSSLEnvName] ?? '', ['1', 't', 'T', 'TRUE', 'true', 'True'], true)
             ? 'https'
             : self::DEFAULT_SCHEME;
 

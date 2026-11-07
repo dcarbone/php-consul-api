@@ -95,7 +95,7 @@ class MeshDirectionalTLSConfig extends AbstractType
     {
         foreach ((array)$decoded as $k => $v) {
             if ('CipherSuites' === $k || 'cipher_suites' === $k) {
-                $n->setCipherSuites(...$v);
+                $n->setCipherSuites(...($v ?? []));
             } elseif ('tls_min_version' === $k) {
                 $n->TLSMinVersion = $v;
             } elseif ('tls_max_version' === $k) {

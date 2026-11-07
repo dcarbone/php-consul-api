@@ -33,7 +33,12 @@ class TxnClient extends AbstractClient
                 return $ret;
             }
 
-            $ret->TxnResponse = TxnResponse::jsonUnserialize($dec->Decoded);
+            try {
+                $ret->TxnResponse = TxnResponse::jsonUnserialize($dec->Decoded);
+            } catch (\Throwable $e) {
+                $ret->OK  = false;
+                $ret->Err = $this->_hydrationError($e);
+            }
             return $ret;
         }
 

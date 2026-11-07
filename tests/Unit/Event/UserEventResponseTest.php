@@ -23,7 +23,7 @@ final class UserEventResponseTest extends TestCase
         $decoded = new \stdClass();
         $decoded->ID = 'abc';
         $decoded->Name = 'deploy';
-        $decoded->Payload = 'data';
+        $decoded->Payload = base64_encode('data');
         $decoded->NodeFilter = '';
         $decoded->ServiceFilter = '';
         $decoded->TagFilter = '';

@@ -26,6 +26,9 @@
         <testsuite name="usage-config">
             <file>./tests/Integration/ConfigTest.php</file>
         </testsuite>
+        <testsuite name="usage-config-states">
+            <file>./tests/Integration/ConfigStatesTest.php</file>
+        </testsuite>
         <testsuite name="usage-request">
             <file>./tests/Integration/RequestTest.php</file>
         </testsuite>

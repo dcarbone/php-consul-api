@@ -53,10 +53,16 @@ abstract class AbstractClient
 
         $opts = Config::DEFAULT_REQUEST_OPTIONS;
 
-        if (!$this->_config->InsecureSkipVerify) {
+        if ($this->_config->InsecureSkipVerify) {
             $opts[GuzzleRequestOptions::VERIFY] = false;
         } elseif ('' !== ($b = $this->_config->CAFile)) {
             $opts[GuzzleRequestOptions::VERIFY] = $b;
+        } elseif ('' !== ($b = $this->_config->CAPath)) {
+            $opts[GuzzleRequestOptions::VERIFY] = $b;
+        }
+
+        if (null !== ($auth = $this->_config->HttpAuth)) {
+            $opts[GuzzleRequestOptions::AUTH] = [$auth->username, $auth->password];
         }
 
         if ('' !== ($c = $this->_config->CertFile)) {
@@ -326,7 +332,16 @@ abstract class AbstractClient
             return;
         }
 
-        // finally, have response create its value
-        $ret->unmarshalValue($dec->Decoded);
+        // finally, have response create its value.  hydration failures are decode failures, surfaced as Err.
+        try {
+            $ret->unmarshalValue($dec->Decoded);
+        } catch (\Throwable $throwable) {
+            $ret->setErr($this->_hydrationError($throwable));
+        }
+    }
+
+    protected function _hydrationError(\Throwable $e): Error
+    {
+        return new Error(sprintf('%s - Unable to unmarshal response: %s', static::class, $e->getMessage()));
     }
 }
